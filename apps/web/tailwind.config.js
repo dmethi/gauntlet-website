@@ -24,13 +24,6 @@ module.exports = {
         "fira-sans": ["var(--font-fira-sans)", "sans-serif"],
         "ibm-plex-sans": ["var(--font-ibm-plex-sans)", "sans-serif"],
         poppins: ["var(--font-poppins)", "sans-serif"],
-        sans: [
-          "var(--font-avenir)",
-          "var(--font-work-sans)",
-          "var(--font-inter)",
-          "system-ui",
-          "sans-serif",
-        ],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -65,6 +58,40 @@ module.exports = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        
+        // Gauntlet Brand Colors - Balanced Medieval Theme
+        gauntlet: {
+          crimson: '#8B1538',      // Deep burgundy primary red
+          battle: '#A31621',       // Secondary red tone  
+          ember: '#6B1426',        // Darkest red for depth
+          'regal-gold': '#D4AF37', // Co-primary royal gold
+          'warm-gold': '#EBB748',  // Brighter gold accent
+          charcoal: '#1A1A1A',     // Softer charcoal
+          'off-white': '#F3E9D2',  // Neutral light
+          'burnt-orange': '#B8621B', // Muted orange bridge
+        },
+        
+        // Data visualization colors
+        viz: {
+          // 12-Color Team Visualization Palette (distinct colors for 12 teams)
+          team: {
+            1: '#8B1538',  // Crimson Red
+            2: '#D4AF37',  // Regal Gold  
+            3: '#2D5A87',  // Steel Blue
+            4: '#8B4513',  // Saddle Brown
+            5: '#556B2F',  // Dark Olive Green
+            6: '#4B0082',  // Indigo
+            7: '#CD853F',  // Peru
+            8: '#2F4F4F',  // Dark Slate Gray
+            9: '#8B008B',  // Dark Magenta
+            10: '#B8860B', // Dark Goldenrod
+            11: '#483D8B', // Dark Slate Blue
+            12: '#A0522D'  // Sienna
+          },
+          
+          // RdYlGn scale for performance metrics
+          'rd-yl-gn': ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837'],
         },
       },
       borderRadius: {

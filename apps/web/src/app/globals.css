@@ -4,29 +4,63 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.75rem;
+    /* Gauntlet Brand Colors - Balanced Medieval Aesthetic */
+    --crimson-red: #8B1538;
+    --battle-red: #A31621;
+    --ember-red: #6B1426;
+    --regal-gold: #D4AF37;
+    --warm-gold: #EBB748;
+    --charcoal-steel: #1A1A1A;
+    --off-white: #F3E9D2;
+    --burnt-orange: #B8621B;
     
-    /* System font fallbacks for Avenir */
+    /* Font Configuration */
     --font-avenir: 'Avenir', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    
+    /* Light mode semantic colors */
+    --background: 45 51% 95%; /* off white background */
+    --foreground: 0 0% 5%; /* very dark charcoal text */
+    --card: 0 0% 100%; /* pure white cards */
+    --card-foreground: 0 0% 5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+    --primary: 345 69% 31%; /* crimson red - balanced */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 43 64% 52%; /* regal gold */
+    --secondary-foreground: 0 0% 5%;
+    --muted: 45 25% 92%; /* light muted */
+    --muted-foreground: 0 0% 40%;
+    --accent: 39 73% 58%; /* warm gold */
+    --accent-foreground: 0 0% 5%;
+    --destructive: 355 65% 35%; /* battle red */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 89%;
+    --input: 0 0% 100%;
+    --ring: 345 69% 31%; /* crimson red */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark mode semantic colors - Linear-inspired intensity */
+    --background: 0 0% 5%; /* near black background (Linear style) */
+    --foreground: 45 51% 89%; /* off white text */
+    --card: 0 0% 8%; /* very dark cards */
+    --card-foreground: 45 51% 89%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 45 51% 89%;
+    --primary: 345 69% 31%; /* crimson red */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 43 64% 52%; /* regal gold */
+    --secondary-foreground: 0 0% 5%;
+    --muted: 0 0% 10%; /* very dark muted */
+    --muted-foreground: 0 0% 54%; /* not too light, Linear-style */
+    --accent: 39 73% 58%; /* warm gold */
+    --accent-foreground: 0 0% 5%;
+    --destructive: 355 65% 35%; /* battle red */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 16%; /* subtle dark borders */
+    --input: 0 0% 8%;
+    --ring: 345 69% 31%; /* crimson red */
   }
 }
 
@@ -34,8 +68,8 @@
   * {
     @apply border-border;
   }
-  
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-avenir);
   }
 } 

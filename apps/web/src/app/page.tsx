@@ -1,6 +1,7 @@
 import React from "react";
 import { Sidebar } from "@/components/sidebar";
 import { MainContent } from "@/components/main-content";
+import { colors, dataVizColors } from "@/lib/colors";
 import { 
   Calendar,
   TrendingUp,
@@ -9,7 +10,10 @@ import {
   Trophy,
   Clock,
   Star,
-  ChevronRight
+  ChevronRight,
+  Palette,
+  Sun,
+  Moon
 } from "lucide-react";
 
 const recentItems = [
@@ -31,134 +35,226 @@ const recentItems = [
   },
   {
     id: "TG-1003",
-    title: "Trade Proposal: CMC for Tyreek + Pick",
-    status: "Pending Review",
-    assignee: "League Commissioner", 
-    updated: "1 day ago",
+    title: "Trade Proposal: CMC for Kupp + Draft Pick",
+    status: "Under Review",
+    assignee: "League Commissioner",
+    updated: "6 hours ago",
     priority: "low"
   },
   {
     id: "TG-1004",
-    title: "Playoff Bracket Predictions Updated",
+    title: "Playoff Bracket Seeding Analysis",
     status: "Completed",
-    assignee: "Simulation Engine",
-    updated: "2 days ago",
-    priority: "low"
-  },
-  {
-    id: "TG-1005",
-    title: "Week 11 Performance Analysis",
-    status: "Under Review",
     assignee: "Analytics Team",
-    updated: "3 days ago", 
+    updated: "1 day ago",
     priority: "medium"
   }
 ];
 
-const stats = [
-  { label: "Active Teams", value: "8", change: "+2 this week", icon: Users },
-  { label: "Win Rate", value: "67%", change: "+5% vs last week", icon: Trophy },
-  { label: "Points For", value: "1,247", change: "+89 this week", icon: Target },
-  { label: "Proj. Finish", value: "2nd", change: "↑1 spot", icon: TrendingUp },
+const quickActions = [
+  { icon: Users, label: "Set Lineup", color: "text-gauntlet-crimson" },
+  { icon: Target, label: "Add Player", color: "text-gauntlet-regal-gold" },
+  { icon: Trophy, label: "View Standings", color: "text-gauntlet-battle" },
+  { icon: TrendingUp, label: "Analytics", color: "text-gauntlet-warm-gold" }
 ];
 
-export default function HomePage() {
+const teamNames = [
+  "Crimson Crusaders", "Golden Lions", "Steel Wolves", "Bronze Bears",
+  "Olive Eagles", "Indigo Knights", "Peru Panthers", "Slate Stallions", 
+  "Magenta Mavericks", "Amber Arrows", "Sapphire Spartans", "Sienna Sentinels"
+];
+
+export default function DashboardPage() {
   return (
-    <div className="flex h-screen bg-gray-950">
+    <div className="h-screen flex bg-background">
       <Sidebar />
       <MainContent>
         <div className="p-6 space-y-6">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-4 gap-4">
-            {stats.map((stat) => {
-              const Icon = stat.icon;
-              return (
-                <div key={stat.label} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Icon size={16} className="text-gray-400" />
-                    <span className="text-xs text-green-400 font-avenir">{stat.change}</span>
-                  </div>
-                  <div className="text-2xl font-bold text-white mb-1 font-avenir">{stat.value}</div>
-                  <div className="text-sm text-gray-400 font-avenir">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Recent Activity Table */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg">
-            <div className="border-b border-gray-800 p-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-white font-semibold font-avenir">Recent Activity</h3>
-                <button className="text-gray-400 hover:text-white text-sm flex items-center gap-1 font-avenir">
-                  View all
-                  <ChevronRight size={14} />
-                </button>
+          {/* Welcome Section with Brand Showcase */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground font-geizer">
+                  Welcome to The Gauntlet
+                </h1>
+                <p className="text-muted-foreground font-avenir">
+                  Medieval fantasy football with balanced red & gold aesthetics
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <span className="block w-2 h-2 bg-primary rounded-full"></span>
+                  Crimson Red Primary
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="block w-2 h-2 bg-secondary rounded-full"></span>
+                  Regal Gold Co-Primary
+                </span>
               </div>
             </div>
-            
-            <div className="divide-y divide-gray-800">
-              {recentItems.map((item) => (
-                <div key={item.id} className="p-4 hover:bg-gray-800/50 transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${
-                        item.priority === 'high' ? 'bg-red-500' :
-                        item.priority === 'medium' ? 'bg-yellow-500' : 'bg-gray-500'
-                      }`} />
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400 text-sm font-mono font-avenir">{item.id}</span>
-                          <span className="text-white font-avenir">{item.title}</span>
+
+            {/* Brand Color Showcase */}
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Palette className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-card-foreground font-avenir">
+                  Linear-Style Dark Mode & Team Colors
+                </h2>
+              </div>
+              
+              {/* Core Colors */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2 font-avenir">
+                    Core Palette (Burgundy & Gold Balance)
+                  </h3>
+                  <div className="grid grid-cols-4 lg:grid-cols-8 gap-3">
+                    {Object.entries(colors.core).map(([name, hex]) => (
+                      <div key={name} className="text-center">
+                        <div 
+                          className="w-full h-12 rounded-md border border-border mb-1"
+                          style={{ backgroundColor: hex }}
+                        />
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {name}
                         </div>
-                        <div className="flex items-center gap-4 mt-1 text-sm text-gray-400">
-                          <span className={`px-2 py-1 rounded-sm text-xs font-avenir ${
-                            item.status === 'Completed' ? 'bg-green-900 text-green-300' :
-                            item.status === 'In Progress' ? 'bg-blue-900 text-blue-300' :
-                            item.status === 'High Priority' ? 'bg-red-900 text-red-300' :
-                            'bg-gray-800 text-gray-300'
-                          }`}>
-                            {item.status}
-                          </span>
-                          <span className="font-avenir">Assigned to {item.assignee}</span>
-                          <span className="flex items-center gap-1 font-avenir">
-                            <Clock size={12} />
-                            {item.updated}
-                          </span>
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {hex}
                         </div>
                       </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Team Visualization Palette */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2 font-avenir">
+                    12-Team Visualization Palette (Distinct Colors for Fantasy Leagues)
+                  </h3>
+                  <div className="grid grid-cols-6 lg:grid-cols-12 gap-2">
+                    {colors.rainbow.map((hex, index) => (
+                      <div key={index} className="text-center">
+                        <div 
+                          className="w-full h-10 rounded border border-border mb-1"
+                          style={{ backgroundColor: hex }}
+                        />
+                        <div className="text-xs text-muted-foreground font-mono font-avenir">
+                          {teamNames[index]}
+                        </div>
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {hex}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2 font-avenir">
+                    Maximum visual distinction for 12 team fantasy leagues
+                  </p>
+                </div>
+
+                {/* RdYlGn Scale */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2 font-avenir">
+                    Performance Scale (Red-Yellow-Green)
+                  </h3>
+                  <div className="grid grid-cols-11 gap-1">
+                    {colors.rdylgn.map((hex, index) => (
+                      <div key={index} className="text-center">
+                        <div 
+                          className="w-full h-8 rounded border border-border"
+                          style={{ backgroundColor: hex }}
+                        />
+                        <div className="text-xs text-muted-foreground font-mono mt-1">
+                          {index}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1 font-avenir">
+                    <span>Worst Performance</span>
+                    <span>Best Performance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {quickActions.map((action, index) => (
+              <button
+                key={index}
+                className="bg-card hover:bg-card/80 border border-border rounded-lg p-4 text-left transition-colors group"
+              >
+                <action.icon className={`h-6 w-6 mb-2 ${action.color} group-hover:scale-110 transition-transform`} />
+                <div className="text-sm font-medium text-card-foreground font-avenir">
+                  {action.label}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Recent Activity */}
+          <div className="bg-card border border-border rounded-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-card-foreground font-avenir">
+                Recent Activity
+              </h2>
+              <button className="text-sm text-primary hover:text-primary/80 font-avenir">
+                View All
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {recentItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between p-3 rounded-md hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${
+                      item.priority === 'high' ? 'bg-destructive' : 
+                      item.priority === 'medium' ? 'bg-accent' : 'bg-muted-foreground'
+                    }`} />
+                    <div>
+                      <div className="text-sm font-medium text-card-foreground font-avenir">
+                        {item.title}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {item.assignee} • {item.updated}
+                      </div>
                     </div>
-                    <button 
-                      className="text-gray-400 hover:text-white"
-                      aria-label="Star item"
-                      title="Star item"
-                    >
-                      <Star size={16} />
-                    </button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs px-2 py-1 rounded font-medium ${
+                      item.status === 'Completed' ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300' :
+                      item.status === 'High Priority' ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300' :
+                      'bg-muted text-muted-foreground'
+                    }`}>
+                      {item.status}
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors cursor-pointer">
-              <Target className="text-purple-400 mb-3" size={24} />
-              <h4 className="text-white font-semibold mb-2" style={{ fontFamily: 'var(--font-geizer)', letterSpacing: '0.1em' }}>SET LINEUP</h4>
-              <p className="text-gray-400 text-sm font-avenir">Optimize your starting lineup for this week</p>
-            </div>
-            
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors cursor-pointer">
-              <Calendar className="text-blue-400 mb-3" size={24} />
-              <h4 className="text-white font-semibold mb-2" style={{ fontFamily: 'var(--font-geizer)', letterSpacing: '0.1em' }}>VIEW SCHEDULE</h4>
-              <p className="text-gray-400 text-sm font-avenir">Check upcoming matchups and deadlines</p>
-            </div>
-            
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors cursor-pointer">
-              <TrendingUp className="text-green-400 mb-3" size={24} />
-              <h4 className="text-white font-semibold mb-2" style={{ fontFamily: 'var(--font-geizer)', letterSpacing: '0.1em' }}>RUN SIMULATION</h4>
-              <p className="text-gray-400 text-sm font-avenir">Get AI-powered playoff predictions</p>
+          {/* Performance Chart Placeholder */}
+          <div className="bg-card border border-border rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-card-foreground mb-4 font-avenir">
+              Season Performance Trends
+            </h2>
+            <div className="h-48 bg-muted/20 rounded-md flex items-center justify-center">
+              <div className="text-center">
+                <TrendingUp className="h-8 w-8 text-primary mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground font-avenir">
+                  Performance visualization will be rendered here
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Using team colors & RdYlGn scale for data-driven insights
+                </p>
+              </div>
             </div>
           </div>
         </div>

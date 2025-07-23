@@ -116,8 +116,6 @@ export const geizer = localFont({
   display: 'swap',
 });
 
-// Note: Avenir is handled as a system font via CSS custom properties in globals.css
-
 // Font alternatives (Google Fonts - no files needed!)
 
 // 1. INTER (most popular modern choice)
@@ -190,3 +188,5 @@ export const ibmPlexSans = IBM_Plex_Sans({
   variable: '--font-ibm-plex-sans',
   display: 'swap',
 });
+
+// Note: Avenir will be handled as a system font through CSS and Tailwind config

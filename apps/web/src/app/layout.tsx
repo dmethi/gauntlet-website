@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className={`
         ${workSans.variable} 
         ${geizer.variable} 
@@ -32,7 +32,7 @@ export default function RootLayout({
         ${firaSans.variable}
         ${ibmPlexSans.variable}
         ${poppins.variable}
-        font-sans bg-gray-950 text-gray-100
+        font-sans antialiased
       `}>
         {children}
       </body>

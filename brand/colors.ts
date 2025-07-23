@@ -1,148 +1,111 @@
+// Gauntlet Brand Color System
+// Medieval/gilded war aesthetic with data visualization support
+
 export const colors = {
-  // Primary brand colors
-  primary: {
-    50: '#f0f9ff',
-    100: '#e0f2fe',
-    200: '#bae6fd',
-    300: '#7dd3fc',
-    400: '#38bdf8',
-    500: '#0ea5e9', // Main brand blue
-    600: '#0284c7',
-    700: '#0369a1',
-    800: '#075985',
-    900: '#0c4a6e',
-    950: '#082f49'
+  // 🎨 Core Brand Palette (balanced to match logo)
+  core: {
+    crimsonRed: '#8B1538',        // Deep burgundy red from logo
+    battleRed: '#A31621',         // Secondary red tone
+    emberRed: '#6B1426',          // Darkest red for depth
+    regalGold: '#D4AF37',         // Co-primary gold (royal gold)
+    warmGold: '#EBB748',          // Brighter gold accent
+    charcoalSteel: '#1A1A1A',     // Softer charcoal (not pure black)
+    offWhite: '#F3E9D2',          // Neutral light text
+    burntOrange: '#B8621B',       // Muted orange bridge color
   },
 
-  // Secondary colors - Fantasy football themed
-  secondary: {
-    50: '#fefce8',
-    100: '#fef9c3',
-    200: '#fef08a',
-    300: '#fde047',
-    400: '#facc15', // Gold/Yellow for accents
-    500: '#eab308',
-    600: '#ca8a04',
-    700: '#a16207',
-    800: '#854d0e',
-    900: '#713f12',
-    950: '#422006'
+  // 🌈 12-Color Team Visualization Palette
+  // Carefully chosen for maximum distinction in both light and dark modes
+  // Perfect for 12 teams in fantasy leagues
+  rainbow: [
+    "#8B1538", // Crimson Red (Team 1)
+    "#D4AF37", // Regal Gold (Team 2) 
+    "#2D5A87", // Steel Blue (Team 3)
+    "#8B4513", // Saddle Brown (Team 4)
+    "#556B2F", // Dark Olive Green (Team 5)
+    "#4B0082", // Indigo (Team 6)
+    "#CD853F", // Peru (Team 7)
+    "#2F4F4F", // Dark Slate Gray (Team 8)
+    "#8B008B", // Dark Magenta (Team 9)
+    "#B8860B", // Dark Goldenrod (Team 10)
+    "#483D8B", // Dark Slate Blue (Team 11)
+    "#A0522D"  // Sienna (Team 12)
+  ],
+
+  // 📊 Data Visualization Palettes
+  
+  // matplotlib RdYlGn colormap (11-step) - for red/yellow/green gradients
+  rdylgn: [
+    "#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b",
+    "#ffffbf", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#006837"
+  ],
+
+  // Diverging palette - useful for showing deviation from a center point
+  diverging: {
+    negative: "#8B1538",  // crimson red
+    neutral: "#F3E9D2",   // off white
+    positive: "#2C4D3A"   // deep forest green
   },
 
-  // Success colors
-  success: {
-    50: '#f0fdf4',
-    100: '#dcfce7',
-    200: '#bbf7d0',
-    300: '#86efac',
-    400: '#4ade80',
-    500: '#22c55e', // Win green
-    600: '#16a34a',
-    700: '#15803d',
-    800: '#166534',
-    900: '#14532d',
-    950: '#052e16'
-  },
+  // Sequential palettes for data ranges
+  sequential: {
+    reds: ["#FFF5F0", "#FEE0D2", "#FCBBA1", "#FC9272", "#FB6A4A", "#EF3B2C", "#CB181D", "#A31621", "#8B1538"],
+    golds: ["#FFFBF0", "#FEF0D9", "#FDD49E", "#FDBB84", "#FC8D59", "#EF6548", "#D7301F", "#B30000", "#7F0000"],
+    neutrals: ["#FFFFFF", "#F8F8F8", "#E8E8E8", "#D3D3D3", "#BEBEBE", "#969696", "#737373", "#525252", "#252525"]
+  }
+};
 
-  // Danger/Error colors
-  danger: {
-    50: '#fef2f2',
-    100: '#fee2e2',
-    200: '#fecaca',
-    300: '#fca5a5',
-    400: '#f87171',
-    500: '#ef4444', // Loss red
-    600: '#dc2626',
-    700: '#b91c1c',
-    800: '#991b1b',
-    900: '#7f1d1d',
-    950: '#450a0a'
-  },
-
-  // Warning colors
-  warning: {
-    50: '#fffbeb',
-    100: '#fef3c7',
-    200: '#fde68a',
-    300: '#fcd34d',
-    400: '#fbbf24',
-    500: '#f59e0b', // Warning orange
-    600: '#d97706',
-    700: '#b45309',
-    800: '#92400e',
-    900: '#78350f',
-    950: '#451a03'
-  },
-
-  // Neutral grays
-  neutral: {
-    50: '#fafafa',
-    100: '#f5f5f5',
-    200: '#e5e5e5',
-    300: '#d4d4d4',
-    400: '#a3a3a3',
-    500: '#737373',
-    600: '#525252',
-    700: '#404040',
-    800: '#262626',
-    900: '#171717',
-    950: '#0a0a0a'
-  },
-
-  // Fantasy position colors
-  positions: {
-    QB: '#8b5cf6', // Purple
-    RB: '#06b6d4', // Cyan
-    WR: '#10b981', // Green
-    TE: '#f59e0b', // Orange
-    K: '#ef4444',  // Red
-    DEF: '#6b7280' // Gray
-  },
-
-  // Status colors
-  status: {
-    active: '#22c55e',
-    injured: '#ef4444',
-    questionable: '#f59e0b',
-    out: '#6b7280',
-    bye: '#a855f7'
-  },
-
-  // Chart colors for analytics
-  charts: [
-    '#0ea5e9', // Primary blue
-    '#22c55e', // Success green
-    '#f59e0b', // Warning orange
-    '#ef4444', // Danger red
-    '#8b5cf6', // Purple
-    '#06b6d4', // Cyan
-    '#84cc16', // Lime
-    '#f97316'  // Orange
-  ]
-} as const;
-
-// Semantic color mappings
+// 🎯 Semantic Color Mapping (Linear-style dark mode intensity)
 export const semanticColors = {
-  background: colors.neutral[50],
-  foreground: colors.neutral[900],
-  muted: colors.neutral[100],
-  mutedForeground: colors.neutral[500],
-  border: colors.neutral[200],
-  input: colors.neutral[50],
+  // Primary actions and focus states
+  primary: colors.core.crimsonRed,
+  primaryHover: colors.core.battleRed,
+  primaryActive: colors.core.emberRed,
   
-  // Interactive states
-  hover: colors.neutral[100],
-  pressed: colors.neutral[200],
-  focus: colors.primary[500],
+  // Secondary actions and accents  
+  secondary: colors.core.regalGold,
+  secondaryHover: colors.core.warmGold,
   
-  // Feedback
-  destructive: colors.danger[500],
-  constructive: colors.success[500],
+  // Status and feedback colors
+  success: "#10B981",      // Emerald green
+  warning: colors.core.burntOrange,
+  error: colors.core.battleRed,
+  info: "#3B82F6",         // Blue
   
-  // Branding
-  brand: colors.primary[500],
-  accent: colors.secondary[400]
-} as const;
+  // Neutral colors - Linear-inspired dark mode
+  background: "#0D0D0D",      // Near black background (Linear style)
+  surface: "#141414",         // Slightly lighter surface
+  surfaceHover: "#1A1A1A",    // Hover state for surfaces
+  border: "#2A2A2A",          // Subtle borders
+  text: colors.core.offWhite,
+  textMuted: "#8A8A8A",       // Muted text (not too light)
+  textInverse: "#0D0D0D",     // Inverse text
+};
+
+// 📈 Data Visualization Color Helper
+export const dataVizColors = {
+  // Use this for categorical data (teams, players, etc.)
+  categorical: colors.rainbow,
+  
+  // Use this for performance metrics (red=bad, yellow=okay, green=good)
+  performance: colors.rdylgn,
+  
+  // Use this for binary comparisons or showing deviation
+  comparison: [colors.core.crimsonRed, colors.core.regalGold],
+  
+  // Use this for heatmaps and intensity scales
+  intensity: colors.sequential.reds,
+  
+  // Use this for showing rankings or tiers
+  ranking: [
+    colors.core.regalGold,     // Gold tier
+    "#C0C0C0",                 // Silver tier  
+    "#CD7F32",                 // Bronze tier
+    colors.core.charcoalSteel  // Base tier
+  ]
+};
+
+export default colors;
 
 export type Color = keyof typeof colors;
 export type ColorShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950; 
