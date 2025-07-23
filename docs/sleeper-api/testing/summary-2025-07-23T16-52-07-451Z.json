@@ -1,0 +1,42 @@
+{
+  "testRun": {
+    "timestamp": "2025-07-23T16-52-07-451Z",
+    "totalEndpoints": 10,
+    "successful": 10,
+    "failed": 0
+  },
+  "endpointTypes": {
+    "publicEndpoints": 3,
+    "statsEndpoints": 3,
+    "projectionEndpoints": 3,
+    "playerDatabase": 3
+  },
+  "dataDiscoveries": {
+    "statCategories": 240,
+    "projectionCategories": 97,
+    "sampleStatCategories": [
+      "anytime_tds",
+      "blk_kick",
+      "blk_kick_ret_td",
+      "blk_kick_ret_yd",
+      "bonus_def_fum_td_50p",
+      "bonus_def_int_td_50p",
+      "bonus_fd_qb",
+      "bonus_fd_rb",
+      "bonus_fd_te",
+      "bonus_fd_wr"
+    ],
+    "sampleProjectionCategories": [
+      "adp_dd_ppr",
+      "blk_kick",
+      "bonus_rec_rb",
+      "bonus_rec_te",
+      "bonus_rec_wr",
+      "cmp_pct",
+      "def_fum_td",
+      "def_kr_td",
+      "def_kr_yd",
+      "def_pr_td"
+    ]
+  }
+}
