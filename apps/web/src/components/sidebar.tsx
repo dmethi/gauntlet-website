@@ -61,7 +61,7 @@ export function Sidebar({ isMobileOpen = false, onMobileToggle }: SidebarProps) 
           <div className="flex items-center gap-3">
             <GauntletLogo size="md" />
             <div>
-              <h2 className="font-bold text-card-foreground font-geizer text-sm">
+              <h2 className="font-bold text-card-foreground font-geizer text-sm tracking-wide">
                 THE GAUNTLET
               </h2>
               <p className="text-xs text-muted-foreground font-avenir">
@@ -100,7 +100,7 @@ function SidebarContent() {
         <div className="flex items-center gap-3">
           <GauntletLogo size="md" />
           <div>
-            <h2 className="font-bold text-card-foreground font-geizer">
+            <h2 className="font-bold text-card-foreground font-geizer tracking-wide">
               THE GAUNTLET
             </h2>
             <p className="text-xs text-muted-foreground font-avenir">

@@ -90,7 +90,7 @@ export default function DashboardPage() {
                 <div className="min-w-0">
                   <div className="flex items-center gap-3 mb-2">
                     <GauntletLogo size="lg" className="sm:hidden" />
-                    <h1 className="text-responsive-xl font-bold text-foreground font-geizer">
+                    <h1 className="text-responsive-xl font-bold text-foreground font-geizer tracking-wider">
                       Welcome to The Gauntlet
                     </h1>
                   </div>
