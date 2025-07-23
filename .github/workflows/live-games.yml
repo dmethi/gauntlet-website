@@ -1,0 +1,45 @@
+name: Live Game Updates
+
+on:
+  schedule:
+    # Thursday Night Football (8-11 PM ET)
+    - cron: '*/10 0-3 * * 5'  # Every 10 min, Fri 12-3 AM UTC (Thu 8-11 PM ET)
+    
+    # Sunday Early Games (1-4 PM ET) 
+    - cron: '*/10 17-20 * * 0' # Every 10 min, Sun 5-8 PM UTC (Sun 1-4 PM ET)
+    
+    # Sunday Late Games (4-7 PM ET)
+    - cron: '*/10 20-23 * * 0' # Every 10 min, Sun 8-11 PM UTC (Sun 4-7 PM ET)
+    
+    # Sunday Night Football (8-11 PM ET)
+    - cron: '*/10 0-3 * * 1'   # Every 10 min, Mon 12-3 AM UTC (Sun 8-11 PM ET)
+    
+    # Monday Night Football (8-11 PM ET)  
+    - cron: '*/10 0-3 * * 2'   # Every 10 min, Tue 12-3 AM UTC (Mon 8-11 PM ET)
+  
+  workflow_dispatch:
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if games are active
+        id: check-games
+        run: |
+          # Call your API to check if any games are currently active
+          response=$(curl -s "${{ secrets.API_BASE_URL }}/api/games/active")
+          active=$(echo $response | jq -r '.hasActiveGames')
+          echo "active_games=$active" >> $GITHUB_OUTPUT
+          echo "Active games: $active"
+      
+      - name: Update live scores (only if games active)
+        if: steps.check-games.outputs.active_games == 'true'
+        run: |
+          curl -X POST "${{ secrets.API_BASE_URL }}/api/update-live-scores" \
+            -H "Authorization: Bearer ${{ secrets.API_SECRET }}"
+      
+      - name: Calculate win probabilities (only if games active)  
+        if: steps.check-games.outputs.active_games == 'true'
+        run: |
+          curl -X POST "${{ secrets.API_BASE_URL }}/api/calculate-win-prob" \
+            -H "Authorization: Bearer ${{ secrets.API_SECRET }}" 
