@@ -16,13 +16,21 @@ export const metadata = {
   description: "Advanced fantasy football platform with dynamic scoring and simulation",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#8B1538',
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <body className={`
         ${workSans.variable} 
         ${geizer.variable} 
@@ -32,7 +40,7 @@ export default function RootLayout({
         ${firaSans.variable}
         ${ibmPlexSans.variable}
         ${poppins.variable}
-        font-sans antialiased
+        font-sans antialiased overflow-x-hidden
       `}>
         {children}
       </body>

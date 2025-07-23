@@ -1,23 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Check if there's a saved theme preference
+    // Check if user has a theme preference in localStorage
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDark(shouldBeDark);
-    
-    // Apply theme to document
-    if (shouldBeDark) {
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      setIsDark(true);
       document.documentElement.classList.add('dark');
     } else {
+      setIsDark(false);
       document.documentElement.classList.remove('dark');
     }
   }, []);
@@ -26,25 +24,27 @@ export function ThemeToggle() {
     const newTheme = !isDark;
     setIsDark(newTheme);
     
-    // Save preference
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-    
-    // Apply theme to document
     if (newTheme) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   };
 
   return (
     <button
       onClick={toggleTheme}
-      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+      className="touch-target p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      {isDark ? <Sun size={16} /> : <Moon size={16} />}
+      {isDark ? (
+        <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
+      ) : (
+        <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
+      )}
     </button>
   );
 } 
