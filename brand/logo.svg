@@ -1,0 +1,21 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background circle -->
+    <circle cx="100" cy="100" r="95" fill="#0ea5e9" stroke="#075985" stroke-width="10" />
+
+    <!-- Gauntlet/Glove shape -->
+    <path
+        d="M60 80 L60 140 L80 140 L80 120 L100 120 L100 140 L120 140 L120 120 L140 120 L140 100 L120 100 L120 80 L100 80 L100 100 L80 100 L80 80 Z"
+        fill="#facc15" stroke="#854d0e" stroke-width="3" />
+
+    <!-- Football -->
+    <ellipse cx="100" cy="60" rx="15" ry="10" fill="#8b4513" stroke="#654321" stroke-width="2" />
+    <line x1="90" y1="60" x2="110" y2="60" stroke="#654321" stroke-width="1" />
+    <line x1="95" y1="55" x2="95" y2="65" stroke="#654321" stroke-width="1" />
+    <line x1="105" y1="55" x2="105" y2="65" stroke="#654321" stroke-width="1" />
+
+    <!-- Text -->
+    <text x="100" y="170" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18"
+        font-weight="bold">
+        THE GAUNTLET
+    </text>
+</svg>

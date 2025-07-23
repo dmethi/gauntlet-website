@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Check if there are any staged files
+if git diff --staged --quiet; then
+  echo "No staged files found."
+  exit 0
+fi
+
+echo "📝 Formatting code with Prettier..."
+pnpm format
+
+echo "🔎 Running ESLint..."
+pnpm lint
+
+echo "🔧 Type checking with TypeScript..."
+pnpm type-check
+
+echo "✅ All pre-commit checks passed!" 
