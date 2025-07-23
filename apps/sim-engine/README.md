@@ -56,20 +56,21 @@ pnpm test
 
 ## Simulation Models
 
-### Player Performance
+### 🎯 Win Probability Engine (In Development)
+**Status:** Research complete, implementation pending  
+**Purpose:** Real-time fantasy matchup win probability for pre-game odds and live updates
+
+- **Data-driven variance constants** from 10 years of historical Sleeper API data
+- **Lightweight Monte Carlo simulation** for browser/edge execution  
+- **Game progress decay modeling** for live probability updates
+- **Position-specific volatility** based on 20,000+ player performances
+
+📚 **Full documentation:** [`src/simulations/win-probability-engine.md`](src/simulations/win-probability-engine.md)
+
+### Legacy Simulation Models (Placeholder)
 - Base projections from historical data
-- Matchup-specific adjustments
+- Matchup-specific adjustments  
 - Weather and venue factors
 - Injury probability modeling
-
-### Team Scenarios
-- Lineup optimization
-- Roster construction analysis
-- Trade impact simulation
-- Waiver wire strategy
-
-### League Dynamics
-- Playoff probability calculations
-- Championship odds
-- Draft strategy evaluation
-- Season-long projections 
+- Lineup optimization and roster analysis
+- Playoff probability calculations 

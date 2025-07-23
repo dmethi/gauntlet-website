@@ -1,0 +1,66 @@
+{
+  "derivedFrom": [
+    "2022",
+    "2023",
+    "2024"
+  ],
+  "positionVariance": {
+    "K": {
+      "coefficientOfVariation": 0.50105100061671,
+      "averageFantasyPoints": 7.191489361702128,
+      "totalSampleSize": 282,
+      "recommendedSimulationStdDev": 0.50105100061671,
+      "confidenceLevel": "High"
+    },
+    "QB": {
+      "coefficientOfVariation": 0.8033196669579383,
+      "averageFantasyPoints": 38.252723660965565,
+      "totalSampleSize": 637,
+      "recommendedSimulationStdDev": 0.8033196669579383,
+      "confidenceLevel": "High"
+    },
+    "UNKNOWN": {
+      "coefficientOfVariation": 30.183766508460167,
+      "averageFantasyPoints": 0.00877737493129913,
+      "totalSampleSize": 17881,
+      "recommendedSimulationStdDev": 30.183766508460167,
+      "confidenceLevel": "High"
+    },
+    "TE": {
+      "coefficientOfVariation": 0.988187701490307,
+      "averageFantasyPoints": 4.976737298445978,
+      "totalSampleSize": 1458,
+      "recommendedSimulationStdDev": 0.988187701490307,
+      "confidenceLevel": "High"
+    },
+    "RB": {
+      "coefficientOfVariation": 0.9784510071485846,
+      "averageFantasyPoints": 6.9515165631469955,
+      "totalSampleSize": 684,
+      "recommendedSimulationStdDev": 0.9784510071485846,
+      "confidenceLevel": "High"
+    },
+    "WR": {
+      "coefficientOfVariation": 0.9778720460298969,
+      "averageFantasyPoints": 8.85597326649958,
+      "totalSampleSize": 115,
+      "recommendedSimulationStdDev": 0.9778720460298969,
+      "confidenceLevel": "High"
+    }
+  },
+  "gameDecayFunctions": {
+    "linear": {
+      "description": "Simple linear decay: remaining = original * (1 - gameProgress)",
+      "formula": "remaining_projection = original_projection * (1 - game_progress)"
+    },
+    "conservative": {
+      "description": "Conservative decay: slower reduction early, faster late",
+      "formula": "remaining_projection = original_projection * (1 - game_progress^1.5)"
+    }
+  },
+  "confidenceIntervals": {},
+  "metadata": {
+    "createdAt": "2025-07-23T17:06:28.510Z",
+    "purpose": "Constants for lightweight fantasy win probability simulation"
+  }
+}
