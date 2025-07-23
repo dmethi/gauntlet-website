@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { MainContent } from "@/components/main-content";
+import { GauntletLogo } from "@/components/gauntlet-logo";
 import { colors, dataVizColors } from "@/lib/colors";
 import { 
   Calendar,
@@ -84,13 +85,19 @@ export default function DashboardPage() {
           {/* Welcome Section with Brand Showcase */}
           <div className="space-y-4 no-overflow">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="min-w-0">
-                <h1 className="text-responsive-xl font-bold text-foreground font-geizer">
-                  Welcome to The Gauntlet
-                </h1>
-                <p className="text-muted-foreground font-avenir text-responsive-sm">
-                  Medieval fantasy football with balanced red & gold aesthetics
-                </p>
+              <div className="flex items-center gap-4 min-w-0">
+                <GauntletLogo size="xl" className="hidden sm:block" />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-3 mb-2">
+                    <GauntletLogo size="lg" className="sm:hidden" />
+                    <h1 className="text-responsive-xl font-bold text-foreground font-geizer">
+                      Welcome to The Gauntlet
+                    </h1>
+                  </div>
+                  <p className="text-muted-foreground font-avenir text-responsive-sm">
+                    Medieval fantasy football with balanced red & gold aesthetics
+                  </p>
+                </div>
               </div>
               <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground flex-shrink-0">
                 <span className="flex items-center gap-1">

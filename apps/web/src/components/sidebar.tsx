@@ -15,6 +15,7 @@ import {
   X,
   Menu
 } from 'lucide-react';
+import { GauntletLogo } from './gauntlet-logo';
 
 const navigationItems = [
   { name: 'Dashboard', icon: Home, href: '/', active: true },
@@ -58,9 +59,7 @@ export function Sidebar({ isMobileOpen = false, onMobileToggle }: SidebarProps) 
         {/* Mobile Header */}
         <div className="flex items-center justify-between p-4 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-gauntlet-crimson to-gauntlet-battle rounded-lg flex items-center justify-center">
-              <Trophy className="h-4 w-4 text-white" />
-            </div>
+            <GauntletLogo size="md" />
             <div>
               <h2 className="font-bold text-card-foreground font-geizer text-sm">
                 THE GAUNTLET
@@ -99,9 +98,7 @@ function SidebarContent() {
       {/* Header */}
       <div className="p-6 border-b border-border flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-gauntlet-crimson to-gauntlet-battle rounded-lg flex items-center justify-center">
-            <Trophy className="h-4 w-4 text-white" />
-          </div>
+          <GauntletLogo size="md" />
           <div>
             <h2 className="font-bold text-card-foreground font-geizer">
               THE GAUNTLET
