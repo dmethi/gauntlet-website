@@ -74,23 +74,38 @@ export function generateId(): string {
 }
 
 /**
- * Get current week of NFL season
+ * Calculate normalized error between projected and actual points
  */
-export function getCurrentNFLWeek(): number {
-  const now = new Date();
-  const seasonStart = new Date(now.getFullYear(), 8, 1); // September 1st
-
-  // Adjust if we're in the next calendar year
-  if (now.getMonth() < 6) {
-    seasonStart.setFullYear(now.getFullYear() - 1);
+export function calculateNormalizedError(projected: number, actual: number): number | null {
+  if (projected > 0) {
+    return (actual - projected) / projected;
   }
+  return null;
+}
 
-  const daysSinceStart = Math.floor(
-    (now.getTime() - seasonStart.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const week = Math.floor(daysSinceStart / 7) + 1;
+/**
+ * Calculate standard deviation for an array of numbers
+ */
+export function calculateStdDev(values: number[]): number {
+  if (values.length < 2) return 0;
 
-  return Math.max(1, Math.min(18, week)); // NFL has 18 weeks
+  // Calculate mean
+  const mean = values.reduce((a, b) => a + b, 0) / values.length;
+
+  // Calculate sum of squared differences from mean
+  const squaredDiffs = values.map(x => Math.pow(x - mean, 2));
+  const sumSquaredDiffs = squaredDiffs.reduce((a, b) => a + b, 0);
+
+  // Calculate variance and standard deviation
+  const variance = sumSquaredDiffs / (values.length - 1); // Use n-1 for sample variance
+  return Math.sqrt(variance);
+}
+
+export function getCurrentWeek(): number {
+  const now = new Date();
+  const seasonStart = new Date('2024-09-05'); // Update each season
+  const weekMs = 7 * 24 * 60 * 60 * 1000;
+  return Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1;
 }
 
 /**

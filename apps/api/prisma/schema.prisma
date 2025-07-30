@@ -229,3 +229,46 @@ model WeeklyMetrics {
   @@index([leagueId, week])
   @@index([rosterId, week])
 }
+
+model PositionVariance {
+  id              String   @id @default(cuid())
+  position        String   // QB, RB, WR, etc.
+  season          String   // Season this variance is calculated for
+  sampleSize      Int     // Number of data points used
+  meanError       Float   // Average normalized projection error
+  stdDev          Float   // Standard deviation of normalized errors
+  lastUpdated     DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  @@unique([position, season])
+  @@index([position])
+}
+
+model PlayerVariance {
+  id              String   @id @default(cuid())
+  playerId        String   // Sleeper player_id
+  season          String   // Season this variance is calculated for
+  sampleSize      Int     // Number of weeks of data
+  meanError       Float   // Average normalized projection error
+  stdDev          Float   // Standard deviation of normalized errors
+  lastUpdated     DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  @@unique([playerId, season])
+  @@index([playerId])
+}
+
+model ProjectionError {
+  id              String   @id @default(cuid())
+  playerId        String   // Sleeper player_id
+  week            Int
+  season          String   // Season when this occurred
+  projectedPoints Float
+  actualPoints    Float
+  normalizedError Float   // (actual - projected) / projected
+  createdAt       DateTime @default(now())
+
+  @@unique([playerId, week, season])
+  @@index([playerId])
+  @@index([season, week])
+}

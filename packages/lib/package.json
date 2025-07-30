@@ -1,25 +1,14 @@
 {
   "name": "@gauntlet/lib",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "Shared utility functions and helpers for The Gauntlet",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "type-check": "tsc --noEmit",
-    "test": "jest",
-    "clean": "rm -rf dist"
-  },
-  "dependencies": {
-    "@gauntlet/types": "workspace:*"
+    "dev": "tsc -w"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "jest": "^29.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.0.0"
   }
 }

@@ -1,17 +1,23 @@
 # Fantasy Football Simulation Engine
 
-A Monte Carlo simulation engine for generating win probability estimates and betting line equivalents for fantasy football matchups.
+A Monte Carlo simulation engine for generating win probability estimates and
+betting line equivalents for fantasy football matchups.
 
 ## Core Components
 
 ### 1. Player Variance Model (`variance.ts`)
-- Uses historical projection vs actual data to model player outcome distributions
+
+- Uses historical projection vs actual data to model player outcome
+  distributions
 - Calculates position-level and player-specific variance patterns
-- Employs Monte Carlo sampling from actual historical distributions rather than assuming normal/triangular distributions
-- Weights player-specific data (70%) over position-level data (30%) when sufficient history exists
+- Employs Monte Carlo sampling from actual historical distributions rather than
+  assuming normal/triangular distributions
+- Weights player-specific data (70%) over position-level data (30%) when
+  sufficient history exists
 - Adjusts variance based on game progress for live simulations
 
 ### 2. Matchup Simulator (`matchup.ts`)
+
 - Simulates full lineup matchups using player variance models
 - Validates lineup constraints (no duplicates, valid positions)
 - Runs thousands of simulations to generate:
@@ -23,8 +29,10 @@ A Monte Carlo simulation engine for generating win probability estimates and bet
 ## Key Design Decisions
 
 1. **Direct Distribution Sampling**
-   - Instead of fitting to normal/triangular distributions, we sample directly from historical outcomes
-   - This preserves the true shape of outcome distributions without forcing assumptions
+   - Instead of fitting to normal/triangular distributions, we sample directly
+     from historical outcomes
+   - This preserves the true shape of outcome distributions without forcing
+     assumptions
 
 2. **Player vs Position-Level Data**
    - Use player-specific patterns when we have enough samples (8+ games)
@@ -38,6 +46,7 @@ A Monte Carlo simulation engine for generating win probability estimates and bet
 ## Future Enhancements
 
 ### High Impact
+
 1. **Game Stacks / Correlation**
    - Track team/game context for each player
    - Adjust outcomes to reflect real correlations
@@ -54,6 +63,7 @@ A Monte Carlo simulation engine for generating win probability estimates and bet
    - Consider weather impacts late season
 
 ### Additional Features
+
 4. **Position Restrictions**
    - Add validation for FLEX positions (RB/WR/TE only)
    - Support for different league formats (Superflex, etc.)
@@ -95,6 +105,7 @@ const result = await simulateMatchupProbability(team1, team2, 10000);
 ## Data Requirements
 
 The simulation engine requires:
+
 - Historical projection vs actual data
 - Player metadata (position, team, etc.)
 - Recent performance history (8+ weeks ideal)
@@ -103,5 +114,6 @@ The simulation engine requires:
 ## Testing
 
 Test scripts available:
+
 - `test-variance-model.ts`: Test individual player variance models
-- `test-matchup-sim.ts`: Test full matchup simulations 
+- `test-matchup-sim.ts`: Test full matchup simulations

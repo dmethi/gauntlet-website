@@ -1,193 +1,179 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { NextRequest } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+import { simulateMatchupProbability, type Lineup, type LineupPlayer } from '@gauntlet/sim-engine';
 
-const DATA_DIR = join(process.cwd(), 'data');
+const prisma = new PrismaClient();
 
-// Your hardcoded league IDs
-const LEAGUE_IDS = [
-  '1049321550490456064', // Replace with your actual league ID
-];
+interface Matchup {
+  matchupId: number;
+  roster_id: number;
+  points: number;
+  starters: string[];
+}
 
 export async function POST(request: NextRequest) {
   try {
-    // Auth check
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.API_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { matchups, timestamp } = await request.json();
 
-    const currentWeek = getCurrentWeek();
-    const timestamp = new Date().toISOString();
-    const results = [];
+    // Group matchups by matchupId
+    const matchupPairs = matchups.reduce((acc: Record<number, Matchup[]>, matchup: Matchup) => {
+      if (!matchup.matchupId) return acc;
+      if (!acc[matchup.matchupId]) {
+        acc[matchup.matchupId] = [];
+      }
+      acc[matchup.matchupId].push(matchup);
+      return acc;
+    }, {});
 
-    for (const leagueId of LEAGUE_IDS) {
-      try {
-        // Read the latest live scores
-        const scoresFile = join(DATA_DIR, `live-scores-${leagueId}-week-${currentWeek}.json`);
+    // Process each matchup
+    const results = await Promise.all(
+      Object.values(matchupPairs).map(async pair => {
+        if (pair.length !== 2) return null;
 
-        if (!existsSync(scoresFile)) {
-          throw new Error('No live scores data found');
-        }
+        const [team1, team2] = pair;
 
-        const scoresData = JSON.parse(readFileSync(scoresFile, 'utf8'));
+        // Get player projections and current points
+        const [team1Lineup, team2Lineup] = await Promise.all([
+          buildLineup(team1.starters),
+          buildLineup(team2.starters),
+        ]);
 
-        // Calculate win probabilities for each matchup
-        const winProbabilities = calculateWinProbabilities(scoresData.matchups, timestamp);
+        // Calculate game progress (rough estimate based on current points vs projections)
+        const team1Progress = calculateGameProgress(team1Lineup, team1.points);
+        const team2Progress = calculateGameProgress(team2Lineup, team2.points);
+        const gameProgress = Math.max(team1Progress, team2Progress);
 
-        // Store win probabilities as time-series
-        const winProbTimeSeriesFile = join(
-          DATA_DIR,
-          `winprob-timeseries-${leagueId}-week-${currentWeek}.json`
+        // Run simulation
+        const simResult = await simulateMatchupProbability(
+          team1Lineup,
+          team2Lineup,
+          1000, // Reduced for API performance
+          gameProgress
         );
 
-        let winProbTimeSeries = [];
-        if (existsSync(winProbTimeSeriesFile)) {
-          winProbTimeSeries = JSON.parse(readFileSync(winProbTimeSeriesFile, 'utf8'));
-        }
-
-        // Add new data point
-        winProbTimeSeries.push({
+        return {
+          matchupId: team1.matchupId,
+          team1: {
+            rosterId: team1.roster_id,
+            currentScore: team1.points,
+            projectedFinal: simResult.team1Scores.mean,
+            winProbability: simResult.team1WinPct,
+            confidenceInterval: {
+              low: simResult.team1Scores.p10,
+              high: simResult.team1Scores.p90,
+            },
+            impliedOdds: simResult.impliedOdds.team1MoneyLine,
+          },
+          team2: {
+            rosterId: team2.roster_id,
+            currentScore: team2.points,
+            projectedFinal: simResult.team2Scores.mean,
+            winProbability: simResult.team2WinPct,
+            confidenceInterval: {
+              low: simResult.team2Scores.p10,
+              high: simResult.team2Scores.p90,
+            },
+            impliedOdds: simResult.impliedOdds.team2MoneyLine,
+          },
+          spread: simResult.impliedOdds.spread,
+          overUnder: simResult.impliedOdds.total,
           timestamp,
-          week: currentWeek,
-          winProbabilities,
-        });
-
-        writeFileSync(winProbTimeSeriesFile, JSON.stringify(winProbTimeSeries, null, 2));
-
-        // Also keep latest snapshot
-        const latestWinProbFile = join(DATA_DIR, `win-prob-${leagueId}-week-${currentWeek}.json`);
-        const latestWinProbData = {
-          leagueId,
-          week: currentWeek,
-          winProbabilities,
-          lastUpdated: timestamp,
         };
-        writeFileSync(latestWinProbFile, JSON.stringify(latestWinProbData, null, 2));
+      })
+    );
 
-        // Calculate excitement metrics
-        const excitementMetrics = calculateExcitementMetrics(winProbTimeSeries);
-
-        results.push({
-          leagueId,
-          week: currentWeek,
-          matchupsCalculated: winProbabilities.length,
-          dataPoints: winProbTimeSeries.length,
-          excitement: excitementMetrics,
-          filename: `winprob-timeseries-${leagueId}-week-${currentWeek}.json`,
-        });
-      } catch (error) {
-        console.error(`Failed to calculate win probabilities for ${leagueId}:`, error);
-        results.push({ leagueId, error: 'Calculation failed' });
-      }
-    }
-
-    return NextResponse.json({
-      success: true,
-      results,
-      updatedAt: timestamp,
-    });
+    return Response.json({ results: results.filter(Boolean) });
   } catch (error) {
-    console.error('Win probability calculation error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Error calculating win probabilities:', error);
+    return Response.json({ error: 'Failed to calculate win probabilities' }, { status: 500 });
   }
 }
 
-function calculateWinProbabilities(matchups: any[], timestamp: string) {
-  return matchups.map(matchup => {
-    const { roster_id, points, totalLivePoints } = matchup;
+async function buildLineup(playerIds: string[]): Promise<Lineup> {
+  // Get player data and projections
+  const players = await prisma.player.findMany({
+    where: { id: { in: playerIds } },
+  });
 
-    // Simple win probability calculation
-    // This is where you'd integrate your sim-engine
-    const currentScore = totalLivePoints || 0;
-    const projectedTotal = currentScore + estimateRemainingPoints();
+  const stats = await prisma.playerStats.findMany({
+    where: {
+      playerId: { in: playerIds },
+      statsType: 'projections',
+      season: new Date().getFullYear().toString(),
+      week: getCurrentWeek(),
+    },
+  });
 
-    // Placeholder logic - replace with your actual simulation
-    const winProb = Math.min(Math.max(projectedTotal / 120, 0.1), 0.9);
+  // Map players to lineup positions
+  const lineup: Partial<Lineup> = {};
+  let flexCandidates: LineupPlayer[] = [];
 
-    return {
-      roster_id,
-      currentScore,
-      projectedTotal: Math.round(projectedTotal * 100) / 100,
-      winProbability: Math.round(winProb * 100) / 100,
-      timestamp,
+  for (const player of players) {
+    const projection = stats.find(s => s.playerId === player.id);
+    const playerData: LineupPlayer = {
+      id: player.id,
+      name: player.fullName,
+      position: player.position,
+      projection: (projection?.stats as any)?.pts_ppr || 0,
     };
-  });
-}
 
-function calculateExcitementMetrics(winProbTimeSeries: any[]) {
-  const matchupExcitement: Record<string, any> = {};
-
-  // Calculate win probability volatility for each matchup
-  winProbTimeSeries.forEach(dataPoint => {
-    dataPoint.winProbabilities.forEach((wp: any) => {
-      if (!matchupExcitement[wp.roster_id]) {
-        matchupExcitement[wp.roster_id] = {
-          roster_id: wp.roster_id,
-          probabilities: [],
-          maxSwing: 0,
-          volatility: 0,
-        };
-      }
-      matchupExcitement[wp.roster_id].probabilities.push(wp.winProbability);
-    });
-  });
-
-  // Calculate excitement scores
-  Object.values(matchupExcitement).forEach((matchup: any) => {
-    const probs = matchup.probabilities;
-    if (probs.length > 1) {
-      // Max swing: biggest single change in win probability
-      let maxSwing = 0;
-      for (let i = 1; i < probs.length; i++) {
-        const swing = Math.abs(probs[i] - probs[i - 1]);
-        maxSwing = Math.max(maxSwing, swing);
-      }
-      matchup.maxSwing = Math.round(maxSwing * 100) / 100;
-
-      // Volatility: standard deviation of win probabilities
-      const mean = probs.reduce((sum: number, p: number) => sum + p, 0) / probs.length;
-      const variance =
-        probs.reduce((sum: number, p: number) => sum + Math.pow(p - mean, 2), 0) / probs.length;
-      matchup.volatility = Math.round(Math.sqrt(variance) * 100) / 100;
-
-      // Excitement score: combination of max swing and volatility
-      matchup.excitementScore =
-        Math.round((matchup.maxSwing * 0.6 + matchup.volatility * 0.4) * 100) / 100;
+    switch (player.position) {
+      case 'QB':
+        if (!lineup.qb) lineup.qb = playerData;
+        break;
+      case 'RB':
+        if (!lineup.rb1) lineup.rb1 = playerData;
+        else if (!lineup.rb2) lineup.rb2 = playerData;
+        else flexCandidates.push(playerData);
+        break;
+      case 'WR':
+        if (!lineup.wr1) lineup.wr1 = playerData;
+        else if (!lineup.wr2) lineup.wr2 = playerData;
+        else if (!lineup.wr3) lineup.wr3 = playerData;
+        else flexCandidates.push(playerData);
+        break;
+      case 'TE':
+        if (!lineup.te) lineup.te = playerData;
+        else flexCandidates.push(playerData);
+        break;
     }
+  }
+
+  // Fill in any missing positions with placeholder players
+  const placeholder = (pos: string): LineupPlayer => ({
+    id: `placeholder_${pos}`,
+    name: `Placeholder ${pos}`,
+    position: pos,
+    projection: 0,
   });
 
-  return Object.values(matchupExcitement).sort(
-    (a: any, b: any) => b.excitementScore - a.excitementScore
-  );
+  // Use highest projected remaining player for FLEX
+  if (flexCandidates.length > 0) {
+    flexCandidates.sort((a, b) => b.projection - a.projection);
+    lineup.flex = flexCandidates[0];
+  }
+
+  return {
+    qb: lineup.qb || placeholder('QB'),
+    rb1: lineup.rb1 || placeholder('RB'),
+    rb2: lineup.rb2 || placeholder('RB'),
+    wr1: lineup.wr1 || placeholder('WR'),
+    wr2: lineup.wr2 || placeholder('WR'),
+    wr3: lineup.wr3 || placeholder('WR'),
+    te: lineup.te || placeholder('TE'),
+    flex: lineup.flex || placeholder('RB'),
+  };
 }
 
-function estimateRemainingPoints(): number {
-  // Rough estimate of remaining points based on time of day
-  const now = new Date();
-  const hour = now.getUTCHours();
-
-  // This is very crude - you'd want better logic based on:
-  // - Which players are still playing
-  // - Time remaining in games
-  // - Historical performance
-
-  if (hour >= 17 && hour <= 19) {
-    // Early in Sunday games
-    return 40;
-  } else if (hour >= 20 && hour <= 22) {
-    // Later in Sunday games
-    return 20;
-  } else {
-    // Night games or late in games
-    return 10;
-  }
+function calculateGameProgress(lineup: Lineup, currentPoints: number): number {
+  const totalProjected = Object.values(lineup).reduce((sum, player) => sum + player.projection, 0);
+  if (totalProjected === 0) return 0;
+  return Math.min(Math.max(currentPoints / totalProjected, 0), 1);
 }
 
 function getCurrentWeek(): number {
-  const seasonStart = new Date('2024-09-05');
   const now = new Date();
-  const diffTime = now.getTime() - seasonStart.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return Math.min(Math.max(Math.ceil(diffDays / 7), 1), 18);
+  const seasonStart = new Date('2024-09-05'); // Update each season
+  const weekMs = 7 * 24 * 60 * 60 * 1000;
+  return Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1;
 }
