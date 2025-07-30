@@ -169,11 +169,19 @@ Business logic models for:
 
 This section tracks known technical debt and areas for improvement.
 
-- [ ] **Consolidate API Logic**: The backend logic is currently split between `apps/api` (data ingestion) and `apps/web` (API routes). This should be consolidated into a single, dedicated backend service.
-- [ ] **Add a UI Package**: A shared `ui` package should be created to house common React components, reducing code duplication between applications.
-- [ ] **Improve Test Coverage**: The current test coverage is low. More comprehensive tests (unit, integration, and end-to-end) should be added to ensure code quality and prevent regressions.
-- [ ] **Refactor Data Ingestion**: The data ingestion scripts in `apps/api` should be refactored for better error handling, logging, and configurability.
-- [ ] **Standardize API Responses**: The API responses should follow a consistent format to simplify client-side data handling.
+- [ ] **Consolidate API Logic**: The backend logic is currently split between
+      `apps/api` (data ingestion) and `apps/web` (API routes). This should be
+      consolidated into a single, dedicated backend service.
+- [ ] **Add a UI Package**: A shared `ui` package should be created to house
+      common React components, reducing code duplication between applications.
+- [ ] **Improve Test Coverage**: The current test coverage is low. More
+      comprehensive tests (unit, integration, and end-to-end) should be added to
+      ensure code quality and prevent regressions.
+- [ ] **Refactor Data Ingestion**: The data ingestion scripts in `apps/api`
+      should be refactored for better error handling, logging, and
+      configurability.
+- [ ] **Standardize API Responses**: The API responses should follow a
+      consistent format to simplify client-side data handling.
 
 ## Contributing
 

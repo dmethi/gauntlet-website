@@ -19,7 +19,9 @@ router.get('/overview', async (req: Request, res: Response) => {
 
 router.get('/teams', async (req: Request, res: Response) => {
   try {
+    console.log('[API Route] /teams endpoint hit');
     const teams = await getTeams();
+    console.log(`[API Route] Returning ${teams.length} teams`);
     res.json(teams);
   } catch (error) {
     console.error('Error fetching teams:', error);

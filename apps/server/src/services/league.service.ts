@@ -39,17 +39,21 @@ export async function getLeagueOverview() {
 
 export async function getTeams() {
   // First get the league ID
+  console.log('[getTeams] Searching for league with season: 2023');
   const league = await prisma.league.findFirst({
     where: {
       season: '2023', // Updated to 2024 season
     },
   });
+  console.log('[getTeams] League found:', league);
 
   if (!league) {
+    console.log('[getTeams] No league found, returning empty array');
     return [];
   }
 
   // Then get all rosters with their owners
+  console.log(`[getTeams] Fetching rosters for leagueId: ${league.id}`);
   const rosters = await prisma.roster.findMany({
     where: {
       leagueId: league.id,
@@ -61,6 +65,7 @@ export async function getTeams() {
       id: 'asc',
     },
   });
+  console.log(`[getTeams] Found ${rosters.length} rosters`);
 
   const teams = rosters.map(
     (roster: { id: string; owner: { metadata: any; displayName: string; username: string } }) => ({
@@ -74,5 +79,6 @@ export async function getTeams() {
     })
   );
 
+  console.log('[getTeams] Transformed teams:', teams);
   return teams;
 }

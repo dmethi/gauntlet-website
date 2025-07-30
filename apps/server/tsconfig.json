@@ -9,7 +9,5 @@
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
-  "references": [
-    { "path": "../sim-engine" }
-  ]
+  "references": [{ "path": "../sim-engine" }]
 }

@@ -11,10 +11,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   useEffect(() => {
     async function fetchTeams() {
       try {
+        console.log('[ClientLayout] Fetching teams from /api/league/teams');
         const res = await fetch('/api/league/teams');
+        console.log(`[ClientLayout] Received response with status: ${res.status}`);
         if (res.ok) {
           const data = await res.json();
+          console.log('[ClientLayout] Parsed teams data:', data);
           setTeams(data);
+        } else {
+          console.error('[ClientLayout] Failed to fetch teams:', res.statusText);
         }
       } catch (error) {
         console.error('Error fetching teams:', error);
