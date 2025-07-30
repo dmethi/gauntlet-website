@@ -7,7 +7,7 @@ async function getLeagueData() {
   // First get the league ID
   const league = await prisma.league.findFirst({
     where: {
-      season: '2023', // We want the 2023 season league
+      season: '2023', // Updated to 2024 season
     },
   });
 
@@ -44,7 +44,14 @@ export default async function LeagueOverview() {
   const league = await getLeagueData();
 
   if (!league) {
-    return <div>League not found</div>;
+    return (
+      <div className='flex items-center justify-center h-[80vh]'>
+        <div className='text-center'>
+          <h2 className='text-2xl font-bold text-card-foreground mb-2'>League Not Found</h2>
+          <p className='text-muted-foreground'>No league data available for the 2024 season.</p>
+        </div>
+      </div>
+    );
   }
 
   // Calculate team stats

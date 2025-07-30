@@ -20,9 +20,10 @@ import {
 import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ThemeToggle } from './theme-toggle';
 
 const navigationItems = [
-  { name: 'Dashboard', icon: Home, href: '/', active: true },
+  { name: 'Dashboard', icon: Home, href: '/' },
   { name: 'League Overview', icon: Trophy, href: '/league/overview' },
   { name: 'My Teams', icon: Users, href: '/teams' },
   { name: 'Players', icon: Target, href: '/players' },
@@ -141,26 +142,40 @@ function SidebarNavigation({
   const pathname = usePathname();
   const [isTeamsOpen, setIsTeamsOpen] = useState(true);
 
+  console.log('[SidebarNavigation] Rendering with pathname:', pathname);
+
   return (
     <div className='space-y-1'>
       {navigationItems.map(item => {
         const Icon = item.icon;
+        const isActive = pathname === item.href;
+
         return (
-          <a
+          <Link
             key={item.name}
             href={item.href}
             onClick={onItemClick}
             className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors font-avenir min-h-[44px] text-left ${
-              item.active
+              isActive
                 ? 'bg-gauntlet-crimson text-white shadow-sm'
                 : 'text-muted-foreground hover:text-card-foreground hover:bg-muted'
             }`}
           >
             <Icon className='h-4 w-4 flex-shrink-0' />
             <span className='flex-1 text-left'>{item.name}</span>
-          </a>
+          </Link>
         );
       })}
+
+      {/* Theme Toggle */}
+      {(() => {
+        console.log('[SidebarNavigation] Rendering theme toggle');
+        return (
+          <div className='pt-2'>
+            <ThemeToggle />
+          </div>
+        );
+      })()}
 
       {/* Teams Section */}
       {teams && teams.length > 0 && (
@@ -180,13 +195,13 @@ function SidebarNavigation({
           {isTeamsOpen && (
             <div className='ml-4 space-y-1 pt-2'>
               {teams.map(team => {
-                console.log('Rendering team:', team);
+                const isActive = pathname === `/team/${team.id}/stats`;
                 return (
                   <Link
                     key={team.id}
                     href={`/team/${team.id}/stats`}
                     className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors font-avenir min-h-[44px] text-left ${
-                      pathname === `/team/${team.id}/stats`
+                      isActive
                         ? 'bg-gauntlet-crimson text-white shadow-sm'
                         : 'text-muted-foreground hover:text-card-foreground hover:bg-muted'
                     }`}
