@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/cli.ts",
+    "dev": "echo '🎯 Simulation Engine ready - use: pnpm sim:test, pnpm sim:season, or pnpm sim:matchup'",
     "start": "node dist/cli.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",

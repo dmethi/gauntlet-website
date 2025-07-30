@@ -1,0 +1,62 @@
+{
+  "description": "Seed data configuration for Gauntlet development",
+  "league_info": {
+    "sample_league_id": "1124853133466419200",
+    "sample_user_id": "465307317622009856",
+    "sample_username": "dmethi",
+    "season": "2024",
+    "league_name": "Legends 23-24 😈🏈"
+  },
+  "data_files": {
+    "user_data": {
+      "file": "user-dmethi.json",
+      "description": "Sample user profile from Sleeper API"
+    },
+    "fantasy_league": {
+      "file": "fantasy-league.json", 
+      "description": "Complete league configuration with settings and scoring"
+    },
+    "league_users": {
+      "file": "fantasy-league-users.json",
+      "description": "All users/members in the league"
+    },
+    "league_rosters": {
+      "file": "fantasy-league-rosters.json",
+      "description": "Team rosters (may be sparse for this dynasty league)"
+    },
+    "nfl_state": {
+      "file": "nfl-state.json",
+      "description": "Current NFL season state and week information"
+    },
+    "player_stats": {
+      "file": "stats-week1.json",
+      "description": "Week 1 player statistics for 2024 season (749KB)"
+    },
+    "player_projections": {
+      "file": "projections-week1.json", 
+      "description": "Week 1 player projections for 2024 season (726KB)"
+    },
+    "player_sample": {
+      "file": "players-sample.json",
+      "description": "Sample of 50 players with metadata (names, positions, teams)"
+    }
+  },
+  "usage_notes": {
+    "matchups": "Matchup data is empty for this league - use mock data generation",
+    "rosters": "Roster data shows mostly zeros - typical for inactive dynasty league",
+    "stats_projections": "Rich data available for testing scoring calculations",
+    "player_lookup": "Use players-sample.json for player ID to name mapping in tests"
+  },
+  "api_endpoints_tested": [
+    "GET /v1/user/{username}",
+    "GET /v1/user/{user_id}/leagues/nfl/{season}",
+    "GET /v1/league/{league_id}",
+    "GET /v1/league/{league_id}/users", 
+    "GET /v1/league/{league_id}/rosters",
+    "GET /v1/league/{league_id}/matchups/{week}",
+    "GET /v1/state/nfl",
+    "GET /v1/stats/nfl/{season_type}/{season}/{week}",
+    "GET /v1/projections/nfl/{season_type}/{season}/{week}",
+    "GET /v1/players/nfl"
+  ]
+} 

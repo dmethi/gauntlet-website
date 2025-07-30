@@ -26,6 +26,15 @@
       "@gauntlet/ui/*": ["./packages/ui/src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-  "exclude": ["node_modules", "dist", "build", ".next"]
+  "include": [],
+  "exclude": ["node_modules", "dist", "build", ".next"],
+  "references": [
+    { "path": "./apps/web" },
+    { "path": "./apps/api" },
+    { "path": "./apps/scraper" },
+    { "path": "./apps/sim-engine" },
+    { "path": "./packages/types" },
+    { "path": "./packages/lib" },
+    { "path": "./packages/models" }
+  ]
 } 

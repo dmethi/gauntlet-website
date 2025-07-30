@@ -1,60 +1,58 @@
-import React from "react";
-import "./globals.css";
-import { 
-  inter, 
-  montserrat, 
-  geizer, 
-  roboto, 
-  workSans, 
-  firaSans, 
-  ibmPlexSans,
-  poppins
-} from "@/lib/fonts";
+import { PrismaClient } from '../generated/prisma';
+import { Sidebar } from '@/components/sidebar';
+import './globals.css';
 
-export const metadata = {
-  title: "The Gauntlet - High-Stakes Fantasy Football",
-  description: "Advanced fantasy football platform with dynamic scoring and simulation",
-  icons: {
-    icon: [
-      { url: '/gauntlet_logo.svg', type: 'image/svg+xml' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
-    ],
-    shortcut: '/favicon.ico',
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
-};
+const prisma = new PrismaClient();
 
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  themeColor: '#8B1538',
-};
+async function getTeams() {
+  // First get the league ID
+  const league = await prisma.league.findFirst({
+    where: {
+      season: '2023', // We want the 2023 season league
+    },
+  });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+  if (!league) {
+    return [];
+  }
+
+  // Then get all rosters with their owners
+  const rosters = await prisma.roster.findMany({
+    where: {
+      leagueId: league.id,
+    },
+    include: {
+      owner: true,
+    },
+    orderBy: {
+      id: 'asc',
+    },
+  });
+
+  const teams = rosters.map(roster => ({
+    id: roster.id.toString(),
+    name:
+      (roster.owner?.metadata as any)?.team_name ||
+      roster.owner?.displayName ||
+      roster.owner?.username ||
+      `Team ${roster.id}`,
+    owner: roster.owner?.displayName || roster.owner?.username || 'Unknown',
+  }));
+
+  return teams;
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const teams = await getTeams();
+  console.log('Teams passed to Sidebar:', JSON.stringify(teams, null, 2));
+
   return (
-    <html lang="en" className="overflow-x-hidden">
-      <body className={`
-        ${workSans.variable} 
-        ${geizer.variable} 
-        ${inter.variable} 
-        ${montserrat.variable} 
-        ${roboto.variable}
-        ${firaSans.variable}
-        ${ibmPlexSans.variable}
-        ${poppins.variable}
-        font-sans antialiased overflow-x-hidden
-      `}>
-        {children}
+    <html lang='en'>
+      <body>
+        <div className='flex h-screen'>
+          <Sidebar teams={teams} />
+          <main className='flex-1 overflow-auto bg-gray-100'>{children}</main>
+        </div>
       </body>
     </html>
   );
