@@ -67,17 +67,15 @@ export async function getTeams() {
   });
   console.log(`[getTeams] Found ${rosters.length} rosters`);
 
-  const teams = rosters.map(
-    (roster: { id: string; owner: { metadata: any; displayName: string; username: string } }) => ({
-      id: roster.id.toString(),
-      name:
-        (roster.owner?.metadata as any)?.team_name ||
-        roster.owner?.displayName ||
-        roster.owner?.username ||
-        `Team ${roster.id}`,
-      owner: roster.owner?.displayName || roster.owner?.username || 'Unknown',
-    })
-  );
+  const teams = rosters.map(roster => ({
+    id: roster.id.toString(),
+    name:
+      (roster.owner?.metadata as any)?.team_name ||
+      roster.owner?.displayName ||
+      roster.owner?.username ||
+      `Team ${roster.id}`,
+    owner: roster.owner?.displayName || roster.owner?.username || 'Unknown',
+  }));
 
   console.log('[getTeams] Transformed teams:', teams);
   return teams;
