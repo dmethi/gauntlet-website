@@ -1,6 +1,8 @@
-import { PrismaClient, Prisma } from '../generated/prisma';
+import { PrismaClient, Prisma } from '../generated/prisma/index.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import _ from 'lodash';
+const { chunk } = _;
 
 dotenv.config();
 
@@ -8,6 +10,10 @@ const prisma = new PrismaClient();
 const SLEEPER_API_BASE = 'https://api.sleeper.app/v1';
 const TEST_LEAGUE_ID = '997670420490801152';
 const CURRENT_SEASON = '2024'; // Update this each season
+
+function nullToUndefined<T>(value: T | null): T | undefined {
+  return value === null ? undefined : value;
+}
 
 // Types for Sleeper API responses
 interface SleeperUser {
@@ -84,6 +90,7 @@ interface SleeperPlayer {
   age: number | null;
   years_exp: number | null;
   hashtag: string | null;
+  fantasy_positions: string[];
 }
 
 interface SleeperDraft {
@@ -192,18 +199,18 @@ async function ingestUsers(leagueId: string) {
       prisma.user.upsert({
         where: { id: user.user_id },
         update: {
-          username: user.username,
+          username: user.username ?? user.display_name ?? `user_${user.user_id}`,
           displayName: user.display_name,
           avatar: user.avatar,
-          metadata: user.metadata,
+          metadata: nullToUndefined(user.metadata),
           isBot: user.is_bot || false,
         },
         create: {
           id: user.user_id,
-          username: user.username,
+          username: user.username ?? user.display_name ?? `user_${user.user_id}`,
           displayName: user.display_name,
           avatar: user.avatar,
-          metadata: user.metadata,
+          metadata: nullToUndefined(user.metadata),
           isBot: user.is_bot || false,
         },
       })
@@ -226,7 +233,7 @@ async function ingestRosters(leagueId: string) {
           starters: roster.starters,
           reserve: roster.reserve || [],
           settings: roster.settings,
-          metadata: roster.metadata,
+          metadata: nullToUndefined(roster.metadata),
         },
         create: {
           id: roster.roster_id,
@@ -236,7 +243,7 @@ async function ingestRosters(leagueId: string) {
           starters: roster.starters,
           reserve: roster.reserve || [],
           settings: roster.settings,
-          metadata: roster.metadata,
+          metadata: nullToUndefined(roster.metadata),
         },
       })
     )
@@ -298,7 +305,7 @@ async function ingestPlayers() {
           lastName: player.last_name,
           fullName: player.full_name,
           team: player.team,
-          position: player.position,
+          position: player.position ?? player.fantasy_positions?.[0] ?? 'UNKNOWN',
           depthChartOrder: player.depth_chart_order,
           status: player.status,
           injuryStatus: player.injury_status,
@@ -315,7 +322,7 @@ async function ingestPlayers() {
           lastName: player.last_name,
           fullName: player.full_name,
           team: player.team,
-          position: player.position,
+          position: player.position ?? player.fantasy_positions?.[0] ?? 'UNKNOWN',
           depthChartOrder: player.depth_chart_order,
           status: player.status,
           injuryStatus: player.injury_status,
@@ -342,8 +349,10 @@ async function ingestDraft(draftId: string) {
       type: draft.type,
       season: draft.season,
       settings: draft.settings,
-      metadata: draft.metadata,
-      slotToRosterId: draft.slot_to_roster_id,
+      metadata: nullToUndefined(draft.metadata),
+      slotToRosterId: Array.isArray(draft.slot_to_roster_id)
+        ? draft.slot_to_roster_id.filter((v): v is number => typeof v === 'number')
+        : [],
     },
     create: {
       id: draft.draft_id,
@@ -352,8 +361,10 @@ async function ingestDraft(draftId: string) {
       type: draft.type,
       season: draft.season,
       settings: draft.settings,
-      metadata: draft.metadata,
-      slotToRosterId: draft.slot_to_roster_id,
+      metadata: nullToUndefined(draft.metadata),
+      slotToRosterId: Array.isArray(draft.slot_to_roster_id)
+        ? draft.slot_to_roster_id.filter((v): v is number => typeof v === 'number')
+        : [],
     },
   });
 }
@@ -361,36 +372,41 @@ async function ingestDraft(draftId: string) {
 async function ingestDraftPicks(draftId: string) {
   console.log(`Fetching draft picks for ${draftId}...`);
   const picks = await fetchFromSleeper<SleeperDraftPick[]>(`/draft/${draftId}/picks`);
+  const batches = chunk(picks, 25); // or 10-15 if you're still hitting limits
 
   return await Promise.all(
-    picks.map(pick =>
-      prisma.draftPick.upsert({
-        where: {
-          draftId_pickNo: {
-            draftId: pick.draft_id,
-            pickNo: pick.pick_no,
-          },
-        },
-        update: {
-          round: pick.round,
-          rosterId: pick.roster_id,
-          playerId: pick.player_id,
-          pickedBy: pick.picked_by,
-          metadata: pick.metadata,
-          isKeeper: pick.is_keeper,
-        },
-        create: {
-          id: `${pick.draft_id}-${pick.pick_no}`,
-          draftId: pick.draft_id,
-          pickNo: pick.pick_no,
-          round: pick.round,
-          rosterId: pick.roster_id,
-          playerId: pick.player_id,
-          pickedBy: pick.picked_by,
-          metadata: pick.metadata,
-          isKeeper: pick.is_keeper,
-        },
-      })
+    batches.map(batch =>
+      Promise.all(
+        batch.map(pick =>
+          prisma.draftPick.upsert({
+            where: {
+              draftId_pickNo: {
+                draftId: pick.draft_id,
+                pickNo: pick.pick_no,
+              },
+            },
+            update: {
+              round: pick.round,
+              rosterId: pick.roster_id,
+              playerId: pick.player_id,
+              pickedBy: pick.picked_by,
+              metadata: nullToUndefined(pick.metadata),
+              isKeeper: pick.is_keeper || false,
+            },
+            create: {
+              id: `${pick.draft_id}-${pick.pick_no}`,
+              draft: { connect: { id: pick.draft_id } },
+              pickNo: pick.pick_no,
+              round: pick.round,
+              rosterId: pick.roster_id,
+              playerId: pick.player_id,
+              pickedBy: pick.picked_by,
+              metadata: nullToUndefined(pick.metadata),
+              isKeeper: pick.is_keeper || false,
+            },
+          })
+        )
+      )
     )
   );
 }
@@ -411,13 +427,13 @@ async function ingestTransactions(leagueId: string, week: number) {
           status: tx.status,
           creatorId: tx.creator,
           rosterIds: tx.roster_ids,
-          adds: tx.adds,
-          drops: tx.drops,
-          draftPicks: tx.draft_picks,
-          waiver: tx.waiver_budget,
-          settings: tx.settings,
+          adds: nullToUndefined(tx.adds),
+          drops: nullToUndefined(tx.drops),
+          draftPicks: nullToUndefined(tx.draft_picks),
+          waiver: nullToUndefined(tx.waiver_budget),
+          settings: nullToUndefined(tx.settings),
           leg: tx.leg,
-          consenterIds: tx.consenter_ids,
+          consenterIds: tx.consenter_ids.map(String),
         },
         create: {
           id: tx.transaction_id,
@@ -426,13 +442,13 @@ async function ingestTransactions(leagueId: string, week: number) {
           status: tx.status,
           creatorId: tx.creator,
           rosterIds: tx.roster_ids,
-          adds: tx.adds,
-          drops: tx.drops,
-          draftPicks: tx.draft_picks,
-          waiver: tx.waiver_budget,
-          settings: tx.settings,
+          adds: nullToUndefined(tx.adds),
+          drops: nullToUndefined(tx.drops),
+          draftPicks: nullToUndefined(tx.draft_picks),
+          waiver: nullToUndefined(tx.waiver_budget),
+          settings: nullToUndefined(tx.settings),
           leg: tx.leg,
-          consenterIds: tx.consenter_ids,
+          consenterIds: tx.consenter_ids.map(String),
         },
       })
     )
@@ -457,8 +473,8 @@ async function main() {
     console.log('Rosters ingested.');
 
     // Ingest players (this is a large dataset)
-    await ingestPlayers();
-    console.log('Players ingested.');
+    // await ingestPlayers();
+    // console.log('Players ingested.');
 
     // Ingest matchups for weeks 1-18
     for (let week = 1; week <= 18; week++) {

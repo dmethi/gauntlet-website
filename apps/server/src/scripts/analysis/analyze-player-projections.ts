@@ -1,5 +1,6 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
+import { getVarianceModel } from '@gauntlet/sim-engine';
 
 const prisma = new PrismaClient();
 const SLEEPER_API = 'https://api.sleeper.app/v1';

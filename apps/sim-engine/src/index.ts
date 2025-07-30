@@ -1,23 +1,7 @@
-export { simulatePlayerScore, simulatePlayerRange } from './models/variance';
-export { simulateMatchupProbability } from './models/matchup';
-
-export interface LineupPlayer {
-  id: string;
-  name: string;
-  position: string;
-  projection: number;
-}
-
-export interface Lineup {
-  qb: LineupPlayer;
-  rb1: LineupPlayer;
-  rb2: LineupPlayer;
-  wr1: LineupPlayer;
-  wr2: LineupPlayer;
-  wr3: LineupPlayer;
-  te: LineupPlayer;
-  flex: LineupPlayer; // RB/WR/TE
-}
+export * from './models/matchup';
+export * from './models/variance';
+export * from './simulations/matchup-sim';
+export * from './simulations/season-sim';
 
 export interface MatchupResult {
   team1Score: number;

@@ -4,8 +4,12 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": false,
-    "noEmit": false
+    "noEmit": false,
+    "strict": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
+  "references": [
+    { "path": "../sim-engine" }
+  ]
 }

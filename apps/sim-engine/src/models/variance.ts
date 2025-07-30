@@ -1,4 +1,4 @@
-import { PrismaClient } from '@gauntlet/api/src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -45,7 +45,7 @@ async function getPositionDistribution(position: string): Promise<{
               where: { position },
               select: { id: true },
             })
-          ).map(p => p.id),
+          ).map((p: any) => p.id),
         },
       },
     });
@@ -63,9 +63,9 @@ async function getPositionDistribution(position: string): Promise<{
 
     // Calculate relative outcomes (actual/projected)
     const outcomes = errors
-      .filter(e => e.projectedPoints > 0) // Avoid division by zero
-      .map(e => e.actualPoints / e.projectedPoints)
-      .sort((a, b) => a - b);
+      .filter((e: any) => e.projectedPoints > 0) // Avoid division by zero
+      .map((e: any) => e.actualPoints / e.projectedPoints)
+      .sort((a: number, b: number) => a - b);
 
     // Cache the result
     const result = {
@@ -114,9 +114,9 @@ async function getPlayerOutcomes(playerId: string): Promise<{
 
     // Calculate relative outcomes
     const outcomes = errors
-      .filter(e => e.projectedPoints > 0)
-      .map(e => e.actualPoints / e.projectedPoints)
-      .sort((a, b) => a - b);
+      .filter((e: any) => e.projectedPoints > 0)
+      .map((e: any) => e.actualPoints / e.projectedPoints)
+      .sort((a: number, b: number) => a - b);
 
     // Cache the result
     const result = {
@@ -216,6 +216,46 @@ export async function simulatePlayerRange(
   ]);
 
   for (let i = 0; i < iterations; i++) {
+    scores.push(await simulatePlayerScore(playerId, position, projection));
+  }
+
+  scores.sort((a, b) => a - b);
+
+  return {
+    p10: scores[Math.floor(scores.length * 0.1)],
+    p25: scores[Math.floor(scores.length * 0.25)],
+    median: scores[Math.floor(scores.length * 0.5)],
+    p75: scores[Math.floor(scores.length * 0.75)],
+    p90: scores[Math.floor(scores.length * 0.9)],
+    mean: scores.reduce((a, b) => a + b, 0) / scores.length,
+    positionDist: { sampleSize: positionDist.sampleSize },
+    playerOutcomes: { sampleSize: playerOutcomes.sampleSize },
+  };
+}
+
+export async function getVarianceModel(
+  playerId: string,
+  position: string,
+  projection: number
+): Promise<{
+  p10: number;
+  p25: number;
+  median: number;
+  p75: number;
+  p90: number;
+  mean: number;
+  positionDist: { sampleSize: number };
+  playerOutcomes: { sampleSize: number };
+}> {
+  const scores: number[] = [];
+
+  // Get distributions for reporting
+  const [positionDist, playerOutcomes] = await Promise.all([
+    getPositionDistribution(position),
+    getPlayerOutcomes(playerId),
+  ]);
+
+  for (let i = 0; i < 1000; i++) {
     scores.push(await simulatePlayerScore(playerId, position, projection));
   }
 

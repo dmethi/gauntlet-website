@@ -1,4 +1,4 @@
-import { PrismaClient, type Matchup, type WeeklyMetrics } from '../../../../generated/prisma';
+import { PrismaClient, type Matchup, type WeeklyMetrics } from '@prisma/client';
 import { TeamPerformanceChart, TeamExpectedPerformanceChart } from '@/components/team-charts';
 
 const prisma = new PrismaClient();
@@ -126,8 +126,10 @@ export default async function TeamStatsPage({ params }: { params: { id: string }
               </tr>
             </thead>
             <tbody className='divide-y divide-gray-200 bg-white'>
-              {team.matchups.map(matchup => {
-                const weekData = weeklyData.find(w => w.week === matchup.week);
+              {team.matchups.map((matchup: Matchup) => {
+                const weekData = weeklyData.find(
+                  (w: { week: number; opponentPoints: number }) => w.week === matchup.week
+                );
                 return (
                   <tr key={matchup.week}>
                     <td className='whitespace-nowrap px-6 py-4'>Week {matchup.week}</td>

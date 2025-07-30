@@ -1,8 +1,9 @@
-import { NextRequest } from 'next/server';
+import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { simulateMatchupProbability, type Lineup, type LineupPlayer } from '@gauntlet/sim-engine';
 
 const prisma = new PrismaClient();
+const router = Router();
 
 interface Matchup {
   matchupId: number;
@@ -11,9 +12,9 @@ interface Matchup {
   starters: string[];
 }
 
-export async function POST(request: NextRequest) {
+router.post('/', async (req: Request, res: Response) => {
   try {
-    const { matchups, timestamp } = await request.json();
+    const { matchups, timestamp } = req.body;
 
     // Group matchups by matchupId
     const matchupPairs = matchups.reduce((acc: Record<number, Matchup[]>, matchup: Matchup) => {
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     // Process each matchup
     const results = await Promise.all(
-      Object.values(matchupPairs).map(async pair => {
+      Object.values(matchupPairs).map(async (pair: any) => {
         if (pair.length !== 2) return null;
 
         const [team1, team2] = pair;
@@ -82,16 +83,16 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    return Response.json({ results: results.filter(Boolean) });
+    return res.json({ results: results.filter(Boolean) });
   } catch (error) {
     console.error('Error calculating win probabilities:', error);
-    return Response.json({ error: 'Failed to calculate win probabilities' }, { status: 500 });
+    return res.status(500).json({ error: 'Failed to calculate win probabilities' });
   }
-}
+});
 
 async function buildLineup(playerIds: string[]): Promise<Lineup> {
   // Get player data and projections
-  const players = await prisma.player.findMany({
+  const players: any[] = await prisma.player.findMany({
     where: { id: { in: playerIds } },
   });
 
@@ -109,7 +110,7 @@ async function buildLineup(playerIds: string[]): Promise<Lineup> {
   let flexCandidates: LineupPlayer[] = [];
 
   for (const player of players) {
-    const projection = stats.find(s => s.playerId === player.id);
+    const projection = stats.find((s: any) => s.playerId === player.id);
     const playerData: LineupPlayer = {
       id: player.id,
       name: player.fullName,
@@ -166,7 +167,10 @@ async function buildLineup(playerIds: string[]): Promise<Lineup> {
 }
 
 function calculateGameProgress(lineup: Lineup, currentPoints: number): number {
-  const totalProjected = Object.values(lineup).reduce((sum, player) => sum + player.projection, 0);
+  const totalProjected: number = Object.values(lineup).reduce(
+    (sum: number, player: LineupPlayer) => sum + player.projection,
+    0
+  );
   if (totalProjected === 0) return 0;
   return Math.min(Math.max(currentPoints / totalProjected, 0), 1);
 }
@@ -177,3 +181,5 @@ function getCurrentWeek(): number {
   const weekMs = 7 * 24 * 60 * 60 * 1000;
   return Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1;
 }
+
+export default router;

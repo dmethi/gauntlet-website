@@ -1,5 +1,5 @@
-import { PrismaClient } from '@gauntlet/api/src/generated/prisma';
-import { simulatePlayerRange } from '../models/variance';
+import { PrismaClient } from '@prisma/client';
+import { getVarianceModel } from '../models/variance';
 
 const prisma = new PrismaClient();
 
@@ -27,7 +27,8 @@ async function testPlayer(name: string) {
 
   // Get average projection
   const avgProjection =
-    recentProjections.reduce((sum, p) => sum + p.projectedPoints, 0) / recentProjections.length;
+    recentProjections.reduce((sum: number, p: any) => sum + p.projectedPoints, 0) /
+    recentProjections.length;
 
   // Test different projection levels
   const projections = [
@@ -39,7 +40,7 @@ async function testPlayer(name: string) {
   console.log(`\n=== ${name} (${player.position}) ===`);
 
   // Show data sources being used
-  const range = await simulatePlayerRange(player.id, player.position, avgProjection);
+  const range = await getVarianceModel(player.id, player.position, avgProjection);
   console.log(`Position Data: ${range.positionDist.sampleSize} historical samples`);
   console.log(`Player Data: ${range.playerOutcomes.sampleSize} recent games`);
 
@@ -53,7 +54,7 @@ async function testPlayer(name: string) {
 
   console.log('\nMonte Carlo Simulations (1000 runs each):');
   for (const projection of projections) {
-    const range = await simulatePlayerRange(player.id, player.position, projection);
+    const range = await getVarianceModel(player.id, player.position, projection);
 
     console.log(`\nProjected ${projection.toFixed(1)} points:`);
     console.log(

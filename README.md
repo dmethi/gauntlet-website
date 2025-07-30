@@ -3,34 +3,18 @@
 High-stakes fantasy football platform with advanced simulation, dynamic scoring
 systems, and tightly integrated game mechanics.
 
-## Features
-
-- **Advanced Simulation Engine**: AI-powered player projections and matchup
-  analysis
-- **Real-time Data Pipeline**: Live stats from multiple sources with automated
-  ingestion
-- **Dynamic Scoring Systems**: Customizable scoring with weather, matchup, and
-  situational adjustments
-- **League Management**: Complete fantasy league administration with trade
-  analysis
-- **Modern UI/UX**: Beautiful, responsive interface built with Next.js and
-  Tailwind CSS
-
 ## Project Structure
 
 ```
 gauntlet-website/
 ├── apps/
-│   ├── web/          # Next.js frontend application
-│   ├── api/          # Express.js backend API
-│   ├── sim-engine/   # Fantasy simulation CLI and service
-│   ├── scraper/      # Data scraping and ingestion service
-│   └── admin/        # Admin dashboard (optional)
+│   ├── web/          # Next.js frontend application and API
+│   ├── api/          # Data ingestion and processing scripts
+│   └── sim-engine/   # Fantasy simulation CLI and service
 ├── packages/
 │   ├── types/        # Shared TypeScript interfaces
 │   ├── lib/          # Utility functions and helpers
-│   ├── models/       # Business logic and domain models
-│   └── ui/           # Shared React components
+│   └── models/       # Business logic and domain models
 ├── brand/
 │   ├── logo.svg      # Brand assets
 │   ├── fonts/        # Typography files
@@ -70,8 +54,6 @@ pnpm dev
 This will start:
 
 - **Web App**: http://localhost:3000
-- **API Server**: http://localhost:3001
-- **Simulation Engine**: Available via CLI commands
 
 ### Development Commands
 
@@ -110,25 +92,24 @@ Next.js 14 application with:
 - Modern React with TypeScript
 - Tailwind CSS for styling
 - shadcn/ui component library
-- Real-time updates via WebSockets
+- API routes for backend logic
 
 ```bash
 cd apps/web
 pnpm dev  # Start at localhost:3000
 ```
 
-### 🔌 API Server (`apps/api`)
+### 🔌 Data Ingestion (`apps/api`)
 
-Express.js backend providing:
+A collection of Node.js scripts for:
 
-- RESTful API endpoints
-- JWT authentication
-- Real-time WebSocket connections
-- Database integration
+- Ingesting data from various sources
+- Processing and storing data in PostgreSQL
+- Running data analysis scripts
 
 ```bash
-cd apps/api
-pnpm dev  # Start at localhost:3001
+# Run data ingestion scripts
+pnpm --filter @gauntlet/api -- <script_name>
 ```
 
 ### 🎯 Simulation Engine (`apps/sim-engine`)
@@ -144,20 +125,6 @@ pnpm --filter @gauntlet/sim-engine sim:season
 
 # Simulate specific matchup
 pnpm --filter @gauntlet/sim-engine sim:matchup --team1 team_123 --team2 team_456
-```
-
-### 🕷️ Data Scraper (`apps/scraper`)
-
-Automated data ingestion service:
-
-```bash
-# Run scraper service
-pnpm --filter @gauntlet/scraper dev
-
-# Run specific scrapers
-pnpm --filter @gauntlet/scraper scrape:players
-pnpm --filter @gauntlet/scraper scrape:stats
-pnpm --filter @gauntlet/scraper scrape:schedule
 ```
 
 ## Packages
@@ -189,50 +156,24 @@ Business logic models for:
 - Player statistics
 - Game simulations
 
-### 🎨 UI (`packages/ui`)
-
-Shared React components:
-
-- Design system components
-- Fantasy-specific widgets
-- Charts and visualizations
-- Form components
-
 ## Technology Stack
 
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
-- **Backend**: Express.js, Node.js, TypeScript
+- **Frontend/Backend**: Next.js, React, TypeScript
+- **Styling**: Tailwind CSS
 - **Database**: PostgreSQL with Prisma ORM
 - **Monorepo**: pnpm workspaces + Turbo
 - **Testing**: Jest, React Testing Library, Playwright
-- **Deployment**: Vercel (frontend), Railway (backend)
+- **Deployment**: Vercel (frontend and backend)
 
-## Environment Variables
+## Tech Debt
 
-### Web App (`apps/web/.env.local`)
+This section tracks known technical debt and areas for improvement.
 
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:3001
-NEXT_PUBLIC_WS_URL=ws://localhost:3001
-```
-
-### API Server (`apps/api/.env`)
-
-```bash
-NODE_ENV=development
-PORT=3001
-DATABASE_URL=postgresql://user:password@localhost:5432/gauntlet
-JWT_SECRET=your-secret-key
-```
-
-### Scraper Service (`apps/scraper/.env`)
-
-```bash
-ESPN_API_KEY=your-espn-key
-YAHOO_CLIENT_ID=your-yahoo-id
-YAHOO_CLIENT_SECRET=your-yahoo-secret
-WEATHER_API_KEY=your-weather-key
-```
+- [ ] **Consolidate API Logic**: The backend logic is currently split between `apps/api` (data ingestion) and `apps/web` (API routes). This should be consolidated into a single, dedicated backend service.
+- [ ] **Add a UI Package**: A shared `ui` package should be created to house common React components, reducing code duplication between applications.
+- [ ] **Improve Test Coverage**: The current test coverage is low. More comprehensive tests (unit, integration, and end-to-end) should be added to ensure code quality and prevent regressions.
+- [ ] **Refactor Data Ingestion**: The data ingestion scripts in `apps/api` should be refactored for better error handling, logging, and configurability.
+- [ ] **Standardize API Responses**: The API responses should follow a consistent format to simplify client-side data handling.
 
 ## Contributing
 
@@ -261,19 +202,9 @@ This project maintains high code quality standards:
 ```bash
 # Build all packages and applications
 pnpm build
-
-# Start production servers
-pnpm start
 ```
 
-### Docker Deployment
-
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-```
-
-### Vercel Deployment (Frontend)
+### Vercel Deployment
 
 The web app is configured for automatic deployment to Vercel:
 
@@ -284,14 +215,6 @@ vercel deploy
 # Deploy to production
 vercel deploy --prod
 ```
-
-## API Documentation
-
-Once the API server is running, documentation is available at:
-
-- **Development**: http://localhost:3001/docs
-- **Swagger UI**: Interactive API documentation
-- **OpenAPI Spec**: Machine-readable API specification
 
 ## License
 

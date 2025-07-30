@@ -42,6 +42,7 @@ export interface FantasyTeam {
   roster: Player[];
   wins: number;
   losses: number;
+  ties: number;
   pointsFor: number;
   pointsAgainst: number;
 }
@@ -177,4 +178,10 @@ export interface User {
   avatar?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface SidebarTeam {
+  id: string;
+  name: string;
+  owner: string;
 }

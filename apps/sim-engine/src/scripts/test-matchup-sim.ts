@@ -1,4 +1,4 @@
-import { PrismaClient } from '@gauntlet/api/src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { Lineup, simulateMatchupProbability } from '../models/matchup';
 
 const prisma = new PrismaClient();
@@ -15,7 +15,9 @@ async function getAvgProjection(playerId: string): Promise<number> {
     throw new Error(`No projections found for player ${playerId}`);
   }
 
-  return projections.reduce((sum, p) => sum + p.projectedPoints, 0) / projections.length;
+  return (
+    projections.reduce((sum: number, p: any) => sum + p.projectedPoints, 0) / projections.length
+  );
 }
 
 async function getPlayer(name: string) {

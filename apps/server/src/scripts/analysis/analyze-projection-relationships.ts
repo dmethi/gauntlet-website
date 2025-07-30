@@ -1,4 +1,4 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -12,11 +12,11 @@ interface ProjectionBucket {
 
 async function analyzeByProjectionLevel() {
   // Get all players and their positions
-  const players = await prisma.player.findMany();
-  const playerMap = new Map(players.map(p => [p.id, p]));
+  const players: any[] = await prisma.player.findMany();
+  const playerMap = new Map(players.map((p: any) => [p.id, p]));
 
   // Get all projection errors
-  const errors = await prisma.projectionError.findMany();
+  const errors: any[] = await prisma.projectionError.findMany();
 
   // Group by position and projection level
   const positionStats: Record<string, ProjectionBucket[]> = {};
@@ -58,8 +58,8 @@ async function analyzeByProjectionLevel() {
     for (const bucket of buckets) {
       if (bucket.count < 10) continue; // Skip buckets with too few samples
 
-      const sortedActual = bucket.actualPoints.sort((a, b) => a - b);
-      const sortedDevs = bucket.deviations.sort((a, b) => a - b);
+      const sortedActual = bucket.actualPoints.sort((a: number, b: number) => a - b);
+      const sortedDevs = bucket.deviations.sort((a: number, b: number) => a - b);
 
       // Calculate percentiles
       const p10 = sortedActual[Math.floor(sortedActual.length * 0.1)];
@@ -69,7 +69,7 @@ async function analyzeByProjectionLevel() {
       const p90 = sortedActual[Math.floor(sortedActual.length * 0.9)];
 
       // Calculate average absolute deviation
-      const avgDev = bucket.deviations.reduce((a, b) => a + b, 0) / bucket.count;
+      const avgDev = bucket.deviations.reduce((a: number, b: number) => a + b, 0) / bucket.count;
       const medianDev = sortedDevs[Math.floor(sortedDevs.length * 0.5)];
 
       console.log(
@@ -95,7 +95,7 @@ async function analyzeByProjectionLevel() {
 
   // Look at specific high-projection players
   console.log('\n=== Analysis of High-Projected Players ===');
-  const highProjections = errors.filter(e => e.projectedPoints >= 20);
+  const highProjections = errors.filter((e: any) => e.projectedPoints >= 20);
 
   // Group by player
   const playerStats = new Map<
@@ -131,10 +131,12 @@ async function analyzeByProjectionLevel() {
   for (const [name, stats] of playerStats) {
     if (stats.projections.length < 5) continue; // Need enough samples
 
-    const avgProj = stats.projections.reduce((a, b) => a + b, 0) / stats.projections.length;
-    const avgDev = stats.deviations.reduce((a, b) => a + b, 0) / stats.deviations.length;
+    const avgProj =
+      stats.projections.reduce((a: number, b: number) => a + b, 0) / stats.projections.length;
+    const avgDev =
+      stats.deviations.reduce((a: number, b: number) => a + b, 0) / stats.deviations.length;
 
-    const sortedActuals = stats.actuals.sort((a, b) => a - b);
+    const sortedActuals = stats.actuals.sort((a: number, b: number) => a - b);
     const p10 = sortedActuals[Math.floor(sortedActuals.length * 0.1)];
     const p90 = sortedActuals[Math.floor(sortedActuals.length * 0.9)];
 

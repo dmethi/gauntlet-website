@@ -1,4 +1,4 @@
-import { PrismaClient } from '@gauntlet/api/src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { calculateNormalizedError } from '@gauntlet/lib';
 
 const prisma = new PrismaClient();
