@@ -1,14 +1,14 @@
 import localFont from 'next/font/local';
-import { 
-  Inter,           // Modern, very popular, excellent for UI
-  Roboto,          // Classic Google font, highly readable  
-  Open_Sans,       // Friendly, widely used
-  Lato,            // Humanist, warm feeling
-  Source_Sans_3,   // Clean, professional (updated name)
-  Poppins,         // Geometric, modern
-  Work_Sans,       // Versatile, great for data
-  Fira_Sans,       // Technical, clean
-  IBM_Plex_Sans    // Corporate, modern
+import {
+  Inter, // Modern, very popular, excellent for UI
+  Roboto, // Classic Google font, highly readable
+  Open_Sans, // Friendly, widely used
+  Lato, // Humanist, warm feeling
+  Source_Sans_3, // Clean, professional (updated name)
+  Poppins, // Geometric, modern
+  Work_Sans, // Versatile, great for data
+  Fira_Sans, // Technical, clean
+  IBM_Plex_Sans, // Corporate, modern
 } from 'next/font/google';
 
 // Current Montserrat setup (all weights)
@@ -119,7 +119,7 @@ export const geizer = localFont({
 // Font alternatives (Google Fonts - no files needed!)
 
 // 1. INTER (most popular modern choice)
-export const inter = Inter({ 
+export const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',

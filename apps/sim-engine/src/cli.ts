@@ -34,7 +34,7 @@ program
   .command('season')
   .description('Run full season simulation')
   .option('-w, --weeks <number>', 'Number of weeks to simulate', '17')
-  .action(async (options) => {
+  .action(async options => {
     const spinner = ora(`Simulating ${options.weeks} weeks...`).start();
     try {
       const results = await runSeasonSimulation(parseInt(options.weeks));
@@ -52,7 +52,7 @@ program
   .description('Simulate specific team matchup')
   .requiredOption('-t1, --team1 <id>', 'Team 1 ID')
   .requiredOption('-t2, --team2 <id>', 'Team 2 ID')
-  .action(async (options) => {
+  .action(async options => {
     const spinner = ora(`Simulating ${options.team1} vs ${options.team2}...`).start();
     try {
       const results = await runMatchupSimulation(options.team1, options.team2);
@@ -65,4 +65,4 @@ program
     }
   });
 
-program.parse(); 
+program.parse();

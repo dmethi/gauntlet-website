@@ -1,6 +1,7 @@
 # Seed Data for Gauntlet Development
 
-This directory contains real Sleeper API data for development and testing purposes.
+This directory contains real Sleeper API data for development and testing
+purposes.
 
 ## Data Overview
 
@@ -12,20 +13,26 @@ This directory contains real Sleeper API data for development and testing purpos
 ## Files
 
 ### Core League Data
+
 - `fantasy-league.json` - League configuration, settings, and scoring rules
 - `fantasy-league-users.json` - All 14 users in the league
-- `fantasy-league-rosters.json` - Team rosters (note: dynasty league with sparse data)
+- `fantasy-league-rosters.json` - Team rosters (note: dynasty league with sparse
+  data)
 
-### Player Data  
+### Player Data
+
 - `stats-week1.json` - Week 1 player statistics (749KB, 2,310 players)
 - `projections-week1.json` - Week 1 player projections (726KB)
-- `players-sample.json` - Sample of 50 players with metadata (names, positions, teams)
+- `players-sample.json` - Sample of 50 players with metadata (names, positions,
+  teams)
 
 ### NFL Data
+
 - `nfl-state.json` - Current NFL season state
 - `user-dmethi.json` - Sample user profile
 
 ### Configuration
+
 - `seed-data-config.json` - Documentation of all available data files
 - `README.md` - This file
 
@@ -68,23 +75,26 @@ node scripts/test-seed-data.js
 
 ```typescript
 const LEAGUE_ID = '1124853133466419200';
-const USER_ID = '465307317622009856'; 
+const USER_ID = '465307317622009856';
 const USERNAME = 'dmethi';
 const SEASON = '2024';
 ```
 
 ## Data Limitations
 
-1. **Matchups**: The real matchup data is empty (typical for inactive dynasty leagues), so use `generateMockMatchups()` for testing
-2. **Rosters**: Roster data shows mostly zeros/nulls - this is normal for a dynasty league that wasn't actively managed
-3. **Sample Size**: Player sample is limited to 50 players to avoid loading the full 5MB dataset
+1. **Matchups**: The real matchup data is empty (typical for inactive dynasty
+   leagues), so use `generateMockMatchups()` for testing
+2. **Rosters**: Roster data shows mostly zeros/nulls - this is normal for a
+   dynasty league that wasn't actively managed
+3. **Sample Size**: Player sample is limited to 50 players to avoid loading the
+   full 5MB dataset
 
 ## Using for Development
 
 This seed data is perfect for:
 
 - ✅ Testing scoring calculations with real player stats
-- ✅ Building UI components with realistic league structures  
+- ✅ Building UI components with realistic league structures
 - ✅ Testing user authentication flows
 - ✅ Developing matchup displays (using mock data)
 - ✅ League configuration and settings management
@@ -95,7 +105,7 @@ This seed data is perfect for:
 The data was fetched from these Sleeper API endpoints:
 
 - `GET /v1/user/{username}` ✅
-- `GET /v1/user/{user_id}/leagues/nfl/{season}` ✅  
+- `GET /v1/user/{user_id}/leagues/nfl/{season}` ✅
 - `GET /v1/league/{league_id}` ✅
 - `GET /v1/league/{league_id}/users` ✅
 - `GET /v1/league/{league_id}/rosters` ✅
@@ -108,9 +118,12 @@ The data was fetched from these Sleeper API endpoints:
 
 You can now start building features step by step:
 
-1. **League Display** - Use `seedData.getSampleLeague()` and `seedData.getLeagueUsers()`
+1. **League Display** - Use `seedData.getSampleLeague()` and
+   `seedData.getLeagueUsers()`
 2. **Player Stats** - Use `seedData.getPlayerStats()` for scoring calculations
 3. **Mock Matchups** - Use `seedData.generateMockMatchups()` for UI development
-4. **Win Probability** - Combine stats + projections for probability calculations
+4. **Win Probability** - Combine stats + projections for probability
+   calculations
 
-The data structure matches the Sleeper API exactly, so your code will work with live data when ready. 
+The data structure matches the Sleeper API exactly, so your code will work with
+live data when ready.

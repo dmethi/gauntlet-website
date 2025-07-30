@@ -1,6 +1,7 @@
 # The Gauntlet Data Scraper
 
-Automated data scraping and ingestion service for fantasy football statistics, player information, and game schedules.
+Automated data scraping and ingestion service for fantasy football statistics,
+player information, and game schedules.
 
 ## Features
 
@@ -13,7 +14,7 @@ Automated data scraping and ingestion service for fantasy football statistics, p
 ## Data Sources
 
 - ESPN Fantasy API
-- Yahoo Fantasy API  
+- Yahoo Fantasy API
 - NFL.com Statistics
 - FantasyPros Projections
 - Pro Football Reference
@@ -64,4 +65,4 @@ DATABASE_URL=your_database_url
 2. **Transformation**: Normalize formats and calculate fantasy points
 3. **Validation**: Verify data integrity and handle duplicates
 4. **Loading**: Store in database with proper indexing
-5. **Notification**: Alert simulation engine of updates 
+5. **Notification**: Alert simulation engine of updates

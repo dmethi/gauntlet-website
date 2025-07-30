@@ -27,9 +27,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "CIN"
-        ],
+        "v1:regular:1": ["CIN"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -86,9 +84,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "SEA"
-        ],
+        "v1:regular:1": ["SEA"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -98,12 +94,8 @@
         "v1:regular:16": [],
         "v1:regular:17": [],
         "v1:regular:18": [],
-        "v1:regular:2": [
-          "LAC"
-        ],
-        "v1:regular:3": [
-          "LV"
-        ],
+        "v1:regular:2": ["LAC"],
+        "v1:regular:3": ["LV"],
         "v1:regular:4": [],
         "v1:regular:5": [],
         "v1:regular:6": [],
@@ -149,9 +141,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "CIN"
-        ],
+        "v1:regular:1": ["CIN"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -208,9 +198,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "BUF"
-        ],
+        "v1:regular:1": ["BUF"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -220,9 +208,7 @@
         "v1:regular:16": [],
         "v1:regular:17": [],
         "v1:regular:18": [],
-        "v1:regular:2": [
-          "BAL"
-        ],
+        "v1:regular:2": ["BAL"],
         "v1:regular:3": [],
         "v1:regular:4": [],
         "v1:regular:5": [],
@@ -269,9 +255,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "CIN"
-        ],
+        "v1:regular:1": ["CIN"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -328,9 +312,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "MIN"
-        ],
+        "v1:regular:1": ["MIN"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -387,9 +369,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "ATL"
-        ],
+        "v1:regular:1": ["ATL"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -446,9 +426,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "NO"
-        ],
+        "v1:regular:1": ["NO"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -458,12 +436,8 @@
         "v1:regular:16": [],
         "v1:regular:17": [],
         "v1:regular:18": [],
-        "v1:regular:2": [
-          "WAS"
-        ],
-        "v1:regular:3": [
-          "LV"
-        ],
+        "v1:regular:2": ["WAS"],
+        "v1:regular:3": ["LV"],
         "v1:regular:4": [],
         "v1:regular:5": [],
         "v1:regular:6": [],
@@ -510,9 +484,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "NO"
-        ],
+        "v1:regular:1": ["NO"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -522,9 +494,7 @@
         "v1:regular:16": [],
         "v1:regular:17": [],
         "v1:regular:18": [],
-        "v1:regular:2": [
-          "BAL"
-        ],
+        "v1:regular:2": ["BAL"],
         "v1:regular:3": [],
         "v1:regular:4": [],
         "v1:regular:5": [],
@@ -572,9 +542,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "SEA"
-        ],
+        "v1:regular:1": ["SEA"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -584,12 +552,8 @@
         "v1:regular:16": [],
         "v1:regular:17": [],
         "v1:regular:18": [],
-        "v1:regular:2": [
-          "HOU"
-        ],
-        "v1:regular:3": [
-          "TEN"
-        ],
+        "v1:regular:2": ["HOU"],
+        "v1:regular:3": ["TEN"],
         "v1:regular:4": [],
         "v1:regular:5": [],
         "v1:regular:6": [],
@@ -635,9 +599,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "ATL"
-        ],
+        "v1:regular:1": ["ATL"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],
@@ -693,9 +655,7 @@
         "v1:regular:9": 0.0
       },
       "previous_picks": {
-        "v1:regular:1": [
-          "CIN"
-        ],
+        "v1:regular:1": ["CIN"],
         "v1:regular:10": [],
         "v1:regular:11": [],
         "v1:regular:12": [],

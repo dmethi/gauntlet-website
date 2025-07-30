@@ -34,7 +34,7 @@ export const NFL_TEAMS = {
   SEA: { name: 'Seattle Seahawks', conference: 'NFC', division: 'West' },
   TB: { name: 'Tampa Bay Buccaneers', conference: 'NFC', division: 'South' },
   TEN: { name: 'Tennessee Titans', conference: 'AFC', division: 'South' },
-  WAS: { name: 'Washington Commanders', conference: 'NFC', division: 'East' }
+  WAS: { name: 'Washington Commanders', conference: 'NFC', division: 'East' },
 } as const;
 
 export const DEFAULT_LINEUP_SETTINGS = {
@@ -45,7 +45,7 @@ export const DEFAULT_LINEUP_SETTINGS = {
   FLEX: 1,
   K: 1,
   DEF: 1,
-  BENCH: 6
+  BENCH: 6,
 };
 
 export const STANDARD_SCORING = {
@@ -53,18 +53,18 @@ export const STANDARD_SCORING = {
     passingYards: 0.04, // 1 point per 25 yards
     passingTDs: 4,
     passingINTs: -2,
-    passing2PT: 2
+    passing2PT: 2,
   },
   rushing: {
     rushingYards: 0.1, // 1 point per 10 yards
     rushingTDs: 6,
-    rushing2PT: 2
+    rushing2PT: 2,
   },
   receiving: {
     receivingYards: 0.1, // 1 point per 10 yards
     receivingTDs: 6,
     receptions: 0, // Standard scoring (no PPR)
-    receiving2PT: 2
+    receiving2PT: 2,
   },
   kicking: {
     extraPoints: 1,
@@ -72,7 +72,7 @@ export const STANDARD_SCORING = {
     fieldGoals40to49: 4,
     fieldGoals50plus: 5,
     missedExtraPoints: -1,
-    missedFieldGoals: -1
+    missedFieldGoals: -1,
   },
   defense: {
     sacks: 1,
@@ -86,28 +86,28 @@ export const STANDARD_SCORING = {
     pointsAllowed14To20: 1,
     pointsAllowed21To27: 0,
     pointsAllowed28To34: -1,
-    pointsAllowed35Plus: -4
-  }
+    pointsAllowed35Plus: -4,
+  },
 };
 
 export const PPR_SCORING = {
   ...STANDARD_SCORING,
   receiving: {
     ...STANDARD_SCORING.receiving,
-    receptions: 1 // 1 point per reception
-  }
+    receptions: 1, // 1 point per reception
+  },
 };
 
 export const HALF_PPR_SCORING = {
   ...STANDARD_SCORING,
   receiving: {
     ...STANDARD_SCORING.receiving,
-    receptions: 0.5 // 0.5 points per reception
-  }
+    receptions: 0.5, // 0.5 points per reception
+  },
 };
 
 export const REGEX_PATTERNS = {
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   username: /^[a-zA-Z0-9_]{3,20}$/,
-  password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/
-}; 
+  password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/,
+};

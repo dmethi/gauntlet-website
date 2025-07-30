@@ -5,11 +5,7 @@ module.exports = {
     es2022: true,
     node: true,
   },
-  extends: [
-    'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['eslint:recommended', '@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -23,12 +19,12 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-function': 'off',
-    
+
     // General rules
     'no-console': 'warn',
     'prefer-const': 'error',
     'no-var': 'error',
-    
+
     // Import rules
     'sort-imports': ['error', { ignoreDeclarationSort: true }],
   },
@@ -57,11 +53,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: [
-    'node_modules/',
-    '.next/',
-    'dist/',
-    'build/',
-    '*.config.js',
-  ],
-}; 
+  ignorePatterns: ['node_modules/', '.next/', 'dist/', 'build/', '*.config.js'],
+};

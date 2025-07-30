@@ -13,7 +13,7 @@
       "description": "Sample user profile from Sleeper API"
     },
     "fantasy_league": {
-      "file": "fantasy-league.json", 
+      "file": "fantasy-league.json",
       "description": "Complete league configuration with settings and scoring"
     },
     "league_users": {
@@ -33,7 +33,7 @@
       "description": "Week 1 player statistics for 2024 season (749KB)"
     },
     "player_projections": {
-      "file": "projections-week1.json", 
+      "file": "projections-week1.json",
       "description": "Week 1 player projections for 2024 season (726KB)"
     },
     "player_sample": {
@@ -51,7 +51,7 @@
     "GET /v1/user/{username}",
     "GET /v1/user/{user_id}/leagues/nfl/{season}",
     "GET /v1/league/{league_id}",
-    "GET /v1/league/{league_id}/users", 
+    "GET /v1/league/{league_id}/users",
     "GET /v1/league/{league_id}/rosters",
     "GET /v1/league/{league_id}/matchups/{week}",
     "GET /v1/state/nfl",
@@ -59,4 +59,4 @@
     "GET /v1/projections/nfl/{season_type}/{season}/{week}",
     "GET /v1/players/nfl"
   ]
-} 
+}

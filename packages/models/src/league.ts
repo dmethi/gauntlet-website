@@ -25,7 +25,7 @@ export class LeagueModel {
       settings,
       season,
       currentWeek: 1,
-      status: 'draft'
+      status: 'draft',
     };
 
     return new LeagueModel(league);
@@ -46,7 +46,10 @@ export class LeagueModel {
     this.league.teams.push(team);
 
     // Auto-advance to active status when league is full
-    if (this.league.teams.length === this.league.settings.teamCount && this.league.status === 'draft') {
+    if (
+      this.league.teams.length === this.league.settings.teamCount &&
+      this.league.status === 'draft'
+    ) {
       this.league.status = 'active';
     }
   }
@@ -141,4 +144,4 @@ export class LeagueModel {
   toJSON(): League {
     return { ...this.league };
   }
-} 
+}

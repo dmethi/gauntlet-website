@@ -23,9 +23,7 @@
     "birth_date": "1995-02-12",
     "status": "Active",
     "number": 45,
-    "fantasy_positions": [
-      "TE"
-    ],
+    "fantasy_positions": ["TE"],
     "pandascore_id": null,
     "first_name": "Ellis",
     "competitions": [],
@@ -81,9 +79,7 @@
     "birth_date": null,
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "OL"
-    ],
+    "fantasy_positions": ["OL"],
     "pandascore_id": null,
     "first_name": "Nick",
     "competitions": [],
@@ -139,9 +135,7 @@
     "birth_date": null,
     "status": "Injured Reserve",
     "number": 0,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Malkelm",
     "competitions": [],
@@ -196,9 +190,7 @@
     "birth_date": "1997-02-06",
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "TE"
-    ],
+    "fantasy_positions": ["TE"],
     "pandascore_id": null,
     "first_name": "Carl",
     "competitions": [],
@@ -254,9 +246,7 @@
     "birth_date": "1992-06-19",
     "status": "Active",
     "number": 57,
-    "fantasy_positions": [
-      "LB"
-    ],
+    "fantasy_positions": ["LB"],
     "pandascore_id": null,
     "first_name": "C.J.",
     "competitions": [],
@@ -312,9 +302,7 @@
     "birth_date": "1999-07-07",
     "status": "Active",
     "number": 33,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Samuel",
     "competitions": [],
@@ -367,9 +355,7 @@
     "birth_date": "1987-08-17",
     "status": "Injured Reserve",
     "number": 0,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Ron",
     "competitions": [],
@@ -424,9 +410,7 @@
     "birth_date": "1992-02-18",
     "status": "Active",
     "number": 6,
-    "fantasy_positions": [
-      "RB"
-    ],
+    "fantasy_positions": ["RB"],
     "pandascore_id": null,
     "first_name": "Le'Veon",
     "competitions": [],
@@ -481,9 +465,7 @@
     "birth_date": "1997-05-02",
     "status": "Active",
     "number": 41,
-    "fantasy_positions": [
-      "TE"
-    ],
+    "fantasy_positions": ["TE"],
     "pandascore_id": null,
     "first_name": "Matt",
     "competitions": [],
@@ -536,9 +518,7 @@
     "birth_date": "1985-01-01",
     "status": "Inactive",
     "number": 25,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "William",
     "competitions": [],
@@ -594,10 +574,7 @@
     "birth_date": "1997-02-21",
     "status": "Active",
     "number": 60,
-    "fantasy_positions": [
-      "DB",
-      "LB"
-    ],
+    "fantasy_positions": ["DB", "LB"],
     "pandascore_id": null,
     "first_name": "Javin",
     "competitions": [],
@@ -652,9 +629,7 @@
     "birth_date": "1992-01-30",
     "status": "Active",
     "number": 24,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Bashaud",
     "competitions": [],
@@ -710,9 +685,7 @@
     "birth_date": "2000-07-27",
     "status": "Active",
     "number": null,
-    "fantasy_positions": [
-      "QB"
-    ],
+    "fantasy_positions": ["QB"],
     "pandascore_id": null,
     "first_name": "Kinkead",
     "competitions": [],
@@ -768,9 +741,7 @@
     "birth_date": "1995-03-14",
     "status": "Active",
     "number": 17,
-    "fantasy_positions": [
-      "K"
-    ],
+    "fantasy_positions": ["K"],
     "pandascore_id": null,
     "first_name": "Brandon",
     "competitions": [],
@@ -823,9 +794,7 @@
     "birth_date": "1991-09-20",
     "status": "Inactive",
     "number": 56,
-    "fantasy_positions": [
-      "LB"
-    ],
+    "fantasy_positions": ["LB"],
     "pandascore_id": null,
     "first_name": "Amarlo",
     "competitions": [],
@@ -880,10 +849,7 @@
     "birth_date": "1989-08-17",
     "status": "Inactive",
     "number": 95,
-    "fantasy_positions": [
-      "DL",
-      "LB"
-    ],
+    "fantasy_positions": ["DL", "LB"],
     "pandascore_id": null,
     "first_name": "Kasim",
     "competitions": [],
@@ -936,9 +902,7 @@
     "birth_date": "1992-01-29",
     "status": "Inactive",
     "number": 13,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "Tyler",
     "competitions": [],
@@ -994,9 +958,7 @@
     "birth_date": "1992-04-28",
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "DL"
-    ],
+    "fantasy_positions": ["DL"],
     "pandascore_id": null,
     "first_name": "DeMarcus",
     "competitions": [],
@@ -1049,9 +1011,7 @@
     "birth_date": "1990-01-25",
     "status": "Inactive",
     "number": 25,
-    "fantasy_positions": [
-      "RB"
-    ],
+    "fantasy_positions": ["RB"],
     "pandascore_id": null,
     "first_name": "Lance",
     "competitions": [],
@@ -1106,9 +1066,7 @@
     "birth_date": "1991-10-16",
     "status": "Inactive",
     "number": 18,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "DeAndrew",
     "competitions": [],
@@ -1163,9 +1121,7 @@
     "birth_date": "1992-10-13",
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "DL"
-    ],
+    "fantasy_positions": ["DL"],
     "pandascore_id": null,
     "first_name": "Devaroe",
     "competitions": [],
@@ -1220,9 +1176,7 @@
     "birth_date": "1997-09-04",
     "status": "Active",
     "number": 30,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "DeAndre",
     "competitions": [],
@@ -1275,9 +1229,7 @@
     "birth_date": "1989-10-19",
     "status": "Inactive",
     "number": 84,
-    "fantasy_positions": [
-      "TE"
-    ],
+    "fantasy_positions": ["TE"],
     "pandascore_id": null,
     "first_name": "Taylor",
     "competitions": [],
@@ -1333,9 +1285,7 @@
     "birth_date": "1993-11-30",
     "status": "Active",
     "number": 29,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Kevon",
     "competitions": [],
@@ -1390,9 +1340,7 @@
     "birth_date": "1998-10-16",
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Corey",
     "competitions": [],
@@ -1447,9 +1395,7 @@
     "birth_date": "1997-10-14",
     "status": "Active",
     "number": 24,
-    "fantasy_positions": [
-      "RB"
-    ],
+    "fantasy_positions": ["RB"],
     "pandascore_id": null,
     "first_name": "A.J.",
     "competitions": [],
@@ -1502,9 +1448,7 @@
     "birth_date": "1982-06-25",
     "status": "Inactive",
     "number": 71,
-    "fantasy_positions": [
-      "OL"
-    ],
+    "fantasy_positions": ["OL"],
     "pandascore_id": null,
     "first_name": "Erik",
     "competitions": [],
@@ -1560,9 +1504,7 @@
     "birth_date": null,
     "status": "Active",
     "number": 92,
-    "fantasy_positions": [
-      "DL"
-    ],
+    "fantasy_positions": ["DL"],
     "pandascore_id": null,
     "first_name": "Decarius",
     "competitions": [],
@@ -1617,9 +1559,7 @@
     "birth_date": "1993-12-03",
     "status": "Active",
     "number": 2,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "Ricky",
     "competitions": [],
@@ -1674,9 +1614,7 @@
     "birth_date": "1991-10-02",
     "status": "Active",
     "number": 34,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Aaron",
     "competitions": [],
@@ -1732,9 +1670,7 @@
     "birth_date": null,
     "status": "Active",
     "number": null,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Marquis",
     "competitions": [],
@@ -1789,9 +1725,7 @@
     "birth_date": "1998-01-22",
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Christian",
     "competitions": [],
@@ -1847,9 +1781,7 @@
     "birth_date": "1999-01-04",
     "status": "Active",
     "number": 35,
-    "fantasy_positions": [
-      "LB"
-    ],
+    "fantasy_positions": ["LB"],
     "pandascore_id": null,
     "first_name": "Jake",
     "competitions": [],
@@ -1905,9 +1837,7 @@
     "birth_date": "2000-08-04",
     "status": "Active",
     "number": 16,
-    "fantasy_positions": [
-      "QB"
-    ],
+    "fantasy_positions": ["QB"],
     "pandascore_id": null,
     "first_name": "Brett",
     "competitions": [],
@@ -1962,9 +1892,7 @@
     "birth_date": "1999-04-07",
     "status": "Active",
     "number": 31,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "Jerome",
     "competitions": [],
@@ -2019,9 +1947,7 @@
     "birth_date": "1993-02-17",
     "status": "Active",
     "number": 86,
-    "fantasy_positions": [
-      "TE"
-    ],
+    "fantasy_positions": ["TE"],
     "pandascore_id": null,
     "first_name": "Nick",
     "competitions": [],
@@ -2077,9 +2003,7 @@
     "birth_date": "1999-05-07",
     "status": "Active",
     "number": 0,
-    "fantasy_positions": [
-      "OL"
-    ],
+    "fantasy_positions": ["OL"],
     "pandascore_id": null,
     "first_name": "Ty",
     "competitions": [],
@@ -2135,9 +2059,7 @@
     "birth_date": "1999-10-18",
     "status": "Active",
     "number": 33,
-    "fantasy_positions": [
-      "RB"
-    ],
+    "fantasy_positions": ["RB"],
     "pandascore_id": null,
     "first_name": "Aaron",
     "competitions": [],
@@ -2193,9 +2115,7 @@
     "birth_date": "2002-03-21",
     "status": "Active",
     "number": 11,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "Parker",
     "competitions": [],
@@ -2251,9 +2171,7 @@
     "birth_date": "1999-04-19",
     "status": "Active",
     "number": 22,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Geno",
     "competitions": [],
@@ -2306,9 +2224,7 @@
     "birth_date": "1992-12-06",
     "status": "Inactive",
     "number": 2,
-    "fantasy_positions": [
-      "QB"
-    ],
+    "fantasy_positions": ["QB"],
     "pandascore_id": null,
     "first_name": "Johnny",
     "competitions": [],
@@ -2364,9 +2280,7 @@
     "birth_date": "1996-09-27",
     "status": "Active",
     "number": 97,
-    "fantasy_positions": [
-      "DL"
-    ],
+    "fantasy_positions": ["DL"],
     "pandascore_id": null,
     "first_name": "Joe",
     "competitions": [],
@@ -2421,9 +2335,7 @@
     "birth_date": "1997-07-02",
     "status": "Active",
     "number": 76,
-    "fantasy_positions": [
-      "OL"
-    ],
+    "fantasy_positions": ["OL"],
     "pandascore_id": null,
     "first_name": "Jarrid",
     "competitions": [],
@@ -2478,9 +2390,7 @@
     "birth_date": "1996-01-07",
     "status": "Active",
     "number": 72,
-    "fantasy_positions": [
-      "OL"
-    ],
+    "fantasy_positions": ["OL"],
     "pandascore_id": null,
     "first_name": "Brock",
     "competitions": [],
@@ -2536,9 +2446,7 @@
     "birth_date": "1992-10-30",
     "status": "Active",
     "number": 84,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "Jakeem",
     "competitions": [],
@@ -2593,9 +2501,7 @@
     "birth_date": "1990-01-08",
     "status": "Active",
     "number": 18,
-    "fantasy_positions": [
-      "WR"
-    ],
+    "fantasy_positions": ["WR"],
     "pandascore_id": null,
     "first_name": "Jaron",
     "competitions": [],
@@ -2651,9 +2557,7 @@
     "birth_date": "1994-01-07",
     "status": "Active",
     "number": 29,
-    "fantasy_positions": [
-      "DB"
-    ],
+    "fantasy_positions": ["DB"],
     "pandascore_id": null,
     "first_name": "Eric",
     "competitions": [],
@@ -2709,9 +2613,7 @@
     "birth_date": "1995-07-10",
     "status": "Active",
     "number": 43,
-    "fantasy_positions": [
-      "LB"
-    ],
+    "fantasy_positions": ["LB"],
     "pandascore_id": null,
     "first_name": "Nicholas",
     "competitions": [],
@@ -2767,9 +2669,7 @@
     "birth_date": "1999-10-25",
     "status": "Active",
     "number": 47,
-    "fantasy_positions": [
-      "DL"
-    ],
+    "fantasy_positions": ["DL"],
     "pandascore_id": null,
     "first_name": "Joshua",
     "competitions": [],
@@ -2825,9 +2725,7 @@
     "birth_date": "1998-12-30",
     "status": "Active",
     "number": 36,
-    "fantasy_positions": [
-      "RB"
-    ],
+    "fantasy_positions": ["RB"],
     "pandascore_id": null,
     "first_name": "Salvon",
     "competitions": [],

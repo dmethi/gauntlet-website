@@ -125,22 +125,6 @@
   "bracket_overrides_id": null,
   "loser_bracket_id": null,
   "loser_bracket_overrides_id": null,
-  "roster_positions": [
-    "QB",
-    "RB",
-    "RB",
-    "WR",
-    "WR",
-    "TE",
-    "FLEX",
-    "K",
-    "DEF",
-    "BN",
-    "BN",
-    "BN",
-    "BN",
-    "BN",
-    "BN"
-  ],
+  "roster_positions": ["QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "K", "DEF", "BN", "BN", "BN", "BN", "BN", "BN"],
   "total_rosters": 14
 }

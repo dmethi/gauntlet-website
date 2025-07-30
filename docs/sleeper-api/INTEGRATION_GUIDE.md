@@ -1,6 +1,8 @@
 # Sleeper API Integration Guide
 
-This guide shows how to integrate the documented Sleeper API endpoints into The Gauntlet's data pipeline, specifically for the scraper service in `apps/scraper/`.
+This guide shows how to integrate the documented Sleeper API endpoints into The
+Gauntlet's data pipeline, specifically for the scraper service in
+`apps/scraper/`.
 
 ## Quick Start
 
@@ -17,7 +19,11 @@ Create `src/clients/sleeper-client.ts`:
 
 ```typescript
 import fetch from 'node-fetch';
-import { StatsResponse, ProjectionsResponse, PlayersResponse } from '../../../docs/sleeper-api/schemas/sleeper-api-types';
+import {
+  StatsResponse,
+  ProjectionsResponse,
+  PlayersResponse,
+} from '../../../docs/sleeper-api/schemas/sleeper-api-types';
 
 export class SleeperClient {
   private baseUrl = 'https://api.sleeper.app/v1';
@@ -30,16 +36,18 @@ export class SleeperClient {
   private async request<T>(endpoint: string): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     console.log(`Fetching: ${url}`);
-    
+
     const response = await fetch(url);
-    
+
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`
+      );
     }
-    
-    const data = await response.json() as T;
+
+    const data = (await response.json()) as T;
     await this.delay(this.rateLimitMs); // Rate limiting
-    
+
     return data;
   }
 
@@ -53,7 +61,9 @@ export class SleeperClient {
   }
 
   async getTrendingPlayers(type: 'add' | 'drop', hours = 24, limit = 25) {
-    return this.request(`/players/nfl/trending/${type}?lookback_hours=${hours}&limit=${limit}`);
+    return this.request(
+      `/players/nfl/trending/${type}?lookback_hours=${hours}&limit=${limit}`
+    );
   }
 
   async getNFLState() {
@@ -61,19 +71,33 @@ export class SleeperClient {
   }
 
   // Undocumented endpoints
-  async getWeeklyStats(seasonType: 'regular' | 'pre' | 'post', season: number, week: number): Promise<StatsResponse> {
+  async getWeeklyStats(
+    seasonType: 'regular' | 'pre' | 'post',
+    season: number,
+    week: number
+  ): Promise<StatsResponse> {
     return this.request(`/stats/nfl/${seasonType}/${season}/${week}`);
   }
 
-  async getSeasonStats(seasonType: 'regular' | 'pre' | 'post', season: number): Promise<StatsResponse> {
+  async getSeasonStats(
+    seasonType: 'regular' | 'pre' | 'post',
+    season: number
+  ): Promise<StatsResponse> {
     return this.request(`/stats/nfl/${seasonType}/${season}`);
   }
 
-  async getWeeklyProjections(seasonType: 'regular' | 'pre' | 'post', season: number, week: number): Promise<ProjectionsResponse> {
+  async getWeeklyProjections(
+    seasonType: 'regular' | 'pre' | 'post',
+    season: number,
+    week: number
+  ): Promise<ProjectionsResponse> {
     return this.request(`/projections/nfl/${seasonType}/${season}/${week}`);
   }
 
-  async getSeasonProjections(seasonType: 'regular' | 'pre' | 'post', season: number): Promise<ProjectionsResponse> {
+  async getSeasonProjections(
+    seasonType: 'regular' | 'pre' | 'post',
+    season: number
+  ): Promise<ProjectionsResponse> {
     return this.request(`/projections/nfl/${seasonType}/${season}`);
   }
 }
@@ -85,7 +109,10 @@ Update `src/scrapers/stats-scraper.ts`:
 
 ```typescript
 import { SleeperClient } from '../clients/sleeper-client';
-import { StatsResponse, PlayerStats } from '../../../docs/sleeper-api/schemas/sleeper-api-types';
+import {
+  StatsResponse,
+  PlayerStats,
+} from '../../../docs/sleeper-api/schemas/sleeper-api-types';
 
 export class StatsScraperService {
   private sleeper: SleeperClient;
@@ -97,14 +124,16 @@ export class StatsScraperService {
   async scrapeWeeklyStats(season: number, week: number): Promise<void> {
     try {
       console.log(`Scraping stats for ${season} week ${week}...`);
-      
+
       // Get stats from Sleeper API
       const stats = await this.sleeper.getWeeklyStats('regular', season, week);
-      
+
       // Process and save to database
       await this.processStatsData(stats, season, week);
-      
-      console.log(`Successfully scraped ${Object.keys(stats).length} player records`);
+
+      console.log(
+        `Successfully scraped ${Object.keys(stats).length} player records`
+      );
     } catch (error) {
       console.error('Error scraping weekly stats:', error);
       throw error;
@@ -114,19 +143,29 @@ export class StatsScraperService {
   async scrapeProjections(season: number, week: number): Promise<void> {
     try {
       console.log(`Scraping projections for ${season} week ${week}...`);
-      
-      const projections = await this.sleeper.getWeeklyProjections('regular', season, week);
-      
+
+      const projections = await this.sleeper.getWeeklyProjections(
+        'regular',
+        season,
+        week
+      );
+
       await this.processProjectionsData(projections, season, week);
-      
-      console.log(`Successfully scraped ${Object.keys(projections).length} player projections`);
+
+      console.log(
+        `Successfully scraped ${Object.keys(projections).length} player projections`
+      );
     } catch (error) {
       console.error('Error scraping projections:', error);
       throw error;
     }
   }
 
-  private async processStatsData(stats: StatsResponse, season: number, week: number): Promise<void> {
+  private async processStatsData(
+    stats: StatsResponse,
+    season: number,
+    week: number
+  ): Promise<void> {
     const processedStats = [];
 
     for (const [playerId, playerStats] of Object.entries(stats)) {
@@ -136,7 +175,11 @@ export class StatsScraperService {
       }
 
       // Only process players with actual fantasy stats
-      if (!playerStats.pts_ppr && !playerStats.pts_half_ppr && !playerStats.pts_std) {
+      if (
+        !playerStats.pts_ppr &&
+        !playerStats.pts_half_ppr &&
+        !playerStats.pts_std
+      ) {
         continue;
       }
 
@@ -147,30 +190,30 @@ export class StatsScraperService {
         fantasy_points: {
           ppr: playerStats.pts_ppr || 0,
           half_ppr: playerStats.pts_half_ppr || 0,
-          standard: playerStats.pts_std || 0
+          standard: playerStats.pts_std || 0,
         },
         receiving: {
           receptions: playerStats.rec || 0,
           yards: playerStats.rec_yd || 0,
           touchdowns: playerStats.rec_td || 0,
-          targets: playerStats.rec_tgt || 0
+          targets: playerStats.rec_tgt || 0,
         },
         rushing: {
           attempts: playerStats.rush_att || 0,
           yards: playerStats.rush_yd || 0,
-          touchdowns: playerStats.rush_td || 0
+          touchdowns: playerStats.rush_td || 0,
         },
         passing: {
           attempts: playerStats.pass_att || 0,
           completions: playerStats.pass_cmp || 0,
           yards: playerStats.pass_yd || 0,
           touchdowns: playerStats.pass_td || 0,
-          interceptions: playerStats.pass_int || 0
+          interceptions: playerStats.pass_int || 0,
         },
         misc: {
-          fumbles_lost: playerStats.fum_lost || 0
+          fumbles_lost: playerStats.fum_lost || 0,
         },
-        updated_at: new Date()
+        updated_at: new Date(),
       };
 
       processedStats.push(processed);
@@ -180,7 +223,11 @@ export class StatsScraperService {
     await this.saveStatsToDatabase(processedStats);
   }
 
-  private async processProjectionsData(projections: any, season: number, week: number): Promise<void> {
+  private async processProjectionsData(
+    projections: any,
+    season: number,
+    week: number
+  ): Promise<void> {
     // Similar processing for projections
     // Implementation depends on your database schema
   }
@@ -226,7 +273,7 @@ export class StatsScheduler {
     try {
       const currentSeason = new Date().getFullYear();
       const currentWeek = this.getCurrentNFLWeek();
-      
+
       await this.statsScraper.scrapeWeeklyStats(currentSeason, currentWeek);
     } catch (error) {
       console.error('Scheduled stats scraping failed:', error);
@@ -237,7 +284,7 @@ export class StatsScheduler {
     try {
       const currentSeason = new Date().getFullYear();
       const currentWeek = this.getCurrentNFLWeek();
-      
+
       await this.statsScraper.scrapeProjections(currentSeason, currentWeek);
     } catch (error) {
       console.error('Scheduled projections scraping failed:', error);
@@ -257,19 +304,22 @@ export class StatsScheduler {
 ### 1. Data Validation
 
 ```typescript
-import { PlayerStats, PlayerProjections } from '../../../docs/sleeper-api/schemas/sleeper-api-types';
+import {
+  PlayerStats,
+  PlayerProjections,
+} from '../../../docs/sleeper-api/schemas/sleeper-api-types';
 
 export class DataValidator {
   static validateStats(stats: PlayerStats): boolean {
     // Validate that fantasy points make sense
     if (stats.pts_ppr && stats.pts_ppr < 0) return false;
     if (stats.pts_ppr && stats.pts_ppr > 100) return false; // Sanity check
-    
+
     // Validate receiving stats consistency
     if (stats.rec && stats.rec_yd && stats.rec_yd / stats.rec > 50) {
       console.warn('Unusual yards per reception detected');
     }
-    
+
     return true;
   }
 
@@ -315,7 +365,10 @@ export class SleeperCache {
 
 ```typescript
 export class SleeperClientWithRetry extends SleeperClient {
-  private async requestWithRetry<T>(endpoint: string, maxRetries = 3): Promise<T> {
+  private async requestWithRetry<T>(
+    endpoint: string,
+    maxRetries = 3
+  ): Promise<T> {
     let lastError: Error;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -323,7 +376,7 @@ export class SleeperClientWithRetry extends SleeperClient {
         return await this.request<T>(endpoint);
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt === maxRetries) {
           break;
         }
@@ -335,7 +388,9 @@ export class SleeperClientWithRetry extends SleeperClient {
       }
     }
 
-    throw new Error(`Failed after ${maxRetries} attempts: ${lastError.message}`);
+    throw new Error(
+      `Failed after ${maxRetries} attempts: ${lastError.message}`
+    );
   }
 }
 ```
@@ -344,7 +399,8 @@ export class SleeperClientWithRetry extends SleeperClient {
 
 ### 1. Update Player Scraper
 
-Enhance `src/scrapers/player-scraper.ts` to use Sleeper's comprehensive player data:
+Enhance `src/scrapers/player-scraper.ts` to use Sleeper's comprehensive player
+data:
 
 ```typescript
 export class PlayerScraperService {
@@ -352,7 +408,7 @@ export class PlayerScraperService {
 
   async syncPlayersFromSleeper(): Promise<void> {
     const players = await this.sleeper.getAllPlayers();
-    
+
     for (const [playerId, player] of Object.entries(players)) {
       await this.upsertPlayer({
         id: playerId,
@@ -375,12 +431,20 @@ Feed the scraped data into your simulation engine:
 ```typescript
 // In apps/sim-engine/src/data/stats-provider.ts
 export class SleeperStatsProvider {
-  async getPlayerStats(playerId: string, season: number, weeks: number[]): Promise<PlayerStats[]> {
+  async getPlayerStats(
+    playerId: string,
+    season: number,
+    weeks: number[]
+  ): Promise<PlayerStats[]> {
     // Retrieve processed stats from your database
     // that were scraped from Sleeper API
   }
 
-  async getPlayerProjections(playerId: string, season: number, week: number): Promise<PlayerProjections> {
+  async getPlayerProjections(
+    playerId: string,
+    season: number,
+    week: number
+  ): Promise<PlayerProjections> {
     // Retrieve projections for simulation input
   }
 }
@@ -408,9 +472,7 @@ describe('SleeperClient', () => {
   });
 
   it('should handle API errors gracefully', async () => {
-    await expect(
-      client.getWeeklyStats('regular', 1999, 1)
-    ).rejects.toThrow();
+    await expect(client.getWeeklyStats('regular', 1999, 1)).rejects.toThrow();
   });
 });
 ```
@@ -422,12 +484,14 @@ describe('SleeperClient', () => {
 describe('StatsScraperService Integration', () => {
   it('should scrape and process stats end-to-end', async () => {
     const scraper = new StatsScraperService();
-    
+
     // Mock database calls
-    jest.spyOn(scraper as any, 'saveStatsToDatabase').mockResolvedValue(undefined);
-    
+    jest
+      .spyOn(scraper as any, 'saveStatsToDatabase')
+      .mockResolvedValue(undefined);
+
     await scraper.scrapeWeeklyStats(2024, 1);
-    
+
     expect(scraper['saveStatsToDatabase']).toHaveBeenCalled();
   });
 });
@@ -466,11 +530,18 @@ export class SleeperHealthCheck {
 
 ```typescript
 export class SleeperMetrics {
-  static recordApiCall(endpoint: string, duration: number, success: boolean): void {
+  static recordApiCall(
+    endpoint: string,
+    duration: number,
+    success: boolean
+  ): void {
     // Send metrics to your monitoring system (Prometheus, DataDog, etc.)
   }
 
-  static recordDataVolume(dataType: 'stats' | 'projections', count: number): void {
+  static recordDataVolume(
+    dataType: 'stats' | 'projections',
+    count: number
+  ): void {
     // Track data volume for monitoring
   }
 }
@@ -493,4 +564,6 @@ export class SleeperMetrics {
 4. **Add historical data backfill** for past seasons
 5. **Optimize for performance** with parallel processing where appropriate
 
-This integration guide provides a solid foundation for incorporating Sleeper API data into The Gauntlet's data infrastructure while maintaining reliability and performance. 
+This integration guide provides a solid foundation for incorporating Sleeper API
+data into The Gauntlet's data infrastructure while maintaining reliability and
+performance.

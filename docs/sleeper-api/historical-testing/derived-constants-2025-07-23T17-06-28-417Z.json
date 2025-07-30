@@ -1,9 +1,5 @@
 {
-  "derivedFrom": [
-    "2022",
-    "2023",
-    "2024"
-  ],
+  "derivedFrom": ["2022", "2023", "2024"],
   "positionVariance": {
     "K": {
       "coefficientOfVariation": 0.50105100061671,

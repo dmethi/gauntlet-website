@@ -131,7 +131,7 @@ class SeedDataLoader {
   generateMockMatchups(week: number = 1): SleeperMatchup[] {
     const rosters = this.getLeagueRosters();
     const playerStats = this.getPlayerStats(week);
-    
+
     // Group rosters into matchups (pairs)
     const matchups: SleeperMatchup[] = [];
     let matchupId = 1;
@@ -153,7 +153,12 @@ class SeedDataLoader {
             matchup_id: matchupId,
             points: mockPoints,
             starters: mockStarters,
-            players: [...mockStarters, ...Array(6).fill(null).map(() => this.getRandomPlayerId())],
+            players: [
+              ...mockStarters,
+              ...Array(6)
+                .fill(null)
+                .map(() => this.getRandomPlayerId()),
+            ],
             starters_points: mockStarters.map(() => Math.random() * 20),
           });
         });
@@ -204,4 +209,4 @@ export const SEED_CONSTANTS = {
   USER_ID: '465307317622009856',
   USERNAME: 'dmethi',
   SEASON: '2024',
-} as const; 
+} as const;

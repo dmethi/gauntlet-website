@@ -2,7 +2,7 @@
 
 /**
  * TypeScript Type Generator for Sleeper API
- * 
+ *
  * Generates TypeScript interfaces and types from API response schemas
  * and actual API responses to create a comprehensive type system.
  */
@@ -15,7 +15,7 @@ const CONFIG = {
   inputDir: '../testing',
   outputDir: '../schemas',
   typeOutputFile: 'sleeper-api-types.ts',
-  jsonSchemaOutputFile: 'sleeper-api-schemas.json'
+  jsonSchemaOutputFile: 'sleeper-api-schemas.json',
 };
 
 // TypeScript type mapping
@@ -26,7 +26,7 @@ const TYPE_MAPPING = {
   object: 'object',
   array: 'Array',
   null: 'null',
-  undefined: 'undefined'
+  undefined: 'undefined',
 };
 
 // Utility functions
@@ -49,29 +49,29 @@ function sanitizeKey(key) {
 // Generate TypeScript interface from object
 function generateInterface(name, obj, depth = 0) {
   if (depth > 5) return 'any'; // Prevent infinite recursion
-  
+
   if (obj === null || obj === undefined) {
     return 'null';
   }
-  
+
   if (Array.isArray(obj)) {
     if (obj.length === 0) return 'any[]';
     const itemType = generateInterface(`${name}Item`, obj[0], depth + 1);
     return `${itemType}[]`;
   }
-  
+
   if (typeof obj !== 'object') {
     return TYPE_MAPPING[typeof obj] || 'any';
   }
-  
+
   const properties = [];
   const keys = Object.keys(obj);
-  
+
   for (const key of keys) {
     const value = obj[key];
     const sanitizedKey = sanitizeKey(key);
     const camelKey = toCamelCase(key);
-    
+
     let type;
     if (value === null) {
       type = 'null';
@@ -87,12 +87,12 @@ function generateInterface(name, obj, depth = 0) {
     } else {
       type = TYPE_MAPPING[typeof value] || 'any';
     }
-    
+
     // Add optional modifier for potentially missing properties
     const optional = Math.random() > 0.8 ? '?' : ''; // Simulate optional fields
     properties.push(`  ${sanitizedKey}${optional}: ${type};`);
   }
-  
+
   if (depth === 0) {
     return `export interface ${name} {\n${properties.join('\n')}\n}`;
   } else {
@@ -103,56 +103,60 @@ function generateInterface(name, obj, depth = 0) {
 // Generate comprehensive stats interface
 function generateStatsInterface(statsData) {
   const allStats = new Set();
-  
+
   // Collect all possible stat keys
   Object.values(statsData).forEach(playerStats => {
     if (typeof playerStats === 'object' && playerStats !== null) {
       Object.keys(playerStats).forEach(stat => allStats.add(stat));
     }
   });
-  
-  const properties = Array.from(allStats).sort().map(stat => {
-    // Determine type based on common patterns
-    let type = 'number';
-    
-    if (stat.includes('pct')) {
-      type = 'number'; // Percentage
-    } else if (stat.includes('rank')) {
-      type = 'number'; // Ranking
-    } else if (stat.startsWith('pts_')) {
-      type = 'number'; // Fantasy points
-    } else if (stat === 'gp' || stat === 'gs' || stat === 'gms_active') {
-      type = 'number'; // Games
-    }
-    
-    return `  ${sanitizeKey(stat)}?: ${type};`;
-  });
-  
+
+  const properties = Array.from(allStats)
+    .sort()
+    .map(stat => {
+      // Determine type based on common patterns
+      let type = 'number';
+
+      if (stat.includes('pct')) {
+        type = 'number'; // Percentage
+      } else if (stat.includes('rank')) {
+        type = 'number'; // Ranking
+      } else if (stat.startsWith('pts_')) {
+        type = 'number'; // Fantasy points
+      } else if (stat === 'gp' || stat === 'gs' || stat === 'gms_active') {
+        type = 'number'; // Games
+      }
+
+      return `  ${sanitizeKey(stat)}?: ${type};`;
+    });
+
   return `export interface PlayerStats {\n${properties.join('\n')}\n}`;
 }
 
 // Generate projections interface
 function generateProjectionsInterface(projectionsData) {
   const allProjections = new Set();
-  
+
   // Collect all possible projection keys
   Object.values(projectionsData).forEach(playerProj => {
     if (typeof playerProj === 'object' && playerProj !== null) {
       Object.keys(playerProj).forEach(proj => allProjections.add(proj));
     }
   });
-  
-  const properties = Array.from(allProjections).sort().map(proj => {
-    let type = 'number';
-    
-    // Special handling for ADP fields
-    if (proj.includes('adp')) {
-      type = 'number';
-    }
-    
-    return `  ${sanitizeKey(proj)}?: ${type};`;
-  });
-  
+
+  const properties = Array.from(allProjections)
+    .sort()
+    .map(proj => {
+      let type = 'number';
+
+      // Special handling for ADP fields
+      if (proj.includes('adp')) {
+        type = 'number';
+      }
+
+      return `  ${sanitizeKey(proj)}?: ${type};`;
+    });
+
   return `export interface PlayerProjections {\n${properties.join('\n')}\n}`;
 }
 
@@ -573,23 +577,25 @@ async function generateAllTypes(testResults) {
 
   // Add imports if needed
   output += `// Core API types\n`;
-  
+
   // Generate stats interface if we have stats data
   if (testResults && testResults.endpoints) {
-    const statsEndpoints = Object.entries(testResults.endpoints)
-      .filter(([key]) => key.includes('stats') && !key.includes('projections'));
-    
+    const statsEndpoints = Object.entries(testResults.endpoints).filter(
+      ([key]) => key.includes('stats') && !key.includes('projections')
+    );
+
     if (statsEndpoints.length > 0) {
       const [, firstStatsResult] = statsEndpoints[0];
       if (firstStatsResult.success && firstStatsResult.data) {
         output += generateStatsInterface(firstStatsResult.data) + '\n\n';
       }
     }
-    
+
     // Generate projections interface if we have projection data
-    const projectionEndpoints = Object.entries(testResults.endpoints)
-      .filter(([key]) => key.includes('projections'));
-    
+    const projectionEndpoints = Object.entries(testResults.endpoints).filter(([key]) =>
+      key.includes('projections')
+    );
+
     if (projectionEndpoints.length > 0) {
       const [, firstProjResult] = projectionEndpoints[0];
       if (firstProjResult.success && firstProjResult.data) {
@@ -597,16 +603,16 @@ async function generateAllTypes(testResults) {
       }
     }
   }
-  
+
   // Add league-related interfaces
   output += generateLeagueInterfaces() + '\n\n';
-  
+
   // Add player and draft interfaces
   output += generatePlayerInterfaces() + '\n\n';
-  
+
   // Add API wrapper types
   output += generateApiTypes() + '\n\n';
-  
+
   // Add utility functions
   output += `
 // Utility functions for type checking
@@ -656,16 +662,15 @@ async function loadTestResults(filename) {
 // Save generated types
 async function saveTypes(types) {
   const outputDir = path.join(__dirname, CONFIG.outputDir);
-  
+
   try {
     await fs.mkdir(outputDir, { recursive: true });
-    
+
     const outputPath = path.join(outputDir, CONFIG.typeOutputFile);
     await fs.writeFile(outputPath, types);
-    
+
     console.log(`TypeScript types saved to: ${outputPath}`);
     console.log(`Generated ${types.split('\n').length} lines of TypeScript definitions`);
-    
   } catch (error) {
     console.error('Error saving types:', error);
   }
@@ -674,16 +679,16 @@ async function saveTypes(types) {
 // Main execution
 async function main() {
   console.log('Generating TypeScript types for Sleeper API...');
-  
+
   // Try to load the most recent test results
   const testResults = await loadTestResults('results.json');
-  
+
   // Generate types
   const types = await generateAllTypes(testResults);
-  
+
   // Save to file
   await saveTypes(types);
-  
+
   console.log('Type generation complete!');
 }
 
@@ -699,5 +704,5 @@ module.exports = {
   generateLeagueInterfaces,
   generatePlayerInterfaces,
   generateApiTypes,
-  CONFIG
-}; 
+  CONFIG,
+};

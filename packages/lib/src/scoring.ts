@@ -83,7 +83,12 @@ export function compareScoringSystems(
   system1: ScoringSystem,
   system2: ScoringSystem
 ): Array<{ category: string; setting: string; system1Value: number; system2Value: number }> {
-  const differences: Array<{ category: string; setting: string; system1Value: number; system2Value: number }> = [];
+  const differences: Array<{
+    category: string;
+    setting: string;
+    system1Value: number;
+    system2Value: number;
+  }> = [];
 
   // Compare passing scoring
   Object.entries(system1.passing).forEach(([key, value]) => {
@@ -92,7 +97,7 @@ export function compareScoringSystems(
         category: 'passing',
         setting: key,
         system1Value: value,
-        system2Value: system2.passing[key as keyof typeof system2.passing]
+        system2Value: system2.passing[key as keyof typeof system2.passing],
       });
     }
   });
@@ -101,4 +106,4 @@ export function compareScoringSystems(
   // (Implementation would continue for rushing, receiving, kicking, defense)
 
   return differences;
-} 
+}

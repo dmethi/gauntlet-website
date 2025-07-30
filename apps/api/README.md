@@ -44,4 +44,4 @@ JWT_SECRET=your_jwt_secret
 - `POST /api/v1/auth/login` - User login
 - `POST /api/v1/auth/register` - User registration
 - `GET /api/v1/leagues` - Get user leagues
-- `POST /api/v1/leagues` - Create new league 
+- `POST /api/v1/leagues` - Create new league

@@ -11,12 +11,12 @@ console.log('🏈 Gauntlet data functions loaded');
 // Hardcoded league IDs for your specific leagues
 const LEAGUE_IDS = [
   '1049321550490456064', // Your league 1
-  '1049321550490456065'  // Your league 2 (example)
+  '1049321550490456065', // Your league 2 (example)
 ];
 
 export async function handleLeagueUpdate(leagueId?: string) {
   const leagues = leagueId ? [leagueId] : LEAGUE_IDS;
-  
+
   for (const id of leagues) {
     try {
       await updateLeagueData(id);
@@ -45,4 +45,4 @@ export async function handleSimulationRun() {
   } catch (error) {
     console.error('Simulation failed:', error);
   }
-} 
+}

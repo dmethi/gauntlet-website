@@ -2,7 +2,7 @@
 
 /**
  * Sleeper API Endpoint Tester
- * 
+ *
  * Systematically tests all Sleeper API endpoints across multiple seasons
  * to document request formats, response schemas, and data availability.
  */
@@ -21,11 +21,11 @@ const CONFIG = {
   maxSampleSize: 5, // Max entries to save in examples
   testUserId: '1234567890', // Replace with actual test user ID
   testLeagueId: '987654321', // Replace with actual test league ID
-  testDraftId: '123456789' // Replace with actual test draft ID
+  testDraftId: '123456789', // Replace with actual test draft ID
 };
 
 // Rate limiting utility
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // HTTP client with error handling
 async function apiRequest(url, options = {}) {
@@ -34,9 +34,9 @@ async function apiRequest(url, options = {}) {
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Gauntlet-API-Tester/1.0',
-        ...options.headers
+        ...options.headers,
       },
-      ...options
+      ...options,
     });
 
     const result = {
@@ -44,7 +44,7 @@ async function apiRequest(url, options = {}) {
       status: response.status,
       statusText: response.statusText,
       headers: Object.fromEntries(response.headers.entries()),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     if (response.ok) {
@@ -52,7 +52,7 @@ async function apiRequest(url, options = {}) {
       result.success = true;
       result.dataType = Array.isArray(data) ? 'array' : typeof data;
       result.dataSize = JSON.stringify(data).length;
-      
+
       if (typeof data === 'object' && data !== null) {
         if (Array.isArray(data)) {
           result.arrayLength = data.length;
@@ -64,7 +64,7 @@ async function apiRequest(url, options = {}) {
           );
         }
       }
-      
+
       result.data = data;
     } else {
       result.success = false;
@@ -77,7 +77,7 @@ async function apiRequest(url, options = {}) {
       url,
       success: false,
       error: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 }
@@ -85,54 +85,51 @@ async function apiRequest(url, options = {}) {
 // Official endpoints (documented)
 const OFFICIAL_ENDPOINTS = {
   user: {
-    getUser: (userId) => `/user/${userId}`,
+    getUser: userId => `/user/${userId}`,
     getUserLeagues: (userId, sport, season) => `/user/${userId}/leagues/${sport}/${season}`,
-    getUserDrafts: (userId, sport, season) => `/user/${userId}/drafts/${sport}/${season}`
+    getUserDrafts: (userId, sport, season) => `/user/${userId}/drafts/${sport}/${season}`,
   },
-  
+
   leagues: {
-    getLeague: (leagueId) => `/league/${leagueId}`,
-    getRosters: (leagueId) => `/league/${leagueId}/rosters`,
-    getUsers: (leagueId) => `/league/${leagueId}/users`,
+    getLeague: leagueId => `/league/${leagueId}`,
+    getRosters: leagueId => `/league/${leagueId}/rosters`,
+    getUsers: leagueId => `/league/${leagueId}/users`,
     getMatchups: (leagueId, week) => `/league/${leagueId}/matchups/${week}`,
-    getWinnersBracket: (leagueId) => `/league/${leagueId}/winners_bracket`,
-    getLosersBracket: (leagueId) => `/league/${leagueId}/losers_bracket`,
+    getWinnersBracket: leagueId => `/league/${leagueId}/winners_bracket`,
+    getLosersBracket: leagueId => `/league/${leagueId}/losers_bracket`,
     getTransactions: (leagueId, week) => `/league/${leagueId}/transactions/${week}`,
-    getTradedPicks: (leagueId) => `/league/${leagueId}/traded_picks`
+    getTradedPicks: leagueId => `/league/${leagueId}/traded_picks`,
   },
-  
+
   drafts: {
-    getDraft: (draftId) => `/draft/${draftId}`,
-    getPicks: (draftId) => `/draft/${draftId}/picks`,
-    getTradedPicks: (draftId) => `/draft/${draftId}/traded_picks`
+    getDraft: draftId => `/draft/${draftId}`,
+    getPicks: draftId => `/draft/${draftId}/picks`,
+    getTradedPicks: draftId => `/draft/${draftId}/traded_picks`,
   },
-  
+
   players: {
     getAllPlayers: () => '/players/nfl',
-    getTrendingPlayers: (type, hours = 24, limit = 25) => 
-      `/players/nfl/trending/${type}?lookback_hours=${hours}&limit=${limit}`
+    getTrendingPlayers: (type, hours = 24, limit = 25) =>
+      `/players/nfl/trending/${type}?lookback_hours=${hours}&limit=${limit}`,
   },
-  
+
   state: {
-    getNFLState: () => '/state/nfl'
-  }
+    getNFLState: () => '/state/nfl',
+  },
 };
 
 // Undocumented endpoints (discovered through wrappers)
 const UNDOCUMENTED_ENDPOINTS = {
   stats: {
-    getWeeklyStats: (seasonType, season, week) => 
-      `/stats/nfl/${seasonType}/${season}/${week}`,
-    getSeasonStats: (seasonType, season) => 
-      `/stats/nfl/${seasonType}/${season}`
+    getWeeklyStats: (seasonType, season, week) => `/stats/nfl/${seasonType}/${season}/${week}`,
+    getSeasonStats: (seasonType, season) => `/stats/nfl/${seasonType}/${season}`,
   },
-  
+
   projections: {
-    getWeeklyProjections: (seasonType, season, week) => 
+    getWeeklyProjections: (seasonType, season, week) =>
       `/projections/nfl/${seasonType}/${season}/${week}`,
-    getSeasonProjections: (seasonType, season) => 
-      `/projections/nfl/${seasonType}/${season}`
-  }
+    getSeasonProjections: (seasonType, season) => `/projections/nfl/${seasonType}/${season}`,
+  },
 };
 
 // Test official endpoints
@@ -143,8 +140,8 @@ async function testOfficialEndpoints() {
     summary: {
       tested: 0,
       successful: 0,
-      failed: 0
-    }
+      failed: 0,
+    },
   };
 
   console.log('\n=== Testing Official Endpoints ===');
@@ -167,7 +164,7 @@ async function testOfficialEndpoints() {
     } else {
       endpoint = endpointFn(CONFIG.testLeagueId);
     }
-    
+
     const result = await apiRequest(`${CONFIG.baseUrl}${endpoint}`);
     results.endpoints[name] = result;
     results.summary.tested++;
@@ -193,7 +190,7 @@ async function testOfficialEndpoints() {
     } else {
       endpoint = endpointFn();
     }
-    
+
     const result = await apiRequest(`${CONFIG.baseUrl}${endpoint}`);
     results.endpoints[name] = result;
     results.summary.tested++;
@@ -223,8 +220,8 @@ async function testUndocumentedEndpoints() {
     summary: {
       tested: 0,
       successful: 0,
-      failed: 0
-    }
+      failed: 0,
+    },
   };
 
   console.log('\n=== Testing Undocumented Endpoints ===');
@@ -232,61 +229,60 @@ async function testUndocumentedEndpoints() {
   // Test stats endpoints
   for (const season of CONFIG.seasons) {
     console.log(`\nTesting ${season} season...`);
-    
+
     for (const seasonType of CONFIG.seasonTypes) {
       // Test weekly stats for first few weeks
       const testWeeks = CONFIG.weeks.slice(0, 3); // Test first 3 weeks
-      
+
       for (const week of testWeeks) {
-        const statsEndpoint = UNDOCUMENTED_ENDPOINTS.stats.getWeeklyStats(
-          seasonType, season, week
-        );
-        
+        const statsEndpoint = UNDOCUMENTED_ENDPOINTS.stats.getWeeklyStats(seasonType, season, week);
+
         const statsResult = await apiRequest(`${CONFIG.baseUrl}${statsEndpoint}`);
         const key = `stats_${seasonType}_${season}_${week}`;
         results.endpoints[key] = statsResult;
         results.summary.tested++;
         statsResult.success ? results.summary.successful++ : results.summary.failed++;
-        
+
         await delay(CONFIG.rateLimitMs);
 
         // Test projections for same week
         const projEndpoint = UNDOCUMENTED_ENDPOINTS.projections.getWeeklyProjections(
-          seasonType, season, week
+          seasonType,
+          season,
+          week
         );
-        
+
         const projResult = await apiRequest(`${CONFIG.baseUrl}${projEndpoint}`);
         const projKey = `projections_${seasonType}_${season}_${week}`;
         results.endpoints[projKey] = projResult;
         results.summary.tested++;
         projResult.success ? results.summary.successful++ : results.summary.failed++;
-        
+
         await delay(CONFIG.rateLimitMs);
       }
 
       // Test season-level endpoints
-      const seasonStatsEndpoint = UNDOCUMENTED_ENDPOINTS.stats.getSeasonStats(
-        seasonType, season
-      );
-      
+      const seasonStatsEndpoint = UNDOCUMENTED_ENDPOINTS.stats.getSeasonStats(seasonType, season);
+
       const seasonStatsResult = await apiRequest(`${CONFIG.baseUrl}${seasonStatsEndpoint}`);
       const seasonKey = `stats_${seasonType}_${season}`;
       results.endpoints[seasonKey] = seasonStatsResult;
       results.summary.tested++;
       seasonStatsResult.success ? results.summary.successful++ : results.summary.failed++;
-      
+
       await delay(CONFIG.rateLimitMs);
 
       const seasonProjEndpoint = UNDOCUMENTED_ENDPOINTS.projections.getSeasonProjections(
-        seasonType, season
+        seasonType,
+        season
       );
-      
+
       const seasonProjResult = await apiRequest(`${CONFIG.baseUrl}${seasonProjEndpoint}`);
       const seasonProjKey = `projections_${seasonType}_${season}`;
       results.endpoints[seasonProjKey] = seasonProjResult;
       results.summary.tested++;
       seasonProjResult.success ? results.summary.successful++ : results.summary.failed++;
-      
+
       await delay(CONFIG.rateLimitMs);
     }
 
@@ -294,12 +290,12 @@ async function testUndocumentedEndpoints() {
     const seasonResults = Object.entries(results.endpoints)
       .filter(([key]) => key.includes(season.toString()))
       .map(([key, result]) => ({ key, success: result.success }));
-    
+
     results.seasonAnalysis[season] = {
       total: seasonResults.length,
       successful: seasonResults.filter(r => r.success).length,
       failed: seasonResults.filter(r => !r.success).length,
-      successRate: seasonResults.filter(r => r.success).length / seasonResults.length
+      successRate: seasonResults.filter(r => r.success).length / seasonResults.length,
     };
   }
 
@@ -316,7 +312,7 @@ function generateSchemas(results) {
         endpoint: result.url,
         responseType: result.dataType,
         schema: generateSchema(result.data),
-        example: result.sampleData
+        example: result.sampleData,
       };
     }
   }
@@ -332,18 +328,18 @@ function generateSchema(data, depth = 0) {
     if (data.length === 0) return { type: 'array', items: 'unknown' };
     return {
       type: 'array',
-      items: generateSchema(data[0], depth + 1)
+      items: generateSchema(data[0], depth + 1),
     };
   }
 
   if (data === null) return { type: 'null' };
-  
+
   if (typeof data !== 'object') {
     return { type: typeof data };
   }
 
   const schema = { type: 'object', properties: {} };
-  
+
   for (const [key, value] of Object.entries(data)) {
     schema.properties[key] = generateSchema(value, depth + 1);
   }
@@ -355,22 +351,16 @@ function generateSchema(data, depth = 0) {
 async function saveResults(results, schemas) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const testDir = path.join(__dirname, CONFIG.outputDir, `test-run-${timestamp}`);
-  
+
   try {
     await fs.mkdir(testDir, { recursive: true });
-    
+
     // Save raw results
-    await fs.writeFile(
-      path.join(testDir, 'results.json'),
-      JSON.stringify(results, null, 2)
-    );
-    
+    await fs.writeFile(path.join(testDir, 'results.json'), JSON.stringify(results, null, 2));
+
     // Save schemas
-    await fs.writeFile(
-      path.join(testDir, 'schemas.json'),
-      JSON.stringify(schemas, null, 2)
-    );
-    
+    await fs.writeFile(path.join(testDir, 'schemas.json'), JSON.stringify(schemas, null, 2));
+
     // Generate summary report
     const summary = {
       testRun: {
@@ -378,26 +368,22 @@ async function saveResults(results, schemas) {
         totalEndpoints: results.summary.tested,
         successful: results.summary.successful,
         failed: results.summary.failed,
-        successRate: results.summary.successful / results.summary.tested
+        successRate: results.summary.successful / results.summary.tested,
       },
       seasonAnalysis: results.seasonAnalysis || {},
       discoveries: {
-        newEndpoints: Object.keys(schemas).filter(name => 
-          name.includes('stats') || name.includes('projections')
+        newEndpoints: Object.keys(schemas).filter(
+          name => name.includes('stats') || name.includes('projections')
         ).length,
-        schemasGenerated: Object.keys(schemas).length
-      }
+        schemasGenerated: Object.keys(schemas).length,
+      },
     };
-    
-    await fs.writeFile(
-      path.join(testDir, 'summary.json'),
-      JSON.stringify(summary, null, 2)
-    );
-    
+
+    await fs.writeFile(path.join(testDir, 'summary.json'), JSON.stringify(summary, null, 2));
+
     console.log(`\nResults saved to: ${testDir}`);
     console.log(`Generated ${Object.keys(schemas).length} schemas`);
     console.log(`Success rate: ${(summary.testRun.successRate * 100).toFixed(1)}%`);
-    
   } catch (error) {
     console.error('Error saving results:', error);
   }
@@ -408,11 +394,11 @@ async function main() {
   console.log('Starting Sleeper API Endpoint Testing...');
   console.log(`Rate limit: ${CONFIG.rateLimitMs}ms between requests`);
   console.log(`Testing seasons: ${CONFIG.seasons.join(', ')}`);
-  
+
   let allResults = {
     summary: { tested: 0, successful: 0, failed: 0 },
     endpoints: {},
-    seasonAnalysis: {}
+    seasonAnalysis: {},
   };
 
   // Test official endpoints
@@ -449,5 +435,5 @@ module.exports = {
   testOfficialEndpoints,
   testUndocumentedEndpoints,
   generateSchemas,
-  CONFIG
-}; 
+  CONFIG,
+};

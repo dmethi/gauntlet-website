@@ -1,43 +1,52 @@
 # Player Statistics (Undocumented)
 
-The Sleeper API includes undocumented endpoints for accessing player statistics that are not mentioned in the official documentation. These endpoints provide access to weekly and seasonal stats data.
+The Sleeper API includes undocumented endpoints for accessing player statistics
+that are not mentioned in the official documentation. These endpoints provide
+access to weekly and seasonal stats data.
 
 ## Endpoints
 
 ### Get Weekly Stats
+
 ```
 GET /v1/stats/nfl/{season_type}/{season}/{week}
 ```
 
 **Parameters:**
+
 - `season_type`: `"regular"`, `"pre"`, or `"post"`
 - `season`: Year (e.g., `2024`, `2023`)
 - `week`: Week number (1-18 for regular season)
 
 **Example:**
+
 ```javascript
 // Get stats for week 8 of 2024 regular season
-fetch('https://api.sleeper.app/v1/stats/nfl/regular/2024/8')
+fetch('https://api.sleeper.app/v1/stats/nfl/regular/2024/8');
 ```
 
 ### Get Season Stats
+
 ```
 GET /v1/stats/nfl/{season_type}/{season}
 ```
 
 **Parameters:**
+
 - `season_type`: `"regular"`, `"pre"`, or `"post"`
 - `season`: Year (e.g., `2024`, `2023`)
 
 **Example:**
+
 ```javascript
 // Get all regular season stats for 2024
-fetch('https://api.sleeper.app/v1/stats/nfl/regular/2024')
+fetch('https://api.sleeper.app/v1/stats/nfl/regular/2024');
 ```
 
 ## Response Format
 
-The API returns a JSON object where keys are player IDs (or team IDs like `"TEAM_BUF"`) and values are stat objects.
+The API returns a JSON object where keys are player IDs (or team IDs like
+`"TEAM_BUF"`) and values are stat objects.
 
 ```json
 {
@@ -63,9 +72,12 @@ Based on testing Week 8, 2024 data:
 - **Players with fantasy stats**: ~487
 
 ### Most Complete Data
-Team-level aggregates have the most complete statistics (80+ categories), while individual players vary significantly in data completeness.
+
+Team-level aggregates have the most complete statistics (80+ categories), while
+individual players vary significantly in data completeness.
 
 ### Top Individual Players (by stat completeness)
+
 1. **Player 5892**: 52 stats (likely RB with receiving work)
 2. **Player 4018**: 48 stats (likely RB)
 3. **Player 7523**: 47 stats (likely QB)
@@ -73,8 +85,9 @@ Team-level aggregates have the most complete statistics (80+ categories), while 
 ## Available Stat Categories
 
 ### Core Fantasy Stats
+
 - `pts_ppr`: PPR fantasy points
-- `pts_half_ppr`: Half-PPR fantasy points  
+- `pts_half_ppr`: Half-PPR fantasy points
 - `pts_std`: Standard fantasy points
 - `rec`: Receptions
 - `rec_yd`: Receiving yards
@@ -90,12 +103,13 @@ Team-level aggregates have the most complete statistics (80+ categories), while 
 - `fum_lost`: Fumbles lost
 
 ### Advanced Stats (219 total categories)
+
 - `pos_rank_ppr`: Position rank in PPR
 - `pos_rank_half_ppr`: Position rank in half-PPR
 - `pos_rank_std`: Position rank in standard
 - `gms_active`: Games active
 - `tm_off_snp`: Team offensive snaps
-- `tm_def_snp`: Team defensive snaps  
+- `tm_def_snp`: Team defensive snaps
 - `tm_st_snp`: Team special teams snaps
 - `rec_tgt`: Targets
 - `rec_air_yd`: Air yards
@@ -110,18 +124,19 @@ Team-level aggregates have the most complete statistics (80+ categories), while 
 ## Usage Examples
 
 ### Get Player Fantasy Points
+
 ```javascript
 const getPlayerPoints = async (playerId, season, week) => {
   const response = await fetch(
     `https://api.sleeper.app/v1/stats/nfl/regular/${season}/${week}`
   );
   const stats = await response.json();
-  
+
   if (stats[playerId]) {
     return {
       ppr: stats[playerId].pts_ppr || 0,
       halfPpr: stats[playerId].pts_half_ppr || 0,
-      standard: stats[playerId].pts_std || 0
+      standard: stats[playerId].pts_std || 0,
     };
   }
   return null;
@@ -129,31 +144,33 @@ const getPlayerPoints = async (playerId, season, week) => {
 ```
 
 ### Find Top Performers
+
 ```javascript
 const getTopPerformers = async (season, week, statCategory = 'pts_ppr') => {
   const response = await fetch(
     `https://api.sleeper.app/v1/stats/nfl/regular/${season}/${week}`
   );
   const stats = await response.json();
-  
+
   const players = Object.entries(stats)
     .filter(([playerId, data]) => !playerId.startsWith('TEAM_'))
     .filter(([playerId, data]) => data[statCategory])
     .map(([playerId, data]) => ({
       playerId,
-      value: data[statCategory]
+      value: data[statCategory],
     }))
     .sort((a, b) => b.value - a.value);
-    
+
   return players.slice(0, 10); // Top 10
 };
 ```
 
 ### Aggregate Season Stats
+
 ```javascript
 const getSeasonStats = async (playerId, season) => {
   const seasonStats = {};
-  
+
   // Get stats for weeks 1-18
   for (let week = 1; week <= 18; week++) {
     try {
@@ -161,7 +178,7 @@ const getSeasonStats = async (playerId, season) => {
         `https://api.sleeper.app/v1/stats/nfl/regular/${season}/${week}`
       );
       const weekData = await response.json();
-      
+
       if (weekData[playerId]) {
         Object.entries(weekData[playerId]).forEach(([stat, value]) => {
           if (typeof value === 'number') {
@@ -172,11 +189,11 @@ const getSeasonStats = async (playerId, season) => {
     } catch (error) {
       console.warn(`Failed to get week ${week} data:`, error);
     }
-    
+
     // Rate limiting - wait 100ms between requests
     await new Promise(resolve => setTimeout(resolve, 100));
   }
-  
+
   return seasonStats;
 };
 ```
@@ -198,6 +215,7 @@ const getSeasonStats = async (playerId, season) => {
 ## Testing Results
 
 ### 2024 Season (Week 8)
+
 - **API Response Time**: ~200-500ms
 - **Data Size**: ~2MB uncompressed
 - **Success Rate**: 100% for weeks 1-8
@@ -205,10 +223,12 @@ const getSeasonStats = async (playerId, season) => {
 - **Fantasy Relevant**: ~50 core stats for fantasy football
 
 ### Historical Testing
+
 - **2023 Season**: Similar structure and availability
 - **2022 Season**: Consistent schema
 - **Pre-2022**: Limited testing, assume similar format
 
 ## Related Endpoints
+
 - [Player Projections](./projections.md) - Weekly/seasonal projections
-- [Players List](../official/players.md) - Player metadata and IDs 
+- [Players List](../official/players.md) - Player metadata and IDs

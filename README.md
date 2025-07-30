@@ -1,14 +1,20 @@
 # 🏈 The Gauntlet
 
-High-stakes fantasy football platform with advanced simulation, dynamic scoring systems, and tightly integrated game mechanics.
+High-stakes fantasy football platform with advanced simulation, dynamic scoring
+systems, and tightly integrated game mechanics.
 
 ## Features
 
-- **Advanced Simulation Engine**: AI-powered player projections and matchup analysis
-- **Real-time Data Pipeline**: Live stats from multiple sources with automated ingestion
-- **Dynamic Scoring Systems**: Customizable scoring with weather, matchup, and situational adjustments
-- **League Management**: Complete fantasy league administration with trade analysis
-- **Modern UI/UX**: Beautiful, responsive interface built with Next.js and Tailwind CSS
+- **Advanced Simulation Engine**: AI-powered player projections and matchup
+  analysis
+- **Real-time Data Pipeline**: Live stats from multiple sources with automated
+  ingestion
+- **Dynamic Scoring Systems**: Customizable scoring with weather, matchup, and
+  situational adjustments
+- **League Management**: Complete fantasy league administration with trade
+  analysis
+- **Modern UI/UX**: Beautiful, responsive interface built with Next.js and
+  Tailwind CSS
 
 ## Project Structure
 
@@ -62,6 +68,7 @@ pnpm dev
 ```
 
 This will start:
+
 - **Web App**: http://localhost:3000
 - **API Server**: http://localhost:3001
 - **Simulation Engine**: Available via CLI commands
@@ -97,7 +104,9 @@ pnpm clean
 ## Applications
 
 ### 🌐 Web App (`apps/web`)
+
 Next.js 14 application with:
+
 - Modern React with TypeScript
 - Tailwind CSS for styling
 - shadcn/ui component library
@@ -109,7 +118,9 @@ pnpm dev  # Start at localhost:3000
 ```
 
 ### 🔌 API Server (`apps/api`)
+
 Express.js backend providing:
+
 - RESTful API endpoints
 - JWT authentication
 - Real-time WebSocket connections
@@ -121,6 +132,7 @@ pnpm dev  # Start at localhost:3001
 ```
 
 ### 🎯 Simulation Engine (`apps/sim-engine`)
+
 Advanced fantasy football simulation system:
 
 ```bash
@@ -135,6 +147,7 @@ pnpm --filter @gauntlet/sim-engine sim:matchup --team1 team_123 --team2 team_456
 ```
 
 ### 🕷️ Data Scraper (`apps/scraper`)
+
 Automated data ingestion service:
 
 ```bash
@@ -150,28 +163,36 @@ pnpm --filter @gauntlet/scraper scrape:schedule
 ## Packages
 
 ### 📋 Types (`packages/types`)
+
 Shared TypeScript definitions for:
+
 - Player and team interfaces
 - League settings and scoring systems
 - API response types
 - Simulation results
 
 ### 🔧 Lib (`packages/lib`)
+
 Utility functions including:
+
 - Scoring calculations
 - Data validation
 - Helper functions
 - Constants and configurations
 
 ### 🏗️ Models (`packages/models`)
+
 Business logic models for:
+
 - League management
 - Team operations
 - Player statistics
 - Game simulations
 
 ### 🎨 UI (`packages/ui`)
+
 Shared React components:
+
 - Design system components
 - Fantasy-specific widgets
 - Charts and visualizations
@@ -189,12 +210,14 @@ Shared React components:
 ## Environment Variables
 
 ### Web App (`apps/web/.env.local`)
+
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_WS_URL=ws://localhost:3001
 ```
 
 ### API Server (`apps/api/.env`)
+
 ```bash
 NODE_ENV=development
 PORT=3001
@@ -203,6 +226,7 @@ JWT_SECRET=your-secret-key
 ```
 
 ### Scraper Service (`apps/scraper/.env`)
+
 ```bash
 ESPN_API_KEY=your-espn-key
 YAHOO_CLIENT_ID=your-yahoo-id
@@ -233,6 +257,7 @@ This project maintains high code quality standards:
 ## Deployment
 
 ### Production Build
+
 ```bash
 # Build all packages and applications
 pnpm build
@@ -242,12 +267,14 @@ pnpm start
 ```
 
 ### Docker Deployment
+
 ```bash
 # Build and run with Docker Compose
 docker-compose up --build
 ```
 
 ### Vercel Deployment (Frontend)
+
 The web app is configured for automatic deployment to Vercel:
 
 ```bash
@@ -261,13 +288,15 @@ vercel deploy --prod
 ## API Documentation
 
 Once the API server is running, documentation is available at:
+
 - **Development**: http://localhost:3001/docs
 - **Swagger UI**: Interactive API documentation
 - **OpenAPI Spec**: Machine-readable API specification
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ## Support
 
@@ -277,4 +306,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Built with ❤️ for fantasy football enthusiasts who demand the best tools for their high-stakes leagues. 
+Built with ❤️ for fantasy football enthusiasts who demand the best tools for
+their high-stakes leagues.

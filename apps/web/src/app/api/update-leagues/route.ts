@@ -17,29 +17,29 @@ export async function POST(request: NextRequest) {
     }
 
     const results = [];
-    
+
     for (const leagueId of LEAGUE_IDS) {
       try {
         const [leagueRes, usersRes, rostersRes] = await Promise.all([
           fetch(`${SLEEPER_API}/league/${leagueId}`),
           fetch(`${SLEEPER_API}/league/${leagueId}/users`),
-          fetch(`${SLEEPER_API}/league/${leagueId}/rosters`)
+          fetch(`${SLEEPER_API}/league/${leagueId}/rosters`),
         ]);
 
         const [league, users, rosters] = await Promise.all([
           leagueRes.json(),
-          usersRes.json(), 
-          rostersRes.json()
+          usersRes.json(),
+          rostersRes.json(),
         ]);
 
         // Store in Vercel KV or your chosen storage
         // await kv.set(`league:${leagueId}`, { league, users, rosters, updatedAt: new Date() });
-        
+
         results.push({
           leagueId,
           leagueName: league.name,
           userCount: users.length,
-          rosterCount: rosters.length
+          rosterCount: rosters.length,
         });
       } catch (error) {
         console.error(`Failed to update league ${leagueId}:`, error);
@@ -50,14 +50,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       results,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
-
   } catch (error) {
     console.error('League update error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-} 
+}

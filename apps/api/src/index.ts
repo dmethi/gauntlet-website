@@ -29,4 +29,4 @@ app.get('/api/v1/status', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🏈 The Gauntlet API server running on port ${PORT}`);
-}); 
+});

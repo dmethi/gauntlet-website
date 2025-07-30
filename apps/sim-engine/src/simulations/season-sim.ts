@@ -3,6 +3,6 @@ export async function runSeasonSimulation(weeks: number) {
   return {
     totalWeeks: weeks,
     status: 'Season simulation not yet implemented',
-    message: 'This will simulate an entire fantasy season with playoff brackets'
+    message: 'This will simulate an entire fantasy season with playoff brackets',
   };
-} 
+}

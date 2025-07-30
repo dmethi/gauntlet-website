@@ -67,7 +67,9 @@ try {
   const samplePlayerIds = Object.keys(players).slice(0, 3);
   samplePlayerIds.forEach(playerId => {
     const player = players[playerId];
-    console.log(`   - ${player.first_name} ${player.last_name} (${player.position}, ${player.team})`);
+    console.log(
+      `   - ${player.first_name} ${player.last_name} (${player.position}, ${player.team})`
+    );
   });
   console.log();
 
@@ -87,8 +89,7 @@ try {
   console.log(`   - ${Object.keys(stats).length} player stats: ✅`);
   console.log(`   - ${Object.keys(players).length} player profiles: ✅`);
   console.log(`   - NFL state: ✅`);
-
 } catch (error) {
   console.error('❌ Error testing seed data:', error.message);
   process.exit(1);
-} 
+}

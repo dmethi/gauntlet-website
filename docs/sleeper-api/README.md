@@ -1,10 +1,13 @@
 # Sleeper API Documentation
 
-Comprehensive documentation for the Sleeper Fantasy Football API, including official endpoints and undocumented endpoints discovered through reverse engineering.
+Comprehensive documentation for the Sleeper Fantasy Football API, including
+official endpoints and undocumented endpoints discovered through reverse
+engineering.
 
 ## Overview
 
 This documentation covers:
+
 - **Official API endpoints** from [docs.sleeper.app](https://docs.sleeper.app/)
 - **Undocumented endpoints** for stats, projections, and advanced data
 - **Multi-season testing** across 2018-2024 seasons
@@ -66,10 +69,12 @@ docs/sleeper-api/
 
 ### Undocumented Endpoints
 
-Based on analysis of community wrappers, we've identified several undocumented endpoints:
+Based on analysis of community wrappers, we've identified several undocumented
+endpoints:
 
 1. **Player Stats**: `GET /v1/stats/nfl/{season_type}/{season}/{week}`
-2. **Player Projections**: `GET /v1/projections/nfl/{season_type}/{season}/{week}` 
+2. **Player Projections**:
+   `GET /v1/projections/nfl/{season_type}/{season}/{week}`
 3. **Season Stats**: `GET /v1/stats/nfl/{season_type}/{season}`
 4. **Season Projections**: `GET /v1/projections/nfl/{season_type}/{season}`
 
@@ -115,6 +120,7 @@ console.log(`Found projections for ${Object.keys(projections).length} players`);
 ## Testing Results
 
 We've tested endpoints across multiple seasons to understand:
+
 - Data availability and consistency
 - Schema changes over time
 - Performance characteristics
@@ -127,7 +133,7 @@ See the `testing/` directory for detailed results.
 When documenting new endpoints:
 
 1. **Test thoroughly** across multiple seasons
-2. **Document edge cases** and error conditions  
+2. **Document edge cases** and error conditions
 3. **Include response examples** with real data
 4. **Generate TypeScript types** for responses
 5. **Note rate limiting** and caching recommendations
@@ -137,4 +143,4 @@ When documenting new endpoints:
 - [Official Sleeper API Docs](https://docs.sleeper.app/)
 - [Community Python Wrapper](https://github.com/dtsong/sleeper-api-wrapper)
 - [Community Node.js Wrapper](https://github.com/BankkRoll/sleeper-wrapper)
-- [Community Go Wrapper](https://github.com/battle-of-the-states/sleeper-go-wrapper) 
+- [Community Go Wrapper](https://github.com/battle-of-the-states/sleeper-go-wrapper)

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
         // Store as time-series data (append, don't overwrite)
         const timeSeriesFile = join(DATA_DIR, `timeseries-${leagueId}-week-${currentWeek}.json`);
-        
+
         let timeSeriesData = [];
         if (existsSync(timeSeriesFile)) {
           timeSeriesData = JSON.parse(readFileSync(timeSeriesFile, 'utf8'));
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           timestamp,
           week: currentWeek,
           season,
-          matchups: liveScores
+          matchups: liveScores,
         });
 
         writeFileSync(timeSeriesFile, JSON.stringify(timeSeriesData, null, 2));
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
           week: currentWeek,
           season,
           matchups: liveScores,
-          lastUpdated: timestamp
+          lastUpdated: timestamp,
         };
         writeFileSync(latestFile, JSON.stringify(latestData, null, 2));
 
@@ -79,9 +79,8 @@ export async function POST(request: NextRequest) {
           week: currentWeek,
           matchupsUpdated: liveScores.length,
           dataPoints: timeSeriesData.length,
-          filename: `timeseries-${leagueId}-week-${currentWeek}.json`
+          filename: `timeseries-${leagueId}-week-${currentWeek}.json`,
         });
-
       } catch (error) {
         console.error(`Failed to update live scores for ${leagueId}:`, error);
         results.push({ leagueId, error: 'Update failed' });
@@ -91,49 +90,47 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       results,
-      updatedAt: timestamp
+      updatedAt: timestamp,
     });
-
   } catch (error) {
     console.error('Live scores update error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 function calculateLiveScores(matchups: any[], stats: Record<string, any>, timestamp: string) {
   return matchups.map(matchup => {
     const livePoints: Record<string, number> = {};
-    
+
     // Calculate live fantasy points for each player in the matchup
     if (matchup.starters) {
       matchup.starters.forEach((playerId: string) => {
         const playerStats = stats[playerId];
         if (playerStats) {
           // Basic fantasy scoring - customize based on your league settings
-          const points = (
+          const points =
             (playerStats.rush_yd || 0) * 0.1 +
             (playerStats.pass_yd || 0) * 0.04 +
             (playerStats.rec_yd || 0) * 0.1 +
             (playerStats.rush_td || 0) * 6 +
             (playerStats.pass_td || 0) * 4 +
             (playerStats.rec_td || 0) * 6 +
-            (playerStats.rec || 0) * 1
-          );
+            (playerStats.rec || 0) * 1;
           livePoints[playerId] = Math.round(points * 100) / 100;
         }
       });
     }
 
-    const totalLivePoints = Object.values(livePoints).reduce((sum: number, pts: number) => sum + pts, 0);
+    const totalLivePoints = Object.values(livePoints).reduce(
+      (sum: number, pts: number) => sum + pts,
+      0
+    );
 
     return {
       ...matchup,
       livePoints,
       totalLivePoints,
-      timestamp
+      timestamp,
     };
   });
 }
@@ -144,4 +141,4 @@ function getCurrentWeek(): number {
   const diffTime = now.getTime() - seasonStart.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return Math.min(Math.max(Math.ceil(diffDays / 7), 1), 18);
-} 
+}

@@ -1,16 +1,8 @@
 [
   {
     "season": 2015,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 1759,
       "8": 1541,
@@ -21,24 +13,12 @@
       "8": 8567,
       "17": 8567
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2016,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 1759,
       "8": 1429,
@@ -49,24 +29,12 @@
       "8": 8567,
       "17": 8567
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2017,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 1652,
       "8": 1429,
@@ -77,24 +45,12 @@
       "8": 8567,
       "17": 8567
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2018,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 1759,
       "8": 1542,
@@ -105,24 +61,12 @@
       "8": 8596,
       "17": 8601
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2019,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 1761,
       "8": 1650,
@@ -133,24 +77,12 @@
       "8": 8598,
       "17": 8600
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2020,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 1794,
       "8": 1571,
@@ -161,24 +93,12 @@
       "8": 8595,
       "17": 8601
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2021,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 2495,
       "8": 2212,
@@ -189,24 +109,12 @@
       "8": 8598,
       "17": 8599
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2022,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 2281,
       "8": 2216,
@@ -217,24 +125,12 @@
       "8": 8597,
       "17": 8599
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2023,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 2273,
       "8": 2336,
@@ -245,24 +141,12 @@
       "8": 8599,
       "17": 8599
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   },
   {
     "season": 2024,
-    "statsAvailable": [
-      1,
-      8,
-      17
-    ],
-    "projectionsAvailable": [
-      1,
-      8,
-      17
-    ],
+    "statsAvailable": [1, 8, 17],
+    "projectionsAvailable": [1, 8, 17],
     "totalPlayersStats": {
       "1": 2310,
       "8": 2400,
@@ -273,10 +157,6 @@
       "8": 8599,
       "17": 8599
     },
-    "sampleWeeks": [
-      1,
-      8,
-      17
-    ]
+    "sampleWeeks": [1, 8, 17]
   }
 ]

@@ -31,16 +31,14 @@ export function sleep(ms: number): Promise<void> {
  * Capitalize first letter of each word
  */
 export function titleCase(str: string): string {
-  return str.replace(/\w\S*/g, (txt) =>
-    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  );
+  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
 
 /**
  * Convert snake_case to camelCase
  */
 export function toCamelCase(str: string): string {
-  return str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+  return str.replace(/_([a-z])/g, g => g[1].toUpperCase());
 }
 
 /**
@@ -68,9 +66,9 @@ export function isEmpty(obj: object): boolean {
  * Generate UUID v4
  */
 export function generateId(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -81,15 +79,17 @@ export function generateId(): string {
 export function getCurrentNFLWeek(): number {
   const now = new Date();
   const seasonStart = new Date(now.getFullYear(), 8, 1); // September 1st
-  
+
   // Adjust if we're in the next calendar year
   if (now.getMonth() < 6) {
     seasonStart.setFullYear(now.getFullYear() - 1);
   }
-  
-  const daysSinceStart = Math.floor((now.getTime() - seasonStart.getTime()) / (1000 * 60 * 60 * 24));
+
+  const daysSinceStart = Math.floor(
+    (now.getTime() - seasonStart.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const week = Math.floor(daysSinceStart / 7) + 1;
-  
+
   return Math.max(1, Math.min(18, week)); // NFL has 18 weeks
 }
 
@@ -99,7 +99,7 @@ export function getCurrentNFLWeek(): number {
 export function isNFLSeason(): boolean {
   const now = new Date();
   const month = now.getMonth() + 1; // getMonth() returns 0-11
-  
+
   // NFL season runs September through February
   return month >= 9 || month <= 2;
-} 
+}

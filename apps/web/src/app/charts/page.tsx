@@ -25,11 +25,11 @@ export default function ChartsPage() {
   const fetchChartData = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch(`/api/charts/${LEAGUE_ID}/${selectedWeek}`);
       const data = await response.json();
-      
+
       if (data.success) {
         setChartData(data);
       } else {
@@ -45,21 +45,21 @@ export default function ChartsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading chart data...</div>
+      <div className='container mx-auto px-4 py-8'>
+        <div className='text-center'>Loading chart data...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      <div className='container mx-auto px-4 py-8'>
+        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded'>
           {error}
         </div>
-        <button 
+        <button
           onClick={fetchChartData}
-          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
         >
           Retry
         </button>
@@ -69,9 +69,9 @@ export default function ChartsPage() {
 
   if (!chartData?.chartData?.length) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Fantasy Charts - Week {selectedWeek}</h1>
-        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+      <div className='container mx-auto px-4 py-8'>
+        <h1 className='text-3xl font-bold mb-6'>Fantasy Charts - Week {selectedWeek}</h1>
+        <div className='bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded'>
           No chart data available for this week yet.
         </div>
       </div>
@@ -79,59 +79,67 @@ export default function ChartsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Fantasy Charts - Week {selectedWeek}</h1>
-        
-        <div className="flex items-center gap-4">
-          <select 
-            value={selectedWeek} 
-            onChange={(e) => setSelectedWeek(parseInt(e.target.value))}
-            className="border rounded px-3 py-2"
+    <div className='container mx-auto px-4 py-8'>
+      <div className='flex justify-between items-center mb-6'>
+        <h1 className='text-3xl font-bold'>Fantasy Charts - Week {selectedWeek}</h1>
+
+        <div className='flex items-center gap-4'>
+          <select
+            value={selectedWeek}
+            onChange={e => setSelectedWeek(parseInt(e.target.value))}
+            className='border rounded px-3 py-2'
           >
-            {Array.from({length: 18}, (_, i) => i + 1).map(week => (
-              <option key={week} value={week}>Week {week}</option>
+            {Array.from({ length: 18 }, (_, i) => i + 1).map(week => (
+              <option key={week} value={week}>
+                Week {week}
+              </option>
             ))}
           </select>
-          
-          <button 
+
+          <button
             onClick={fetchChartData}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
           >
             Refresh
           </button>
         </div>
       </div>
 
-      <div className="mb-6 text-sm text-gray-600">
-        Last updated: {chartData.lastUpdated ? new Date(chartData.lastUpdated).toLocaleString() : 'N/A'}
-        <span className="ml-4">Data points: {chartData.dataPoints}</span>
+      <div className='mb-6 text-sm text-gray-600'>
+        Last updated:{' '}
+        {chartData.lastUpdated ? new Date(chartData.lastUpdated).toLocaleString() : 'N/A'}
+        <span className='ml-4'>Data points: {chartData.dataPoints}</span>
       </div>
 
       {/* Excitement Rankings */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">🔥 Most Exciting Matchups</h2>
-        <div className="grid gap-4 md:grid-cols-3">
+      <div className='mb-8'>
+        <h2 className='text-2xl font-bold mb-4'>🔥 Most Exciting Matchups</h2>
+        <div className='grid gap-4 md:grid-cols-3'>
           {chartData.chartData.slice(0, 3).map((matchup: any, index: number) => (
-            <div key={`${matchup.matchup_id}-${matchup.roster_id}`} 
-                 className={`border rounded-lg p-4 ${
-                   index === 0 ? 'bg-yellow-50 border-yellow-300' :
-                   index === 1 ? 'bg-gray-50 border-gray-300' :
-                   'bg-orange-50 border-orange-300'
-                 }`}>
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-bold">
+            <div
+              key={`${matchup.matchup_id}-${matchup.roster_id}`}
+              className={`border rounded-lg p-4 ${
+                index === 0
+                  ? 'bg-yellow-50 border-yellow-300'
+                  : index === 1
+                    ? 'bg-gray-50 border-gray-300'
+                    : 'bg-orange-50 border-orange-300'
+              }`}
+            >
+              <div className='flex justify-between items-center mb-2'>
+                <h3 className='font-bold'>
                   {index === 0 && '🥇'} {index === 1 && '🥈'} {index === 2 && '🥉'}
                   Matchup {matchup.matchup_id}
                 </h3>
-                <div className="text-lg font-bold text-red-600">
-                  {matchup.excitementScore}
-                </div>
+                <div className='text-lg font-bold text-red-600'>{matchup.excitementScore}</div>
               </div>
-              <div className="text-sm space-y-1">
+              <div className='text-sm space-y-1'>
                 <div>Max Swing: ±{(matchup.maxSwing * 100).toFixed(1)}%</div>
                 <div>Volatility: {(matchup.volatility * 100).toFixed(1)}%</div>
-                <div>Current Score: {matchup.scores[matchup.scores.length - 1]?.score.toFixed(1) || 'N/A'}</div>
+                <div>
+                  Current Score:{' '}
+                  {matchup.scores[matchup.scores.length - 1]?.score.toFixed(1) || 'N/A'}
+                </div>
               </div>
             </div>
           ))}
@@ -139,22 +147,23 @@ export default function ChartsPage() {
       </div>
 
       {/* Individual Matchup Charts */}
-      <div className="space-y-8">
+      <div className='space-y-8'>
         {chartData.chartData.map((matchup: any) => (
-          <div key={`${matchup.matchup_id}-${matchup.roster_id}`} className="border rounded-lg p-6 bg-white shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">
+          <div
+            key={`${matchup.matchup_id}-${matchup.roster_id}`}
+            className='border rounded-lg p-6 bg-white shadow-lg'
+          >
+            <div className='flex justify-between items-center mb-4'>
+              <h3 className='text-xl font-bold'>
                 Matchup {matchup.matchup_id} - Roster {matchup.roster_id}
               </h3>
-              <div className="text-sm text-gray-600">
-                Excitement: {matchup.excitementScore}
-              </div>
+              <div className='text-sm text-gray-600'>Excitement: {matchup.excitementScore}</div>
             </div>
 
             {/* Score Chart */}
-            <div className="mb-6">
-              <h4 className="font-semibold mb-2">Score Over Time</h4>
-              <div className="h-32 bg-gray-50 rounded border relative overflow-hidden">
+            <div className='mb-6'>
+              <h4 className='font-semibold mb-2'>Score Over Time</h4>
+              <div className='h-32 bg-gray-50 rounded border relative overflow-hidden'>
                 <ScoreChart scores={matchup.scores} />
               </div>
             </div>
@@ -162,8 +171,8 @@ export default function ChartsPage() {
             {/* Win Probability Chart */}
             {matchup.winProbabilities.length > 0 && (
               <div>
-                <h4 className="font-semibold mb-2">Win Probability Over Time</h4>
-                <div className="h-32 bg-gray-50 rounded border relative overflow-hidden">
+                <h4 className='font-semibold mb-2'>Win Probability Over Time</h4>
+                <div className='h-32 bg-gray-50 rounded border relative overflow-hidden'>
                   <WinProbChart winProbs={matchup.winProbabilities} />
                 </div>
               </div>
@@ -177,27 +186,30 @@ export default function ChartsPage() {
 
 // Simple ASCII-style chart components
 function ScoreChart({ scores }: { scores: any[] }) {
-  if (!scores.length) return <div className="p-4 text-gray-500">No score data</div>;
-  
+  if (!scores.length) return <div className='p-4 text-gray-500'>No score data</div>;
+
   const maxScore = Math.max(...scores.map(s => s.score));
   const minScore = Math.min(...scores.map(s => s.score));
   const range = maxScore - minScore || 1;
-  
+
   return (
-    <div className="flex items-end h-full p-2 gap-1">
+    <div className='flex items-end h-full p-2 gap-1'>
       {scores.map((score, index) => {
         const height = ((score.score - minScore) / range) * 100;
-        const time = new Date(score.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
+        const time = new Date(score.timestamp).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+
         return (
-          <div key={index} className="flex-1 flex flex-col items-center">
-            <div 
-              className="bg-blue-500 w-full min-h-[2px] rounded-t"
+          <div key={index} className='flex-1 flex flex-col items-center'>
+            <div
+              className='bg-blue-500 w-full min-h-[2px] rounded-t'
               style={{ height: `${Math.max(height, 5)}%` }}
               title={`${time}: ${score.score.toFixed(1)}`}
             />
             {index % 3 === 0 && (
-              <div className="text-xs text-gray-600 mt-1 transform -rotate-45 origin-left">
+              <div className='text-xs text-gray-600 mt-1 transform -rotate-45 origin-left'>
                 {time}
               </div>
             )}
@@ -209,24 +221,27 @@ function ScoreChart({ scores }: { scores: any[] }) {
 }
 
 function WinProbChart({ winProbs }: { winProbs: any[] }) {
-  if (!winProbs.length) return <div className="p-4 text-gray-500">No win probability data</div>;
-  
+  if (!winProbs.length) return <div className='p-4 text-gray-500'>No win probability data</div>;
+
   return (
-    <div className="flex items-end h-full p-2 gap-1">
+    <div className='flex items-end h-full p-2 gap-1'>
       {winProbs.map((wp, index) => {
         const height = wp.winProbability * 100;
-        const time = new Date(wp.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = new Date(wp.timestamp).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
         const color = height > 60 ? 'bg-green-500' : height > 40 ? 'bg-yellow-500' : 'bg-red-500';
-        
+
         return (
-          <div key={index} className="flex-1 flex flex-col items-center">
-            <div 
+          <div key={index} className='flex-1 flex flex-col items-center'>
+            <div
               className={`${color} w-full min-h-[2px] rounded-t`}
               style={{ height: `${Math.max(height, 5)}%` }}
-              title={`${time}: ${(height).toFixed(1)}%`}
+              title={`${time}: ${height.toFixed(1)}%`}
             />
             {index % 3 === 0 && (
-              <div className="text-xs text-gray-600 mt-1 transform -rotate-45 origin-left">
+              <div className='text-xs text-gray-600 mt-1 transform -rotate-45 origin-left'>
                 {time}
               </div>
             )}
@@ -235,4 +250,4 @@ function WinProbChart({ winProbs }: { winProbs: any[] }) {
       })}
     </div>
   );
-} 
+}
