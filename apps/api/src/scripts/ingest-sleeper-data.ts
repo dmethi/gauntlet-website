@@ -6,7 +6,7 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 const SLEEPER_API_BASE = 'https://api.sleeper.app/v1';
-const TEST_LEAGUE_ID = '1124853133466419200';
+const TEST_LEAGUE_ID = '997670420490801152';
 const CURRENT_SEASON = '2024'; // Update this each season
 
 // Types for Sleeper API responses
