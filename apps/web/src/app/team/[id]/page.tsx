@@ -1,6 +1,6 @@
 'use client';
 
-import { TeamPerformanceChart, TeamExpectedPerformanceChart } from '@/components/team-charts';
+import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
 import { useTeamData } from '@/lib/hooks';
 import ContentLoader from 'react-content-loader';
 import { type Matchup, type WeeklyMetrics } from '../../../generated/prisma';
@@ -78,7 +78,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   return (
     <div className='container mx-auto px-4 py-8'>
       <div className='mb-8'>
-        <h1 className='text-3xl font-bold'>{team.owner?.username}'s Team</h1>
+        <h1 className='text-3xl font-bold'>{team.owner?.username}&apos;s Team</h1>
         <p className='text-gray-600'>League: {team.league.name}</p>
       </div>
 

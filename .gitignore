@@ -121,4 +121,4 @@ Thumbs.db
 tmp/
 temp/ 
 
-**/generated/
+**/generated/\n# Cursor-specific files\n.cursor/

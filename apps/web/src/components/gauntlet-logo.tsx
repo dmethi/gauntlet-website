@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface GauntletLogoProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -15,12 +16,8 @@ const sizeClasses = {
 
 export function GauntletLogo({ size = 'md', className = '' }: GauntletLogoProps) {
   return (
-    <div className={`${sizeClasses[size]} ${className} flex-shrink-0`}>
-      <img
-        src='/gauntlet_logo.svg'
-        alt='The Gauntlet Logo'
-        className='w-full h-full object-contain'
-      />
+    <div className={`${sizeClasses[size]} ${className} flex-shrink-0 relative`}>
+      <Image src='/gauntlet_logo.svg' alt='The Gauntlet Logo' layout='fill' objectFit='contain' />
     </div>
   );
 }

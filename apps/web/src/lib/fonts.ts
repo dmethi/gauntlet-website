@@ -1,14 +1,14 @@
 import localFont from 'next/font/local';
 import {
-  Inter, // Modern, very popular, excellent for UI
-  Roboto, // Classic Google font, highly readable
-  Open_Sans, // Friendly, widely used
-  Lato, // Humanist, warm feeling
-  Source_Sans_3, // Clean, professional (updated name)
-  Poppins, // Geometric, modern
-  Work_Sans, // Versatile, great for data
   Fira_Sans, // Technical, clean
   IBM_Plex_Sans, // Corporate, modern
+  Inter, // Modern, very popular, excellent for UI
+  Lato, // Humanist, warm feeling
+  Open_Sans, // Friendly, widely used
+  Poppins, // Geometric, modern
+  Roboto, // Classic Google font, highly readable
+  Source_Sans_3, // Clean, professional (updated name)
+  Work_Sans, // Versatile, great for data
 } from 'next/font/google';
 
 // Current Montserrat setup (all weights)

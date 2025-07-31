@@ -5,7 +5,7 @@ module.exports = {
     es2022: true,
     node: true,
   },
-  extends: ['eslint:recommended', '@typescript-eslint/recommended', 'prettier'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -53,5 +53,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['node_modules/', '.next/', 'dist/', 'build/', '*.config.js'],
+  ignorePatterns: ['node_modules/', '.next/', 'dist/', 'build/', '*.config.js', '**/generated/'],
 };

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { League, FantasyTeam } from '@gauntlet/types';
+import { FantasyTeam, League } from '@gauntlet/types';
 
 interface Matchup {
   week: number;

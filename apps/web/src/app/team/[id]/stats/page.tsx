@@ -1,43 +1,52 @@
-import { PrismaClient, type Matchup, type WeeklyMetrics } from '@prisma/client';
-import { TeamPerformanceChart, TeamExpectedPerformanceChart } from '@/components/team-charts';
+'use client';
 
-const prisma = new PrismaClient();
+import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
+import { useTeamData } from '@/lib/hooks';
+import ContentLoader from 'react-content-loader';
+import { type Matchup, type WeeklyMetrics } from '../../../generated/prisma';
 
-async function getTeamData(teamId: string) {
-  // First get the league ID
-  const league = await prisma.league.findFirst({
-    where: {
-      season: '2023', // We want the 2023 season league
-    },
-  });
+const TeamStatsPageLoader = () => (
+  <ContentLoader
+    speed={2}
+    width={1200}
+    height={1000}
+    viewBox='0 0 1200 1000'
+    backgroundColor='#f3f3f3'
+    foregroundColor='#ecebeb'
+  >
+    {/* Title and Subtitle */}
+    <rect x='16' y='32' rx='3' ry='3' width='400' height='36' />
+    <rect x='16' y='72' rx='3' ry='3' width='300' height='20' />
 
-  if (!league) {
-    return null;
+    {/* Stat Cards */}
+    <rect x='16' y='128' rx='8' ry='8' width='280' height='100' />
+    <rect x='312' y='128' rx='8' ry='8' width='280' height='100' />
+    <rect x='608' y='128' rx='8' ry='8' width='280' height='100' />
+
+    {/* Weekly Performance Chart */}
+    <rect x='16' y='260' rx='3' ry='3' width='300' height='28' />
+    <rect x='16' y='300' rx='8' ry='8' width='1168' height='200' />
+
+    {/* Expected vs Actual Chart */}
+    <rect x='16' y='540' rx='3' ry='3' width='400' height='28' />
+    <rect x='16' y='580' rx='8' ry='8' width='1168' height='200' />
+
+    {/* Matchups Table */}
+    <rect x='16' y='820' rx='3' ry='3' width='250' height='28' />
+    <rect x='16' y='860' rx='8' ry='8' width='1168' height='120' />
+  </ContentLoader>
+);
+
+export default function TeamStatsPage({ params }: { params: { id: string } }) {
+  const { team, loading } = useTeamData(params.id);
+
+  if (loading) {
+    return (
+      <div className='container mx-auto px-4 py-8'>
+        <TeamStatsPageLoader />
+      </div>
+    );
   }
-
-  // Then get the roster with all its data
-  const team = await prisma.roster.findUnique({
-    where: {
-      id: parseInt(teamId),
-      leagueId: league.id,
-    },
-    include: {
-      owner: true,
-      league: true,
-      weeklyMetrics: {
-        orderBy: { week: 'asc' },
-      },
-      matchups: {
-        orderBy: { week: 'asc' },
-      },
-    },
-  });
-
-  return team;
-}
-
-export default async function TeamStatsPage({ params }: { params: { id: string } }) {
-  const team = await getTeamData(params.id);
 
   if (!team) {
     return <div>Team not found</div>;
@@ -69,7 +78,7 @@ export default async function TeamStatsPage({ params }: { params: { id: string }
     <div className='container mx-auto px-4 py-8'>
       <div className='mb-8'>
         <h1 className='text-3xl font-bold'>
-          {(team.owner?.metadata as any)?.team_name ||
+          {team.owner?.metadata?.team_name ||
             team.owner?.displayName ||
             team.owner?.username ||
             `Team ${team.id}`}
@@ -127,9 +136,7 @@ export default async function TeamStatsPage({ params }: { params: { id: string }
             </thead>
             <tbody className='divide-y divide-gray-200 bg-white'>
               {team.matchups.map((matchup: Matchup) => {
-                const weekData = weeklyData.find(
-                  (w: { week: number; opponentPoints: number }) => w.week === matchup.week
-                );
+                const weekData = weeklyData.find(w => w.week === matchup.week);
                 return (
                   <tr key={matchup.week}>
                     <td className='whitespace-nowrap px-6 py-4'>Week {matchup.week}</td>

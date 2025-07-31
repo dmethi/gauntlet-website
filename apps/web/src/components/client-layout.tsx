@@ -1,10 +1,9 @@
 'use client';
 
 import { Sidebar } from '@/components/sidebar';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SidebarTeam } from '@gauntlet/types';
 import { MainContent } from '@/components/main-content';
-import { Providers } from '@/components/providers';
 import { useQuery } from '@tanstack/react-query';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {

@@ -1,8 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const LEAGUE_ID = '1049321550490456064'; // Replace with your actual league ID
+
+interface Score {
+  timestamp: string;
+  score: number;
+}
+
+interface WinProbability {
+  timestamp: string;
+  winProbability: number;
+}
+
+interface ChartDataPoint {
+  matchup_id: number;
+  roster_id: number;
+  excitementScore: number;
+  maxSwing: number;
+  volatility: number;
+  scores: Score[];
+  winProbabilities: WinProbability[];
+}
+
+interface ApiResponse {
+  success: boolean;
+  chartData: ChartDataPoint[];
+  lastUpdated: string;
+  dataPoints: number;
+  error?: string;
+}
 
 function getCurrentWeek(): number {
   const seasonStart = new Date('2024-09-05');
@@ -12,36 +41,27 @@ function getCurrentWeek(): number {
   return Math.min(Math.max(Math.ceil(diffDays / 7), 1), 18);
 }
 
+const fetchChartData = async (leagueId: string, week: number): Promise<ApiResponse> => {
+  const response = await fetch(`/api/charts/${leagueId}/${week}`);
+  const data = await response.json();
+  if (!data.success) {
+    throw new Error(data.error || 'Failed to load chart data');
+  }
+  return data;
+};
+
 export default function ChartsPage() {
-  const [chartData, setChartData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedWeek, setSelectedWeek] = useState(getCurrentWeek());
 
-  useEffect(() => {
-    fetchChartData();
-  }, [selectedWeek]);
-
-  const fetchChartData = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/charts/${LEAGUE_ID}/${selectedWeek}`);
-      const data = await response.json();
-
-      if (data.success) {
-        setChartData(data);
-      } else {
-        setError(data.error || 'Failed to load chart data');
-      }
-    } catch (err) {
-      setError('Error fetching chart data');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: chartData,
+    isLoading: loading,
+    error,
+    refetch,
+  } = useQuery<ApiResponse, Error>({
+    queryKey: ['chartData', LEAGUE_ID, selectedWeek],
+    queryFn: () => fetchChartData(LEAGUE_ID, selectedWeek),
+  });
 
   if (loading) {
     return (
@@ -55,10 +75,10 @@ export default function ChartsPage() {
     return (
       <div className='container mx-auto px-4 py-8'>
         <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded'>
-          {error}
+          {error.message}
         </div>
         <button
-          onClick={fetchChartData}
+          onClick={() => refetch()}
           className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
         >
           Retry
@@ -97,7 +117,7 @@ export default function ChartsPage() {
           </select>
 
           <button
-            onClick={fetchChartData}
+            onClick={() => refetch()}
             className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
           >
             Refresh
@@ -115,7 +135,7 @@ export default function ChartsPage() {
       <div className='mb-8'>
         <h2 className='text-2xl font-bold mb-4'>🔥 Most Exciting Matchups</h2>
         <div className='grid gap-4 md:grid-cols-3'>
-          {chartData.chartData.slice(0, 3).map((matchup: any, index: number) => (
+          {chartData.chartData.slice(0, 3).map((matchup, index) => (
             <div
               key={`${matchup.matchup_id}-${matchup.roster_id}`}
               className={`border rounded-lg p-4 ${
@@ -148,7 +168,7 @@ export default function ChartsPage() {
 
       {/* Individual Matchup Charts */}
       <div className='space-y-8'>
-        {chartData.chartData.map((matchup: any) => (
+        {chartData.chartData.map(matchup => (
           <div
             key={`${matchup.matchup_id}-${matchup.roster_id}`}
             className='border rounded-lg p-6 bg-white shadow-lg'
@@ -184,8 +204,7 @@ export default function ChartsPage() {
   );
 }
 
-// Simple ASCII-style chart components
-function ScoreChart({ scores }: { scores: any[] }) {
+function ScoreChart({ scores }: { scores: Score[] }) {
   if (!scores.length) return <div className='p-4 text-gray-500'>No score data</div>;
 
   const maxScore = Math.max(...scores.map(s => s.score));
@@ -220,7 +239,7 @@ function ScoreChart({ scores }: { scores: any[] }) {
   );
 }
 
-function WinProbChart({ winProbs }: { winProbs: any[] }) {
+function WinProbChart({ winProbs }: { winProbs: WinProbability[] }) {
   if (!winProbs.length) return <div className='p-4 text-gray-500'>No win probability data</div>;
 
   return (

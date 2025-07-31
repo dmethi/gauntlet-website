@@ -2,26 +2,25 @@
 
 import React, { useState } from 'react';
 import {
-  Home,
-  Target,
-  Users,
   BarChart3,
-  Settings,
-  Trophy,
   Calendar,
-  Zap,
-  TrendingUp,
-  Database,
-  X,
-  Menu,
   ChevronDown,
   ChevronRight,
+  Database,
+  Home,
+  Menu,
+  Settings,
+  Target,
+  TrendingUp,
+  Trophy,
+  Users,
+  X,
+  Zap,
 } from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
-import ContentLoader from 'react-content-loader';
 
 const navigationItems = [
   { name: 'Dashboard', icon: Home, href: '/' },
@@ -55,8 +54,6 @@ export function Sidebar({
   isLoading,
   isError,
 }: SidebarProps) {
-  const pathname = usePathname();
-
   return (
     <>
       {/* Desktop Sidebar */}
@@ -155,8 +152,8 @@ function SidebarContent({
 function SidebarNavigation({
   onItemClick,
   teams,
-  isLoading,
-  isError,
+  isLoading: _isLoading,
+  isError: _isError,
 }: {
   onItemClick?: () => void;
   teams?: SidebarProps['teams'];
@@ -165,8 +162,6 @@ function SidebarNavigation({
 }) {
   const pathname = usePathname();
   const [isTeamsOpen, setIsTeamsOpen] = useState(true);
-
-  console.log('[SidebarNavigation] Rendering with pathname:', pathname);
 
   return (
     <div className='space-y-1'>
@@ -192,14 +187,9 @@ function SidebarNavigation({
       })}
 
       {/* Theme Toggle */}
-      {(() => {
-        console.log('[SidebarNavigation] Rendering theme toggle');
-        return (
-          <div className='pt-2'>
-            <ThemeToggle />
-          </div>
-        );
-      })()}
+      <div className='pt-2'>
+        <ThemeToggle />
+      </div>
 
       {/* Teams Section */}
       {teams && teams.length > 0 && (

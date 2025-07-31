@@ -1,4 +1,4 @@
-import { montserrat, geizer } from '@/lib/fonts';
+import { geizer, montserrat } from '@/lib/fonts';
 import './globals.css';
 import ClientLayout from '@/components/client-layout';
 import { Providers } from '@/components/providers';

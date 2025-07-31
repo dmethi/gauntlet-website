@@ -3,19 +3,7 @@
 import React from 'react';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 import { colors } from '@/lib/colors';
-import {
-  Calendar,
-  TrendingUp,
-  Users,
-  Target,
-  Trophy,
-  Clock,
-  Star,
-  ChevronRight,
-  Palette,
-  Sun,
-  Moon,
-} from 'lucide-react';
+import { ChevronRight, Palette, Target, TrendingUp, Trophy, Users } from 'lucide-react';
 
 const recentItems = [
   {

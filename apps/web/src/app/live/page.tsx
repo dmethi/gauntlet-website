@@ -1,8 +1,32 @@
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
+'use client';
 
-const DATA_DIR = join(process.cwd(), 'data');
-const LEAGUE_ID = '1049321550490456064'; // Replace with your actual league ID
+import { useQuery } from '@tanstack/react-query';
+
+// const LEAGUE_ID = '1049321550490456064'; // Replace with your actual league ID
+
+interface LiveScores {
+  lastUpdated: string;
+  matchups: {
+    matchup_id: number;
+    roster_id: number;
+    totalLivePoints: number;
+    livePoints: Record<string, number>;
+  }[];
+}
+
+interface WinProbabilities {
+  winProbabilities: {
+    roster_id: number;
+    projectedTotal: number;
+    winProbability: number;
+  }[];
+}
+
+interface LiveData {
+  liveScores: LiveScores | null;
+  winProbs: WinProbabilities | null;
+  currentWeek: number;
+}
 
 function getCurrentWeek(): number {
   const seasonStart = new Date('2024-09-05');
@@ -12,45 +36,46 @@ function getCurrentWeek(): number {
   return Math.min(Math.max(Math.ceil(diffDays / 7), 1), 18);
 }
 
-async function getLiveData() {
+const getLiveData = async (): Promise<LiveData> => {
+  // This is a placeholder for a real API call
+  // In a real app, you would fetch this data from your server
   const currentWeek = getCurrentWeek();
+  return { liveScores: null, winProbs: null, currentWeek };
+};
 
-  try {
-    // Read live scores
-    const scoresFile = join(DATA_DIR, `live-scores-${LEAGUE_ID}-week-${currentWeek}.json`);
-    const winProbFile = join(DATA_DIR, `win-prob-${LEAGUE_ID}-week-${currentWeek}.json`);
+export default function LivePage() {
+  const {
+    data,
+    isLoading: loading,
+    error,
+    refetch,
+  } = useQuery<LiveData, Error>({
+    queryKey: ['liveData'],
+    queryFn: getLiveData,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
 
-    let liveScores = null;
-    let winProbs = null;
-
-    if (existsSync(scoresFile)) {
-      liveScores = JSON.parse(readFileSync(scoresFile, 'utf8'));
-    }
-
-    if (existsSync(winProbFile)) {
-      winProbs = JSON.parse(readFileSync(winProbFile, 'utf8'));
-    }
-
-    return { liveScores, winProbs, currentWeek };
-  } catch (error) {
-    console.error('Error reading live data:', error);
-    return { liveScores: null, winProbs: null, currentWeek: getCurrentWeek() };
+  if (loading) {
+    return (
+      <div className='container mx-auto px-4 py-8'>
+        <div className='text-center'>Loading live data...</div>
+      </div>
+    );
   }
-}
 
-export default async function LivePage() {
-  const { liveScores, winProbs, currentWeek } = await getLiveData();
-
-  if (!liveScores?.matchups) {
+  if (error || !data || !data.liveScores?.matchups) {
+    const currentWeek = data?.currentWeek || getCurrentWeek();
     return (
       <div className='container mx-auto px-4 py-8'>
         <h1 className='text-3xl font-bold mb-6'>Live Scores - Week {currentWeek}</h1>
         <div className='bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded'>
-          No live data available. Games may not be active or data hasn't been updated yet.
+          No live data available. Games may not be active or data has not been updated yet.
         </div>
       </div>
     );
   }
+
+  const { liveScores, winProbs, currentWeek } = data;
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -61,13 +86,13 @@ export default async function LivePage() {
       </div>
 
       <div className='grid gap-6 md:grid-cols-2'>
-        {liveScores.matchups.map((matchup: any, index: number) => {
+        {liveScores.matchups.map(matchup => {
           const winProb = winProbs?.winProbabilities?.find(
-            (wp: any) => wp.roster_id === matchup.roster_id
+            wp => wp.roster_id === matchup.roster_id
           );
 
           return (
-            <div key={index} className='border rounded-lg p-6 bg-white shadow-lg'>
+            <div key={matchup.roster_id} className='border rounded-lg p-6 bg-white shadow-lg'>
               <div className='flex justify-between items-center mb-4'>
                 <h3 className='text-lg font-semibold'>Matchup {matchup.matchup_id}</h3>
                 <div className='text-sm text-gray-500'>Roster {matchup.roster_id}</div>
@@ -131,7 +156,7 @@ export default async function LivePage() {
 
       <div className='mt-8 text-center'>
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => refetch()}
           className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
         >
           Refresh Data

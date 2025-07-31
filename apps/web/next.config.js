@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
@@ -7,6 +9,10 @@ const nextConfig = {
         destination: 'http://localhost:3001/api/:path*',
       },
     ];
+  },
+  webpack: config => {
+    config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+    return config;
   },
 };
 

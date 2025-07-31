@@ -1,4 +1,4 @@
-import { League, FantasyTeam, LeagueSettings, LeagueStatus } from '@gauntlet/types';
+import { FantasyTeam, League, LeagueSettings } from '@gauntlet/types';
 import { generateId } from '@gauntlet/lib';
 
 export class LeagueModel {

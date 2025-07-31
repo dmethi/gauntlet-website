@@ -1,39 +1,17 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "es6"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "baseUrl": ".",
     "paths": {
+      "@gauntlet/lib": ["./packages/lib/src"],
       "@gauntlet/lib/*": ["./packages/lib/src/*"],
-      "@gauntlet/types/*": ["./packages/types/src/*"],
-      "@gauntlet/models/*": ["./packages/models/src/*"],
-      "@gauntlet/ui/*": ["./packages/ui/src/*"]
-    }
+      "@gauntlet/sim-engine": ["./apps/sim-engine/src"],
+      "@gauntlet/sim-engine/*": ["./apps/sim-engine/src/*"],
+      "@gauntlet/types": ["./packages/types/src"],
+      "@gauntlet/types/*": ["./packages/types/src/*"]
+    },
+    "plugins": [{ "name": "next" }]
   },
-  "include": [],
-  "exclude": ["node_modules", "dist", "build", ".next"],
-  "references": [
-    { "path": "./apps/web" },
-    { "path": "./apps/server" },
-    { "path": "./apps/sim-engine" },
-    { "path": "./packages/types" },
-    { "path": "./packages/lib" },
-    { "path": "./packages/models" }
-  ]
+  "exclude": ["node_modules", ".next", "dist", "build"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }
