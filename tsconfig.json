@@ -1,17 +1,11 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@gauntlet/lib": ["./packages/lib/src"],
-      "@gauntlet/lib/*": ["./packages/lib/src/*"],
-      "@gauntlet/sim-engine": ["./apps/sim-engine/src"],
-      "@gauntlet/sim-engine/*": ["./apps/sim-engine/src/*"],
-      "@gauntlet/types": ["./packages/types/src"],
-      "@gauntlet/types/*": ["./packages/types/src/*"]
-    },
-    "plugins": [{ "name": "next" }]
-  },
-  "exclude": ["node_modules", ".next", "dist", "build"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "files": [],
+  "references": [
+    { "path": "./apps/web" },
+    { "path": "./apps/server" },
+    { "path": "./apps/sim-engine" },
+    { "path": "./packages/types" },
+    { "path": "./packages/lib" },
+    { "path": "./packages/models" }
+  ]
 }

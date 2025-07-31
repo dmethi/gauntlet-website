@@ -11,13 +11,16 @@ interface Matchup {
 
 interface WeeklyMetric {
   week: number;
+  totalPoints: number;
   expectedWins: number;
-  luck: number;
+  luckRating: number;
+  opponentPoints: number;
 }
 
 interface Roster extends FantasyTeam {
   matchups: Matchup[];
   weeklyMetrics: WeeklyMetric[];
+  league: League;
   owner: {
     displayName: string;
     username: string;
@@ -60,7 +63,7 @@ export function useLeagueData() {
           0
         );
         const totalLuck = roster.weeklyMetrics.reduce(
-          (sum: number, metric: WeeklyMetric) => sum + metric.luck,
+          (sum: number, metric: WeeklyMetric) => sum + metric.luckRating,
           0
         );
 

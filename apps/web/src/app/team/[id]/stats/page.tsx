@@ -3,7 +3,6 @@
 import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
 import { useTeamData } from '@/lib/hooks';
 import ContentLoader from 'react-content-loader';
-import { type Matchup, type WeeklyMetrics } from '../../../generated/prisma';
 
 const TeamStatsPageLoader = () => (
   <ContentLoader
@@ -52,7 +51,7 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
     return <div>Team not found</div>;
   }
 
-  const weeklyData = team.weeklyMetrics.map((metric: WeeklyMetrics) => ({
+  const weeklyData = team.weeklyMetrics.map(metric => ({
     week: metric.week,
     points: metric.totalPoints,
     expectedWins: metric.expectedWins,
@@ -60,19 +59,13 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
     opponentPoints: metric.opponentPoints,
   }));
 
-  const totalPoints = team.matchups.reduce(
-    (sum: number, matchup: Matchup) => sum + matchup.points,
-    0
-  );
+  const totalPoints = team.matchups.reduce((sum, matchup) => sum + matchup.points, 0);
   const averagePoints = totalPoints / team.matchups.length || 0;
   const totalExpectedWins = team.weeklyMetrics.reduce(
-    (sum: number, metric: WeeklyMetrics) => sum + metric.expectedWins,
+    (sum, metric) => sum + metric.expectedWins,
     0
   );
-  const totalLuckRating = team.weeklyMetrics.reduce(
-    (sum: number, metric: WeeklyMetrics) => sum + metric.luckRating,
-    0
-  );
+  const totalLuckRating = team.weeklyMetrics.reduce((sum, metric) => sum + metric.luckRating, 0);
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -135,7 +128,7 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
               </tr>
             </thead>
             <tbody className='divide-y divide-gray-200 bg-white'>
-              {team.matchups.map((matchup: Matchup) => {
+              {team.matchups.map(matchup => {
                 const weekData = weeklyData.find(w => w.week === matchup.week);
                 return (
                   <tr key={matchup.week}>

@@ -19,11 +19,11 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/components/*": ["./components/*"],
-      "@/lib/*": ["./lib/*"],
-      "@/styles/*": ["./styles/*"],
-      "@/utils/*": ["./utils/*"]
+      "@/*": ["./apps/web/src/*"],
+      "@/components/*": ["./apps/web/src/components/*"],
+      "@/lib/*": ["./apps/web/src/lib/*"],
+      "@/styles/*": ["./apps/web/src/styles/*"],
+      "@/utils/*": ["./apps/web/src/utils/*"]
     }
   },
   "exclude": ["node_modules"]
