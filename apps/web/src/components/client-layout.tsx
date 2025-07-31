@@ -1,39 +1,44 @@
 'use client';
 
 import { Sidebar } from '@/components/sidebar';
-import { ThemeProvider } from '@/components/theme-provider';
 import { useEffect, useState } from 'react';
 import { SidebarTeam } from '@gauntlet/types';
+import { MainContent } from '@/components/main-content';
+import { Providers } from '@/components/providers';
+import { useQuery } from '@tanstack/react-query';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const [teams, setTeams] = useState<SidebarTeam[]>([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    async function fetchTeams() {
-      try {
-        console.log('[ClientLayout] Fetching teams from /api/league/teams');
-        const res = await fetch('/api/league/teams');
-        console.log(`[ClientLayout] Received response with status: ${res.status}`);
-        if (res.ok) {
-          const data = await res.json();
-          console.log('[ClientLayout] Parsed teams data:', data);
-          setTeams(data);
-        } else {
-          console.error('[ClientLayout] Failed to fetch teams:', res.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching teams:', error);
+  const {
+    data: teams,
+    isLoading,
+    isError,
+  } = useQuery<SidebarTeam[]>({
+    queryKey: ['teams'],
+    queryFn: async () => {
+      const res = await fetch('/api/league/teams');
+      if (!res.ok) {
+        throw new Error('Failed to fetch teams');
       }
-    }
-    fetchTeams();
-  }, []);
+      return res.json();
+    },
+  });
+
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
-    <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-      <div className='flex h-screen'>
-        <Sidebar teams={teams} />
-        <main className='flex-1 overflow-auto bg-background'>{children}</main>
-      </div>
-    </ThemeProvider>
+    <div className='flex h-screen'>
+      <Sidebar
+        teams={teams}
+        isMobileOpen={isMobileMenuOpen}
+        onMobileToggle={handleMobileMenuToggle}
+        isLoading={isLoading}
+        isError={isError}
+      />
+      <MainContent onMobileMenuToggle={handleMobileMenuToggle}>{children}</MainContent>
+    </div>
   );
 }

@@ -21,6 +21,7 @@ import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
+import ContentLoader from 'react-content-loader';
 
 const navigationItems = [
   { name: 'Dashboard', icon: Home, href: '/' },
@@ -43,18 +44,24 @@ interface SidebarProps {
     name: string;
     owner: string;
   }[];
+  isLoading?: boolean;
+  isError?: boolean;
 }
 
-export function Sidebar({ isMobileOpen = false, onMobileToggle, teams = [] }: SidebarProps) {
-  console.log('Sidebar received teams:', teams);
+export function Sidebar({
+  isMobileOpen = false,
+  onMobileToggle,
+  teams = [],
+  isLoading,
+  isError,
+}: SidebarProps) {
   const pathname = usePathname();
-  const [isTeamsOpen, setIsTeamsOpen] = useState(true);
 
   return (
     <>
       {/* Desktop Sidebar */}
       <div className='hidden lg:flex w-64 bg-card border-r border-border flex-col h-full'>
-        <SidebarContent teams={teams} />
+        <SidebarContent teams={teams} isLoading={isLoading} isError={isError} />
       </div>
 
       {/* Mobile Overlay */}
@@ -91,7 +98,12 @@ export function Sidebar({ isMobileOpen = false, onMobileToggle, teams = [] }: Si
 
         {/* Mobile Navigation */}
         <div className='flex-1 p-4 overflow-y-auto'>
-          <SidebarNavigation onItemClick={onMobileToggle} teams={teams} />
+          <SidebarNavigation
+            onItemClick={onMobileToggle}
+            teams={teams}
+            isLoading={isLoading}
+            isError={isError}
+          />
         </div>
 
         {/* Mobile Footer */}
@@ -103,7 +115,15 @@ export function Sidebar({ isMobileOpen = false, onMobileToggle, teams = [] }: Si
   );
 }
 
-function SidebarContent({ teams }: { teams?: SidebarProps['teams'] }) {
+function SidebarContent({
+  teams,
+  isLoading,
+  isError,
+}: {
+  teams?: SidebarProps['teams'];
+  isLoading?: boolean;
+  isError?: boolean;
+}) {
   return (
     <>
       {/* Header */}
@@ -121,7 +141,7 @@ function SidebarContent({ teams }: { teams?: SidebarProps['teams'] }) {
 
       {/* Navigation */}
       <nav className='flex-1 p-4 overflow-y-auto'>
-        <SidebarNavigation teams={teams} />
+        <SidebarNavigation teams={teams} isLoading={isLoading} isError={isError} />
       </nav>
 
       {/* Footer */}
@@ -135,9 +155,13 @@ function SidebarContent({ teams }: { teams?: SidebarProps['teams'] }) {
 function SidebarNavigation({
   onItemClick,
   teams,
+  isLoading,
+  isError,
 }: {
   onItemClick?: () => void;
   teams?: SidebarProps['teams'];
+  isLoading?: boolean;
+  isError?: boolean;
 }) {
   const pathname = usePathname();
   const [isTeamsOpen, setIsTeamsOpen] = useState(true);

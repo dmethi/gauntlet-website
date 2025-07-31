@@ -2,16 +2,38 @@
 
 import { LeagueChart } from '@/components/league-chart';
 import { useLeagueData } from '@/lib/hooks';
+import ContentLoader from 'react-content-loader';
+
+const LeagueOverviewLoader = () => (
+  <ContentLoader
+    speed={2}
+    width={1200}
+    height={800}
+    viewBox='0 0 1200 800'
+    backgroundColor='#f3f3f3'
+    foregroundColor='#ecebeb'
+  >
+    {/* Title and Subtitle */}
+    <rect x='16' y='32' rx='3' ry='3' width='300' height='36' />
+    <rect x='16' y='72' rx='3' ry='3' width='150' height='20' />
+
+    {/* Team Rankings Table */}
+    <rect x='16' y='128' rx='3' ry='3' width='200' height='28' />
+    <rect x='16' y='168' rx='8' ry='8' width='1168' height='400' />
+
+    {/* League Scoring Trends Chart */}
+    <rect x='16' y='600' rx='3' ry='3' width='250' height='28' />
+    <rect x='16' y='640' rx='8' ry='8' width='1168' height='150' />
+  </ContentLoader>
+);
 
 export default function LeagueOverview() {
   const { league, loading, teamStats, weeklyAverages } = useLeagueData();
 
   if (loading) {
     return (
-      <div className='flex items-center justify-center h-[80vh]'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold text-card-foreground mb-2'>Loading...</h2>
-        </div>
+      <div className='container mx-auto px-4 py-8'>
+        <LeagueOverviewLoader />
       </div>
     );
   }

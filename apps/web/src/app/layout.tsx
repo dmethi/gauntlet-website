@@ -1,6 +1,7 @@
 import { montserrat, geizer } from '@/lib/fonts';
 import './globals.css';
 import ClientLayout from '@/components/client-layout';
+import { Providers } from '@/components/providers';
 
 export const metadata = {
   title: 'The Gauntlet - Fantasy Football',
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`${montserrat.variable} ${geizer.variable}`}>
-        <ClientLayout>{children}</ClientLayout>
+        <Providers>
+          <ClientLayout>{children}</ClientLayout>
+        </Providers>
       </body>
     </html>
   );
