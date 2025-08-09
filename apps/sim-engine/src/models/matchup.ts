@@ -1,4 +1,8 @@
-import { simulatePlayerScore } from './variance';
+import {
+  buildSamplingContext,
+  samplePlayerScoreFromContext,
+  simulatePlayerScore,
+} from './variance';
 
 export interface LineupPlayer {
   id: string;
@@ -172,11 +176,11 @@ function calculateBettingLines(
 }
 
 /**
- * Simulate many matchups to get win probabilities and betting lines
+ * Simulate from arbitrary arrays of players (dynamic roster sizes, incl. SUPER_FLEX)
  */
-export async function simulateMatchupProbability(
-  team1: Lineup,
-  team2: Lineup,
+export async function simulateMatchupProbabilityFromPlayers(
+  team1Players: LineupPlayer[],
+  team2Players: LineupPlayer[],
   iterations: number = 10000,
   gameProgress: number = 0
 ): Promise<MatchupSimulationResult> {
@@ -184,12 +188,40 @@ export async function simulateMatchupProbability(
   const team1Scores: number[] = [];
   const team2Scores: number[] = [];
 
-  // Run simulations
+  const playerIds = [...team1Players.map(p => p.id), ...team2Players.map(p => p.id)];
+  const positions = [...team1Players.map(p => p.position), ...team2Players.map(p => p.position)];
+
+  const ctx = await buildSamplingContext(playerIds, positions);
+
   for (let i = 0; i < iterations; i++) {
-    const result = await simulateMatchup(team1, team2, gameProgress);
-    results.push(result);
-    team1Scores.push(result.team1Score);
-    team2Scores.push(result.team2Score);
+    let team1Total = 0;
+    let team2Total = 0;
+
+    for (const player of team1Players) {
+      team1Total += samplePlayerScoreFromContext(
+        ctx,
+        player.id,
+        player.position,
+        player.projection,
+        gameProgress
+      );
+    }
+    for (const player of team2Players) {
+      team2Total += samplePlayerScoreFromContext(
+        ctx,
+        player.id,
+        player.position,
+        player.projection,
+        gameProgress
+      );
+    }
+
+    const winner = team1Total > team2Total ? 1 : 2;
+    const margin = Math.abs(team1Total - team2Total);
+
+    results.push({ team1Score: team1Total, team2Score: team2Total, winner, margin });
+    team1Scores.push(team1Total);
+    team2Scores.push(team2Total);
   }
 
   // Sort scores for percentiles
@@ -226,4 +258,23 @@ export async function simulateMatchupProbability(
     },
     impliedOdds,
   };
+}
+
+/**
+ * Simulate many matchups to get win probabilities and betting lines
+ */
+export async function simulateMatchupProbability(
+  team1: Lineup | LineupPlayer[],
+  team2: Lineup | LineupPlayer[],
+  iterations: number = 10000,
+  gameProgress: number = 0
+): Promise<MatchupSimulationResult> {
+  const team1Players: LineupPlayer[] = Array.isArray(team1) ? team1 : Object.values(team1);
+  const team2Players: LineupPlayer[] = Array.isArray(team2) ? team2 : Object.values(team2);
+  return simulateMatchupProbabilityFromPlayers(
+    team1Players,
+    team2Players,
+    iterations,
+    gameProgress
+  );
 }

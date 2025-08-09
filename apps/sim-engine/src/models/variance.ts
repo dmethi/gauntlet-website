@@ -281,3 +281,100 @@ setInterval(
   },
   60 * 60 * 1000
 ); // Every hour
+
+/**
+ * Prefetched sampling context for fast synchronous Monte Carlo loops
+ */
+export interface SamplingContext {
+  positionToOutcomes: Map<string, number[]>;
+  playerToOutcomes: Map<string, number[]>;
+  playerSampleCounts: Map<string, number>;
+  positionSampleCounts: Map<string, number>;
+}
+
+/**
+ * Build a sampling context for a set of players and positions.
+ * Fetches and prepares distributions once to enable synchronous sampling.
+ */
+export async function buildSamplingContext(
+  playerIds: string[],
+  positions: string[]
+): Promise<SamplingContext> {
+  const uniquePlayerIds = Array.from(new Set(playerIds));
+  const uniquePositions = Array.from(new Set(positions));
+
+  const positionToOutcomes = new Map<string, number[]>();
+  const playerToOutcomes = new Map<string, number[]>();
+  const playerSampleCounts = new Map<string, number>();
+  const positionSampleCounts = new Map<string, number>();
+
+  // Fetch position distributions
+  await Promise.all(
+    uniquePositions.map(async pos => {
+      const dist = await getPositionDistribution(pos);
+      positionToOutcomes.set(pos, dist.outcomes);
+      positionSampleCounts.set(pos, dist.sampleSize);
+    })
+  );
+
+  // Fetch player outcomes (recent games)
+  await Promise.all(
+    uniquePlayerIds.map(async id => {
+      const out = await getPlayerOutcomes(id);
+      playerToOutcomes.set(id, out.outcomes);
+      playerSampleCounts.set(id, out.sampleSize);
+    })
+  );
+
+  return {
+    positionToOutcomes,
+    playerToOutcomes,
+    playerSampleCounts,
+    positionSampleCounts,
+  };
+}
+
+/**
+ * Fast synchronous sampling using a prefetched context.
+ * Falls back to position outcomes when player data is sparse.
+ */
+export function samplePlayerScoreFromContext(
+  ctx: SamplingContext,
+  playerId: string,
+  position: string,
+  projection: number,
+  gameProgress: number = 0
+): number {
+  if (projection < 0) {
+    throw new Error(`Invalid projection: ${projection}`);
+  }
+  if (gameProgress < 0 || gameProgress > 1) {
+    throw new Error(`Invalid game progress: ${gameProgress}`);
+  }
+
+  const positionOutcomes = ctx.positionToOutcomes.get(position) || [];
+  const playerOutcomes = ctx.playerToOutcomes.get(playerId) || [];
+  const playerN = ctx.playerSampleCounts.get(playerId) || 0;
+
+  const usePlayerData = playerN >= 8 && playerOutcomes.length > 0;
+
+  // Sample a relative outcome
+  let relativeOutcome: number;
+  if (usePlayerData) {
+    // 70% weight player-specific
+    const pickFromPlayer = Math.random() < 0.7 && playerOutcomes.length > 0;
+    const src = pickFromPlayer && playerOutcomes.length > 0 ? playerOutcomes : positionOutcomes;
+    const idx = Math.floor(Math.random() * src.length);
+    relativeOutcome = src.length ? src[idx] : 1;
+  } else {
+    const idx = Math.floor(Math.random() * positionOutcomes.length);
+    relativeOutcome = positionOutcomes.length ? positionOutcomes[idx] : 1;
+  }
+
+  if (gameProgress > 0) {
+    const remainingVariance = 1 - gameProgress;
+    relativeOutcome = 1 + (relativeOutcome - 1) * remainingVariance;
+  }
+
+  return projection * relativeOutcome;
+}

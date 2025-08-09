@@ -1,0 +1,62 @@
+name: Live Sims (NFL Windows)
+
+on:
+  schedule:
+    # Based on NFL 2025 schedule windows Weeks 1-17
+    # Source: https://operations.nfl.com/gameday/nfl-schedule/2025-nfl-schedule/
+    # Cron uses UTC
+    #
+    # Thursday Night Football (runs Fri 00:00–05:59 UTC)
+    - cron: '*/10 0-5 * * 5'
+    # Friday night specials (occasional international/holiday games) (Sat 00:00–05:59 UTC)
+    - cron: '*/10 0-5 * * 6'
+    # Saturday late-season windows (Weeks ~15–16) 17:00–23:59 UTC, plus early Sunday carryover 00:00–05:59 UTC
+    - cron: '*/10 17-23 * * 6'
+    - cron: '*/10 0-5 * * 0'
+    # Sunday early window (1:00p ET ≈ 17:00 UTC) through ~4:59p ET (≈ 20:59 UTC)
+    - cron: '*/10 17-21 * * 0'
+    # Sunday late window (4:05/4:25p ET) through ~8:00p ET
+    - cron: '*/10 20-23 * * 0'
+    # Sunday Night Football (Mon 00:00–05:59 UTC)
+    - cron: '*/10 0-5 * * 1'
+    # Monday Night Football (Tue 00:00–05:59 UTC)
+    - cron: '*/10 0-5 * * 2'
+
+  workflow_dispatch:
+    inputs:
+      leagueId:
+        description: 'Sleeper League ID'
+        required: true
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  run-live-sims:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install -w --frozen-lockfile
+
+      - name: Run live sims (scheduled)
+        if: github.event_name == 'schedule'
+        env:
+          LEAGUE_ID: ${{ secrets.SLEEPER_LEAGUE_ID }}
+        run: pnpm --filter @gauntlet/server live-sims $LEAGUE_ID
+
+      - name: Run live sims (manual)
+        if: github.event_name == 'workflow_dispatch'
+        run: pnpm --filter @gauntlet/server live-sims ${{ inputs.leagueId }}

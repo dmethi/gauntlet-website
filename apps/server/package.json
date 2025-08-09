@@ -12,7 +12,11 @@
     "prisma:migrate": "prisma migrate dev",
     "rollups:compute": "tsx src/scripts/analysis/compute-weekly-rollups.ts",
     "ingest:all": "tsx src/scripts/data-ingestion/index.ts",
-    "superlatives:compute": "tsx src/scripts/analysis/compute-season-superlatives.ts"
+    "superlatives:compute": "tsx src/scripts/analysis/compute-season-superlatives.ts",
+    "live-sims": "tsx src/scripts/jobs/run-live-sims.ts",
+    "regression:matchup": "tsx src/scripts/regression/run-matchup-sim.ts",
+    "readiness:variance": "tsx src/scripts/readiness/check-variance-coverage.ts",
+    "metrics:calc": "tsx src/scripts/metrics/run-calc.ts"
   },
   "prisma": {
     "schema": "prisma/schema.prisma"
