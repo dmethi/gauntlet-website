@@ -46,6 +46,10 @@ model League {
   tradedPicks      TradedPick[]
   drafts           Draft[]
   weeklyMetrics    WeeklyMetrics[]
+  matchupSummaries MatchupSummary[]
+  rosterWeekAggregates RosterWeekAggregate[]
+  leagueWeekSummaries  LeagueWeekSummary[]
+  seasonSuperlatives   SeasonSuperlatives[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
@@ -69,6 +73,11 @@ model Roster {
   waiverBudget    Int           @default(100) // FAAB budget (0-100)
   waiverPosition  Int?          // Waiver priority
   weeklyMetrics   WeeklyMetrics[]
+  weekAggregates  RosterWeekAggregate[]
+  asOpponentInWeekAggregates RosterWeekAggregate[] @relation("RosterWeekOpponent")
+  matchupSummariesAsA MatchupSummary[] @relation("MatchupSummaryRosterA")
+  matchupSummariesAsB MatchupSummary[] @relation("MatchupSummaryRosterB")
+  seasonSuperlatives  SeasonSuperlatives[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -191,6 +200,7 @@ model Player {
   yearsExp          Int?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+  statusHistory     PlayerStatusHistory[]
 
   @@index([position])
   @@index([team])
@@ -271,4 +281,115 @@ model ProjectionError {
   @@unique([playerId, week, season])
   @@index([playerId])
   @@index([season, week])
+}
+
+// Rollup and analytics models
+
+model MatchupSummary {
+  id            String   @id @default(cuid())
+  leagueId      String
+  league        League   @relation(fields: [leagueId], references: [id])
+  week          Int
+  matchupId     Int
+  rosterAId     Int
+  rosterA       Roster   @relation("MatchupSummaryRosterA", fields: [rosterAId], references: [id])
+  rosterBId     Int
+  rosterB       Roster   @relation("MatchupSummaryRosterB", fields: [rosterBId], references: [id])
+  pointsA       Float
+  pointsB       Float
+  winnerRosterId Int?
+  margin        Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([leagueId, week, matchupId])
+  @@index([leagueId, week])
+}
+
+model RosterWeekAggregate {
+  id                         String   @id @default(cuid())
+  leagueId                   String
+  league                     League   @relation(fields: [leagueId], references: [id])
+  rosterId                   Int
+  roster                     Roster   @relation(fields: [rosterId], references: [id])
+  week                       Int
+  points                     Float    @default(0)
+  projectedPoints            Float?   // Sum of starter projections
+  optimalPoints              Float?   // Best legal lineup actuals
+  managerDelta               Float?   // optimal - actual
+  managerScore               Float?   // actual / optimal
+  opponentRosterId           Int?
+  opponent                   Roster?  @relation("RosterWeekOpponent", fields: [opponentRosterId], references: [id])
+  opponentPoints             Float?
+  won                        Boolean? // 1 win, 0 loss (ties optional)
+  streak                     Int?     // signed: positive = win streak, negative = loss streak
+  rollingAvg3                Float?
+  expectedWins               Float?
+  luck                       Float?
+  positionalPoints           Json?
+  opponentPositionalPoints   Json?
+  mvpPlayerId                String?
+  mvpValue                   Float?
+  transactionScore           Float?
+  injuryPoints               Float?
+  powerRank                  Float?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  @@unique([leagueId, rosterId, week])
+  @@index([leagueId, week])
+  @@index([rosterId, week])
+}
+
+model LeagueWeekSummary {
+  id            String   @id @default(cuid())
+  leagueId      String
+  league        League   @relation(fields: [leagueId], references: [id])
+  week          Int
+  medianPoints  Float
+  averagePoints Float
+  maxPoints     Float
+  minPoints     Float
+  stdDev        Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([leagueId, week])
+  @@index([leagueId, week])
+}
+
+model PlayerStatusHistory {
+  id           String   @id @default(cuid())
+  playerId     String
+  player       Player   @relation(fields: [playerId], references: [id])
+  season       String
+  week         Int
+  status       String?
+  injuryStatus String?
+  source       String?  // sleeper, manual, other
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([playerId, season, week])
+  @@index([season, week])
+}
+
+model SeasonSuperlatives {
+  id         String   @id @default(cuid())
+  leagueId   String
+  league     League   @relation(fields: [leagueId], references: [id])
+  season     String
+  category   String   // e.g., highest_single_week, most_points_in_loss, most_exciting_matchup, etc.
+  week       Int?
+  rosterId   Int?
+  roster     Roster?  @relation(fields: [rosterId], references: [id])
+  playerId   String?
+  matchupId  Int?
+  value      Float?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([leagueId, season])
+  @@index([category])
 }

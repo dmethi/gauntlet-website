@@ -1,6 +1,5 @@
-import { PrismaClient } from '../generated/prisma';
-
-const prisma = new PrismaClient();
+import 'dotenv/config';
+import prisma from '../lib/prisma.js';
 
 async function inspectData() {
   try {
@@ -79,6 +78,16 @@ async function inspectData() {
             team: players[0].team,
           }
         : null,
+    });
+
+    // Check rollup tables
+    const lwsCount = await (prisma as any).leagueWeekSummary.count();
+    const rwaCount = await (prisma as any).rosterWeekAggregate.count();
+    const msCount = await (prisma as any).matchupSummary.count();
+    console.log('\nRollup Tables:', {
+      leagueWeekSummary: lwsCount,
+      rosterWeekAggregate: rwaCount,
+      matchupSummary: msCount,
     });
 
     // Check draft data
