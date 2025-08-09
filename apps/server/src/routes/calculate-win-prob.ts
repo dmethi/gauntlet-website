@@ -1,6 +1,6 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { simulateMatchupProbability, type Lineup, type LineupPlayer } from '@gauntlet/sim-engine';
+import { type Lineup, type LineupPlayer, simulateMatchupProbability } from '@gauntlet/sim-engine';
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -14,7 +14,13 @@ interface Matchup {
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { matchups, timestamp } = req.body;
+    const {
+      matchups,
+      timestamp,
+      iterations = 2000,
+      decayMode = 'linear',
+      gameProgressOverride,
+    } = req.body;
 
     // Group matchups by matchupId
     const matchupPairs = matchups.reduce((acc: Record<number, Matchup[]>, matchup: Matchup) => {
@@ -33,24 +39,63 @@ router.post('/', async (req: Request, res: Response) => {
 
         const [team1, team2] = pair;
 
-        // Get player projections and current points
-        const [team1Lineup, team2Lineup] = await Promise.all([
-          buildLineup(team1.starters),
-          buildLineup(team2.starters),
+        // Build fixed-shape lineups from roster starters stored in DB
+        const currentWeek = getCurrentWeek();
+        const [team1Lineup, team2Lineup, roster1, roster2] = await Promise.all([
+          buildLineupFromRoster(team1.roster_id, currentWeek),
+          buildLineupFromRoster(team2.roster_id, currentWeek),
+          prisma.roster.findUnique({ where: { id: team1.roster_id } }),
+          prisma.roster.findUnique({ where: { id: team2.roster_id } }),
         ]);
 
         // Calculate game progress (rough estimate based on current points vs projections)
-        const team1Progress = calculateGameProgress(team1Lineup, team1.points);
-        const team2Progress = calculateGameProgress(team2Lineup, team2.points);
-        const gameProgress = Math.max(team1Progress, team2Progress);
+        const team1Progress = calculateGameProgressFromPlayers(
+          Object.values(team1Lineup),
+          team1.points
+        );
+        const team2Progress = calculateGameProgressFromPlayers(
+          Object.values(team2Lineup),
+          team2.points
+        );
+        const computedProgress = Math.max(team1Progress, team2Progress);
+        const gameProgress =
+          typeof gameProgressOverride === 'number'
+            ? Math.min(Math.max(gameProgressOverride, 0), 1)
+            : computedProgress;
 
         // Run simulation
         const simResult = await simulateMatchupProbability(
           team1Lineup,
           team2Lineup,
-          1000, // Reduced for API performance
+          iterations,
           gameProgress
         );
+
+        const leagueId = roster1?.leagueId || roster2?.leagueId;
+        const week = currentWeek;
+
+        // Optional: persist snapshot to LiveWinProbSample
+        if (leagueId) {
+          await (prisma as any).liveWinProbSample.create({
+            data: {
+              leagueId,
+              week,
+              matchupId: team1.matchupId,
+              rosterAId: team1.roster_id,
+              rosterBId: team2.roster_id,
+              timestamp: timestamp ? new Date(timestamp) : new Date(),
+              gameProgress,
+              winProbA: simResult.team1WinPct,
+              winProbB: simResult.team2WinPct,
+              projectedFinalA: simResult.team1Scores.mean,
+              projectedFinalB: simResult.team2Scores.mean,
+              currentScoreA: team1.points,
+              currentScoreB: team2.points,
+              spread: simResult.impliedOdds.spread,
+              total: simResult.impliedOdds.total,
+            },
+          });
+        }
 
         return {
           matchupId: team1.matchupId,
@@ -90,69 +135,91 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-async function buildLineup(playerIds: string[]): Promise<Lineup> {
-  // Get player data and projections
-  const players: any[] = await prisma.player.findMany({
-    where: { id: { in: playerIds } },
-  });
+async function buildPlayersFromRoster(rosterId: number, week: number): Promise<LineupPlayer[]> {
+  const roster = await prisma.roster.findUnique({ where: { id: rosterId } });
+  const playerIds = roster?.starters || [];
+  if (playerIds.length === 0) return [];
 
-  const stats = await prisma.playerStats.findMany({
-    where: {
-      playerId: { in: playerIds },
-      statsType: 'projections',
-      season: new Date().getFullYear().toString(),
-      week: getCurrentWeek(),
-    },
-  });
+  const [players, stats] = await Promise.all([
+    prisma.player.findMany({ where: { id: { in: playerIds } } }),
+    prisma.playerStats.findMany({
+      where: {
+        playerId: { in: playerIds },
+        statsType: 'projections',
+        season: new Date().getFullYear().toString(),
+        week,
+      },
+    }),
+  ]);
 
-  // Map players to lineup positions
+  const byId = new Map(players.map(p => [p.id, p] as const));
+
+  return playerIds
+    .map(pid => {
+      const player = byId.get(pid);
+      if (!player) return null;
+      const proj = stats.find(s => s.playerId === pid);
+      const projection = (proj?.stats as any)?.pts_half_ppr ?? (proj?.stats as any)?.pts_ppr ?? 0;
+      const lp: LineupPlayer = {
+        id: player.id,
+        name: player.fullName,
+        position: player.position,
+        projection,
+      };
+      return lp;
+    })
+    .filter((p): p is LineupPlayer => Boolean(p));
+}
+
+function calculateGameProgressFromPlayers(players: LineupPlayer[], currentPoints: number): number {
+  const totalProjected = players.reduce((sum, p) => sum + p.projection, 0);
+  if (totalProjected === 0) return 0;
+  return Math.min(Math.max(currentPoints / totalProjected, 0), 1);
+}
+
+async function buildLineupFromRoster(rosterId: number, week: number): Promise<Lineup> {
+  const players = await buildPlayersFromRoster(rosterId, week);
+
   const lineup: Partial<Lineup> = {};
-  let flexCandidates: LineupPlayer[] = [];
+  const flexCandidates: LineupPlayer[] = [];
 
-  for (const player of players) {
-    const projection = stats.find((s: any) => s.playerId === player.id);
-    const playerData: LineupPlayer = {
-      id: player.id,
-      name: player.fullName,
-      position: player.position,
-      projection: (projection?.stats as any)?.pts_ppr || 0,
-    };
-
-    switch (player.position) {
+  for (const p of players) {
+    switch (p.position) {
       case 'QB':
-        if (!lineup.qb) lineup.qb = playerData;
+        if (!lineup.qb) lineup.qb = p;
         break;
       case 'RB':
-        if (!lineup.rb1) lineup.rb1 = playerData;
-        else if (!lineup.rb2) lineup.rb2 = playerData;
-        else flexCandidates.push(playerData);
+        if (!lineup.rb1) lineup.rb1 = p;
+        else if (!lineup.rb2) lineup.rb2 = p;
+        else flexCandidates.push(p);
         break;
       case 'WR':
-        if (!lineup.wr1) lineup.wr1 = playerData;
-        else if (!lineup.wr2) lineup.wr2 = playerData;
-        else if (!lineup.wr3) lineup.wr3 = playerData;
-        else flexCandidates.push(playerData);
+        if (!lineup.wr1) lineup.wr1 = p;
+        else if (!lineup.wr2) lineup.wr2 = p;
+        else if (!lineup.wr3) lineup.wr3 = p;
+        else flexCandidates.push(p);
         break;
       case 'TE':
-        if (!lineup.te) lineup.te = playerData;
-        else flexCandidates.push(playerData);
+        if (!lineup.te) lineup.te = p;
+        else flexCandidates.push(p);
+        break;
+      default:
+        // ignore K/DEF for now
         break;
     }
   }
 
-  // Fill in any missing positions with placeholder players
+  if (!lineup.flex && flexCandidates.length > 0) {
+    flexCandidates.sort((a, b) => b.projection - a.projection);
+    lineup.flex = flexCandidates[0];
+  }
+
   const placeholder = (pos: string): LineupPlayer => ({
     id: `placeholder_${pos}`,
     name: `Placeholder ${pos}`,
     position: pos,
     projection: 0,
   });
-
-  // Use highest projected remaining player for FLEX
-  if (flexCandidates.length > 0) {
-    flexCandidates.sort((a, b) => b.projection - a.projection);
-    lineup.flex = flexCandidates[0];
-  }
 
   return {
     qb: lineup.qb || placeholder('QB'),
@@ -164,15 +231,6 @@ async function buildLineup(playerIds: string[]): Promise<Lineup> {
     te: lineup.te || placeholder('TE'),
     flex: lineup.flex || placeholder('RB'),
   };
-}
-
-function calculateGameProgress(lineup: Lineup, currentPoints: number): number {
-  const totalProjected: number = Object.values(lineup).reduce(
-    (sum: number, player: LineupPlayer) => sum + player.projection,
-    0
-  );
-  if (totalProjected === 0) return 0;
-  return Math.min(Math.max(currentPoints / totalProjected, 0), 1);
 }
 
 function getCurrentWeek(): number {

@@ -64,6 +64,35 @@ Sleeper/ingestion → Prisma/Postgres → API routes (Express/Next) → Next pag
   - Falls back to conservative distributions when data is sparse
 - Output includes win percentages, score distributions (mean/median/p10/p90), and implied odds (moneylines, spread, total)
 
+### Live Win Probability Persistence (Planned)
+
+- Storage goals
+  - Persist a time series of matchup win probability and scores every ~10 minutes during live games
+  - Use for post-game excitement metrics and auditability
+- Proposed Prisma models
+  - `LiveWinProbSample`
+    - `id` (cuid)
+    - `leagueId` (string)
+    - `week` (int)
+    - `matchupId` (int)
+    - `rosterAId` (int)
+    - `rosterBId` (int)
+    - `timestamp` (DateTime)
+    - `gameProgress` (float 0–1)
+    - `winProbA` (float 0–1)
+    - `winProbB` (float 0–1)
+    - `projectedFinalA` (float)
+    - `projectedFinalB` (float)
+    - `currentScoreA` (float)
+    - `currentScoreB` (float)
+    - `spread` (float)
+    - `total` (float)
+    - indexes: `(leagueId, week, matchupId)`, `(timestamp)`
+- Scheduling
+  - Cron (e.g., GitHub Actions) every 10 minutes during NFL live windows
+  - Job flow: ingest live stats and NFL state → compute gameProgress (linear) → run sims for active matchups → upsert `LiveWinProbSample`
+  - Retention: keep full series for the season; optional pruning policy by season if needed later
+
 ## Frontend (apps/web)
 
 - Next.js 14 with App Router; Tailwind; charts via `recharts`
@@ -148,6 +177,7 @@ Sleeper/ingestion → Prisma/Postgres → API routes (Express/Next) → Next pag
   - [Done] Implemented Hall of Fame/Shame generator with: overall weekly highs/lows, most in loss/least in win, blowout/closest, bench blunder, positional weekly highs/lows, positional season totals highs/lows, longest streaks, best/worst manager, luckiest/unluckiest
   - [Next] Add excitement-based and upset categories once time-series and/or betting lines are integrated
   - [Next] Transaction score and draft pick value rollups
+  - [Next] Persist live win-prob time-series per matchup (see Live Win Probability Persistence), and store current scores each interval
 
 - **3. UI build-out (Next.js app)**
   - League dashboard: standings, trends, key metrics
@@ -158,6 +188,8 @@ Sleeper/ingestion → Prisma/Postgres → API routes (Express/Next) → Next pag
 - **4. Simulation engine integration**
   - Integrate player/position curves and variance models; ensure DB-backed variance is used when available
   - Implement matchup and season sims endpoints; return win prob, distributions, implied odds
+  - Support dynamic roster slots (including SUPER_FLEX) by consuming `Roster.starters` and `League.rosterPositions`
+  - Standardize projections to half-PPR (`pts_half_ppr` fallback to `pts_ppr`)
   - Validate against sample scenarios; tune iteration counts for HTTP vs offline scripts
 
 - **Tracking and structure**

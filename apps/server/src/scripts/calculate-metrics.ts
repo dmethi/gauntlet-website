@@ -189,22 +189,4 @@ export async function calculateVarianceMetrics(options: { season: string; week?:
 }
 
 // For CLI usage
-if (require.main === module) {
-  const season = process.argv[2];
-  const week = process.argv[3] ? parseInt(process.argv[3]) : undefined;
-
-  if (!season) {
-    console.error('Please provide a season (e.g., "2023")');
-    process.exit(1);
-  }
-
-  calculateVarianceMetrics({ season, week })
-    .then(() => {
-      console.log('Variance metrics calculation complete');
-      process.exit(0);
-    })
-    .catch(error => {
-      console.error('Failed to calculate variance metrics:', error);
-      process.exit(1);
-    });
-}
+// ESM-friendly: CLI entry is provided in src/scripts/metrics/run-calc.ts

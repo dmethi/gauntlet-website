@@ -393,3 +393,26 @@ model SeasonSuperlatives {
   @@index([leagueId, season])
   @@index([category])
 }
+
+/// Live win probability and score snapshots during games (every ~10 minutes)
+model LiveWinProbSample {
+  id              String   @id @default(cuid())
+  leagueId        String
+  week            Int
+  matchupId       Int
+  rosterAId       Int
+  rosterBId       Int
+  timestamp       DateTime @default(now())
+  gameProgress    Float
+  winProbA        Float
+  winProbB        Float
+  projectedFinalA Float
+  projectedFinalB Float
+  currentScoreA   Float
+  currentScoreB   Float
+  spread          Float
+  total           Float
+
+  @@index([leagueId, week, matchupId])
+  @@index([timestamp])
+}
