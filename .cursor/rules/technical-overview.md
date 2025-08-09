@@ -64,6 +64,47 @@ Sleeper/ingestion → Prisma/Postgres → API routes (Express/Next) → Next pag
   - Falls back to conservative distributions when data is sparse
 - Output includes win percentages, score distributions (mean/median/p10/p90), and implied odds (moneylines, spread, total)
 
+### Current Implementation Status (2025-08)
+
+- Dynamic roster support
+  - `simulateMatchupProbability` accepts either fixed `Lineup` or arrays of `LineupPlayer` (incl. SUPER_FLEX)
+  - Server builds starters from `Roster.starters`; no hard-coded slots
+- Variance & projections
+  - Half-PPR (`pts_half_ppr`) with fallback to PPR
+  - Empirical outcome sampler (position + recent player outcomes) with linear in-game variance decay
+  - Prefetched sampling context for fast 10k Monte Carlo loops
+  - Gaussian CV sampler retained as fallback
+- Live state & persistence
+  - ESPN scoreboard polling for game state/clock (linear `gameProgress`), fallback to points/projection ratio
+  - Persistent time-series snapshots in `LiveWinProbSample`
+- CI/cron
+  - GitHub Actions workflow schedules `live-sims` every 10 minutes during NFL windows (Weeks 1–17)
+
+### How to Run (local)
+
+- Ingest data (example season 2023)
+  - `pnpm --filter @gauntlet/server exec tsx src/scripts/data-ingestion/index.ts`
+
+- Build variance metrics (hydrate models)
+  - Ensure `DATABASE_URL` is set
+  - `pnpm --filter @gauntlet/server metrics:calc 2022`
+  - `pnpm --filter @gauntlet/server metrics:calc 2023`
+  - `pnpm --filter @gauntlet/server metrics:calc 2024`
+  - Verify: `pnpm --filter @gauntlet/server readiness:variance 2023`
+
+- Run live sims (manual)
+  - `pnpm --filter @gauntlet/server live-sims <leagueId>`
+
+- Validate sims with scripts
+  - Deterministic regression: `pnpm --filter @gauntlet/server regression:matchup <leagueId> <week> <rosterAId> <rosterBId> [iterations]`
+  - Random lineups (sanity): `pnpm --filter @gauntlet/server exec tsx src/scripts/tests/sim-random-lineups.ts [iterations]`
+
+### API
+
+- `POST /api/calculate-win-prob`
+  - Body: `{ matchups: Array<{ matchupId, roster_id, starters?, points }>, iterations?, gameProgressOverride?, timestamp? }`
+  - Behavior: Builds starters from `Roster.starters`, half-PPR projections, computes `gameProgress` (or uses override), runs Monte Carlo, returns win pct, distributions, implied odds; persists `LiveWinProbSample` when league context is known
+
 ### Live Win Probability Persistence (Planned)
 
 - Storage goals
