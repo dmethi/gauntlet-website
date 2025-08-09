@@ -1,5 +1,5 @@
 import { Prisma } from '../../generated/prisma';
-import { IngestionOptions } from './types';
+import { IngestionOptions } from './types.js';
 
 export const SLEEPER_API_BASE = 'https://api.sleeper.app/v1';
 

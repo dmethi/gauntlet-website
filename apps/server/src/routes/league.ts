@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import { getLeagueOverview, getTeams } from '../services/league.service';
+import { Request, Response, Router } from 'express';
+import { getLeagueOverview, getTeams } from '../services/league.service.js';
 
 const router = Router();
 

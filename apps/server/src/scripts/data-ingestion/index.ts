@@ -1,10 +1,12 @@
-import { PrismaClient } from '../../generated/prisma';
-import { createLogger } from './logger';
-import { createAPI } from './api';
-import { DEFAULT_OPTIONS, TEST_LEAGUE_ID, toPrismaJson } from './config';
+import 'dotenv/config';
+import prisma from '../../lib/prisma.js';
+import { createLogger } from './logger.js';
+import { createAPI } from './api.js';
+import { DEFAULT_OPTIONS, TEST_LEAGUE_ID, toPrismaJson } from './config.js';
+import { fileURLToPath } from 'url';
+import * as path from 'path';
 import type { IngestionContext, IngestionOptions } from './types';
 
-const prisma = new PrismaClient();
 const logger = createLogger();
 const api = createAPI(logger);
 
@@ -135,111 +137,158 @@ async function ingestMatchups(ctx: IngestionContext, week: number) {
   });
 }
 
+async function ingestWeeklyPlayerStats(ctx: IngestionContext, season: string, week: number) {
+  const seasonNum = Number(season);
+  ctx.logger.info(`Ingesting player weekly stats for season ${seasonNum} week ${week}`);
+  try {
+    const stats = await api.getWeeklyStats('regular', seasonNum, week);
+    const rows = Object.entries(stats).map(([playerId, s]) => ({
+      playerId,
+      week,
+      season,
+      statsType: 'stats' as const,
+      stats: toPrismaJson(s) || {},
+    }));
+    if (rows.length > 0) {
+      await prisma.playerStats.createMany({ data: rows, skipDuplicates: true });
+    }
+  } catch (err) {
+    ctx.logger.warn(`Skipping weekly stats for week ${week}: ${(err as Error).message}`);
+  }
+}
+
+async function ingestWeeklyProjections(ctx: IngestionContext, season: string, week: number) {
+  const seasonNum = Number(season);
+  ctx.logger.info(`Ingesting player weekly projections for season ${seasonNum} week ${week}`);
+  try {
+    const projections = await api.getWeeklyProjections('regular', seasonNum, week);
+    const rows = Object.entries(projections).map(([playerId, p]) => ({
+      playerId,
+      week,
+      season,
+      statsType: 'projections' as const,
+      stats: toPrismaJson(p) || {},
+    }));
+    if (rows.length > 0) {
+      await prisma.playerStats.createMany({ data: rows, skipDuplicates: true });
+    }
+  } catch (err) {
+    ctx.logger.warn(`Skipping weekly projections for week ${week}: ${(err as Error).message}`);
+  }
+}
+
 async function ingestPlayers(ctx: IngestionContext) {
   logger.info('Ingesting all NFL players');
 
   const players = await api.getAllPlayers();
-  await Promise.all(
-    Object.entries(players).map(([id, player]) => {
-      // Handle team defenses
-      if (id.length === 3) {
-        // Team abbreviations are 3 characters
-        const teamName = {
-          ARI: 'Arizona Cardinals',
-          ATL: 'Atlanta Falcons',
-          BAL: 'Baltimore Ravens',
-          BUF: 'Buffalo Bills',
-          CAR: 'Carolina Panthers',
-          CHI: 'Chicago Bears',
-          CIN: 'Cincinnati Bengals',
-          CLE: 'Cleveland Browns',
-          DAL: 'Dallas Cowboys',
-          DEN: 'Denver Broncos',
-          DET: 'Detroit Lions',
-          GB: 'Green Bay Packers',
-          HOU: 'Houston Texans',
-          IND: 'Indianapolis Colts',
-          JAX: 'Jacksonville Jaguars',
-          KC: 'Kansas City Chiefs',
-          LV: 'Las Vegas Raiders',
-          LAC: 'Los Angeles Chargers',
-          LAR: 'Los Angeles Rams',
-          MIA: 'Miami Dolphins',
-          MIN: 'Minnesota Vikings',
-          NE: 'New England Patriots',
-          NO: 'New Orleans Saints',
-          NYG: 'New York Giants',
-          NYJ: 'New York Jets',
-          PHI: 'Philadelphia Eagles',
-          PIT: 'Pittsburgh Steelers',
-          SF: 'San Francisco 49ers',
-          SEA: 'Seattle Seahawks',
-          TB: 'Tampa Bay Buccaneers',
-          TEN: 'Tennessee Titans',
-          WAS: 'Washington Commanders',
-        }[id];
+  const entries = Object.entries(players);
+  const batchSize = ctx.options.batchSize ?? 50;
 
-        if (teamName) {
-          const [firstName, ...rest] = teamName.split(' ');
-          return prisma.player.upsert({
-            where: { id },
-            update: {
-              firstName,
-              lastName: rest.join(' '),
-              fullName: teamName,
-              team: id,
-              position: 'DEF',
-              status: 'Active',
-              hashtag: `#${teamName.replace(/\s+/g, '')}-NFL-${id}`,
-            },
-            create: {
-              id,
-              firstName,
-              lastName: rest.join(' '),
-              fullName: teamName,
-              team: id,
-              position: 'DEF',
-              status: 'Active',
-              hashtag: `#${teamName.replace(/\s+/g, '')}-NFL-${id}`,
-            },
-          });
+  for (let i = 0; i < entries.length; i += batchSize) {
+    const batch = entries.slice(i, i + batchSize);
+    // Upsert a batch in parallel, but limit batch size to avoid pool exhaustion
+    await Promise.all(
+      batch.map(([id, player]) => {
+        // Handle team defenses
+        if (id.length === 3) {
+          // Team abbreviations are 3 characters
+          const teamName = {
+            ARI: 'Arizona Cardinals',
+            ATL: 'Atlanta Falcons',
+            BAL: 'Baltimore Ravens',
+            BUF: 'Buffalo Bills',
+            CAR: 'Carolina Panthers',
+            CHI: 'Chicago Bears',
+            CIN: 'Cincinnati Bengals',
+            CLE: 'Cleveland Browns',
+            DAL: 'Dallas Cowboys',
+            DEN: 'Denver Broncos',
+            DET: 'Detroit Lions',
+            GB: 'Green Bay Packers',
+            HOU: 'Houston Texans',
+            IND: 'Indianapolis Colts',
+            JAX: 'Jacksonville Jaguars',
+            KC: 'Kansas City Chiefs',
+            LV: 'Las Vegas Raiders',
+            LAC: 'Los Angeles Chargers',
+            LAR: 'Los Angeles Rams',
+            MIA: 'Miami Dolphins',
+            MIN: 'Minnesota Vikings',
+            NE: 'New England Patriots',
+            NO: 'New Orleans Saints',
+            NYG: 'New York Giants',
+            NYJ: 'New York Jets',
+            PHI: 'Philadelphia Eagles',
+            PIT: 'Pittsburgh Steelers',
+            SF: 'San Francisco 49ers',
+            SEA: 'Seattle Seahawks',
+            TB: 'Tampa Bay Buccaneers',
+            TEN: 'Tennessee Titans',
+            WAS: 'Washington Commanders',
+          }[id];
+
+          if (teamName) {
+            const [firstName, ...rest] = teamName.split(' ');
+            return prisma.player.upsert({
+              where: { id },
+              update: {
+                firstName,
+                lastName: rest.join(' '),
+                fullName: teamName,
+                team: id,
+                position: 'DEF',
+                status: 'Active',
+                hashtag: `#${teamName.replace(/\s+/g, '')}-NFL-${id}`,
+              },
+              create: {
+                id,
+                firstName,
+                lastName: rest.join(' '),
+                fullName: teamName,
+                team: id,
+                position: 'DEF',
+                status: 'Active',
+                hashtag: `#${teamName.replace(/\s+/g, '')}-NFL-${id}`,
+              },
+            });
+          }
+          return Promise.resolve();
         }
-        return Promise.resolve();
-      }
 
-      // Skip players without required fields
-      if (!player.first_name || !player.last_name || !player.position) {
-        logger.warn(`Skipping player ${id} due to missing required fields`);
-        return Promise.resolve();
-      }
+        // Skip players without required fields
+        if (!player.first_name || !player.last_name || !player.position) {
+          logger.warn(`Skipping player ${id} due to missing required fields`);
+          return Promise.resolve();
+        }
 
-      const playerData = {
-        hashtag: player.hashtag,
-        firstName: player.first_name,
-        lastName: player.last_name,
-        fullName: player.full_name || `${player.first_name} ${player.last_name}`,
-        team: player.team,
-        position: player.position,
-        depthChartOrder: player.depth_chart_order,
-        status: player.status || 'Unknown',
-        injuryStatus: player.injury_status,
-        weight: player.weight,
-        height: player.height,
-        number: player.number,
-        age: player.age,
-        yearsExp: player.years_exp,
-      };
+        const playerData = {
+          hashtag: player.hashtag,
+          firstName: player.first_name,
+          lastName: player.last_name,
+          fullName: player.full_name || `${player.first_name} ${player.last_name}`,
+          team: player.team,
+          position: player.position,
+          depthChartOrder: player.depth_chart_order,
+          status: player.status || 'Unknown',
+          injuryStatus: player.injury_status,
+          weight: player.weight,
+          height: player.height,
+          number: player.number,
+          age: player.age,
+          yearsExp: player.years_exp,
+        };
 
-      return prisma.player.upsert({
-        where: { id },
-        update: playerData,
-        create: {
-          id,
-          ...playerData,
-        },
-      });
-    })
-  );
+        return prisma.player.upsert({
+          where: { id },
+          update: playerData,
+          create: {
+            id,
+            ...playerData,
+          },
+        });
+      })
+    );
+  }
 }
 
 async function ingestDraft(ctx: IngestionContext, draftId: string) {
@@ -374,9 +423,11 @@ async function ingestAll(options: Partial<IngestionOptions> = {}) {
     await ingestPlayers(ctx);
     ctx.stats.successCount++;
 
-    // Ingest matchups for all weeks
+    // Ingest matchups, stats, projections for all weeks
     for (const week of ctx.options.weeks || []) {
       await ingestMatchups(ctx, week);
+      await ingestWeeklyPlayerStats(ctx, ctx.options.season, week);
+      await ingestWeeklyProjections(ctx, ctx.options.season, week);
       ctx.stats.successCount++;
     }
 
@@ -410,9 +461,29 @@ async function ingestAll(options: Partial<IngestionOptions> = {}) {
   return ctx.stats;
 }
 
-// Run the ingestion if called directly
-if (require.main === module) {
-  ingestAll().catch(error => {
+// Run the ingestion if called directly (ESM compatible)
+const isDirectRun = (() => {
+  const thisFile = fileURLToPath(import.meta.url);
+  const entryFile = process.argv[1] ? path.resolve(process.argv[1]) : '';
+  return thisFile === entryFile;
+})();
+
+if (isDirectRun) {
+  const leagueId = process.env.INGEST_LEAGUE_ID || TEST_LEAGUE_ID;
+  const season = process.env.INGEST_SEASON || (DEFAULT_OPTIONS.season as string) || '2023';
+  const weeksEnv = process.env.INGEST_WEEKS; // e.g., "1-18" or "1,2,3"
+  let weeks = DEFAULT_OPTIONS.weeks as number[];
+  if (weeksEnv) {
+    if (weeksEnv.includes('-')) {
+      const [a, b] = weeksEnv.split('-').map(v => Number(v.trim()));
+      weeks = Array.from({ length: b - a + 1 }, (_, i) => a + i);
+    } else {
+      weeks = weeksEnv.split(',').map(v => Number(v.trim()));
+    }
+  }
+
+  ingestAll({ leagueId, season, weeks }).catch(error => {
+    // eslint-disable-next-line no-console
     console.error('Fatal error:', error);
     process.exit(1);
   });
