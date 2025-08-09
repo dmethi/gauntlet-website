@@ -65,10 +65,7 @@ async function buildRandomLineupArray(): Promise<LineupPlayer[]> {
 async function main() {
   const iterations = parseInt(process.argv[2] || '5000', 10);
 
-  const [team1, team2] = await Promise.all([
-    buildRandomLineupArray(),
-    buildRandomLineupArray(),
-  ]);
+  const [team1, team2] = await Promise.all([buildRandomLineupArray(), buildRandomLineupArray()]);
 
   const sim = await simulateMatchupProbability(team1, team2, iterations, 0);
   console.log(JSON.stringify({ team1, team2, sim }, null, 2));
@@ -82,5 +79,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
-
