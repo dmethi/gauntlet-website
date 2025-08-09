@@ -1,15 +1,15 @@
 import axios, { AxiosInstance } from 'axios';
-import { SLEEPER_API_BASE, API_RATE_LIMIT } from './config';
-import { Logger } from './types';
+import { API_RATE_LIMIT, SLEEPER_API_BASE } from './config.js';
+import { Logger } from './types.js';
 import type {
-  SleeperUser,
-  SleeperLeague,
-  SleeperRoster,
-  SleeperMatchup,
-  SleeperPlayer,
   SleeperDraft,
   SleeperDraftPick,
+  SleeperLeague,
+  SleeperMatchup,
+  SleeperPlayer,
+  SleeperRoster,
   SleeperTransaction,
+  SleeperUser,
 } from './types';
 
 export class SleeperAPI {
@@ -92,6 +92,23 @@ export class SleeperAPI {
 
   async getTransactions(leagueId: string, week: number): Promise<SleeperTransaction[]> {
     return this.get<SleeperTransaction[]>(`/league/${leagueId}/transactions/${week}`);
+  }
+
+  // Undocumented endpoints used for rollups
+  async getWeeklyStats(
+    seasonType: 'regular' | 'pre' | 'post',
+    season: number,
+    week: number
+  ): Promise<Record<string, any>> {
+    return this.get<Record<string, any>>(`/stats/nfl/${seasonType}/${season}/${week}`);
+  }
+
+  async getWeeklyProjections(
+    seasonType: 'regular' | 'pre' | 'post',
+    season: number,
+    week: number
+  ): Promise<Record<string, any>> {
+    return this.get<Record<string, any>>(`/projections/nfl/${seasonType}/${season}/${week}`);
   }
 }
 
