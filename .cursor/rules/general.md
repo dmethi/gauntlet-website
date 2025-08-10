@@ -7,6 +7,16 @@ alwaysApply: true
 Always reference `.cursor/rules/technical-overview.md` at the start of a task to align with the system’s architecture and code generation rules. If it is missing or outdated, create or update it before proceeding.
 ```
 
+# PR Test Generation Requirement
+
+```rule
+Before merging any PR that changes behavior, generate regression coverage for the change.
+
+- Preferred: add permanent unit/integration tests in the relevant workspace (`apps/*` or `packages/*`) runnable via `pnpm test` and Turbo `test` task.
+- Acceptable fallback: generate a one-off regression script under `apps/*/src/scripts/regression/` (or `apps/*/src/scripts/tests/`). Run it locally/non-interactively, capture output in the PR description (and/or `docs/test-artifacts/<slug>.md`). These scripts may be deleted after validation.
+- Requirement: CI must be green (`build`, `lint`, `type-check`, `test`) prior to merge.
+- For schema changes: include a quick verification step (seed/backfill check) via script or test to prove migrations run and core queries still work.
+```
 ```rule
 Always start by referencing the technical knowledge base document in the codebase. If this is the first chat, make sure to create it and maintain this knowledge base throughout working on this project. Rememeber to update this .md file as you learn new lessons (mistakes, learnings, shortcuts, understandings about deployment, project highlights, etc.)
 ```

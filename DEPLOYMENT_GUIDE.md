@@ -65,9 +65,9 @@ https://your-app.vercel.app/api/webhook/sleeper
 
 **Scheduled Updates (GitHub Actions):**
 
-1. Every 6 hours: Update league data and player stats
-2. Every Monday: Run simulations
-3. Manual triggers available
+1. Live win-probability: `.github/workflows/live-sims.yml` runs every 10 minutes during NFL windows (Weeks 1–17) based on the published 2025 schedule ([source](https://operations.nfl.com/gameday/nfl-schedule/2025-nfl-schedule/))
+2. Manual trigger: run workflow with `leagueId` input
+3. Optional: add weekly ingestion/rollups jobs as needed
 
 **Real-time Updates (Sleeper Webhooks):**
 
@@ -82,18 +82,11 @@ https://your-app.vercel.app/api/webhook/sleeper
 
 ## Storage
 
-Using Vercel KV (Redis-like):
+PostgreSQL (Prisma)
 
-```javascript
-// Store league data
-await kv.set(`league:${leagueId}`, leagueData);
-
-// Store player stats
-await kv.set(`stats:week:${week}`, statsData);
-
-// Store simulation results
-await kv.set(`sims:${leagueId}:${week}`, simResults);
-```
+- Core domain models (League, Roster, Matchup, Player, PlayerStats)
+- Variance models (PositionVariance, PlayerVariance)
+- Live win-prob snapshots (LiveWinProbSample)
 
 ## Monitoring
 
@@ -126,9 +119,29 @@ Total: $0/month (until you scale)
 ## Next Steps
 
 1. **Add storage layer**: Implement Vercel KV in your API routes
-2. **Connect sim-engine**: Integrate your simulation logic
+2. **Connect sim-engine**: Integrate your simulation logic (already integrated, see `apps/server/src/routes/calculate-win-prob.ts`)
 3. **Add error handling**: Retry logic, dead letter queues
 4. **Setup monitoring**: Sentry for error tracking
+
+## Live Sims: How To Run
+
+### Local
+
+- Ensure `DATABASE_URL` is set
+- Ingest and hydrate variance
+  - `pnpm --filter @gauntlet/server exec tsx src/scripts/data-ingestion/index.ts`
+  - `pnpm --filter @gauntlet/server metrics:calc 2022 && pnpm --filter @gauntlet/server metrics:calc 2023 && pnpm --filter @gauntlet/server metrics:calc 2024`
+  - `pnpm --filter @gauntlet/server readiness:variance 2023`
+- Run manual live sims job
+  - `pnpm --filter @gauntlet/server live-sims <leagueId>`
+- Call API
+  - `POST /api/calculate-win-prob` with `{ matchups, iterations?, gameProgressOverride? }`
+
+### CI
+
+- Uses ESPN scoreboard for live game state
+- Persists time-series to `LiveWinProbSample`
+- Safe to over-schedule; job exits if no “in” games
 
 ## Scaling Path
 
