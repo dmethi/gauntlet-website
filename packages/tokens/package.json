@@ -1,0 +1,23 @@
+{
+  "name": "@gauntlet/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "tailwind-preset.ts",
+    "css"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.0.0",
+    "rimraf": "^5.0.0"
+  }
+}

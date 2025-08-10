@@ -122,3 +122,6 @@ tmp/
 temp/ 
 
 **/generated/\n# Cursor-specific files\n.cursor/
+
+*storybook.log
+storybook-static

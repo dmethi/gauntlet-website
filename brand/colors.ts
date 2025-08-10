@@ -14,27 +14,37 @@ export const colors = {
     burntOrange: '#B8621B', // Muted orange bridge color
   },
 
-  // 🌈 12-Color Team Visualization Palette
-  // Carefully chosen for maximum distinction in both light and dark modes
-  // Perfect for 12 teams in fantasy leagues
-  rainbow: [
-    '#8B1538', // Crimson Red (Team 1)
-    '#D4AF37', // Regal Gold (Team 2)
-    '#2D5A87', // Steel Blue (Team 3)
-    '#8B4513', // Saddle Brown (Team 4)
-    '#556B2F', // Dark Olive Green (Team 5)
-    '#4B0082', // Indigo (Team 6)
-    '#CD853F', // Peru (Team 7)
-    '#2F4F4F', // Dark Slate Gray (Team 8)
-    '#8B008B', // Dark Magenta (Team 9)
-    '#B8860B', // Dark Goldenrod (Team 10)
-    '#483D8B', // Dark Slate Blue (Team 11)
-    '#A0522D', // Sienna (Team 12)
+  // 🌈 Categorical team palette (shadcn-aligned, balanced spectrum; distinct hues)
+  teamCategorical: [
+    '#f43f5e', // rose-500
+    '#f97316', // orange-500
+    '#f59e0b', // amber-500
+    '#65a30d', // lime-600
+    '#10b981', // emerald-500
+    '#14b8a6', // teal-500
+    '#06b6d4', // cyan-500
+    '#0ea5e9', // sky-500
+    '#2563eb', // blue-600
+    '#6366f1', // indigo-500
+    '#8b5cf6', // violet-500
+    '#d946ef', // fuchsia-500
   ],
 
   // 📊 Data Visualization Palettes
 
-  // matplotlib RdYlGn colormap (11-step) - for red/yellow/green gradients
+  // Sequential palette (neutral to brand accent)
+  sequentialWarm: [
+    '#fff7ed',
+    '#ffedd5',
+    '#fed7aa',
+    '#fdba74',
+    '#fb923c',
+    '#f97316',
+    '#ea580c',
+    '#c2410c',
+  ],
+
+  // Red→Yellow→Green scale for performance (ColorBrewer-inspired RdYlGn 11-step)
   rdylgn: [
     '#a50026',
     '#d73027',
@@ -49,11 +59,11 @@ export const colors = {
     '#006837',
   ],
 
-  // Diverging palette - useful for showing deviation from a center point
+  // Diverging palette (brand negative vs emerald positive)
   diverging: {
-    negative: '#8B1538', // crimson red
-    neutral: '#F3E9D2', // off white
-    positive: '#2C4D3A', // deep forest green
+    negative: '#8B1538',
+    neutral: '#e5e7eb',
+    positive: '#10B981',
   },
 
   // Sequential palettes for data ranges
@@ -124,9 +134,9 @@ export const semanticColors = {
 // 📈 Data Visualization Color Helper
 export const dataVizColors = {
   // Use this for categorical data (teams, players, etc.)
-  categorical: colors.rainbow,
+  categorical: colors.teamCategorical,
 
-  // Use this for performance metrics (red=bad, yellow=okay, green=good)
+  // Use this for performance metrics (red → yellow → green)
   performance: colors.rdylgn,
 
   // Use this for binary comparisons or showing deviation

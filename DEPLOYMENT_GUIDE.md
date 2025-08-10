@@ -65,7 +65,9 @@ https://your-app.vercel.app/api/webhook/sleeper
 
 **Scheduled Updates (GitHub Actions):**
 
-1. Live win-probability: `.github/workflows/live-sims.yml` runs every 10 minutes during NFL windows (Weeks 1–17) based on the published 2025 schedule ([source](https://operations.nfl.com/gameday/nfl-schedule/2025-nfl-schedule/))
+1. Live win-probability: `.github/workflows/live-sims.yml` runs every 10 minutes
+   during NFL windows (Weeks 1–17) based on the published 2025 schedule
+   ([source](https://operations.nfl.com/gameday/nfl-schedule/2025-nfl-schedule/))
 2. Manual trigger: run workflow with `leagueId` input
 3. Optional: add weekly ingestion/rollups jobs as needed
 
@@ -119,7 +121,8 @@ Total: $0/month (until you scale)
 ## Next Steps
 
 1. **Add storage layer**: Implement Vercel KV in your API routes
-2. **Connect sim-engine**: Integrate your simulation logic (already integrated, see `apps/server/src/routes/calculate-win-prob.ts`)
+2. **Connect sim-engine**: Integrate your simulation logic (already integrated,
+   see `apps/server/src/routes/calculate-win-prob.ts`)
 3. **Add error handling**: Retry logic, dead letter queues
 4. **Setup monitoring**: Sentry for error tracking
 
@@ -135,7 +138,8 @@ Total: $0/month (until you scale)
 - Run manual live sims job
   - `pnpm --filter @gauntlet/server live-sims <leagueId>`
 - Call API
-  - `POST /api/calculate-win-prob` with `{ matchups, iterations?, gameProgressOverride? }`
+  - `POST /api/calculate-win-prob` with
+    `{ matchups, iterations?, gameProgressOverride? }`
 
 ### CI
 
