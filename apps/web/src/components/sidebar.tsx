@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import {
   BarChart3,
+  Beaker,
   Calendar,
   ChevronDown,
   ChevronRight,
@@ -32,6 +33,7 @@ const navigationItems = [
   { name: 'Analytics', icon: BarChart3, href: '/analytics' },
   { name: 'Trends', icon: TrendingUp, href: '/trends' },
   { name: 'Data Feed', icon: Database, href: '/data' },
+  { name: 'Playground', icon: Beaker, href: '/playground' },
   { name: 'Settings', icon: Settings, href: '/settings' },
 ];
 

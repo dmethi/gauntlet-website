@@ -17,50 +17,60 @@
     /* Font Configuration */
     --font-avenir: 'Avenir', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     
-    /* Light mode semantic colors */
-    --background: 45 51% 95%; /* off white background */
-    --foreground: 0 0% 5%; /* very dark charcoal text */
-    --card: 0 0% 100%; /* pure white cards */
-    --card-foreground: 0 0% 5%;
+    /* Light mode semantic colors (brand-aligned) */
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-    --primary: 345 69% 31%; /* crimson red - balanced */
+    --popover-foreground: 20 14.3% 4.1%;
+    --primary: 345 69% 31%; /* brand crimson */
     --primary-foreground: 0 0% 100%;
     --secondary: 43 64% 52%; /* regal gold */
     --secondary-foreground: 0 0% 5%;
-    --muted: 45 25% 92%; /* light muted */
-    --muted-foreground: 0 0% 40%;
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
     --accent: 39 73% 58%; /* warm gold */
     --accent-foreground: 0 0% 5%;
     --destructive: 355 65% 35%; /* battle red */
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 89%;
-    --input: 0 0% 100%;
-    --ring: 345 69% 31%; /* crimson red */
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 345 69% 31%;
     --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
 
   .dark {
-    /* Dark mode semantic colors - Linear-inspired intensity */
-    --background: 0 0% 5%; /* near black background (Linear style) */
-    --foreground: 45 51% 89%; /* off white text */
-    --card: 0 0% 8%; /* very dark cards */
-    --card-foreground: 45 51% 89%;
-    --popover: 0 0% 8%;
-    --popover-foreground: 45 51% 89%;
-    --primary: 345 69% 31%; /* crimson red */
+    /* Dark mode semantic colors (brand-aligned) */
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+    --card: 20 14.3% 7%;
+    --card-foreground: 60 9.1% 97.8%;
+    --popover: 20 14.3% 7%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --primary: 345 69% 35%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 43 64% 52%; /* regal gold */
-    --secondary-foreground: 0 0% 5%;
-    --muted: 0 0% 10%; /* very dark muted */
-    --muted-foreground: 0 0% 54%; /* not too light, Linear-style */
-    --accent: 39 73% 58%; /* warm gold */
-    --accent-foreground: 0 0% 5%;
-    --destructive: 355 65% 35%; /* battle red */
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 16%; /* subtle dark borders */
-    --input: 0 0% 8%;
-    --ring: 345 69% 31%; /* crimson red */
+    --secondary: 43 64% 52%;
+    --secondary-foreground: 24 9.8% 10%;
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+    --accent: 39 73% 58%;
+    --accent-foreground: 24 9.8% 10%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 345 69% 35%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 

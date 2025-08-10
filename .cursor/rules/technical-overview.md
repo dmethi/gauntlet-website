@@ -201,6 +201,9 @@ Sleeper/ingestion → Prisma/Postgres → API routes (Express/Next) → Next pag
 - Replace hard-coded season strings and season start dates with shared config
 - Document and automate Next Prisma client generation to stay in sync with server schema
 - Implement auth and real-time updates per future roadmap when needed
+- UI TODOs
+  - Fix Team Record Calculation (UI): Recompute wins/losses using authoritative server data (weekly aggregates/matchups), include ties; add tests.
+  - Stable Rank Number in Sortable Table (UI): In League Overview, display canonical rank anchored to the primary ranking metric (v0 = Record; later power rank). Do not use visible row index.
 
 ## Project Management TODOs
 

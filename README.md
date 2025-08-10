@@ -182,6 +182,15 @@ This section tracks known technical debt and areas for improvement.
       configurability.
 - [ ] **Standardize API Responses**: The API responses should follow a
       consistent format to simplify client-side data handling.
+- [ ] **Fix Team Record Calculation (UI)**: The league overview table's record
+      display is incorrect. Recompute wins/losses using authoritative data
+      (server-side weekly metrics or matchup outcomes) and ensure ties are
+      handled. Add tests for edge cases.
+- [ ] **Stable Rank Number in Sortable Table (UI)**: In `League Overview`, the
+      1–N rank label should remain anchored to the primary ranking metric (e.g.,
+      power rank or points) regardless of secondary sort selection. Implement a
+      canonical rank field in the dataset and render that instead of the visible
+      row index.
 
 ## Contributing
 
