@@ -128,10 +128,10 @@ export default function DashboardPage() {
             {/* Team Visualization Palette */}
             <div className='no-overflow'>
               <h3 className='text-sm font-medium text-muted-foreground mb-2 font-avenir'>
-                12-Team Visualization Palette (Distinct Colors for Fantasy Leagues)
+                Team Visualization Palette (shadcn-aligned)
               </h3>
               <div className='grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-12 gap-1 sm:gap-2 no-overflow'>
-                {colors.rainbow.map((hex, index) => (
+                {colors.teamCategorical.map((hex: string, index: number) => (
                   <div key={index} className='text-center min-w-0 no-overflow'>
                     <div
                       className='w-full h-8 sm:h-10 rounded border border-border mb-1'
@@ -147,17 +147,17 @@ export default function DashboardPage() {
                 ))}
               </div>
               <p className='text-xs text-muted-foreground mt-2 font-avenir'>
-                Maximum visual distinction for 12 team fantasy leagues
+                High-contrast categorical set that works in light/dark
               </p>
             </div>
 
             {/* RdYlGn Scale */}
             <div className='no-overflow'>
               <h3 className='text-sm font-medium text-muted-foreground mb-2 font-avenir'>
-                Performance Scale (Red-Yellow-Green)
+                Performance Scale (Warm sequential)
               </h3>
-              <div className='grid grid-cols-11 gap-1 no-overflow'>
-                {colors.rdylgn.map((hex, index) => (
+              <div className='grid grid-cols-8 gap-1 no-overflow'>
+                {colors.sequentialWarm.map((hex: string, index: number) => (
                   <div key={index} className='text-center min-w-0 no-overflow'>
                     <div
                       className='w-full h-6 sm:h-8 rounded border border-border'

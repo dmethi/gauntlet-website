@@ -1,4 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+const tokensPreset =
+  require('../../packages/tokens/tailwind-preset').default ||
+  require('../../packages/tokens/tailwind-preset');
+
 module.exports = {
   darkMode: ['class'],
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', '../../packages/ui/src/**/*.{js,ts,jsx,tsx}'],
@@ -56,38 +60,31 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-
-        // Gauntlet Brand Colors - Balanced Medieval Theme
         gauntlet: {
-          crimson: '#8B1538', // Deep burgundy primary red
-          battle: '#A31621', // Secondary red tone
-          ember: '#6B1426', // Darkest red for depth
-          'regal-gold': '#D4AF37', // Co-primary royal gold
-          'warm-gold': '#EBB748', // Brighter gold accent
-          charcoal: '#1A1A1A', // Softer charcoal
-          'off-white': '#F3E9D2', // Neutral light
-          'burnt-orange': '#B8621B', // Muted orange bridge
+          crimson: '#8B1538',
+          battle: '#A31621',
+          ember: '#6B1426',
+          'regal-gold': '#D4AF37',
+          'warm-gold': '#EBB748',
+          charcoal: '#1A1A1A',
+          'off-white': '#F3E9D2',
+          'burnt-orange': '#B8621B',
         },
-
-        // Data visualization colors
         viz: {
-          // 12-Color Team Visualization Palette (distinct colors for 12 teams)
           team: {
-            1: '#8B1538', // Crimson Red
-            2: '#D4AF37', // Regal Gold
-            3: '#2D5A87', // Steel Blue
-            4: '#8B4513', // Saddle Brown
-            5: '#556B2F', // Dark Olive Green
-            6: '#4B0082', // Indigo
-            7: '#CD853F', // Peru
-            8: '#2F4F4F', // Dark Slate Gray
-            9: '#8B008B', // Dark Magenta
-            10: '#B8860B', // Dark Goldenrod
-            11: '#483D8B', // Dark Slate Blue
-            12: '#A0522D', // Sienna
+            1: '#8B1538',
+            2: '#D4AF37',
+            3: '#2D5A87',
+            4: '#8B4513',
+            5: '#556B2F',
+            6: '#4B0082',
+            7: '#CD853F',
+            8: '#2F4F4F',
+            9: '#8B008B',
+            10: '#B8860B',
+            11: '#483D8B',
+            12: '#A0522D',
           },
-
-          // RdYlGn scale for performance metrics
           'rd-yl-gn': [
             '#a50026',
             '#d73027',
@@ -102,6 +99,13 @@ module.exports = {
             '#006837',
           ],
         },
+        chart: {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -110,12 +114,20 @@ module.exports = {
       },
       keyframes: {
         'accordion-down': {
-          from: { height: 0 },
-          to: { height: 'var(--radix-accordion-content-height)' },
+          from: {
+            height: '0',
+          },
+          to: {
+            height: 'var(--radix-accordion-content-height)',
+          },
         },
         'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: 0 },
+          from: {
+            height: 'var(--radix-accordion-content-height)',
+          },
+          to: {
+            height: '0',
+          },
         },
       },
       animation: {
@@ -124,5 +136,6 @@ module.exports = {
       },
     },
   },
+  presets: [tokensPreset],
   plugins: [require('tailwindcss-animate')],
 };

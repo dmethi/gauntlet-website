@@ -16,7 +16,10 @@
     "live-sims": "tsx src/scripts/jobs/run-live-sims.ts",
     "regression:matchup": "tsx src/scripts/regression/run-matchup-sim.ts",
     "readiness:variance": "tsx src/scripts/readiness/check-variance-coverage.ts",
-    "metrics:calc": "tsx src/scripts/metrics/run-calc.ts"
+    "metrics:calc": "tsx src/scripts/metrics/run-calc.ts",
+    "hydrate:weekly": "tsx src/scripts/hydrate-weekly-metrics.ts",
+    "seed:livewin": "tsx src/scripts/seed-live-winprob.ts",
+    "inventory:db": "tsx src/scripts/inventory-db.ts"
   },
   "prisma": {
     "schema": "prisma/schema.prisma"
