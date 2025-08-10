@@ -1,17 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
+  Activity,
+  Award,
   BarChart3,
   Beaker,
-  Calendar,
-  ChevronDown,
-  ChevronRight,
   Database,
   Home,
   Menu,
-  Settings,
-  Target,
   TrendingUp,
   Trophy,
   Users,
@@ -24,17 +21,16 @@ import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
 
 const navigationItems = [
-  { name: 'Dashboard', icon: Home, href: '/' },
+  { name: 'Competition', icon: Home, href: '/competition' },
   { name: 'League Overview', icon: Trophy, href: '/league/overview' },
-  { name: 'My Teams', icon: Users, href: '/teams' },
-  { name: 'Players', icon: Target, href: '/players' },
-  { name: 'Matchups', icon: Calendar, href: '/matchups' },
-  { name: 'Simulations', icon: Zap, href: '/simulations' },
+  { name: 'Live', icon: Activity, href: '/live' },
+  { name: 'Teams', icon: Users, href: '/teams' },
   { name: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { name: 'Simulations', icon: Zap, href: '/simulations' },
   { name: 'Trends', icon: TrendingUp, href: '/trends' },
+  { name: 'Hall of Fame & Shame', icon: Award, href: '/hall' },
   { name: 'Data Feed', icon: Database, href: '/data' },
   { name: 'Playground', icon: Beaker, href: '/playground' },
-  { name: 'Settings', icon: Settings, href: '/settings' },
 ];
 
 interface SidebarProps {
@@ -153,7 +149,7 @@ function SidebarContent({
 
 function SidebarNavigation({
   onItemClick,
-  teams,
+  teams: _teams,
   isLoading: _isLoading,
   isError: _isError,
 }: {
@@ -163,7 +159,6 @@ function SidebarNavigation({
   isError?: boolean;
 }) {
   const pathname = usePathname();
-  const [isTeamsOpen, setIsTeamsOpen] = useState(true);
 
   return (
     <div className='space-y-1'>
@@ -192,49 +187,6 @@ function SidebarNavigation({
       <div className='pt-2'>
         <ThemeToggle />
       </div>
-
-      {/* Teams Section */}
-      {teams && teams.length > 0 && (
-        <div className='pt-4'>
-          <button
-            onClick={() => setIsTeamsOpen(!isTeamsOpen)}
-            className='flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors font-avenir min-h-[44px] text-left text-muted-foreground hover:text-card-foreground hover:bg-muted'
-          >
-            {isTeamsOpen ? (
-              <ChevronDown className='h-4 w-4' />
-            ) : (
-              <ChevronRight className='h-4 w-4' />
-            )}
-            <span className='flex-1 text-left'>League Teams ({teams.length})</span>
-          </button>
-
-          {isTeamsOpen && (
-            <div className='ml-4 space-y-1 pt-2'>
-              {teams.map(team => {
-                const isActive = pathname === `/team/${team.id}/stats`;
-                return (
-                  <Link
-                    key={team.id}
-                    href={`/team/${team.id}/stats`}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors font-avenir min-h-[44px] text-left ${
-                      isActive
-                        ? 'bg-gauntlet-crimson text-white shadow-sm'
-                        : 'text-muted-foreground hover:text-card-foreground hover:bg-muted'
-                    }`}
-                    onClick={onItemClick}
-                  >
-                    <Users className='h-4 w-4 flex-shrink-0' />
-                    <div>
-                      <div>{team.name}</div>
-                      <div className='text-xs text-muted-foreground'>{team.owner}</div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

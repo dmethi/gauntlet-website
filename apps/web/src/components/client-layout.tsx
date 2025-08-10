@@ -14,6 +14,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     isLoading,
     isError,
   } = useQuery<SidebarTeam[]>({
+    // Keep the query so Team pages can use it later if needed,
+    // but it's not used in Sidebar list anymore
     queryKey: ['teams'],
     queryFn: async () => {
       const res = await fetch('/api/league/teams');

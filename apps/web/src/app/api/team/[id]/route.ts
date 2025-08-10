@@ -6,10 +6,9 @@ const prisma = new PrismaClient();
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const teamId = params.id;
   try {
+    // TODO: Replace season hard-code with shared config
     const league = await prisma.league.findFirst({
-      where: {
-        season: '2023',
-      },
+      where: { season: '2023' },
     });
 
     if (!league) {

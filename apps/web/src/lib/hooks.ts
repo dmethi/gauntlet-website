@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FantasyTeam, League } from '@gauntlet/types';
+import { getCurrentWeek } from '@gauntlet/lib';
 
 interface Matchup {
   week: number;
@@ -120,4 +121,52 @@ export function useTeamData(teamId: string) {
   });
 
   return { team, loading };
+}
+
+// Rollups hooks
+export interface WeekRollupsResponse<T = unknown> {
+  ok: boolean;
+  data: T[];
+  meta: unknown;
+}
+
+export interface SuperlativesResponse<T = unknown> {
+  ok: boolean;
+  data: T[];
+  meta: unknown;
+}
+
+export function useWeekRollups<T = unknown>(leagueId: string, season: string, week?: number) {
+  const targetWeek = week ?? getCurrentWeek();
+  return useQuery<WeekRollupsResponse<T>>({
+    queryKey: ['rollups', leagueId, season, targetWeek],
+    queryFn: async () => {
+      const res = await fetch(`/api/rollups/${leagueId}/${season}/weeks/${targetWeek}`);
+      if (!res.ok) throw new Error('Failed to fetch week rollups');
+      return res.json();
+    },
+    enabled: Boolean(leagueId && season),
+  });
+}
+
+export function useSeasonSuperlatives<T = unknown>(
+  leagueId: string,
+  season: string,
+  opts?: { category?: string; limit?: number; offset?: number }
+) {
+  const params = new URLSearchParams();
+  if (opts?.category) params.set('category', opts.category);
+  if (opts?.limit != null) params.set('limit', String(opts.limit));
+  if (opts?.offset != null) params.set('offset', String(opts.offset));
+  const qs = params.toString();
+  return useQuery<SuperlativesResponse<T>>({
+    queryKey: ['superlatives', leagueId, season, qs],
+    queryFn: async () => {
+      const url = `/api/rollups/${leagueId}/${season}/superlatives${qs ? `?${qs}` : ''}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to fetch superlatives');
+      return res.json();
+    },
+    enabled: Boolean(leagueId && season),
+  });
 }

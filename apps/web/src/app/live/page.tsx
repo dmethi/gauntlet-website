@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { getCurrentWeek } from '@gauntlet/lib';
 
 // const LEAGUE_ID = '1049321550490456064'; // Replace with your actual league ID
 
@@ -28,13 +29,7 @@ interface LiveData {
   currentWeek: number;
 }
 
-function getCurrentWeek(): number {
-  const seasonStart = new Date('2024-09-05');
-  const now = new Date();
-  const diffTime = now.getTime() - seasonStart.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return Math.min(Math.max(Math.ceil(diffDays / 7), 1), 18);
-}
+// use shared getCurrentWeek from @gauntlet/lib
 
 const getLiveData = async (): Promise<LiveData> => {
   // This is a placeholder for a real API call

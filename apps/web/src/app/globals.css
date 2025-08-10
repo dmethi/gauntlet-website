@@ -17,25 +17,26 @@
     /* Font Configuration */
     --font-avenir: 'Avenir', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     
-    /* Light mode semantic colors (brand-aligned) */
-    --background: 0 0% 100%;
+    /* Light mode semantic colors (brand-aligned, papyrus/tan) */
+    /* Papyrus/off-white base approximating #F3E9D2 */
+    --background: 39 58% 89%;
     --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
+    --card: 39 40% 96%;
     --card-foreground: 20 14.3% 4.1%;
-    --popover: 0 0% 100%;
+    --popover: 39 40% 96%;
     --popover-foreground: 20 14.3% 4.1%;
     --primary: 345 69% 31%; /* brand crimson */
     --primary-foreground: 0 0% 100%;
     --secondary: 43 64% 52%; /* regal gold */
     --secondary-foreground: 0 0% 5%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
+    --muted: 39 35% 92%;
+    --muted-foreground: 25 10% 35%;
     --accent: 39 73% 58%; /* warm gold */
     --accent-foreground: 0 0% 5%;
     --destructive: 355 65% 35%; /* battle red */
     --destructive-foreground: 0 0% 100%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
+    --border: 35 20% 80%;
+    --input: 35 20% 80%;
     --ring: 345 69% 31%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
@@ -46,25 +47,25 @@
   }
 
   .dark {
-    /* Dark mode semantic colors (brand-aligned) */
-    --background: 20 14.3% 4.1%;
+    /* Dark mode semantic colors (brand-aligned, charcoal) */
+    --background: 0 0% 10%; /* ~#1A1A1A */
     --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 7%;
+    --card: 0 0% 14%; /* ~#242424 */
     --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 7%;
+    --popover: 0 0% 14%;
     --popover-foreground: 60 9.1% 97.8%;
     --primary: 345 69% 35%;
     --primary-foreground: 0 0% 100%;
     --secondary: 43 64% 52%;
     --secondary-foreground: 24 9.8% 10%;
-    --muted: 12 6.5% 15.1%;
+    --muted: 0 0% 20%;
     --muted-foreground: 24 5.4% 63.9%;
     --accent: 39 73% 58%;
     --accent-foreground: 24 9.8% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
     --ring: 345 69% 35%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
