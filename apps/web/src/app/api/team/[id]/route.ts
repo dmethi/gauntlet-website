@@ -1,42 +1,27 @@
-import { PrismaClient } from '../../../../generated/prisma';
 import { NextResponse } from 'next/server';
 
-const prisma = new PrismaClient();
+const SERVER_BASE_URL = process.env.SERVER_BASE_URL || 'http://localhost:3001';
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const teamId = params.id;
+  const teamId = Number(params.id);
   try {
-    // TODO: Replace season hard-code with shared config
-    const league = await prisma.league.findFirst({
-      where: { season: '2023' },
-    });
-
-    if (!league) {
-      return NextResponse.json({ error: 'League not found' }, { status: 404 });
+    const res = await fetch(`${SERVER_BASE_URL}/api/league/overview`, { cache: 'no-store' });
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: 'Failed to fetch league overview' },
+        { status: res.status }
+      );
     }
-
-    const roster = await prisma.roster.findUnique({
-      where: {
-        id: parseInt(teamId),
-        leagueId: league.id,
-      },
-      include: {
-        owner: true,
-        league: true,
-        weeklyMetrics: {
-          orderBy: { week: 'asc' },
-        },
-        matchups: {
-          orderBy: { week: 'asc' },
-        },
-      },
-    });
+    const league = await res.json();
+    const roster = Array.isArray(league?.rosters)
+      ? league.rosters.find((r: { id: number }) => r.id === teamId)
+      : null;
 
     if (!roster) {
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });
     }
 
-    return NextResponse.json(roster);
+    return NextResponse.json({ ...roster, league });
   } catch (error) {
     console.error('Error fetching team data:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

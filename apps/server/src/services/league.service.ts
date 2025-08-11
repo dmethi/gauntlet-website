@@ -31,9 +31,16 @@ export async function getLeagueOverview() {
     },
   });
 
+  // League activity for client-side use
+  const transactions = await prisma.transaction.findMany({
+    where: { leagueId: league.id },
+    orderBy: { createdAt: 'desc' },
+  });
+
   return {
     ...league,
     rosters,
+    transactions,
   };
 }
 

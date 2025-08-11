@@ -24,9 +24,38 @@
 - Motion polish: table row hover/press, page header actions, transitions
   (respect animations.md).
 
+##### Bugs/TODOs (Team pages)
+
+- Remove chart legend/label from polar (radar) chart to reduce clutter.
+- Filter out unknown/invalid positional buckets (e.g., `UNK`) when aggregating
+  positional points.
+- Transactions: show detailed adds/drops/draft picks with player names and FAAB
+  amounts.
+- Playoffs: ingest Sleeper playoff bracket/toilet data and render a separate
+  playoffs analysis section; compute final placing.
+- Radar compare: allow selecting other teams to overlay normalized positional
+  radar for comparisons (in progress: chart API accepts comparisons array).
+
 ---
 
 ### Information Architecture and Page Specs
+
+---
+
+Status checkpoint (UI implementation)
+
+- Teams index: grid of team blocks with avatar/initials, links to `team/[id]`.
+- Team page: header with avatar, regular-season KPIs (Weeks 1–playoff_start-1),
+  weekly charts with league average overlay, matchups table split by regular
+  season vs playoffs.
+- Positional analytics: seasonal bar chart (team vs opponent vs league avg) and
+  normalized radar (0–1); filters to positions: QB/RB/WR/TE/K/DEF; compare
+  overlay supported.
+- Roster section: starters and bench with player name/position/team.
+- Transactions: server route with player expansion and D/ST fallback; UI lists
+  Adds/Drops player names; FAAB/picks pending.
+- Hooks stability fixes; colors import fixed; weekly averages correctly applied
+  to charts; playoff opponent points handled.
 
 #### Competition Dashboard (`/competition`)
 

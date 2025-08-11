@@ -65,4 +65,30 @@ router.get('/:leagueId/:season/superlatives', async (req: Request, res: Response
   }
 });
 
+// Seasonal aggregates for a league (all weeks). Returns roster week aggregates and league week summaries
+router.get('/:leagueId/:season/seasonal', async (req: Request, res: Response) => {
+  try {
+    const { leagueId } = req.params as { leagueId: string; season: string };
+    if (!leagueId) {
+      return res
+        .status(400)
+        .json({ ok: false, error: { code: 'BAD_REQUEST', message: 'leagueId is required' } });
+    }
+    const [rosterWeekAggregates, leagueWeekSummaries] = await Promise.all([
+      db.rosterWeekAggregate.findMany({ where: { leagueId }, orderBy: { week: 'asc' } }),
+      db.leagueWeekSummary.findMany({ where: { leagueId }, orderBy: { week: 'asc' } }),
+    ]);
+    return res.json({
+      ok: true,
+      data: { rosterWeekAggregates, leagueWeekSummaries },
+      meta: { leagueId },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      error: { code: 'INTERNAL', message: 'Failed to fetch seasonal aggregates' },
+    });
+  }
+});
+
 export default router;

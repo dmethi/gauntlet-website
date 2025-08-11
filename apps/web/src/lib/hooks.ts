@@ -25,6 +25,7 @@ interface Roster extends FantasyTeam {
   owner: {
     displayName: string;
     username: string;
+    avatar?: string;
     metadata: {
       team_name: string;
     };
@@ -33,6 +34,14 @@ interface Roster extends FantasyTeam {
 
 interface LeagueData extends League {
   rosters: Roster[];
+  transactions?: Array<{
+    id: string;
+    type: string;
+    createdAt: string;
+    rosterIds?: number[];
+    adds?: unknown;
+    drops?: unknown;
+  }>;
 }
 
 const getLeagueData = async (): Promise<LeagueData> => {
@@ -57,8 +66,17 @@ export function useLeagueData() {
           (sum: number, matchup: Matchup) => sum + matchup.points,
           0
         );
-        const wins = roster.matchups.filter((m: Matchup) => m.result === 'W').length;
-        const losses = roster.matchups.filter((m: Matchup) => m.result === 'L').length;
+        const wins = roster.matchups.reduce((count: number, m: Matchup) => {
+          const week = roster.weeklyMetrics.find((wm: WeeklyMetric) => wm.week === m.week);
+          // Regular season only (Weeks 1–14)
+          if (!week || week.week < 1 || week.week > 14) return count;
+          return count + (m.points > week.opponentPoints ? 1 : 0);
+        }, 0);
+        const losses = roster.matchups.reduce((count: number, m: Matchup) => {
+          const week = roster.weeklyMetrics.find((wm: WeeklyMetric) => wm.week === m.week);
+          if (!week || week.week < 1 || week.week > 14) return count;
+          return count + (m.points <= week.opponentPoints ? 1 : 0);
+        }, 0);
         const totalExpectedWins = roster.weeklyMetrics.reduce(
           (sum: number, metric: WeeklyMetric) => sum + metric.expectedWins,
           0
@@ -114,13 +132,18 @@ const getTeamData = async (teamId: string): Promise<Roster> => {
 };
 
 export function useTeamData(teamId: string) {
-  const { data: team, isLoading: loading } = useQuery<Roster>({
+  const {
+    data: team,
+    isLoading: loading,
+    error,
+  } = useQuery<Roster>({
     queryKey: ['teamData', teamId],
     queryFn: () => getTeamData(teamId),
     enabled: !!teamId,
+    retry: 0,
   });
 
-  return { team, loading };
+  return { team, loading, error };
 }
 
 // Rollups hooks
@@ -134,6 +157,90 @@ export interface SuperlativesResponse<T = unknown> {
   ok: boolean;
   data: T[];
   meta: unknown;
+}
+
+export interface SeasonalAggregatesResponse {
+  ok: boolean;
+  data: {
+    rosterWeekAggregates: Array<{
+      leagueId: string;
+      rosterId: number;
+      week: number;
+      points: number;
+      opponentRosterId?: number | null;
+      opponentPoints?: number | null;
+      positionalPoints?: Record<string, number> | null;
+      opponentPositionalPoints?: Record<string, number> | null;
+    }>;
+    leagueWeekSummaries: Array<{
+      week: number;
+      averagePoints: number;
+      medianPoints: number;
+    }>;
+  };
+  meta: unknown;
+}
+
+export function useSeasonalAggregates(leagueId?: string, season?: string) {
+  return useQuery<SeasonalAggregatesResponse>({
+    queryKey: ['seasonal', leagueId, season],
+    queryFn: async () => {
+      const res = await fetch(`/api/rollups/${leagueId}/${season}`);
+      if (!res.ok) throw new Error('Failed to fetch seasonal aggregates');
+      return res.json();
+    },
+    enabled: Boolean(leagueId && season),
+  });
+}
+
+export interface RosterDetailsResponse {
+  rosterId: number;
+  starters: string[];
+  players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
+}
+
+export function useRosterDetails(leagueId?: string, rosterId?: number) {
+  return useQuery<RosterDetailsResponse>({
+    queryKey: ['roster', leagueId, rosterId],
+    queryFn: async () => {
+      const res = await fetch(`/api/league/${leagueId}/rosters/${rosterId}`);
+      if (!res.ok) throw new Error('Failed to fetch roster details');
+      return res.json();
+    },
+    enabled: Boolean(leagueId && rosterId),
+  });
+}
+
+export interface LeagueTransactionsResponse {
+  ok: boolean;
+  data: Array<{
+    id: string;
+    type: string;
+    createdAt: string;
+    rosterIds: number[];
+    adds?: Array<{
+      rosterId: number;
+      players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
+    }>;
+    drops?: Array<{
+      rosterId: number;
+      players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
+    }>;
+    waiver?: unknown;
+    settings?: unknown;
+  }>;
+}
+
+export function useLeagueTransactions(leagueId?: string) {
+  return useQuery<LeagueTransactionsResponse>({
+    queryKey: ['transactions', leagueId],
+    queryFn: async () => {
+      const res = await fetch(`/api/league/${leagueId}/transactions`);
+      if (!res.ok) throw new Error('Failed to fetch transactions');
+      return res.json();
+    },
+    enabled: Boolean(leagueId),
+  });
 }
 
 export function useWeekRollups<T = unknown>(leagueId: string, season: string, week?: number) {

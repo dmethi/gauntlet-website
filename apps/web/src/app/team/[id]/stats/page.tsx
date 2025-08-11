@@ -1,8 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
 import { useTeamData } from '@/lib/hooks';
 import ContentLoader from 'react-content-loader';
+import { Container, PageHeader } from '@gauntlet/ui';
+import { Button } from '@/components/ui/button';
 
 const TeamStatsPageLoader = () => (
   <ContentLoader
@@ -37,7 +40,7 @@ const TeamStatsPageLoader = () => (
 );
 
 export default function TeamStatsPage({ params }: { params: { id: string } }) {
-  const { team, loading } = useTeamData(params.id);
+  const { team, loading, error } = useTeamData(params.id);
 
   if (loading) {
     return (
@@ -47,52 +50,106 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
     );
   }
 
-  if (!team) {
-    return <div>Team not found</div>;
+  if (error) {
+    return (
+      <Container className='py-8'>
+        <PageHeader title='Team not found' subtitle='Failed to load team data' />
+      </Container>
+    );
   }
 
-  const weeklyData = team.weeklyMetrics.map(metric => ({
-    week: metric.week,
-    points: metric.totalPoints,
-    expectedWins: metric.expectedWins,
-    luckRating: metric.luckRating,
-    opponentPoints: metric.opponentPoints,
-  }));
+  if (!team) {
+    return (
+      <Container className='py-8'>
+        <PageHeader title='Team not found' subtitle='No team data available' />
+      </Container>
+    );
+  }
+
+  const weeklyData = team.weeklyMetrics
+    // Regular season only (Weeks 1–14). TODO: compute playoff start dynamically from league settings
+    .filter(metric => metric.week >= 1 && metric.week <= 14)
+    .map(metric => ({
+      week: metric.week,
+      points: metric.totalPoints,
+      expectedWins: metric.expectedWins,
+      luckRating: metric.luckRating,
+      opponentPoints: metric.opponentPoints,
+    }));
 
   const totalPoints = team.matchups.reduce((sum, matchup) => sum + matchup.points, 0);
   const averagePoints = totalPoints / team.matchups.length || 0;
-  const totalExpectedWins = team.weeklyMetrics.reduce(
+  const regularSeasonWeeks = team.weeklyMetrics.filter(wm => wm.week >= 1 && wm.week <= 14);
+  const totalExpectedWins = regularSeasonWeeks.reduce(
     (sum, metric) => sum + metric.expectedWins,
     0
   );
-  const totalLuckRating = team.weeklyMetrics.reduce((sum, metric) => sum + metric.luckRating, 0);
+  const totalLuckRating = regularSeasonWeeks.reduce((sum, metric) => sum + metric.luckRating, 0);
+
+  const getTeamName = () =>
+    team.owner?.metadata?.team_name ||
+    team.owner?.displayName ||
+    team.owner?.username ||
+    `Team ${team.id}`;
+
+  const getAvatarUrl = (avatar?: string | null) => {
+    if (!avatar) return undefined;
+    if (avatar.startsWith('http')) return avatar;
+    return `https://sleepercdn.com/avatars/${avatar}`;
+  };
+
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(/\s+/);
+    const first = parts[0]?.[0] ?? '';
+    const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? '') : '';
+    return (first + last).toUpperCase() || name.slice(0, 2).toUpperCase();
+  };
+
+  const name = getTeamName();
+  const ownerName = team.owner?.displayName || team.owner?.username || 'Unknown';
+  const avatarUrl = getAvatarUrl(team.owner?.avatar);
+  const initials = getInitials(name);
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='mb-8'>
-        <h1 className='text-3xl font-bold'>
-          {team.owner?.metadata?.team_name ||
-            team.owner?.displayName ||
-            team.owner?.username ||
-            `Team ${team.id}`}
-        </h1>
-        <p className='text-gray-600'>
-          League: {team.league.name} • Owner: {team.owner?.displayName || team.owner?.username}
-        </p>
+    <Container className='py-8'>
+      <div className='flex items-start justify-between gap-4 mb-6'>
+        <div className='flex items-center gap-4'>
+          <div className='h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold'>
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatarUrl} alt={`${name} avatar`} className='h-full w-full object-cover' />
+            ) : (
+              <span>{initials}</span>
+            )}
+          </div>
+          <div>
+            <PageHeader
+              title={`${name} • Stats`}
+              subtitle={`League: ${team.league?.name} • Owner: ${ownerName}`}
+            />
+          </div>
+        </div>
+        <div className='pt-2'>
+          <Link href={`/team/${team.id}`}>
+            <Button variant='secondary' size='sm'>
+              Back to Team
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
-        <div className='rounded-lg bg-white p-6 shadow'>
-          <h3 className='text-lg font-semibold'>Total Points</h3>
+        <div className='rounded-md border border-border bg-card p-4'>
+          <h3 className='text-sm font-medium text-muted-foreground'>Total Points</h3>
           <p className='text-3xl font-bold'>{totalPoints.toFixed(2)}</p>
-          <p className='text-sm text-gray-600'>Avg: {averagePoints.toFixed(2)}</p>
+          <p className='text-xs text-muted-foreground'>Avg: {averagePoints.toFixed(2)}</p>
         </div>
-        <div className='rounded-lg bg-white p-6 shadow'>
-          <h3 className='text-lg font-semibold'>Expected Wins</h3>
+        <div className='rounded-md border border-border bg-card p-4'>
+          <h3 className='text-sm font-medium text-muted-foreground'>Expected Wins</h3>
           <p className='text-3xl font-bold'>{totalExpectedWins.toFixed(1)}</p>
         </div>
-        <div className='rounded-lg bg-white p-6 shadow'>
-          <h3 className='text-lg font-semibold'>Luck Rating</h3>
+        <div className='rounded-md border border-border bg-card p-4'>
+          <h3 className='text-sm font-medium text-muted-foreground'>Luck Rating</h3>
           <p className='text-3xl font-bold'>{totalLuckRating.toFixed(2)}</p>
         </div>
       </div>
@@ -106,47 +163,6 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
         <h2 className='mb-4 text-2xl font-bold'>Expected vs Actual Performance</h2>
         <TeamExpectedPerformanceChart weeklyData={weeklyData} />
       </div>
-
-      <div className='mt-8'>
-        <h2 className='mb-4 text-2xl font-bold'>Weekly Matchups</h2>
-        <div className='overflow-x-auto'>
-          <table className='min-w-full divide-y divide-gray-200'>
-            <thead className='bg-gray-50'>
-              <tr>
-                <th className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500'>
-                  Week
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500'>
-                  Points
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500'>
-                  Opp. Points
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500'>
-                  Result
-                </th>
-              </tr>
-            </thead>
-            <tbody className='divide-y divide-gray-200 bg-white'>
-              {team.matchups.map(matchup => {
-                const weekData = weeklyData.find(w => w.week === matchup.week);
-                return (
-                  <tr key={matchup.week}>
-                    <td className='whitespace-nowrap px-6 py-4'>Week {matchup.week}</td>
-                    <td className='whitespace-nowrap px-6 py-4'>{matchup.points.toFixed(2)}</td>
-                    <td className='whitespace-nowrap px-6 py-4'>
-                      {weekData?.opponentPoints.toFixed(2)}
-                    </td>
-                    <td className='whitespace-nowrap px-6 py-4'>
-                      {matchup.points > (weekData?.opponentPoints || 0) ? 'Win' : 'Loss'}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    </Container>
   );
 }
