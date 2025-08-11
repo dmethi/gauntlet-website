@@ -186,7 +186,14 @@ Status checkpoint (UI implementation)
 
 Team Pages – Pending polish/TODOs
 
-- Mobile responsiveness: audit and refine layouts for charts, roster lists, and transactions on small screens (spacing, font sizes, wrapping).
-- Transactions UI/time: render relative time (e.g., 2d ago), group by day, show roster owner, and improve long player list layout; add FAAB/picks once server payload includes them.
-- Radar overlay bug: ensure compare overlay cannot select current team; validate compare data set, and visually distinguish overlays; remove polar legend/labels for clarity.
-- Charts UI polish: consistent card headers, legend theming, dashed league average line, accessible tooltips, and improved contrast/color mapping per team.
+- Mobile responsiveness: audit and refine layouts for charts, roster lists, and
+  transactions on small screens (spacing, font sizes, wrapping).
+- Transactions UI/time: render relative time (e.g., 2d ago), group by day, show
+  roster owner, and improve long player list layout; add FAAB/picks once server
+  payload includes them.
+- Radar overlay bug: ensure compare overlay cannot select current team; validate
+  compare data set, and visually distinguish overlays; remove polar
+  legend/labels for clarity.
+- Charts UI polish: consistent card headers, legend theming, dashed league
+  average line, accessible tooltips, and improved contrast/color mapping per
+  team.

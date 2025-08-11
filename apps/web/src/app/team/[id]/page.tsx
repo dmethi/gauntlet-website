@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import {
   TeamExpectedPerformanceChart,
@@ -26,7 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 
 const TeamPageLoader = () => (
   <ContentLoader
@@ -162,7 +160,11 @@ export default function TeamPage({ params }: { params: { id: string } }) {
           <div className='h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold'>
             {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={avatarUrl} alt={`${name} avatar`} className='h-full w-full object-cover' />
+              <img
+                src={avatarUrl}
+                alt={`${name} avatar`}
+                className='h-full w-full aspect-square object-cover rounded-full'
+              />
             ) : (
               <span>{initials}</span>
             )}
@@ -173,13 +175,6 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               subtitle={`League: ${team.league?.name} • Owner: ${ownerName}`}
             />
           </div>
-        </div>
-        <div className='pt-2'>
-          <Link href={`/team/${team.id}/stats`}>
-            <Button variant='secondary' size='sm'>
-              View Stats
-            </Button>
-          </Link>
         </div>
       </div>
 
@@ -335,9 +330,6 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             return (
               <>
                 <div className='flex items-center justify-between mb-2'>
-                  <div className='font-medium text-sm text-muted-foreground'>
-                    Regular Season Weeks 1–{Number(playoffStart) - 1}
-                  </div>
                   {league ? (
                     <label className='text-sm text-muted-foreground'>
                       Compare:&nbsp;

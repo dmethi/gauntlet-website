@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { ChartContainer, ChartLegend } from '@gauntlet/ui';
 import { dataVizColors } from '@/lib/colors';
+import { useEffect } from 'react';
 
 interface WeeklyAverage {
   week: number;
@@ -25,6 +26,16 @@ interface LeagueChartProps {
 }
 
 export function LeagueChart({ data }: LeagueChartProps) {
+  // Same mobile fix to ensure initial width is measured correctly
+  useEffect(() => {
+    const trigger = () => window.dispatchEvent(new Event('resize'));
+    const t = setTimeout(trigger, 0);
+    window.addEventListener('orientationchange', trigger);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('orientationchange', trigger);
+    };
+  }, []);
   const seriesColor = dataVizColors.performance[8];
 
   if (!data || data.length === 0) {
@@ -48,7 +59,7 @@ export function LeagueChart({ data }: LeagueChartProps) {
       height={384}
       actions={<ChartLegend items={[{ label: 'League Average', color: seriesColor }]} />}
     >
-      <ResponsiveContainer>
+      <ResponsiveContainer width='100%' height='100%' minWidth={0}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray='3 3' stroke='hsl(var(--muted))' />
           <XAxis
@@ -73,6 +84,7 @@ export function LeagueChart({ data }: LeagueChartProps) {
             stroke={seriesColor}
             name='League Average'
             dot={true}
+            isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>
