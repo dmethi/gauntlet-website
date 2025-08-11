@@ -121,12 +121,7 @@ router.get('/:leagueId/transactions', async (req: Request, res: Response) => {
       }
     };
     playerIds.forEach(pid => maybeMakeDst(pid));
-    console.log(
-      '[transactions] uniquePlayerIds',
-      playerIds.size,
-      'resolved',
-      Object.keys(idToPlayer).length
-    );
+    // logging removed
 
     const toRosterPlayerGroups = (
       mapping: unknown,
@@ -150,7 +145,6 @@ router.get('/:leagueId/transactions', async (req: Request, res: Response) => {
         rosterId: Number(rid),
         players,
       }));
-      console.log('[transactions] grouped', { groups: result.length, fallbackRosterIds });
       return result;
     };
 
