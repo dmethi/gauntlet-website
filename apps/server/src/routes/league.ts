@@ -65,7 +65,7 @@ router.get('/:leagueId/transactions', async (req: Request, res: Response) => {
 
     const txns = await prisma.transaction.findMany({
       where: { leagueId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ transactionAt: 'desc' }, { createdAt: 'desc' }],
       take: 200,
     });
 
@@ -157,7 +157,7 @@ router.get('/:leagueId/transactions', async (req: Request, res: Response) => {
         id: t.id,
         type: t.type,
         status: t.status,
-        createdAt: t.createdAt,
+        createdAt: (t as any).transactionAt || t.createdAt, // Use actual transaction time if available
         rosterIds: t.rosterIds,
         adds: addDetails,
         drops: dropDetails,

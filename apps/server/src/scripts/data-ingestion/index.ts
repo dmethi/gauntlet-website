@@ -366,6 +366,7 @@ async function ingestTransactions(ctx: IngestionContext, week: number) {
         settings: toPrismaJson(tx.settings),
         leg: tx.leg,
         consenterIds: (tx.consenter_ids || []).map(String),
+        transactionAt: new Date(tx.created * 1000), // Convert Unix timestamp to Date
       };
 
       return prisma.transaction.upsert({

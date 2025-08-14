@@ -122,6 +122,7 @@ model Transaction {
   settings      Json?     // Transaction metadata
   leg           Int       @default(1) // For multi-team trades
   consenterIds  String[]  // For trade voting
+  transactionAt DateTime? // Original Sleeper transaction timestamp
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

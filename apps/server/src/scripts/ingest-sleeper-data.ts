@@ -434,6 +434,7 @@ async function ingestTransactions(leagueId: string, week: number) {
           settings: nullToUndefined(tx.settings),
           leg: tx.leg,
           consenterIds: tx.consenter_ids.map(String),
+          transactionAt: new Date(tx.created * 1000), // Convert Unix timestamp to Date
         },
         create: {
           id: tx.transaction_id,
@@ -449,6 +450,7 @@ async function ingestTransactions(leagueId: string, week: number) {
           settings: nullToUndefined(tx.settings),
           leg: tx.leg,
           consenterIds: tx.consenter_ids.map(String),
+          transactionAt: new Date(tx.created * 1000), // Convert Unix timestamp to Date
         },
       })
     )

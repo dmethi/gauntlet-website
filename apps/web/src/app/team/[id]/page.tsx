@@ -148,6 +148,19 @@ export default function TeamPage({ params }: { params: { id: string } }) {
     return (first + last).toUpperCase() || name.slice(0, 2).toUpperCase();
   };
 
+  const formatTransactionType = (type: string) => {
+    switch (type) {
+      case 'free_agent':
+        return 'Free Agent';
+      case 'waiver':
+        return 'Waiver';
+      case 'trade':
+        return 'Trade';
+      default:
+        return type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' ');
+    }
+  };
+
   const name = getTeamName();
   const ownerName = team.owner?.displayName || team.owner?.username || 'Unknown';
   const avatarUrl = getAvatarUrl(team.owner?.avatar);
@@ -458,7 +471,13 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                       <TableCell>{weekData ? weekData.opponentPoints.toFixed(2) : '—'}</TableCell>
                       <TableCell>{leagueAvgCell}</TableCell>
                       <TableCell>
-                        {matchup.points > (weekData?.opponentPoints || 0) ? 'Win' : 'Loss'}
+                        {!weekData ||
+                        weekData.opponentPoints === 0 ||
+                        weekData.opponentPoints == null
+                          ? 'Bye'
+                          : matchup.points > weekData.opponentPoints
+                            ? 'Win'
+                            : 'Loss'}
                       </TableCell>
                     </TableRow>
                   );
@@ -492,7 +511,13 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                       <TableCell>{weekData ? weekData.opponentPoints.toFixed(2) : '—'}</TableCell>
                       <TableCell>{leagueAvgCell}</TableCell>
                       <TableCell>
-                        {matchup.points > (weekData?.opponentPoints || 0) ? 'Win' : 'Loss'}
+                        {!weekData ||
+                        weekData.opponentPoints === 0 ||
+                        weekData.opponentPoints == null
+                          ? 'Bye'
+                          : matchup.points > weekData.opponentPoints
+                            ? 'Win'
+                            : 'Loss'}
                       </TableCell>
                     </TableRow>
                   );
@@ -504,7 +529,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
       <div className='mt-8'>
         <h2 className='mb-2 text-2xl font-bold'>Transactions</h2>
-        <div className='rounded-md border border-border bg-card p-4'>
+        <div className='rounded-md border border-border bg-card px-4 py-1'>
           {tx?.ok ? (
             tx.data
               .filter(
@@ -513,38 +538,50 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               )
               .slice(0, 20)
               .map((t: LeagueTransactionsResponse['data'][number]) => (
-                <div
-                  key={t.id}
-                  className='flex items-center justify-between py-2 border-b last:border-b-0 border-border/50'
-                >
-                  <div className='text-sm'>
-                    <span className='font-medium'>{t.type}</span>
+                <div key={t.id} className='py-2 border-b last:border-b-0 border-border/50'>
+                  <div className='flex items-start gap-2 mb-1'>
+                    <span className='font-medium text-sm'>{formatTransactionType(t.type)}</span>
+                    {t.type === 'waiver' && (t as any).settings?.waiver_bid && (
+                      <span className='text-xs bg-muted px-2 py-1 rounded text-muted-foreground'>
+                        ${(t as any).settings.waiver_bid}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className='text-sm space-y-1'>
                     {t.adds?.length ? (
-                      <>
-                        <span className='text-muted-foreground'> — Adds: </span>
+                      <div className='flex items-center gap-2'>
+                        <span className='text-green-600 font-semibold'>+</span>
                         <span className='text-muted-foreground'>
                           {t.adds
                             .flatMap((a: { players: { fullName: string }[] }) =>
                               a.players.map((p: { fullName: string }) => p.fullName)
                             )
+                            .filter(Boolean)
                             .join(', ')}
                         </span>
-                      </>
+                      </div>
                     ) : null}
-                    {t.drops?.length ? (
-                      <>
-                        <span className='text-muted-foreground'> — Drops: </span>
+
+                    {t.drops?.length &&
+                    t.drops.some(
+                      (d: { players: { fullName: string }[] }) => d.players.length > 0
+                    ) ? (
+                      <div className='flex items-center gap-2'>
+                        <span className='text-red-600 font-semibold'>−</span>
                         <span className='text-muted-foreground'>
                           {t.drops
                             .flatMap((a: { players: { fullName: string }[] }) =>
                               a.players.map((p: { fullName: string }) => p.fullName)
                             )
+                            .filter(Boolean)
                             .join(', ')}
                         </span>
-                      </>
+                      </div>
                     ) : null}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+
+                  <div className='text-xs text-muted-foreground mt-1'>
                     {new Date(t.createdAt).toLocaleString()}
                   </div>
                 </div>
