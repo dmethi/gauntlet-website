@@ -32,6 +32,19 @@ interface Roster extends FantasyTeam {
   };
 }
 
+export interface TeamStats {
+  id: string;
+  name: string;
+  owner: string;
+  wins: number;
+  losses: number;
+  totalPoints: number;
+  expectedWins: number;
+  luckRating: number;
+  winPercentage: number;
+  canonicalRank: number;
+}
+
 interface LeagueData extends League {
   rosters: Roster[];
   transactions?: Array<{
@@ -58,51 +71,97 @@ export function useLeagueData() {
     queryFn: getLeagueData,
   });
 
-  const teamStats = useMemo(() => {
-    if (!league) return [];
-    return league.rosters
-      .map((roster: Roster) => {
-        const totalPoints = roster.matchups.reduce(
-          (sum: number, matchup: Matchup) => sum + matchup.points,
-          0
-        );
-        const wins = roster.matchups.reduce((count: number, m: Matchup) => {
-          const week = roster.weeklyMetrics.find((wm: WeeklyMetric) => wm.week === m.week);
-          // Regular season only (Weeks 1–14)
-          if (!week || week.week < 1 || week.week > 14) return count;
-          return count + (m.points > week.opponentPoints ? 1 : 0);
-        }, 0);
-        const losses = roster.matchups.reduce((count: number, m: Matchup) => {
-          const week = roster.weeklyMetrics.find((wm: WeeklyMetric) => wm.week === m.week);
-          if (!week || week.week < 1 || week.week > 14) return count;
-          return count + (m.points <= week.opponentPoints ? 1 : 0);
-        }, 0);
-        const totalExpectedWins = roster.weeklyMetrics.reduce(
-          (sum: number, metric: WeeklyMetric) => sum + metric.expectedWins,
-          0
-        );
-        const totalLuck = roster.weeklyMetrics.reduce(
-          (sum: number, metric: WeeklyMetric) => sum + metric.luckRating,
-          0
-        );
+  // Fetch seasonal aggregates for authoritative record data
+  const leagueId = league?.id ? String(league.id) : undefined;
+  const season = league?.season ? String(league.season) : undefined;
+  const { data: seasonal } = useSeasonalAggregates(leagueId, season);
 
+  const teamStats = useMemo(() => {
+    if (!league || !seasonal?.ok) return [];
+
+    // Create a map of roster aggregates for easier lookup
+    const rosterAggregates = new Map<number, RosterWeekAggregate[]>();
+    seasonal.data.rosterWeekAggregates.forEach(agg => {
+      if (!rosterAggregates.has(agg.rosterId)) {
+        rosterAggregates.set(agg.rosterId, []);
+      }
+      rosterAggregates.get(agg.rosterId)!.push(agg);
+    });
+
+    const teams = league.rosters.map((roster: Roster) => {
+      const aggregates = rosterAggregates.get(Number(roster.id)) || [];
+
+      // Calculate total points from matchups (unchanged)
+      const totalPoints = roster.matchups.reduce(
+        (sum: number, matchup: Matchup) => sum + matchup.points,
+        0
+      );
+
+      // Use authoritative record data from RosterWeekAggregate
+      // Filter to regular season weeks (we'll use dynamic playoff start if available)
+      const playoffStart = Number((league as any)?.playoff_week_start) || 15;
+      const regularSeasonAggregates = aggregates.filter(
+        agg => agg.week >= 1 && agg.week < playoffStart
+      );
+
+      const wins = regularSeasonAggregates.reduce(
+        (count: number, agg: RosterWeekAggregate) => count + (agg.won ? 1 : 0),
+        0
+      );
+      const losses = regularSeasonAggregates.reduce(
+        (count: number, agg: RosterWeekAggregate) => count + (agg.won === false ? 1 : 0),
+        0
+      );
+
+      // Calculate cumulative expected wins and luck from aggregates
+      const totalExpectedWins = regularSeasonAggregates.reduce(
+        (sum: number, agg: RosterWeekAggregate) => sum + (agg.expectedWins || 0),
+        0
+      );
+      const totalLuck = regularSeasonAggregates.reduce(
+        (sum: number, agg: RosterWeekAggregate) => sum + (agg.luck || 0),
+        0
+      );
+
+      return {
+        id: roster.id,
+        name:
+          roster.owner?.metadata?.team_name ||
+          roster.owner?.displayName ||
+          roster.owner?.username ||
+          `Team ${roster.id}`,
+        owner: roster.owner?.displayName || roster.owner?.username || 'Unknown',
+        wins,
+        losses,
+        totalPoints,
+        expectedWins: totalExpectedWins,
+        luckRating: totalLuck,
+      };
+    });
+
+    return teams
+      .map(team => {
+        // Calculate win percentage for ranking
+        const totalGames = team.wins + team.losses;
+        const winPercentage = totalGames > 0 ? team.wins / totalGames : 0;
         return {
-          id: roster.id,
-          name:
-            roster.owner?.metadata?.team_name ||
-            roster.owner?.displayName ||
-            roster.owner?.username ||
-            `Team ${roster.id}`,
-          owner: roster.owner?.displayName || roster.owner?.username || 'Unknown',
-          wins,
-          losses,
-          totalPoints,
-          expectedWins: totalExpectedWins,
-          luckRating: totalLuck,
+          ...team,
+          winPercentage,
         };
       })
-      .sort((a, b) => b.totalPoints - a.totalPoints);
-  }, [league]);
+      .sort((a, b) => {
+        // Sort by win percentage first (descending), then by total points as tiebreaker
+        if (a.winPercentage !== b.winPercentage) {
+          return b.winPercentage - a.winPercentage;
+        }
+        return b.totalPoints - a.totalPoints;
+      })
+      .map((team, index) => ({
+        ...team,
+        canonicalRank: index + 1, // Stable rank based on record + points tiebreaker
+      }))
+      .sort((a, b) => b.totalPoints - a.totalPoints) as TeamStats[]; // Default sort by points for display
+  }, [league, seasonal]);
 
   const weeklyAverages = useMemo(() => {
     if (!league) return [];
@@ -120,7 +179,13 @@ export function useLeagueData() {
     }).filter(w => w.averagePoints > 0);
   }, [league]);
 
-  return { league, loading, teamStats, weeklyAverages };
+  return {
+    league,
+    loading: loading || !seasonal, // Loading if either query is loading or seasonal data not available
+    teamStats,
+    weeklyAverages,
+    seasonal: seasonal?.data,
+  };
 }
 
 const getTeamData = async (teamId: string): Promise<Roster> => {
@@ -159,19 +224,28 @@ export interface SuperlativesResponse<T = unknown> {
   meta: unknown;
 }
 
+export interface RosterWeekAggregate {
+  leagueId: string;
+  rosterId: number;
+  week: number;
+  points: number;
+  projectedPoints?: number | null;
+  optimalPoints?: number | null;
+  opponentRosterId?: number | null;
+  opponentPoints?: number | null;
+  won?: boolean | null;
+  streak?: number | null;
+  expectedWins?: number | null;
+  luck?: number | null;
+  positionalPoints?: Record<string, number> | null;
+  opponentPositionalPoints?: Record<string, number> | null;
+  powerRank?: number | null;
+}
+
 export interface SeasonalAggregatesResponse {
   ok: boolean;
   data: {
-    rosterWeekAggregates: Array<{
-      leagueId: string;
-      rosterId: number;
-      week: number;
-      points: number;
-      opponentRosterId?: number | null;
-      opponentPoints?: number | null;
-      positionalPoints?: Record<string, number> | null;
-      opponentPositionalPoints?: Record<string, number> | null;
-    }>;
+    rosterWeekAggregates: RosterWeekAggregate[];
     leagueWeekSummaries: Array<{
       week: number;
       averagePoints: number;
@@ -238,6 +312,48 @@ export function useLeagueTransactions(leagueId?: string) {
       const res = await fetch(`/api/league/${leagueId}/transactions`);
       if (!res.ok) throw new Error('Failed to fetch transactions');
       return res.json();
+    },
+    enabled: Boolean(leagueId),
+  });
+}
+
+export interface PlayoffMatchup {
+  r: number; // round
+  m: number; // matchup id
+  t1: number; // team 1 roster id
+  t2: number; // team 2 roster id
+  t1_from?: { w: number; m: number } | { l: number; m: number };
+  t2_from?: { w: number; m: number } | { l: number; m: number };
+}
+
+export interface PlayoffBracketResponse {
+  winners_bracket?: PlayoffMatchup[];
+  losers_bracket?: PlayoffMatchup[];
+}
+
+export function usePlayoffBracket(leagueId?: string) {
+  return useQuery<PlayoffBracketResponse>({
+    queryKey: ['playoffBracket', leagueId],
+    queryFn: async () => {
+      // Fetch both winners and losers brackets from Sleeper API
+      const [winnersRes, losersRes] = await Promise.allSettled([
+        fetch(`https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`),
+        fetch(`https://api.sleeper.app/v1/league/${leagueId}/losers_bracket`),
+      ]);
+
+      const result: PlayoffBracketResponse = {};
+
+      // Handle winners bracket
+      if (winnersRes.status === 'fulfilled' && winnersRes.value.ok) {
+        result.winners_bracket = await winnersRes.value.json();
+      }
+
+      // Handle losers bracket
+      if (losersRes.status === 'fulfilled' && losersRes.value.ok) {
+        result.losers_bracket = await losersRes.value.json();
+      }
+
+      return result;
     },
     enabled: Boolean(leagueId),
   });

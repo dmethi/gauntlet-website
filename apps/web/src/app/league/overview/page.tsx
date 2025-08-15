@@ -1,12 +1,14 @@
 'use client';
 
 import { LeagueChart } from '@/components/league-chart';
-import { useLeagueData } from '@/lib/hooks';
+import { useLeagueData, usePlayoffBracket } from '@/lib/hooks';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Download, RefreshCw, Settings } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { PlayoffBracket } from '@/components/playoff-bracket';
 import {
   Table,
   TableBody,
@@ -41,6 +43,8 @@ const LeagueOverviewLoader = () => (
 
 export default function LeagueOverview() {
   const { league, loading, teamStats, weeklyAverages } = useLeagueData();
+  const leagueId = league?.id ? String(league.id) : undefined;
+  const { data: playoffBracket } = usePlayoffBracket(leagueId);
   const [sortKey, setSortKey] = useState<'team' | 'record' | 'points' | 'expectedWins' | 'luck'>(
     'points'
   );
@@ -126,7 +130,43 @@ export default function LeagueOverview() {
 
   return (
     <Container className='py-8'>
-      <PageHeader title={league.name} subtitle={`Season ${league.season}`} />
+      <div className='flex items-start justify-between mb-8'>
+        <PageHeader title={league.name} subtitle={`Season ${league.season}`} />
+        <div className='flex gap-2 opacity-0 animate-in fade-in-0 duration-300 delay-150'>
+          <Button
+            variant='outline'
+            size='sm'
+            className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
+            onClick={() => {
+              /* TODO: Implement data refresh */
+            }}
+          >
+            <RefreshCw className='h-4 w-4 mr-2' />
+            Refresh
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
+            onClick={() => {
+              /* TODO: Implement data export */
+            }}
+          >
+            <Download className='h-4 w-4 mr-2' />
+            Export
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
+            onClick={() => {
+              /* TODO: Navigate to settings */
+            }}
+          >
+            <Settings className='h-4 w-4' />
+          </Button>
+        </div>
+      </div>
 
       <div className='mb-8'>
         <h2 className='mb-4 text-2xl font-bold'>Team Rankings</h2>
@@ -137,7 +177,7 @@ export default function LeagueOverview() {
                 <TableHead className='w-[60px]'>Rank</TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 hover:text-card-foreground transition-colors'
+                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
                     onClick={() => onSort('team')}
                     aria-label='Sort by Team'
                   >
@@ -152,7 +192,7 @@ export default function LeagueOverview() {
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 hover:text-card-foreground transition-colors'
+                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
                     onClick={() => onSort('record')}
                     aria-label='Sort by Record'
                   >
@@ -167,7 +207,7 @@ export default function LeagueOverview() {
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 hover:text-card-foreground transition-colors'
+                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
                     onClick={() => onSort('points')}
                     aria-label='Sort by Points For'
                   >
@@ -182,7 +222,7 @@ export default function LeagueOverview() {
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 hover:text-card-foreground transition-colors'
+                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
                     onClick={() => onSort('expectedWins')}
                     aria-label='Sort by Expected Wins'
                   >
@@ -197,7 +237,7 @@ export default function LeagueOverview() {
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 hover:text-card-foreground transition-colors'
+                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
                     onClick={() => onSort('luck')}
                     aria-label='Sort by Luck'
                   >
@@ -213,12 +253,15 @@ export default function LeagueOverview() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedTeamStats.map((team, index) => (
+              {sortedTeamStats.map(team => (
                 <TableRow
                   key={team.id}
-                  className='hover:bg-muted/50 transition-colors duration-200 ease-out'
+                  className='group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none'
+                  onClick={() => {
+                    // TODO: Navigate to team page - this will be implemented when team pages are linked
+                  }}
                 >
-                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{team.canonicalRank}</TableCell>
                   <TableCell className='font-medium'>{team.name}</TableCell>
                   <TableCell>
                     <Badge variant='secondary'>
@@ -235,7 +278,17 @@ export default function LeagueOverview() {
         </div>
       </div>
 
-      <div className='mt-8'>
+      {/* Playoff Bracket */}
+      <div className='mt-12'>
+        <h2 className='mb-6 text-2xl font-bold'>Playoff Brackets</h2>
+        <PlayoffBracket
+          teams={teamStats}
+          league={league}
+          playoffBracket={playoffBracket}
+        />
+      </div>
+
+      <div className='mt-12'>
         <LeagueChart data={weeklyAverages} />
       </div>
     </Container>

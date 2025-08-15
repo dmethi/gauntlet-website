@@ -275,7 +275,7 @@ export function TeamPositionalRadarChart({
           >
             <PolarGrid />
             <PolarAngleAxis dataKey='position' />
-            <PolarRadiusAxis domain={[0, 1]} tickCount={6} />
+            <PolarRadiusAxis domain={[0, 1]} tick={false} tickCount={6} />
             <Tooltip />
             <Radar
               name={teamName}

@@ -31,8 +31,10 @@
   positional points.
 - Transactions: show detailed adds/drops/draft picks with player names and FAAB
   amounts.
-- Playoffs: ingest Sleeper playoff bracket/toilet data and render a separate
-  playoffs analysis section; compute final placing.
+- Playoffs: **IN PROGRESS** - Sleeper API integration and bracket flow
+  visualization implemented. Still needs: proper matchup data hydration,
+  placement games detection refinement, mobile responsive layout, and final
+  polishing of winner/loser advancement logic.
 - Radar compare: allow selecting other teams to overlay normalized positional
   radar for comparisons (in progress: chart API accepts comparisons array).
 
