@@ -6,6 +6,7 @@ import {
   Award,
   BarChart3,
   Beaker,
+  CheckSquare,
   Database,
   Home,
   Menu,
@@ -31,6 +32,7 @@ const navigationItems = [
   { name: 'Simulations', icon: Zap, href: '/simulations' },
   { name: 'Trends', icon: TrendingUp, href: '/trends' },
   { name: 'Hall of Fame & Shame', icon: Award, href: '/hall' },
+  { name: 'TODOs', icon: CheckSquare, href: '/todos' },
   { name: 'Data Feed', icon: Database, href: '/data' },
   { name: 'Playground', icon: Beaker, href: '/playground' },
 ];

@@ -4,7 +4,11 @@ alwaysApply: true
 # Agent Rules: Persistent Memory & Learning
 
 ```rule
-Always reference `.cursor/rules/technical-overview.md` at the start of a task to align with the system’s architecture and code generation rules. If it is missing or outdated, create or update it before proceeding.
+Always reference `.cursor/rules/technical-overview.md` at the start of a task to align with the system's architecture and code generation rules. If it is missing or outdated, create or update it before proceeding.
+```
+
+```rule
+CRITICAL: Always reference `.cursor/rules/project-management.md` BEFORE starting any development work. This file enforces TODO order, dependency validation, and single-focus development discipline. No coding should begin without completing the session start checklist.
 ```
 
 # PR Test Generation Requirement
