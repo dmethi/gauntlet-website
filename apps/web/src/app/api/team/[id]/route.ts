@@ -23,6 +23,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     return NextResponse.json({ ...roster, league });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching team data:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
