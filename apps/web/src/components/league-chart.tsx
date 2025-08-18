@@ -3,6 +3,7 @@
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartLegend } from '@gauntlet/ui';
 import { dataVizColors } from '@/lib/colors';
+import { useChartColors } from '@/lib/chart-colors';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 
 interface WeeklyAverage {
@@ -72,8 +73,9 @@ function useElementSize<T extends HTMLElement>() {
 export function LeagueChart({ data }: LeagueChartProps) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
+  const chartColors = useChartColors();
   const key = useWindowSizeKey();
-  const seriesColor = dataVizColors.performance[8];
+  const seriesColor = chartColors.primary;
 
   if (!data || data.length === 0) {
     return (
@@ -99,15 +101,15 @@ export function LeagueChart({ data }: LeagueChartProps) {
         <div ref={elementRef} className='h-full w-full'>
           {size.width > 0 && size.height > 0 ? (
             <LineChart key={key} width={size.width} height={size.height} data={data}>
-              <CartesianGrid strokeDasharray='3 3' stroke='hsl(var(--muted))' />
+              <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
               <XAxis
                 dataKey='week'
                 type='number'
                 domain={['dataMin', 'dataMax']}
                 tickCount={data.length}
-                stroke='hsl(var(--muted-foreground))'
+                stroke={chartColors.axis}
               />
-              <YAxis domain={[0, 'auto']} tickCount={10} stroke='hsl(var(--muted-foreground))' />
+              <YAxis domain={[0, 'auto']} tickCount={10} stroke={chartColors.axis} />
               <Tooltip
                 contentStyle={{
                   background: 'hsl(var(--card))',

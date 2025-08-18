@@ -31,7 +31,7 @@ export function MatchupLink({
   if (variant === 'badge-only') {
     return (
       <Link href={href} className={className}>
-        <Badge variant='outline' className='hover:bg-blue-50 cursor-pointer'>
+        <Badge variant='outline' className='hover:bg-muted/50 cursor-pointer'>
           Week {week} Matchup {matchupId}
         </Badge>
       </Link>
@@ -42,11 +42,11 @@ export function MatchupLink({
     return (
       <Link
         href={href}
-        className={`inline-flex items-center space-x-2 text-sm hover:text-blue-600 hover:underline ${className}`}
+        className={`inline-flex items-center space-x-2 text-sm hover:text-primary hover:underline ${className}`}
       >
         <span>Week {week}</span>
         {teamA && teamB && (
-          <span className='text-gray-500'>
+          <span className='text-muted-foreground'>
             ({teamA.name} vs {teamB.name})
           </span>
         )}
@@ -58,7 +58,7 @@ export function MatchupLink({
   return (
     <Link
       href={href}
-      className={`block p-3 border rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors ${className}`}
+      className={`block p-3 border rounded-lg hover:border-primary/50 hover:bg-muted/20 transition-colors ${className}`}
     >
       <div className='flex items-center justify-between'>
         <div>
@@ -66,7 +66,7 @@ export function MatchupLink({
             Week {week}, Matchup {matchupId}
           </h4>
           {teamA && teamB && (
-            <p className='text-xs text-gray-600 mt-1'>
+            <p className='text-xs text-muted-foreground mt-1'>
               {teamA.name} vs {teamB.name}
             </p>
           )}
@@ -76,7 +76,7 @@ export function MatchupLink({
             <p className='text-sm font-medium'>
               {teamA.score} - {teamB.score}
             </p>
-            <p className='text-xs text-gray-500'>Final</p>
+            <p className='text-xs text-muted-foreground'>Final</p>
           </div>
         )}
       </div>

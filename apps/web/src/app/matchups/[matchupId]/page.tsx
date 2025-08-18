@@ -25,8 +25,8 @@ const MatchupDetailLoader = () => (
     width={1200}
     height={1000}
     viewBox='0 0 1200 1000'
-    backgroundColor='#f3f3f3'
-    foregroundColor='#ecebeb'
+    backgroundColor='hsl(var(--muted))'
+    foregroundColor='hsl(var(--muted-foreground))'
   >
     {/* Header */}
     <rect x='16' y='32' rx='3' ry='3' width='200' height='32' />
@@ -99,7 +99,7 @@ function PlayerRow({
     difference !== null ? (difference > 0 ? '+' : '') + difference.toFixed(1) : null;
 
   return (
-    <tr className={`border-b ${isStarter ? 'bg-blue-50' : 'bg-gray-50'}`}>
+    <tr className={`border-b ${isStarter ? 'bg-primary/5 dark:bg-primary/10' : 'bg-muted/20'}`}>
       <td className='px-2 md:px-4 py-3'>
         <div className='flex items-center space-x-1 md:space-x-2'>
           <Badge className={`text-xs ${getPositionColor(playerPosition)}`}>{playerPosition}</Badge>
@@ -118,7 +118,7 @@ function PlayerRow({
                 <p className='font-medium text-sm truncate max-w-[120px] md:max-w-none'>
                   {displayName}
                 </p>
-                <p className='text-xs text-gray-500'>{team}</p>
+                <p className='text-xs text-muted-foreground'>{team}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent className='max-w-xs'>
@@ -126,7 +126,7 @@ function PlayerRow({
                 <p className='font-medium'>{displayName}</p>
                 <p className='text-xs'>Position: {playerPosition}</p>
                 <p className='text-xs'>Team: {team}</p>
-                {isStarter && <p className='text-xs text-blue-600'>Starter</p>}
+                {isStarter && <p className='text-xs text-primary'>Starter</p>}
                 {projectedPoints && (
                   <p className='text-xs'>Projected: {projectedPoints.toFixed(1)} pts</p>
                 )}
@@ -229,7 +229,7 @@ function TeamRoster({
 
   return (
     <Card className={`w-full ${isWinner ? 'ring-2 ring-green-500' : ''}`}>
-      <CardHeader className={isWinner ? 'bg-green-50' : ''}>
+      <CardHeader className={isWinner ? 'bg-green-50 dark:bg-green-900/20' : ''}>
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-3'>
             <Link href={`/team/${team.rosterId}`} className='hover:underline'>
@@ -246,8 +246,8 @@ function TeamRoster({
             {isWinner && <Badge className='bg-green-500'>Winner</Badge>}
           </div>
           <div className='text-right'>
-            <p className='text-3xl font-bold text-blue-600'>{team.points.toFixed(1)}</p>
-            <p className='text-sm text-gray-600'>{team.starters.length} starters</p>
+            <p className='text-3xl font-bold text-primary'>{team.points.toFixed(1)}</p>
+            <p className='text-sm text-muted-foreground'>{team.starters.length} starters</p>
           </div>
         </div>
       </CardHeader>
@@ -259,12 +259,12 @@ function TeamRoster({
         )}
         <div className='overflow-x-auto -mx-2 px-2 md:mx-0 md:px-0'>
           <table className='w-full min-w-[400px]'>
-            <thead className='bg-gray-100'>
+            <thead className='bg-muted/50'>
               <tr>
-                <th className='px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase'>
+                <th className='px-2 md:px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase'>
                   Position
                 </th>
-                <th className='px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase'>
+                <th className='px-2 md:px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase'>
                   Player
                 </th>
                 <th className='px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase'>
@@ -356,7 +356,7 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
     return (
       <Container className='py-8'>
         <PageHeader title='Error Loading Matchup' subtitle='Failed to load matchup data' />
-        <div className='mt-4 text-red-600'>{String(error)}</div>
+        <div className='mt-4 text-destructive'>{String(error)}</div>
         <Link href='/matchups'>
           <Button variant='outline' className='mt-4'>
             <ArrowLeft className='w-4 h-4 mr-2' />
@@ -536,9 +536,23 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
               <div className='h-48 relative'>
                 <svg className='w-full h-full' viewBox='0 0 320 160'>
                   {/* Y-axis */}
-                  <line x1='20' y1='10' x2='20' y2='150' stroke='#e5e7eb' strokeWidth='1' />
+                  <line
+                    x1='20'
+                    y1='10'
+                    x2='20'
+                    y2='150'
+                    stroke='hsl(var(--border))'
+                    strokeWidth='1'
+                  />
                   {/* X-axis */}
-                  <line x1='20' y1='150' x2='300' y2='150' stroke='#e5e7eb' strokeWidth='1' />
+                  <line
+                    x1='20'
+                    y1='150'
+                    x2='300'
+                    y2='150'
+                    stroke='hsl(var(--border))'
+                    strokeWidth='1'
+                  />
 
                   {/* 50% reference line */}
                   <line
@@ -546,17 +560,17 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
                     y1='80'
                     x2='300'
                     y2='80'
-                    stroke='#9ca3af'
+                    stroke='hsl(var(--muted-foreground))'
                     strokeWidth='1'
                     strokeDasharray='5,5'
                   />
-                  <text x='2' y='85' fontSize='10' fill='#6b7280'>
+                  <text x='2' y='85' fontSize='10' fill='hsl(var(--muted-foreground))'>
                     50%
                   </text>
-                  <text x='2' y='25' fontSize='10' fill='#6b7280'>
+                  <text x='2' y='25' fontSize='10' fill='hsl(var(--muted-foreground))'>
                     100%
                   </text>
-                  <text x='2' y='155' fontSize='10' fill='#6b7280'>
+                  <text x='2' y='155' fontSize='10' fill='hsl(var(--muted-foreground))'>
                     0%
                   </text>
 
@@ -575,13 +589,31 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
                   <circle cx='300' cy='55' r='3' fill='hsl(var(--primary))' />
 
                   {/* Time labels */}
-                  <text x='20' y='170' fontSize='10' fill='#6b7280' textAnchor='start'>
+                  <text
+                    x='20'
+                    y='170'
+                    fontSize='10'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='start'
+                  >
                     Sun 1PM
                   </text>
-                  <text x='160' y='170' fontSize='10' fill='#6b7280' textAnchor='middle'>
+                  <text
+                    x='160'
+                    y='170'
+                    fontSize='10'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='middle'
+                  >
                     Sun 8PM
                   </text>
-                  <text x='300' y='170' fontSize='10' fill='#6b7280' textAnchor='end'>
+                  <text
+                    x='300'
+                    y='170'
+                    fontSize='10'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='end'
+                  >
                     Final
                   </text>
                 </svg>
@@ -611,24 +643,68 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
               <div className='h-48 relative mb-4'>
                 <svg className='w-full h-full' viewBox='0 0 380 160'>
                   {/* Y-axis */}
-                  <line x1='30' y1='10' x2='30' y2='140' stroke='#e5e7eb' strokeWidth='1' />
+                  <line
+                    x1='30'
+                    y1='10'
+                    x2='30'
+                    y2='140'
+                    stroke='hsl(var(--border))'
+                    strokeWidth='1'
+                  />
                   {/* X-axis */}
-                  <line x1='30' y1='140' x2='360' y2='140' stroke='#e5e7eb' strokeWidth='1' />
+                  <line
+                    x1='30'
+                    y1='140'
+                    x2='360'
+                    y2='140'
+                    stroke='hsl(var(--border))'
+                    strokeWidth='1'
+                  />
 
                   {/* Y-axis labels */}
-                  <text x='25' y='15' fontSize='9' fill='#6b7280' textAnchor='end'>
+                  <text
+                    x='25'
+                    y='15'
+                    fontSize='9'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='end'
+                  >
                     120
                   </text>
-                  <text x='25' y='45' fontSize='9' fill='#6b7280' textAnchor='end'>
+                  <text
+                    x='25'
+                    y='45'
+                    fontSize='9'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='end'
+                  >
                     80
                   </text>
-                  <text x='25' y='75' fontSize='9' fill='#6b7280' textAnchor='end'>
+                  <text
+                    x='25'
+                    y='75'
+                    fontSize='9'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='end'
+                  >
                     40
                   </text>
-                  <text x='25' y='105' fontSize='9' fill='#6b7280' textAnchor='end'>
+                  <text
+                    x='25'
+                    y='105'
+                    fontSize='9'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='end'
+                  >
                     20
                   </text>
-                  <text x='25' y='143' fontSize='9' fill='#6b7280' textAnchor='end'>
+                  <text
+                    x='25'
+                    y='143'
+                    fontSize='9'
+                    fill='hsl(var(--muted-foreground))'
+                    textAnchor='end'
+                  >
                     0
                   </text>
 
@@ -644,7 +720,7 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
                   {/* Team B score line (red) */}
                   <path
                     d='M30,140 Q60,135 90,120 Q120,108 150,98 Q180,90 210,85 Q240,82 270,80 Q300,79 330,78 Q345,78 360,78'
-                    stroke='#ef4444'
+                    stroke='hsl(var(--destructive))'
                     strokeWidth='2.5'
                     fill='none'
                     className='drop-shadow-sm'
@@ -654,7 +730,7 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
                   <circle cx='90' cy='110' r='2' fill='hsl(var(--primary))' />
                   <circle cx='210' cy='45' r='2' fill='hsl(var(--primary))' />
                   <circle cx='360' cy='15' r='2' fill='hsl(var(--primary))' />
-                  <circle cx='90' cy='120' r='2' fill='#ef4444' />
+                  <circle cx='90' cy='120' r='2' fill='hsl(var(--destructive))' />
                   <circle cx='210' cy='85' r='2' fill='#ef4444' />
                   <circle cx='360' cy='78' r='2' fill='#ef4444' />
 

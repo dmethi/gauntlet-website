@@ -1,6 +1,7 @@
 'use client';
 
 import { colors } from '@/lib/colors';
+import { useChartColors } from '@/lib/chart-colors';
 import {
   Bar,
   BarChart,
@@ -91,7 +92,9 @@ export function TeamPerformanceChart({
 }: TeamChartsProps & { teamColor?: string }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
+  const chartColors = useChartColors();
   const key = useWindowSizeKey();
+
   if (!weeklyData || weeklyData.length === 0) {
     return <div>No data available</div>;
   }
@@ -101,14 +104,15 @@ export function TeamPerformanceChart({
       <div ref={elementRef} className='h-full w-full'>
         {size.width > 0 && size.height > 0 ? (
           <LineChart key={key} width={size.width} height={size.height} data={weeklyData}>
-            <CartesianGrid strokeDasharray='3 3' />
+            <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
             <XAxis
               dataKey='week'
               type='number'
               domain={['dataMin', 'dataMax']}
               tickCount={weeklyData.length}
+              stroke={chartColors.axis}
             />
-            <YAxis domain={[0, 'auto']} tickCount={10} />
+            <YAxis domain={[0, 'auto']} tickCount={10} stroke={chartColors.axis} />
             <Tooltip />
             <Legend />
             <Line
@@ -122,7 +126,7 @@ export function TeamPerformanceChart({
             <Line
               type='monotone'
               dataKey='opponentPoints'
-              stroke='#000000'
+              stroke={chartColors.opponent}
               name='Opponent Points'
               dot={true}
               isAnimationActive={false}
@@ -130,7 +134,7 @@ export function TeamPerformanceChart({
             <Line
               type='monotone'
               dataKey='leagueAverage'
-              stroke='#A1A8B3'
+              stroke={chartColors.leagueAverage}
               name='League Average'
               dot={false}
               strokeDasharray='5 5'
@@ -150,7 +154,9 @@ export function TeamExpectedPerformanceChart({
 }: TeamChartsProps & { teamColor?: string }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
+  const chartColors = useChartColors();
   const key = useWindowSizeKey();
+
   if (!weeklyData || weeklyData.length === 0) {
     return <div>No data available</div>;
   }
@@ -160,14 +166,15 @@ export function TeamExpectedPerformanceChart({
       <div ref={elementRef} className='h-full w-full'>
         {size.width > 0 && size.height > 0 ? (
           <LineChart key={key} width={size.width} height={size.height} data={weeklyData}>
-            <CartesianGrid strokeDasharray='3 3' />
+            <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
             <XAxis
               dataKey='week'
               type='number'
               domain={['dataMin', 'dataMax']}
               tickCount={weeklyData.length}
+              stroke={chartColors.axis}
             />
-            <YAxis domain={[-1, 1]} tickCount={3} />
+            <YAxis domain={[-1, 1]} tickCount={3} stroke={chartColors.axis} />
             <Tooltip />
             <Legend />
             <Line
@@ -181,7 +188,7 @@ export function TeamExpectedPerformanceChart({
             <Line
               type='monotone'
               dataKey='luckRating'
-              stroke='#82ca9d'
+              stroke={chartColors.luck}
               name='Luck Rating'
               dot={true}
               isAnimationActive={false}
@@ -210,26 +217,34 @@ export function TeamPositionalBarChart({
 }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
+  const chartColors = useChartColors();
   const key = useWindowSizeKey();
+
   if (!data || data.length === 0) {
     return <div>No data available</div>;
   }
+
   return (
     <div className='h-64 sm:h-80 md:h-96 w-full min-w-0'>
       <div ref={elementRef} className='h-full w-full'>
         {size.width > 0 && size.height > 0 ? (
           <BarChart key={key} width={size.width} height={size.height} data={data}>
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='position' />
-            <YAxis />
+            <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
+            <XAxis dataKey='position' stroke={chartColors.axis} />
+            <YAxis stroke={chartColors.axis} />
             <Tooltip />
             <Legend />
             <Bar dataKey='team' name='Team' fill={teamColor} isAnimationActive={false} />
-            <Bar dataKey='opponent' name='Opponent' fill={'#111111'} isAnimationActive={false} />
+            <Bar
+              dataKey='opponent'
+              name='Opponent'
+              fill={chartColors.opponentBar}
+              isAnimationActive={false}
+            />
             <Bar
               dataKey='leagueAverage'
               name='League Average'
-              fill={'#A1A8B3'}
+              fill={chartColors.leagueAverageBar}
               isAnimationActive={false}
             />
           </BarChart>

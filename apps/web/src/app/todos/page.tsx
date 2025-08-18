@@ -70,59 +70,42 @@ const baseWorkTodos: TodoSection = {
   icon: Wrench,
   items: [
     {
-      id: 'fix-playoffs-ui',
-      title: 'Fix playoffs UI',
-      description: 'Improve the playoffs bracket visualization and user experience',
-      status: 'in_progress',
-      priority: 'high',
-      category: 'ui',
+      id: 'chart-color-palette-iteration',
+      title: 'Chart color palette iteration',
+      description: 'Develop theme-aware chart color palettes for consistent branding',
+      status: 'pending',
+      priority: 'medium',
+      category: 'design',
       spec: {
         overview:
-          'The current playoffs bracket system needs major improvements for proper bracket flow visualization, matchup hydration, and mobile responsiveness. Currently relies on Sleeper API integration but lacks proper placement game detection and advancement logic.',
+          'Create distinct, theme-aware color palettes for charts that work across light and dark modes while maintaining brand consistency and accessibility.',
         technicalRequirements: [
-          'Implement proper bracket tree data structure',
-          'Create responsive bracket visualization component',
-          'Add matchup hydration from MatchupSummary model',
-          'Implement placement game detection logic',
-          'Add bracket advancement validation',
-          'Mobile-first bracket layout system',
-        ],
-        dataModels: [
-          'League.playoffMatchups (JSON bracket structure)',
-          'MatchupSummary (week-by-week matchup results)',
-          'RosterWeekAggregate (team performance data)',
-          'Roster.settings (wins/losses for seeding)',
-        ],
-        apiEndpoints: [
-          'GET /api/league/[leagueId]/playoffs - bracket structure',
-          'GET /api/matchups/[leagueId]/[week] - playoff matchups',
-          'PUT /api/league/[leagueId]/playoffs - update bracket',
+          'Design separate color palettes for light and dark themes',
+          'Implement theme-aware chart color system',
+          'Ensure WCAG contrast compliance across all themes',
+          'Update all chart components to use new palette system',
+          'Test color accessibility for colorblind users',
+          'Document color usage guidelines',
         ],
         uiComponents: [
-          'BracketTree - main tournament bracket',
-          'PlayoffMatchupCard - individual matchup display',
-          'BracketConnector - visual lines between rounds',
-          'MobilePlayoffView - condensed mobile layout',
+          'Chart color theme system',
+          'All recharts components (league-chart.tsx, etc.)',
+          'Chart legends and labels',
+          'Progress indicators and data visualizations',
         ],
         dependencies: [
-          'Sleeper API playoff bracket format understanding',
-          'MatchupSummary data population',
-          'Responsive design system',
+          'Brand color palette foundation',
+          'Completed light/dark mode system',
+          'Tailwind CSS theme configuration',
         ],
         acceptanceCriteria: [
-          'Bracket displays correctly on desktop and mobile',
-          'All playoff matchups are properly hydrated with team data',
-          'Placement games are visually distinguished from championship bracket',
-          'Bracket advancement follows league-specific playoff format',
-          'Loading states and error handling for missing data',
+          'Charts display with appropriate colors in both themes',
+          'All chart colors meet accessibility contrast requirements',
+          'Color palette is consistent across all chart types',
+          'Brand colors are properly integrated',
+          'Color blind accessibility is maintained',
         ],
-        estimatedComplexity: 'complex',
-        blockers: [
-          "Need to understand Sleeper's specific playoff bracket JSON format",
-          'Missing playoff weeks data in some test leagues',
-        ],
-        questions: [],
-        // RESOLVED: 6-team playoffs with toilet bowl, 2 byes, reseeding format
+        estimatedComplexity: 'moderate',
       },
     },
     {
@@ -174,7 +157,7 @@ const baseWorkTodos: TodoSection = {
       title: 'UI adjustments (fix charts, fix colors, etc.)',
       description: 'General UI polish and consistency improvements',
       status: 'pending',
-      priority: 'medium',
+      priority: 'low',
       category: 'design',
       spec: {
         overview:
@@ -277,6 +260,76 @@ const baseWorkTodos: TodoSection = {
       },
     },
     {
+      id: 'playoff-odds-overview',
+      title: 'Add playoff odds to league overview page',
+      description: 'Display calculated playoff probabilities on the main overview',
+      status: 'pending',
+      priority: 'medium',
+      category: 'analytics',
+      spec: createDefaultSpec(
+        'Add playoff odds to league overview page',
+        'Display calculated playoff probabilities on the main overview',
+        'analytics'
+      ),
+    },
+    {
+      id: 'season-sims-playoff-odds',
+      title: 'Add season sims for playoff odds',
+      description: 'Implement season-long simulations for playoff probability calculations',
+      status: 'pending',
+      priority: 'medium',
+      category: 'analytics',
+      spec: createDefaultSpec(
+        'Add season sims for playoff odds',
+        'Implement season-long simulations for playoff probability calculations',
+        'analytics'
+      ),
+    },
+    {
+      id: 'data-strategy-optimization',
+      title: 'Data strategy optimization',
+      description: 'Implement smart data update scheduling and caching strategies',
+      status: 'pending',
+      priority: 'medium',
+      category: 'backend',
+      spec: {
+        overview:
+          'Optimize data fetching and update strategies with intelligent scheduling: 10-minute updates during NFL games, 12-hour updates during the week, and strategic caching to minimize API calls while maintaining data freshness.',
+        technicalRequirements: [
+          'Implement intelligent update scheduling system',
+          'Create game-time detection logic',
+          'Build caching layer with expiration strategies',
+          'Add data freshness monitoring',
+          'Implement selective data updates (only changed data)',
+          'Create background job queue for data processing',
+          'Add API rate limiting and backoff strategies',
+        ],
+        dataModels: [
+          'DataUpdateLog - track update frequency and success',
+          'CacheMetadata - cache expiration and freshness tracking',
+          'UpdateSchedule - smart scheduling configuration',
+        ],
+        dependencies: [
+          'NFL game schedule integration',
+          'Background job system (Redis/Bull)',
+          'Caching infrastructure',
+          'Sleeper API rate limiting understanding',
+        ],
+        acceptanceCriteria: [
+          'Data updates every 10 minutes during game times',
+          'Data updates every 12 hours during non-game periods',
+          'API rate limits are never exceeded',
+          'Cache hit ratio above 80% for frequently accessed data',
+          'Stale data is automatically refreshed',
+        ],
+        estimatedComplexity: 'complex',
+        blockers: [
+          'Need sim engine integration completed first',
+          'Requires understanding of NFL game scheduling',
+        ],
+      },
+    },
+    {
       id: 'draft-page',
       title: 'Draft page',
       description: 'Create comprehensive draft analysis and visualization page',
@@ -289,25 +342,13 @@ const baseWorkTodos: TodoSection = {
         'ui'
       ),
     },
-    {
-      id: 'draft-transaction-trade-grades',
-      title: 'Draft, transaction, and trade grades',
-      description: 'Implement grading system for draft picks, transactions, and trades',
-      status: 'pending',
-      priority: 'medium',
-      category: 'analytics',
-      spec: createDefaultSpec(
-        'Draft, transaction, and trade grades',
-        'Implement grading system for draft picks, transactions, and trades',
-        'analytics'
-      ),
-    },
+
     {
       id: 'tooltips-explanations',
       title: 'Tooltips for explanations on what advanced analytics mean',
       description: 'Add helpful tooltips to explain complex metrics and analytics',
       status: 'pending',
-      priority: 'medium',
+      priority: 'low',
       category: 'ui',
       spec: createDefaultSpec(
         'Tooltips for explanations on what advanced analytics mean',
@@ -315,25 +356,13 @@ const baseWorkTodos: TodoSection = {
         'ui'
       ),
     },
-    {
-      id: 'nfl-play-by-play',
-      title: 'Connection to NFL play by play for key plays tooltip on matchups page',
-      description: 'Integrate NFL play-by-play data for enhanced matchup insights',
-      status: 'pending',
-      priority: 'low',
-      category: 'integration',
-      spec: createDefaultSpec(
-        'Connection to NFL play by play for key plays tooltip on matchups page',
-        'Integrate NFL play-by-play data for enhanced matchup insights',
-        'integration'
-      ),
-    },
+
     {
       id: 'hall-of-fame-shame',
       title: 'Implement hall of fame and shame page',
       description: 'Create page showcasing league highlights and lowlights',
       status: 'pending',
-      priority: 'medium',
+      priority: 'low',
       category: 'ui',
       spec: createDefaultSpec(
         'Implement hall of fame and shame page',
@@ -346,7 +375,7 @@ const baseWorkTodos: TodoSection = {
       title: 'Consolidate sidebar into just a few tabs',
       description: 'Simplify navigation by reducing sidebar items',
       status: 'pending',
-      priority: 'medium',
+      priority: 'low',
       category: 'ui',
       spec: createDefaultSpec(
         'Consolidate sidebar into just a few tabs',
@@ -395,7 +424,7 @@ const baseWorkTodos: TodoSection = {
       title: 'Implement luck ratings, schedule comparison',
       description: 'Add advanced analytics for luck-based metrics and schedule strength',
       status: 'pending',
-      priority: 'medium',
+      priority: 'low',
       category: 'analytics',
       spec: createDefaultSpec(
         'Implement luck ratings, schedule comparison',
@@ -416,44 +445,7 @@ const baseWorkTodos: TodoSection = {
         'ui'
       ),
     },
-    {
-      id: 'github-actions-data-fetch',
-      title: 'Implement GitHub Actions to fetch data every 10 minutes + run sims',
-      description: 'Set up automated data ingestion and simulation runs',
-      status: 'pending',
-      priority: 'high',
-      category: 'backend',
-      spec: {
-        overview:
-          'Set up automated CI/CD pipeline with GitHub Actions to fetch data every 10 minutes during the fantasy season and run simulations after data updates.',
-        technicalRequirements: [
-          'Create GitHub Actions workflow for data ingestion',
-          'Set up automated Sleeper API data fetching',
-          'Implement simulation runs in CI/CD pipeline',
-          'Add error handling and monitoring',
-          'Set up secure database connection in Actions',
-          'Create notification system for failures',
-          'Implement conditional runs (only during season)',
-        ],
-        dataModels: ['All existing models for data updates'],
-        dependencies: [
-          'GitHub Actions runner environment',
-          'Database connection secrets',
-          'Sleeper API rate limiting considerations',
-          'Simulation engine integration',
-        ],
-        acceptanceCriteria: [
-          'Data fetches automatically every 10 minutes during season',
-          'Simulations run after successful data updates',
-          'Failed runs are monitored and reported',
-          'Database is kept in sync with latest data',
-          'No rate limit violations on Sleeper API',
-        ],
-        estimatedComplexity: 'complex',
-        blockers: [],
-        // RESOLVED: Prod DB via Neon, <1000 API calls/min limit, weekly playoff odds
-      },
-    },
+
     {
       id: 'implement-waitlist',
       title: 'Implement waitlist',
@@ -467,32 +459,6 @@ const baseWorkTodos: TodoSection = {
         'backend'
       ),
     },
-    {
-      id: 'playoff-odds-overview',
-      title: 'Add playoff odds to league overview page',
-      description: 'Display calculated playoff probabilities on the main overview',
-      status: 'pending',
-      priority: 'medium',
-      category: 'analytics',
-      spec: createDefaultSpec(
-        'Add playoff odds to league overview page',
-        'Display calculated playoff probabilities on the main overview',
-        'analytics'
-      ),
-    },
-    {
-      id: 'season-sims-playoff-odds',
-      title: 'Add season sims for playoff odds',
-      description: 'Implement season-long simulations for playoff probability calculations',
-      status: 'pending',
-      priority: 'medium',
-      category: 'analytics',
-      spec: createDefaultSpec(
-        'Add season sims for playoff odds',
-        'Implement season-long simulations for playoff probability calculations',
-        'analytics'
-      ),
-    },
   ],
 };
 
@@ -501,6 +467,96 @@ const gauntletSpecificTodos: TodoSection = {
   description: 'Will need temp data in line with new league structure to test UI',
   icon: Zap,
   items: [
+    {
+      id: 'fix-playoffs-ui',
+      title: 'Fix playoffs UI for Gauntlet structure',
+      description: 'Build playoffs bracket UI specifically for 6-team Gauntlet playoff format',
+      status: 'pending',
+      priority: 'medium',
+      category: 'ui',
+      spec: {
+        overview:
+          "Design and implement playoffs bracket UI specifically for The Gauntlet's 6-team playoff format with toilet bowl, reseeding, and promotion/relegation implications. This is separate from generic Sleeper leagues since Gauntlet has unique structure.",
+        technicalRequirements: [
+          'Design 6-team playoff bracket with 2 byes and reseeding',
+          'Implement toilet bowl bracket for bottom teams',
+          'Add promotion/relegation indicators on playoff results',
+          'Create mobile-responsive bracket layout',
+          'Add division context to playoff matchups',
+          'Implement bracket advancement with Gauntlet rules',
+        ],
+        dataModels: [
+          'League.metadata (Gauntlet division structure)',
+          'Division model for tier assignments',
+          'MatchupSummary (playoff matchups)',
+          'PromotionRelegation tracking',
+        ],
+        uiComponents: [
+          'GauntletPlayoffBracket - 6-team format',
+          'ToiletBowlBracket - consolation games',
+          'PromotionRelegationIndicator - tier movement',
+          'DivisionPlayoffCard - division-aware matchup display',
+        ],
+        dependencies: [
+          'Division system implementation',
+          'Gauntlet league structure setup',
+          'Promotion/relegation logic',
+        ],
+        acceptanceCriteria: [
+          '6-team playoff bracket displays correctly',
+          'Toilet bowl bracket shows consolation games',
+          'Promotion/relegation outcomes are clearly indicated',
+          'Mobile layout works for complex bracket structure',
+          'Division tiers are properly represented',
+        ],
+        estimatedComplexity: 'complex',
+        blockers: [
+          'Need division system implemented first',
+          'Requires Gauntlet test data structure',
+        ],
+      },
+    },
+    {
+      id: 'github-actions-data-fetch',
+      title: 'Implement GitHub Actions live data collection',
+      description: 'Set up automated data pipeline after foundation is complete',
+      status: 'pending',
+      priority: 'medium',
+      category: 'backend',
+      spec: {
+        overview:
+          'Implement automated data collection pipeline using GitHub Actions, scheduled to run after all core functionality is stable. This layers live data on top of the complete foundation.',
+        technicalRequirements: [
+          'Create GitHub Actions workflow for data ingestion',
+          'Set up automated Sleeper API data fetching',
+          'Implement simulation runs in CI/CD pipeline',
+          'Add error handling and monitoring',
+          'Set up secure database connection in Actions',
+          'Create notification system for failures',
+          'Implement conditional runs (only during season)',
+        ],
+        dataModels: ['All existing models for data updates'],
+        dependencies: [
+          'All foundation features completed',
+          'Sim engine integration working',
+          'Database models stabilized',
+          'GitHub Actions runner environment',
+          'Database connection secrets',
+        ],
+        acceptanceCriteria: [
+          'Data fetches automatically every 10 minutes during season',
+          'Simulations run after successful data updates',
+          'Failed runs are monitored and reported',
+          'Database is kept in sync with latest data',
+          'No rate limit violations on Sleeper API',
+        ],
+        estimatedComplexity: 'complex',
+        blockers: [
+          'Wait for foundation Phase 1-2 completion',
+          'Need stable sim engine integration',
+        ],
+      },
+    },
     {
       id: 'setup-divisions',
       title: 'Set up divisions',
@@ -577,6 +633,32 @@ const gauntletSpecificTodos: TodoSection = {
         'Owner history page',
         'Historical performance tracking for league owners',
         'ui'
+      ),
+    },
+    {
+      id: 'draft-transaction-trade-grades',
+      title: 'Draft, transaction, and trade grades',
+      description: 'Implement grading system for draft picks, transactions, and trades',
+      status: 'pending',
+      priority: 'medium',
+      category: 'analytics',
+      spec: createDefaultSpec(
+        'Draft, transaction, and trade grades',
+        'Implement grading system for draft picks, transactions, and trades',
+        'analytics'
+      ),
+    },
+    {
+      id: 'nfl-play-by-play',
+      title: 'Connection to NFL play by play for key plays tooltip on matchups page',
+      description: 'Integrate NFL play-by-play data for enhanced matchup insights',
+      status: 'pending',
+      priority: 'low',
+      category: 'integration',
+      spec: createDefaultSpec(
+        'Connection to NFL play by play for key plays tooltip on matchups page',
+        'Integrate NFL play-by-play data for enhanced matchup insights',
+        'integration'
       ),
     },
   ],
@@ -841,9 +923,9 @@ function TodoSection({ section }: { section: TodoSection }) {
           </div>
         </div>
         {/* Progress bar */}
-        <div className='w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700'>
+        <div className='w-full bg-muted rounded-full h-2'>
           <div
-            className='bg-gauntlet-crimson h-2 rounded-full transition-all duration-300'
+            className='bg-primary h-2 rounded-full transition-all duration-300'
             data-progress={progressPercentage}
             style={
               { width: `${Math.min(100, Math.max(0, progressPercentage))}%` } as React.CSSProperties

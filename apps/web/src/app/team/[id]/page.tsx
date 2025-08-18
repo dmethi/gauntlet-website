@@ -33,8 +33,8 @@ const TeamPageLoader = () => (
     width={1200}
     height={1000}
     viewBox='0 0 1200 1000'
-    backgroundColor='#f3f3f3'
-    foregroundColor='#ecebeb'
+    backgroundColor='hsl(var(--muted))'
+    foregroundColor='hsl(var(--muted-foreground))'
   >
     {/* Title and Subtitle */}
     <rect x='16' y='32' rx='3' ry='3' width='400' height='36' />
@@ -339,7 +339,9 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 compRoster?.owner?.displayName ||
                 compRoster?.owner?.username ||
                 `Team ${compareTeamId}`;
-              comparisons = [{ name: String(compName), color: '#8884d8', data: compData }];
+              comparisons = [
+                { name: String(compName), color: 'hsl(var(--chart-2))', data: compData },
+              ];
             }
 
             return (
@@ -571,7 +573,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   <div className='text-sm space-y-1'>
                     {t.adds?.length ? (
                       <div className='flex items-center gap-2'>
-                        <span className='text-green-600 font-semibold'>+</span>
+                        <span className='text-green-500 dark:text-green-400 font-semibold'>+</span>
                         <span className='text-muted-foreground'>
                           {t.adds
                             .flatMap((a: { players: { fullName: string }[] }) =>
@@ -588,7 +590,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                       (d: { players: { fullName: string }[] }) => d.players.length > 0
                     ) ? (
                       <div className='flex items-center gap-2'>
-                        <span className='text-red-600 font-semibold'>−</span>
+                        <span className='text-red-500 dark:text-red-400 font-semibold'>−</span>
                         <span className='text-muted-foreground'>
                           {t.drops
                             .flatMap((a: { players: { fullName: string }[] }) =>

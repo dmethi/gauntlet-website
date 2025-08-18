@@ -15,8 +15,8 @@ const MatchupsPageLoader = () => (
     width={1200}
     height={800}
     viewBox='0 0 1200 800'
-    backgroundColor='#f3f3f3'
-    foregroundColor='#ecebeb'
+    backgroundColor='hsl(var(--muted))'
+    foregroundColor='hsl(var(--muted-foreground))'
   >
     {/* Title */}
     <rect x='16' y='32' rx='3' ry='3' width='300' height='32' />
@@ -84,18 +84,22 @@ function MatchupCard({ matchup, week }: MatchupCardProps) {
         {/* Team A */}
         <div
           className={`flex items-center justify-between p-4 rounded-lg border ${
-            isTeamAWinner ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
+            isTeamAWinner
+              ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
+              : 'bg-muted/20 border-muted'
           }`}
         >
           <div className='flex items-center space-x-3'>
             <Link href={`/team/${teamA.rosterId}`} className='hover:underline'>
               <div className='flex items-center space-x-2'>
-                <div className='w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold'>
+                <div className='w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold'>
                   {teamA.owner?.displayName?.charAt(0) || 'T'}
                 </div>
                 <div>
                   <p className='font-medium'>{teamA.owner?.displayName || 'Team A'}</p>
-                  <p className='text-sm text-gray-600'>@{teamA.owner?.username || 'unknown'}</p>
+                  <p className='text-sm text-muted-foreground'>
+                    @{teamA.owner?.username || 'unknown'}
+                  </p>
                 </div>
               </div>
             </Link>
@@ -103,16 +107,16 @@ function MatchupCard({ matchup, week }: MatchupCardProps) {
           </div>
           <div className='text-right'>
             <p className='text-2xl font-bold'>{teamA.points.toFixed(1)}</p>
-            <p className='text-sm text-gray-600'>{teamA.starters.length} starters</p>
+            <p className='text-sm text-muted-foreground'>{teamA.starters.length} starters</p>
           </div>
         </div>
 
         {/* VS divider */}
         <div className='flex items-center justify-center'>
-          <div className='bg-gray-200 px-3 py-1 rounded-full text-sm font-medium'>
+          <div className='bg-muted px-3 py-1 rounded-full text-sm font-medium'>
             VS
             {matchup.summary && (
-              <span className='ml-2 text-gray-600'>
+              <span className='ml-2 text-muted-foreground'>
                 (Margin: {matchup.summary.margin.toFixed(1)})
               </span>
             )}
@@ -122,18 +126,22 @@ function MatchupCard({ matchup, week }: MatchupCardProps) {
         {/* Team B */}
         <div
           className={`flex items-center justify-between p-4 rounded-lg border ${
-            isTeamBWinner ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
+            isTeamBWinner
+              ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
+              : 'bg-muted/20 border-muted'
           }`}
         >
           <div className='flex items-center space-x-3'>
             <Link href={`/team/${teamB.rosterId}`} className='hover:underline'>
               <div className='flex items-center space-x-2'>
-                <div className='w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold'>
+                <div className='w-8 h-8 bg-destructive rounded-full flex items-center justify-center text-destructive-foreground text-sm font-semibold'>
                   {teamB.owner?.displayName?.charAt(0) || 'T'}
                 </div>
                 <div>
                   <p className='font-medium'>{teamB.owner?.displayName || 'Team B'}</p>
-                  <p className='text-sm text-gray-600'>@{teamB.owner?.username || 'unknown'}</p>
+                  <p className='text-sm text-muted-foreground'>
+                    @{teamB.owner?.username || 'unknown'}
+                  </p>
                 </div>
               </div>
             </Link>
@@ -141,7 +149,7 @@ function MatchupCard({ matchup, week }: MatchupCardProps) {
           </div>
           <div className='text-right'>
             <p className='text-2xl font-bold'>{teamB.points.toFixed(1)}</p>
-            <p className='text-sm text-gray-600'>{teamB.starters.length} starters</p>
+            <p className='text-sm text-muted-foreground'>{teamB.starters.length} starters</p>
           </div>
         </div>
 
@@ -177,7 +185,7 @@ export default function MatchupsPage() {
     return (
       <Container className='py-8'>
         <PageHeader title='Error Loading Matchups' subtitle='Failed to load matchup data' />
-        <div className='mt-4 text-red-600'>{String(error)}</div>
+        <div className='mt-4 text-destructive'>{String(error)}</div>
       </Container>
     );
   }
@@ -191,14 +199,14 @@ export default function MatchupsPage() {
 
       {/* Week Selector */}
       <div className='mb-6'>
-        <label htmlFor='week-select' className='block text-sm font-medium text-gray-700 mb-2'>
+        <label htmlFor='week-select' className='block text-sm font-medium text-foreground mb-2'>
           Select Week
         </label>
         <select
           id='week-select'
           value={selectedWeek}
           onChange={e => setSelectedWeek(parseInt(e.target.value))}
-          className='px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+          className='px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-ring focus:border-ring bg-background text-foreground'
         >
           {weekOptions.map(week => (
             <option key={week} value={week}>
@@ -210,9 +218,9 @@ export default function MatchupsPage() {
 
       {/* Debug Panel (temporary) */}
       {process.env.NODE_ENV === 'development' && (
-        <div className='mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg'>
-          <h4 className='font-semibold text-yellow-800 mb-2'>Debug Info</h4>
-          <div className='text-sm text-yellow-700 space-y-1'>
+        <div className='mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg dark:bg-yellow-900/20 dark:border-yellow-800'>
+          <h4 className='font-semibold text-yellow-800 dark:text-yellow-200 mb-2'>Debug Info</h4>
+          <div className='text-sm text-yellow-700 dark:text-yellow-300 space-y-1'>
             <p>
               <strong>League ID:</strong> {leagueId}
             </p>
@@ -246,11 +254,11 @@ export default function MatchupsPage() {
         </div>
       ) : (
         <div className='text-center py-12'>
-          <p className='text-gray-500 text-lg'>No matchups found for Week {selectedWeek}</p>
-          <p className='text-gray-400 text-sm mt-2'>
+          <p className='text-muted-foreground text-lg'>No matchups found for Week {selectedWeek}</p>
+          <p className='text-muted-foreground text-sm mt-2'>
             Try selecting a different week or check if data is available.
           </p>
-          <div className='mt-4 text-xs text-gray-500'>
+          <div className='mt-4 text-xs text-muted-foreground'>
             <p>
               Debug: Loading={loading ? 'true' : 'false'}, Error={error || 'none'}
             </p>
@@ -268,11 +276,11 @@ export default function MatchupsPage() {
           <h3 className='text-lg font-semibold mb-4'>Week {selectedWeek} Summary</h3>
           <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
             <div className='text-center'>
-              <p className='text-2xl font-bold text-blue-600'>{matchups.matchups.length}</p>
-              <p className='text-sm text-gray-600'>Total Matchups</p>
+              <p className='text-2xl font-bold text-primary'>{matchups.matchups.length}</p>
+              <p className='text-sm text-muted-foreground'>Total Matchups</p>
             </div>
             <div className='text-center'>
-              <p className='text-2xl font-bold text-green-600'>
+              <p className='text-2xl font-bold text-green-600 dark:text-green-400'>
                 {matchups.matchups
                   .reduce(
                     (sum, m) => sum + (m.teams[0]?.points || 0) + (m.teams[1]?.points || 0),
@@ -280,10 +288,10 @@ export default function MatchupsPage() {
                   )
                   .toFixed(1)}
               </p>
-              <p className='text-sm text-gray-600'>Total Points</p>
+              <p className='text-sm text-muted-foreground'>Total Points</p>
             </div>
             <div className='text-center'>
-              <p className='text-2xl font-bold text-purple-600'>
+              <p className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
                 {(
                   matchups.matchups.reduce((avg, m) => {
                     const total = (m.teams[0]?.points || 0) + (m.teams[1]?.points || 0);
@@ -291,17 +299,17 @@ export default function MatchupsPage() {
                   }, 0) / matchups.matchups.length
                 ).toFixed(1)}
               </p>
-              <p className='text-sm text-gray-600'>Avg Points/Team</p>
+              <p className='text-sm text-muted-foreground'>Avg Points/Team</p>
             </div>
             <div className='text-center'>
-              <p className='text-2xl font-bold text-orange-600'>
+              <p className='text-2xl font-bold text-orange-600 dark:text-orange-400'>
                 {Math.max(
                   ...matchups.matchups.map(m =>
                     Math.max(m.teams[0]?.points || 0, m.teams[1]?.points || 0)
                   )
                 ).toFixed(1)}
               </p>
-              <p className='text-sm text-gray-600'>Highest Score</p>
+              <p className='text-sm text-muted-foreground'>Highest Score</p>
             </div>
           </div>
         </div>
