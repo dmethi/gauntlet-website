@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useMemo } from 'react';
-import { dataVizColors, colors } from './colors';
+import { colors } from './colors';
 import teamColorData from '../../data/team-colors.json';
 
 /**
@@ -242,12 +242,13 @@ export function getPositionColor(position: string, theme: 'light' | 'dark' = 'li
  */
 export function assignTeamColor(teamId: string): number {
   // Try to get from explicit mapping first
-  const assignedColor = teamColorData.teamColorAssignments[teamId as keyof typeof teamColorData.teamColorAssignments];
-  
+  const assignedColor =
+    teamColorData.teamColorAssignments[teamId as keyof typeof teamColorData.teamColorAssignments];
+
   if (assignedColor !== undefined) {
     return assignedColor;
   }
-  
+
   // Fallback: simple hash for teams not in mapping (new teams, etc.)
   let hash = 0;
   for (let i = 0; i < teamId.length; i++) {
