@@ -184,6 +184,15 @@ Sleeper/ingestion → Prisma/Postgres → API routes (Express/Next) → Next pag
 - Reduce iterations for endpoints; increase for offline scripts
 - Logging prefixes: `[API]`, `[SIM]`, `[INGEST]`; avoid verbose logs in hot paths
 
+## Deployment
+
+- **Platform**: Vercel with automatic GitHub integration
+- **Configuration**: `apps/web/vercel.json` configures build commands and settings
+- **Database**: Neon PostgreSQL via `DATABASE_URL` environment variable
+- **Manual Deployment**: Run `vercel --prod` from project root directory
+- **Auto Deployment**: Pushes to `main` branch trigger automatic Vercel deployments
+- **Build Process**: Uses Turbo monorepo build system (`pnpm turbo build --filter=@gauntlet/web`)
+
 ## Security
 
 - Until auth is implemented, prefer read-only endpoints; add CORS and validation when exposing to browsers

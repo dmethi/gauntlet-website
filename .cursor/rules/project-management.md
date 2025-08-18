@@ -119,7 +119,8 @@ REQUIRED: Confirm this session will:
 1. Verify ALL acceptance criteria met
 2. Test functionality thoroughly  
 3. Mark TODO as `completed` using todo_write tool
-4. Suggest next logical TODO based on phase order
+4. Deploy to Vercel using `vercel --prod` from project root (if needed)
+5. Suggest next logical TODO based on phase order
 ```
 
 ## 🚨 VIOLATIONS & ENFORCEMENT
