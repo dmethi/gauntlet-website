@@ -1,7 +1,7 @@
 'use client';
 
-import { colors } from '@/lib/colors';
-import { useChartColors } from '@/lib/chart-colors';
+import { getTeamColor, useChartColors } from '@/lib/chart-colors';
+import { useTheme } from 'next-themes';
 import {
   Bar,
   BarChart,
@@ -88,12 +88,16 @@ function useElementSize<T extends HTMLElement>() {
 
 export function TeamPerformanceChart({
   weeklyData,
-  teamColor = colors.core.regalGold,
-}: TeamChartsProps & { teamColor?: string }) {
+  teamId,
+}: TeamChartsProps & { teamId?: string }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
+  const { theme } = useTheme();
   const key = useWindowSizeKey();
+
+  // Use team color assignment for consistent team identification
+  const teamColor = teamId ? getTeamColor(teamId, theme as 'light' | 'dark') : chartColors.primary;
 
   if (!weeklyData || weeklyData.length === 0) {
     return <div>No data available</div>;
@@ -150,12 +154,16 @@ export function TeamPerformanceChart({
 
 export function TeamExpectedPerformanceChart({
   weeklyData,
-  teamColor = colors.core.regalGold,
-}: TeamChartsProps & { teamColor?: string }) {
+  teamId,
+}: TeamChartsProps & { teamId?: string }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
+  const { theme } = useTheme();
   const key = useWindowSizeKey();
+
+  // Use team color assignment for consistent team identification
+  const teamColor = teamId ? getTeamColor(teamId, theme as 'light' | 'dark') : chartColors.primary;
 
   if (!weeklyData || weeklyData.length === 0) {
     return <div>No data available</div>;
@@ -188,7 +196,7 @@ export function TeamExpectedPerformanceChart({
             <Line
               type='monotone'
               dataKey='luckRating'
-              stroke={chartColors.luck}
+              stroke={chartColors.luckRating}
               name='Luck Rating'
               dot={true}
               isAnimationActive={false}
@@ -210,15 +218,19 @@ export interface PositionalScoringRow {
 
 export function TeamPositionalBarChart({
   data,
-  teamColor = colors.core.regalGold,
+  teamId,
 }: {
   data: PositionalScoringRow[];
-  teamColor?: string;
+  teamId?: string;
 }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
+  const { theme } = useTheme();
   const key = useWindowSizeKey();
+
+  // Use team color assignment for consistent team identification
+  const teamColor = teamId ? getTeamColor(teamId, theme as 'light' | 'dark') : chartColors.primary;
 
   if (!data || data.length === 0) {
     return <div>No data available</div>;
@@ -238,13 +250,13 @@ export function TeamPositionalBarChart({
             <Bar
               dataKey='opponent'
               name='Opponent'
-              fill={chartColors.opponentBar}
+              fill={chartColors.opponent}
               isAnimationActive={false}
             />
             <Bar
               dataKey='leagueAverage'
               name='League Average'
-              fill={chartColors.leagueAverageBar}
+              fill={chartColors.leagueAverage}
               isAnimationActive={false}
             />
           </BarChart>
@@ -263,17 +275,22 @@ export interface PositionalNormalizedRow {
 export function TeamPositionalRadarChart({
   data,
   teamName = 'Team',
-  teamColor = colors.core.regalGold,
+  teamId,
   comparisons,
 }: {
   data: PositionalNormalizedRow[];
   teamName?: string;
-  teamColor?: string;
+  teamId?: string;
   comparisons?: Array<{ name: string; color: string; data: PositionalNormalizedRow[] }>;
 }) {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
+  const { theme } = useTheme();
   const key = useWindowSizeKey();
+
+  // Use team color assignment for consistent team identification
+  const teamColor = teamId ? getTeamColor(teamId, theme as 'light' | 'dark') : '#ef4444'; // fallback red
+
   if (!data || data.length === 0) {
     return <div>No data available</div>;
   }

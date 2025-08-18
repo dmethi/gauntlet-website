@@ -73,7 +73,7 @@ const baseWorkTodos: TodoSection = {
       id: 'chart-color-palette-iteration',
       title: 'Chart color palette iteration',
       description: 'Develop theme-aware chart color palettes for consistent branding',
-      status: 'pending',
+      status: 'completed',
       priority: 'medium',
       category: 'design',
       spec: {
@@ -112,7 +112,7 @@ const baseWorkTodos: TodoSection = {
       id: 'fix-light-dark-mode',
       title: 'Fix light mode / dark mode',
       description: 'Ensure consistent theming across all components',
-      status: 'pending',
+      status: 'completed',
       priority: 'high',
       category: 'ui',
       spec: {
@@ -387,7 +387,7 @@ const baseWorkTodos: TodoSection = {
       id: 'mobile-responsiveness',
       title: 'Implement mobile responsiveness',
       description: 'Ensure all pages work well on mobile devices',
-      status: 'pending',
+      status: 'completed',
       priority: 'high',
       category: 'ui',
       spec: {

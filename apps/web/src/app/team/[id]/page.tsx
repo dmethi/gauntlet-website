@@ -217,12 +217,12 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
       <div className='mt-8'>
         <h2 className='mb-4 text-2xl font-bold'>Weekly Performance</h2>
-        <TeamPerformanceChart weeklyData={weeklyData} />
+        <TeamPerformanceChart weeklyData={weeklyData} teamId={team.id} />
       </div>
 
       <div className='mt-8'>
         <h2 className='mb-4 text-2xl font-bold'>Expected vs Actual Performance</h2>
-        <TeamExpectedPerformanceChart weeklyData={weeklyData} />
+        <TeamExpectedPerformanceChart weeklyData={weeklyData} teamId={team.id} />
       </div>
 
       {/* Positional Scoring (Regular Season) */}
@@ -376,12 +376,13 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                     </label>
                   ) : null}
                 </div>
-                <TeamPositionalBarChart data={positionalRows} />
+                <TeamPositionalBarChart data={positionalRows} teamId={team.id} />
                 <div className='mt-8'>
                   <h3 className='mb-4 text-xl font-semibold'>Normalized Positional Strength</h3>
                   <TeamPositionalRadarChart
                     data={radarData}
                     teamName={name}
+                    teamId={team.id}
                     comparisons={comparisons}
                   />
                 </div>

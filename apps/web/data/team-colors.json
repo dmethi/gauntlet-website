@@ -1,0 +1,37 @@
+{
+  "teamColorAssignments": {
+    "1": 0,
+    "2": 1,
+    "3": 2,
+    "4": 3,
+    "5": 4,
+    "6": 5,
+    "7": 6,
+    "8": 7,
+    "9": 8,
+    "10": 9,
+    "11": 10,
+    "12": 11,
+    "13": 12,
+    "14": 13
+  },
+  "colorPalette": {
+    "description": "14 distinct colors for team assignments",
+    "colors": [
+      { "index": 0, "name": "Red", "light": "#dc2626", "dark": "#ef4444" },
+      { "index": 1, "name": "Blue", "light": "#2563eb", "dark": "#3b82f6" },
+      { "index": 2, "name": "Green", "light": "#059669", "dark": "#10b981" },
+      { "index": 3, "name": "Amber", "light": "#d97706", "dark": "#f59e0b" },
+      { "index": 4, "name": "Purple", "light": "#7c3aed", "dark": "#8b5cf6" },
+      { "index": 5, "name": "Cyan", "light": "#0891b2", "dark": "#06b6d4" },
+      { "index": 6, "name": "Pink", "light": "#db2777", "dark": "#ec4899" },
+      { "index": 7, "name": "Orange", "light": "#ea580c", "dark": "#f97316" },
+      { "index": 8, "name": "Emerald", "light": "#16a34a", "dark": "#22c55e" },
+      { "index": 9, "name": "Indigo", "light": "#4f46e5", "dark": "#6366f1" },
+      { "index": 10, "name": "Rose", "light": "#e11d48", "dark": "#f43f5e" },
+      { "index": 11, "name": "Teal", "light": "#0d9488", "dark": "#14b8a6" },
+      { "index": 12, "name": "Lime", "light": "#65a30d", "dark": "#84cc16" },
+      { "index": 13, "name": "Violet", "light": "#9333ea", "dark": "#a855f7" }
+    ]
+  }
+}

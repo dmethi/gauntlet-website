@@ -39,11 +39,12 @@
     --input: 35 20% 80%;
     --ring: 345 69% 31%;
     --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* Enhanced chart colors - brand integrated & WCAG AA compliant */
+    --chart-1: 345 69% 31%; /* Brand crimson for primary data */
+    --chart-2: 43 64% 52%; /* Regal gold for secondary data */
+    --chart-3: 32 95% 44%; /* Amber for tertiary data */
+    --chart-4: 142 76% 36%; /* Emerald for quaternary data */
+    --chart-5: 217 91% 60%; /* Blue for quinary data */
   }
 
   .dark {
@@ -67,11 +68,12 @@
     --border: 0 0% 22%;
     --input: 0 0% 22%;
     --ring: 345 69% 35%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Enhanced dark mode chart colors - optimized for dark backgrounds */
+    --chart-1: 0 84% 60%; /* Bright red for primary data */
+    --chart-2: 160 60% 45%; /* Teal for secondary data */  
+    --chart-3: 30 80% 55%; /* Orange for tertiary data */
+    --chart-4: 280 65% 60%; /* Purple for quaternary data */
+    --chart-5: 340 75% 55%; /* Pink for quinary data */
   }
 }
 

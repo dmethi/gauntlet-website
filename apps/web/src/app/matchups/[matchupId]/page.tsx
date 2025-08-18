@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTheme } from 'next-themes';
+import { getTeamColor } from '@/lib/chart-colors';
 import { ChartContainer, ChartLegend, Container, PageHeader } from '@gauntlet/ui';
 import {
   type PlayerInfo,
@@ -296,6 +298,7 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
   const week = searchParams.get('week');
   const weekNumber = week ? parseInt(week) : 1;
   const matchupId = parseInt(params.matchupId);
+  const { theme } = useTheme(); // Move hook to top level
 
   // For now, hardcode league ID - this should be dynamic in a real app
   const leagueId = '997670420490801152';
@@ -385,6 +388,10 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
   const winner = matchup.matchup.summary?.winnerRosterId;
   const isTeamAWinner = winner === teamA.rosterId;
   const isTeamBWinner = winner === teamB.rosterId;
+
+  // Get team colors using roster IDs for consistent assignment
+  const teamAColor = getTeamColor(String(teamA.rosterId), theme as 'light' | 'dark');
+  const teamBColor = getTeamColor(String(teamB.rosterId), theme as 'light' | 'dark');
 
   const totalPoints = teamA.points + teamB.points;
   const margin = matchup.matchup.summary?.margin || Math.abs(teamA.points - teamB.points);
@@ -708,31 +715,32 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
                     0
                   </text>
 
-                  {/* Team A score line (blue) */}
+                  {/* Team A score line */}
                   <path
                     d='M30,140 Q60,130 90,110 Q120,95 150,75 Q180,60 210,45 Q240,35 270,28 Q300,22 330,18 Q345,16 360,15'
-                    stroke='hsl(var(--primary))'
+                    stroke={teamAColor}
                     strokeWidth='2.5'
                     fill='none'
                     className='drop-shadow-sm'
                   />
 
-                  {/* Team B score line (red) */}
+                  {/* Team B score line */}
                   <path
                     d='M30,140 Q60,135 90,120 Q120,108 150,98 Q180,90 210,85 Q240,82 270,80 Q300,79 330,78 Q345,78 360,78'
-                    stroke='hsl(var(--destructive))'
+                    stroke={teamBColor}
                     strokeWidth='2.5'
                     fill='none'
                     className='drop-shadow-sm'
                   />
 
-                  {/* Data point markers */}
-                  <circle cx='90' cy='110' r='2' fill='hsl(var(--primary))' />
-                  <circle cx='210' cy='45' r='2' fill='hsl(var(--primary))' />
-                  <circle cx='360' cy='15' r='2' fill='hsl(var(--primary))' />
-                  <circle cx='90' cy='120' r='2' fill='hsl(var(--destructive))' />
-                  <circle cx='210' cy='85' r='2' fill='#ef4444' />
-                  <circle cx='360' cy='78' r='2' fill='#ef4444' />
+                  {/* Data point markers for Team A */}
+                  <circle cx='90' cy='110' r='2' fill={teamAColor} />
+                  <circle cx='210' cy='45' r='2' fill={teamAColor} />
+                  <circle cx='360' cy='15' r='2' fill={teamAColor} />
+                  {/* Data point markers for Team B */}
+                  <circle cx='90' cy='120' r='2' fill={teamBColor} />
+                  <circle cx='210' cy='85' r='2' fill={teamBColor} />
+                  <circle cx='360' cy='78' r='2' fill={teamBColor} />
 
                   {/* Time labels */}
                   <text x='90' y='155' fontSize='10' fill='#6b7280' textAnchor='middle'>
@@ -752,8 +760,8 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
 
               <ChartLegend
                 items={[
-                  { label: teamA.owner?.displayName || 'Team A', color: 'hsl(var(--primary))' },
-                  { label: teamB.owner?.displayName || 'Team B', color: '#ef4444' },
+                  { label: teamA.owner?.displayName || 'Team A', color: teamAColor },
+                  { label: teamB.owner?.displayName || 'Team B', color: teamBColor },
                 ]}
               />
 

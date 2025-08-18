@@ -74,6 +74,8 @@ export function LeagueChart({ data }: LeagueChartProps) {
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
   const key = useWindowSizeKey();
+
+  // Use enhanced primary color for the main data series
   const seriesColor = chartColors.primary;
 
   if (!data || data.length === 0) {
@@ -111,9 +113,16 @@ export function LeagueChart({ data }: LeagueChartProps) {
               <YAxis domain={[0, 'auto']} tickCount={10} stroke={chartColors.axis} />
               <Tooltip
                 contentStyle={{
-                  background: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  color: 'hsl(var(--card-foreground))',
+                  background: chartColors.tooltip.background,
+                  border: `2px solid ${chartColors.brandPrimary}`, // Brand color for accent
+                  color: chartColors.tooltip.text,
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  fontSize: '14px',
+                }}
+                labelStyle={{
+                  color: chartColors.brandPrimary, // Brand color for labels
+                  fontWeight: '600',
                 }}
               />
               <Legend />
