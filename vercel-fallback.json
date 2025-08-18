@@ -1,0 +1,12 @@
+{
+  "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && pnpm turbo build --filter='@gauntlet/web'",
+  "devCommand": "cd ../.. && pnpm dev --filter=@gauntlet/web", 
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
+  "functions": {
+    "apps/web/src/app/api/**/route.{js,ts}": {
+      "maxDuration": 30
+    }
+  }
+}
