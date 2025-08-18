@@ -1,22 +1,32 @@
 import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
-const SERVER_BASE_URL = process.env.SERVER_BASE_URL || 'http://localhost:3001';
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const res = await fetch(`${SERVER_BASE_URL}/api/league/overview`, {
-      // Ensure this always hits server
-      cache: 'no-store',
+    // Fetch league data directly from database
+    // You'll need to adjust this query based on your actual schema
+    const leagues = await prisma.league.findMany({
+      include: {
+        rosters: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: 'Failed to fetch league overview' },
-        { status: res.status }
-      );
+
+    // For now, return the first league (adjust as needed)
+    const league = leagues[0];
+
+    if (!league) {
+      return NextResponse.json({ error: 'No league found' }, { status: 404 });
     }
-    const data = await res.json();
-    return NextResponse.json(data);
-  } catch {
+
+    return NextResponse.json(league);
+  } catch (error) {
+    console.error('Error fetching league overview:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
