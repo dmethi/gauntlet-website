@@ -8,6 +8,7 @@ interface Matchup {
   points: number;
   projected: number;
   result: 'W' | 'L' | 'T';
+  matchupId?: number; // Add this for proper linking
 }
 
 interface WeeklyMetric {
@@ -46,6 +47,7 @@ export interface TeamStats {
 }
 
 interface LeagueData extends League {
+  playoff_week_start?: number;
   rosters: Roster[];
   transactions?: Array<{
     id: string;
@@ -54,6 +56,9 @@ interface LeagueData extends League {
     rosterIds?: number[];
     adds?: unknown;
     drops?: unknown;
+    settings?: {
+      waiver_bid?: number;
+    };
   }>;
 }
 
@@ -99,7 +104,7 @@ export function useLeagueData() {
 
       // Use authoritative record data from RosterWeekAggregate
       // Filter to regular season weeks (we'll use dynamic playoff start if available)
-      const playoffStart = Number((league as any)?.playoff_week_start) || 15;
+      const playoffStart = Number(league?.playoff_week_start) || 15;
       const regularSeasonAggregates = aggregates.filter(
         agg => agg.week >= 1 && agg.week < playoffStart
       );
@@ -301,7 +306,9 @@ export interface LeagueTransactionsResponse {
       players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
     }>;
     waiver?: unknown;
-    settings?: unknown;
+    settings?: {
+      waiver_bid?: number;
+    };
   }>;
 }
 
@@ -391,5 +398,201 @@ export function useSeasonSuperlatives<T = unknown>(
       return res.json();
     },
     enabled: Boolean(leagueId && season),
+  });
+}
+
+// Matchups hook
+export interface MatchupTeam {
+  rosterId: number;
+  owner: {
+    id: string;
+    username: string;
+    displayName: string;
+    avatar?: string;
+  } | null;
+  points: number;
+  customPoints?: number;
+  starters: string[];
+  startersPoints: number[] | Record<string, number>;
+  players: string[];
+  playersPoints: Record<string, number>;
+  rosterSettings?: Record<string, unknown>;
+  rosterMetadata?: Record<string, unknown>;
+}
+
+export interface MatchupData {
+  matchupId: number;
+  teams: MatchupTeam[];
+  summary?: {
+    pointsA: number;
+    pointsB: number;
+    winnerRosterId?: number;
+    margin: number;
+  } | null;
+}
+
+export interface MatchupsResponse {
+  matchups: MatchupData[];
+  week: number;
+  leagueId: string;
+  totalMatchups: number;
+}
+
+export function useMatchups(leagueId: string, week: number) {
+  return useQuery<MatchupsResponse>({
+    queryKey: ['matchups', leagueId, week],
+    queryFn: async () => {
+      const url = `/api/matchups/${leagueId}/${week}`;
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to fetch matchups: ${res.status} ${errorText}`);
+      }
+
+      const data = await res.json();
+
+      return data;
+    },
+    enabled: Boolean(leagueId && week),
+    select: data => ({
+      ...data,
+      matchups: data.matchups || [],
+    }),
+    // Note: onError and onSuccess are deprecated in newer versions of React Query
+    // Consider using useEffect or error boundaries for error handling
+  });
+}
+
+export interface SingleMatchupResponse {
+  matchup: MatchupData;
+  week: number;
+  leagueId: string;
+}
+
+export function useMatchup(leagueId: string, week: number, matchupId: number) {
+  return useQuery<SingleMatchupResponse>({
+    queryKey: ['matchup', leagueId, week, matchupId],
+    queryFn: async () => {
+      const res = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}`);
+      if (!res.ok) throw new Error('Failed to fetch matchup');
+      return res.json();
+    },
+    enabled: Boolean(leagueId && week && matchupId),
+    select: data => data,
+  });
+}
+
+// Player data types
+export interface PlayerInfo {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  team: string | null;
+  position: string;
+}
+
+export interface PlayersResponse {
+  players: Record<string, PlayerInfo>;
+  found: number;
+  requested: number;
+}
+
+// Hook for fetching multiple players by IDs
+export function usePlayers(playerIds: string[]) {
+  return useQuery<PlayersResponse>({
+    queryKey: ['players', 'batch', playerIds.sort()], // Sort for consistent cache key
+    queryFn: async () => {
+      if (playerIds.length === 0) {
+        return { players: {}, found: 0, requested: 0 };
+      }
+
+      const res = await fetch('/api/players/batch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ playerIds }),
+      });
+
+      if (!res.ok) throw new Error('Failed to fetch players');
+      const data = await res.json();
+
+      return data;
+    },
+    enabled: playerIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes - player data doesn't change often
+  });
+}
+
+// Hook for fetching a single player
+export function usePlayer(playerId: string) {
+  return useQuery<{ player: PlayerInfo }>({
+    queryKey: ['player', playerId],
+    queryFn: async () => {
+      const res = await fetch(`/api/players/${playerId}`);
+      if (!res.ok) throw new Error('Failed to fetch player');
+      return res.json();
+    },
+    enabled: Boolean(playerId),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+// Player stats types
+export interface PlayerStats {
+  actual: Record<string, number> | null;
+  projections: Record<string, number> | null;
+  hasActual: boolean;
+  hasProjections: boolean;
+}
+
+export interface PlayerStatsResponse {
+  playerStats: Record<string, PlayerStats>;
+  week: number;
+  season: string;
+  requested: number;
+  foundStats: number;
+  foundProjections: number;
+}
+
+// Hook for fetching player stats for multiple players
+export function usePlayerStats(playerIds: string[], season: string, week: number) {
+  return useQuery<PlayerStatsResponse>({
+    queryKey: ['playerStats', 'batch', playerIds.sort(), season, week],
+    queryFn: async () => {
+      if (playerIds.length === 0) {
+        return { playerStats: {}, week, season, requested: 0, foundStats: 0, foundProjections: 0 };
+      }
+
+      const res = await fetch('/api/players/stats/batch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ playerIds, season, week }),
+      });
+
+      if (!res.ok) throw new Error('Failed to fetch player stats');
+      const data = await res.json();
+      return data;
+    },
+    enabled: playerIds.length > 0 && Boolean(season) && Boolean(week),
+    staleTime: 2 * 60 * 1000, // 2 minutes - stats are more dynamic than player info
+  });
+}
+
+// Hook for fetching a single player's stats
+export function usePlayerStatsSingle(playerId: string, season: string, week: number) {
+  return useQuery<PlayerStats & { playerId: string; week: number; season: string }>({
+    queryKey: ['playerStats', playerId, season, week],
+    queryFn: async () => {
+      const res = await fetch(`/api/players/${playerId}/stats/${season}/${week}`);
+      if (!res.ok) throw new Error('Failed to fetch player stats');
+      return res.json();
+    },
+    enabled: Boolean(playerId && season && week),
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }

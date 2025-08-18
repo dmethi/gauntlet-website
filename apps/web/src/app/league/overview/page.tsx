@@ -281,11 +281,7 @@ export default function LeagueOverview() {
       {/* Playoff Bracket */}
       <div className='mt-12'>
         <h2 className='mb-6 text-2xl font-bold'>Playoff Brackets</h2>
-        <PlayoffBracket
-          teams={teamStats}
-          league={league}
-          playoffBracket={playoffBracket}
-        />
+        <PlayoffBracket teams={teamStats} league={league} playoffBracket={playoffBracket} />
       </div>
 
       <div className='mt-12'>

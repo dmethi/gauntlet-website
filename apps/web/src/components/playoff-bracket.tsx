@@ -980,7 +980,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   <Matchup
                     key='upper-bye-1'
                     team1={upperBracket[0]}
-
                     matchupLabel='Bye Week'
                     isBye
                     result={getByeResult(upperBracket[0].id, 15)}
@@ -988,7 +987,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   <Matchup
                     key='upper-bye-2'
                     team1={upperBracket[1]}
-
                     matchupLabel='Bye Week'
                     isBye
                     result={getByeResult(Number(upperBracket[1].id), 15)}
@@ -997,7 +995,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='upper-wc-1'
                     team1={upperBracket[2]}
                     team2={upperBracket[5]}
-
                     matchupLabel='#3 vs #6'
                     result={getPlayoffResult(
                       Number(upperBracket[2].id),
@@ -1009,7 +1006,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='upper-wc-2'
                     team1={upperBracket[3]}
                     team2={upperBracket[4]}
-
                     matchupLabel='#4 vs #5'
                     result={getPlayoffResult(
                       Number(upperBracket[3].id),
@@ -1028,7 +1024,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='upper-sf-1'
                     team1={upperAdvancingTeams.week15.bye1 || undefined}
                     team2={upperAdvancingTeams.week15.wc1Winner || undefined}
-
                     matchupLabel='Semifinal 1'
                     result={
                       upperAdvancingTeams.week15.bye1 && upperAdvancingTeams.week15.wc1Winner
@@ -1044,7 +1039,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='upper-sf-2'
                     team1={upperAdvancingTeams.week15.bye2 || undefined}
                     team2={upperAdvancingTeams.week15.wc2Winner || undefined}
-
                     matchupLabel='Semifinal 2'
                     result={
                       upperAdvancingTeams.week15.bye2 && upperAdvancingTeams.week15.wc2Winner
@@ -1067,7 +1061,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='upper-final'
                     team1={upperAdvancingTeamsWeek16.sf1Winner || undefined}
                     team2={upperAdvancingTeamsWeek16.sf2Winner || undefined}
-
                     matchupLabel='Championship Final'
                     result={
                       upperAdvancingTeamsWeek16.sf1Winner && upperAdvancingTeamsWeek16.sf2Winner
@@ -1106,7 +1099,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   <Matchup
                     key='lower-bye-1'
                     team1={lowerBracket[5]}
-
                     matchupLabel='Forced Bye (Auto-Advance)'
                     isBye
                     result={getByeResult(Number(lowerBracket[5].id), 15)}
@@ -1114,7 +1106,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   <Matchup
                     key='lower-bye-2'
                     team1={lowerBracket[4]}
-
                     matchupLabel='Forced Bye (Auto-Advance)'
                     isBye
                     result={getByeResult(Number(lowerBracket[4].id), 15)}
@@ -1123,7 +1114,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='lower-wc-1'
                     team1={lowerBracket[0]}
                     team2={lowerBracket[3]}
-
                     matchupLabel='#7 vs #10 (Loser Advances)'
                     result={getPlayoffResult(
                       Number(lowerBracket[0].id),
@@ -1136,7 +1126,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='lower-wc-2'
                     team1={lowerBracket[1]}
                     team2={lowerBracket[2]}
-
                     matchupLabel='#8 vs #9 (Loser Advances)'
                     result={getPlayoffResult(
                       Number(lowerBracket[1].id),
@@ -1156,7 +1145,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='lower-sf-1'
                     team1={lowerAdvancingTeams.week15.bye2 || undefined} // #11 forced bye
                     team2={lowerAdvancingTeams.week15.wc1Loser || undefined} // LOSER from #7 vs #10
-
                     matchupLabel='Toilet Semifinal 1 (Loser Advances)'
                     result={
                       lowerAdvancingTeams.week15.bye2 && lowerAdvancingTeams.week15.wc1Loser
@@ -1173,7 +1161,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='lower-sf-2'
                     team1={lowerAdvancingTeams.week15.bye1 || undefined} // #12 forced bye
                     team2={lowerAdvancingTeams.week15.wc2Loser || undefined} // LOSER from #8 vs #9
-
                     matchupLabel='Toilet Semifinal 2 (Loser Advances)'
                     result={
                       lowerAdvancingTeams.week15.bye1 && lowerAdvancingTeams.week15.wc2Loser
@@ -1197,7 +1184,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='lower-final'
                     team1={lowerAdvancingTeamsWeek16.sf1Loser || undefined}
                     team2={lowerAdvancingTeamsWeek16.sf2Loser || undefined}
-
                     matchupLabel='Sacko Championship (Last Place Game)'
                     result={
                       lowerAdvancingTeamsWeek16.sf1Loser && lowerAdvancingTeamsWeek16.sf2Loser
@@ -1238,7 +1224,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='3rd-4th-place'
                     team1={upperAdvancingTeamsWeek16.sf1Loser || undefined}
                     team2={upperAdvancingTeamsWeek16.sf2Loser || undefined}
-
                     matchupLabel='Bronze Medal Game'
                     result={
                       upperAdvancingTeamsWeek16.sf1Loser && upperAdvancingTeamsWeek16.sf2Loser
@@ -1261,7 +1246,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='5th-6th-place'
                     team1={upperAdvancingTeams.week15.wc1Loser || undefined}
                     team2={upperAdvancingTeams.week15.wc2Loser || undefined}
-
                     matchupLabel='Middle Tier Final'
                     result={
                       upperAdvancingTeams.week15.wc1Loser && upperAdvancingTeams.week15.wc2Loser
@@ -1284,7 +1268,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     key='9th-10th-place'
                     team1={lowerAdvancingTeams.week15.wc1Winner || undefined} // Winner of #7 vs #10 (eliminated from toilet)
                     team2={lowerAdvancingTeams.week15.wc2Winner || undefined} // Winner of #8 vs #9 (eliminated from toilet)
-
                     matchupLabel='Avoided Sacko Game'
                     result={
                       lowerAdvancingTeams.week15.wc1Winner && lowerAdvancingTeams.week15.wc2Winner
@@ -1345,7 +1328,6 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                         return null;
                       })() || undefined
                     }
-
                     matchupLabel='Toilet Escape Game'
                     result={(() => {
                       const team1Data =

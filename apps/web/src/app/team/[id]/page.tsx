@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { MatchupLink } from '@/components/matchup-link';
 
 const TeamPageLoader = () => (
   <ContentLoader
@@ -95,7 +96,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
     );
   }
 
-  const playoffStart = Number((team.league as any)?.playoff_week_start) || 15;
+  const playoffStart =
+    Number((team.league as { playoff_week_start?: number })?.playoff_week_start) || 15;
 
   const weeklyData = team.weeklyMetrics
     // Regular season only (Weeks 1–(playoffStart-1))
@@ -233,8 +235,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 r => r.rosterId === Number(team.id) && r.week >= 1 && r.week < Number(playoffStart)
               )
               .reduce<Record<string, { team: number; opponent: number }>>((acc, r) => {
-                const pos = (r.positionalPoints as any) || {};
-                const opp = (r.opponentPositionalPoints as any) || {};
+                const pos = (r.positionalPoints as Record<string, number>) || {};
+                const opp = (r.opponentPositionalPoints as Record<string, number>) || {};
                 for (const p of Object.keys(pos)) {
                   // Filter out unknown positions like 'UNK'
                   if (!['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].includes(p)) continue;
@@ -258,7 +260,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             seasonal.data.rosterWeekAggregates
               .filter(r => r.week >= 1 && r.week < Number(playoffStart))
               .forEach(r => {
-                const pos = (r.positionalPoints as any) || {};
+                const pos = (r.positionalPoints as Record<string, number>) || {};
                 for (const p of Object.keys(pos)) {
                   if (!['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].includes(p)) continue;
                   perRosterTotals[r.rosterId][p] =
@@ -317,7 +319,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   r => r.rosterId === compareTeamId && r.week >= 1 && r.week < Number(playoffStart)
                 )
                 .forEach(r => {
-                  const pos = (r.positionalPoints as any) || {};
+                  const pos = (r.positionalPoints as Record<string, number>) || {};
                   for (const p of Object.keys(pos)) {
                     if (!allowedPositions.includes(p)) continue;
                     compareTotals[p] = (compareTotals[p] ?? 0) + Number(pos[p] ?? 0);
@@ -441,7 +443,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
       <div className='mt-8'>
         <h2 className='mb-2 text-2xl font-bold'>Weekly Matchups</h2>
         <p className='text-sm text-muted-foreground mb-4'>
-          TODO: link each row to matchup page when route and data are wired.
+          Click on a week to view the full matchup breakdown with player details and analytics.
         </p>
         <div className='overflow-x-auto rounded-md border border-border bg-card'>
           <Table>
@@ -465,8 +467,15 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   const leagueAvgCell =
                     typeof leagueAvgForWeek === 'number' ? leagueAvgForWeek.toFixed(2) : '—';
                   return (
-                    <TableRow key={`reg-${matchup.week}`}>
-                      <TableCell>Week {matchup.week}</TableCell>
+                    <TableRow key={`reg-${matchup.week}`} className='hover:bg-muted/50'>
+                      <TableCell>
+                        <MatchupLink
+                          matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
+                          week={matchup.week}
+                          variant='compact'
+                          className='font-medium'
+                        />
+                      </TableCell>
                       <TableCell>{matchup.points.toFixed(2)}</TableCell>
                       <TableCell>{weekData ? weekData.opponentPoints.toFixed(2) : '—'}</TableCell>
                       <TableCell>{leagueAvgCell}</TableCell>
@@ -505,8 +514,15 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   const leagueAvgCell =
                     typeof leagueAvgForWeek === 'number' ? leagueAvgForWeek.toFixed(2) : '—';
                   return (
-                    <TableRow key={`po-${matchup.week}`}>
-                      <TableCell>Week {matchup.week}</TableCell>
+                    <TableRow key={`po-${matchup.week}`} className='hover:bg-muted/50'>
+                      <TableCell>
+                        <MatchupLink
+                          matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
+                          week={matchup.week}
+                          variant='compact'
+                          className='font-medium'
+                        />
+                      </TableCell>
                       <TableCell>{matchup.points.toFixed(2)}</TableCell>
                       <TableCell>{weekData ? weekData.opponentPoints.toFixed(2) : '—'}</TableCell>
                       <TableCell>{leagueAvgCell}</TableCell>
@@ -541,9 +557,9 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 <div key={t.id} className='py-2 border-b last:border-b-0 border-border/50'>
                   <div className='flex items-start gap-2 mb-1'>
                     <span className='font-medium text-sm'>{formatTransactionType(t.type)}</span>
-                    {t.type === 'waiver' && (t as any).settings?.waiver_bid && (
+                    {t.type === 'waiver' && t.settings?.waiver_bid && (
                       <span className='text-xs bg-muted px-2 py-1 rounded text-muted-foreground'>
-                        ${(t as any).settings.waiver_bid}
+                        ${t.settings.waiver_bid}
                       </span>
                     )}
                   </div>

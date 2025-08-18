@@ -288,13 +288,13 @@ export function TeamPositionalRadarChart({
             {comparisons?.map(series => {
               const merged = data.map(d => {
                 const found = series.data.find(s => s.position === d.position)?.value ?? 0;
-                return { ...d, [series.name]: found } as any;
+                return { ...d, [series.name]: found };
               });
               return (
                 <Radar
                   key={series.name}
                   name={series.name}
-                  dataKey={series.name as any}
+                  dataKey={series.name}
                   stroke={series.color}
                   fill={series.color}
                   fillOpacity={0.15}
