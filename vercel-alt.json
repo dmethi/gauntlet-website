@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && pnpm build",
+  "buildCommand": "cd ../.. && pnpm install && pnpm build --filter='@gauntlet/lib' && pnpm build --filter='@gauntlet/sim-engine' && pnpm build --filter='@gauntlet/web'",
   "devCommand": "cd ../.. && pnpm dev --filter=@gauntlet/web", 
   "installCommand": "pnpm install",
   "framework": "nextjs",
