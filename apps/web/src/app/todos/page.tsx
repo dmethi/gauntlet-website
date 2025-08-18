@@ -18,10 +18,10 @@ import {
   Code,
   Database,
   ExternalLink,
+  Zap as Lightning,
   Palette,
   Wrench,
   Zap,
-  Zap as Lightning,
 } from 'lucide-react';
 
 interface TodoSpec {
