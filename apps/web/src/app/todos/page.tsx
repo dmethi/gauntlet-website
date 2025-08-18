@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,16 +11,16 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import {
+  AlertCircle,
   CheckCircle,
   Circle,
   Clock,
-  AlertCircle,
+  Code,
+  Database,
+  ExternalLink,
+  Palette,
   Wrench,
   Zap,
-  ExternalLink,
-  Database,
-  Code,
-  Palette,
   Zap as Lightning,
 } from 'lucide-react';
 
@@ -40,7 +38,7 @@ interface TodoSpec {
 }
 
 // Helper function to create default specs for items that need basic specifications
-function createDefaultSpec(title: string, description: string, category: string): TodoSpec {
+function createDefaultSpec(title: string, description: string, _category: string): TodoSpec {
   return {
     overview: description || `Implementation of ${title.toLowerCase()}.`,
     technicalRequirements: [`Implement ${title.toLowerCase()}`],
