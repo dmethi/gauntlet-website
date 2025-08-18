@@ -2,7 +2,6 @@
 
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartLegend } from '@gauntlet/ui';
-import { dataVizColors } from '@/lib/colors';
 import { useChartColors } from '@/lib/chart-colors';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 
