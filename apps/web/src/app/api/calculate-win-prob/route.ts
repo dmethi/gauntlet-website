@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import type { PlayerStats as PlayerStatsModel } from '@prisma/client';
 import { type Lineup, type LineupPlayer, simulateMatchupProbability } from '@gauntlet/sim-engine';
 
-const prisma = new PrismaClient();
+async function getPrisma() {
+  const { prisma } = await import('@/lib/prisma');
+  return prisma;
+}
 
 interface Matchup {
   matchupId: number;
@@ -13,13 +16,7 @@ interface Matchup {
 
 export async function POST(request: NextRequest) {
   try {
-    const {
-      matchups,
-      timestamp,
-      iterations = 2000,
-      decayMode = 'linear',
-      gameProgressOverride,
-    } = await request.json();
+    const { matchups, timestamp, iterations = 2000, gameProgressOverride } = await request.json();
 
     // Group matchups by matchupId
     const matchupPairs = matchups.reduce((acc: Record<number, Matchup[]>, matchup: Matchup) => {
@@ -33,13 +30,14 @@ export async function POST(request: NextRequest) {
 
     // Process each matchup
     const results = await Promise.all(
-      Object.values(matchupPairs).map(async (pair: any) => {
+      (Object.values(matchupPairs) as Matchup[][]).map(async pair => {
         if (pair.length !== 2) return null;
 
         const [team1, team2] = pair;
 
         // Build fixed-shape lineups from roster starters stored in DB
         const currentWeek = getCurrentWeek();
+        const prisma = await getPrisma();
         const [team1Lineup, team2Lineup, roster1, roster2] = await Promise.all([
           buildLineupFromRoster(team1.roster_id, currentWeek),
           buildLineupFromRoster(team2.roster_id, currentWeek),
@@ -75,7 +73,7 @@ export async function POST(request: NextRequest) {
 
         // Persist snapshot to LiveWinProbSample
         if (leagueId) {
-          await (prisma as any).liveWinProbSample.create({
+          await prisma.liveWinProbSample.create({
             data: {
               leagueId,
               week,
@@ -129,6 +127,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ results: results.filter(Boolean) });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error calculating win probabilities:', error);
     return NextResponse.json({ error: 'Failed to calculate win probabilities' }, { status: 500 });
   }
@@ -136,6 +135,7 @@ export async function POST(request: NextRequest) {
 
 // Helper functions (copied from server)
 async function buildPlayersFromRoster(rosterId: number, week: number): Promise<LineupPlayer[]> {
+  const prisma = await getPrisma();
   const roster = await prisma.roster.findUnique({ where: { id: rosterId } });
   const playerIds = roster?.starters || [];
   if (playerIds.length === 0) return [];
@@ -152,14 +152,16 @@ async function buildPlayersFromRoster(rosterId: number, week: number): Promise<L
     }),
   ]);
 
-  const byId = new Map(players.map(p => [p.id, p] as const));
+  type PlayerData = { id: string; fullName: string; position: string };
+  const byId = new Map<string, PlayerData>(players.map((p: PlayerData) => [p.id, p]));
 
   return playerIds
-    .map(pid => {
+    .map((pid: string) => {
       const player = byId.get(pid);
       if (!player) return null;
-      const proj = stats.find(s => s.playerId === pid);
-      const projection = (proj?.stats as any)?.pts_half_ppr ?? (proj?.stats as any)?.pts_ppr ?? 0;
+      const proj = stats.find((s: PlayerStatsModel) => s.playerId === pid);
+      const projStats = proj?.stats as Record<string, number> | undefined;
+      const projection = projStats?.pts_half_ppr ?? projStats?.pts_ppr ?? 0;
       const lp: LineupPlayer = {
         id: player.id,
         name: player.fullName,
@@ -168,11 +170,11 @@ async function buildPlayersFromRoster(rosterId: number, week: number): Promise<L
       };
       return lp;
     })
-    .filter((p): p is LineupPlayer => Boolean(p));
+    .filter((p: LineupPlayer | null): p is LineupPlayer => Boolean(p));
 }
 
 function calculateGameProgressFromPlayers(players: LineupPlayer[], currentPoints: number): number {
-  const totalProjected = players.reduce((sum, p) => sum + p.projection, 0);
+  const totalProjected = players.reduce((sum: number, p: LineupPlayer) => sum + p.projection, 0);
   if (totalProjected === 0) return 0;
   return Math.min(Math.max(currentPoints / totalProjected, 0), 1);
 }
@@ -210,7 +212,7 @@ async function buildLineupFromRoster(rosterId: number, week: number): Promise<Li
   }
 
   if (!lineup.flex && flexCandidates.length > 0) {
-    flexCandidates.sort((a, b) => b.projection - a.projection);
+    flexCandidates.sort((a: LineupPlayer, b: LineupPlayer) => b.projection - a.projection);
     lineup.flex = flexCandidates[0];
   }
 

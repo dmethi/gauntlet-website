@@ -99,7 +99,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   const playoffStart =
     Number((team.league as { playoff_week_start?: number })?.playoff_week_start) || 15;
 
-  const weeklyData = team.weeklyMetrics
+  const weeklyData = (team.weeklyMetrics ?? [])
     // Regular season only (Weeks 1–(playoffStart-1))
     .filter(metric => metric.week >= 1 && metric.week < playoffStart)
     .map(metric => ({
@@ -111,10 +111,10 @@ export default function TeamPage({ params }: { params: { id: string } }) {
       leagueAverage: weeklyAverages.find(w => w.week === metric.week)?.averagePoints,
     }));
 
-  const totalPoints = team.matchups.reduce((sum, matchup) => sum + matchup.points, 0);
-  const averagePoints = totalPoints / (team.matchups.length || 1);
+  const totalPoints = (team.matchups ?? []).reduce((sum, matchup) => sum + matchup.points, 0);
+  const averagePoints = totalPoints / ((team.matchups ?? []).length || 1);
   // Compute regular-season record using dynamic playoff start if available
-  const regularSeasonWeeks = team.weeklyMetrics.filter(
+  const regularSeasonWeeks = (team.weeklyMetrics ?? []).filter(
     wm => wm.week >= 1 && wm.week < playoffStart
   );
   const totalExpectedWins = regularSeasonWeeks.reduce(
@@ -457,7 +457,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {team.matchups
+              {(team.matchups ?? [])
                 .filter(m => m.week >= 1 && m.week <= 14)
                 .map(matchup => {
                   const weekData = weeklyData.find(w => w.week === matchup.week);
@@ -492,7 +492,9 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   );
                 })}
 
-              {team.matchups.some(m => m.week >= playoffStart && m.week <= playoffStart + 2) && (
+              {(team.matchups ?? []).some(
+                m => m.week >= playoffStart && m.week <= playoffStart + 2
+              ) && (
                 <TableRow>
                   <TableCell colSpan={5} className='bg-muted/40 text-xs uppercase tracking-wider'>
                     Playoffs (Weeks {playoffStart}–{playoffStart + 2})
@@ -500,11 +502,13 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 </TableRow>
               )}
 
-              {team.matchups
+              {(team.matchups ?? [])
                 .filter(m => m.week >= playoffStart && m.week <= playoffStart + 2)
                 .map(matchup => {
                   // Use authoritative weekly metrics for playoff weeks (weeklyData is regular-season-only)
-                  const playoffWeek = team.weeklyMetrics.find(wm => wm.week === matchup.week);
+                  const playoffWeek = (team.weeklyMetrics ?? []).find(
+                    wm => wm.week === matchup.week
+                  );
                   const weekData = playoffWeek
                     ? { opponentPoints: playoffWeek.opponentPoints }
                     : undefined;

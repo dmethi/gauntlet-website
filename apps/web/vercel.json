@@ -1,0 +1,12 @@
+{
+  "buildCommand": "cd ../.. && pnpm turbo build --filter=@gauntlet/web",
+  "devCommand": "cd ../.. && pnpm dev --filter=@gauntlet/web", 
+  "installCommand": "cd ../.. && pnpm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "functions": {
+    "src/app/api/**/route.{js,ts}": {
+      "maxDuration": 30
+    }
+  }
+}

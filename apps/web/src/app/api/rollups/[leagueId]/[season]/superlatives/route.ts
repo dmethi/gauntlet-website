@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
+import type { Prisma } from '@prisma/client';
 
-const SERVER_BASE_URL = process.env.SERVER_BASE_URL || 'http://localhost:3001';
+export const dynamic = 'force-dynamic';
+
+async function getPrisma() {
+  const { prisma } = await import('@/lib/prisma');
+  return prisma;
+}
 
 export async function GET(
   request: Request,
@@ -8,26 +14,28 @@ export async function GET(
 ) {
   const { searchParams } = new URL(request.url);
   const { leagueId, season } = params;
-  const category = searchParams.get('category') ?? '';
-  const limit = searchParams.get('limit') ?? '';
-  const offset = searchParams.get('offset') ?? '';
+  const category = searchParams.get('category') ?? undefined;
+  const limit = searchParams.get('limit') ?? undefined;
+  const offset = searchParams.get('offset') ?? undefined;
   try {
-    const qs = new URLSearchParams();
-    if (category) qs.set('category', category);
-    if (limit) qs.set('limit', limit);
-    if (offset) qs.set('offset', offset);
-    const res = await fetch(
-      `${SERVER_BASE_URL}/api/rollups/${encodeURIComponent(leagueId)}/${encodeURIComponent(
-        season
-      )}/superlatives?${qs.toString()}`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) {
-      return NextResponse.json({ error: 'Failed to fetch superlatives' }, { status: res.status });
-    }
-    const data = await res.json();
-    return NextResponse.json(data);
+    const prisma = await getPrisma();
+    const take = Math.min(100, Math.max(0, Number(limit ?? '100')));
+    const skip = Math.max(0, Number(offset ?? '0'));
+    const where: Prisma.SeasonSuperlativesWhereInput = { leagueId, season };
+    if (category) where.category = category;
+    const [data, total] = await Promise.all([
+      prisma.seasonSuperlatives.findMany({ where, take, skip, orderBy: { category: 'asc' } }),
+      prisma.seasonSuperlatives.count({ where }),
+    ]);
+    return NextResponse.json({
+      ok: true,
+      data,
+      meta: { leagueId, season, total, limit: take, offset: skip },
+    });
   } catch {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: { code: 'INTERNAL', message: 'Failed to fetch season superlatives' } },
+      { status: 500 }
+    );
   }
 }

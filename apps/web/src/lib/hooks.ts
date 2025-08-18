@@ -93,37 +93,37 @@ export function useLeagueData() {
       rosterAggregates.get(agg.rosterId)!.push(agg);
     });
 
-    const teams = league.rosters.map((roster: Roster) => {
+    const teams = (league.rosters || []).map((roster: Roster) => {
       const aggregates = rosterAggregates.get(Number(roster.id)) || [];
 
       // Calculate total points from matchups (unchanged)
-      const totalPoints = roster.matchups.reduce(
+      const totalPoints = (roster.matchups || []).reduce(
         (sum: number, matchup: Matchup) => sum + matchup.points,
         0
       );
 
       // Use authoritative record data from RosterWeekAggregate
       // Filter to regular season weeks (we'll use dynamic playoff start if available)
-      const playoffStart = Number(league?.playoff_week_start) || 15;
-      const regularSeasonAggregates = aggregates.filter(
+      const playoffStart = Number(league?.playoff_week_start ?? 15);
+      const regularSeasonAggregates = (aggregates || []).filter(
         agg => agg.week >= 1 && agg.week < playoffStart
       );
 
-      const wins = regularSeasonAggregates.reduce(
+      const wins = (regularSeasonAggregates || []).reduce(
         (count: number, agg: RosterWeekAggregate) => count + (agg.won ? 1 : 0),
         0
       );
-      const losses = regularSeasonAggregates.reduce(
+      const losses = (regularSeasonAggregates || []).reduce(
         (count: number, agg: RosterWeekAggregate) => count + (agg.won === false ? 1 : 0),
         0
       );
 
       // Calculate cumulative expected wins and luck from aggregates
-      const totalExpectedWins = regularSeasonAggregates.reduce(
+      const totalExpectedWins = (regularSeasonAggregates || []).reduce(
         (sum: number, agg: RosterWeekAggregate) => sum + (agg.expectedWins || 0),
         0
       );
-      const totalLuck = regularSeasonAggregates.reduce(
+      const totalLuck = (regularSeasonAggregates || []).reduce(
         (sum: number, agg: RosterWeekAggregate) => sum + (agg.luck || 0),
         0
       );
@@ -172,8 +172,8 @@ export function useLeagueData() {
     if (!league) return [];
     return Array.from({ length: 18 }, (_, week) => {
       const weekNumber = week + 1;
-      const weekMatchups = league.rosters.flatMap((r: Roster) =>
-        r.matchups.filter((m: Matchup) => m.week === weekNumber)
+      const weekMatchups = (league.rosters || []).flatMap((r: Roster) =>
+        (r.matchups || []).filter((m: Matchup) => m.week === weekNumber)
       );
       const totalPoints = weekMatchups.reduce((sum: number, m: Matchup) => sum + m.points, 0);
       const averagePoints = weekMatchups.length > 0 ? totalPoints / weekMatchups.length : 0;
