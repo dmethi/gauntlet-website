@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { TransactionList } from '@/components/transactions';
 
 const LeagueOverviewLoader = () => (
   <ContentLoader
@@ -296,6 +297,66 @@ export default function LeagueOverview() {
       <div className='mt-12'>
         <LeagueChart data={weeklyAverages} />
       </div>
+
+      {/* Recent Transactions */}
+      <div className='mt-12'>
+        <div className='flex items-center justify-between mb-3'>
+          <h2 className='text-2xl font-bold'>Recent Transactions</h2>
+          <Link href='/league/transactions'>
+            <Button size='sm' variant='outline'>
+              View All
+            </Button>
+          </Link>
+        </div>
+        <RecentTransactionsWidget league={league} />
+      </div>
     </Container>
   );
+}
+
+function RecentTransactionsWidget({ league }: { league: any }) {
+  const [items, setItems] = useState<any[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  useMemo(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/league/${String(league.id)}/transactions`);
+        const json = (await res.json()) as { ok: boolean; data?: any[] };
+        if (!cancelled && json.ok) setItems((json.data || []).slice(0, 5));
+      } catch {
+        if (!cancelled) setItems([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [league?.id]);
+
+  if (loading) {
+    return <div className='text-sm text-muted-foreground'>Loading…</div>;
+  }
+  const rosterMap = new Map<number, string>();
+  (league?.rosters || []).forEach((r: any) => {
+    const name = r?.owner?.metadata?.team_name || r?.owner?.displayName || r?.owner?.username;
+    rosterMap.set(Number(r.id), name || `Team ${r.id}`);
+  });
+  const rosterName = (rid: number) => rosterMap.get(Number(rid)) || `Team ${rid}`;
+
+  const adapted = (items || []).map(t => ({
+    id: t.id,
+    type: t.type,
+    status: t.status,
+    createdAt: t.createdAt,
+    adds: (t.adds || []).flatMap((a: any) =>
+      a.players.map((p: any) => ({ label: `${p.fullName} to ${rosterName(a.rosterId)}` }))
+    ),
+    drops: (t.drops || []).flatMap((d: any) =>
+      d.players.map((p: any) => ({ label: `${p.fullName} from ${rosterName(d.rosterId)}` }))
+    ),
+    waiverBid: t.settings?.waiver_bid ?? null,
+  }));
+  return <TransactionList items={adapted} />;
 }

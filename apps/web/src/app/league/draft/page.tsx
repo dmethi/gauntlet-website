@@ -548,7 +548,9 @@ export default function DraftPage() {
                                                       className='flex items-start justify-between gap-4 border-b border-border pb-2'
                                                     >
                                                       <div>
-                                                        <div className='font-medium'>{t.type}</div>
+                                                        <div className='font-medium'>
+                                                          {t.type.replace('_', ' ')}
+                                                        </div>
                                                         <div className='text-muted-foreground'>
                                                           {new Date(t.createdAt).toLocaleString()}
                                                         </div>
