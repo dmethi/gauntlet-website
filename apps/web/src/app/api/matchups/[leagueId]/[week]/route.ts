@@ -40,12 +40,15 @@ export async function GET(
       where: { leagueId, week: weekNumber },
     });
 
-    const grouped = matchups.reduce((acc: Record<number, typeof matchups>, m) => {
-      if (!m.matchupId) return acc;
-      if (!acc[m.matchupId]) acc[m.matchupId] = [] as unknown as typeof matchups;
-      acc[m.matchupId]!.push(m);
-      return acc;
-    }, {} as Record<number, typeof matchups>);
+    const grouped = matchups.reduce(
+      (acc: Record<number, typeof matchups>, m) => {
+        if (!m.matchupId) return acc;
+        if (!acc[m.matchupId]) acc[m.matchupId] = [] as unknown as typeof matchups;
+        acc[m.matchupId]!.push(m);
+        return acc;
+      },
+      {} as Record<number, typeof matchups>
+    );
 
     const formatted = Object.entries(grouped).map(([mid, teams]) => {
       const matchupId = Number(mid);

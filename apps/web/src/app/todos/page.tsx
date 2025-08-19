@@ -333,7 +333,7 @@ const baseWorkTodos: TodoSection = {
       id: 'draft-page',
       title: 'Draft page',
       description: 'Create comprehensive draft analysis and visualization page',
-      status: 'pending',
+      status: 'in_progress',
       priority: 'medium',
       category: 'ui',
       spec: createDefaultSpec(

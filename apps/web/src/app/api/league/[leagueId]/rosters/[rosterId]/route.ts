@@ -26,8 +26,17 @@ export async function GET(
     const players = playerIds.length
       ? await prisma.player.findMany({ where: { id: { in: playerIds } } })
       : [];
-    const mapped = players.map(p => ({ id: p.id, fullName: p.fullName, position: p.position, team: p.team }));
-    return NextResponse.json({ rosterId: roster.id, starters: roster.starters || [], players: mapped });
+    const mapped = players.map(p => ({
+      id: p.id,
+      fullName: p.fullName,
+      position: p.position,
+      team: p.team,
+    }));
+    return NextResponse.json({
+      rosterId: roster.id,
+      starters: roster.starters || [],
+      players: mapped,
+    });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('league:[leagueId]/rosters:[rosterId] error', {

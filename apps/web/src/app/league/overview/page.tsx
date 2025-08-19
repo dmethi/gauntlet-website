@@ -6,6 +6,7 @@ import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/
 import ContentLoader from 'react-content-loader';
 import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp, Download, RefreshCw, Settings } from 'lucide-react';
+import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PlayoffBracket } from '@/components/playoff-bracket';
@@ -132,7 +133,15 @@ export default function LeagueOverview() {
     <Container className='py-8'>
       <div className='flex items-start justify-between mb-8'>
         <PageHeader title={league.name} subtitle={`Season ${league.season}`} />
-        <div className='flex gap-2 opacity-0 animate-in fade-in-0 duration-300 delay-150'>
+        <div className='flex gap-2 animate-in fade-in-0 duration-300 delay-150'>
+          <Link href='/league/draft'>
+            <Button
+              size='sm'
+              className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
+            >
+              View Draft
+            </Button>
+          </Link>
           <Button
             variant='outline'
             size='sm'
