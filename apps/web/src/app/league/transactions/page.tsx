@@ -739,7 +739,10 @@ export default function LeagueTransactionsPage() {
                           <div className='text-xs text-muted-foreground'>
                             {(t.rosterIds || [])
                               .map(rid => {
-                                const r = (league?.rosters || []).find(rr => rr.id === String(rid));
+                                const r = (league?.rosters || []).find(
+                                  rr => Number(rr.id) === Number(rid)
+                                );
+
                                 const teamName =
                                   r?.owner?.metadata?.team_name ||
                                   r?.owner?.displayName ||

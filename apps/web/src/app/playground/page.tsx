@@ -35,6 +35,24 @@ export default function Playground() {
         </div>
       </div>
 
+      {/* Ultra Large Logo Showcase */}
+      <div className='mt-12 mb-12'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Ultra Large Logo</CardTitle>
+          </CardHeader>
+          <CardContent className='flex flex-col items-center justify-center py-24 bg-slate-900 rounded-b-lg'>
+            <GauntletLogo size='xl' className='!w-80 !h-80 mb-12' />
+            <div className='text-center'>
+              <div className='font-bold font-geizer tracking-wide text-6xl mb-4 text-white'>
+                THE GAUNTLET
+              </div>
+              <div className='text-2xl text-slate-300 font-avenir'>Medieval Fantasy Football</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className='grid gap-6 md:grid-cols-2'>
         <Card>
           <CardHeader>
