@@ -49,6 +49,7 @@ model League {
   rosterWeekAggregates RosterWeekAggregate[]
   leagueWeekSummaries  LeagueWeekSummary[]
   seasonSuperlatives   SeasonSuperlatives[]
+  hallOfFameRecords    HallOfFameRecord[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
@@ -77,6 +78,7 @@ model Roster {
   matchupSummariesAsA MatchupSummary[] @relation("MatchupSummaryRosterA")
   matchupSummariesAsB MatchupSummary[] @relation("MatchupSummaryRosterB")
   seasonSuperlatives  SeasonSuperlatives[]
+  hallOfFameRecords   HallOfFameRecord[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -333,6 +335,13 @@ model RosterWeekAggregate {
   transactionScore           Float?
   injuryPoints               Float?
   powerRank                  Float?
+  
+  // Hall of Fame fields
+  donutCount                 Int?     // Number of starters who scored 0 points
+  starConcentrationIndex     Float?   // Percentage of team points from top 1-2 players
+  boomCount                  Int?     // Number of starters exceeding 90th percentile vs position baseline
+  bustCount                  Int?     // Number of starters below 10th percentile vs position baseline
+  
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @updatedAt
 
@@ -415,4 +424,50 @@ model LiveWinProbSample {
 
   @@index([leagueId, week, matchupId])
   @@index([timestamp])
+}
+
+// Hall of Fame and Shame models
+
+/// Defines all trackable stat categories for Hall of Fame/Shame
+model HallOfFameCategory {
+  id            String   @id @default(cuid())
+  name          String   @unique // e.g., "highest_team_points", "largest_margin_victory"
+  displayName   String            // e.g., "Highest Team Points", "Largest Margin of Victory"
+  description   String?           // Optional description of what this tracks
+  groupName     String            // e.g., "Score & Margin", "Lineup Quality", "Positional Splits", "Volatility"
+  statType      String            // "high" (for top 5) or "low" (for bottom 5) or "both"
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0) // For display ordering within groups
+  records       HallOfFameRecord[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([groupName])
+  @@index([statType])
+}
+
+/// Individual Hall of Fame/Shame records (top 5/bottom 5 for each category)
+model HallOfFameRecord {
+  id           String           @id @default(cuid())
+  categoryId   String
+  category     HallOfFameCategory @relation(fields: [categoryId], references: [id])
+  leagueId     String
+  league       League           @relation(fields: [leagueId], references: [id])
+  rosterId     Int
+  roster       Roster           @relation(fields: [rosterId], references: [id])
+  week         Int
+  season       String
+  value        Float            // The stat value (points, margin, etc.)
+  recordType   String           // "top" or "bottom" 
+  rank         Int              // 1-5 for top/bottom 5
+  contextData  Json?            // Additional context (opponent, lineup details, etc.)
+  isAllTime    Boolean @default(false) // Whether this is an all-time record vs current season
+  achievedAt   DateTime         // When this performance happened
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([categoryId, leagueId, recordType, rank]) // Each category can have 5 top and 5 bottom records
+  @@index([leagueId, season])
+  @@index([categoryId, recordType, rank])
+  @@index([rosterId])
 }

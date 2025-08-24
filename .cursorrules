@@ -78,6 +78,61 @@ REQUIRED: Confirm this session will:
 - **Update Strategy**: 10min during NFL games, 12hr during week
 - **Deployment**: Vercel with DATABASE_URL environment variable
 
+### 🗄️ PRISMA SCHEMA MANAGEMENT
+**CRITICAL**: This project uses a dual Prisma setup with separate schemas that MUST be kept in sync:
+
+#### Schema Locations:
+- **Primary Schema**: `/apps/server/prisma/schema.prisma` (authoritative source)
+- **Web App Schema**: `/apps/web/src/generated/prisma/schema.prisma` (copy of primary)
+
+#### Schema Update Protocol:
+**ALWAYS follow this exact sequence when modifying database models:**
+
+1. **Edit Primary Schema**:
+   ```bash
+   # Edit the authoritative schema
+   apps/server/prisma/schema.prisma
+   ```
+
+2. **Run Migration** (from server directory):
+   ```bash
+   cd apps/server
+   npx prisma migrate dev --name descriptive_migration_name
+   npx prisma generate  # Regenerate server Prisma client
+   ```
+
+3. **Sync Web App Schema**:
+   ```bash
+   # Copy updated schema to web app
+   cp apps/server/prisma/schema.prisma apps/web/src/generated/prisma/schema.prisma
+   
+   # Regenerate web app Prisma client
+   cd apps/web
+   npx prisma generate --schema=src/generated/prisma/schema.prisma
+   ```
+
+4. **Verify Both Clients**:
+   - Test API endpoints that use new models
+   - Ensure both server scripts and web API routes work
+   - Check that TypeScript types are updated
+
+#### ⚠️ Common Pitfalls:
+- **NEVER** edit only one schema - always sync both
+- **ALWAYS** regenerate both Prisma clients after schema changes
+- **VERIFY** new models exist in both generated clients before using them
+- **RESTART** Next.js dev server if Prisma client changes don't take effect
+
+#### Model Usage by Location:
+- **Server Scripts**: Use `/apps/server/src/lib/prisma.ts` → server schema
+- **Web API Routes**: Use `/apps/web/src/lib/prisma.ts` → web app schema
+- Both must have identical schemas for consistency
+
+#### Emergency Recovery:
+If schemas get out of sync:
+1. Copy server schema to web app: `cp apps/server/prisma/schema.prisma apps/web/src/generated/prisma/schema.prisma`
+2. Regenerate web client: `cd apps/web && npx prisma generate --schema=src/generated/prisma/schema.prisma`
+3. Restart Next.js dev server
+
 ### League Structure (The Gauntlet Specific)
 - **Format**: 2 leagues × 12 teams × 3 divisions
 - **Playoffs**: 6-team with 2 byes, reseeding, toilet bowl
