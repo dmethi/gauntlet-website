@@ -359,14 +359,15 @@ const baseWorkTodos: TodoSection = {
 
     {
       id: 'hall-of-fame-shame',
-      title: 'Implement hall of fame and shame page',
-      description: 'Create page showcasing league highlights and lowlights',
-      status: 'pending',
+      title: 'Hall of Fame & Shame (STASHED)',
+      description:
+        'Complete design documented and work stashed for future implementation. See docs/hall-of-fame-design.md',
+      status: 'completed',
       priority: 'low',
       category: 'ui',
       spec: createDefaultSpec(
-        'Implement hall of fame and shame page',
-        'Create page showcasing league highlights and lowlights',
+        'Hall of Fame & Shame (STASHED)',
+        'Complete design documented and work stashed for future implementation. See docs/hall-of-fame-design.md',
         'ui'
       ),
     },
