@@ -49,16 +49,14 @@ export default function LeagueOverview() {
   const router = useRouter();
   const leagueIdParam = searchParams.get('leagueId');
 
-  // Use the appropriate hook based on whether we have a league ID parameter
-  const leagueDataById = leagueIdParam ? useLeagueDataById(leagueIdParam) : null;
-  const leagueDataFallback = !leagueIdParam ? useLeagueData() : null;
+    // Call both hooks unconditionally to follow Rules of Hooks
+  const leagueDataById = useLeagueDataById(leagueIdParam || undefined);
+  const leagueDataFallback = useLeagueData();
   
-  const { league, loading, teamStats, weeklyAverages } = leagueDataById || leagueDataFallback || {
-    league: null,
-    loading: true,
-    teamStats: [],
-    weeklyAverages: []
-  };
+  // Use the appropriate data based on whether we have a league ID parameter
+  const { league, loading, teamStats, weeklyAverages } = leagueIdParam
+    ? leagueDataById
+    : leagueDataFallback;
   const [sortKey, setSortKey] = useState<'team' | 'record' | 'points' | 'expectedWins' | 'luck'>(
     'points'
   );
