@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { getTeamColor } from '@/lib/chart-colors';
@@ -293,7 +293,7 @@ function TeamRoster({
   );
 }
 
-export default function MatchupDetailPage({ params }: { params: { matchupId: string } }) {
+function MatchupDetailPageContent({ params }: { params: { matchupId: string } }) {
   const searchParams = useSearchParams();
   const week = searchParams.get('week');
   const weekNumber = week ? parseInt(week) : 1;
@@ -934,5 +934,22 @@ export default function MatchupDetailPage({ params }: { params: { matchupId: str
         </TabsContent>
       </Tabs>
     </Container>
+  );
+}
+
+export default function MatchupDetailPage({ params }: { params: { matchupId: string } }) {
+  return (
+    <Suspense fallback={
+      <Container>
+        <PageHeader title='Matchup Details' />
+        <div className='animate-pulse space-y-4'>
+          <div className='h-64 bg-muted rounded-lg' />
+          <div className='h-32 bg-muted rounded-lg' />
+          <div className='h-48 bg-muted rounded-lg' />
+        </div>
+      </Container>
+    }>
+      <MatchupDetailPageContent params={params} />
+    </Suspense>
   );
 }

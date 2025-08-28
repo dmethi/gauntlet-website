@@ -4,7 +4,7 @@ import { LeagueChart } from '@/components/league-chart';
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -44,15 +44,15 @@ const LeagueOverviewLoader = () => (
   </ContentLoader>
 );
 
-export default function LeagueOverview() {
+function LeagueOverviewContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const leagueIdParam = searchParams.get('leagueId');
 
-    // Call both hooks unconditionally to follow Rules of Hooks
+  // Call both hooks unconditionally to follow Rules of Hooks
   const leagueDataById = useLeagueDataById(leagueIdParam || undefined);
   const leagueDataFallback = useLeagueData();
-  
+
   // Use the appropriate data based on whether we have a league ID parameter
   const { league, loading, teamStats, weeklyAverages } = leagueIdParam
     ? leagueDataById
@@ -291,6 +291,14 @@ export default function LeagueOverview() {
         <RecentTransactionsWidget league={league} />
       </div>
     </Container>
+  );
+}
+
+export default function LeagueOverview() {
+  return (
+    <Suspense fallback={<LeagueOverviewLoader />}>
+      <LeagueOverviewContent />
+    </Suspense>
   );
 }
 

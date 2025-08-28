@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { CheckSquare, ChevronDown, ChevronRight, Home, Menu, Trophy, Users, X } from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
@@ -118,7 +118,8 @@ function SidebarContent({
   );
 }
 
-function SidebarNavigation({
+// Create a separate component that uses useSearchParams
+function SidebarNavigationWithSearchParams({
   onItemClick,
   teams: _teams,
   isLoading: _isLoading,
@@ -191,7 +192,7 @@ function SidebarNavigation({
           }`}
         >
           <div className='space-y-1'>
-            {leagues.map((league) => {
+            {leagues.map(league => {
               const currentLeagueId = searchParams.get('leagueId');
               const isLeagueActive =
                 pathname === `/league/overview` && currentLeagueId === league.id;
@@ -259,7 +260,27 @@ function SidebarNavigation({
   );
 }
 
-
+// Wrapper component with Suspense boundary
+function SidebarNavigation(props: {
+  onItemClick?: () => void;
+  teams?: SidebarProps['teams'];
+  isLoading?: boolean;
+  isError?: boolean;
+}) {
+  return (
+    <Suspense fallback={
+      <div className='space-y-1'>
+        {/* Loading skeleton for navigation */}
+        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+      </div>
+    }>
+      <SidebarNavigationWithSearchParams {...props} />
+    </Suspense>
+  );
+}
 
 // Mobile Menu Button Component
 export function MobileMenuButton({ onClick }: { onClick: () => void }) {

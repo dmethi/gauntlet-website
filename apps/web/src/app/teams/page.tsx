@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Users } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 interface League {
   id: string;
@@ -48,7 +49,7 @@ async function fetchLeagues(): Promise<LeaguesResponse> {
   return response.json();
 }
 
-export default function TeamsPage() {
+function TeamsPageContent() {
   const searchParams = useSearchParams();
   const leagueIdParam = searchParams.get('leagueId');
 
@@ -291,5 +292,24 @@ export default function TeamsPage() {
         </Card>
       )}
     </Container>
+  );
+}
+
+export default function TeamsPage() {
+  return (
+    <Suspense fallback={
+      <Container>
+        <PageHeader title='Teams' />
+        <div className='animate-pulse'>
+          <div className='h-32 bg-muted rounded-lg mb-4' />
+          <div className='space-y-2'>
+            <div className='h-4 bg-muted rounded w-1/4' />
+            <div className='h-4 bg-muted rounded w-1/2' />
+          </div>
+        </div>
+      </Container>
+    }>
+      <TeamsPageContent />
+    </Suspense>
   );
 }
