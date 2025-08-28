@@ -105,8 +105,38 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
     return (first + last).toUpperCase() || name.slice(0, 2).toUpperCase();
   };
 
+  // Get all owners for this team (primary + co-owners)
+  const getAllOwners = (team: any) => {
+    const owners = [];
+
+    // Add primary owner
+    if (team.owner) {
+      const primaryOwner = team.owner.displayName || team.owner.username || 'Unknown';
+      owners.push(primaryOwner);
+    }
+
+    // Add co-owners
+    if (team.coOwnerDetails && team.coOwnerDetails.length > 0) {
+      team.coOwnerDetails.forEach((coOwner: any) => {
+        const coOwnerName = coOwner.displayName || coOwner.username || 'Unknown Co-owner';
+        owners.push(coOwnerName);
+      });
+    }
+
+    return owners;
+  };
+
+  // Format owners for display
+  const formatOwners = (owners: string[]) => {
+    if (owners.length === 0) return 'Unknown';
+    if (owners.length === 1) return `Owner: ${owners[0]}`;
+    if (owners.length === 2) return `Owners: ${owners[0]} & ${owners[1]}`;
+    return `Owners: ${owners.slice(0, -1).join(', ')} & ${owners[owners.length - 1]}`;
+  };
+
   const name = getTeamName();
-  const ownerName = team.owner?.displayName || team.owner?.username || 'Unknown';
+  const allOwners = getAllOwners(team);
+  const ownersText = formatOwners(allOwners);
   const avatarUrl = getAvatarUrl(team.owner?.avatar);
   const initials = getInitials(name);
 
@@ -125,7 +155,7 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
           <div>
             <PageHeader
               title={`${name} • Stats`}
-              subtitle={`League: ${team.league?.name} • Owner: ${ownerName}`}
+              subtitle={`League: ${team.league?.name} • ${ownersText}`}
             />
           </div>
         </div>

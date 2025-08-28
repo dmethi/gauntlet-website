@@ -30,7 +30,7 @@ export default function Playground() {
           <GauntletLogo size='md' />
           <div className='text-right'>
             <div className='font-bold font-geizer tracking-wide'>THE GAUNTLET</div>
-            <div className='text-xs text-muted-foreground font-avenir'>Medieval Fantasy</div>
+            <div className='text-xs text-muted-foreground font-avenir'>High-Stakes Fantasy</div>
           </div>
         </div>
       </div>
@@ -47,7 +47,9 @@ export default function Playground() {
               <div className='font-bold font-geizer tracking-wide text-6xl mb-4 text-white'>
                 THE GAUNTLET
               </div>
-              <div className='text-2xl text-slate-300 font-avenir'>Medieval Fantasy Football</div>
+              <div className='text-2xl text-slate-300 font-avenir'>
+                High-Stakes Fantasy Football
+              </div>
             </div>
           </CardContent>
         </Card>

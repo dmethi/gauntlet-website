@@ -44,7 +44,22 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });
     }
 
-    return NextResponse.json(roster);
+    // Fetch co-owner details if there are any co-owners
+    let coOwnerDetails: any[] = [];
+    if (roster.coOwners && roster.coOwners.length > 0) {
+      const coOwnerUsers = await prisma.user.findMany({
+        where: { id: { in: roster.coOwners } },
+      });
+      coOwnerDetails = coOwnerUsers;
+    }
+
+    // Add co-owner details to the response
+    const rosterWithCoOwners = {
+      ...roster,
+      coOwnerDetails,
+    };
+
+    return NextResponse.json(rosterWithCoOwners);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('team:[id] error', {

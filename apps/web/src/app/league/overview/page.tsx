@@ -1,15 +1,15 @@
 'use client';
 
 import { LeagueChart } from '@/components/league-chart';
-import { useLeagueData, usePlayoffBracket } from '@/lib/hooks';
+import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp, Download, RefreshCw, Settings } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { PlayoffBracket } from '@/components/playoff-bracket';
 import {
   Table,
   TableBody,
@@ -19,6 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { TransactionList } from '@/components/transactions';
+import { useSearchParams } from 'next/navigation';
 
 const LeagueOverviewLoader = () => (
   <ContentLoader
@@ -44,9 +45,20 @@ const LeagueOverviewLoader = () => (
 );
 
 export default function LeagueOverview() {
-  const { league, loading, teamStats, weeklyAverages } = useLeagueData();
-  const leagueId = league?.id ? String(league.id) : undefined;
-  const { data: playoffBracket } = usePlayoffBracket(leagueId);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const leagueIdParam = searchParams.get('leagueId');
+
+  // Use the appropriate hook based on whether we have a league ID parameter
+  const leagueDataById = leagueIdParam ? useLeagueDataById(leagueIdParam) : null;
+  const leagueDataFallback = !leagueIdParam ? useLeagueData() : null;
+  
+  const { league, loading, teamStats, weeklyAverages } = leagueDataById || leagueDataFallback || {
+    league: null,
+    loading: true,
+    teamStats: [],
+    weeklyAverages: []
+  };
   const [sortKey, setSortKey] = useState<'team' | 'record' | 'points' | 'expectedWins' | 'luck'>(
     'points'
   );
@@ -130,52 +142,22 @@ export default function LeagueOverview() {
     );
   }
 
+  // Division name mapping
+  const getDivisionName = (divisionNum: number | null | undefined) => {
+    const divisionNames = {
+      1: 'North',
+      2: 'South',
+      3: 'East',
+    };
+    return divisionNum
+      ? divisionNames[divisionNum as keyof typeof divisionNames] || `Division ${divisionNum}`
+      : 'N/A';
+  };
+
   return (
     <Container className='py-8'>
-      <div className='flex items-start justify-between mb-8'>
+      <div className='mb-8'>
         <PageHeader title={league.name} subtitle={`Season ${league.season}`} />
-        <div className='flex gap-2 animate-in fade-in-0 duration-300 delay-150'>
-          <Link href='/league/draft'>
-            <Button
-              size='sm'
-              className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
-            >
-              View Draft
-            </Button>
-          </Link>
-          <Button
-            variant='outline'
-            size='sm'
-            className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
-            onClick={() => {
-              /* TODO: Implement data refresh */
-            }}
-          >
-            <RefreshCw className='h-4 w-4 mr-2' />
-            Refresh
-          </Button>
-          <Button
-            variant='outline'
-            size='sm'
-            className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
-            onClick={() => {
-              /* TODO: Implement data export */
-            }}
-          >
-            <Download className='h-4 w-4 mr-2' />
-            Export
-          </Button>
-          <Button
-            variant='outline'
-            size='sm'
-            className='hover:scale-105 active:scale-95 transition-transform duration-200 ease-out motion-reduce:transform-none'
-            onClick={() => {
-              /* TODO: Navigate to settings */
-            }}
-          >
-            <Settings className='h-4 w-4' />
-          </Button>
-        </div>
       </div>
 
       <div className='mb-8'>
@@ -200,6 +182,7 @@ export default function LeagueOverview() {
                       ))}
                   </button>
                 </TableHead>
+                <TableHead className='w-[80px]'>Division</TableHead>
                 <TableHead>
                   <button
                     className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
@@ -268,11 +251,16 @@ export default function LeagueOverview() {
                   key={team.id}
                   className='group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none'
                   onClick={() => {
-                    // TODO: Navigate to team page - this will be implemented when team pages are linked
+                    router.push(`/team/${team.id}`);
                   }}
                 >
                   <TableCell>{team.canonicalRank}</TableCell>
                   <TableCell className='font-medium'>{team.name}</TableCell>
+                  <TableCell>
+                    <Badge variant='outline' className='text-xs'>
+                      {getDivisionName(team.division)}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <Badge variant='secondary'>
                       {team.wins}-{team.losses}
@@ -286,12 +274,6 @@ export default function LeagueOverview() {
             </TableBody>
           </Table>
         </div>
-      </div>
-
-      {/* Playoff Bracket */}
-      <div className='mt-12'>
-        <h2 className='mb-6 text-2xl font-bold'>Playoff Brackets</h2>
-        <PlayoffBracket teams={teamStats} league={league} playoffBracket={playoffBracket} />
       </div>
 
       <div className='mt-12'>

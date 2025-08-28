@@ -1,6 +1,7 @@
 # 🏈 The Gauntlet - Setup & Running Instructions
 
-A high-stakes fantasy football platform with advanced analytics, Monte Carlo simulations, and real-time win probabilities.
+A high-stakes fantasy football platform with advanced analytics, Monte Carlo
+simulations, and real-time win probabilities.
 
 ## 🚀 Quick Start
 
@@ -67,6 +68,7 @@ gauntlet-website/
 ## 🎯 Development Commands
 
 ### Main Commands (run from root)
+
 ```bash
 pnpm dev              # Start all development servers
 pnpm build           # Build all packages and applications
@@ -77,6 +79,7 @@ pnpm clean           # Clean build artifacts
 ```
 
 ### Server Operations
+
 ```bash
 # Data ingestion and processing
 pnpm --filter @gauntlet/server ingest:all
@@ -100,18 +103,21 @@ This project uses a **dual Prisma setup**:
 - **Primary Schema**: `apps/server/prisma/schema.prisma` (authoritative)
 - **Web App Schema**: `apps/web/src/generated/prisma/schema.prisma` (copy)
 
-Both schemas must stay in sync. The setup commands above handle this automatically.
+Both schemas must stay in sync. The setup commands above handle this
+automatically.
 
 ### Environment Variables Required
 
 Create these files with your database connection:
 
 **`apps/server/.env`:**
+
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/gauntlet_db
 ```
 
 **`apps/web/.env.local`:**
+
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/gauntlet_db
 ```
@@ -130,6 +136,7 @@ DATABASE_URL=postgresql://username:password@localhost:5432/gauntlet_db
 After setup, you'll have access to:
 
 ### Web Interface (http://localhost:3000)
+
 - **League Overview**: Team standings, power rankings, playoff odds
 - **Live Matchups**: Real-time win probabilities during games
 - **Team Analytics**: Individual team performance metrics
@@ -138,6 +145,7 @@ After setup, you'll have access to:
 - **Charts & Analytics**: Advanced statistical visualizations
 
 ### API Endpoints
+
 - Real-time win probability calculations
 - Team and player statistics
 - League management operations
@@ -146,6 +154,7 @@ After setup, you'll have access to:
 ## 🚨 Troubleshooting
 
 ### Prisma Client Issues
+
 ```bash
 # Regenerate both Prisma clients
 cd apps/server && npx prisma generate
@@ -153,12 +162,14 @@ cd apps/web && npx prisma generate --schema=src/generated/prisma/schema.prisma
 ```
 
 ### Development Servers Won't Start
+
 1. Ensure PostgreSQL is running locally
 2. Verify DATABASE_URL in both `.env` files
 3. Try `pnpm install` to reinstall dependencies
 4. Check Node.js version (must be ≥18.0.0)
 
 ### Database Connection Issues
+
 1. Create the database: `createdb gauntlet_db`
 2. Run migrations: `cd apps/server && npx prisma migrate dev`
 3. Verify connection string format
@@ -182,19 +193,22 @@ See `DEPLOYMENT_GUIDE.md` for detailed production setup.
 1. **First Time Setup**: Run data ingestion to populate initial data
 2. **Development**: Use `pnpm dev` from root - it starts all necessary services
 3. **Database Changes**: Always edit the primary schema in `apps/server/prisma/`
-4. **Testing Simulations**: Use the playground page to test Monte Carlo simulations
+4. **Testing Simulations**: Use the playground page to test Monte Carlo
+   simulations
 
 ## 📖 Additional Documentation
 
 - `docs/architecture.md` - System architecture overview
-- `docs/chart-color-guidelines.md` - UI design guidelines  
+- `docs/chart-color-guidelines.md` - UI design guidelines
 - `DEPLOYMENT_GUIDE.md` - Production deployment instructions
 - `apps/web/src/app/todos/page.tsx` - Development roadmap and task tracking
 
 ## 🤝 Contributing
 
-This project follows a structured development approach. Check the TODO management system at `/todos` for current priorities and task dependencies.
+This project follows a structured development approach. Check the TODO
+management system at `/todos` for current priorities and task dependencies.
 
 ---
 
-**Built for fantasy football enthusiasts who demand advanced analytics and real-time insights for their high-stakes leagues.**
+**Built for fantasy football enthusiasts who demand advanced analytics and
+real-time insights for their high-stakes leagues.**

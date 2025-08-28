@@ -10,32 +10,58 @@ async function getPrisma() {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const debug = searchParams.has('debug');
+  const leagueId = searchParams.get('leagueId');
+
   try {
     const prisma = await getPrisma();
-    // Fetch league data directly from database
-    // You'll need to adjust this query based on your actual schema
-    const leagues = await prisma.league.findMany({
-      include: {
-        rosters: {
-          include: {
-            owner: true,
-            // Provide matchups used by UI (week + points at minimum)
-            matchups: {
-              select: {
-                week: true,
-                points: true,
-                matchupId: true,
+
+    let league;
+
+    if (leagueId) {
+      // Fetch specific league by ID
+      league = await prisma.league.findUnique({
+        where: { id: leagueId },
+        include: {
+          rosters: {
+            include: {
+              owner: true,
+              // Provide matchups used by UI (week + points at minimum)
+              matchups: {
+                select: {
+                  week: true,
+                  points: true,
+                  matchupId: true,
+                },
               },
+              // Optional metrics if available
+              weeklyMetrics: true,
             },
-            // Optional metrics if available
-            weeklyMetrics: true,
           },
         },
-      },
-    });
-
-    // For now, return the first league (adjust as needed)
-    const league = leagues[0];
+      });
+    } else {
+      // Fallback: return the first league
+      const leagues = await prisma.league.findMany({
+        include: {
+          rosters: {
+            include: {
+              owner: true,
+              // Provide matchups used by UI (week + points at minimum)
+              matchups: {
+                select: {
+                  week: true,
+                  points: true,
+                  matchupId: true,
+                },
+              },
+              // Optional metrics if available
+              weeklyMetrics: true,
+            },
+          },
+        },
+      });
+      league = leagues[0];
+    }
 
     if (!league) {
       return NextResponse.json({ error: 'No league found' }, { status: 404 });

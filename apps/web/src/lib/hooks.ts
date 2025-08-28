@@ -31,6 +31,11 @@ interface Roster extends FantasyTeam {
       team_name: string;
     };
   };
+  coOwnerDetails?: Array<{
+    displayName?: string;
+    username?: string;
+    avatar?: string;
+  }>;
 }
 
 export interface TeamStats {
@@ -44,6 +49,7 @@ export interface TeamStats {
   luckRating: number;
   winPercentage: number;
   canonicalRank: number;
+  division?: number | null;
 }
 
 interface LeagueData extends League {
@@ -183,6 +189,121 @@ export function useLeagueData() {
       };
     }).filter(w => w.averagePoints > 0);
   }, [league]);
+
+  return {
+    league,
+    loading: loading || !seasonal, // Loading if either query is loading or seasonal data not available
+    teamStats,
+    weeklyAverages,
+    seasonal: seasonal?.data,
+  };
+}
+
+// Hook for fetching league data by specific league ID
+const getLeagueDataById = async (leagueId: string): Promise<LeagueData> => {
+  const res = await fetch(`/api/league/overview?leagueId=${leagueId}`);
+  if (!res.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return res.json();
+};
+
+export function useLeagueDataById(leagueId?: string) {
+  const { data: league, isLoading: loading } = useQuery<LeagueData>({
+    queryKey: ['leagueData', leagueId],
+    queryFn: () => getLeagueDataById(leagueId!),
+    enabled: !!leagueId,
+  });
+
+  // Fetch seasonal aggregates for authoritative record data
+  const season = league?.season ? String(league.season) : undefined;
+  const { data: seasonal } = useSeasonalAggregates(leagueId, season);
+
+  const teamStats = useMemo(() => {
+    if (!league || !seasonal?.ok) return [];
+
+    // Create a map of roster aggregates for easier lookup
+    const rosterAggregates = new Map<number, RosterWeekAggregate[]>();
+    seasonal.data.rosterWeekAggregates.forEach(agg => {
+      if (!rosterAggregates.has(agg.rosterId)) {
+        rosterAggregates.set(agg.rosterId, []);
+      }
+      rosterAggregates.get(agg.rosterId)!.push(agg);
+    });
+
+    const teams = (league.rosters || []).map((roster: Roster) => {
+      const aggregates = rosterAggregates.get(Number(roster.id)) || [];
+
+      // Calculate total points from matchups (unchanged)
+      const totalPoints = (roster.matchups || []).reduce(
+        (sum: number, matchup: Matchup) => sum + matchup.points,
+        0
+      );
+
+      // Use authoritative record data from RosterWeekAggregate
+      // Filter to regular season weeks (we'll use dynamic playoff start if available)
+      const playoffStart = Number(league?.playoff_week_start ?? 15);
+      const regularSeasonAggregates = (aggregates || []).filter(
+        agg => agg.week >= 1 && agg.week < playoffStart
+      );
+
+      const wins = (regularSeasonAggregates || []).reduce(
+        (count: number, agg: RosterWeekAggregate) => count + (agg.won ? 1 : 0),
+        0
+      );
+
+      const losses = regularSeasonAggregates.length - wins;
+
+      const expectedWins = (regularSeasonAggregates || []).reduce(
+        (sum: number, agg: RosterWeekAggregate) => sum + (agg.expectedWins ?? 0),
+        0
+      );
+
+      const luckRating = (regularSeasonAggregates || []).reduce(
+        (sum: number, agg: RosterWeekAggregate) => sum + (agg.luck ?? 0),
+        0
+      );
+
+      const name =
+        roster.owner?.metadata?.team_name ||
+        roster.owner?.displayName ||
+        roster.owner?.username ||
+        `Team ${roster.id}`;
+
+      // Extract division from roster settings
+      const division = roster.settings?.division || null;
+
+      return {
+        id: roster.id,
+        name,
+        totalPoints,
+        wins,
+        losses,
+        expectedWins,
+        luckRating,
+        division,
+        canonicalRank: 1, // Will be set below
+      };
+    });
+
+    // Sort by total points (descending) and assign canonical rank
+    const sorted = teams.sort((a, b) => b.totalPoints - a.totalPoints);
+    sorted.forEach((team, index) => {
+      team.canonicalRank = index + 1;
+    });
+
+    return sorted;
+  }, [league, seasonal]);
+
+  const weeklyAverages = useMemo(() => {
+    if (!seasonal?.ok) return [];
+
+    return seasonal.data.leagueWeekSummaries.map(summary => ({
+      week: summary.week,
+      averagePoints: summary.averagePoints,
+      medianPoints: summary.medianPoints,
+    }));
+  }, [seasonal]);
 
   return {
     league,
