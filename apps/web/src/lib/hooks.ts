@@ -23,6 +23,10 @@ interface Roster extends FantasyTeam {
   matchups: Matchup[];
   weeklyMetrics: WeeklyMetric[];
   league: League;
+  settings?: {
+    division?: number;
+    [key: string]: any;
+  };
   owner: {
     displayName: string;
     username: string;
