@@ -382,8 +382,6 @@ function RecentTransactionsWidget({ league }: { league: any }) {
 
       // If we have duplicates, this suggests malformed trade data
       if (duplicatePlayerNames.length > 0) {
-        console.warn(`Trade ${t.id} has duplicate players:`, duplicatePlayerNames);
-
         // For malformed trades, group players by roster and show as separate trade legs
         const playersByRoster = new Map<number, { adds: any[]; drops: any[] }>();
 
@@ -406,7 +404,7 @@ function RecentTransactionsWidget({ league }: { league: any }) {
         cleanedAdds = [];
         cleanedDrops = [];
 
-        playersByRoster.forEach((data, rosterId) => {
+        playersByRoster.forEach((data, _rosterId) => {
           data.adds.forEach((add: any) => {
             const isAlsoDropped = data.drops.some((drop: any) => drop.player === add.player);
             if (!isAlsoDropped) {

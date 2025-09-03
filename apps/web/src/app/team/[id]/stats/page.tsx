@@ -94,7 +94,12 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
     team.owner?.username ||
     `Team ${team.id}`;
 
-  const getAvatarUrl = (avatar?: string | null) => {
+  const getAvatarUrl = () => {
+    // Prioritize team avatar from metadata over user avatar
+    const teamAvatar = (team.owner?.metadata as any)?.avatar;
+    const userAvatar = team.owner?.avatar;
+
+    const avatar = teamAvatar || userAvatar;
     if (!avatar) return undefined;
     if (avatar.startsWith('http')) return avatar;
     return `https://sleepercdn.com/avatars/${avatar}`;
@@ -139,7 +144,7 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
   const name = getTeamName();
   const allOwners = getAllOwners(team);
   const ownersText = formatOwners(allOwners);
-  const avatarUrl = getAvatarUrl(team.owner?.avatar);
+  const avatarUrl = getAvatarUrl();
   const initials = getInitials(name);
 
   return (

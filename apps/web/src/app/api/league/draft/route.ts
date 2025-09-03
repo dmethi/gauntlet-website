@@ -7,10 +7,12 @@ async function getPrisma() {
   return prisma;
 }
 
-export async function GET(_request: Request) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request) {
   try {
     const prisma = await getPrisma();
-    const url = new URL(_request.url);
+    const url = new URL(request.url);
     const debug = url.searchParams.has('debug');
 
     // Get a league context (same approach as overview: first league)

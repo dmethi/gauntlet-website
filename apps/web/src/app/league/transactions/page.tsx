@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Container, PageHeader } from '@gauntlet/ui';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -67,7 +67,7 @@ type RawTxn = {
   }>;
 };
 
-export default function LeagueTransactionsPage() {
+function LeagueTransactionsContent() {
   const searchParams = useSearchParams();
   const leagueIdParam = searchParams.get('leagueId');
 
@@ -1151,5 +1151,19 @@ export default function LeagueTransactionsPage() {
         </DialogContent>
       </Dialog>
     </TooltipProvider>
+  );
+}
+
+export default function LeagueTransactionsPage() {
+  return (
+    <Suspense
+      fallback={
+        <Container className='py-8'>
+          <PageHeader title='Loading...' subtitle='Fetching transactions...' />
+        </Container>
+      }
+    >
+      <LeagueTransactionsContent />
+    </Suspense>
   );
 }

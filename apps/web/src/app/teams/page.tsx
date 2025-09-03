@@ -74,7 +74,12 @@ function TeamsPageContent() {
     roster.owner?.username ||
     `Team ${roster.id}`;
 
-  const getAvatarUrl = (avatar?: string | null) => {
+  const getAvatarUrl = (roster: League['rosters'][number]) => {
+    // Prioritize team avatar from metadata over user avatar
+    const teamAvatar = (roster.owner?.metadata as any)?.avatar;
+    const userAvatar = roster.owner?.avatar;
+
+    const avatar = teamAvatar || userAvatar;
     if (!avatar) return undefined;
     if (avatar.startsWith('http')) return avatar;
     return `https://sleepercdn.com/avatars/${avatar}`;
@@ -232,7 +237,7 @@ function TeamsPageContent() {
                               const name = getTeamName(roster);
                               const allOwners = getAllOwners(roster);
                               const ownersText = formatOwners(allOwners);
-                              const avatarUrl = getAvatarUrl(roster.owner?.avatar);
+                              const avatarUrl = getAvatarUrl(roster);
                               const initials = getInitials(name);
                               const hasMultipleOwners = allOwners.length > 1;
 

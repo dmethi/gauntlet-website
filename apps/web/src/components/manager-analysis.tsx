@@ -245,23 +245,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
     const whiteContrast = contrastRatio(bgLuminance, whiteLuminance);
     const blackContrast = contrastRatio(bgLuminance, blackLuminance);
 
-    // Debug logging only for concentration metrics table
-    if (debugLabel) {
-      console.log(
-        `[CONCENTRATION] ${debugLabel} - Background: ${backgroundColor}, RGB: ${rgb.r},${rgb.g},${rgb.b}, Luminance: ${bgLuminance.toFixed(3)}, White contrast: ${whiteContrast.toFixed(2)}, Black contrast: ${blackContrast.toFixed(2)}`
-      );
-    }
+    // Debug logging only for concentration metrics table (removed console.log for production build)
 
     // Choose the color with better contrast (higher ratio)
     // In dark mode, be more aggressive about using white text for better readability
     const lightModeUseWhite = whiteContrast > blackContrast;
     const darkModeUseWhite = whiteContrast > blackContrast * 0.7; // Lower threshold for dark mode
 
-    if (debugLabel) {
-      console.log(
-        `[CONCENTRATION] ${debugLabel} - Light mode: ${lightModeUseWhite ? 'WHITE' : 'BLACK'}, Dark mode: ${darkModeUseWhite ? 'WHITE' : 'BLACK'} (white: ${whiteContrast.toFixed(2)} vs black: ${blackContrast.toFixed(2)})`
-      );
-    }
+    // Debug logging removed for production build
 
     // Return theme-specific classes for optimal readability
     return lightModeUseWhite
