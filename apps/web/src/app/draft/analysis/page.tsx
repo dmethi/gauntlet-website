@@ -88,15 +88,65 @@ export default function DraftAnalysisPage() {
     return colors[colorIndex];
   };
 
-  // Helper function to get contrasting text color for dark backgrounds
+  // Helper function to get contrasting text color based on luminance calculation
   const getContrastingTextColor = (backgroundColor: string) => {
     // If there's no background color, use default text
     if (!backgroundColor || backgroundColor === 'transparent') {
       return '';
     }
 
-    // For colored backgrounds, use white text for better contrast
-    return 'text-white dark:text-white';
+    // Parse RGB values from hex color
+    const parseRgb = (color: string) => {
+      // Handle rgb() format
+      const rgbMatch = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (rgbMatch) {
+        return {
+          r: parseInt(rgbMatch[1]),
+          g: parseInt(rgbMatch[2]),
+          b: parseInt(rgbMatch[3]),
+        };
+      }
+
+      // Handle hex format
+      const hex = color.replace('#', '');
+      if (hex.length === 6) {
+        return {
+          r: parseInt(hex.substr(0, 2), 16),
+          g: parseInt(hex.substr(2, 2), 16),
+          b: parseInt(hex.substr(4, 2), 16),
+        };
+      }
+
+      // Default to medium gray if parsing fails
+      return { r: 128, g: 128, b: 128 };
+    };
+
+    // Calculate relative luminance using WCAG formula
+    const calculateLuminance = (r: number, g: number, b: number) => {
+      // Convert RGB to sRGB
+      const rsRGB = r / 255;
+      const gsRGB = g / 255;
+      const bsRGB = b / 255;
+
+      // Apply gamma correction
+      const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+      const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+      const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+
+      // Calculate luminance using WCAG coefficients
+      return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+    };
+
+    const rgb = parseRgb(backgroundColor);
+    const luminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
+
+    // Use white text on dark backgrounds (luminance < 0.5), black text on light backgrounds
+    // This threshold provides good contrast for most scenarios
+    if (luminance < 0.5) {
+      return 'text-white dark:text-white';
+    } else {
+      return 'text-black dark:text-black';
+    }
   };
 
   // Helper function for red heatmap colors (for price values)
