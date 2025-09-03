@@ -32,7 +32,7 @@ jobs:
         run: pnpm install -w --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @gauntlet/server exec prisma generate
+        run: cd apps/server && npx prisma generate
 
       - name: Run Daily Data Ingestion
         run: |
