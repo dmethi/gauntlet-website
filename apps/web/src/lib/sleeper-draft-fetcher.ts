@@ -5,6 +5,8 @@
  * the MockDraft format expected by the analytics system.
  */
 
+/* eslint-disable no-console */
+
 import { MockDraft, Player, DraftPick, TeamRoster } from './mock-draft-data';
 
 // Sleeper API interfaces

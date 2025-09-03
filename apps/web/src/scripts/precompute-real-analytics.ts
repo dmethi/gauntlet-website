@@ -7,7 +7,9 @@
  * for instant page loading.
  */
 
-import { writeFileSync, mkdirSync } from 'fs';
+/* eslint-disable no-console */
+
+import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { getRealDrafts } from '../lib/sleeper-draft-fetcher';
 import { generateMockAnalytics } from '../lib/draft-analytics';

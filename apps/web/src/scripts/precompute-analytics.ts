@@ -9,7 +9,9 @@
  * Run with: npx tsx src/scripts/precompute-analytics.ts
  */
 
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
+/* eslint-disable no-console */
+
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { getPreGeneratedDrafts } from '../lib/draft-generator';
 import { generateMockAnalytics } from '../lib/draft-analytics';

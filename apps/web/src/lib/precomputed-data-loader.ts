@@ -5,6 +5,8 @@
  * Falls back to real-time computation if precomputed data is not available.
  */
 
+/* eslint-disable no-console */
+
 import { DraftAnalytics } from './draft-analytics';
 import { ManagerAnalytics } from './manager-analytics';
 import { MockDraft } from './draft-generator';

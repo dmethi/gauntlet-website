@@ -417,40 +417,120 @@ export default function TeamPage({ params }: { params: { id: string } }) {
       <div className='mt-8'>
         <h2 className='mb-4 text-2xl font-bold'>Roster</h2>
         {rosterDetails ? (
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='space-y-6'>
+            {/* Starters */}
+            <div className='rounded-md border border-border bg-card'>
+              <div className='border-b border-border bg-muted/30 px-4 py-3'>
+                <h3 className='text-lg font-semibold flex items-center gap-2'>
+                  <div className='h-2 w-2 bg-green-500 rounded-full'></div>
+                  Starting Lineup ({rosterDetails.starters.length})
+                </h3>
+              </div>
+              <div className='p-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'>
+                  {rosterDetails.starters.map(pid => {
+                    const p = rosterDetails.players.find(pl => pl.id === pid);
+                    if (!p) return null;
+                    
+                    const getPositionColor = (position: string) => {
+                      const colors = {
+                        QB: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
+                        RB: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
+                        WR: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+                        TE: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400',
+                        K: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
+                        DEF: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
+                      };
+                      return colors[position as keyof typeof colors] || colors.DEF;
+                    };
+
+                    return (
+                      <div
+                        key={pid}
+                        className='flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors'
+                      >
+                        <div className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}>
+                          {p.position}
+                        </div>
+                        <div className='flex-1 min-w-0'>
+                          <div className='font-medium text-sm truncate'>{p.fullName}</div>
+                          {p.team && (
+                            <div className='text-xs text-muted-foreground'>{p.team}</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Bench */}
+            <div className='rounded-md border border-border bg-card'>
+              <div className='border-b border-border bg-muted/30 px-4 py-3'>
+                <h3 className='text-lg font-semibold flex items-center gap-2'>
+                  <div className='h-2 w-2 bg-orange-500 rounded-full'></div>
+                  Bench ({rosterDetails.players.filter(pl => !rosterDetails.starters.includes(pl.id)).length})
+                </h3>
+              </div>
+              <div className='p-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'>
+                  {rosterDetails.players
+                    .filter(pl => !rosterDetails.starters.includes(pl.id))
+                    .map(p => {
+                      const getPositionColor = (position: string) => {
+                        const colors = {
+                          QB: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
+                          RB: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
+                          WR: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+                          TE: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400',
+                          K: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
+                          DEF: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
+                        };
+                        return colors[position as keyof typeof colors] || colors.DEF;
+                      };
+
+                      return (
+                        <div
+                          key={p.id}
+                          className='flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors opacity-75'
+                        >
+                          <div className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}>
+                            {p.position}
+                          </div>
+                          <div className='flex-1 min-w-0'>
+                            <div className='font-medium text-sm truncate'>{p.fullName}</div>
+                            {p.team && (
+                              <div className='text-xs text-muted-foreground'>{p.team}</div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+
+            {/* Roster Summary */}
             <div className='rounded-md border border-border bg-card p-4'>
-              <h3 className='text-lg font-semibold mb-2'>Starters</h3>
-              <ul className='space-y-2 text-sm'>
-                {rosterDetails.starters.map(pid => {
-                  const p = rosterDetails.players.find(pl => pl.id === pid);
-                  if (!p) return null;
+              <h3 className='text-lg font-semibold mb-3'>Roster Breakdown</h3>
+              <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center'>
+                {['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(position => {
+                  const positionPlayers = rosterDetails.players.filter(p => p.position === position);
+                  const starters = positionPlayers.filter(p => rosterDetails.starters.includes(p.id)).length;
+                  const bench = positionPlayers.length - starters;
+                  
                   return (
-                    <li key={pid} className='flex items-center justify-between'>
-                      <span className='font-medium'>{p.fullName}</span>
-                      <span className='text-muted-foreground'>
-                        {p.position}
-                        {p.team ? ` • ${p.team}` : ''}
-                      </span>
-                    </li>
+                    <div key={position} className='p-3 rounded-lg bg-muted/30'>
+                      <div className='text-sm font-medium text-muted-foreground'>{position}</div>
+                      <div className='text-lg font-bold'>{positionPlayers.length}</div>
+                      <div className='text-xs text-muted-foreground'>
+                        {starters}S / {bench}B
+                      </div>
+                    </div>
                   );
                 })}
-              </ul>
-            </div>
-            <div className='rounded-md border border-border bg-card p-4'>
-              <h3 className='text-lg font-semibold mb-2'>Bench</h3>
-              <ul className='space-y-2 text-sm'>
-                {rosterDetails.players
-                  .filter(pl => !rosterDetails.starters.includes(pl.id))
-                  .map(p => (
-                    <li key={p.id} className='flex items-center justify-between'>
-                      <span className='font-medium'>{p.fullName}</span>
-                      <span className='text-muted-foreground'>
-                        {p.position}
-                        {p.team ? ` • ${p.team}` : ''}
-                      </span>
-                    </li>
-                  ))}
-              </ul>
+              </div>
             </div>
           </div>
         ) : (
