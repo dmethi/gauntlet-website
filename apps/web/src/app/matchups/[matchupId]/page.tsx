@@ -939,16 +939,18 @@ function MatchupDetailPageContent({ params }: { params: { matchupId: string } })
 
 export default function MatchupDetailPage({ params }: { params: { matchupId: string } }) {
   return (
-    <Suspense fallback={
-      <Container>
-        <PageHeader title='Matchup Details' />
-        <div className='animate-pulse space-y-4'>
-          <div className='h-64 bg-muted rounded-lg' />
-          <div className='h-32 bg-muted rounded-lg' />
-          <div className='h-48 bg-muted rounded-lg' />
-        </div>
-      </Container>
-    }>
+    <Suspense
+      fallback={
+        <Container>
+          <PageHeader title='Matchup Details' />
+          <div className='animate-pulse space-y-4'>
+            <div className='h-64 bg-muted rounded-lg' />
+            <div className='h-32 bg-muted rounded-lg' />
+            <div className='h-48 bg-muted rounded-lg' />
+          </div>
+        </Container>
+      }
+    >
       <MatchupDetailPageContent params={params} />
     </Suspense>
   );

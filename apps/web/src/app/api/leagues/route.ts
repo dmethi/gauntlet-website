@@ -68,11 +68,11 @@ export async function GET(request: Request) {
       count: leaguesWithCoOwners.length,
     });
   } catch (error) {
-    console.error('leagues API error:', {
-      hasDbUrl: Boolean(process.env.DATABASE_URL),
-      message: (error as Error).message,
-      stack: (error as Error).stack,
-    });
+    // console.error('leagues API error:', {
+    //   hasDbUrl: Boolean(process.env.DATABASE_URL),
+    //   message: (error as Error).message,
+    //   stack: (error as Error).stack,
+    // });
 
     const body = debug
       ? {

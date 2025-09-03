@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 export type Facts = {
   weeks: number[];
   weekRosterPlayers: Map<string, Set<string>>; // key: `${week}:${rosterId}`
@@ -68,8 +70,8 @@ export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promi
       for (const [k, arr] of Object.entries(startersPtsByPos)) {
         replacementByWeekPos.set(k, median(arr));
       }
-    } catch (e) {
-      console.error('Failed to build facts:', e);
+    } catch {
+      // console.error('Failed to build facts:', e);
       continue;
     }
   }

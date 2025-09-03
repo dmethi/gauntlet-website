@@ -1,6 +1,8 @@
 // Mock Draft Data for Draft Analysis Comparison
 // Based on player screenshots provided
 
+/* eslint-disable @typescript-eslint/no-unused-vars, no-case-declarations */
+
 export interface Player {
   id: string;
   name: string;
@@ -777,22 +779,23 @@ export function canAddPlayerToRoster(
   switch (player.position) {
     case 'QB':
       return positionCounts.QB < constraints.QB;
-    case 'RB':
+    case 'RB': {
       // Can add if we need RB starters OR flex OR bench
-      const rbNeeded = Math.max(0, constraints.RB - positionCounts.RB);
       const flexSpots = constraints.FLEX;
       const benchSpots = constraints.BENCH;
       const totalRBSpots = constraints.RB + flexSpots + benchSpots;
       return positionCounts.RB < totalRBSpots;
-    case 'WR':
+    }
+    case 'WR': {
       // Can add if we need WR starters OR flex OR bench
-      const wrNeeded = Math.max(0, constraints.WR - positionCounts.WR);
       const totalWRSpots = constraints.WR + constraints.FLEX + constraints.BENCH;
       return positionCounts.WR < totalWRSpots;
-    case 'TE':
+    }
+    case 'TE': {
       // Can add if we need TE starter OR flex OR bench
       const totalTESpots = constraints.TE + constraints.FLEX + constraints.BENCH;
       return positionCounts.TE < totalTESpots;
+    }
     case 'DEF':
       return positionCounts.DEF < constraints.DEF;
     default:

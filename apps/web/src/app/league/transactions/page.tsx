@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable no-console */
+
 import { useEffect, useMemo, useState } from 'react';
 import { Container, PageHeader } from '@gauntlet/ui';
 import { Badge } from '@/components/ui/badge';

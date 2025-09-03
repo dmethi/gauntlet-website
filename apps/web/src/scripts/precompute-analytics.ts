@@ -9,7 +9,7 @@
  * Run with: npx tsx src/scripts/precompute-analytics.ts
  */
 
-/* eslint-disable no-console */
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';

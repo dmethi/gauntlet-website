@@ -7,7 +7,7 @@
 
 /* eslint-disable no-console */
 
-import { MockDraft, Player, DraftPick, TeamRoster } from './mock-draft-data';
+import { DraftPick, MockDraft, Player, TeamRoster } from './mock-draft-data';
 
 // Sleeper API interfaces
 interface SleeperPlayer {
@@ -154,7 +154,12 @@ class SleeperDraftFetcher {
     return {
       id: sleeperPlayer.player_id,
       name: sleeperPlayer.full_name || `${sleeperPlayer.first_name} ${sleeperPlayer.last_name}`,
-      position: sleeperPlayer.fantasy_positions?.[0] || sleeperPlayer.position || 'FLEX',
+      position: (sleeperPlayer.fantasy_positions?.[0] || sleeperPlayer.position || 'DEF') as
+        | 'QB'
+        | 'RB'
+        | 'WR'
+        | 'TE'
+        | 'DEF',
       team: sleeperPlayer.team || 'FA',
       aav: aav, // Will be calculated based on draft position or auction price
       rank: rank,
@@ -270,25 +275,31 @@ class SleeperDraftFetcher {
       }
 
       // Transform picks
-      const transformedPicks: DraftPick[] = teamPicks.map((pick, index) => {
+      const transformedPicks: DraftPick[] = teamPicks.map((pick, _index) => {
         const sleeperPlayer = allPlayers[pick.player_id];
 
         if (!sleeperPlayer) {
           console.warn(`⚠️ Player not found: ${pick.player_id}`);
+          const actualPrice = this.calculatePrice(draftInfo.type, pick, teamPicks.length);
           return {
             playerId: pick.player_id,
             player: {
               id: pick.player_id,
               name: 'Unknown Player',
-              position: 'FLEX',
+              position: 'DEF' as 'QB' | 'RB' | 'WR' | 'TE' | 'DEF',
               team: 'FA',
               aav: 1,
               rank: 999,
             },
-            actualPrice: this.calculatePrice(draftInfo.type, pick, teamPicks.length),
+            teamId: rosterId,
+            teamName: teamName,
+            actualPrice: actualPrice,
             pickNumber: pick.pick_no,
             round: pick.round,
-            valueOverAAV: 0,
+            pickInRound: pick.pick_no % 12 || 12, // Calculate pick in round
+            aavAtTime: 1,
+            valueOverAAV: actualPrice - 1,
+            percentageOfAAV: (actualPrice / 1) * 100,
           };
         }
 
@@ -304,10 +315,15 @@ class SleeperDraftFetcher {
         return {
           playerId: pick.player_id,
           player: player,
+          teamId: rosterId,
+          teamName: teamName,
           actualPrice: actualPrice,
           pickNumber: pick.pick_no,
           round: pick.round,
-          valueOverAAV: 0, // Will be calculated later if needed
+          pickInRound: pick.pick_no % 12 || 12, // Calculate pick in round
+          aavAtTime: player.aav,
+          valueOverAAV: actualPrice - player.aav,
+          percentageOfAAV: (actualPrice / Math.max(player.aav, 1)) * 100,
         };
       });
 
@@ -324,11 +340,17 @@ class SleeperDraftFetcher {
       }
 
       teams.push({
-        teamId: rosterId.toString(),
+        teamId: rosterId,
         teamName: teamName,
         picks: transformedPicks,
         totalSpent: totalSpent,
-        starters: [], // Will be populated by inferStarters
+        budget: 200, // Standard auction budget
+        remaining: 200 - totalSpent,
+        qb: transformedPicks.filter(p => p.player.position === 'QB'),
+        rb: transformedPicks.filter(p => p.player.position === 'RB'),
+        wr: transformedPicks.filter(p => p.player.position === 'WR'),
+        te: transformedPicks.filter(p => p.player.position === 'TE'),
+        flex: [], // Will be populated by inferStarters
         bench: [], // Will be populated by inferStarters
         def: transformedPicks.filter(p => p.player.position === 'DEF'),
       });
@@ -346,7 +368,7 @@ class SleeperDraftFetcher {
   /**
    * Calculate price based on draft type
    */
-  private calculatePrice(draftType: string, pick: SleeperDraftPick, teamSize: number): number {
+  private calculatePrice(draftType: string, pick: SleeperDraftPick, _teamSize: number): number {
     if (draftType === 'auction') {
       // For auction drafts, try to extract price from metadata
       const raw =

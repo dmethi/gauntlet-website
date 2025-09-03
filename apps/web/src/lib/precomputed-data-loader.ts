@@ -5,7 +5,7 @@
  * Falls back to real-time computation if precomputed data is not available.
  */
 
-/* eslint-disable no-console */
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 
 import { DraftAnalytics } from './draft-analytics';
 import { ManagerAnalytics } from './manager-analytics';

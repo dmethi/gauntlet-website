@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,35 +23,20 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { MockDraft } from '@/lib/draft-generator';
+import { getPreGeneratedDrafts } from '@/lib/draft-generator';
 import { DraftAnalytics, generateMockAnalytics } from '@/lib/draft-analytics';
-import { generateManagerAnalytics, ManagerAnalytics } from '@/lib/manager-analytics';
+import { ManagerAnalytics, generateManagerAnalytics } from '@/lib/manager-analytics';
 import {
   getPrecomputedAnalytics,
-  getPrecomputedDrafts,
   getPrecomputedManagerAnalytics,
 } from '@/lib/precomputed-data-loader';
 import { PositionalCurvesChart } from '@/components/charts/positional-curves-chart';
 import { ManagerAnalysis } from '@/components/manager-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
-import {
-  BarChart3,
-  Filter,
-  Shuffle,
-  Trophy,
-  TrendingDown,
-  TrendingUp,
-  Users,
-} from 'lucide-react';
+import { BarChart3, Filter, Shuffle, Trophy, Users } from 'lucide-react';
 
 export default function DraftAnalysisPage() {
   const [drafts, setDrafts] = useState(() => {
-    const precomputed = getPrecomputedDrafts();
-    if (precomputed) {
-      console.log('⚡ Using precomputed draft data');
-      return [precomputed.draft1, precomputed.draft2];
-    }
-    console.log('🐌 Generating draft data (consider running precompute script)');
     return getPreGeneratedDrafts();
   });
 
@@ -70,24 +55,28 @@ export default function DraftAnalysisPage() {
 
   // Load analytics
   useEffect(() => {
-    const precomputedLeagueAnalytics = getPrecomputedAnalytics();
-    const precomputedManagerAnalytics = getPrecomputedManagerAnalytics();
+    async function loadAnalytics() {
+      const precomputedLeagueAnalytics = await getPrecomputedAnalytics();
+      const precomputedManagerAnalytics = await getPrecomputedManagerAnalytics();
 
-    if (precomputedLeagueAnalytics && precomputedManagerAnalytics) {
-      console.log('⚡ Using precomputed analytics (instant load)');
-      setAnalytics(precomputedLeagueAnalytics);
-      setManagerAnalytics(precomputedManagerAnalytics);
-    } else {
-      console.log('🐌 Generating analytics on demand...');
-      const startTime = Date.now();
-      const leagueAnalytics = generateMockAnalytics(draft1, draft2);
-      const managerAnalytics = generateManagerAnalytics(draft1, draft2);
-      const endTime = Date.now();
+      if (precomputedLeagueAnalytics && precomputedManagerAnalytics) {
+        console.log('⚡ Using precomputed analytics (instant load)');
+        setAnalytics(precomputedLeagueAnalytics);
+        setManagerAnalytics(precomputedManagerAnalytics);
+      } else {
+        console.log('🐌 Generating analytics on demand...');
+        const startTime = Date.now();
+        const leagueAnalytics = generateMockAnalytics(draft1, draft2);
+        const managerAnalytics = generateManagerAnalytics(draft1, draft2);
+        const endTime = Date.now();
 
-      console.log(`⏱️ Analytics generated in ${endTime - startTime}ms`);
-      setAnalytics(leagueAnalytics);
-      setManagerAnalytics(managerAnalytics);
+        console.log(`⏱️ Analytics generated in ${endTime - startTime}ms`);
+        setAnalytics(leagueAnalytics);
+        setManagerAnalytics(managerAnalytics);
+      }
     }
+
+    loadAnalytics();
   }, [draft1, draft2]);
 
   const regenerateDrafts = () => {
@@ -116,8 +105,6 @@ export default function DraftAnalysisPage() {
     if (value > -5) return 'text-orange-500 dark:text-orange-400';
     return 'text-red-500 dark:text-red-400';
   };
-
-
 
   return (
     <div className='relative'>

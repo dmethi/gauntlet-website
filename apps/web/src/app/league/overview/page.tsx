@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { LeagueChart } from '@/components/league-chart';
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';

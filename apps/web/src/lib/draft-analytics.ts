@@ -525,7 +525,7 @@ export function generateMockAnalytics(draft1: MockDraft, draft2: MockDraft): Dra
     });
 
     // Find notable nomination order differences
-    const notableDifferences = [];
+    const notableDifferences: any[] = [];
     picks1.forEach(pick1 => {
       const pick2 = picks2.find(p => p.playerId === pick1.playerId);
       if (pick2) {

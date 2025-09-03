@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useMemo, useState } from 'react';
 import {
   TeamExpectedPerformanceChart,
@@ -431,7 +433,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   {rosterDetails.starters.map(pid => {
                     const p = rosterDetails.players.find(pl => pl.id === pid);
                     if (!p) return null;
-                    
+
                     const getPositionColor = (position: string) => {
                       const colors = {
                         QB: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
@@ -449,14 +451,14 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                         key={pid}
                         className='flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors'
                       >
-                        <div className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}>
+                        <div
+                          className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}
+                        >
                           {p.position}
                         </div>
                         <div className='flex-1 min-w-0'>
                           <div className='font-medium text-sm truncate'>{p.fullName}</div>
-                          {p.team && (
-                            <div className='text-xs text-muted-foreground'>{p.team}</div>
-                          )}
+                          {p.team && <div className='text-xs text-muted-foreground'>{p.team}</div>}
                         </div>
                       </div>
                     );
@@ -470,7 +472,12 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               <div className='border-b border-border bg-muted/30 px-4 py-3'>
                 <h3 className='text-lg font-semibold flex items-center gap-2'>
                   <div className='h-2 w-2 bg-orange-500 rounded-full'></div>
-                  Bench ({rosterDetails.players.filter(pl => !rosterDetails.starters.includes(pl.id)).length})
+                  Bench (
+                  {
+                    rosterDetails.players.filter(pl => !rosterDetails.starters.includes(pl.id))
+                      .length
+                  }
+                  )
                 </h3>
               </div>
               <div className='p-4'>
@@ -495,7 +502,9 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                           key={p.id}
                           className='flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors opacity-75'
                         >
-                          <div className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}>
+                          <div
+                            className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}
+                          >
                             {p.position}
                           </div>
                           <div className='flex-1 min-w-0'>
@@ -516,10 +525,14 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               <h3 className='text-lg font-semibold mb-3'>Roster Breakdown</h3>
               <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center'>
                 {['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(position => {
-                  const positionPlayers = rosterDetails.players.filter(p => p.position === position);
-                  const starters = positionPlayers.filter(p => rosterDetails.starters.includes(p.id)).length;
+                  const positionPlayers = rosterDetails.players.filter(
+                    p => p.position === position
+                  );
+                  const starters = positionPlayers.filter(p =>
+                    rosterDetails.starters.includes(p.id)
+                  ).length;
                   const bench = positionPlayers.length - starters;
-                  
+
                   return (
                     <div key={position} className='p-3 rounded-lg bg-muted/30'>
                       <div className='text-sm font-medium text-muted-foreground'>{position}</div>

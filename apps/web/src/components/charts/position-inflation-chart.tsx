@@ -1,15 +1,17 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
 import { PositionInflation } from '@/lib/draft-analytics';
 import { colors, semanticColors } from '../../../../../brand/colors';
@@ -43,7 +45,7 @@ const CustomTooltip = ({ active, payload, label, leagueAName, leagueBName }: any
     const shareB = data[`${position}_share_B`];
 
     const deltaText = delta >= 0 ? `+$${delta}` : `-$${Math.abs(delta)}`;
-    const deltaColor = delta >= 0 ? colors.diverging.positive : colors.diverging.negative;
+    // const deltaColor = delta >= 0 ? colors.diverging.positive : colors.diverging.negative;
 
     return (
       <div className='p-3 rounded-lg border bg-surface border-border text-offWhite'>

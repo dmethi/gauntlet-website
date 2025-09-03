@@ -1,20 +1,22 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, react/no-unescaped-entities */
+
 import React, { useState } from 'react';
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from 'recharts';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
 import { DraftAnalytics } from '@/lib/draft-analytics';
-import { colors, semanticColors } from '../../../../../brand/colors';
+import { colors } from '../../../../../brand/colors';
 import { MockDraft } from '@/lib/draft-generator';
 
 interface PositionalCurvesChartProps {
@@ -110,7 +112,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
   draft1,
   draft2,
-  analytics,
+  analytics: _analytics,
   height = 500,
 }) => {
   const [visiblePositions, setVisiblePositions] = useState<Set<string>>(

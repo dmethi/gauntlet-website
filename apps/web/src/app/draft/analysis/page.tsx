@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,10 +23,10 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { MockDraft } from '@/lib/draft-generator';
+import { MockDraft, getPreGeneratedDrafts } from '@/lib/draft-generator';
 import { getRealDrafts } from '@/lib/sleeper-draft-fetcher';
 import { DraftAnalytics, generateMockAnalytics } from '@/lib/draft-analytics';
-import { generateManagerAnalytics, inferStarters, ManagerAnalytics } from '@/lib/manager-analytics';
+import { ManagerAnalytics, generateManagerAnalytics, inferStarters } from '@/lib/manager-analytics';
 import {
   getPrecomputedAnalytics,
   getPrecomputedDrafts,
@@ -35,14 +35,7 @@ import {
 import { PositionalCurvesChart } from '@/components/charts/positional-curves-chart';
 import { ManagerAnalysis } from '@/components/manager-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
-import {
-  BarChart3,
-  Filter,
-  Trophy,
-  TrendingDown,
-  TrendingUp,
-  Users,
-} from 'lucide-react';
+import { BarChart3, Filter, Trophy, Users } from 'lucide-react';
 
 export default function DraftAnalysisPage() {
   // All useState hooks must be at the top, before any conditional logic
@@ -93,6 +86,17 @@ export default function DraftAnalysisPage() {
 
     const colorIndex = Math.floor(normalizedValue * (colors.length - 1));
     return colors[colorIndex];
+  };
+
+  // Helper function to get contrasting text color for dark backgrounds
+  const getContrastingTextColor = (backgroundColor: string) => {
+    // If there's no background color, use default text
+    if (!backgroundColor || backgroundColor === 'transparent') {
+      return '';
+    }
+
+    // For colored backgrounds, use white text for better contrast
+    return 'text-white dark:text-white';
   };
 
   // Helper function for red heatmap colors (for price values)
@@ -218,8 +222,8 @@ export default function DraftAnalysisPage() {
       },
       {
         root: null,
-        rootMargin: '-120px 0px -60% 0px',
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+        rootMargin: '-80px 0px -70% 0px',
+        threshold: 0.1,
       }
     );
 
@@ -280,8 +284,6 @@ export default function DraftAnalysisPage() {
     };
     return colors[position as keyof typeof colors] || colors.DEF;
   };
-
-
 
   return (
     <div className='relative'>
@@ -492,7 +494,9 @@ export default function DraftAnalysisPage() {
                                     </div>
                                   </TableCell>
                                   <TableCell
-                                    className='text-right font-medium'
+                                    className={`text-right font-medium ${getContrastingTextColor(
+                                      getRedHeatmapColor(pos.avg_raw_A, minAfcValue, maxAfcValue)
+                                    )}`}
                                     style={{
                                       backgroundColor: getRedHeatmapColor(
                                         pos.avg_raw_A,
@@ -504,7 +508,9 @@ export default function DraftAnalysisPage() {
                                     ${pos.avg_raw_A}
                                   </TableCell>
                                   <TableCell
-                                    className='text-right font-medium'
+                                    className={`text-right font-medium ${getContrastingTextColor(
+                                      getRedHeatmapColor(pos.avg_raw_B, minNfcValue, maxNfcValue)
+                                    )}`}
                                     style={{
                                       backgroundColor: getRedHeatmapColor(
                                         pos.avg_raw_B,
@@ -516,7 +522,11 @@ export default function DraftAnalysisPage() {
                                     ${pos.avg_raw_B}
                                   </TableCell>
                                   <TableCell
-                                    className='text-right font-medium'
+                                    className={`text-right font-medium ${getContrastingTextColor(
+                                      pos.delta_avg_raw !== 0
+                                        ? getRdYlGnColorForDiff(pos.delta_avg_raw, -10, 10)
+                                        : 'transparent'
+                                    )}`}
                                     style={{
                                       backgroundColor:
                                         pos.delta_avg_raw !== 0
@@ -527,7 +537,11 @@ export default function DraftAnalysisPage() {
                                     {pos.delta_avg_raw >= 0 ? '+' : ''}${pos.delta_avg_raw}
                                   </TableCell>
                                   <TableCell
-                                    className='text-right font-medium'
+                                    className={`text-right font-medium ${getContrastingTextColor(
+                                      percentDiff !== 0
+                                        ? getRdYlGnColorForDiff(percentDiff, -50, 50)
+                                        : 'transparent'
+                                    )}`}
                                     style={{
                                       backgroundColor:
                                         percentDiff !== 0
@@ -598,7 +612,13 @@ export default function DraftAnalysisPage() {
                                                         {quartile.label} ({quartile.count} players)
                                                       </td>
                                                       <td
-                                                        className='text-right text-sm py-1.5 pr-6 font-medium'
+                                                        className={`text-right text-sm py-1.5 pr-6 font-medium ${getContrastingTextColor(
+                                                          getRedHeatmapColor(
+                                                            quartile.avgPrice,
+                                                            minQuartileAfcValue,
+                                                            maxQuartileAfcValue
+                                                          )
+                                                        )}`}
                                                         style={{
                                                           backgroundColor: getRedHeatmapColor(
                                                             quartile.avgPrice,
@@ -610,7 +630,13 @@ export default function DraftAnalysisPage() {
                                                         ${Math.round(quartile.avgPrice)}
                                                       </td>
                                                       <td
-                                                        className='text-right text-sm py-1.5 pr-6 font-medium'
+                                                        className={`text-right text-sm py-1.5 pr-6 font-medium ${getContrastingTextColor(
+                                                          getRedHeatmapColor(
+                                                            correspondingB?.avgPrice || 0,
+                                                            minQuartileNfcValue,
+                                                            maxQuartileNfcValue
+                                                          )
+                                                        )}`}
                                                         style={{
                                                           backgroundColor: getRedHeatmapColor(
                                                             correspondingB?.avgPrice || 0,
@@ -622,7 +648,11 @@ export default function DraftAnalysisPage() {
                                                         ${Math.round(correspondingB?.avgPrice || 0)}
                                                       </td>
                                                       <td
-                                                        className='text-right text-sm py-1.5 pr-6 font-medium'
+                                                        className={`text-right text-sm py-1.5 pr-6 font-medium ${getContrastingTextColor(
+                                                          qDiff !== 0
+                                                            ? getRdYlGnColorForDiff(qDiff, -10, 10)
+                                                            : 'transparent'
+                                                        )}`}
                                                         style={{
                                                           backgroundColor:
                                                             qDiff !== 0
@@ -637,7 +667,15 @@ export default function DraftAnalysisPage() {
                                                         {qDiff >= 0 ? '+' : ''}${Math.round(qDiff)}
                                                       </td>
                                                       <td
-                                                        className='text-right text-sm py-1.5 pr-6 font-medium'
+                                                        className={`text-right text-sm py-1.5 pr-6 font-medium ${getContrastingTextColor(
+                                                          qPercentDiff !== 0
+                                                            ? getRdYlGnColorForDiff(
+                                                                qPercentDiff,
+                                                                -50,
+                                                                50
+                                                              )
+                                                            : 'transparent'
+                                                        )}`}
                                                         style={{
                                                           backgroundColor:
                                                             qPercentDiff !== 0
@@ -768,7 +806,9 @@ export default function DraftAnalysisPage() {
                                     {starters.map(pick => (
                                       <div
                                         key={`${draft1.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className='flex items-center justify-between rounded p-1'
+                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
+                                          getHeatmapColor(pick.actualPrice)
+                                        )}`}
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
@@ -796,7 +836,9 @@ export default function DraftAnalysisPage() {
                                     {bench.map(pick => (
                                       <div
                                         key={`${draft1.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className='flex items-center justify-between rounded p-1'
+                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
+                                          getHeatmapColor(pick.actualPrice)
+                                        )}`}
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
@@ -873,7 +915,9 @@ export default function DraftAnalysisPage() {
                                     {starters.map(pick => (
                                       <div
                                         key={`${draft2.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className='flex items-center justify-between rounded p-1'
+                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
+                                          getHeatmapColor(pick.actualPrice)
+                                        )}`}
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
@@ -901,7 +945,9 @@ export default function DraftAnalysisPage() {
                                     {bench.map(pick => (
                                       <div
                                         key={`${draft2.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className='flex items-center justify-between rounded p-1'
+                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
+                                          getHeatmapColor(pick.actualPrice)
+                                        )}`}
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}

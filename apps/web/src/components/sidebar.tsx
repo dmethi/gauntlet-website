@@ -1,7 +1,17 @@
 'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';
-import { CheckSquare, ChevronDown, ChevronRight, Home, Menu, Trophy, Users, X } from 'lucide-react';
+import {
+  BarChart3,
+  CheckSquare,
+  ChevronDown,
+  ChevronRight,
+  Home,
+  Menu,
+  Trophy,
+  Users,
+  X,
+} from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -252,6 +262,20 @@ function SidebarNavigationWithSearchParams({
         <span className='flex-1 text-left'>TODOs</span>
       </Link>
 
+      {/* Draft Analysis */}
+      <Link
+        href='/draft/analysis'
+        onClick={onItemClick}
+        className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left transition-all duration-200 ease ${
+          pathname === '/draft/analysis'
+            ? 'bg-gauntlet-crimson text-white shadow-sm'
+            : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
+        } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
+      >
+        <BarChart3 className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
+        <span className='flex-1 text-left'>Draft Analysis</span>
+      </Link>
+
       {/* Theme Toggle */}
       <div className='pt-2'>
         <ThemeToggle />
@@ -268,15 +292,17 @@ function SidebarNavigation(props: {
   isError?: boolean;
 }) {
   return (
-    <Suspense fallback={
-      <div className='space-y-1'>
-        {/* Loading skeleton for navigation */}
-        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
-        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
-        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
-        <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className='space-y-1'>
+          {/* Loading skeleton for navigation */}
+          <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+          <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+          <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+          <div className='px-3 py-2 rounded-md h-[44px] bg-muted/20 animate-pulse' />
+        </div>
+      }
+    >
       <SidebarNavigationWithSearchParams {...props} />
     </Suspense>
   );
