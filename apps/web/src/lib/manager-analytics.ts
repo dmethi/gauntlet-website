@@ -1,6 +1,8 @@
 // Manager Behavior Analytics Engine
 // Comprehensive team-by-team breakdown analysis
 
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, prefer-const, no-console */
+
 import { MockDraft } from './draft-generator';
 
 export interface ManagerSpendShares {

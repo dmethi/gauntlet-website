@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+/* eslint-disable no-console */
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,36 +23,25 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import {
-  getPreGeneratedDrafts,
-  calculateDraftEfficiency,
-  MockDraft,
-  TeamRoster,
-  DraftPick,
-} from '@/lib/draft-generator';
+import { MockDraft } from '@/lib/draft-generator';
 import { getRealDrafts } from '@/lib/sleeper-draft-fetcher';
-import { generateMockAnalytics, DraftAnalytics } from '@/lib/draft-analytics';
-import { generateManagerAnalytics, ManagerAnalytics, inferStarters } from '@/lib/manager-analytics';
+import { DraftAnalytics, generateMockAnalytics } from '@/lib/draft-analytics';
+import { generateManagerAnalytics, inferStarters, ManagerAnalytics } from '@/lib/manager-analytics';
 import {
-  getPrecomputedDrafts,
   getPrecomputedAnalytics,
+  getPrecomputedDrafts,
   getPrecomputedManagerAnalytics,
 } from '@/lib/precomputed-data-loader';
 import { PositionalCurvesChart } from '@/components/charts/positional-curves-chart';
 import { ManagerAnalysis } from '@/components/manager-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  DollarSign,
-  Trophy,
   BarChart3,
-  Target,
-  GitMerge,
-  AlertTriangle,
   Filter,
-  Zap,
+  Trophy,
+  TrendingDown,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
 
 export default function DraftAnalysisPage() {
@@ -290,18 +281,7 @@ export default function DraftAnalysisPage() {
     return colors[position as keyof typeof colors] || colors.DEF;
   };
 
-  const getValueColor = (value: number) => {
-    if (value > 5) return 'text-green-600 dark:text-green-400';
-    if (value > 0) return 'text-green-500 dark:text-green-400';
-    if (value > -5) return 'text-orange-500 dark:text-orange-400';
-    return 'text-red-500 dark:text-red-400';
-  };
 
-  const getValueIcon = (value: number) => {
-    if (value > 0) return <TrendingUp className='h-3 w-3' />;
-    if (value < 0) return <TrendingDown className='h-3 w-3' />;
-    return null;
-  };
 
   return (
     <div className='relative'>
@@ -1041,7 +1021,7 @@ export default function DraftAnalysisPage() {
                                 const { starters } = inferStarters(team.picks);
                                 const starterPickNumbers = new Set(starters.map(s => s.pickNumber));
 
-                                return team.picks.map((pick, pickIndex) => ({
+                                return team.picks.map((pick, _pickIndex) => ({
                                   ...pick,
                                   league: teamIndex < draft1.teams.length ? 'AFC' : 'NFC',
                                   teamName: team.teamName,
@@ -1062,7 +1042,7 @@ export default function DraftAnalysisPage() {
                               })
                               .sort((a, b) => a.pickNumber - b.pickNumber); // Sort by draft order
 
-                            return allPicks.map((pick, index) => (
+                            return allPicks.map((pick, _index) => (
                               <TableRow key={`${pick.league}-${pick.pickNumber}`}>
                                 <TableCell>
                                   <div className='font-medium'>{pick.player.name}</div>

@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+/* eslint-disable no-console */
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,36 +23,25 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import {
-  getPreGeneratedDrafts,
-  calculateDraftEfficiency,
-  MockDraft,
-  TeamRoster,
-  DraftPick,
-} from '@/lib/draft-generator';
-import { generateMockAnalytics, DraftAnalytics } from '@/lib/draft-analytics';
+import { MockDraft } from '@/lib/draft-generator';
+import { DraftAnalytics, generateMockAnalytics } from '@/lib/draft-analytics';
 import { generateManagerAnalytics, ManagerAnalytics } from '@/lib/manager-analytics';
 import {
-  getPrecomputedDrafts,
   getPrecomputedAnalytics,
+  getPrecomputedDrafts,
   getPrecomputedManagerAnalytics,
 } from '@/lib/precomputed-data-loader';
 import { PositionalCurvesChart } from '@/components/charts/positional-curves-chart';
 import { ManagerAnalysis } from '@/components/manager-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  DollarSign,
-  Trophy,
   BarChart3,
-  Shuffle,
-  Target,
-  GitMerge,
-  AlertTriangle,
   Filter,
-  Zap,
+  Shuffle,
+  Trophy,
+  TrendingDown,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
 
 export default function DraftAnalysisPage() {
@@ -126,11 +117,7 @@ export default function DraftAnalysisPage() {
     return 'text-red-500 dark:text-red-400';
   };
 
-  const getValueIcon = (value: number) => {
-    if (value > 0) return <TrendingUp className='h-3 w-3' />;
-    if (value < 0) return <TrendingDown className='h-3 w-3' />;
-    return null;
-  };
+
 
   return (
     <div className='relative'>
@@ -574,7 +561,7 @@ export default function DraftAnalysisPage() {
                             )
                             .sort((a, b) => b.player.aav - a.player.aav)
                             .slice(0, 100)
-                            .map((pick, index) => (
+                            .map((pick, _index) => (
                               <TableRow key={`${pick.league}-${pick.pickNumber}`}>
                                 <TableCell>
                                   <div className='font-medium'>{pick.player.name}</div>

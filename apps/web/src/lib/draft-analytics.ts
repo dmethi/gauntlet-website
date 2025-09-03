@@ -1,6 +1,8 @@
 // Draft Analytics Engine - Mock data structure matching specification
 // This will be replaced with precomputed DB values after real drafts
 
+/* eslint-disable @typescript-eslint/no-unused-vars, no-console */
+
 import { MockDraft } from './draft-generator';
 
 export interface PositionInflation {

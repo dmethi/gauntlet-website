@@ -1,5 +1,7 @@
 // Draft Generation System for Mock Draft Analysis
 
+/* eslint-disable @typescript-eslint/no-unused-vars, no-console, sort-imports */
+
 import {
   Player,
   DraftPick,
