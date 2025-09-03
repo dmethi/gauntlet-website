@@ -107,6 +107,7 @@ export function TransactionList({ items }: { items: TransactionViewModel[] }) {
 // Adapter for team page league transactions → view model
 export function TeamTransactionsList({
   transactions,
+  league,
 }: {
   transactions: Array<{
     id: string;
@@ -117,18 +118,64 @@ export function TeamTransactionsList({
     drops?: Array<{ rosterId: number; players: Array<{ fullName: string }> }>;
     settings?: { waiver_bid?: number } | null;
   }>;
+  league?: {
+    rosters?: Array<{
+      id: string | number;
+      owner?: {
+        metadata?: { team_name?: string };
+        displayName?: string;
+        username?: string;
+      };
+    }>;
+  };
 }) {
+  // Create roster ID to team name mapping (with reverse mapping for original IDs)
+  const rosterMap = new Map<number, string>();
+  if (league?.rosters) {
+    league.rosters.forEach((r: any) => {
+      const name =
+        r?.owner?.metadata?.team_name ||
+        r?.owner?.displayName ||
+        r?.owner?.username ||
+        `Team ${r.id}`;
+      // Map unique roster ID (e.g., 1001, 2001)
+      rosterMap.set(Number(r.id), name);
+
+      // Map original Sleeper ID: AFC 1001-1012 -> 1-12, NFC 2001-2012 -> 1-12
+      const rosterId = Number(r.id);
+      let originalId: number;
+      if (rosterId >= 2000) {
+        originalId = rosterId - 2000; // NFC: 2001 -> 1, 2012 -> 12
+      } else if (rosterId >= 1000) {
+        originalId = rosterId - 1000; // AFC: 1001 -> 1, 1012 -> 12
+      } else {
+        originalId = rosterId; // Fallback for old IDs
+      }
+      rosterMap.set(originalId, name);
+    });
+  }
+
   const items: TransactionViewModel[] = (transactions || []).map(t => ({
     id: t.id,
     type: t.type,
     status: t.status,
     createdAt: t.createdAt,
     adds:
-      t.adds?.flatMap(a => a.players.map(p => ({ label: p.fullName }))).filter(Boolean) ??
-      undefined,
+      t.adds
+        ?.flatMap(a =>
+          a.players.map(p => ({
+            label: `${p.fullName} to ${rosterMap.get(a.rosterId) || `Team ${a.rosterId}`}`,
+          }))
+        )
+        .filter(Boolean) ?? undefined,
     drops:
-      t.drops?.flatMap(d => d.players.map(p => ({ label: p.fullName }))).filter(Boolean) ??
-      undefined,
+      t.drops
+        ?.flatMap(d =>
+          d.players.map(p => ({
+            label: `${p.fullName} from ${rosterMap.get(d.rosterId) || `Team ${d.rosterId}`}`,
+          }))
+        )
+        .filter(Boolean) ?? undefined,
     waiverBid: t.settings?.waiver_bid ?? null,
   }));
   return <TransactionList items={items} />;

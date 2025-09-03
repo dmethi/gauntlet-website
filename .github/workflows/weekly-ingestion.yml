@@ -1,0 +1,82 @@
+name: Weekly Data Ingestion
+
+on:
+  schedule:
+    # Run twice weekly during NFL season (Tuesday 8am and Friday 8am ET)
+    - cron: '0 12 * * 2' # Tuesday at 12:00 UTC (8am ET)
+    - cron: '0 12 * * 5' # Friday at 12:00 UTC (8am ET)
+
+  # Allow manual trigger with league selection
+  workflow_dispatch:
+    inputs:
+      leagues:
+        description: 'Comma-separated league IDs (default: both Gauntlet leagues)'
+        required: false
+        default: '1263740549504962561,1263744209295245312'
+        type: string
+      season:
+        description: 'NFL Season'
+        required: false
+        default: '2025'
+        type: string
+      weeks:
+        description: 'Weeks to ingest (e.g., "1,2,3" or "current")'
+        required: false
+        default: 'current'
+        type: string
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+jobs:
+  ingest-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install -w --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @gauntlet/server exec prisma generate
+
+      - name: Run Weekly Data Ingestion
+        run: |
+          echo "Running current season data ingestion..."
+          echo "Leagues: ${{ github.event.inputs.leagues || 'Both Gauntlet leagues' }}"
+          echo "Season: ${{ github.event.inputs.season || '2025' }}"
+
+          # Use the current season ingestion script (it handles both leagues)
+          pnpm --filter @gauntlet/server ingest:current
+
+      - name: Verify Data Ingestion
+        run: pnpm --filter @gauntlet/server inventory:db | head -30
+
+      - name: Slack Notification (Success)
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: "✅ Weekly data ingestion completed successfully for ${{ github.event.inputs.leagues || 'both Gauntlet leagues' }}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack Notification (Failure)
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: '❌ Weekly data ingestion failed. Check GitHub Actions logs.'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

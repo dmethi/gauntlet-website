@@ -664,18 +664,38 @@ export default function TeamPage({ params }: { params: { id: string } }) {
         <h2 className='mb-2 text-2xl font-bold'>Transactions</h2>
         <div className='rounded-md border border-border bg-card px-4 py-1'>
           {tx?.ok ? (
-            <TeamTransactionsList
-              transactions={
-                tx.data
-                  .filter(
-                    (t: LeagueTransactionsResponse['data'][number]) =>
-                      Array.isArray(t.rosterIds) && t.rosterIds.includes(Number(team.id))
-                  )
-                  .slice(0, 20) as any
+            (() => {
+              const teamId = Number(team.id);
+              let originalId: number;
+              if (teamId >= 2000) {
+                originalId = teamId - 2000; // NFC: 2001 -> 1, 2012 -> 12
+              } else if (teamId >= 1000) {
+                originalId = teamId - 1000; // AFC: 1001 -> 1, 1012 -> 12
+              } else {
+                originalId = teamId; // Fallback
               }
-            />
+
+              const filteredTransactions = tx.data
+                .filter((t: LeagueTransactionsResponse['data'][number]) => {
+                  // Handle both unique roster IDs and original Sleeper IDs (1-12)
+                  if (!Array.isArray(t.rosterIds)) return false;
+
+                  // Check if transaction includes this team's unique ID or original Sleeper ID
+                  return t.rosterIds.includes(teamId) || t.rosterIds.includes(originalId);
+                })
+                .slice(0, 20) as any;
+
+              return (
+                <TeamTransactionsList
+                  transactions={filteredTransactions}
+                  league={team.league as any}
+                />
+              );
+            })()
           ) : (
-            <div className='text-sm text-muted-foreground'>No transactions found.</div>
+            <div className='text-sm text-muted-foreground'>
+              {tx ? 'No transactions found.' : 'Loading transactions...'}
+            </div>
           )}
         </div>
       </div>

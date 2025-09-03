@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useLeagueData } from '@/lib/hooks';
+import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
+import { useSearchParams } from 'next/navigation';
 import {
   Facts,
   buildFacts,
@@ -67,9 +68,17 @@ type RawTxn = {
 };
 
 export default function LeagueTransactionsPage() {
-  const { league } = useLeagueData();
+  const searchParams = useSearchParams();
+  const leagueIdParam = searchParams.get('leagueId');
+
+  // Use league-specific hook if leagueId is provided, otherwise use default
+  const leagueDataById = useLeagueDataById(leagueIdParam || undefined);
+  const leagueDataDefault = useLeagueData();
+
+  const { league } = leagueIdParam ? leagueDataById : leagueDataDefault;
   const leagueId = league?.id ? String(league.id) : undefined;
   const [allData, setAllData] = useState<GradeTxn[]>([]);
+  const [rawTransactions, setRawTransactions] = useState<RawTxn[]>([]);
   const [loading, setLoading] = useState(true);
   const [pos, setPos] = useState('ALL');
   const [type, setType] = useState('ALL');
@@ -118,6 +127,9 @@ export default function LeagueTransactionsPage() {
 
         // Filter out failed transactions
         const validTransactions = raw.filter(t => t.status !== 'failed');
+
+        // Store raw transactions for trade parsing
+        setRawTransactions(validTransactions);
 
         // Build quick lookup for positions/names
         const idToPlayer = new Map<string, { name: string; position: string }>();
@@ -513,6 +525,33 @@ export default function LeagueTransactionsPage() {
     return filtered;
   }, [allData, sort, team, pos]);
 
+  // Create roster map once for team name lookups
+  const rosterMap = useMemo(() => {
+    const map = new Map<number, string>();
+    (league?.rosters || []).forEach((r: any) => {
+      const name =
+        r?.owner?.metadata?.team_name ||
+        r?.owner?.displayName ||
+        r?.owner?.username ||
+        `Team ${r.id}`;
+      // Map unique roster ID
+      map.set(Number(r.id), name);
+
+      // Map original Sleeper ID: AFC 1001-1012 -> 1-12, NFC 2001-2012 -> 1-12
+      const rosterId = Number(r.id);
+      let originalId: number;
+      if (rosterId >= 2000) {
+        originalId = rosterId - 2000; // NFC: 2001 -> 1, 2012 -> 12
+      } else if (rosterId >= 1000) {
+        originalId = rosterId - 1000; // AFC: 1001 -> 1, 1012 -> 12
+      } else {
+        originalId = rosterId; // Fallback for old IDs
+      }
+      map.set(originalId, name);
+    });
+    return map;
+  }, [league?.rosters]);
+
   const rows = useMemo(() => {
     if (view === 'all') return filteredAndSorted;
     const start = currentPage * pageSize;
@@ -611,7 +650,10 @@ export default function LeagueTransactionsPage() {
     <TooltipProvider>
       <Container className='py-8'>
         <div className='flex items-start justify-between mb-6'>
-          <PageHeader title='Transactions' subtitle='League-wide feed with grades' />
+          <PageHeader
+            title='Transactions'
+            subtitle={`${league?.name || 'League'} - Transaction feed with grades`}
+          />
         </div>
 
         <div className='mb-3 flex items-center gap-2 flex-wrap'>
@@ -740,18 +782,7 @@ export default function LeagueTransactionsPage() {
                         {!!(t.rosterIds && t.rosterIds.length) && (
                           <div className='text-xs text-muted-foreground'>
                             {(t.rosterIds || [])
-                              .map(rid => {
-                                const r = (league?.rosters || []).find(
-                                  rr => Number(rr.id) === Number(rid)
-                                );
-
-                                const teamName =
-                                  r?.owner?.metadata?.team_name ||
-                                  r?.owner?.displayName ||
-                                  r?.owner?.username ||
-                                  `Team ${rid}`;
-                                return teamName;
-                              })
+                              .map(rid => rosterMap.get(Number(rid)) || `Team ${rid}`)
                               .join(' • ')}
                           </div>
                         )}
@@ -759,11 +790,41 @@ export default function LeagueTransactionsPage() {
                     </TableCell>
                     <TableCell>
                       <div className='flex flex-col gap-1'>
-                        {t.players.map(p => (
-                          <div key={p.playerId} className='text-sm text-muted-foreground'>
-                            {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
-                          </div>
-                        ))}
+                        {t.type === 'trade'
+                          ? // For trades, show which team got which player with unidirectional arrows
+                            (() => {
+                              // Find the corresponding raw transaction for trade details
+                              const rawTxn = rawTransactions.find(rt => rt.id === t.id);
+                              if (!rawTxn) {
+                                // Fallback to old logic if raw transaction not found
+                                const addedPlayers = t.players.filter(p => p.role === 'add');
+                                return addedPlayers.map(p => (
+                                  <div key={p.playerId} className='text-sm text-muted-foreground'>
+                                    {p.name} ({p.position}) • Trade
+                                  </div>
+                                ));
+                              }
+
+                              // Use raw transaction data to show specific destinations
+                              return (rawTxn.adds || []).flatMap(addGroup =>
+                                addGroup.players.map(player => {
+                                  const teamName =
+                                    rosterMap.get(Number(addGroup.rosterId)) ||
+                                    `Team ${addGroup.rosterId}`;
+                                  return (
+                                    <div key={player.id} className='text-sm text-muted-foreground'>
+                                      {player.fullName} ({player.position}) → {teamName}
+                                    </div>
+                                  );
+                                })
+                              );
+                            })()
+                          : // For non-trades, show traditional format with team context
+                            t.players.map(p => (
+                              <div key={p.playerId} className='text-sm text-muted-foreground'>
+                                {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
+                              </div>
+                            ))}
                       </div>
                     </TableCell>
                     <TableCell className='text-right'>

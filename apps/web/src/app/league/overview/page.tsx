@@ -284,7 +284,7 @@ function LeagueOverviewContent() {
       <div className='mt-12'>
         <div className='flex items-center justify-between mb-3'>
           <h2 className='text-2xl font-bold'>Recent Transactions</h2>
-          <Link href='/league/transactions'>
+          <Link href={`/league/transactions?leagueId=${league.id}`}>
             <Button size='sm' variant='outline'>
               View All
             </Button>
@@ -328,25 +328,111 @@ function RecentTransactionsWidget({ league }: { league: any }) {
   if (loading) {
     return <div className='text-sm text-muted-foreground'>Loading…</div>;
   }
+
+  // Create mapping from both unique roster IDs and original Sleeper IDs (1-12)
   const rosterMap = new Map<number, string>();
   (league?.rosters || []).forEach((r: any) => {
-    const name = r?.owner?.metadata?.team_name || r?.owner?.displayName || r?.owner?.username;
-    rosterMap.set(Number(r.id), name || `Team ${r.id}`);
+    const name =
+      r?.owner?.metadata?.team_name ||
+      r?.owner?.displayName ||
+      r?.owner?.username ||
+      `Team ${r.id}`;
+    // Map unique roster ID (e.g., 1001, 2001)
+    rosterMap.set(Number(r.id), name);
+
+    // Map original Sleeper ID: AFC 1001-1012 -> 1-12, NFC 2001-2012 -> 1-12
+    const rosterId = Number(r.id);
+    let originalId: number;
+    if (rosterId >= 2000) {
+      originalId = rosterId - 2000; // NFC: 2001 -> 1, 2012 -> 12
+    } else if (rosterId >= 1000) {
+      originalId = rosterId - 1000; // AFC: 1001 -> 1, 1012 -> 12
+    } else {
+      originalId = rosterId; // Fallback for old IDs
+    }
+    rosterMap.set(originalId, name);
   });
   const rosterName = (rid: number) => rosterMap.get(Number(rid)) || `Team ${rid}`;
 
-  const adapted = (items || []).map(t => ({
-    id: t.id,
-    type: t.type,
-    status: t.status,
-    createdAt: t.createdAt,
-    adds: (t.adds || []).flatMap((a: any) =>
-      a.players.map((p: any) => ({ label: `${p.fullName} to ${rosterName(a.rosterId)}` }))
-    ),
-    drops: (t.drops || []).flatMap((d: any) =>
-      d.players.map((p: any) => ({ label: `${p.fullName} from ${rosterName(d.rosterId)}` }))
-    ),
-    waiverBid: t.settings?.waiver_bid ?? null,
-  }));
+  const adapted = (items || []).map(t => {
+    // Get raw adds and drops
+    const rawAdds = (t.adds || []).flatMap((a: any) =>
+      a.players.map((p: any) => ({
+        player: p.fullName,
+        rosterId: a.rosterId,
+        label: `${p.fullName} to ${rosterName(a.rosterId)}`,
+      }))
+    );
+    const rawDrops = (t.drops || []).flatMap((d: any) =>
+      d.players.map((p: any) => ({
+        player: p.fullName,
+        rosterId: d.rosterId,
+        label: `${p.fullName} from ${rosterName(d.rosterId)}`,
+      }))
+    );
+
+    // For trades, detect and fix duplicate players appearing on both sides
+    let cleanedAdds = rawAdds;
+    let cleanedDrops = rawDrops;
+
+    if (t.type === 'trade' && rawAdds.length > 0 && rawDrops.length > 0) {
+      const addPlayerNames = new Set(rawAdds.map((a: any) => a.player));
+      const dropPlayerNames = new Set(rawDrops.map((d: any) => d.player));
+      const duplicatePlayerNames = [...addPlayerNames].filter(name => dropPlayerNames.has(name));
+
+      // If we have duplicates, this suggests malformed trade data
+      if (duplicatePlayerNames.length > 0) {
+        console.warn(`Trade ${t.id} has duplicate players:`, duplicatePlayerNames);
+
+        // For malformed trades, group players by roster and show as separate trade legs
+        const playersByRoster = new Map<number, { adds: any[]; drops: any[] }>();
+
+        rawAdds.forEach((add: any) => {
+          if (!playersByRoster.has(add.rosterId)) {
+            playersByRoster.set(add.rosterId, { adds: [], drops: [] });
+          }
+          playersByRoster.get(add.rosterId)!.adds.push(add);
+        });
+
+        rawDrops.forEach((drop: any) => {
+          if (!playersByRoster.has(drop.rosterId)) {
+            playersByRoster.set(drop.rosterId, { adds: [], drops: [] });
+          }
+          playersByRoster.get(drop.rosterId)!.drops.push(drop);
+        });
+
+        // Reconstruct trade: if a player appears in both adds/drops for same roster, it's likely incorrect
+        // Keep only the logical direction (typically drops = giving away, adds = receiving)
+        cleanedAdds = [];
+        cleanedDrops = [];
+
+        playersByRoster.forEach((data, rosterId) => {
+          data.adds.forEach((add: any) => {
+            const isAlsoDropped = data.drops.some((drop: any) => drop.player === add.player);
+            if (!isAlsoDropped) {
+              cleanedAdds.push(add);
+            }
+          });
+
+          data.drops.forEach((drop: any) => {
+            const isAlsoAdded = data.adds.some((add: any) => add.player === drop.player);
+            if (!isAlsoAdded) {
+              cleanedDrops.push(drop);
+            }
+          });
+        });
+      }
+    }
+
+    return {
+      id: t.id,
+      type: t.type,
+      status: t.status,
+      createdAt: t.createdAt,
+      adds: cleanedAdds.map((a: any) => ({ label: a.label })),
+      drops: cleanedDrops.map((d: any) => ({ label: d.label })),
+      waiverBid: t.settings?.waiver_bid ?? null,
+    };
+  });
   return <TransactionList items={adapted} />;
 }
