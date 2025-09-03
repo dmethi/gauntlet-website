@@ -159,6 +159,120 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
     return dataVizColors.intensity[colorIndex];
   };
 
+  // Helper function to get contrasting text color using proper WCAG contrast calculation
+  const getContrastingTextColor = (backgroundColor: string, debugLabel?: string) => {
+    // If there's no background color, use default text
+    if (!backgroundColor || backgroundColor === 'transparent') {
+      return '';
+    }
+
+    // Parse RGB values from any CSS color format
+    const parseRgb = (color: string) => {
+      // Handle rgba() format
+      const rgbaMatch = color.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)/);
+      if (rgbaMatch) {
+        return {
+          r: parseInt(rgbaMatch[1]),
+          g: parseInt(rgbaMatch[2]),
+          b: parseInt(rgbaMatch[3]),
+        };
+      }
+
+      // Handle rgb() format
+      const rgbMatch = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (rgbMatch) {
+        return {
+          r: parseInt(rgbMatch[1]),
+          g: parseInt(rgbMatch[2]),
+          b: parseInt(rgbMatch[3]),
+        };
+      }
+
+      // Handle hex format
+      const hex = color.replace('#', '');
+      if (hex.length === 6) {
+        return {
+          r: parseInt(hex.substr(0, 2), 16),
+          g: parseInt(hex.substr(2, 2), 16),
+          b: parseInt(hex.substr(4, 2), 16),
+        };
+      } else if (hex.length === 3) {
+        return {
+          r: parseInt(hex[0] + hex[0], 16),
+          g: parseInt(hex[1] + hex[1], 16),
+          b: parseInt(hex[2] + hex[2], 16),
+        };
+      }
+
+      // Default to medium gray if parsing fails
+      return { r: 128, g: 128, b: 128 };
+    };
+
+    // Calculate relative luminance using WCAG formula with proper gamma correction
+    const calculateLuminance = (r: number, g: number, b: number) => {
+      // Convert to 0-1 range
+      const rsRGB = r / 255;
+      const gsRGB = g / 255;
+      const bsRGB = b / 255;
+
+      // Apply gamma correction for sRGB
+      const toLinear = (c: number) =>
+        c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
+      const rLinear = toLinear(rsRGB);
+      const gLinear = toLinear(gsRGB);
+      const bLinear = toLinear(bsRGB);
+
+      // Calculate relative luminance using WCAG coefficients
+      return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+    };
+
+    // Calculate contrast ratio between two luminance values
+    const contrastRatio = (L1: number, L2: number) => {
+      const lighter = Math.max(L1, L2);
+      const darker = Math.min(L1, L2);
+      return (lighter + 0.05) / (darker + 0.05);
+    };
+
+    const rgb = parseRgb(backgroundColor);
+    const bgLuminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
+
+    // Luminance values for pure black and white
+    const whiteLuminance = 1.0;
+    const blackLuminance = 0.0;
+
+    // Calculate contrast ratios
+    const whiteContrast = contrastRatio(bgLuminance, whiteLuminance);
+    const blackContrast = contrastRatio(bgLuminance, blackLuminance);
+
+    // Debug logging only for concentration metrics table
+    if (debugLabel) {
+      console.log(
+        `[CONCENTRATION] ${debugLabel} - Background: ${backgroundColor}, RGB: ${rgb.r},${rgb.g},${rgb.b}, Luminance: ${bgLuminance.toFixed(3)}, White contrast: ${whiteContrast.toFixed(2)}, Black contrast: ${blackContrast.toFixed(2)}`
+      );
+    }
+
+    // Choose the color with better contrast (higher ratio)
+    // In dark mode, be more aggressive about using white text for better readability
+    const lightModeUseWhite = whiteContrast > blackContrast;
+    const darkModeUseWhite = whiteContrast > blackContrast * 0.7; // Lower threshold for dark mode
+
+    if (debugLabel) {
+      console.log(
+        `[CONCENTRATION] ${debugLabel} - Light mode: ${lightModeUseWhite ? 'WHITE' : 'BLACK'}, Dark mode: ${darkModeUseWhite ? 'WHITE' : 'BLACK'} (white: ${whiteContrast.toFixed(2)} vs black: ${blackContrast.toFixed(2)})`
+      );
+    }
+
+    // Return theme-specific classes for optimal readability
+    return lightModeUseWhite
+      ? darkModeUseWhite
+        ? 'text-white'
+        : 'text-black dark:text-white'
+      : darkModeUseWhite
+        ? 'text-white dark:text-white'
+        : 'text-black';
+  };
+
   // RdYlGn diverging color scale for performance metrics
   const getRdYlGnColor = (value: number, max: number, min: number, reverse: boolean = false) => {
     if (max === min) return colors.rdylgn[5]; // Neutral yellow if no variation
@@ -363,7 +477,9 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Gini */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(profile.concentration.giniSpend, maxGini, minGini)
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.giniSpend,
@@ -377,7 +493,9 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Top 1% */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(profile.concentration.top1_share, maxTop1, minTop1)
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top1_share,
@@ -391,7 +509,9 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Top 2% */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(profile.concentration.top2_share, maxTop2, minTop2)
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top2_share,
@@ -405,7 +525,9 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Top 3% */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(profile.concentration.top3_share, maxTop3, minTop3)
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top3_share,
@@ -419,7 +541,9 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Top 4% */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(profile.concentration.top4_share, maxTop4, minTop4)
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top4_share,
@@ -433,7 +557,9 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Top 5% */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(profile.concentration.top5_share, maxTop5, minTop5)
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top5_share,
@@ -851,7 +977,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                               {player.nfc_price !== null ? `$${player.nfc_price}` : '-'}
                             </TableCell>
                             <TableCell
-                              className='text-center font-medium'
+                              className={`text-center font-medium ${
+                                player.is_cross_league
+                                  ? getContrastingTextColor(
+                                      getHeatmapColor(player.price_diff_abs, maxDiff, minDiff)
+                                    )
+                                  : ''
+                              }`}
                               style={{
                                 backgroundColor: player.is_cross_league
                                   ? getHeatmapColor(player.price_diff_abs, maxDiff, minDiff)
@@ -1003,7 +1135,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* QB allocation */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.spend_shares.pctQB || 0,
+                            Math.max(...allQB),
+                            Math.min(...allQB)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctQB || 0,
@@ -1017,7 +1155,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* RB allocation */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.spend_shares.pctRB || 0,
+                            Math.max(...allRB),
+                            Math.min(...allRB)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctRB || 0,
@@ -1031,7 +1175,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* WR allocation */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.spend_shares.pctWR || 0,
+                            Math.max(...allWR),
+                            Math.min(...allWR)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctWR || 0,
@@ -1045,7 +1195,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* TE allocation */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.spend_shares.pctTE || 0,
+                            Math.max(...allTE),
+                            Math.min(...allTE)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctTE || 0,
@@ -1059,7 +1215,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* DEF allocation */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.spend_shares.pctDEF || 0,
+                            Math.max(...allDEF),
+                            Math.min(...allDEF)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctDEF || 0,
@@ -1073,7 +1235,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Starters % */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.spend_shares.pctStarters,
+                            Math.max(...allStarters),
+                            Math.min(...allStarters)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctStarters,
@@ -1087,7 +1255,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                       {/* Patience score */}
                       <TableCell
-                        className='text-center'
+                        className={`text-center ${getContrastingTextColor(
+                          getHeatmapColor(
+                            profile.pacing.patience_score,
+                            Math.max(...allPatience),
+                            Math.min(...allPatience)
+                          )
+                        )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.pacing.patience_score,
@@ -1195,7 +1369,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                         {/* Gini - heatmap style */}
                         <TableCell
-                          className='text-center'
+                          className={`text-center ${getContrastingTextColor(
+                            getHeatmapColor(
+                              profile.concentration.giniSpend,
+                              Math.max(...allGini),
+                              Math.min(...allGini)
+                            )
+                          )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.concentration.giniSpend,
@@ -1209,7 +1389,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                         {/* Top 2% - heatmap style */}
                         <TableCell
-                          className='text-center'
+                          className={`text-center ${getContrastingTextColor(
+                            getHeatmapColor(
+                              profile.concentration.top2_share,
+                              Math.max(...allTop2),
+                              Math.min(...allTop2)
+                            )
+                          )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.concentration.top2_share,
@@ -1223,7 +1409,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                         {/* Starters % - heatmap style */}
                         <TableCell
-                          className='text-center'
+                          className={`text-center ${getContrastingTextColor(
+                            getHeatmapColor(
+                              profile.spend_shares.pctStarters,
+                              Math.max(...allStarters),
+                              Math.min(...allStarters)
+                            )
+                          )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.spend_shares.pctStarters,
@@ -1237,7 +1429,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                         {/* Last Starter - heatmap style */}
                         <TableCell
-                          className='text-center'
+                          className={`text-center ${getContrastingTextColor(
+                            getHeatmapColor(
+                              profile.pacing.last_starter_index,
+                              Math.max(...allLastStarter),
+                              Math.min(...allLastStarter)
+                            )
+                          )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.pacing.last_starter_index,
@@ -1344,7 +1542,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                           {/* Picks 1-30 - heatmap style */}
                           <TableCell
-                            className='text-center'
+                            className={`text-center ${getContrastingTextColor(
+                              getHeatmapColor(
+                                picks1_30,
+                                Math.max(...allPicks1_30),
+                                Math.min(...allPicks1_30)
+                              )
+                            )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks1_30,
@@ -1358,7 +1562,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                           {/* Picks 31-60 - heatmap style */}
                           <TableCell
-                            className='text-center'
+                            className={`text-center ${getContrastingTextColor(
+                              getHeatmapColor(
+                                picks31_60,
+                                Math.max(...allPicks31_60),
+                                Math.min(...allPicks31_60)
+                              )
+                            )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks31_60,
@@ -1372,7 +1582,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                           {/* Picks 61-120 - heatmap style */}
                           <TableCell
-                            className='text-center'
+                            className={`text-center ${getContrastingTextColor(
+                              getHeatmapColor(
+                                picks61_120,
+                                Math.max(...allPicks61_120),
+                                Math.min(...allPicks61_120)
+                              )
+                            )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks61_120,
@@ -1386,7 +1602,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                           {/* Picks 121+ - heatmap style */}
                           <TableCell
-                            className='text-center'
+                            className={`text-center ${getContrastingTextColor(
+                              getHeatmapColor(
+                                picks121_plus,
+                                Math.max(...allPicks121_plus),
+                                Math.min(...allPicks121_plus)
+                              )
+                            )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks121_plus,

@@ -88,15 +88,25 @@ export default function DraftAnalysisPage() {
     return colors[colorIndex];
   };
 
-  // Helper function to get contrasting text color based on luminance calculation
+  // Helper function to get contrasting text color using proper WCAG contrast calculation
   const getContrastingTextColor = (backgroundColor: string) => {
     // If there's no background color, use default text
     if (!backgroundColor || backgroundColor === 'transparent') {
       return '';
     }
 
-    // Parse RGB values from hex color
+    // Parse RGB values from any CSS color format
     const parseRgb = (color: string) => {
+      // Handle rgba() format
+      const rgbaMatch = color.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)/);
+      if (rgbaMatch) {
+        return {
+          r: parseInt(rgbaMatch[1]),
+          g: parseInt(rgbaMatch[2]),
+          b: parseInt(rgbaMatch[3]),
+        };
+      }
+
       // Handle rgb() format
       const rgbMatch = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
       if (rgbMatch) {
@@ -115,38 +125,68 @@ export default function DraftAnalysisPage() {
           g: parseInt(hex.substr(2, 2), 16),
           b: parseInt(hex.substr(4, 2), 16),
         };
+      } else if (hex.length === 3) {
+        return {
+          r: parseInt(hex[0] + hex[0], 16),
+          g: parseInt(hex[1] + hex[1], 16),
+          b: parseInt(hex[2] + hex[2], 16),
+        };
       }
 
       // Default to medium gray if parsing fails
       return { r: 128, g: 128, b: 128 };
     };
 
-    // Calculate relative luminance using WCAG formula
+    // Calculate relative luminance using WCAG formula with proper gamma correction
     const calculateLuminance = (r: number, g: number, b: number) => {
-      // Convert RGB to sRGB
+      // Convert to 0-1 range
       const rsRGB = r / 255;
       const gsRGB = g / 255;
       const bsRGB = b / 255;
 
-      // Apply gamma correction
-      const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
-      const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
-      const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+      // Apply gamma correction for sRGB
+      const toLinear = (c: number) =>
+        c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
 
-      // Calculate luminance using WCAG coefficients
+      const rLinear = toLinear(rsRGB);
+      const gLinear = toLinear(gsRGB);
+      const bLinear = toLinear(bsRGB);
+
+      // Calculate relative luminance using WCAG coefficients
       return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
     };
 
-    const rgb = parseRgb(backgroundColor);
-    const luminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
+    // Calculate contrast ratio between two luminance values
+    const contrastRatio = (L1: number, L2: number) => {
+      const lighter = Math.max(L1, L2);
+      const darker = Math.min(L1, L2);
+      return (lighter + 0.05) / (darker + 0.05);
+    };
 
-    // Use white text on dark backgrounds (luminance < 0.5), black text on light backgrounds
-    // This threshold provides good contrast for most scenarios
-    if (luminance < 0.5) {
-      return 'text-white dark:text-white';
-    } else {
-      return 'text-black dark:text-black';
-    }
+    const rgb = parseRgb(backgroundColor);
+    const bgLuminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
+
+    // Luminance values for pure black and white
+    const whiteLuminance = 1.0;
+    const blackLuminance = 0.0;
+
+    // Calculate contrast ratios
+    const whiteContrast = contrastRatio(bgLuminance, whiteLuminance);
+    const blackContrast = contrastRatio(bgLuminance, blackLuminance);
+
+    // Choose the color with better contrast (higher ratio)
+    // In dark mode, be more aggressive about using white text for better readability
+    const lightModeUseWhite = whiteContrast > blackContrast;
+    const darkModeUseWhite = whiteContrast > blackContrast * 0.7; // Lower threshold for dark mode
+
+    // Return theme-specific classes for optimal readability
+    return lightModeUseWhite
+      ? darkModeUseWhite
+        ? 'text-white'
+        : 'text-black dark:text-white'
+      : darkModeUseWhite
+        ? 'text-white dark:text-white'
+        : 'text-black';
   };
 
   // Helper function for red heatmap colors (for price values)
@@ -856,9 +896,7 @@ export default function DraftAnalysisPage() {
                                     {starters.map(pick => (
                                       <div
                                         key={`${draft1.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
-                                          getHeatmapColor(pick.actualPrice)
-                                        )}`}
+                                        className='flex items-center justify-between rounded p-1 text-black dark:text-white'
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
@@ -886,9 +924,7 @@ export default function DraftAnalysisPage() {
                                     {bench.map(pick => (
                                       <div
                                         key={`${draft1.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
-                                          getHeatmapColor(pick.actualPrice)
-                                        )}`}
+                                        className='flex items-center justify-between rounded p-1 text-black dark:text-white'
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
@@ -965,9 +1001,7 @@ export default function DraftAnalysisPage() {
                                     {starters.map(pick => (
                                       <div
                                         key={`${draft2.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
-                                          getHeatmapColor(pick.actualPrice)
-                                        )}`}
+                                        className='flex items-center justify-between rounded p-1 text-black dark:text-white'
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
@@ -995,9 +1029,7 @@ export default function DraftAnalysisPage() {
                                     {bench.map(pick => (
                                       <div
                                         key={`${draft2.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className={`flex items-center justify-between rounded p-1 ${getContrastingTextColor(
-                                          getHeatmapColor(pick.actualPrice)
-                                        )}`}
+                                        className='flex items-center justify-between rounded p-1 text-black dark:text-white'
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
