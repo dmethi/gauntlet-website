@@ -8,7 +8,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "precompute": "npx tsx src/scripts/precompute-analytics.ts",
+    "precompute:real": "npx tsx src/scripts/precompute-real-analytics.ts",
+    "precompute:dev": "npm run precompute && npm run dev",
+    "precompute:real-dev": "npm run precompute:real && npm run dev"
   },
   "dependencies": {
     "@gauntlet/lib": "workspace:*",

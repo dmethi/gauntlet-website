@@ -1,0 +1,395 @@
+/**
+ * Sleeper Draft Data Fetcher
+ *
+ * Fetches real draft data from Sleeper API and transforms it into
+ * the MockDraft format expected by the analytics system.
+ */
+
+import { MockDraft, Player, DraftPick, TeamRoster } from './mock-draft-data';
+
+// Sleeper API interfaces
+interface SleeperPlayer {
+  player_id: string;
+  full_name: string;
+  first_name: string;
+  last_name: string;
+  position: string;
+  team: string | null;
+  fantasy_positions: string[];
+  years_exp?: number;
+}
+
+interface SleeperDraft {
+  draft_id: string;
+  type: string; // 'auction' | 'snake' | etc.
+  status: string;
+  season: string;
+  settings: Record<string, any>;
+  league_id: string;
+  metadata: Record<string, any> | null;
+  slot_to_roster_id: number[];
+}
+
+interface SleeperDraftPick {
+  pick_no: number;
+  round: number;
+  roster_id: number;
+  player_id: string;
+  picked_by: string;
+  draft_id: string;
+  metadata: Record<string, any> | null;
+  is_keeper: boolean;
+}
+
+interface SleeperRoster {
+  owner_id: string;
+  roster_id: number;
+  league_id: string;
+  players: string[];
+  starters: string[];
+  settings: {
+    wins?: number;
+    waiver_position?: number;
+    waiver_budget_used?: number;
+    total_moves?: number;
+    losses?: number;
+    fpts?: number;
+    fpts_decimal?: number;
+    fpts_against?: number;
+    fpts_against_decimal?: number;
+  };
+  metadata?: Record<string, any>;
+}
+
+interface SleeperUser {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar: string | null;
+}
+
+interface SleeperLeague {
+  league_id: string;
+  name: string;
+  season: string;
+  settings: Record<string, any>;
+  roster_positions: string[];
+  total_rosters: number;
+  status: string;
+  metadata: Record<string, any> | null;
+}
+
+class SleeperDraftFetcher {
+  private baseUrl = 'https://api.sleeper.app/v1';
+  private rateLimit = 100; // ms between requests
+
+  private async delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private async fetchFromSleeper<T>(endpoint: string): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    console.log(`🔍 Fetching: ${url}`);
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Sleeper API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    await this.delay(this.rateLimit); // Rate limiting
+
+    return data;
+  }
+
+  /**
+   * Fetch all players from Sleeper
+   */
+  private async fetchAllPlayers(): Promise<Record<string, SleeperPlayer>> {
+    return this.fetchFromSleeper<Record<string, SleeperPlayer>>('/players/nfl');
+  }
+
+  /**
+   * Fetch draft info
+   */
+  private async fetchDraft(draftId: string): Promise<SleeperDraft> {
+    return this.fetchFromSleeper<SleeperDraft>(`/draft/${draftId}`);
+  }
+
+  /**
+   * Fetch draft picks
+   */
+  private async fetchDraftPicks(draftId: string): Promise<SleeperDraftPick[]> {
+    return this.fetchFromSleeper<SleeperDraftPick[]>(`/draft/${draftId}/picks`);
+  }
+
+  /**
+   * Fetch league info
+   */
+  private async fetchLeague(leagueId: string): Promise<SleeperLeague> {
+    return this.fetchFromSleeper<SleeperLeague>(`/league/${leagueId}`);
+  }
+
+  /**
+   * Fetch league rosters
+   */
+  private async fetchRosters(leagueId: string): Promise<SleeperRoster[]> {
+    return this.fetchFromSleeper<SleeperRoster[]>(`/league/${leagueId}/rosters`);
+  }
+
+  /**
+   * Fetch league users
+   */
+  private async fetchUsers(leagueId: string): Promise<SleeperUser[]> {
+    return this.fetchFromSleeper<SleeperUser[]>(`/league/${leagueId}/users`);
+  }
+
+  /**
+   * Transform Sleeper player to our Player format
+   */
+  private transformPlayer(sleeperPlayer: SleeperPlayer, rank: number, aav: number = 0): Player {
+    return {
+      id: sleeperPlayer.player_id,
+      name: sleeperPlayer.full_name || `${sleeperPlayer.first_name} ${sleeperPlayer.last_name}`,
+      position: sleeperPlayer.fantasy_positions?.[0] || sleeperPlayer.position || 'FLEX',
+      team: sleeperPlayer.team || 'FA',
+      aav: aav, // Will be calculated based on draft position or auction price
+      rank: rank,
+    };
+  }
+
+  /**
+   * Transform Sleeper draft data to MockDraft format
+   */
+  async fetchRealDrafts(
+    draftId1: string,
+    draftId2: string
+  ): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
+    console.log('🏈 Fetching real draft data from Sleeper API...');
+
+    // Fetch both drafts in parallel
+    const [draft1Info, draft1Picks, draft2Info, draft2Picks, allPlayers] = await Promise.all([
+      this.fetchDraft(draftId1),
+      this.fetchDraftPicks(draftId1),
+      this.fetchDraft(draftId2),
+      this.fetchDraftPicks(draftId2),
+      this.fetchAllPlayers(),
+    ]);
+
+    // Fetch league info for both drafts
+    const [league1, league2, rosters1, rosters2, users1, users2] = await Promise.all([
+      this.fetchLeague(draft1Info.league_id),
+      this.fetchLeague(draft2Info.league_id),
+      this.fetchRosters(draft1Info.league_id),
+      this.fetchRosters(draft2Info.league_id),
+      this.fetchUsers(draft1Info.league_id),
+      this.fetchUsers(draft2Info.league_id),
+    ]);
+
+    // Transform both drafts
+    const draft1 = await this.transformDraftData(
+      draft1Info,
+      draft1Picks,
+      league1,
+      rosters1,
+      users1,
+      allPlayers,
+      'Draft 1'
+    );
+
+    const draft2 = await this.transformDraftData(
+      draft2Info,
+      draft2Picks,
+      league2,
+      rosters2,
+      users2,
+      allPlayers,
+      'Draft 2'
+    );
+
+    console.log('✅ Successfully fetched and transformed real draft data');
+    console.log(`📊 Draft 1: ${draft1.teams.length} teams, ${draft1.totalPicks} picks`);
+    console.log(`📊 Draft 2: ${draft2.teams.length} teams, ${draft2.totalPicks} picks`);
+
+    return { draft1, draft2 };
+  }
+
+  /**
+   * Transform single draft data
+   */
+  private async transformDraftData(
+    draftInfo: SleeperDraft,
+    picks: SleeperDraftPick[],
+    league: SleeperLeague,
+    rosters: SleeperRoster[],
+    users: SleeperUser[],
+    allPlayers: Record<string, SleeperPlayer>,
+    draftName: string
+  ): Promise<MockDraft> {
+    console.log(`🔄 Transforming ${draftName} (${draftInfo.type} format)`);
+
+    console.log(
+      `📥 ${draftName} data summary → users: ${users.length}, rosters: ${rosters.length}, picks: ${picks.length}`
+    );
+    const sampleUsers = users
+      .slice(0, 5)
+      .map(u => ({ id: u.user_id, name: u.display_name || u.username }));
+    console.log(`👥 Sample users (${draftName}):`, sampleUsers);
+
+    // Create user map for team names
+    const userMap = new Map(users.map(u => [u.user_id, u]));
+    const rosterMap = new Map(rosters.map(r => [r.roster_id, r]));
+
+    // Sort picks by pick number
+    const sortedPicks = picks.sort((a, b) => a.pick_no - b.pick_no);
+
+    // Group picks by roster_id to create teams
+    const teamPicksMap = new Map<number, SleeperDraftPick[]>();
+    sortedPicks.forEach(pick => {
+      if (!teamPicksMap.has(pick.roster_id)) {
+        teamPicksMap.set(pick.roster_id, []);
+      }
+      teamPicksMap.get(pick.roster_id)!.push(pick);
+    });
+
+    // Transform to our format
+    const teams: TeamRoster[] = [];
+
+    for (const [rosterId, teamPicks] of teamPicksMap.entries()) {
+      const roster = rosterMap.get(rosterId);
+      const user = roster ? userMap.get(roster.owner_id) : null;
+
+      const teamName = user?.display_name || user?.username || `Team ${rosterId}`;
+      if (!user) {
+        console.warn(
+          `⚠️ Missing user for roster_id=${rosterId} in ${draftName}. Using fallback team name.`
+        );
+      }
+
+      // Transform picks
+      const transformedPicks: DraftPick[] = teamPicks.map((pick, index) => {
+        const sleeperPlayer = allPlayers[pick.player_id];
+
+        if (!sleeperPlayer) {
+          console.warn(`⚠️ Player not found: ${pick.player_id}`);
+          return {
+            playerId: pick.player_id,
+            player: {
+              id: pick.player_id,
+              name: 'Unknown Player',
+              position: 'FLEX',
+              team: 'FA',
+              aav: 1,
+              rank: 999,
+            },
+            actualPrice: this.calculatePrice(draftInfo.type, pick, teamPicks.length),
+            pickNumber: pick.pick_no,
+            round: pick.round,
+            valueOverAAV: 0,
+          };
+        }
+
+        const player = this.transformPlayer(
+          sleeperPlayer,
+          pick.pick_no, // Use pick number as rank for now
+          0 // AAV will be calculated
+        );
+
+        const actualPrice = this.calculatePrice(draftInfo.type, pick, teamPicks.length);
+        player.aav = actualPrice; // Set AAV to calculated price
+
+        return {
+          playerId: pick.player_id,
+          player: player,
+          actualPrice: actualPrice,
+          pickNumber: pick.pick_no,
+          round: pick.round,
+          valueOverAAV: 0, // Will be calculated later if needed
+        };
+      });
+
+      // Calculate total spent and warn if outside expected budget
+      const totalSpent = transformedPicks.reduce((sum, pick) => sum + pick.actualPrice, 0);
+      const expectedBudget =
+        (draftInfo.settings as any)?.auction_budget ||
+        (league.settings as any)?.auction_budget ||
+        200;
+      if (totalSpent > expectedBudget * 1.2) {
+        console.warn(
+          `⚠️ Team ${teamName} spent $${totalSpent} in ${draftName}, expected around $${expectedBudget}. Check price parsing.`
+        );
+      }
+
+      teams.push({
+        teamId: rosterId.toString(),
+        teamName: teamName,
+        picks: transformedPicks,
+        totalSpent: totalSpent,
+        starters: [], // Will be populated by inferStarters
+        bench: [], // Will be populated by inferStarters
+        def: transformedPicks.filter(p => p.player.position === 'DEF'),
+      });
+    }
+
+    return {
+      id: draftInfo.draft_id,
+      name: `${league.name} (${draftName})`,
+      teams: teams,
+      totalPicks: picks.length,
+      completedPicks: picks.length,
+    };
+  }
+
+  /**
+   * Calculate price based on draft type
+   */
+  private calculatePrice(draftType: string, pick: SleeperDraftPick, teamSize: number): number {
+    if (draftType === 'auction') {
+      // For auction drafts, try to extract price from metadata
+      const raw =
+        (pick.metadata as any)?.amount ??
+        (pick.metadata as any)?.price ??
+        (pick.metadata as any)?.cost;
+      const parsed = typeof raw === 'string' ? Number(raw) : typeof raw === 'number' ? raw : NaN;
+      if (Number.isFinite(parsed) && parsed > 0) {
+        return Math.floor(parsed);
+      }
+
+      // If no price in metadata, default to $1 (do NOT fabricate synthetic prices)
+      // Real drafts must sum to each manager's auction budget (typically $200)
+      console.warn(
+        `ℹ️ Missing/invalid auction price for pick_no=${pick.pick_no} roster_id=${pick.roster_id}. metadata=`,
+        pick.metadata
+      );
+      return 1;
+    } else {
+      // For snake drafts, create synthetic auction values based on draft position
+      // Early picks get higher values, later picks get lower values
+      // Keep conservative values to avoid inflated totals when a league isn't auction
+      const baseValue = Math.max(1, 40 - (pick.pick_no - 1) * 0.5);
+      return Math.round(baseValue);
+    }
+  }
+}
+
+// Export singleton instance
+const sleeperFetcher = new SleeperDraftFetcher();
+
+/**
+ * Fetch real drafts using Sleeper API
+ */
+export async function fetchRealDrafts(draftId1: string, draftId2: string) {
+  return sleeperFetcher.fetchRealDrafts(draftId1, draftId2);
+}
+
+/**
+ * Get real drafts - replaces getPreGeneratedDrafts for real data
+ */
+export async function getRealDrafts(): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
+  // These are the draft IDs provided by the user
+  const DRAFT_ID_1 = '1263744210637422592';
+  const DRAFT_ID_2 = '1263740550494822400';
+
+  return fetchRealDrafts(DRAFT_ID_1, DRAFT_ID_2);
+}

@@ -1,0 +1,4231 @@
+{
+  "league_A_name": "Gauntlet AFC (Draft 1)",
+  "league_B_name": "Gauntlet NFC (Draft 2)",
+  "position_inflation": [
+    {
+      "pos": "QB",
+      "avg_raw_A": 9,
+      "avg_raw_B": 8,
+      "share_A": 0.068,
+      "share_B": 0.073,
+      "delta_share": -0.005,
+      "delta_avg_raw": 1,
+      "z_score_A": -0.8,
+      "z_score_B": -0.93
+    },
+    {
+      "pos": "RB",
+      "avg_raw_A": 16,
+      "avg_raw_B": 15,
+      "share_A": 0.408,
+      "share_B": 0.418,
+      "delta_share": -0.01,
+      "delta_avg_raw": 1,
+      "z_score_A": 0.16,
+      "z_score_B": 0
+    },
+    {
+      "pos": "WR",
+      "avg_raw_A": 14,
+      "avg_raw_B": 15,
+      "share_A": 0.445,
+      "share_B": 0.427,
+      "delta_share": 0.018,
+      "delta_avg_raw": -1,
+      "z_score_A": -0.09,
+      "z_score_B": 0.05
+    },
+    {
+      "pos": "TE",
+      "avg_raw_A": 8,
+      "avg_raw_B": 7,
+      "share_A": 0.066,
+      "share_B": 0.071,
+      "delta_share": -0.005,
+      "delta_avg_raw": 1,
+      "z_score_A": -0.88,
+      "z_score_B": -0.94
+    },
+    {
+      "pos": "DEF",
+      "avg_raw_A": 1,
+      "avg_raw_B": 1,
+      "share_A": 0.008,
+      "share_B": 0.005,
+      "delta_share": 0.003,
+      "delta_avg_raw": 0,
+      "z_score_A": -1.7,
+      "z_score_B": -1.74
+    }
+  ],
+  "position_quartile_breakdowns": [
+    {
+      "position": "QB",
+      "league_A": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 25,
+          "count": 5,
+          "minPrice": 11,
+          "maxPrice": 37
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 6.75,
+          "count": 4,
+          "minPrice": 3,
+          "maxPrice": 10
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 1.75,
+          "count": 4,
+          "minPrice": 1,
+          "maxPrice": 3
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1,
+          "count": 4,
+          "minPrice": 1,
+          "maxPrice": 1
+        }
+      ],
+      "league_B": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 24.333333333333332,
+          "count": 6,
+          "minPrice": 8,
+          "maxPrice": 35
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 3.6,
+          "count": 5,
+          "minPrice": 2,
+          "maxPrice": 5
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 1.2,
+          "count": 5,
+          "minPrice": 1,
+          "maxPrice": 2
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1,
+          "count": 4,
+          "minPrice": 1,
+          "maxPrice": 1
+        }
+      ]
+    },
+    {
+      "position": "RB",
+      "league_A": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 44.733333333333334,
+          "count": 15,
+          "minPrice": 29,
+          "maxPrice": 67
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 16.066666666666666,
+          "count": 15,
+          "minPrice": 6,
+          "maxPrice": 29
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 3.3333333333333335,
+          "count": 15,
+          "minPrice": 2,
+          "maxPrice": 6
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1.1428571428571428,
+          "count": 14,
+          "minPrice": 1,
+          "maxPrice": 2
+        }
+      ],
+      "league_B": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 41.94117647058823,
+          "count": 17,
+          "minPrice": 25,
+          "maxPrice": 64
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 13.25,
+          "count": 16,
+          "minPrice": 6,
+          "maxPrice": 25
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 3.4375,
+          "count": 16,
+          "minPrice": 2,
+          "maxPrice": 5
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1.3125,
+          "count": 16,
+          "minPrice": 1,
+          "maxPrice": 2
+        }
+      ]
+    },
+    {
+      "position": "WR",
+      "league_A": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 38.73684210526316,
+          "count": 19,
+          "minPrice": 20,
+          "maxPrice": 64
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 14.11111111111111,
+          "count": 18,
+          "minPrice": 8,
+          "maxPrice": 20
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 3.1666666666666665,
+          "count": 18,
+          "minPrice": 2,
+          "maxPrice": 6
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1.1111111111111112,
+          "count": 18,
+          "minPrice": 1,
+          "maxPrice": 2
+        }
+      ],
+      "league_B": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 39.64705882352941,
+          "count": 17,
+          "minPrice": 20,
+          "maxPrice": 65
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 14.4375,
+          "count": 16,
+          "minPrice": 9,
+          "maxPrice": 20
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 5.625,
+          "count": 16,
+          "minPrice": 3,
+          "maxPrice": 9
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1.8666666666666667,
+          "count": 15,
+          "minPrice": 1,
+          "maxPrice": 3
+        }
+      ]
+    },
+    {
+      "position": "TE",
+      "league_A": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 24.4,
+          "count": 5,
+          "minPrice": 9,
+          "maxPrice": 37
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 4.8,
+          "count": 5,
+          "minPrice": 3,
+          "maxPrice": 7
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 1.75,
+          "count": 4,
+          "minPrice": 1,
+          "maxPrice": 3
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1,
+          "count": 4,
+          "minPrice": 1,
+          "maxPrice": 1
+        }
+      ],
+      "league_B": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 21.333333333333332,
+          "count": 6,
+          "minPrice": 12,
+          "maxPrice": 31
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 6.2,
+          "count": 5,
+          "minPrice": 5,
+          "maxPrice": 8
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 1.4,
+          "count": 5,
+          "minPrice": 1,
+          "maxPrice": 3
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1,
+          "count": 4,
+          "minPrice": 1,
+          "maxPrice": 1
+        }
+      ]
+    },
+    {
+      "position": "DEF",
+      "league_A": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 2.75,
+          "count": 4,
+          "minPrice": 2,
+          "maxPrice": 4
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 1,
+          "count": 3,
+          "minPrice": 1,
+          "maxPrice": 1
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 1,
+          "count": 3,
+          "minPrice": 1,
+          "maxPrice": 1
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1,
+          "count": 2,
+          "minPrice": 1,
+          "maxPrice": 1
+        }
+      ],
+      "league_B": [
+        {
+          "label": "Top 25%",
+          "range": "1st Quartile",
+          "avgPrice": 1.3333333333333333,
+          "count": 3,
+          "minPrice": 1,
+          "maxPrice": 2
+        },
+        {
+          "label": "25-50%",
+          "range": "2nd Quartile",
+          "avgPrice": 1,
+          "count": 3,
+          "minPrice": 1,
+          "maxPrice": 1
+        },
+        {
+          "label": "50-75%",
+          "range": "3rd Quartile",
+          "avgPrice": 1,
+          "count": 2,
+          "minPrice": 1,
+          "maxPrice": 1
+        },
+        {
+          "label": "Bottom 25%",
+          "range": "4th Quartile",
+          "avgPrice": 1,
+          "count": 2,
+          "minPrice": 1,
+          "maxPrice": 1
+        }
+      ]
+    }
+  ],
+  "market_shape": {
+    "league_A": {
+      "league": "Gauntlet AFC (Draft 1)",
+      "data": [
+        {
+          "rank": 1,
+          "cost": 67,
+          "cumulative_share": 0.028
+        },
+        {
+          "rank": 2,
+          "cost": 64,
+          "cumulative_share": 0.055
+        },
+        {
+          "rank": 3,
+          "cost": 62,
+          "cumulative_share": 0.081
+        },
+        {
+          "rank": 4,
+          "cost": 61,
+          "cumulative_share": 0.106
+        },
+        {
+          "rank": 5,
+          "cost": 61,
+          "cumulative_share": 0.131
+        },
+        {
+          "rank": 6,
+          "cost": 56,
+          "cumulative_share": 0.155
+        },
+        {
+          "rank": 7,
+          "cost": 55,
+          "cumulative_share": 0.178
+        },
+        {
+          "rank": 8,
+          "cost": 55,
+          "cumulative_share": 0.201
+        },
+        {
+          "rank": 9,
+          "cost": 52,
+          "cumulative_share": 0.222
+        },
+        {
+          "rank": 10,
+          "cost": 48,
+          "cumulative_share": 0.242
+        },
+        {
+          "rank": 11,
+          "cost": 48,
+          "cumulative_share": 0.263
+        },
+        {
+          "rank": 12,
+          "cost": 47,
+          "cumulative_share": 0.282
+        },
+        {
+          "rank": 13,
+          "cost": 47,
+          "cumulative_share": 0.302
+        },
+        {
+          "rank": 14,
+          "cost": 47,
+          "cumulative_share": 0.321
+        },
+        {
+          "rank": 15,
+          "cost": 44,
+          "cumulative_share": 0.34
+        },
+        {
+          "rank": 16,
+          "cost": 43,
+          "cumulative_share": 0.358
+        },
+        {
+          "rank": 17,
+          "cost": 42,
+          "cumulative_share": 0.375
+        },
+        {
+          "rank": 18,
+          "cost": 41,
+          "cumulative_share": 0.392
+        },
+        {
+          "rank": 19,
+          "cost": 38,
+          "cumulative_share": 0.408
+        },
+        {
+          "rank": 20,
+          "cost": 38,
+          "cumulative_share": 0.424
+        },
+        {
+          "rank": 21,
+          "cost": 37,
+          "cumulative_share": 0.439
+        },
+        {
+          "rank": 22,
+          "cost": 37,
+          "cumulative_share": 0.455
+        },
+        {
+          "rank": 23,
+          "cost": 36,
+          "cumulative_share": 0.47
+        },
+        {
+          "rank": 24,
+          "cost": 35,
+          "cumulative_share": 0.485
+        },
+        {
+          "rank": 25,
+          "cost": 34,
+          "cumulative_share": 0.499
+        },
+        {
+          "rank": 26,
+          "cost": 33,
+          "cumulative_share": 0.513
+        },
+        {
+          "rank": 27,
+          "cost": 31,
+          "cumulative_share": 0.525
+        },
+        {
+          "rank": 28,
+          "cost": 30,
+          "cumulative_share": 0.538
+        },
+        {
+          "rank": 29,
+          "cost": 30,
+          "cumulative_share": 0.551
+        },
+        {
+          "rank": 30,
+          "cost": 29,
+          "cumulative_share": 0.563
+        },
+        {
+          "rank": 31,
+          "cost": 29,
+          "cumulative_share": 0.575
+        },
+        {
+          "rank": 32,
+          "cost": 29,
+          "cumulative_share": 0.587
+        },
+        {
+          "rank": 33,
+          "cost": 29,
+          "cumulative_share": 0.599
+        },
+        {
+          "rank": 34,
+          "cost": 27,
+          "cumulative_share": 0.61
+        },
+        {
+          "rank": 35,
+          "cost": 26,
+          "cumulative_share": 0.621
+        },
+        {
+          "rank": 36,
+          "cost": 26,
+          "cumulative_share": 0.632
+        },
+        {
+          "rank": 37,
+          "cost": 25,
+          "cumulative_share": 0.642
+        },
+        {
+          "rank": 38,
+          "cost": 24,
+          "cumulative_share": 0.652
+        },
+        {
+          "rank": 39,
+          "cost": 22,
+          "cumulative_share": 0.662
+        },
+        {
+          "rank": 40,
+          "cost": 22,
+          "cumulative_share": 0.671
+        },
+        {
+          "rank": 41,
+          "cost": 22,
+          "cumulative_share": 0.68
+        },
+        {
+          "rank": 42,
+          "cost": 21,
+          "cumulative_share": 0.689
+        },
+        {
+          "rank": 43,
+          "cost": 21,
+          "cumulative_share": 0.697
+        },
+        {
+          "rank": 44,
+          "cost": 20,
+          "cumulative_share": 0.706
+        },
+        {
+          "rank": 45,
+          "cost": 20,
+          "cumulative_share": 0.714
+        },
+        {
+          "rank": 46,
+          "cost": 20,
+          "cumulative_share": 0.722
+        },
+        {
+          "rank": 47,
+          "cost": 20,
+          "cumulative_share": 0.731
+        },
+        {
+          "rank": 48,
+          "cost": 20,
+          "cumulative_share": 0.739
+        },
+        {
+          "rank": 49,
+          "cost": 20,
+          "cumulative_share": 0.747
+        },
+        {
+          "rank": 50,
+          "cost": 20,
+          "cumulative_share": 0.756
+        },
+        {
+          "rank": 51,
+          "cost": 19,
+          "cumulative_share": 0.764
+        },
+        {
+          "rank": 52,
+          "cost": 18,
+          "cumulative_share": 0.771
+        },
+        {
+          "rank": 53,
+          "cost": 17,
+          "cumulative_share": 0.778
+        },
+        {
+          "rank": 54,
+          "cost": 17,
+          "cumulative_share": 0.785
+        },
+        {
+          "rank": 55,
+          "cost": 16,
+          "cumulative_share": 0.792
+        },
+        {
+          "rank": 56,
+          "cost": 15,
+          "cumulative_share": 0.798
+        },
+        {
+          "rank": 57,
+          "cost": 15,
+          "cumulative_share": 0.805
+        },
+        {
+          "rank": 58,
+          "cost": 15,
+          "cumulative_share": 0.811
+        },
+        {
+          "rank": 59,
+          "cost": 15,
+          "cumulative_share": 0.817
+        },
+        {
+          "rank": 60,
+          "cost": 15,
+          "cumulative_share": 0.823
+        },
+        {
+          "rank": 61,
+          "cost": 14,
+          "cumulative_share": 0.829
+        },
+        {
+          "rank": 62,
+          "cost": 14,
+          "cumulative_share": 0.835
+        },
+        {
+          "rank": 63,
+          "cost": 13,
+          "cumulative_share": 0.841
+        },
+        {
+          "rank": 64,
+          "cost": 13,
+          "cumulative_share": 0.846
+        },
+        {
+          "rank": 65,
+          "cost": 12,
+          "cumulative_share": 0.851
+        },
+        {
+          "rank": 66,
+          "cost": 12,
+          "cumulative_share": 0.856
+        },
+        {
+          "rank": 67,
+          "cost": 11,
+          "cumulative_share": 0.861
+        },
+        {
+          "rank": 68,
+          "cost": 11,
+          "cumulative_share": 0.865
+        },
+        {
+          "rank": 69,
+          "cost": 11,
+          "cumulative_share": 0.87
+        },
+        {
+          "rank": 70,
+          "cost": 10,
+          "cumulative_share": 0.874
+        },
+        {
+          "rank": 71,
+          "cost": 10,
+          "cumulative_share": 0.878
+        },
+        {
+          "rank": 72,
+          "cost": 10,
+          "cumulative_share": 0.882
+        },
+        {
+          "rank": 73,
+          "cost": 10,
+          "cumulative_share": 0.886
+        },
+        {
+          "rank": 74,
+          "cost": 9,
+          "cumulative_share": 0.89
+        },
+        {
+          "rank": 75,
+          "cost": 9,
+          "cumulative_share": 0.894
+        },
+        {
+          "rank": 76,
+          "cost": 9,
+          "cumulative_share": 0.898
+        },
+        {
+          "rank": 77,
+          "cost": 9,
+          "cumulative_share": 0.902
+        },
+        {
+          "rank": 78,
+          "cost": 8,
+          "cumulative_share": 0.905
+        },
+        {
+          "rank": 79,
+          "cost": 7,
+          "cumulative_share": 0.908
+        },
+        {
+          "rank": 80,
+          "cost": 7,
+          "cumulative_share": 0.911
+        },
+        {
+          "rank": 81,
+          "cost": 6,
+          "cumulative_share": 0.913
+        },
+        {
+          "rank": 82,
+          "cost": 6,
+          "cumulative_share": 0.916
+        },
+        {
+          "rank": 83,
+          "cost": 6,
+          "cumulative_share": 0.918
+        },
+        {
+          "rank": 84,
+          "cost": 6,
+          "cumulative_share": 0.921
+        },
+        {
+          "rank": 85,
+          "cost": 6,
+          "cumulative_share": 0.923
+        },
+        {
+          "rank": 86,
+          "cost": 5,
+          "cumulative_share": 0.925
+        },
+        {
+          "rank": 87,
+          "cost": 5,
+          "cumulative_share": 0.927
+        },
+        {
+          "rank": 88,
+          "cost": 5,
+          "cumulative_share": 0.929
+        },
+        {
+          "rank": 89,
+          "cost": 4,
+          "cumulative_share": 0.931
+        },
+        {
+          "rank": 90,
+          "cost": 4,
+          "cumulative_share": 0.933
+        },
+        {
+          "rank": 91,
+          "cost": 4,
+          "cumulative_share": 0.934
+        },
+        {
+          "rank": 92,
+          "cost": 4,
+          "cumulative_share": 0.936
+        },
+        {
+          "rank": 93,
+          "cost": 4,
+          "cumulative_share": 0.938
+        },
+        {
+          "rank": 94,
+          "cost": 4,
+          "cumulative_share": 0.939
+        },
+        {
+          "rank": 95,
+          "cost": 4,
+          "cumulative_share": 0.941
+        },
+        {
+          "rank": 96,
+          "cost": 3,
+          "cumulative_share": 0.942
+        },
+        {
+          "rank": 97,
+          "cost": 3,
+          "cumulative_share": 0.944
+        },
+        {
+          "rank": 98,
+          "cost": 3,
+          "cumulative_share": 0.945
+        },
+        {
+          "rank": 99,
+          "cost": 3,
+          "cumulative_share": 0.946
+        },
+        {
+          "rank": 100,
+          "cost": 3,
+          "cumulative_share": 0.947
+        },
+        {
+          "rank": 101,
+          "cost": 3,
+          "cumulative_share": 0.949
+        },
+        {
+          "rank": 102,
+          "cost": 3,
+          "cumulative_share": 0.95
+        },
+        {
+          "rank": 103,
+          "cost": 3,
+          "cumulative_share": 0.951
+        },
+        {
+          "rank": 104,
+          "cost": 3,
+          "cumulative_share": 0.952
+        },
+        {
+          "rank": 105,
+          "cost": 3,
+          "cumulative_share": 0.954
+        },
+        {
+          "rank": 106,
+          "cost": 3,
+          "cumulative_share": 0.955
+        },
+        {
+          "rank": 107,
+          "cost": 3,
+          "cumulative_share": 0.956
+        },
+        {
+          "rank": 108,
+          "cost": 3,
+          "cumulative_share": 0.957
+        },
+        {
+          "rank": 109,
+          "cost": 3,
+          "cumulative_share": 0.959
+        },
+        {
+          "rank": 110,
+          "cost": 3,
+          "cumulative_share": 0.96
+        },
+        {
+          "rank": 111,
+          "cost": 3,
+          "cumulative_share": 0.961
+        },
+        {
+          "rank": 112,
+          "cost": 3,
+          "cumulative_share": 0.962
+        },
+        {
+          "rank": 113,
+          "cost": 3,
+          "cumulative_share": 0.964
+        },
+        {
+          "rank": 114,
+          "cost": 3,
+          "cumulative_share": 0.965
+        },
+        {
+          "rank": 115,
+          "cost": 2,
+          "cumulative_share": 0.966
+        },
+        {
+          "rank": 116,
+          "cost": 2,
+          "cumulative_share": 0.967
+        },
+        {
+          "rank": 117,
+          "cost": 2,
+          "cumulative_share": 0.967
+        },
+        {
+          "rank": 118,
+          "cost": 2,
+          "cumulative_share": 0.968
+        },
+        {
+          "rank": 119,
+          "cost": 2,
+          "cumulative_share": 0.969
+        },
+        {
+          "rank": 120,
+          "cost": 2,
+          "cumulative_share": 0.97
+        },
+        {
+          "rank": 121,
+          "cost": 2,
+          "cumulative_share": 0.971
+        },
+        {
+          "rank": 122,
+          "cost": 2,
+          "cumulative_share": 0.972
+        },
+        {
+          "rank": 123,
+          "cost": 2,
+          "cumulative_share": 0.972
+        },
+        {
+          "rank": 124,
+          "cost": 2,
+          "cumulative_share": 0.973
+        },
+        {
+          "rank": 125,
+          "cost": 2,
+          "cumulative_share": 0.974
+        },
+        {
+          "rank": 126,
+          "cost": 2,
+          "cumulative_share": 0.975
+        },
+        {
+          "rank": 127,
+          "cost": 2,
+          "cumulative_share": 0.976
+        },
+        {
+          "rank": 128,
+          "cost": 2,
+          "cumulative_share": 0.977
+        },
+        {
+          "rank": 129,
+          "cost": 2,
+          "cumulative_share": 0.977
+        },
+        {
+          "rank": 130,
+          "cost": 2,
+          "cumulative_share": 0.978
+        },
+        {
+          "rank": 131,
+          "cost": 2,
+          "cumulative_share": 0.979
+        },
+        {
+          "rank": 132,
+          "cost": 2,
+          "cumulative_share": 0.98
+        },
+        {
+          "rank": 133,
+          "cost": 1,
+          "cumulative_share": 0.98
+        },
+        {
+          "rank": 134,
+          "cost": 1,
+          "cumulative_share": 0.981
+        },
+        {
+          "rank": 135,
+          "cost": 1,
+          "cumulative_share": 0.981
+        },
+        {
+          "rank": 136,
+          "cost": 1,
+          "cumulative_share": 0.982
+        },
+        {
+          "rank": 137,
+          "cost": 1,
+          "cumulative_share": 0.982
+        },
+        {
+          "rank": 138,
+          "cost": 1,
+          "cumulative_share": 0.982
+        },
+        {
+          "rank": 139,
+          "cost": 1,
+          "cumulative_share": 0.983
+        },
+        {
+          "rank": 140,
+          "cost": 1,
+          "cumulative_share": 0.983
+        },
+        {
+          "rank": 141,
+          "cost": 1,
+          "cumulative_share": 0.984
+        },
+        {
+          "rank": 142,
+          "cost": 1,
+          "cumulative_share": 0.984
+        },
+        {
+          "rank": 143,
+          "cost": 1,
+          "cumulative_share": 0.985
+        },
+        {
+          "rank": 144,
+          "cost": 1,
+          "cumulative_share": 0.985
+        },
+        {
+          "rank": 145,
+          "cost": 1,
+          "cumulative_share": 0.985
+        },
+        {
+          "rank": 146,
+          "cost": 1,
+          "cumulative_share": 0.986
+        },
+        {
+          "rank": 147,
+          "cost": 1,
+          "cumulative_share": 0.986
+        },
+        {
+          "rank": 148,
+          "cost": 1,
+          "cumulative_share": 0.987
+        },
+        {
+          "rank": 149,
+          "cost": 1,
+          "cumulative_share": 0.987
+        },
+        {
+          "rank": 150,
+          "cost": 1,
+          "cumulative_share": 0.987
+        },
+        {
+          "rank": 151,
+          "cost": 1,
+          "cumulative_share": 0.988
+        },
+        {
+          "rank": 152,
+          "cost": 1,
+          "cumulative_share": 0.988
+        },
+        {
+          "rank": 153,
+          "cost": 1,
+          "cumulative_share": 0.989
+        },
+        {
+          "rank": 154,
+          "cost": 1,
+          "cumulative_share": 0.989
+        },
+        {
+          "rank": 155,
+          "cost": 1,
+          "cumulative_share": 0.99
+        },
+        {
+          "rank": 156,
+          "cost": 1,
+          "cumulative_share": 0.99
+        },
+        {
+          "rank": 157,
+          "cost": 1,
+          "cumulative_share": 0.99
+        },
+        {
+          "rank": 158,
+          "cost": 1,
+          "cumulative_share": 0.991
+        },
+        {
+          "rank": 159,
+          "cost": 1,
+          "cumulative_share": 0.991
+        },
+        {
+          "rank": 160,
+          "cost": 1,
+          "cumulative_share": 0.992
+        },
+        {
+          "rank": 161,
+          "cost": 1,
+          "cumulative_share": 0.992
+        },
+        {
+          "rank": 162,
+          "cost": 1,
+          "cumulative_share": 0.992
+        },
+        {
+          "rank": 163,
+          "cost": 1,
+          "cumulative_share": 0.993
+        },
+        {
+          "rank": 164,
+          "cost": 1,
+          "cumulative_share": 0.993
+        },
+        {
+          "rank": 165,
+          "cost": 1,
+          "cumulative_share": 0.994
+        },
+        {
+          "rank": 166,
+          "cost": 1,
+          "cumulative_share": 0.994
+        },
+        {
+          "rank": 167,
+          "cost": 1,
+          "cumulative_share": 0.995
+        },
+        {
+          "rank": 168,
+          "cost": 1,
+          "cumulative_share": 0.995
+        },
+        {
+          "rank": 169,
+          "cost": 1,
+          "cumulative_share": 0.995
+        },
+        {
+          "rank": 170,
+          "cost": 1,
+          "cumulative_share": 0.996
+        },
+        {
+          "rank": 171,
+          "cost": 1,
+          "cumulative_share": 0.996
+        },
+        {
+          "rank": 172,
+          "cost": 1,
+          "cumulative_share": 0.997
+        },
+        {
+          "rank": 173,
+          "cost": 1,
+          "cumulative_share": 0.997
+        },
+        {
+          "rank": 174,
+          "cost": 1,
+          "cumulative_share": 0.997
+        },
+        {
+          "rank": 175,
+          "cost": 1,
+          "cumulative_share": 0.998
+        },
+        {
+          "rank": 176,
+          "cost": 1,
+          "cumulative_share": 0.998
+        },
+        {
+          "rank": 177,
+          "cost": 1,
+          "cumulative_share": 0.999
+        },
+        {
+          "rank": 178,
+          "cost": 1,
+          "cumulative_share": 0.999
+        },
+        {
+          "rank": 179,
+          "cost": 1,
+          "cumulative_share": 1
+        },
+        {
+          "rank": 180,
+          "cost": 1,
+          "cumulative_share": 1
+        }
+      ],
+      "gini_prices": 0.604,
+      "top1_share": 0.028,
+      "top3_share": 0.081,
+      "top10_share": 0.242
+    },
+    "league_B": {
+      "league": "Gauntlet NFC (Draft 2)",
+      "data": [
+        {
+          "rank": 1,
+          "cost": 65,
+          "cumulative_share": 0.027
+        },
+        {
+          "rank": 2,
+          "cost": 64,
+          "cumulative_share": 0.054
+        },
+        {
+          "rank": 3,
+          "cost": 62,
+          "cumulative_share": 0.08
+        },
+        {
+          "rank": 4,
+          "cost": 62,
+          "cumulative_share": 0.106
+        },
+        {
+          "rank": 5,
+          "cost": 60,
+          "cumulative_share": 0.131
+        },
+        {
+          "rank": 6,
+          "cost": 55,
+          "cumulative_share": 0.154
+        },
+        {
+          "rank": 7,
+          "cost": 54,
+          "cumulative_share": 0.176
+        },
+        {
+          "rank": 8,
+          "cost": 51,
+          "cumulative_share": 0.198
+        },
+        {
+          "rank": 9,
+          "cost": 51,
+          "cumulative_share": 0.219
+        },
+        {
+          "rank": 10,
+          "cost": 47,
+          "cumulative_share": 0.239
+        },
+        {
+          "rank": 11,
+          "cost": 44,
+          "cumulative_share": 0.257
+        },
+        {
+          "rank": 12,
+          "cost": 43,
+          "cumulative_share": 0.275
+        },
+        {
+          "rank": 13,
+          "cost": 42,
+          "cumulative_share": 0.292
+        },
+        {
+          "rank": 14,
+          "cost": 42,
+          "cumulative_share": 0.31
+        },
+        {
+          "rank": 15,
+          "cost": 41,
+          "cumulative_share": 0.327
+        },
+        {
+          "rank": 16,
+          "cost": 41,
+          "cumulative_share": 0.344
+        },
+        {
+          "rank": 17,
+          "cost": 41,
+          "cumulative_share": 0.361
+        },
+        {
+          "rank": 18,
+          "cost": 39,
+          "cumulative_share": 0.378
+        },
+        {
+          "rank": 19,
+          "cost": 39,
+          "cumulative_share": 0.394
+        },
+        {
+          "rank": 20,
+          "cost": 38,
+          "cumulative_share": 0.41
+        },
+        {
+          "rank": 21,
+          "cost": 37,
+          "cumulative_share": 0.425
+        },
+        {
+          "rank": 22,
+          "cost": 36,
+          "cumulative_share": 0.44
+        },
+        {
+          "rank": 23,
+          "cost": 35,
+          "cumulative_share": 0.455
+        },
+        {
+          "rank": 24,
+          "cost": 35,
+          "cumulative_share": 0.47
+        },
+        {
+          "rank": 25,
+          "cost": 34,
+          "cumulative_share": 0.484
+        },
+        {
+          "rank": 26,
+          "cost": 33,
+          "cumulative_share": 0.497
+        },
+        {
+          "rank": 27,
+          "cost": 31,
+          "cumulative_share": 0.51
+        },
+        {
+          "rank": 28,
+          "cost": 30,
+          "cumulative_share": 0.523
+        },
+        {
+          "rank": 29,
+          "cost": 30,
+          "cumulative_share": 0.536
+        },
+        {
+          "rank": 30,
+          "cost": 29,
+          "cumulative_share": 0.548
+        },
+        {
+          "rank": 31,
+          "cost": 28,
+          "cumulative_share": 0.559
+        },
+        {
+          "rank": 32,
+          "cost": 27,
+          "cumulative_share": 0.571
+        },
+        {
+          "rank": 33,
+          "cost": 27,
+          "cumulative_share": 0.582
+        },
+        {
+          "rank": 34,
+          "cost": 26,
+          "cumulative_share": 0.593
+        },
+        {
+          "rank": 35,
+          "cost": 26,
+          "cumulative_share": 0.604
+        },
+        {
+          "rank": 36,
+          "cost": 26,
+          "cumulative_share": 0.614
+        },
+        {
+          "rank": 37,
+          "cost": 26,
+          "cumulative_share": 0.625
+        },
+        {
+          "rank": 38,
+          "cost": 25,
+          "cumulative_share": 0.636
+        },
+        {
+          "rank": 39,
+          "cost": 25,
+          "cumulative_share": 0.646
+        },
+        {
+          "rank": 40,
+          "cost": 25,
+          "cumulative_share": 0.657
+        },
+        {
+          "rank": 41,
+          "cost": 25,
+          "cumulative_share": 0.667
+        },
+        {
+          "rank": 42,
+          "cost": 24,
+          "cumulative_share": 0.677
+        },
+        {
+          "rank": 43,
+          "cost": 21,
+          "cumulative_share": 0.686
+        },
+        {
+          "rank": 44,
+          "cost": 20,
+          "cumulative_share": 0.694
+        },
+        {
+          "rank": 45,
+          "cost": 20,
+          "cumulative_share": 0.703
+        },
+        {
+          "rank": 46,
+          "cost": 19,
+          "cumulative_share": 0.711
+        },
+        {
+          "rank": 47,
+          "cost": 19,
+          "cumulative_share": 0.718
+        },
+        {
+          "rank": 48,
+          "cost": 19,
+          "cumulative_share": 0.726
+        },
+        {
+          "rank": 49,
+          "cost": 18,
+          "cumulative_share": 0.734
+        },
+        {
+          "rank": 50,
+          "cost": 18,
+          "cumulative_share": 0.741
+        },
+        {
+          "rank": 51,
+          "cost": 18,
+          "cumulative_share": 0.749
+        },
+        {
+          "rank": 52,
+          "cost": 18,
+          "cumulative_share": 0.756
+        },
+        {
+          "rank": 53,
+          "cost": 16,
+          "cumulative_share": 0.763
+        },
+        {
+          "rank": 54,
+          "cost": 16,
+          "cumulative_share": 0.77
+        },
+        {
+          "rank": 55,
+          "cost": 16,
+          "cumulative_share": 0.777
+        },
+        {
+          "rank": 56,
+          "cost": 16,
+          "cumulative_share": 0.783
+        },
+        {
+          "rank": 57,
+          "cost": 16,
+          "cumulative_share": 0.79
+        },
+        {
+          "rank": 58,
+          "cost": 15,
+          "cumulative_share": 0.796
+        },
+        {
+          "rank": 59,
+          "cost": 15,
+          "cumulative_share": 0.802
+        },
+        {
+          "rank": 60,
+          "cost": 15,
+          "cumulative_share": 0.809
+        },
+        {
+          "rank": 61,
+          "cost": 14,
+          "cumulative_share": 0.815
+        },
+        {
+          "rank": 62,
+          "cost": 13,
+          "cumulative_share": 0.82
+        },
+        {
+          "rank": 63,
+          "cost": 13,
+          "cumulative_share": 0.825
+        },
+        {
+          "rank": 64,
+          "cost": 12,
+          "cumulative_share": 0.83
+        },
+        {
+          "rank": 65,
+          "cost": 12,
+          "cumulative_share": 0.835
+        },
+        {
+          "rank": 66,
+          "cost": 12,
+          "cumulative_share": 0.84
+        },
+        {
+          "rank": 67,
+          "cost": 11,
+          "cumulative_share": 0.845
+        },
+        {
+          "rank": 68,
+          "cost": 10,
+          "cumulative_share": 0.849
+        },
+        {
+          "rank": 69,
+          "cost": 10,
+          "cumulative_share": 0.853
+        },
+        {
+          "rank": 70,
+          "cost": 10,
+          "cumulative_share": 0.858
+        },
+        {
+          "rank": 71,
+          "cost": 9,
+          "cumulative_share": 0.861
+        },
+        {
+          "rank": 72,
+          "cost": 9,
+          "cumulative_share": 0.865
+        },
+        {
+          "rank": 73,
+          "cost": 9,
+          "cumulative_share": 0.869
+        },
+        {
+          "rank": 74,
+          "cost": 8,
+          "cumulative_share": 0.872
+        },
+        {
+          "rank": 75,
+          "cost": 8,
+          "cumulative_share": 0.876
+        },
+        {
+          "rank": 76,
+          "cost": 8,
+          "cumulative_share": 0.879
+        },
+        {
+          "rank": 77,
+          "cost": 8,
+          "cumulative_share": 0.882
+        },
+        {
+          "rank": 78,
+          "cost": 8,
+          "cumulative_share": 0.886
+        },
+        {
+          "rank": 79,
+          "cost": 8,
+          "cumulative_share": 0.889
+        },
+        {
+          "rank": 80,
+          "cost": 7,
+          "cumulative_share": 0.892
+        },
+        {
+          "rank": 81,
+          "cost": 7,
+          "cumulative_share": 0.895
+        },
+        {
+          "rank": 82,
+          "cost": 7,
+          "cumulative_share": 0.898
+        },
+        {
+          "rank": 83,
+          "cost": 6,
+          "cumulative_share": 0.9
+        },
+        {
+          "rank": 84,
+          "cost": 6,
+          "cumulative_share": 0.903
+        },
+        {
+          "rank": 85,
+          "cost": 6,
+          "cumulative_share": 0.905
+        },
+        {
+          "rank": 86,
+          "cost": 6,
+          "cumulative_share": 0.908
+        },
+        {
+          "rank": 87,
+          "cost": 6,
+          "cumulative_share": 0.91
+        },
+        {
+          "rank": 88,
+          "cost": 6,
+          "cumulative_share": 0.913
+        },
+        {
+          "rank": 89,
+          "cost": 6,
+          "cumulative_share": 0.915
+        },
+        {
+          "rank": 90,
+          "cost": 5,
+          "cumulative_share": 0.917
+        },
+        {
+          "rank": 91,
+          "cost": 5,
+          "cumulative_share": 0.919
+        },
+        {
+          "rank": 92,
+          "cost": 5,
+          "cumulative_share": 0.921
+        },
+        {
+          "rank": 93,
+          "cost": 5,
+          "cumulative_share": 0.924
+        },
+        {
+          "rank": 94,
+          "cost": 5,
+          "cumulative_share": 0.926
+        },
+        {
+          "rank": 95,
+          "cost": 5,
+          "cumulative_share": 0.928
+        },
+        {
+          "rank": 96,
+          "cost": 5,
+          "cumulative_share": 0.93
+        },
+        {
+          "rank": 97,
+          "cost": 5,
+          "cumulative_share": 0.932
+        },
+        {
+          "rank": 98,
+          "cost": 5,
+          "cumulative_share": 0.934
+        },
+        {
+          "rank": 99,
+          "cost": 5,
+          "cumulative_share": 0.936
+        },
+        {
+          "rank": 100,
+          "cost": 5,
+          "cumulative_share": 0.938
+        },
+        {
+          "rank": 101,
+          "cost": 5,
+          "cumulative_share": 0.94
+        },
+        {
+          "rank": 102,
+          "cost": 4,
+          "cumulative_share": 0.942
+        },
+        {
+          "rank": 103,
+          "cost": 4,
+          "cumulative_share": 0.944
+        },
+        {
+          "rank": 104,
+          "cost": 4,
+          "cumulative_share": 0.945
+        },
+        {
+          "rank": 105,
+          "cost": 4,
+          "cumulative_share": 0.947
+        },
+        {
+          "rank": 106,
+          "cost": 4,
+          "cumulative_share": 0.949
+        },
+        {
+          "rank": 107,
+          "cost": 4,
+          "cumulative_share": 0.95
+        },
+        {
+          "rank": 108,
+          "cost": 3,
+          "cumulative_share": 0.952
+        },
+        {
+          "rank": 109,
+          "cost": 3,
+          "cumulative_share": 0.953
+        },
+        {
+          "rank": 110,
+          "cost": 3,
+          "cumulative_share": 0.954
+        },
+        {
+          "rank": 111,
+          "cost": 3,
+          "cumulative_share": 0.955
+        },
+        {
+          "rank": 112,
+          "cost": 3,
+          "cumulative_share": 0.957
+        },
+        {
+          "rank": 113,
+          "cost": 3,
+          "cumulative_share": 0.958
+        },
+        {
+          "rank": 114,
+          "cost": 3,
+          "cumulative_share": 0.959
+        },
+        {
+          "rank": 115,
+          "cost": 3,
+          "cumulative_share": 0.96
+        },
+        {
+          "rank": 116,
+          "cost": 3,
+          "cumulative_share": 0.962
+        },
+        {
+          "rank": 117,
+          "cost": 3,
+          "cumulative_share": 0.963
+        },
+        {
+          "rank": 118,
+          "cost": 3,
+          "cumulative_share": 0.964
+        },
+        {
+          "rank": 119,
+          "cost": 3,
+          "cumulative_share": 0.965
+        },
+        {
+          "rank": 120,
+          "cost": 3,
+          "cumulative_share": 0.967
+        },
+        {
+          "rank": 121,
+          "cost": 3,
+          "cumulative_share": 0.968
+        },
+        {
+          "rank": 122,
+          "cost": 2,
+          "cumulative_share": 0.969
+        },
+        {
+          "rank": 123,
+          "cost": 2,
+          "cumulative_share": 0.97
+        },
+        {
+          "rank": 124,
+          "cost": 2,
+          "cumulative_share": 0.97
+        },
+        {
+          "rank": 125,
+          "cost": 2,
+          "cumulative_share": 0.971
+        },
+        {
+          "rank": 126,
+          "cost": 2,
+          "cumulative_share": 0.972
+        },
+        {
+          "rank": 127,
+          "cost": 2,
+          "cumulative_share": 0.973
+        },
+        {
+          "rank": 128,
+          "cost": 2,
+          "cumulative_share": 0.974
+        },
+        {
+          "rank": 129,
+          "cost": 2,
+          "cumulative_share": 0.975
+        },
+        {
+          "rank": 130,
+          "cost": 2,
+          "cumulative_share": 0.975
+        },
+        {
+          "rank": 131,
+          "cost": 2,
+          "cumulative_share": 0.976
+        },
+        {
+          "rank": 132,
+          "cost": 2,
+          "cumulative_share": 0.977
+        },
+        {
+          "rank": 133,
+          "cost": 2,
+          "cumulative_share": 0.978
+        },
+        {
+          "rank": 134,
+          "cost": 2,
+          "cumulative_share": 0.979
+        },
+        {
+          "rank": 135,
+          "cost": 2,
+          "cumulative_share": 0.98
+        },
+        {
+          "rank": 136,
+          "cost": 2,
+          "cumulative_share": 0.98
+        },
+        {
+          "rank": 137,
+          "cost": 2,
+          "cumulative_share": 0.981
+        },
+        {
+          "rank": 138,
+          "cost": 2,
+          "cumulative_share": 0.982
+        },
+        {
+          "rank": 139,
+          "cost": 2,
+          "cumulative_share": 0.983
+        },
+        {
+          "rank": 140,
+          "cost": 1,
+          "cumulative_share": 0.983
+        },
+        {
+          "rank": 141,
+          "cost": 1,
+          "cumulative_share": 0.984
+        },
+        {
+          "rank": 142,
+          "cost": 1,
+          "cumulative_share": 0.984
+        },
+        {
+          "rank": 143,
+          "cost": 1,
+          "cumulative_share": 0.985
+        },
+        {
+          "rank": 144,
+          "cost": 1,
+          "cumulative_share": 0.985
+        },
+        {
+          "rank": 145,
+          "cost": 1,
+          "cumulative_share": 0.985
+        },
+        {
+          "rank": 146,
+          "cost": 1,
+          "cumulative_share": 0.986
+        },
+        {
+          "rank": 147,
+          "cost": 1,
+          "cumulative_share": 0.986
+        },
+        {
+          "rank": 148,
+          "cost": 1,
+          "cumulative_share": 0.987
+        },
+        {
+          "rank": 149,
+          "cost": 1,
+          "cumulative_share": 0.987
+        },
+        {
+          "rank": 150,
+          "cost": 1,
+          "cumulative_share": 0.987
+        },
+        {
+          "rank": 151,
+          "cost": 1,
+          "cumulative_share": 0.988
+        },
+        {
+          "rank": 152,
+          "cost": 1,
+          "cumulative_share": 0.988
+        },
+        {
+          "rank": 153,
+          "cost": 1,
+          "cumulative_share": 0.989
+        },
+        {
+          "rank": 154,
+          "cost": 1,
+          "cumulative_share": 0.989
+        },
+        {
+          "rank": 155,
+          "cost": 1,
+          "cumulative_share": 0.99
+        },
+        {
+          "rank": 156,
+          "cost": 1,
+          "cumulative_share": 0.99
+        },
+        {
+          "rank": 157,
+          "cost": 1,
+          "cumulative_share": 0.99
+        },
+        {
+          "rank": 158,
+          "cost": 1,
+          "cumulative_share": 0.991
+        },
+        {
+          "rank": 159,
+          "cost": 1,
+          "cumulative_share": 0.991
+        },
+        {
+          "rank": 160,
+          "cost": 1,
+          "cumulative_share": 0.992
+        },
+        {
+          "rank": 161,
+          "cost": 1,
+          "cumulative_share": 0.992
+        },
+        {
+          "rank": 162,
+          "cost": 1,
+          "cumulative_share": 0.992
+        },
+        {
+          "rank": 163,
+          "cost": 1,
+          "cumulative_share": 0.993
+        },
+        {
+          "rank": 164,
+          "cost": 1,
+          "cumulative_share": 0.993
+        },
+        {
+          "rank": 165,
+          "cost": 1,
+          "cumulative_share": 0.994
+        },
+        {
+          "rank": 166,
+          "cost": 1,
+          "cumulative_share": 0.994
+        },
+        {
+          "rank": 167,
+          "cost": 1,
+          "cumulative_share": 0.995
+        },
+        {
+          "rank": 168,
+          "cost": 1,
+          "cumulative_share": 0.995
+        },
+        {
+          "rank": 169,
+          "cost": 1,
+          "cumulative_share": 0.995
+        },
+        {
+          "rank": 170,
+          "cost": 1,
+          "cumulative_share": 0.996
+        },
+        {
+          "rank": 171,
+          "cost": 1,
+          "cumulative_share": 0.996
+        },
+        {
+          "rank": 172,
+          "cost": 1,
+          "cumulative_share": 0.997
+        },
+        {
+          "rank": 173,
+          "cost": 1,
+          "cumulative_share": 0.997
+        },
+        {
+          "rank": 174,
+          "cost": 1,
+          "cumulative_share": 0.997
+        },
+        {
+          "rank": 175,
+          "cost": 1,
+          "cumulative_share": 0.998
+        },
+        {
+          "rank": 176,
+          "cost": 1,
+          "cumulative_share": 0.998
+        },
+        {
+          "rank": 177,
+          "cost": 1,
+          "cumulative_share": 0.999
+        },
+        {
+          "rank": 178,
+          "cost": 1,
+          "cumulative_share": 0.999
+        },
+        {
+          "rank": 179,
+          "cost": 1,
+          "cumulative_share": 1
+        },
+        {
+          "rank": 180,
+          "cost": 1,
+          "cumulative_share": 1
+        }
+      ],
+      "gini_prices": 0.587,
+      "top1_share": 0.027,
+      "top3_share": 0.08,
+      "top10_share": 0.239
+    }
+  },
+  "replacement_costs": {
+    "league_A": {
+      "thresholds": {
+        "RB": 24,
+        "WR": 36,
+        "TE": 12,
+        "FLEX": 12
+      },
+      "prices": {
+        "RB": {
+          "locked": 15,
+          "effective": 15
+        },
+        "WR": {
+          "locked": 9,
+          "effective": 9
+        },
+        "TE": {
+          "locked": 2,
+          "effective": 2
+        }
+      }
+    },
+    "league_B": {
+      "thresholds": {
+        "RB": 24,
+        "WR": 36,
+        "TE": 12,
+        "FLEX": 12
+      },
+      "prices": {
+        "RB": {
+          "locked": 16,
+          "effective": 16
+        },
+        "WR": {
+          "locked": 7,
+          "effective": 7
+        },
+        "TE": {
+          "locked": 3,
+          "effective": 3
+        }
+      }
+    }
+  },
+  "tiers": {
+    "league_A": {
+      "assignments": [
+        {
+          "player_id": "9509",
+          "tier": 1
+        },
+        {
+          "player_id": "7564",
+          "tier": 1
+        },
+        {
+          "player_id": "9221",
+          "tier": 1
+        },
+        {
+          "player_id": "4866",
+          "tier": 1
+        },
+        {
+          "player_id": "6786",
+          "tier": 1
+        },
+        {
+          "player_id": "4034",
+          "tier": 1
+        },
+        {
+          "player_id": "6794",
+          "tier": 1
+        },
+        {
+          "player_id": "12527",
+          "tier": 1
+        },
+        {
+          "player_id": "7547",
+          "tier": 1
+        },
+        {
+          "player_id": "7569",
+          "tier": 1
+        },
+        {
+          "player_id": "9493",
+          "tier": 1
+        },
+        {
+          "player_id": "11631",
+          "tier": 1
+        },
+        {
+          "player_id": "3198",
+          "tier": 1
+        },
+        {
+          "player_id": "11632",
+          "tier": 1
+        },
+        {
+          "player_id": "8112",
+          "tier": 1
+        },
+        {
+          "player_id": "5850",
+          "tier": 1
+        },
+        {
+          "player_id": "9224",
+          "tier": 1
+        },
+        {
+          "player_id": "9226",
+          "tier": 1
+        },
+        {
+          "player_id": "11584",
+          "tier": 2
+        },
+        {
+          "player_id": "6813",
+          "tier": 2
+        },
+        {
+          "player_id": "11604",
+          "tier": 2
+        },
+        {
+          "player_id": "4984",
+          "tier": 2
+        },
+        {
+          "player_id": "5859",
+          "tier": 2
+        },
+        {
+          "player_id": "11635",
+          "tier": 2
+        },
+        {
+          "player_id": "4881",
+          "tier": 2
+        },
+        {
+          "player_id": "8150",
+          "tier": 2
+        },
+        {
+          "player_id": "8130",
+          "tier": 2
+        },
+        {
+          "player_id": "4217",
+          "tier": 2
+        },
+        {
+          "player_id": "8138",
+          "tier": 2
+        },
+        {
+          "player_id": "4035",
+          "tier": 2
+        },
+        {
+          "player_id": "12507",
+          "tier": 2
+        },
+        {
+          "player_id": "9488",
+          "tier": 2
+        },
+        {
+          "player_id": "8151",
+          "tier": 2
+        },
+        {
+          "player_id": "3321",
+          "tier": 2
+        },
+        {
+          "player_id": "2133",
+          "tier": 2
+        },
+        {
+          "player_id": "2216",
+          "tier": 2
+        },
+        {
+          "player_id": "8146",
+          "tier": 2
+        },
+        {
+          "player_id": "6801",
+          "tier": 2
+        },
+        {
+          "player_id": "12529",
+          "tier": 2
+        },
+        {
+          "player_id": "11628",
+          "tier": 2
+        },
+        {
+          "player_id": "6904",
+          "tier": 2
+        },
+        {
+          "player_id": "11566",
+          "tier": 2
+        },
+        {
+          "player_id": "8155",
+          "tier": 2
+        },
+        {
+          "player_id": "5846",
+          "tier": 2
+        },
+        {
+          "player_id": "4137",
+          "tier": 2
+        },
+        {
+          "player_id": "12489",
+          "tier": 3
+        },
+        {
+          "player_id": "7594",
+          "tier": 3
+        },
+        {
+          "player_id": "8205",
+          "tier": 3
+        },
+        {
+          "player_id": "12526",
+          "tier": 3
+        },
+        {
+          "player_id": "9997",
+          "tier": 3
+        },
+        {
+          "player_id": "7525",
+          "tier": 3
+        },
+        {
+          "player_id": "8137",
+          "tier": 3
+        },
+        {
+          "player_id": "8148",
+          "tier": 3
+        },
+        {
+          "player_id": "5892",
+          "tier": 3
+        },
+        {
+          "player_id": "5045",
+          "tier": 3
+        },
+        {
+          "player_id": "11624",
+          "tier": 3
+        },
+        {
+          "player_id": "6790",
+          "tier": 3
+        },
+        {
+          "player_id": "4981",
+          "tier": 3
+        },
+        {
+          "player_id": "5927",
+          "tier": 3
+        },
+        {
+          "player_id": "10859",
+          "tier": 3
+        },
+        {
+          "player_id": "10229",
+          "tier": 3
+        },
+        {
+          "player_id": "5967",
+          "tier": 3
+        },
+        {
+          "player_id": "4983",
+          "tier": 3
+        },
+        {
+          "player_id": "7526",
+          "tier": 3
+        },
+        {
+          "player_id": "11638",
+          "tier": 3
+        },
+        {
+          "player_id": "12530",
+          "tier": 3
+        },
+        {
+          "player_id": "6770",
+          "tier": 3
+        },
+        {
+          "player_id": "12501",
+          "tier": 3
+        },
+        {
+          "player_id": "12533",
+          "tier": 3
+        },
+        {
+          "player_id": "4892",
+          "tier": 3
+        },
+        {
+          "player_id": "12514",
+          "tier": 3
+        },
+        {
+          "player_id": "4046",
+          "tier": 3
+        },
+        {
+          "player_id": "4199",
+          "tier": 3
+        },
+        {
+          "player_id": "1466",
+          "tier": 3
+        },
+        {
+          "player_id": "12504",
+          "tier": 3
+        },
+        {
+          "player_id": "11620",
+          "tier": 3
+        },
+        {
+          "player_id": "8144",
+          "tier": 3
+        },
+        {
+          "player_id": "6783",
+          "tier": 3
+        },
+        {
+          "player_id": "11655",
+          "tier": 3
+        },
+        {
+          "player_id": "5844",
+          "tier": 3
+        },
+        {
+          "player_id": "5872",
+          "tier": 3
+        },
+        {
+          "player_id": "6806",
+          "tier": 3
+        },
+        {
+          "player_id": "9753",
+          "tier": 3
+        },
+        {
+          "player_id": "5947",
+          "tier": 3
+        },
+        {
+          "player_id": "12518",
+          "tier": 3
+        },
+        {
+          "player_id": "8228",
+          "tier": 3
+        },
+        {
+          "player_id": "5012",
+          "tier": 3
+        },
+        {
+          "player_id": "2449",
+          "tier": 3
+        },
+        {
+          "player_id": "12495",
+          "tier": 3
+        },
+        {
+          "player_id": "8408",
+          "tier": 3
+        },
+        {
+          "player_id": "4037",
+          "tier": 3
+        },
+        {
+          "player_id": "4039",
+          "tier": 3
+        },
+        {
+          "player_id": "7591",
+          "tier": 3
+        },
+        {
+          "player_id": "12484",
+          "tier": 3
+        },
+        {
+          "player_id": "PIT",
+          "tier": 3
+        },
+        {
+          "player_id": "9225",
+          "tier": 3
+        },
+        {
+          "player_id": "4663",
+          "tier": 3
+        },
+        {
+          "player_id": "4033",
+          "tier": 3
+        },
+        {
+          "player_id": "7049",
+          "tier": 3
+        },
+        {
+          "player_id": "5849",
+          "tier": 4
+        },
+        {
+          "player_id": "4066",
+          "tier": 4
+        },
+        {
+          "player_id": "7543",
+          "tier": 4
+        },
+        {
+          "player_id": "11637",
+          "tier": 4
+        },
+        {
+          "player_id": "9484",
+          "tier": 4
+        },
+        {
+          "player_id": "8134",
+          "tier": 4
+        },
+        {
+          "player_id": "7611",
+          "tier": 4
+        },
+        {
+          "player_id": "8676",
+          "tier": 4
+        },
+        {
+          "player_id": "3294",
+          "tier": 4
+        },
+        {
+          "player_id": "DEN",
+          "tier": 4
+        },
+        {
+          "player_id": "8154",
+          "tier": 4
+        },
+        {
+          "player_id": "12481",
+          "tier": 4
+        },
+        {
+          "player_id": "12512",
+          "tier": 4
+        },
+        {
+          "player_id": "12457",
+          "tier": 4
+        },
+        {
+          "player_id": "12469",
+          "tier": 4
+        },
+        {
+          "player_id": "9500",
+          "tier": 4
+        },
+        {
+          "player_id": "11589",
+          "tier": 4
+        },
+        {
+          "player_id": "11576",
+          "tier": 4
+        },
+        {
+          "player_id": "1479",
+          "tier": 4
+        },
+        {
+          "player_id": "11560",
+          "tier": 4
+        },
+        {
+          "player_id": "9756",
+          "tier": 4
+        },
+        {
+          "player_id": "10222",
+          "tier": 4
+        },
+        {
+          "player_id": "7670",
+          "tier": 4
+        },
+        {
+          "player_id": "4950",
+          "tier": 4
+        },
+        {
+          "player_id": "7571",
+          "tier": 4
+        },
+        {
+          "player_id": "7553",
+          "tier": 4
+        },
+        {
+          "player_id": "PHI",
+          "tier": 4
+        },
+        {
+          "player_id": "7090",
+          "tier": 4
+        },
+        {
+          "player_id": "9494",
+          "tier": 4
+        },
+        {
+          "player_id": "12541",
+          "tier": 4
+        },
+        {
+          "player_id": "BAL",
+          "tier": 4
+        },
+        {
+          "player_id": "4018",
+          "tier": 4
+        },
+        {
+          "player_id": "7528",
+          "tier": 4
+        },
+        {
+          "player_id": "12517",
+          "tier": 4
+        },
+        {
+          "player_id": "SF",
+          "tier": 4
+        },
+        {
+          "player_id": "11577",
+          "tier": 4
+        },
+        {
+          "player_id": "1689",
+          "tier": 4
+        },
+        {
+          "player_id": "8110",
+          "tier": 4
+        },
+        {
+          "player_id": "6819",
+          "tier": 4
+        },
+        {
+          "player_id": "12509",
+          "tier": 4
+        },
+        {
+          "player_id": "11626",
+          "tier": 4
+        },
+        {
+          "player_id": "12490",
+          "tier": 4
+        },
+        {
+          "player_id": "2505",
+          "tier": 4
+        },
+        {
+          "player_id": "DET",
+          "tier": 4
+        },
+        {
+          "player_id": "3214",
+          "tier": 4
+        },
+        {
+          "player_id": "12474",
+          "tier": 4
+        },
+        {
+          "player_id": "5848",
+          "tier": 4
+        },
+        {
+          "player_id": "11646",
+          "tier": 4
+        },
+        {
+          "player_id": "10235",
+          "tier": 4
+        },
+        {
+          "player_id": "11651",
+          "tier": 4
+        },
+        {
+          "player_id": "10444",
+          "tier": 4
+        },
+        {
+          "player_id": "8183",
+          "tier": 4
+        },
+        {
+          "player_id": "11564",
+          "tier": 4
+        },
+        {
+          "player_id": "ARI",
+          "tier": 4
+        },
+        {
+          "player_id": "BUF",
+          "tier": 5
+        },
+        {
+          "player_id": "8132",
+          "tier": 5
+        },
+        {
+          "player_id": "6803",
+          "tier": 5
+        },
+        {
+          "player_id": "8121",
+          "tier": 5
+        },
+        {
+          "player_id": "7588",
+          "tier": 5
+        },
+        {
+          "player_id": "MIN",
+          "tier": 5
+        },
+        {
+          "player_id": "8143",
+          "tier": 5
+        },
+        {
+          "player_id": "12519",
+          "tier": 5
+        },
+        {
+          "player_id": "HOU",
+          "tier": 5
+        },
+        {
+          "player_id": "12499",
+          "tier": 5
+        },
+        {
+          "player_id": "12497",
+          "tier": 5
+        },
+        {
+          "player_id": "12535",
+          "tier": 5
+        },
+        {
+          "player_id": "4098",
+          "tier": 5
+        },
+        {
+          "player_id": "12522",
+          "tier": 5
+        },
+        {
+          "player_id": "12498",
+          "tier": 5
+        },
+        {
+          "player_id": "8126",
+          "tier": 5
+        },
+        {
+          "player_id": "KC",
+          "tier": 5
+        },
+        {
+          "player_id": "11563",
+          "tier": 5
+        },
+        {
+          "player_id": "6797",
+          "tier": 5
+        },
+        {
+          "player_id": "11575",
+          "tier": 5
+        },
+        {
+          "player_id": "GB",
+          "tier": 5
+        },
+        {
+          "player_id": "12483",
+          "tier": 5
+        },
+        {
+          "player_id": "3163",
+          "tier": 5
+        },
+        {
+          "player_id": "4988",
+          "tier": 5
+        },
+        {
+          "player_id": "9501",
+          "tier": 5
+        },
+        {
+          "player_id": "8136",
+          "tier": 5
+        },
+        {
+          "player_id": "10236",
+          "tier": 5
+        }
+      ],
+      "method": {
+        "type": "quantile",
+        "breaks": [
+          0.1,
+          0.25,
+          0.55,
+          0.85,
+          1
+        ]
+      }
+    },
+    "league_B": {
+      "assignments": [
+        {
+          "player_id": "7564",
+          "tier": 1
+        },
+        {
+          "player_id": "9509",
+          "tier": 1
+        },
+        {
+          "player_id": "4866",
+          "tier": 1
+        },
+        {
+          "player_id": "6794",
+          "tier": 1
+        },
+        {
+          "player_id": "9221",
+          "tier": 1
+        },
+        {
+          "player_id": "6786",
+          "tier": 1
+        },
+        {
+          "player_id": "4034",
+          "tier": 1
+        },
+        {
+          "player_id": "3198",
+          "tier": 1
+        },
+        {
+          "player_id": "7547",
+          "tier": 1
+        },
+        {
+          "player_id": "11632",
+          "tier": 1
+        },
+        {
+          "player_id": "7569",
+          "tier": 1
+        },
+        {
+          "player_id": "9226",
+          "tier": 1
+        },
+        {
+          "player_id": "12527",
+          "tier": 1
+        },
+        {
+          "player_id": "9493",
+          "tier": 1
+        },
+        {
+          "player_id": "11631",
+          "tier": 1
+        },
+        {
+          "player_id": "6813",
+          "tier": 1
+        },
+        {
+          "player_id": "11584",
+          "tier": 1
+        },
+        {
+          "player_id": "5850",
+          "tier": 1
+        },
+        {
+          "player_id": "9224",
+          "tier": 2
+        },
+        {
+          "player_id": "5859",
+          "tier": 2
+        },
+        {
+          "player_id": "8112",
+          "tier": 2
+        },
+        {
+          "player_id": "3321",
+          "tier": 2
+        },
+        {
+          "player_id": "4984",
+          "tier": 2
+        },
+        {
+          "player_id": "8150",
+          "tier": 2
+        },
+        {
+          "player_id": "8138",
+          "tier": 2
+        },
+        {
+          "player_id": "4881",
+          "tier": 2
+        },
+        {
+          "player_id": "11604",
+          "tier": 2
+        },
+        {
+          "player_id": "11635",
+          "tier": 2
+        },
+        {
+          "player_id": "12507",
+          "tier": 2
+        },
+        {
+          "player_id": "4217",
+          "tier": 2
+        },
+        {
+          "player_id": "6801",
+          "tier": 2
+        },
+        {
+          "player_id": "11628",
+          "tier": 2
+        },
+        {
+          "player_id": "4137",
+          "tier": 2
+        },
+        {
+          "player_id": "8130",
+          "tier": 2
+        },
+        {
+          "player_id": "8155",
+          "tier": 2
+        },
+        {
+          "player_id": "2216",
+          "tier": 2
+        },
+        {
+          "player_id": "6904",
+          "tier": 2
+        },
+        {
+          "player_id": "11566",
+          "tier": 2
+        },
+        {
+          "player_id": "9488",
+          "tier": 2
+        },
+        {
+          "player_id": "8151",
+          "tier": 2
+        },
+        {
+          "player_id": "7594",
+          "tier": 2
+        },
+        {
+          "player_id": "4035",
+          "tier": 2
+        },
+        {
+          "player_id": "12529",
+          "tier": 2
+        },
+        {
+          "player_id": "12526",
+          "tier": 2
+        },
+        {
+          "player_id": "2133",
+          "tier": 2
+        },
+        {
+          "player_id": "8148",
+          "tier": 3
+        },
+        {
+          "player_id": "6770",
+          "tier": 3
+        },
+        {
+          "player_id": "5846",
+          "tier": 3
+        },
+        {
+          "player_id": "10859",
+          "tier": 3
+        },
+        {
+          "player_id": "8137",
+          "tier": 3
+        },
+        {
+          "player_id": "5967",
+          "tier": 3
+        },
+        {
+          "player_id": "6790",
+          "tier": 3
+        },
+        {
+          "player_id": "8146",
+          "tier": 3
+        },
+        {
+          "player_id": "11624",
+          "tier": 3
+        },
+        {
+          "player_id": "8205",
+          "tier": 3
+        },
+        {
+          "player_id": "5892",
+          "tier": 3
+        },
+        {
+          "player_id": "5927",
+          "tier": 3
+        },
+        {
+          "player_id": "12530",
+          "tier": 3
+        },
+        {
+          "player_id": "4983",
+          "tier": 3
+        },
+        {
+          "player_id": "12489",
+          "tier": 3
+        },
+        {
+          "player_id": "4981",
+          "tier": 3
+        },
+        {
+          "player_id": "5045",
+          "tier": 3
+        },
+        {
+          "player_id": "9997",
+          "tier": 3
+        },
+        {
+          "player_id": "1466",
+          "tier": 3
+        },
+        {
+          "player_id": "5844",
+          "tier": 3
+        },
+        {
+          "player_id": "10229",
+          "tier": 3
+        },
+        {
+          "player_id": "7525",
+          "tier": 3
+        },
+        {
+          "player_id": "11620",
+          "tier": 3
+        },
+        {
+          "player_id": "7526",
+          "tier": 3
+        },
+        {
+          "player_id": "11655",
+          "tier": 3
+        },
+        {
+          "player_id": "5872",
+          "tier": 3
+        },
+        {
+          "player_id": "12514",
+          "tier": 3
+        },
+        {
+          "player_id": "4199",
+          "tier": 3
+        },
+        {
+          "player_id": "6783",
+          "tier": 3
+        },
+        {
+          "player_id": "4046",
+          "tier": 3
+        },
+        {
+          "player_id": "12504",
+          "tier": 3
+        },
+        {
+          "player_id": "7543",
+          "tier": 3
+        },
+        {
+          "player_id": "5012",
+          "tier": 3
+        },
+        {
+          "player_id": "12518",
+          "tier": 3
+        },
+        {
+          "player_id": "11638",
+          "tier": 3
+        },
+        {
+          "player_id": "4039",
+          "tier": 3
+        },
+        {
+          "player_id": "12501",
+          "tier": 3
+        },
+        {
+          "player_id": "4018",
+          "tier": 3
+        },
+        {
+          "player_id": "8228",
+          "tier": 3
+        },
+        {
+          "player_id": "2449",
+          "tier": 3
+        },
+        {
+          "player_id": "8134",
+          "tier": 3
+        },
+        {
+          "player_id": "12484",
+          "tier": 3
+        },
+        {
+          "player_id": "12533",
+          "tier": 3
+        },
+        {
+          "player_id": "4663",
+          "tier": 3
+        },
+        {
+          "player_id": "4037",
+          "tier": 3
+        },
+        {
+          "player_id": "4066",
+          "tier": 3
+        },
+        {
+          "player_id": "9756",
+          "tier": 3
+        },
+        {
+          "player_id": "6806",
+          "tier": 3
+        },
+        {
+          "player_id": "8408",
+          "tier": 3
+        },
+        {
+          "player_id": "7553",
+          "tier": 3
+        },
+        {
+          "player_id": "4892",
+          "tier": 3
+        },
+        {
+          "player_id": "11563",
+          "tier": 3
+        },
+        {
+          "player_id": "12512",
+          "tier": 3
+        },
+        {
+          "player_id": "8144",
+          "tier": 3
+        },
+        {
+          "player_id": "4033",
+          "tier": 4
+        },
+        {
+          "player_id": "7049",
+          "tier": 4
+        },
+        {
+          "player_id": "9753",
+          "tier": 4
+        },
+        {
+          "player_id": "1479",
+          "tier": 4
+        },
+        {
+          "player_id": "12495",
+          "tier": 4
+        },
+        {
+          "player_id": "11576",
+          "tier": 4
+        },
+        {
+          "player_id": "11637",
+          "tier": 4
+        },
+        {
+          "player_id": "12481",
+          "tier": 4
+        },
+        {
+          "player_id": "12490",
+          "tier": 4
+        },
+        {
+          "player_id": "9500",
+          "tier": 4
+        },
+        {
+          "player_id": "12541",
+          "tier": 4
+        },
+        {
+          "player_id": "8121",
+          "tier": 4
+        },
+        {
+          "player_id": "10222",
+          "tier": 4
+        },
+        {
+          "player_id": "8136",
+          "tier": 4
+        },
+        {
+          "player_id": "9225",
+          "tier": 4
+        },
+        {
+          "player_id": "7611",
+          "tier": 4
+        },
+        {
+          "player_id": "12457",
+          "tier": 4
+        },
+        {
+          "player_id": "7588",
+          "tier": 4
+        },
+        {
+          "player_id": "6797",
+          "tier": 4
+        },
+        {
+          "player_id": "11564",
+          "tier": 4
+        },
+        {
+          "player_id": "5947",
+          "tier": 4
+        },
+        {
+          "player_id": "9484",
+          "tier": 4
+        },
+        {
+          "player_id": "8143",
+          "tier": 4
+        },
+        {
+          "player_id": "8183",
+          "tier": 4
+        },
+        {
+          "player_id": "5849",
+          "tier": 4
+        },
+        {
+          "player_id": "11589",
+          "tier": 4
+        },
+        {
+          "player_id": "7090",
+          "tier": 4
+        },
+        {
+          "player_id": "7528",
+          "tier": 4
+        },
+        {
+          "player_id": "9494",
+          "tier": 4
+        },
+        {
+          "player_id": "6819",
+          "tier": 4
+        },
+        {
+          "player_id": "4988",
+          "tier": 4
+        },
+        {
+          "player_id": "12519",
+          "tier": 4
+        },
+        {
+          "player_id": "12474",
+          "tier": 4
+        },
+        {
+          "player_id": "12469",
+          "tier": 4
+        },
+        {
+          "player_id": "9508",
+          "tier": 4
+        },
+        {
+          "player_id": "11651",
+          "tier": 4
+        },
+        {
+          "player_id": "4950",
+          "tier": 4
+        },
+        {
+          "player_id": "8676",
+          "tier": 4
+        },
+        {
+          "player_id": "6803",
+          "tier": 4
+        },
+        {
+          "player_id": "PHI",
+          "tier": 4
+        },
+        {
+          "player_id": "11575",
+          "tier": 4
+        },
+        {
+          "player_id": "10235",
+          "tier": 4
+        },
+        {
+          "player_id": "12534",
+          "tier": 4
+        },
+        {
+          "player_id": "8132",
+          "tier": 4
+        },
+        {
+          "player_id": "12517",
+          "tier": 4
+        },
+        {
+          "player_id": "7571",
+          "tier": 4
+        },
+        {
+          "player_id": "7670",
+          "tier": 4
+        },
+        {
+          "player_id": "12471",
+          "tier": 4
+        },
+        {
+          "player_id": "7523",
+          "tier": 4
+        },
+        {
+          "player_id": "GB",
+          "tier": 4
+        },
+        {
+          "player_id": "8210",
+          "tier": 4
+        },
+        {
+          "player_id": "8154",
+          "tier": 4
+        },
+        {
+          "player_id": "3294",
+          "tier": 4
+        },
+        {
+          "player_id": "8110",
+          "tier": 4
+        },
+        {
+          "player_id": "NYJ",
+          "tier": 5
+        },
+        {
+          "player_id": "6804",
+          "tier": 5
+        },
+        {
+          "player_id": "11560",
+          "tier": 5
+        },
+        {
+          "player_id": "MIN",
+          "tier": 5
+        },
+        {
+          "player_id": "9511",
+          "tier": 5
+        },
+        {
+          "player_id": "11577",
+          "tier": 5
+        },
+        {
+          "player_id": "11646",
+          "tier": 5
+        },
+        {
+          "player_id": "12543",
+          "tier": 5
+        },
+        {
+          "player_id": "ARI",
+          "tier": 5
+        },
+        {
+          "player_id": "10236",
+          "tier": 5
+        },
+        {
+          "player_id": "9758",
+          "tier": 5
+        },
+        {
+          "player_id": "PIT",
+          "tier": 5
+        },
+        {
+          "player_id": "11565",
+          "tier": 5
+        },
+        {
+          "player_id": "5022",
+          "tier": 5
+        },
+        {
+          "player_id": "12499",
+          "tier": 5
+        },
+        {
+          "player_id": "10219",
+          "tier": 5
+        },
+        {
+          "player_id": "SF",
+          "tier": 5
+        },
+        {
+          "player_id": "7021",
+          "tier": 5
+        },
+        {
+          "player_id": "12498",
+          "tier": 5
+        },
+        {
+          "player_id": "1689",
+          "tier": 5
+        },
+        {
+          "player_id": "4144",
+          "tier": 5
+        },
+        {
+          "player_id": "BAL",
+          "tier": 5
+        },
+        {
+          "player_id": "9480",
+          "tier": 5
+        },
+        {
+          "player_id": "7591",
+          "tier": 5
+        },
+        {
+          "player_id": "DEN",
+          "tier": 5
+        },
+        {
+          "player_id": "3163",
+          "tier": 5
+        },
+        {
+          "player_id": "WAS",
+          "tier": 5
+        }
+      ],
+      "method": {
+        "type": "quantile",
+        "breaks": [
+          0.1,
+          0.25,
+          0.55,
+          0.85,
+          1
+        ]
+      }
+    },
+    "shifts": [
+      {
+        "from_tier": 1,
+        "to_tier": 2,
+        "count": 2,
+        "players": [
+          "8112",
+          "9224"
+        ]
+      },
+      {
+        "from_tier": 2,
+        "to_tier": 1,
+        "count": 2,
+        "players": [
+          "11584",
+          "6813"
+        ]
+      },
+      {
+        "from_tier": 2,
+        "to_tier": 3,
+        "count": 2,
+        "players": [
+          "8146",
+          "5846"
+        ]
+      },
+      {
+        "from_tier": 3,
+        "to_tier": 2,
+        "count": 2,
+        "players": [
+          "7594",
+          "12526"
+        ]
+      },
+      {
+        "from_tier": 3,
+        "to_tier": 4,
+        "count": 6,
+        "players": [
+          "9753",
+          "5947",
+          "12495",
+          "9225",
+          "4033",
+          "7049"
+        ]
+      },
+      {
+        "from_tier": 3,
+        "to_tier": 5,
+        "count": 2,
+        "players": [
+          "7591",
+          "PIT"
+        ]
+      },
+      {
+        "from_tier": 4,
+        "to_tier": 3,
+        "count": 7,
+        "players": [
+          "4066",
+          "7543",
+          "8134",
+          "12512",
+          "9756",
+          "7553",
+          "4018"
+        ]
+      },
+      {
+        "from_tier": 4,
+        "to_tier": 5,
+        "count": 8,
+        "players": [
+          "DEN",
+          "11560",
+          "BAL",
+          "SF",
+          "11577",
+          "1689",
+          "11646",
+          "ARI"
+        ]
+      },
+      {
+        "from_tier": 5,
+        "to_tier": 3,
+        "count": 1,
+        "players": [
+          "11563"
+        ]
+      },
+      {
+        "from_tier": 5,
+        "to_tier": 4,
+        "count": 11,
+        "players": [
+          "8132",
+          "6803",
+          "8121",
+          "7588",
+          "8143",
+          "12519",
+          "6797",
+          "11575",
+          "GB",
+          "4988",
+          "8136"
+        ]
+      }
+    ]
+  },
+  "nomination_effects": {
+    "league_A": {
+      "method": "within_pos_residual_OLS",
+      "beta_per_10_picks": -2.1,
+      "r_naive": -0.18,
+      "beta_naive_per_10": -2.8,
+      "correlation": -0.18
+    },
+    "league_B": {
+      "method": "within_pos_residual_OLS",
+      "beta_per_10_picks": -3.2,
+      "r_naive": -0.24,
+      "beta_naive_per_10": -3.7,
+      "correlation": -0.24
+    }
+  },
+  "nomination_order_analysis": {
+    "overall_correlation": {
+      "league_A": -0.065,
+      "league_B": -0.067,
+      "combined": -0.066
+    },
+    "position_effects": [
+      {
+        "position": "QB",
+        "league_A_correlation": -0.091,
+        "league_B_correlation": -0.048,
+        "avg_early_price": 6,
+        "avg_late_price": 11,
+        "effect_strength": "None"
+      },
+      {
+        "position": "RB",
+        "league_A_correlation": -0.186,
+        "league_B_correlation": 0.031,
+        "avg_early_price": 18,
+        "avg_late_price": 15,
+        "effect_strength": "None"
+      },
+      {
+        "position": "WR",
+        "league_A_correlation": 0.035,
+        "league_B_correlation": -0.14,
+        "avg_early_price": 14,
+        "avg_late_price": 16,
+        "effect_strength": "None"
+      },
+      {
+        "position": "TE",
+        "league_A_correlation": 0.226,
+        "league_B_correlation": -0.185,
+        "avg_early_price": 8,
+        "avg_late_price": 9,
+        "effect_strength": "None"
+      },
+      {
+        "position": "DEF",
+        "league_A_correlation": 0.64,
+        "league_B_correlation": 0.126,
+        "avg_early_price": 1,
+        "avg_late_price": 2,
+        "effect_strength": "Moderate"
+      }
+    ],
+    "notable_differences": [
+      {
+        "player_name": "Joe Mixon",
+        "position": "RB",
+        "league_A_order": 160,
+        "league_B_order": 7,
+        "order_diff": 153,
+        "league_A_price": 2,
+        "league_B_price": 6,
+        "price_diff": -4,
+        "consistent_with_early_premium": true
+      },
+      {
+        "player_name": "Alvin Kamara",
+        "position": "RB",
+        "league_A_order": 19,
+        "league_B_order": 170,
+        "order_diff": 151,
+        "league_A_price": 29,
+        "league_B_price": 24,
+        "price_diff": 5,
+        "consistent_with_early_premium": true
+      },
+      {
+        "player_name": "DK Metcalf",
+        "position": "WR",
+        "league_A_order": 20,
+        "league_B_order": 171,
+        "order_diff": 151,
+        "league_A_price": 20,
+        "league_B_price": 19,
+        "price_diff": 1,
+        "consistent_with_early_premium": true
+      },
+      {
+        "player_name": "Trey McBride",
+        "position": "TE",
+        "league_A_order": 152,
+        "league_B_order": 6,
+        "order_diff": 146,
+        "league_A_price": 31,
+        "league_B_price": 26,
+        "price_diff": 5,
+        "consistent_with_early_premium": false
+      },
+      {
+        "player_name": "Matthew Golden",
+        "position": "WR",
+        "league_A_order": 34,
+        "league_B_order": 175,
+        "order_diff": 141,
+        "league_A_price": 11,
+        "league_B_price": 7,
+        "price_diff": 4,
+        "consistent_with_early_premium": true
+      },
+      {
+        "player_name": "Sam LaPorta",
+        "position": "TE",
+        "league_A_order": 138,
+        "league_B_order": 2,
+        "order_diff": 136,
+        "league_A_price": 15,
+        "league_B_price": 18,
+        "price_diff": -3,
+        "consistent_with_early_premium": true
+      },
+      {
+        "player_name": "Green Bay Packers",
+        "position": "DEF",
+        "league_A_order": 161,
+        "league_B_order": 29,
+        "order_diff": 132,
+        "league_A_price": 1,
+        "league_B_price": 1,
+        "price_diff": 0,
+        "consistent_with_early_premium": false
+      },
+      {
+        "player_name": "Austin Ekeler",
+        "position": "RB",
+        "league_A_order": 35,
+        "league_B_order": 162,
+        "order_diff": 127,
+        "league_A_price": 3,
+        "league_B_price": 6,
+        "price_diff": -3,
+        "consistent_with_early_premium": false
+      },
+      {
+        "player_name": "Rashee Rice",
+        "position": "WR",
+        "league_A_order": 46,
+        "league_B_order": 173,
+        "order_diff": 127,
+        "league_A_price": 14,
+        "league_B_price": 12,
+        "price_diff": 2,
+        "consistent_with_early_premium": true
+      },
+      {
+        "player_name": "Jauan Jennings",
+        "position": "WR",
+        "league_A_order": 57,
+        "league_B_order": 179,
+        "order_diff": 122,
+        "league_A_price": 3,
+        "league_B_price": 5,
+        "price_diff": -2,
+        "consistent_with_early_premium": false
+      }
+    ]
+  },
+  "consensus_players": [
+    {
+      "player_id": "12517",
+      "name": "Colston Loveland",
+      "position": "TE",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "9225",
+      "name": "Tank Bigsby",
+      "position": "RB",
+      "price_A": 3,
+      "price_B": 3,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "12495",
+      "name": "Ollie Gordon",
+      "position": "RB",
+      "price_A": 4,
+      "price_B": 4,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "SF",
+      "name": "San Francisco 49ers",
+      "position": "DEF",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "11577",
+      "name": "Will Shipley",
+      "position": "RB",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "1689",
+      "name": "Adam Thielen",
+      "position": "WR",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "8110",
+      "name": "Jake Ferguson",
+      "position": "TE",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "11589",
+      "name": "Trey Benson",
+      "position": "RB",
+      "price_A": 2,
+      "price_B": 2,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "11646",
+      "name": "Jalen Coker",
+      "position": "WR",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    },
+    {
+      "player_id": "10235",
+      "name": "Roschon Johnson",
+      "position": "RB",
+      "price_A": 1,
+      "price_B": 1,
+      "price_diff": 0,
+      "abs_price_diff": 0
+    }
+  ],
+  "divergent_players": [
+    {
+      "player_id": "12527",
+      "name": "Ashton Jeanty",
+      "position": "RB",
+      "price_A": 55,
+      "price_B": 42,
+      "price_diff": 13,
+      "abs_price_diff": 13
+    },
+    {
+      "player_id": "8146",
+      "name": "Garrett Wilson",
+      "position": "WR",
+      "price_A": 25,
+      "price_B": 16,
+      "price_diff": 9,
+      "abs_price_diff": 9
+    },
+    {
+      "player_id": "3321",
+      "name": "Tyreek Hill",
+      "position": "WR",
+      "price_A": 27,
+      "price_B": 36,
+      "price_diff": -9,
+      "abs_price_diff": 9
+    },
+    {
+      "player_id": "6770",
+      "name": "Joe Burrow",
+      "position": "QB",
+      "price_A": 11,
+      "price_B": 19,
+      "price_diff": -8,
+      "abs_price_diff": 8
+    },
+    {
+      "player_id": "7525",
+      "name": "DeVonta Smith",
+      "position": "WR",
+      "price_A": 19,
+      "price_B": 11,
+      "price_diff": 8,
+      "abs_price_diff": 8
+    },
+    {
+      "player_id": "6794",
+      "name": "Justin Jefferson",
+      "position": "WR",
+      "price_A": 55,
+      "price_B": 62,
+      "price_diff": -7,
+      "abs_price_diff": 7
+    },
+    {
+      "player_id": "4137",
+      "name": "James Conner",
+      "position": "RB",
+      "price_A": 20,
+      "price_B": 27,
+      "price_diff": -7,
+      "abs_price_diff": 7
+    },
+    {
+      "player_id": "8112",
+      "name": "Drake London",
+      "position": "WR",
+      "price_A": 44,
+      "price_B": 37,
+      "price_diff": 7,
+      "abs_price_diff": 7
+    },
+    {
+      "player_id": "9997",
+      "name": "Zay Flowers",
+      "position": "WR",
+      "price_A": 20,
+      "price_B": 13,
+      "price_diff": 7,
+      "abs_price_diff": 7
+    },
+    {
+      "player_id": "11631",
+      "name": "Brian Thomas",
+      "position": "WR",
+      "price_A": 47,
+      "price_B": 41,
+      "price_diff": 6,
+      "abs_price_diff": 6
+    }
+  ],
+  "spearman_rank_correlation": 0.76
+}
