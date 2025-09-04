@@ -205,7 +205,7 @@ async function runWithTimeout() {
     await main();
     clearTimeout(timeout);
     console.log('🏁 Script completed successfully, cleaning up...');
-    
+
     // Force cleanup and exit
     await prisma.$disconnect();
     process.exit(0);

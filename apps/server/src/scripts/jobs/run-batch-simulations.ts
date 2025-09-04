@@ -590,10 +590,172 @@ async function main() {
 
     console.log(`\n🎉 Batch simulation complete!`);
     console.log(`📊 Generated consistent odds that all users will see`);
+
+    // Store historical odds snapshot after successful simulation
+    console.log(`\n💾 Storing historical odds snapshot...`);
+    await storeHistoricalOdds(targetWeek, isLive, trigger);
+    
   } catch (error) {
     console.error('❌ Batch simulation failed:', error);
     process.exit(1);
   }
+}
+
+/**
+ * Store historical odds snapshot
+ */
+async function storeHistoricalOdds(
+  week: number,
+  isLive: boolean,
+  triggerType: string
+): Promise<void> {
+  try {
+    const historyStartTime = Date.now();
+
+    // Get all current simulation results for both leagues
+    const simulations = await prisma.matchupSimulation.findMany({
+      where: {
+        week,
+        league: {
+          name: { in: ['Gauntlet AFC', 'Gauntlet NFC'] },
+        },
+      },
+      include: {
+        league: {
+          select: { id: true, name: true, sleeperLeagueId: true },
+        },
+      },
+    });
+
+    console.log(`   Found ${simulations.length} simulations to archive`);
+
+    // Fetch current scores for live games
+    const currentScores = isLive ? await fetchCurrentScores(simulations, week) : {};
+
+    // Calculate game progress based on live status
+    let gameProgress = 0;
+    if (isLive) {
+      const now = new Date();
+      const currentHour = now.getUTCHours();
+
+      if (currentHour >= 18 && currentHour <= 20) {
+        gameProgress = Math.min(0.4, (currentHour - 18) / 3);
+      } else if (currentHour >= 21 && currentHour <= 23) {
+        gameProgress = Math.min(0.7, 0.4 + (currentHour - 21) / 3);
+      } else {
+        gameProgress = Math.min(0.95, 0.7 + 0.25);
+      }
+    }
+
+    // Store snapshot for each simulation
+    const historyRecords = simulations.map(sim => {
+      const scoreKey = `${sim.leagueId}-${sim.matchupId}`;
+      const scores = currentScores[scoreKey] || { team1Score: null, team2Score: null };
+      
+      return {
+        leagueId: sim.leagueId,
+        week: sim.week,
+        matchupId: sim.matchupId,
+        team1WinPct: sim.teamAWinPct,
+        team2WinPct: sim.teamBWinPct,
+        spread: sim.impliedSpread,
+        total: sim.totalLine,
+        team1MoneyLine: sim.moneyLineA,
+        team2MoneyLine: sim.moneyLineB,
+        team1Score: scores.team1Score,
+        team2Score: scores.team2Score,
+        gameProgress,
+        isLive,
+        triggeredBy: triggerType,
+        computeTimeMs: sim.computeTimeMs,
+      };
+    });
+
+    // Batch insert the history records
+    const result = await prisma.matchupOddsHistory.createMany({
+      data: historyRecords,
+    });
+
+    const historyTime = Date.now() - historyStartTime;
+    const scoresNote = isLive ? ' with live scores' : ' (pre-game)';
+    console.log(`   ✅ Stored ${result.count} historical odds snapshots${scoresNote} in ${historyTime}ms`);
+  } catch (error) {
+    console.error('⚠️ Error storing historical odds (non-critical):', error);
+    // Don't throw - simulations are the primary goal
+  }
+}
+
+/**
+ * Fetch current scores from Sleeper API for live games
+ */
+async function fetchCurrentScores(
+  simulations: any[],
+  week: number
+): Promise<Record<string, { team1Score: number | null; team2Score: number | null }>> {
+  const scores: Record<string, { team1Score: number | null; team2Score: number | null }> = {};
+  
+  try {
+    // Group simulations by league to minimize API calls
+    const leagueGroups = simulations.reduce((groups, sim) => {
+      const leagueId = sim.league.sleeperLeagueId;
+      if (!groups[leagueId]) groups[leagueId] = [];
+      groups[leagueId].push(sim);
+      return groups;
+    }, {} as Record<string, any[]>);
+
+    // Fetch matchups for each league
+    for (const [sleeperLeagueId, sims] of Object.entries(leagueGroups)) {
+      try {
+        const response = await fetch(
+          `https://api.sleeper.app/v1/league/${sleeperLeagueId}/matchups/${week}`,
+          {
+            headers: {
+              'User-Agent': 'Gauntlet-Website/1.0.0',
+            },
+            cache: 'no-store',
+          }
+        );
+
+        if (!response.ok) {
+          console.warn(`⚠️ Failed to fetch scores for league ${sleeperLeagueId}: ${response.status}`);
+          continue;
+        }
+
+        const matchups = await response.json();
+        
+        // Group matchups by matchup_id to get both teams
+        const matchupGroups = matchups.reduce((groups: any, matchup: any) => {
+          const matchupId = matchup.matchup_id;
+          if (!groups[matchupId]) groups[matchupId] = [];
+          groups[matchupId].push(matchup);
+          return groups;
+        }, {});
+
+        // Store scores for each matchup
+        sims.forEach(sim => {
+          const matchupTeams = matchupGroups[sim.matchupId];
+          if (matchupTeams && matchupTeams.length === 2) {
+            // Sort by roster_id to maintain consistent team1/team2 ordering
+            matchupTeams.sort((a: any, b: any) => a.roster_id - b.roster_id);
+            
+            const scoreKey = `${sim.leagueId}-${sim.matchupId}`;
+            scores[scoreKey] = {
+              team1Score: matchupTeams[0].points || 0,
+              team2Score: matchupTeams[1].points || 0,
+            };
+          }
+        });
+
+        console.log(`   📊 Fetched scores for ${Object.keys(matchupGroups).length} matchups in league ${sleeperLeagueId}`);
+      } catch (leagueError) {
+        console.error(`❌ Error fetching scores for league ${sleeperLeagueId}:`, leagueError);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error fetching current scores:', error);
+  }
+
+  return scores;
 }
 
 /**

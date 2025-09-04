@@ -580,6 +580,8 @@ model MatchupOddsHistory {
   // Game state
   gameProgress    Float    // 0-1, where 1 = game complete
   isLive          Boolean  @default(false)
+  team1Score      Float?   // Current score for team 1 (null for pre-game)
+  team2Score      Float?   // Current score for team 2 (null for pre-game)
   
   // Context
   triggeredBy     String   // 'scheduled', 'live-update', 'manual'

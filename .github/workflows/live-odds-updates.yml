@@ -111,16 +111,6 @@ jobs:
             pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --trigger="$TRIGGER_TYPE"
           fi
 
-      - name: Store historical odds
-        run: |
-          WEEK="${{ steps.determine-context.outputs.week }}"
-          IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
-          TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
-
-          echo "💾 Storing historical odds snapshot..."
-          cd apps/server
-          npx tsx src/scripts/jobs/store-odds-history.ts $WEEK --live="$IS_LIVE" --trigger="$TRIGGER_TYPE"
-
       - name: Report completion
         if: always()
         run: |
