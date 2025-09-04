@@ -3,7 +3,7 @@ import {
   simulateMatchupProbabilityFromPlayers,
   type LineupPlayer,
   type MatchupSimulationResult,
-} from '@gauntlet/sim-engine';
+} from '@gauntlet/sim-engine/src/index.js';
 
 interface ScoringSettings {
   pass_yd?: number;
