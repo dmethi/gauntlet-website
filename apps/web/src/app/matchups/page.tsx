@@ -1,319 +1,431 @@
 'use client';
 
-import { useState } from 'react';
-import { Container, PageHeader } from '@gauntlet/ui';
-import { useMatchups } from '@/lib/hooks';
-import ContentLoader from 'react-content-loader';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Swords, Clock, Trophy, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { MatchupOddsPreview } from '@/components/matchup-odds-preview';
+import { LeagueWideOdds } from '@/components/league-wide-odds';
 
-const MatchupsPageLoader = () => (
-  <ContentLoader
-    speed={2}
-    width={1200}
-    height={800}
-    viewBox='0 0 1200 800'
-    backgroundColor='hsl(var(--muted))'
-    foregroundColor='hsl(var(--muted-foreground))'
-  >
-    {/* Title */}
-    <rect x='16' y='32' rx='3' ry='3' width='300' height='32' />
-    <rect x='16' y='72' rx='3' ry='3' width='150' height='20' />
-
-    {/* Week selector */}
-    <rect x='16' y='120' rx='8' ry='8' width='200' height='40' />
-
-    {/* Matchup cards */}
-    <rect x='16' y='180' rx='8' ry='8' width='560' height='160' />
-    <rect x='600' y='180' rx='8' ry='8' width='560' height='160' />
-    <rect x='16' y='360' rx='8' ry='8' width='560' height='160' />
-    <rect x='600' y='360' rx='8' ry='8' width='560' height='160' />
-    <rect x='16' y='540' rx='8' ry='8' width='560' height='160' />
-    <rect x='600' y='540' rx='8' ry='8' width='560' height='160' />
-  </ContentLoader>
-);
-
-interface MatchupCardProps {
-  matchup: {
-    matchupId: number;
-    teams: Array<{
-      rosterId: number;
-      owner: {
-        id: string;
-        username: string;
-        displayName: string;
-        avatar?: string;
-      } | null;
-      points: number;
-      customPoints?: number;
-      starters: string[];
-      startersPoints: number[] | Record<string, number>;
-      players: string[];
-      playersPoints: Record<string, number>;
-    }>;
-    summary?: {
-      pointsA: number;
-      pointsB: number;
-      winnerRosterId?: number;
-      margin: number;
-    } | null;
+// Types
+interface MatchupTeam {
+  rosterId: number;
+  teamName: string;
+  ownerName: string;
+  points: number;
+  projectedPoints?: number;
+  roster: {
+    id: number;
+    players: string[];
+    starters: string[];
+    owner?: {
+      id: string;
+      username: string;
+      displayName: string;
+      avatar: string | null;
+    };
+    playerProjections?: Record<string, number>;
+    starterProjections?: Record<string, number>;
   };
-  week: number;
 }
 
-function MatchupCard({ matchup, week }: MatchupCardProps) {
-  const [teamA, teamB] = matchup.teams;
+interface MatchupData {
+  matchupId: number;
+  teams: [MatchupTeam, MatchupTeam];
+  winner: MatchupTeam | null;
+  isComplete: boolean;
+}
 
-  if (!teamA || !teamB) {
-    return null;
+interface LeagueMatchups {
+  leagueId: string;
+  leagueName: string;
+  matchups: MatchupData[];
+}
+
+const LEAGUES = [
+  { id: '1263744209295245312', name: 'Gauntlet AFC' },
+  { id: '1263740549504962561', name: 'Gauntlet NFC' },
+];
+
+const WEEKS = Array.from({ length: 18 }, (_, i) => i + 1);
+
+function MatchupsPageContent() {
+  const searchParams = useSearchParams();
+  const leagueIdParam = searchParams.get('leagueId');
+
+  const [selectedWeek, setSelectedWeek] = useState(1);
+  const [leagueMatchups, setLeagueMatchups] = useState<LeagueMatchups[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filter leagues based on query parameter
+  const filteredLeagues = leagueIdParam
+    ? LEAGUES.filter(league => league.id === leagueIdParam)
+    : LEAGUES;
+
+  const fetchMatchupsForWeek = async (week: number) => {
+    setLoading(true);
+    setError(null);
+
+    console.log('🔍 [MATCHUPS CLIENT] Fetching matchups for week:', week);
+    console.log('📋 [MATCHUPS CLIENT] Filtered leagues:', filteredLeagues);
+
+    try {
+      const leagueData: LeagueMatchups[] = [];
+
+      for (const league of filteredLeagues) {
+        console.log('⚔️ [MATCHUPS CLIENT] Fetching for league:', league.name, league.id);
+        const response = await fetch(`/api/matchups/${league.id}/${week}`);
+        if (!response.ok) {
+          console.error(
+            '❌ [MATCHUPS CLIENT] API response not OK:',
+            response.status,
+            response.statusText
+          );
+          throw new Error(`Failed to fetch matchups for ${league.name}`);
+        }
+
+        const data = await response.json();
+        console.log('📊 [MATCHUPS CLIENT] Raw API response for', league.name, ':', data);
+
+        const matchups: MatchupData[] = data.matchups.map((matchup: any) => ({
+          matchupId: matchup.matchupId,
+          teams: matchup.teams.map((team: any) => ({
+            rosterId: team.rosterId,
+            teamName: team.teamName || `Team ${team.rosterId}`,
+            ownerName: team.ownerName || 'Unknown',
+            points: team.points || 0,
+            projectedPoints: team.projectedPoints || 0,
+            roster: {
+              id: team.rosterId,
+              players: team.players || [],
+              starters: team.starters || [],
+              owner: team.owner,
+              playerProjections: team.playerProjections || {},
+              starterProjections: team.starterProjections || {},
+            },
+          })),
+          winner: matchup.summary?.winnerRosterId
+            ? (() => {
+                const winnerTeam = matchup.teams.find(
+                  (team: any) => team.rosterId === matchup.summary.winnerRosterId
+                );
+                if (!winnerTeam) return null;
+
+                return {
+                  rosterId: matchup.summary.winnerRosterId,
+                  teamName: winnerTeam.teamName || `Team ${matchup.summary.winnerRosterId}`,
+                  ownerName: winnerTeam.ownerName || 'Unknown',
+                  points: winnerTeam.points || 0,
+                  roster: {
+                    id: matchup.summary.winnerRosterId,
+                    players: [],
+                    starters: [],
+                    owner: winnerTeam.owner,
+                  },
+                };
+              })()
+            : null,
+          isComplete:
+            matchup.summary?.winnerRosterId !== null &&
+            matchup.summary?.winnerRosterId !== undefined,
+        }));
+
+        console.log('📋 [MATCHUPS CLIENT] Processed matchups for', league.name, ':', matchups);
+
+        leagueData.push({
+          leagueId: league.id,
+          leagueName: league.name,
+          matchups,
+        });
+      }
+
+      console.log('🎯 [MATCHUPS CLIENT] Final league data:', leagueData);
+      setLeagueMatchups(leagueData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch matchups');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMatchupsForWeek(selectedWeek);
+  }, [selectedWeek]);
+
+  if (error) {
+    return (
+      <div className='min-h-screen bg-background p-6'>
+        <div className='max-w-7xl mx-auto'>
+          <div className='text-center py-12'>
+            <div className='text-red-500 text-lg mb-4'>Error loading matchups</div>
+            <p className='text-muted-foreground'>{error}</p>
+            <Button onClick={() => fetchMatchupsForWeek(selectedWeek)} className='mt-4'>
+              Retry
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  const winner = matchup.summary?.winnerRosterId;
-  const isTeamAWinner = winner === teamA.rosterId;
-  const isTeamBWinner = winner === teamB.rosterId;
+  return (
+    <div className='min-h-screen bg-background p-6'>
+      <div className='max-w-7xl mx-auto space-y-8'>
+        {/* Header */}
+        <div className='space-y-4'>
+          {leagueIdParam && (
+            <Link href='/matchups'>
+              <Button variant='ghost' size='sm'>
+                <ArrowLeft className='h-4 w-4 mr-2' />
+                Back to All Matchups
+              </Button>
+            </Link>
+          )}
+          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+            <div>
+              <h1 className='text-3xl font-bold font-geizer tracking-wide text-foreground'>
+                {leagueIdParam ? `${filteredLeagues[0]?.name || 'League'} Matchups` : 'Matchups'}
+              </h1>
+              <p className='text-muted-foreground mt-2 font-avenir'>
+                {leagueIdParam
+                  ? `View matchups for ${filteredLeagues[0]?.name || 'this league'}`
+                  : 'View all matchups across both Gauntlet leagues'}
+              </p>
+            </div>
+
+            <div className='flex items-center gap-3'>
+              <Select
+                value={selectedWeek.toString()}
+                onValueChange={value => setSelectedWeek(parseInt(value))}
+              >
+                <SelectTrigger className='w-32'>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {WEEKS.map(week => (
+                    <SelectItem key={week} value={week.toString()}>
+                      Week {week}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* League-Wide Odds */}
+        <LeagueWideOdds week={selectedWeek} className='mb-8' />
+
+        {/* Loading State */}
+        {loading && (
+          <div className='space-y-8'>
+            {filteredLeagues.map(league => (
+              <Card key={league.id}>
+                <CardHeader>
+                  <Skeleton className='h-7 w-48' />
+                  <Skeleton className='h-4 w-32' />
+                </CardHeader>
+                <CardContent>
+                  <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                    {[1, 2, 3, 4, 5, 6].map(i => (
+                      <Skeleton key={i} className='h-32 w-full' />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Matchups by League */}
+        {!loading &&
+          leagueMatchups.map(league => (
+            <Card key={league.leagueId}>
+              <CardHeader>
+                <div className='flex items-center gap-3'>
+                  <Trophy className='h-6 w-6 text-gauntlet-crimson' />
+                  <div>
+                    <CardTitle className='text-xl font-geizer tracking-wide'>
+                      {league.leagueName}
+                    </CardTitle>
+                    <CardDescription className='font-avenir'>
+                      Week {selectedWeek} • {league.matchups.length} matchups
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                  {league.matchups.map(matchup => (
+                    <MatchupCard
+                      key={matchup.matchupId}
+                      matchup={matchup}
+                      leagueId={league.leagueId}
+                      week={selectedWeek}
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+        {/* Empty State */}
+        {!loading && leagueMatchups.every(league => league.matchups.length === 0) && (
+          <div className='text-center py-12'>
+            <Swords className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
+            <div className='text-lg font-medium text-muted-foreground mb-2'>No matchups found</div>
+            <p className='text-muted-foreground'>No matchups available for Week {selectedWeek}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MatchupCard({
+  matchup,
+  leagueId,
+  week,
+}: {
+  matchup: MatchupData;
+  leagueId: string;
+  week: number;
+}) {
+  const [teamA, teamB] = matchup.teams;
+  const isGameActive = !matchup.isComplete;
 
   return (
-    <Card className='w-full'>
-      <CardHeader>
-        <CardTitle className='text-lg'>Matchup {matchup.matchupId}</CardTitle>
-        <CardDescription>Week {week}</CardDescription>
-      </CardHeader>
-      <CardContent className='space-y-4'>
-        {/* Team A */}
-        <div
-          className={`flex items-center justify-between p-4 rounded-lg border ${
-            isTeamAWinner
-              ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
-              : 'bg-muted/20 border-muted'
-          }`}
-        >
-          <div className='flex items-center space-x-3'>
-            <Link href={`/team/${teamA.rosterId}`} className='hover:underline'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold'>
-                  {teamA.owner?.displayName?.charAt(0) || 'T'}
+    <Link href={`/matchups/${leagueId}/${week}/${matchup.matchupId}`}>
+      <Card className='hover:shadow-md transition-shadow cursor-pointer'>
+        <CardContent className='p-4'>
+          <div className='space-y-4'>
+            {/* Status Badge */}
+            <div className='flex justify-between items-center'>
+              <Badge variant={matchup.isComplete ? 'secondary' : 'default'} className='text-xs'>
+                {matchup.isComplete ? 'Final' : 'Live'}
+              </Badge>
+              {isGameActive && (
+                <div className='flex items-center gap-1 text-xs text-muted-foreground'>
+                  <Clock className='h-3 w-3' />
+                  In Progress
                 </div>
-                <div>
-                  <p className='font-medium'>{teamA.owner?.displayName || 'Team A'}</p>
-                  <p className='text-sm text-muted-foreground'>
-                    @{teamA.owner?.username || 'unknown'}
-                  </p>
-                </div>
-              </div>
-            </Link>
-            {isTeamAWinner && <Badge variant='secondary'>Winner</Badge>}
-          </div>
-          <div className='text-right'>
-            <p className='text-2xl font-bold'>{teamA.points.toFixed(1)}</p>
-            <p className='text-sm text-muted-foreground'>{teamA.starters.length} starters</p>
-          </div>
-        </div>
+              )}
+            </div>
 
-        {/* VS divider */}
-        <div className='flex items-center justify-center'>
-          <div className='bg-muted px-3 py-1 rounded-full text-sm font-medium'>
-            VS
-            {matchup.summary && (
-              <span className='ml-2 text-muted-foreground'>
-                (Margin: {matchup.summary.margin.toFixed(1)})
-              </span>
+            {/* Teams */}
+            <div className='space-y-2'>
+              <TeamRow team={teamA} isWinner={matchup.winner?.rosterId === teamA.rosterId} />
+              <div className='border-t border-muted my-2' />
+              <TeamRow team={teamB} isWinner={matchup.winner?.rosterId === teamB.rosterId} />
+            </div>
+
+            {/* Live Odds Preview - only for active games */}
+            {!matchup.isComplete && (
+              <div className='py-2 border-t border-muted'>
+                <MatchupOddsPreview
+                  leagueId={leagueId}
+                  week={week}
+                  matchupId={matchup.matchupId}
+                  teamAName={teamA.teamName}
+                  teamBName={teamB.teamName}
+                />
+              </div>
             )}
-          </div>
-        </div>
 
-        {/* Team B */}
-        <div
-          className={`flex items-center justify-between p-4 rounded-lg border ${
-            isTeamBWinner
-              ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
-              : 'bg-muted/20 border-muted'
-          }`}
-        >
-          <div className='flex items-center space-x-3'>
-            <Link href={`/team/${teamB.rosterId}`} className='hover:underline'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-8 h-8 bg-destructive rounded-full flex items-center justify-center text-destructive-foreground text-sm font-semibold'>
-                  {teamB.owner?.displayName?.charAt(0) || 'T'}
-                </div>
-                <div>
-                  <p className='font-medium'>{teamB.owner?.displayName || 'Team B'}</p>
-                  <p className='text-sm text-muted-foreground'>
-                    @{teamB.owner?.username || 'unknown'}
-                  </p>
-                </div>
+            {/* Matchup Info */}
+            <div className='flex justify-between items-center text-xs text-muted-foreground pt-2 border-t border-muted'>
+              <span>Matchup {matchup.matchupId}</span>
+              <div className='flex items-center gap-1'>
+                <Swords className='h-3 w-3' />
+                View Details
               </div>
-            </Link>
-            {isTeamBWinner && <Badge variant='secondary'>Winner</Badge>}
+            </div>
           </div>
-          <div className='text-right'>
-            <p className='text-2xl font-bold'>{teamB.points.toFixed(1)}</p>
-            <p className='text-sm text-muted-foreground'>{teamB.starters.length} starters</p>
-          </div>
-        </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
 
-        {/* Match Details Button */}
-        <div className='pt-2'>
-          <Link href={`/matchups/${matchup.matchupId}?week=${week}`}>
-            <Button variant='outline' className='w-full'>
-              View Match Details
-            </Button>
-          </Link>
+// Safe avatar component with error handling
+function Avatar({ src, alt, fallback }: { src?: string | null; alt: string; fallback: string }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (!src || hasError) {
+    return (
+      <div className='h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium'>
+        {fallback.charAt(0).toUpperCase()}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className='h-8 w-8 rounded-full'
+      onError={() => setHasError(true)}
+      onLoad={() => setHasError(false)}
+    />
+  );
+}
+
+function TeamRow({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) {
+  return (
+    <div
+      className={`flex items-center justify-between p-2 rounded ${isWinner ? 'bg-green-50 dark:bg-green-950' : ''}`}
+    >
+      <div className='flex items-center gap-3'>
+        <Avatar src={team.roster.owner?.avatar} alt={team.ownerName} fallback={team.ownerName} />
+        <div>
+          <div className='font-medium text-sm'>{team.teamName}</div>
+          <div className='text-xs text-muted-foreground'>{team.ownerName}</div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className='text-right'>
+        <div className={`font-bold ${isWinner ? 'text-green-600 dark:text-green-400' : ''}`}>
+          {team.points.toFixed(1)}
+        </div>
+        {team.projectedPoints && (
+          <div className='text-xs text-muted-foreground'>
+            Proj: {team.projectedPoints.toFixed(1)}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
 export default function MatchupsPage() {
-  const [selectedWeek, setSelectedWeek] = useState(1);
-  // For now, we'll hardcode a league ID - in a real app this would come from context or routing
-  const leagueId = '997670420490801152'; // This should be dynamic
-
-  const { data: matchups, isLoading: loading, error } = useMatchups(leagueId, selectedWeek);
-
-  if (loading) {
-    return (
-      <div className='container mx-auto px-4 py-8'>
-        <MatchupsPageLoader />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container className='py-8'>
-        <PageHeader title='Error Loading Matchups' subtitle='Failed to load matchup data' />
-        <div className='mt-4 text-destructive'>{String(error)}</div>
-      </Container>
-    );
-  }
-
-  // Generate week options (1-17 for regular season)
-  const weekOptions = Array.from({ length: 17 }, (_, i) => i + 1);
-
   return (
-    <Container className='py-8'>
-      <PageHeader title='Matchups' subtitle={`View head-to-head matchups for each week`} />
-
-      {/* Week Selector */}
-      <div className='mb-6'>
-        <label htmlFor='week-select' className='block text-sm font-medium text-foreground mb-2'>
-          Select Week
-        </label>
-        <select
-          id='week-select'
-          value={selectedWeek}
-          onChange={e => setSelectedWeek(parseInt(e.target.value))}
-          className='px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-ring focus:border-ring bg-background text-foreground'
-        >
-          {weekOptions.map(week => (
-            <option key={week} value={week}>
-              Week {week}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Debug Panel (temporary) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className='mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg dark:bg-yellow-900/20 dark:border-yellow-800'>
-          <h4 className='font-semibold text-yellow-800 dark:text-yellow-200 mb-2'>Debug Info</h4>
-          <div className='text-sm text-yellow-700 dark:text-yellow-300 space-y-1'>
-            <p>
-              <strong>League ID:</strong> {leagueId}
-            </p>
-            <p>
-              <strong>Selected Week:</strong> {selectedWeek}
-            </p>
-            <p>
-              <strong>Loading:</strong> {loading ? 'Yes' : 'No'}
-            </p>
-            <p>
-              <strong>Error:</strong> {error || 'None'}
-            </p>
-            <p>
-              <strong>Matchups Array:</strong>{' '}
-              {matchups?.matchups ? `${matchups.matchups.length} items` : 'undefined/null'}
-            </p>
-            <p>
-              <strong>Raw Response:</strong>{' '}
-              {JSON.stringify(matchups, null, 2)?.substring(0, 200) || 'No data'}...
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Matchups Grid */}
-      {matchups?.matchups && matchups.matchups.length > 0 ? (
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-          {matchups.matchups.map(matchup => (
-            <MatchupCard key={matchup.matchupId} matchup={matchup} week={selectedWeek} />
-          ))}
-        </div>
-      ) : (
-        <div className='text-center py-12'>
-          <p className='text-muted-foreground text-lg'>No matchups found for Week {selectedWeek}</p>
-          <p className='text-muted-foreground text-sm mt-2'>
-            Try selecting a different week or check if data is available.
-          </p>
-          <div className='mt-4 text-xs text-muted-foreground'>
-            <p>
-              Debug: Loading={loading ? 'true' : 'false'}, Error={error || 'none'}
-            </p>
-            <p>
-              Matchups:{' '}
-              {matchups?.matchups ? `${matchups.matchups.length} found` : 'null/undefined'}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Stats Summary */}
-      {matchups?.matchups && matchups.matchups.length > 0 && (
-        <div className='mt-8 pt-6 border-t'>
-          <h3 className='text-lg font-semibold mb-4'>Week {selectedWeek} Summary</h3>
-          <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-            <div className='text-center'>
-              <p className='text-2xl font-bold text-primary'>{matchups.matchups.length}</p>
-              <p className='text-sm text-muted-foreground'>Total Matchups</p>
-            </div>
-            <div className='text-center'>
-              <p className='text-2xl font-bold text-green-600 dark:text-green-400'>
-                {matchups.matchups
-                  .reduce(
-                    (sum, m) => sum + (m.teams[0]?.points || 0) + (m.teams[1]?.points || 0),
-                    0
-                  )
-                  .toFixed(1)}
-              </p>
-              <p className='text-sm text-muted-foreground'>Total Points</p>
-            </div>
-            <div className='text-center'>
-              <p className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
-                {(
-                  matchups.matchups.reduce((avg, m) => {
-                    const total = (m.teams[0]?.points || 0) + (m.teams[1]?.points || 0);
-                    return avg + total / 2;
-                  }, 0) / matchups.matchups.length
-                ).toFixed(1)}
-              </p>
-              <p className='text-sm text-muted-foreground'>Avg Points/Team</p>
-            </div>
-            <div className='text-center'>
-              <p className='text-2xl font-bold text-orange-600 dark:text-orange-400'>
-                {Math.max(
-                  ...matchups.matchups.map(m =>
-                    Math.max(m.teams[0]?.points || 0, m.teams[1]?.points || 0)
-                  )
-                ).toFixed(1)}
-              </p>
-              <p className='text-sm text-muted-foreground'>Highest Score</p>
+    <Suspense
+      fallback={
+        <div className='min-h-screen bg-background p-6'>
+          <div className='max-w-7xl mx-auto space-y-8'>
+            <Skeleton className='h-12 w-64' />
+            <Skeleton className='h-32 w-full' />
+            <div className='space-y-8'>
+              <Skeleton className='h-96 w-full' />
+              <Skeleton className='h-96 w-full' />
             </div>
           </div>
         </div>
-      )}
-    </Container>
+      }
+    >
+      <MatchupsPageContent />
+    </Suspense>
   );
 }

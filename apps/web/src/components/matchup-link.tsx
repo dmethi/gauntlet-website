@@ -26,7 +26,7 @@ export function MatchupLink({
   className = '',
   variant = 'compact',
 }: MatchupLinkProps) {
-  const href = `/matchups/${matchupId}?week=${week}`;
+  const href = `/matchup/${matchupId}?week=${week}`;
 
   if (variant === 'badge-only') {
     return (

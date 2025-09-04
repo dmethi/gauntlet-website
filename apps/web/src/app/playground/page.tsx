@@ -29,7 +29,7 @@ export default function Playground() {
         <div className='hidden sm:flex items-center gap-3'>
           <GauntletLogo size='md' />
           <div className='text-right'>
-            <div className='font-bold font-geizer tracking-wide'>THE GAUNTLET</div>
+            <div className='font-bold font-geizer tracking-widest'>THE GAUNTLET</div>
             <div className='text-xs text-muted-foreground font-avenir'>High-Stakes Fantasy</div>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function Playground() {
           <CardContent className='flex flex-col items-center justify-center py-24 bg-slate-900 rounded-b-lg'>
             <GauntletLogo size='xl' className='!w-80 !h-80 mb-12' />
             <div className='text-center'>
-              <div className='font-bold font-geizer tracking-wide text-6xl mb-4 text-white'>
+              <div className='font-bold font-geizer tracking-[0.2em] text-6xl mb-4 text-white'>
                 THE GAUNTLET
               </div>
               <div className='text-2xl text-slate-300 font-avenir'>

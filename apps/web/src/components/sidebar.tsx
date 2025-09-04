@@ -10,6 +10,7 @@ import {
   Menu,
   Trophy,
   Users,
+  Swords,
   X,
 } from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';
@@ -67,7 +68,7 @@ export function Sidebar({
           <div className='flex items-center gap-3'>
             <GauntletLogo size='md' />
             <div>
-              <h2 className='font-bold text-card-foreground font-geizer text-sm tracking-wide'>
+              <h2 className='font-bold text-card-foreground font-geizer text-sm tracking-widest'>
                 THE GAUNTLET
               </h2>
               <p className='text-xs text-muted-foreground font-avenir'>High-Stakes Fantasy</p>
@@ -112,7 +113,7 @@ function SidebarContent({
         <div className='flex items-center gap-3'>
           <GauntletLogo size='md' />
           <div>
-            <h2 className='font-bold text-card-foreground font-geizer tracking-wide'>
+            <h2 className='font-bold text-card-foreground font-geizer tracking-widest'>
               THE GAUNTLET
             </h2>
             <p className='text-xs text-muted-foreground font-avenir'>High-Stakes Fantasy</p>
@@ -246,6 +247,20 @@ function SidebarNavigationWithSearchParams({
       >
         <Users className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
         <span className='flex-1 text-left'>Teams</span>
+      </Link>
+
+      {/* Matchups */}
+      <Link
+        href='/matchups'
+        onClick={onItemClick}
+        className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left transition-all duration-200 ease ${
+          pathname.startsWith('/matchups')
+            ? 'bg-gauntlet-crimson text-white shadow-sm'
+            : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
+        } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
+      >
+        <Swords className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
+        <span className='flex-1 text-left'>Matchups</span>
       </Link>
 
       {/* TODOs */}

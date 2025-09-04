@@ -5,7 +5,8 @@ import { Container, PageHeader } from '@gauntlet/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Trophy, Users, Swords } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -191,14 +192,22 @@ function TeamsPageContent() {
         {leagues.map(league => (
           <Card key={league.id}>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Trophy className='h-5 w-5 text-gauntlet-gold' />
-                {league.name}
-                <Badge variant='outline' className='ml-2'>
-                  <Users className='h-3 w-3 mr-1' />
-                  {league.rosters.length} teams
-                </Badge>
-              </CardTitle>
+              <div className='flex items-center justify-between'>
+                <CardTitle className='flex items-center gap-2'>
+                  <Trophy className='h-5 w-5 text-gauntlet-gold' />
+                  {league.name}
+                  <Badge variant='outline' className='ml-2'>
+                    <Users className='h-3 w-3 mr-1' />
+                    {league.rosters.length} teams
+                  </Badge>
+                </CardTitle>
+                <Link href={`/matchups?leagueId=${league.id}`}>
+                  <Button variant='outline' size='sm' className='flex items-center gap-2'>
+                    <Swords className='h-4 w-4' />
+                    View Matchups
+                  </Button>
+                </Link>
+              </div>
             </CardHeader>
             <CardContent>
               {league.rosters.length === 0 ? (
