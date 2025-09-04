@@ -621,7 +621,7 @@ async function storeHistoricalOdds(
       },
       include: {
         league: {
-          select: { id: true, name: true, sleeperLeagueId: true },
+          select: { id: true, name: true },
         },
       },
     });
@@ -699,7 +699,7 @@ async function fetchCurrentScores(
     // Group simulations by league to minimize API calls
     const leagueGroups = simulations.reduce(
       (groups, sim) => {
-        const leagueId = sim.league.sleeperLeagueId;
+        const leagueId = sim.league.id; // League.id matches Sleeper league_id format
         if (!groups[leagueId]) groups[leagueId] = [];
         groups[leagueId].push(sim);
         return groups;
