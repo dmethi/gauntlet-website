@@ -168,7 +168,7 @@ export async function GET(
         // Convert starter IDs to player objects
         const startersWithDetails = (team.starters || []).map(playerId => {
           const player = playersMap.get(playerId);
-          const points = team.playersPoints?.[playerId] || 0;
+          const points = (team.playersPoints as Record<string, number>)?.[playerId] || 0;
           const projectedPoints = getPlayerProjection(playerId);
 
           return {
@@ -189,7 +189,7 @@ export async function GET(
         );
         const benchWithDetails = benchPlayerIds.map(playerId => {
           const player = playersMap.get(playerId);
-          const points = team.playersPoints?.[playerId] || 0;
+          const points = (team.playersPoints as Record<string, number>)?.[playerId] || 0;
           const projectedPoints = getPlayerProjection(playerId);
 
           return {
