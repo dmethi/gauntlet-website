@@ -174,12 +174,9 @@ async function main() {
     const totalTime = Date.now() - startTime;
     console.log(`\n🎉 Odds history storage complete in ${totalTime}ms!`);
     console.log(`📊 Historical data preserved for trend analysis`);
-
-    // Explicitly exit to prevent hanging in CI environments
-    process.exit(0);
   } catch (error) {
     console.error('❌ Odds history storage failed:', error);
-    process.exit(1);
+    throw error;
   }
 }
 
@@ -196,12 +193,12 @@ function getCurrentWeek(): number {
   );
 }
 
-// Run the script
+// Run the script with proper cleanup and exit handling
 main()
   .catch(error => {
     console.error('❌ Fatal error:', error);
-    process.exit(1);
+    return prisma.$disconnect().then(() => process.exit(1));
   })
-  .finally(async () => {
-    await prisma.$disconnect();
+  .then(() => {
+    return prisma.$disconnect().then(() => process.exit(0));
   });
