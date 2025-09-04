@@ -52,14 +52,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install -w --frozen-lockfile
 
+      - name: Ensure workspace links
+        run: pnpm -w link --global || true
+
       - name: Generate Prisma Client
         run: cd apps/server && npx prisma generate
 
       - name: Build required workspace packages
         run: |
-          pnpm --filter @gauntlet/lib run build || true
-          pnpm --filter @gauntlet/types run build || true
-          pnpm --filter @gauntlet/models run build || true
+          pnpm --filter @gauntlet/types... run build
+          pnpm --filter @gauntlet/lib... run build
+          pnpm --filter @gauntlet/models run build
           pnpm --filter @gauntlet/sim-engine run build
 
       - name: Determine update type and week
