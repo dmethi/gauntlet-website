@@ -118,7 +118,8 @@ jobs:
           TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
 
           echo "💾 Storing historical odds snapshot..."
-          pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/store-odds-history.ts $WEEK --live="$IS_LIVE" --trigger="$TRIGGER_TYPE"
+          cd apps/server
+          npx tsx src/scripts/jobs/store-odds-history.ts $WEEK --live="$IS_LIVE" --trigger="$TRIGGER_TYPE"
 
       - name: Report completion
         if: always()
