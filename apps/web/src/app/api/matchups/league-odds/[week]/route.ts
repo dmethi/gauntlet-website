@@ -193,7 +193,16 @@ function sampleTeamScore(simulation: { mean: number; p10: number; p90: number })
   const u2 = Math.random();
   const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
 
-  return simulation.mean + z * stdDev;
+  const result = simulation.mean + z * stdDev;
+
+  // Debug extreme values
+  if (result < 0 || result > 300) {
+    console.warn(
+      `⚠️ [SAMPLE] Extreme sampled score: ${result.toFixed(1)} (mean=${simulation.mean.toFixed(1)}, stdDev=${stdDev.toFixed(1)}, z=${z.toFixed(2)})`
+    );
+  }
+
+  return result;
 }
 
 // Calculate probabilities for highest/lowest scorer using proper Monte Carlo simulation
@@ -315,49 +324,95 @@ function calculateMatchupMarginProbabilities(
   return marginCounts.map(count => count / iterations);
 }
 
-// Run simulation for a single team
-async function simulateTeamScore(
-  team: any,
-  playersMap: Map<string, any>,
-  getPlayerProjection: (playerId: string) => number
-): Promise<{ mean: number; p10: number; p50: number; p90: number }> {
-  // Convert starters to LineupPlayer format
-  const starters: LineupPlayer[] = (team.starters || []).map((playerId: string) => {
-    const player = playersMap.get(playerId);
-    return {
-      id: playerId,
-      name: player?.fullName || 'Unknown Player',
-      position: player?.position || 'UNKNOWN',
-      projection: getPlayerProjection(playerId),
-    };
-  });
+// Get stored simulation results for a team from the database
+async function getStoredTeamSimulation(
+  leagueId: string,
+  week: number,
+  rosterId: number
+): Promise<{ mean: number; p10: number; p50: number; p90: number } | null> {
+  console.log(
+    `🔍 [LEAGUE ODDS] Getting stored simulation for roster ${rosterId} in league ${leagueId} week ${week}`
+  );
+
+  // Import Prisma client
+  const { PrismaClient } = await import('@prisma/client');
+  const prisma = new PrismaClient();
 
   try {
-    // Run simulation for this team vs a dummy opponent (we only care about team1 results)
-    const dummyOpponent: LineupPlayer[] = starters.map(s => ({ ...s, projection: 0 }));
-    const simulation = await simulateMatchupProbabilityFromPlayers(
-      starters,
-      dummyOpponent,
-      1000,
-      0
+    // Find the matchup this team is in
+    const matchup = await prisma.matchup.findFirst({
+      where: {
+        leagueId,
+        week,
+        rosterId,
+      },
+    });
+
+    if (!matchup || !matchup.matchupId) {
+      console.warn(
+        `❌ [LEAGUE ODDS] No matchup found for roster ${rosterId} in league ${leagueId} week ${week}`
+      );
+      return null;
+    }
+
+    console.log(`✅ [LEAGUE ODDS] Found matchup ${matchup.matchupId} for roster ${rosterId}`);
+
+    // Get the stored simulation for this matchup
+    const storedSim = await prisma.matchupSimulation.findFirst({
+      where: {
+        leagueId,
+        week,
+        matchupId: matchup.matchupId,
+      },
+    });
+
+    if (!storedSim) {
+      console.warn(`❌ [LEAGUE ODDS] No stored simulation found for matchup ${matchup.matchupId}`);
+      return null;
+    }
+
+    console.log(`📊 [LEAGUE ODDS] Found stored simulation for matchup ${matchup.matchupId}:`);
+    console.log(
+      `    Team A: ${storedSim.teamAWinPct.toFixed(3)} win% (${storedSim.teamAMean.toFixed(1)} pts)`
+    );
+    console.log(
+      `    Team B: ${storedSim.teamBWinPct.toFixed(3)} win% (${storedSim.teamBMean.toFixed(1)} pts)`
     );
 
-    return {
-      mean: simulation.team1Scores.mean,
-      p10: simulation.team1Scores.p10,
-      p50: simulation.team1Scores.median,
-      p90: simulation.team1Scores.p90,
+    // Determine if this roster is team A or team B in the matchup
+    const matchupTeams = await prisma.matchup.findMany({
+      where: {
+        leagueId,
+        week,
+        matchupId: matchup.matchupId,
+      },
+      select: { rosterId: true },
+      orderBy: { rosterId: 'asc' }, // Ensure consistent ordering
+    });
+
+    const isTeamA = matchupTeams[0]?.rosterId === rosterId;
+    console.log(
+      `🏈 [LEAGUE ODDS] Roster ${rosterId} is ${isTeamA ? 'Team A' : 'Team B'} in matchup ${matchup.matchupId}`
+    );
+    console.log(`    Matchup teams: [${matchupTeams.map(t => t.rosterId).join(', ')}]`);
+
+    const result = {
+      mean: isTeamA ? storedSim.teamAMean : storedSim.teamBMean,
+      p10: isTeamA ? storedSim.teamAP10 : storedSim.teamBP10,
+      p50: isTeamA ? storedSim.teamAMedian : storedSim.teamBMedian,
+      p90: isTeamA ? storedSim.teamAP90 : storedSim.teamBP90,
     };
+
+    console.log(
+      `📈 [LEAGUE ODDS] Returning simulation for roster ${rosterId}: mean=${result.mean.toFixed(1)}, p50=${result.p50.toFixed(1)}, range=${result.p10.toFixed(1)}-${result.p90.toFixed(1)}`
+    );
+
+    return result;
   } catch (error) {
-    console.error(`Error simulating team score for ${getTeamName(team)}:`, error);
-    // Fallback to simple projection sum
-    const totalProjection = starters.reduce((sum, player) => sum + player.projection, 0);
-    return {
-      mean: totalProjection,
-      p10: totalProjection * 0.8,
-      p50: totalProjection,
-      p90: totalProjection * 1.2,
-    };
+    console.error(`💥 [LEAGUE ODDS] Database error in getStoredTeamSimulation:`, error);
+    return null;
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -378,8 +433,8 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       '1263740549504962561': 'Gauntlet NFC',
     };
 
-    // Fetch raw projections once for both leagues
-    const rawProjections = await fetchRawProjections('2025', week);
+    // Fetch raw projections once for both leagues (use 2024 for current NFL season)
+    const rawProjections = await fetchRawProjections('2024', week);
     if (rawProjections.length === 0) {
       throw new Error('No projection data available');
     }
@@ -412,15 +467,44 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
           return leagueProjections[playerId]?.points || 0;
         };
 
-        // Simulate each team in this league
-        for (const team of matchups) {
-          if (!team.starters || team.starters.length === 0) continue;
+        // Get stored simulation results for each team in this league
+        console.log(
+          `🔄 [LEAGUE ODDS] Processing ${matchups.length} teams in ${leagueNames[leagueId as keyof typeof leagueNames]}`
+        );
 
-          const simulation = await simulateTeamScore(team, playersMap, getPlayerProjection);
+        for (const team of matchups) {
+          console.log(
+            `🔍 [LEAGUE ODDS] Processing team ${team.rosterId} with ${team.starters?.length || 0} starters`
+          );
+
+          if (!team.starters || team.starters.length === 0) {
+            console.warn(`⚠️ [LEAGUE ODDS] Skipping team ${team.rosterId} - no starters`);
+            continue;
+          }
+
+          let simulation;
+          try {
+            simulation = await getStoredTeamSimulation(leagueId, week, team.rosterId);
+            if (!simulation) {
+              console.warn(
+                `❌ [LEAGUE ODDS] Skipping team ${team.rosterId} - no stored simulation found`
+              );
+              continue;
+            }
+          } catch (error) {
+            console.error(
+              `💥 [LEAGUE ODDS] Error getting stored simulation for team ${team.rosterId}:`,
+              error
+            );
+            continue;
+          }
+
           const totalProjection = (team.starters || []).reduce(
             (sum: number, playerId: string) => sum + getPlayerProjection(playerId),
             0
           );
+
+          console.log(`✅ [LEAGUE ODDS] Adding team ${team.rosterId} to allTeams array`);
 
           allTeams.push({
             team,
@@ -446,17 +530,27 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
 
     // Calculate probabilities for all teams for highest/lowest scorer using Monte Carlo
     console.log(`🎲 Running Monte Carlo simulations for scoring probabilities...`);
+    console.log(`📊 Input teams for Monte Carlo (${allTeams.length} total):`);
+    allTeams.slice(0, 5).forEach((team, i) => {
+      console.log(
+        `  [${i}] ${getTeamName(team.team)}: mean=${team.simulation.mean.toFixed(1)}, p10-p90=${team.simulation.p10.toFixed(1)}-${team.simulation.p90.toFixed(1)}`
+      );
+    });
+
     const highestScorerProbs = calculateScoringProbabilities(allTeams, false, 25000);
     const lowestScorerProbs = calculateScoringProbabilities(allTeams, true, 25000);
 
-    console.log(
-      `🏆 Top 3 highest scorer probabilities:`,
-      highestScorerProbs.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
-    );
-    console.log(
-      `📉 Top 3 lowest scorer probabilities:`,
-      lowestScorerProbs.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
-    );
+    console.log(`🏆 Top 5 highest scorer probabilities:`);
+    highestScorerProbs.slice(0, 5).forEach((prob, i) => {
+      console.log(`  [${i}] ${getTeamName(allTeams[i].team)}: ${(prob * 100).toFixed(1)}%`);
+    });
+    console.log(`📉 Top 5 lowest scorer probabilities:`);
+    const sortedLowestWithIndex = lowestScorerProbs
+      .map((prob, i) => ({ prob, i }))
+      .sort((a, b) => b.prob - a.prob);
+    sortedLowestWithIndex.slice(0, 5).forEach(({ prob, i }) => {
+      console.log(`  [${i}] ${getTeamName(allTeams[i].team)}: ${(prob * 100).toFixed(1)}%`);
+    });
 
     // Build highest scorer odds for all teams
     const highestScorerOdds: TeamOdds[] = allTeams

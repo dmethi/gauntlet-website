@@ -4,21 +4,42 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { leagueId: string; week: string; matchupId: string } }
 ) {
+  console.log('🚀 [STORED SIMULATION API] Function called!');
+  console.log('📥 Request params:', {
+    leagueId: params.leagueId,
+    week: params.week,
+    matchupId: params.matchupId,
+  });
+
   try {
     const { leagueId, week, matchupId } = params;
     const weekNumber = parseInt(week);
     const matchupIdNumber = parseInt(matchupId);
 
+    console.log('🔍 [STORED SIMULATION API] Parsed params:', {
+      leagueId,
+      weekNumber,
+      matchupIdNumber,
+    });
     console.log(
       `📊 [STORED SIMULATION API] Fetching stored results for league ${leagueId}, week ${weekNumber}, matchup ${matchupIdNumber}`
     );
 
     // Use same Prisma pattern as working league-wide odds API
+    console.log('⚡ [STORED SIMULATION API] Importing Prisma...');
     const { PrismaClient } = await import('@prisma/client');
+    console.log('⚡ [STORED SIMULATION API] Creating Prisma client...');
     const prisma = new PrismaClient();
+    console.log('✅ [STORED SIMULATION API] Prisma client created successfully');
 
     try {
-      // Fetch stored simulation results from database
+      console.log('🔎 [STORED SIMULATION API] Querying database for stored simulation...');
+
+      // First check if any simulations exist at all
+      const totalSimulations = await prisma.matchupSimulation.count();
+      console.log(`📊 [STORED SIMULATION API] Total simulations in DB: ${totalSimulations}`);
+
+      // Then check for this specific one
       const storedSimulation = await prisma.matchupSimulation.findFirst({
         where: {
           leagueId: leagueId,
@@ -26,19 +47,103 @@ export async function GET(
           matchupId: matchupIdNumber,
         },
         include: {
-          playerSimulations: true
-        }
+          playerSimulations: true,
+        },
       });
 
+      console.log(`🎯 [STORED SIMULATION API] Stored simulation found: ${!!storedSimulation}`);
+
       if (!storedSimulation) {
-        console.warn(`❌ No stored simulation found for league ${leagueId}, week ${weekNumber}, matchup ${matchupIdNumber}`);
-        return NextResponse.json({
-          success: false,
-          error: 'Simulation results not found. Please run batch simulations first.',
-        }, { status: 404 });
+        console.warn(
+          `❌ [STORED SIMULATION API] No stored simulation found for league ${leagueId}, week ${weekNumber}, matchup ${matchupIdNumber}`
+        );
+        console.warn(`❌ [STORED SIMULATION API] Returning 404 - simulation not found`);
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Simulation results not found. Please run batch simulations first.',
+          },
+          { status: 404 }
+        );
       }
 
-      console.log(`✅ Found stored simulation with ${storedSimulation.iterations} iterations`);
+      console.log(
+        `✅ [STORED SIMULATION API] Found stored simulation with ${storedSimulation.iterations} iterations`
+      );
+      console.log(
+        `🎲 [STORED SIMULATION API] Player simulations: ${storedSimulation.playerSimulations?.length || 0}`
+      );
+
+      // Fetch team roster data for the frontend
+      console.log(`🏈 [STORED SIMULATION API] Fetching team roster data...`);
+      const matchupTeams = await prisma.matchup.findMany({
+        where: {
+          leagueId: leagueId,
+          week: weekNumber,
+          matchupId: matchupIdNumber,
+        },
+        include: {
+          roster: {
+            include: {
+              owner: {
+                select: {
+                  id: true,
+                  username: true,
+                  displayName: true,
+                  avatar: true,
+                  metadata: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      console.log(`🏈 [STORED SIMULATION API] Found ${matchupTeams.length} teams for this matchup`);
+
+      // Get player details for the teams
+      const allPlayerIds = new Set<string>();
+      matchupTeams.forEach(team => {
+        (team.starters || []).forEach(playerId => {
+          if (playerId) allPlayerIds.add(playerId);
+        });
+      });
+
+      const players = await prisma.player.findMany({
+        where: { id: { in: Array.from(allPlayerIds) } },
+        select: { id: true, fullName: true, position: true, team: true },
+      });
+      const playersMap = new Map(players.map(p => [p.id, p]));
+
+      // Build teams data for frontend
+      const teamsData = matchupTeams.map(team => {
+        const teamMetadata = team.roster.owner?.metadata as any;
+        const teamName = teamMetadata?.teamName || team.roster.owner?.displayName || 'Unknown Team';
+
+        const playersWithProjections = (team.starters || [])
+          .map(playerId => {
+            const player = playersMap.get(playerId);
+            const playerSim = storedSimulation.playerSimulations.find(p => p.playerId === playerId);
+
+            return {
+              id: playerId,
+              name: player?.fullName || 'Unknown Player',
+              position: player?.position || 'UNKNOWN',
+              projection: playerSim?.projection || 0,
+            };
+          })
+          .filter(p => p.name !== 'Unknown Player');
+
+        return {
+          rosterId: team.rosterId,
+          teamName: teamName,
+          ownerName: team.roster.owner?.displayName || 'Unknown Owner',
+          avatar: team.roster.owner?.avatar || undefined,
+          players: playersWithProjections,
+        };
+      });
+
+      console.log(`🏈 [STORED SIMULATION API] Built teams data for ${teamsData.length} teams`);
 
       // Convert stored data back to expected simulation result format
       const simulationResult = {
@@ -58,6 +163,7 @@ export async function GET(
         },
         team1WinPct: storedSimulation.teamAWinPct,
         team2WinPct: storedSimulation.teamBWinPct,
+        medianMargin: Math.abs(storedSimulation.teamAMedian - storedSimulation.teamBMedian),
         impliedOdds: {
           spread: storedSimulation.impliedSpread,
           total: storedSimulation.totalLine,
@@ -66,13 +172,19 @@ export async function GET(
           overPct: storedSimulation.overPct,
           underPct: storedSimulation.underPct,
         },
+        teams: teamsData, // Include the team roster data
         // Metadata about the simulation
         iterations: storedSimulation.iterations,
         computeTimeMs: storedSimulation.computeTimeMs,
         generatedAt: storedSimulation.createdAt.toISOString(),
       };
 
-      console.log(`📊 Returning stored simulation: Team A ${(storedSimulation.teamAWinPct * 100).toFixed(1)}% vs Team B ${(storedSimulation.teamBWinPct * 100).toFixed(1)}%`);
+      console.log(
+        `📊 [STORED SIMULATION API] Returning stored simulation: Team A ${(storedSimulation.teamAWinPct * 100).toFixed(1)}% vs Team B ${(storedSimulation.teamBWinPct * 100).toFixed(1)}%`
+      );
+      console.log(
+        `🎯 [STORED SIMULATION API] Success! Returning stored simulation data with source='stored'`
+      );
 
       return NextResponse.json({
         success: true,
@@ -91,16 +203,33 @@ export async function GET(
           dataSource: player.dataSource,
         })),
       });
-
     } finally {
+      console.log('🔌 [STORED SIMULATION API] Disconnecting Prisma client...');
       await prisma.$disconnect();
+      console.log('✅ [STORED SIMULATION API] Prisma client disconnected');
+    }
+  } catch (error) {
+    console.error('❌ [STORED SIMULATION API] FATAL ERROR:', error);
+    console.error('❌ [STORED SIMULATION API] Error type:', typeof error);
+    console.error(
+      '❌ [STORED SIMULATION API] Error name:',
+      error instanceof Error ? error.name : 'unknown'
+    );
+    console.error(
+      '❌ [STORED SIMULATION API] Error message:',
+      error instanceof Error ? error.message : String(error)
+    );
+    if (error instanceof Error && error.stack) {
+      console.error('❌ [STORED SIMULATION API] Error stack:', error.stack);
     }
 
-  } catch (error) {
-    console.error('❌ [STORED SIMULATION API] Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch stored simulation results',
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch stored simulation results',
+        apiUsed: 'stored-simulation-api',
+      },
+      { status: 500 }
+    );
   }
 }

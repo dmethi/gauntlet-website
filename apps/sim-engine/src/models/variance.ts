@@ -65,7 +65,7 @@ async function getPositionDistribution(position: string): Promise<{
     );
 
     const positionStdDev = getPositionStdDev(position);
-    const outcomes = [];
+    let outcomes: number[] = [];
     for (let i = 0; i < 1000; i++) {
       // Generate normal distribution with mean=1.0, position-specific std dev
       let u = 0,
@@ -76,6 +76,9 @@ async function getPositionDistribution(position: string): Promise<{
       const outcome = Math.max(0.1, 1.0 + z * positionStdDev); // Min 0.1 to avoid 0 scores
       outcomes.push(outcome);
     }
+    // Normalize to exact mean 1.0 after truncation to avoid inflation
+    const mean = outcomes.reduce((s, x) => s + x, 0) / outcomes.length;
+    outcomes = outcomes.map(x => x / (mean === 0 ? 1 : mean));
 
     const result = {
       outcomes: outcomes.sort((a, b) => a - b),

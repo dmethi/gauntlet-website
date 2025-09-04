@@ -51,6 +51,7 @@ model League {
   seasonSuperlatives   SeasonSuperlatives[]
   hallOfFameRecords    HallOfFameRecord[]
   matchupSimulations   MatchupSimulation[]
+  matchupOddsHistory   MatchupOddsHistory[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
@@ -558,4 +559,56 @@ model PlayerSimulation {
   
   @@unique([matchupSimulationId, playerId])
   @@index([playerId])
+}
+
+// Historical tracking of matchup odds changes over time
+model MatchupOddsHistory {
+  id              String   @id @default(cuid())
+  leagueId        String
+  league          League   @relation(fields: [leagueId], references: [id])
+  week            Int
+  matchupId       Int
+  
+  // Odds snapshot at this point in time
+  team1WinPct     Float
+  team2WinPct     Float
+  spread          Float
+  total           Float
+  team1MoneyLine  Int
+  team2MoneyLine  Int
+  
+  // Game state
+  gameProgress    Float    // 0-1, where 1 = game complete
+  isLive          Boolean  @default(false)
+  
+  // Context
+  triggeredBy     String   // 'scheduled', 'live-update', 'manual'
+  computeTimeMs   Int?
+  createdAt       DateTime @default(now())
+  
+  @@index([leagueId, week, matchupId])
+  @@index([createdAt])
+  @@index([isLive])
+}
+
+// Historical tracking of league-wide odds (highest scorer, etc.)
+model LeagueOddsHistory {
+  id            String   @id @default(cuid())
+  week          Int
+  
+  // Snapshot data as JSON for flexibility
+  highestScorerOdds Json   // Array of team odds for highest scorer
+  lowestScorerOdds  Json   // Array of team odds for lowest scorer  
+  closestMatchup    Json   // Array of matchup odds for closest game
+  biggestBlowout    Json   // Array of matchup odds for biggest blowout
+  
+  // Context
+  isLive        Boolean  @default(false)
+  triggeredBy   String   // 'scheduled', 'live-update', 'manual'
+  computeTimeMs Int?
+  createdAt     DateTime @default(now())
+  
+  @@index([week])
+  @@index([createdAt])
+  @@index([isLive])
 }

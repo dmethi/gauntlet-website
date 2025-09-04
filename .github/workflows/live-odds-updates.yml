@@ -1,0 +1,160 @@
+name: Live Odds Updates
+
+on:
+  schedule:
+    # During NFL season (Sep-Feb): Every 10 minutes during game times
+    # Sunday: 1:00 PM - 11:30 PM ET (18:00 - 04:30 UTC next day)
+    - cron: '*/10 18-23 * 9-12,1-2 0' # Sep-Dec & Jan-Feb, Sunday 6PM-11:59PM UTC
+    - cron: '*/10 0-4 * 9-12,1-2 1' # Sep-Dec & Jan-Feb, Monday 12AM-4:30AM UTC (Sunday night games)
+
+    # Monday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
+    - cron: '*/10 1-4 * 9-12,1-2 2' # Sep-Dec & Jan-Feb, Tuesday 1:15AM-4:30AM UTC (Monday night)
+
+    # Thursday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
+    - cron: '*/10 1-4 * 9-12,1-2 5' # Sep-Dec & Jan-Feb, Friday 1:15AM-4:30AM UTC (Thursday night)
+
+    # Daily updates: Every day at 6:00 AM ET (11:00 UTC) for pre-game odds
+    - cron: '0 11 * 9-12,1-2 *' # Daily at 11:00 UTC during NFL season
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'NFL Week to update (optional, defaults to current week)'
+        required: false
+        type: string
+      force_live:
+        description: 'Force live game simulation (ignore game schedule)'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  update-odds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd apps/server && npm ci
+
+      - name: Setup environment variables
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" > apps/server/.env
+          echo "SLEEPER_API_BASE_URL=https://api.sleeper.app/v1" >> apps/server/.env
+
+      - name: Determine update type and week
+        id: determine-context
+        run: |
+          # Get current week (default to week 1 for testing)
+          WEEK="${{ github.event.inputs.week || '1' }}"
+
+          # Check if we're in a live game window
+          CURRENT_HOUR=$(date -u +%H)
+          CURRENT_DAY=$(date -u +%u)  # 1=Monday, 7=Sunday
+          CURRENT_MONTH=$(date -u +%m)
+          FORCE_LIVE="${{ github.event.inputs.force_live || 'false' }}"
+
+          # Determine if this is a live update
+          IS_LIVE="false"
+          TRIGGER_TYPE="scheduled"
+
+          if [ "$FORCE_LIVE" = "true" ]; then
+            IS_LIVE="true" 
+            TRIGGER_TYPE="manual-live"
+          elif [ "$CURRENT_MONTH" -ge 9 ] || [ "$CURRENT_MONTH" -le 2 ]; then
+            # NFL season months
+            if [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
+              IS_LIVE="true"  # Monday night
+            elif [ "$CURRENT_DAY" = "5" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
+              IS_LIVE="true"  # Thursday night
+            elif [ "$CURRENT_DAY" = "7" ] && [ "$CURRENT_HOUR" -ge 18 ]; then
+              IS_LIVE="true"  # Sunday afternoon/evening
+            elif [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -le 4 ]; then
+              IS_LIVE="true"  # Sunday night into Monday
+            fi
+          fi
+
+          echo "week=$WEEK" >> $GITHUB_OUTPUT
+          echo "is_live=$IS_LIVE" >> $GITHUB_OUTPUT  
+          echo "trigger_type=$TRIGGER_TYPE" >> $GITHUB_OUTPUT
+
+          echo "📊 Update Context:"
+          echo "  Week: $WEEK"
+          echo "  Is Live: $IS_LIVE" 
+          echo "  Trigger: $TRIGGER_TYPE"
+          echo "  Time: $(date -u)"
+
+      - name: Run live odds update
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cd apps/server
+
+          # Determine arguments based on context
+          WEEK="${{ steps.determine-context.outputs.week }}"
+          IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
+          TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
+
+          echo "🚀 Starting odds update..."
+          echo "  Week: $WEEK"
+          echo "  Live Mode: $IS_LIVE"
+          echo "  Trigger: $TRIGGER_TYPE"
+
+          # Run the enhanced batch simulation script
+          if [ "$IS_LIVE" = "true" ]; then
+            echo "⚡ Running LIVE odds update with current scores..."
+            npx tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --live --trigger="$TRIGGER_TYPE"
+          else
+            echo "📅 Running daily pre-game odds update..."
+            npx tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --trigger="$TRIGGER_TYPE"
+          fi
+
+      - name: Store historical odds
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cd apps/server
+
+          WEEK="${{ steps.determine-context.outputs.week }}"
+          IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
+          TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
+
+          echo "💾 Storing historical odds snapshot..."
+          npx tsx src/scripts/jobs/store-odds-history.ts $WEEK --live="$IS_LIVE" --trigger="$TRIGGER_TYPE"
+
+      - name: Report completion
+        if: always()
+        run: |
+          WEEK="${{ steps.determine-context.outputs.week }}"
+          IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
+          STATUS="${{ job.status }}"
+
+          echo "✅ Odds update completed!"
+          echo "  Week: $WEEK"
+          echo "  Live Mode: $IS_LIVE"
+          echo "  Status: $STATUS"
+          echo "  Completed: $(date -u)"
+
+      # Optional: Send Slack notification on failure
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Odds update FAILED at $(date -u)"
+          echo "Check the logs for details"
+          # TODO: Add Slack webhook notification if desired
