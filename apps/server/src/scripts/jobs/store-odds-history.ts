@@ -193,12 +193,32 @@ function getCurrentWeek(): number {
   );
 }
 
-// Run the script with proper cleanup and exit handling
-main()
-  .catch(error => {
+// Run the script with aggressive exit handling for CI environments
+async function runWithTimeout() {
+  // Set a timeout to force exit after 30 seconds
+  const timeout = setTimeout(() => {
+    console.log('⏰ Timeout reached, forcing process exit...');
+    process.exit(1);
+  }, 30000);
+
+  try {
+    await main();
+    clearTimeout(timeout);
+    console.log('🏁 Script completed successfully, cleaning up...');
+    
+    // Force cleanup and exit
+    await prisma.$disconnect();
+    process.exit(0);
+  } catch (error) {
+    clearTimeout(timeout);
     console.error('❌ Fatal error:', error);
-    return prisma.$disconnect().then(() => process.exit(1));
-  })
-  .then(() => {
-    return prisma.$disconnect().then(() => process.exit(0));
-  });
+    try {
+      await prisma.$disconnect();
+    } catch (disconnectError) {
+      console.error('⚠️ Error disconnecting from database:', disconnectError);
+    }
+    process.exit(1);
+  }
+}
+
+runWithTimeout();
