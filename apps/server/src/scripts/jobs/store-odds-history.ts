@@ -174,7 +174,7 @@ async function main() {
     const totalTime = Date.now() - startTime;
     console.log(`\n🎉 Odds history storage complete in ${totalTime}ms!`);
     console.log(`📊 Historical data preserved for trend analysis`);
-    
+
     // Explicitly exit to prevent hanging in CI environments
     process.exit(0);
   } catch (error) {
