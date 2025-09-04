@@ -29,84 +29,71 @@ on:
         type: boolean
         default: false
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
 jobs:
   update-odds:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
-    environment: production
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@9
 
       - name: Install dependencies
-        run: |
-          npm ci
-          cd apps/server && npm ci
+        run: pnpm install -w --frozen-lockfile
 
-      - name: Setup environment variables
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          echo "DATABASE_URL=$DATABASE_URL" > apps/server/.env
-          echo "SLEEPER_API_BASE_URL=https://api.sleeper.app/v1" >> apps/server/.env
+      - name: Generate Prisma Client
+        run: cd apps/server && npx prisma generate
 
       - name: Determine update type and week
         id: determine-context
         run: |
-          # Get current week (default to week 1 for testing)
           WEEK="${{ github.event.inputs.week || '1' }}"
-
-          # Check if we're in a live game window
           CURRENT_HOUR=$(date -u +%H)
-          CURRENT_DAY=$(date -u +%u)  # 1=Monday, 7=Sunday
+          CURRENT_DAY=$(date -u +%u)
           CURRENT_MONTH=$(date -u +%m)
           FORCE_LIVE="${{ github.event.inputs.force_live || 'false' }}"
 
-          # Determine if this is a live update
           IS_LIVE="false"
           TRIGGER_TYPE="scheduled"
 
           if [ "$FORCE_LIVE" = "true" ]; then
-            IS_LIVE="true" 
+            IS_LIVE="true"
             TRIGGER_TYPE="manual-live"
           elif [ "$CURRENT_MONTH" -ge 9 ] || [ "$CURRENT_MONTH" -le 2 ]; then
-            # NFL season months
             if [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"  # Monday night
+              IS_LIVE="true"
             elif [ "$CURRENT_DAY" = "5" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"  # Thursday night
+              IS_LIVE="true"
             elif [ "$CURRENT_DAY" = "7" ] && [ "$CURRENT_HOUR" -ge 18 ]; then
-              IS_LIVE="true"  # Sunday afternoon/evening
+              IS_LIVE="true"
             elif [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"  # Sunday night into Monday
+              IS_LIVE="true"
             fi
           fi
 
           echo "week=$WEEK" >> $GITHUB_OUTPUT
-          echo "is_live=$IS_LIVE" >> $GITHUB_OUTPUT  
+          echo "is_live=$IS_LIVE" >> $GITHUB_OUTPUT
           echo "trigger_type=$TRIGGER_TYPE" >> $GITHUB_OUTPUT
 
           echo "📊 Update Context:"
           echo "  Week: $WEEK"
-          echo "  Is Live: $IS_LIVE" 
+          echo "  Is Live: $IS_LIVE"
           echo "  Trigger: $TRIGGER_TYPE"
           echo "  Time: $(date -u)"
 
       - name: Run live odds update
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          cd apps/server
-
-          # Determine arguments based on context
           WEEK="${{ steps.determine-context.outputs.week }}"
           IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
           TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
@@ -116,27 +103,22 @@ jobs:
           echo "  Live Mode: $IS_LIVE"
           echo "  Trigger: $TRIGGER_TYPE"
 
-          # Run the enhanced batch simulation script
           if [ "$IS_LIVE" = "true" ]; then
             echo "⚡ Running LIVE odds update with current scores..."
-            npx tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --live --trigger="$TRIGGER_TYPE"
+            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --live --trigger="$TRIGGER_TYPE"
           else
             echo "📅 Running daily pre-game odds update..."
-            npx tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --trigger="$TRIGGER_TYPE"
+            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --trigger="$TRIGGER_TYPE"
           fi
 
       - name: Store historical odds
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          cd apps/server
-
           WEEK="${{ steps.determine-context.outputs.week }}"
           IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
           TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
 
           echo "💾 Storing historical odds snapshot..."
-          npx tsx src/scripts/jobs/store-odds-history.ts $WEEK --live="$IS_LIVE" --trigger="$TRIGGER_TYPE"
+          pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/store-odds-history.ts $WEEK --live="$IS_LIVE" --trigger="$TRIGGER_TYPE"
 
       - name: Report completion
         if: always()
@@ -150,11 +132,3 @@ jobs:
           echo "  Live Mode: $IS_LIVE"
           echo "  Status: $STATUS"
           echo "  Completed: $(date -u)"
-
-      # Optional: Send Slack notification on failure
-      - name: Notify on failure
-        if: failure()
-        run: |
-          echo "❌ Odds update FAILED at $(date -u)"
-          echo "Check the logs for details"
-          # TODO: Add Slack webhook notification if desired
