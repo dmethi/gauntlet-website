@@ -9,7 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/components/matchup-simulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Types
 interface PlayerDetails {
@@ -293,46 +292,19 @@ export default function MatchupDetailPage() {
           matchupId={matchup.matchupId}
         />
 
-        {/* Content Tabs */}
-        <Tabs defaultValue='rosters' className='w-full'>
-          <TabsList className='grid w-full grid-cols-2'>
-            <TabsTrigger value='rosters'>Team Rosters</TabsTrigger>
-            <TabsTrigger value='analytics'>Advanced Analytics</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value='rosters' className='space-y-6'>
-            {/* Team Rosters */}
-            <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
-              <TeamRosterCard
-                team={teamA}
-                isLeading={teamA.points > teamB.points}
-                maxProjection={maxProjection}
-              />
-              <TeamRosterCard
-                team={teamB}
-                isLeading={teamB.points > teamA.points}
-                maxProjection={maxProjection}
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value='analytics' className='space-y-6'>
-            <Card>
-              <CardHeader>
-                <CardTitle className='font-geizer tracking-wide'>Advanced Analytics</CardTitle>
-                <CardDescription>
-                  Player-specific distributions and variance modeling coming soon
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className='text-muted-foreground'>
-                  Future features: Individual player boom/bust probabilities, correlation analysis,
-                  weather impact modeling, and historical matchup trends.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        {/* Team Rosters */}
+        <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+          <TeamRosterCard
+            team={teamA}
+            isLeading={teamA.points > teamB.points}
+            maxProjection={maxProjection}
+          />
+          <TeamRosterCard
+            team={teamB}
+            isLeading={teamB.points > teamA.points}
+            maxProjection={maxProjection}
+          />
+        </div>
       </div>
     </div>
   );

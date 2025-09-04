@@ -50,6 +50,7 @@ model League {
   leagueWeekSummaries  LeagueWeekSummary[]
   seasonSuperlatives   SeasonSuperlatives[]
   hallOfFameRecords    HallOfFameRecord[]
+  matchupSimulations   MatchupSimulation[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
@@ -470,4 +471,91 @@ model HallOfFameRecord {
   @@index([leagueId, season])
   @@index([categoryId, recordType, rank])
   @@index([rosterId])
+}
+
+// Simulation Models for Server-Side Monte Carlo Results
+model MatchupSimulation {
+  id                String    @id @default(cuid())
+  leagueId          String
+  league            League    @relation(fields: [leagueId], references: [id])
+  week              Int
+  matchupId         Int
+  
+  // Team A Results (100k simulations)
+  teamAMean         Float
+  teamAP10          Float
+  teamAP25          Float?
+  teamAMedian       Float
+  teamAP75          Float?
+  teamAP90          Float
+  teamAStdDev       Float
+  
+  // Team B Results (100k simulations) 
+  teamBMean         Float
+  teamBP10          Float
+  teamBP25          Float?
+  teamBMedian       Float
+  teamBP75          Float?
+  teamBP90          Float
+  teamBStdDev       Float
+  
+  // Win Probabilities
+  teamAWinPct       Float
+  teamBWinPct       Float
+  
+  // Betting Odds
+  impliedSpread     Float     // Team A perspective (negative = underdog)
+  moneyLineA        Int       // American odds format
+  moneyLineB        Int       // American odds format
+  totalLine         Float     // Over/under total
+  overPct           Float     // Over probability
+  underPct          Float     // Under probability
+  
+  // Simulation Metadata
+  iterations        Int       @default(100000)
+  simulationSeed    Int?      // For reproducibility
+  computeTimeMs     Int?      // Performance tracking
+  
+  // Timestamps
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Player-level simulation details
+  playerSimulations PlayerSimulation[]
+  
+  @@unique([leagueId, week, matchupId])
+  @@index([leagueId, week])
+  @@index([createdAt]) // For finding stale simulations
+}
+
+// Individual Player Simulation Results (Optional detailed breakdowns)
+model PlayerSimulation {
+  id                  String            @id @default(cuid())
+  matchupSimulationId String
+  matchupSimulation   MatchupSimulation @relation(fields: [matchupSimulationId], references: [id], onDelete: Cascade)
+  
+  playerId            String
+  playerName          String
+  position            String
+  teamRosterId        Int               // Which team this player belongs to
+  isStarter           Boolean
+  
+  // Simulation Results
+  mean                Float
+  p10                 Float
+  p25                 Float?
+  median              Float
+  p75                 Float?
+  p90                 Float
+  stdDev              Float
+  projection          Float             // Original projection
+  
+  // Variance Source Info
+  dataSource          String            // "player", "position", or "synthetic"
+  sampleSize          Int?              // Historical data points used
+  
+  createdAt           DateTime          @default(now())
+  
+  @@unique([matchupSimulationId, playerId])
+  @@index([playerId])
 }
