@@ -593,8 +593,7 @@ async function main() {
 
     // Store historical odds snapshot after successful simulation
     console.log(`\n💾 Storing historical odds snapshot...`);
-    await storeHistoricalOdds(targetWeek, isLive, trigger);
-    
+    await storeHistoricalOdds(options.week, options.isLive, options.triggerType);
   } catch (error) {
     console.error('❌ Batch simulation failed:', error);
     process.exit(1);
@@ -651,7 +650,7 @@ async function storeHistoricalOdds(
     const historyRecords = simulations.map(sim => {
       const scoreKey = `${sim.leagueId}-${sim.matchupId}`;
       const scores = currentScores[scoreKey] || { team1Score: null, team2Score: null };
-      
+
       return {
         leagueId: sim.leagueId,
         week: sim.week,
@@ -678,7 +677,9 @@ async function storeHistoricalOdds(
 
     const historyTime = Date.now() - historyStartTime;
     const scoresNote = isLive ? ' with live scores' : ' (pre-game)';
-    console.log(`   ✅ Stored ${result.count} historical odds snapshots${scoresNote} in ${historyTime}ms`);
+    console.log(
+      `   ✅ Stored ${result.count} historical odds snapshots${scoresNote} in ${historyTime}ms`
+    );
   } catch (error) {
     console.error('⚠️ Error storing historical odds (non-critical):', error);
     // Don't throw - simulations are the primary goal
@@ -693,15 +694,18 @@ async function fetchCurrentScores(
   week: number
 ): Promise<Record<string, { team1Score: number | null; team2Score: number | null }>> {
   const scores: Record<string, { team1Score: number | null; team2Score: number | null }> = {};
-  
+
   try {
     // Group simulations by league to minimize API calls
-    const leagueGroups = simulations.reduce((groups, sim) => {
-      const leagueId = sim.league.sleeperLeagueId;
-      if (!groups[leagueId]) groups[leagueId] = [];
-      groups[leagueId].push(sim);
-      return groups;
-    }, {} as Record<string, any[]>);
+    const leagueGroups = simulations.reduce(
+      (groups, sim) => {
+        const leagueId = sim.league.sleeperLeagueId;
+        if (!groups[leagueId]) groups[leagueId] = [];
+        groups[leagueId].push(sim);
+        return groups;
+      },
+      {} as Record<string, any[]>
+    );
 
     // Fetch matchups for each league
     for (const [sleeperLeagueId, sims] of Object.entries(leagueGroups)) {
@@ -717,12 +721,14 @@ async function fetchCurrentScores(
         );
 
         if (!response.ok) {
-          console.warn(`⚠️ Failed to fetch scores for league ${sleeperLeagueId}: ${response.status}`);
+          console.warn(
+            `⚠️ Failed to fetch scores for league ${sleeperLeagueId}: ${response.status}`
+          );
           continue;
         }
 
         const matchups = await response.json();
-        
+
         // Group matchups by matchup_id to get both teams
         const matchupGroups = matchups.reduce((groups: any, matchup: any) => {
           const matchupId = matchup.matchup_id;
@@ -737,7 +743,7 @@ async function fetchCurrentScores(
           if (matchupTeams && matchupTeams.length === 2) {
             // Sort by roster_id to maintain consistent team1/team2 ordering
             matchupTeams.sort((a: any, b: any) => a.roster_id - b.roster_id);
-            
+
             const scoreKey = `${sim.leagueId}-${sim.matchupId}`;
             scores[scoreKey] = {
               team1Score: matchupTeams[0].points || 0,
@@ -746,7 +752,9 @@ async function fetchCurrentScores(
           }
         });
 
-        console.log(`   📊 Fetched scores for ${Object.keys(matchupGroups).length} matchups in league ${sleeperLeagueId}`);
+        console.log(
+          `   📊 Fetched scores for ${Object.keys(matchupGroups).length} matchups in league ${sleeperLeagueId}`
+        );
       } catch (leagueError) {
         console.error(`❌ Error fetching scores for league ${sleeperLeagueId}:`, leagueError);
       }
