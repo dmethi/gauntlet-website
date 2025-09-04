@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-async function getPrisma() {
-  const { PrismaClient } = await import('@prisma/client');
-  return new PrismaClient();
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { leagueId: string; week: string; matchupId: string } }
@@ -18,7 +13,9 @@ export async function GET(
       `📊 [STORED SIMULATION API] Fetching stored results for league ${leagueId}, week ${weekNumber}, matchup ${matchupIdNumber}`
     );
 
-    const prisma = await getPrisma();
+    // Use same Prisma pattern as working league-wide odds API
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
 
     try {
       // Fetch stored simulation results from database
