@@ -55,10 +55,9 @@ jobs:
       - name: Generate Prisma Client
         run: cd apps/server && npx prisma generate
 
-      - name: Build Simulation Engine
+      - name: Build workspace packages
         run: |
-          pnpm --filter @gauntlet/lib build || true
-          pnpm --filter @gauntlet/sim-engine build
+          pnpm -r run build
 
       - name: Determine update type and week
         id: determine-context
