@@ -594,9 +594,11 @@ async function main() {
     // Store historical odds snapshot after successful simulation
     console.log(`\n💾 Storing historical odds snapshot...`);
     await storeHistoricalOdds(options.week, options.isLive, options.triggerType);
+    
+    console.log(`\n🎉 All operations complete! Cleaning up and exiting...`);
   } catch (error) {
     console.error('❌ Batch simulation failed:', error);
-    process.exit(1);
+    throw error; // Let the wrapper handle exit
   }
 }
 
@@ -779,12 +781,32 @@ function getCurrentWeek(): number {
   );
 }
 
-// Run the script
-main()
-  .catch(error => {
-    console.error('❌ Fatal error:', error);
+// Run the script with aggressive exit handling for CI environments
+async function runWithTimeout() {
+  // Set a timeout to force exit after 5 minutes (generous for sims + odds storage)
+  const timeout = setTimeout(() => {
+    console.log('⏰ Timeout reached, forcing process exit...');
     process.exit(1);
-  })
-  .finally(async () => {
+  }, 300000); // 5 minutes
+
+  try {
+    await main();
+    clearTimeout(timeout);
+    console.log('🏁 Script completed successfully, cleaning up...');
+    
+    // Force cleanup and exit
     await prisma.$disconnect();
-  });
+    process.exit(0);
+  } catch (error) {
+    clearTimeout(timeout);
+    console.error('❌ Fatal error:', error);
+    try {
+      await prisma.$disconnect();
+    } catch (disconnectError) {
+      console.error('⚠️ Error disconnecting from database:', disconnectError);
+    }
+    process.exit(1);
+  }
+}
+
+runWithTimeout();
