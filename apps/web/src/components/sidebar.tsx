@@ -8,9 +8,9 @@ import {
   ChevronRight,
   Home,
   Menu,
+  Swords,
   Trophy,
   Users,
-  Swords,
   X,
 } from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';

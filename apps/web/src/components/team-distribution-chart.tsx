@@ -5,14 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TrendingUp } from 'lucide-react';
 import {
-  ComposedChart,
-  Bar,
-  XAxis,
-  YAxis,
   ResponsiveContainer,
-  Cell,
-  ReferenceLine,
-  ReferenceArea,
 } from 'recharts';
 
 interface TeamDistribution {
@@ -234,106 +227,106 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
             <div className='relative w-full h-full flex items-center justify-center'>
               <svg width='90%' height='90%' className='overflow-visible'>
                 {(() => {
-                  const chartHeight = 200;
+                  const _chartHeight = 200; // Unused variable
                   const chartWidth = 500;
-                  
+
                   return chartData.map((team, index) => {
                     const rowHeight = chartHeight / chartData.length;
                     const yPos = index * rowHeight + rowHeight * 0.5;
                     const boxHeight = 40;
                     const leftMargin = 100;
 
-                  // Calculate positions
-                  const xMin = Math.min(...chartData.map(t => t.rangeStart)) - 10;
-                  const xMax = Math.max(...chartData.map(t => t.rangeEnd)) + 10;
-                  const scale = (chartWidth - leftMargin - 40) / (xMax - xMin);
+                    // Calculate positions
+                    const xMin = Math.min(...chartData.map(t => t.rangeStart)) - 10;
+                    const xMax = Math.max(...chartData.map(t => t.rangeEnd)) + 10;
+                    const scale = (chartWidth - leftMargin - 40) / (xMax - xMin);
 
-                  const toX = (value: number) => leftMargin + (value - xMin) * scale;
+                    const toX = (value: number) => leftMargin + (value - xMin) * scale;
 
-                  return (
-                    <g key={team.name}>
-                      {/* Team name */}
-                      <text
-                        x={leftMargin - 15}
-                        y={yPos + 5}
-                        textAnchor='end'
-                        className='text-sm font-medium'
-                        fill={team.color}
-                      >
-                        {team.name}
-                      </text>
+                    return (
+                      <g key={team.name}>
+                        {/* Team name */}
+                        <text
+                          x={leftMargin - 15}
+                          y={yPos + 5}
+                          textAnchor='end'
+                          className='text-sm font-medium'
+                          fill={team.color}
+                        >
+                          {team.name}
+                        </text>
 
-                      {/* Whisker line (P10-P90) */}
-                      <line
-                        x1={toX(team.rangeStart)}
-                        y1={yPos}
-                        x2={toX(team.rangeEnd)}
-                        y2={yPos}
-                        stroke={team.color}
-                        strokeWidth='3'
-                        opacity='0.7'
-                      />
+                        {/* Whisker line (P10-P90) */}
+                        <line
+                          x1={toX(team.rangeStart)}
+                          y1={yPos}
+                          x2={toX(team.rangeEnd)}
+                          y2={yPos}
+                          stroke={team.color}
+                          strokeWidth='3'
+                          opacity='0.7'
+                        />
 
-                      {/* Left whisker cap (P10) */}
-                      <line
-                        x1={toX(team.rangeStart)}
-                        y1={yPos - boxHeight / 4}
-                        x2={toX(team.rangeStart)}
-                        y2={yPos + boxHeight / 4}
-                        stroke={team.color}
-                        strokeWidth='3'
-                      />
+                        {/* Left whisker cap (P10) */}
+                        <line
+                          x1={toX(team.rangeStart)}
+                          y1={yPos - boxHeight / 4}
+                          x2={toX(team.rangeStart)}
+                          y2={yPos + boxHeight / 4}
+                          stroke={team.color}
+                          strokeWidth='3'
+                        />
 
-                      {/* Right whisker cap (P90) */}
-                      <line
-                        x1={toX(team.rangeEnd)}
-                        y1={yPos - boxHeight / 4}
-                        x2={toX(team.rangeEnd)}
-                        y2={yPos + boxHeight / 4}
-                        stroke={team.color}
-                        strokeWidth='3'
-                      />
+                        {/* Right whisker cap (P90) */}
+                        <line
+                          x1={toX(team.rangeEnd)}
+                          y1={yPos - boxHeight / 4}
+                          x2={toX(team.rangeEnd)}
+                          y2={yPos + boxHeight / 4}
+                          stroke={team.color}
+                          strokeWidth='3'
+                        />
 
-                      {/* Box (P25-P75) */}
-                      <rect
-                        x={toX(team.boxStart)}
-                        y={yPos - boxHeight / 2}
-                        width={toX(team.boxEnd) - toX(team.boxStart)}
-                        height={boxHeight}
-                        fill={team.color}
-                        fillOpacity='0.25'
-                        stroke={team.color}
-                        strokeWidth='2'
-                        rx='4'
-                      />
+                        {/* Box (P25-P75) */}
+                        <rect
+                          x={toX(team.boxStart)}
+                          y={yPos - boxHeight / 2}
+                          width={toX(team.boxEnd) - toX(team.boxStart)}
+                          height={boxHeight}
+                          fill={team.color}
+                          fillOpacity='0.25'
+                          stroke={team.color}
+                          strokeWidth='2'
+                          rx='4'
+                        />
 
-                      {/* Median line */}
-                      <line
-                        x1={toX(team.median)}
-                        y1={yPos - boxHeight / 2}
-                        x2={toX(team.median)}
-                        y2={yPos + boxHeight / 2}
-                        stroke={team.color}
-                        strokeWidth='4'
-                      />
+                        {/* Median line */}
+                        <line
+                          x1={toX(team.median)}
+                          y1={yPos - boxHeight / 2}
+                          x2={toX(team.median)}
+                          y2={yPos + boxHeight / 2}
+                          stroke={team.color}
+                          strokeWidth='4'
+                        />
 
-                      {/* Mean marker (diamond) */}
-                      <polygon
-                        points={`${toX(team.mean)},${yPos - 6} ${toX(team.mean) + 6},${yPos} ${toX(team.mean)},${yPos + 6} ${toX(team.mean) - 6},${yPos}`}
-                        fill='white'
-                        stroke={team.color}
-                        strokeWidth='2'
-                      />
-                    </g>
-                  );
+                        {/* Mean marker (diamond) */}
+                        <polygon
+                          points={`${toX(team.mean)},${yPos - 6} ${toX(team.mean) + 6},${yPos} ${toX(team.mean)},${yPos + 6} ${toX(team.mean) - 6},${yPos}`}
+                          fill='white'
+                          stroke={team.color}
+                          strokeWidth='2'
+                        />
+                      </g>
+                    );
                   });
                 })()}
 
                 {(() => {
-                  const chartHeight = 200;
+                  const _chartHeight = 200; // Unused variable
                   const chartWidth = 500;
                   const leftMargin = 100;
-                  
+
                   return (
                     <>
                       {/* X-axis */}
@@ -394,7 +387,7 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
           {[
             { team: data.team1, color: team1Color, winPct: data.winProbabilities.team1 },
             { team: data.team2, color: team2Color, winPct: data.winProbabilities.team2 },
-          ].map(({ team, color, winPct }, index) => (
+          ].map(({ team, color, winPct }, _index) => (
             <div key={team.name} className='space-y-2'>
               <div className='font-semibold text-base flex items-center gap-2' style={{ color }}>
                 <div className='w-3 h-3 rounded-full' style={{ backgroundColor: color }}></div>

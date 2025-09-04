@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Clock, Trophy, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/components/matchup-simulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -477,7 +477,7 @@ function TeamRosterCard({
   );
 }
 
-function PlayerRow({ player, maxProjection }: { player: PlayerDetails; maxProjection: number }) {
+function PlayerRow({ player, maxProjection: _maxProjection }: { player: PlayerDetails; maxProjection: number }) {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'out':

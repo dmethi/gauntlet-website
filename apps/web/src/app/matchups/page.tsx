@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Swords, Clock, Trophy, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Clock, Swords, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { MatchupOddsPreview } from '@/components/matchup-odds-preview';
 import { LeagueWideOdds } from '@/components/league-wide-odds';

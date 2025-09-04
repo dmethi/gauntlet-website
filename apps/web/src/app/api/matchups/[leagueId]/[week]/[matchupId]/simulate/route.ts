@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  simulateMatchupProbabilityFromPlayers,
   type LineupPlayer,
   type MatchupSimulationResult,
+  simulateMatchupProbabilityFromPlayers,
 } from '@gauntlet/sim-engine';
 import { simulationCache } from '@/lib/simulation-cache';
-import { calculateLeagueProjections, ScoringSettings } from '@/lib/calculate-league-projections';
+import { ScoringSettings, calculateLeagueProjections } from '@/lib/calculate-league-projections';
 
 async function fetchRawProjections(season: string, week: number): Promise<any[]> {
   try {

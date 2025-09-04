@@ -1,20 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { simulateMatchupProbabilityFromPlayers, type LineupPlayer } from '@gauntlet/sim-engine';
-import { calculateLeagueProjections, ScoringSettings } from '@/lib/calculate-league-projections';
-
-interface TeamProjection {
-  teamId: string;
-  teamName: string;
-  leagueId: string;
-  leagueName: string;
-  players: Array<{
-    id: string;
-    name: string;
-    position: string;
-    projection: number;
-  }>;
-  totalProjection: number;
-}
+import { type LineupPlayer, simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
+import { ScoringSettings, calculateLeagueProjections } from '@/lib/calculate-league-projections';
 
 interface TeamOdds {
   teamId: string;
@@ -270,7 +256,7 @@ function getActualMatchups(allTeams: any[]) {
     margin: number;
   }> = [];
 
-  matchupMap.forEach((teams, key) => {
+  matchupMap.forEach((teams, _key) => {
     if (teams.length === 2) {
       const [team1, team2] = teams;
       const margin = Math.abs(team1.simulation.mean - team2.simulation.mean);

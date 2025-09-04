@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { calculateLeagueProjections, ScoringSettings } from '@/lib/calculate-league-projections';
+import { ScoringSettings, calculateLeagueProjections } from '@/lib/calculate-league-projections';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

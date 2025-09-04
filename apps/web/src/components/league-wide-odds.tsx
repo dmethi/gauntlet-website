@@ -1,18 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Trophy,
-  TrendingUp,
-  TrendingDown,
-  Zap,
-  Target,
-  Crown,
   AlertCircle,
+  Crown,
   RefreshCw,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -102,7 +101,7 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
             <Badge variant='outline'>Week {week}</Badge>
           </CardTitle>
           <CardDescription>
-            Simulating all matchups to find the week's most likely outcomes
+            Simulating all matchups to find the week&apos;s most likely outcomes
           </CardDescription>
         </CardHeader>
         <CardContent>

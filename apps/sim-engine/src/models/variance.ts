@@ -60,20 +60,23 @@ async function getPositionDistribution(position: string): Promise<{
 
   try {
     // TEMPORARY FIX: Use synthetic distributions while we fix historical data outliers
-    console.log(`Using synthetic distribution for ${position} (historical data has outlier issues)`);
-    
+    console.log(
+      `Using synthetic distribution for ${position} (historical data has outlier issues)`
+    );
+
     const positionStdDev = getPositionStdDev(position);
     const outcomes = [];
     for (let i = 0; i < 1000; i++) {
       // Generate normal distribution with mean=1.0, position-specific std dev
-      let u = 0, v = 0;
+      let u = 0,
+        v = 0;
       while (u === 0) u = Math.random();
       while (v === 0) v = Math.random();
       const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
       const outcome = Math.max(0.1, 1.0 + z * positionStdDev); // Min 0.1 to avoid 0 scores
       outcomes.push(outcome);
     }
-    
+
     const result = {
       outcomes: outcomes.sort((a, b) => a - b),
       sampleSize: 1000, // Mark as synthetic but sufficient

@@ -1,21 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 // Note: Slider component not available, using input range instead
 import {
-  TrendingUp,
-  TrendingDown,
-  Target,
-  DollarSign,
-  BarChart3,
-  Zap,
-  RefreshCw,
   AlertCircle,
+  BarChart3,
+  DollarSign,
   Info,
+  RefreshCw,
+  TrendingDown,
+  TrendingUp,
+  Zap,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
