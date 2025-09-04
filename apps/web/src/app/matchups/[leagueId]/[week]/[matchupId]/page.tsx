@@ -477,7 +477,13 @@ function TeamRosterCard({
   );
 }
 
-function PlayerRow({ player, maxProjection: _maxProjection }: { player: PlayerDetails; maxProjection: number }) {
+function PlayerRow({
+  player,
+  maxProjection: _maxProjection,
+}: {
+  player: PlayerDetails;
+  maxProjection: number;
+}) {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'out':

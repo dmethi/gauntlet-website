@@ -4,16 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TrendingUp } from 'lucide-react';
-import {
-  ResponsiveContainer,
-} from 'recharts';
+import { ResponsiveContainer } from 'recharts';
 
 interface TeamDistribution {
   mean: number;
   p10: number;
-  p25: number;
+  p25?: number; // Optional since simulation doesn't provide it
   median: number;
-  p75: number;
+  p75?: number; // Optional since simulation doesn't provide it
   p90: number;
   stdDev: number;
 }
@@ -227,7 +225,7 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
             <div className='relative w-full h-full flex items-center justify-center'>
               <svg width='90%' height='90%' className='overflow-visible'>
                 {(() => {
-                  const _chartHeight = 200; // Unused variable
+                  const chartHeight = 200; // Unused variable
                   const chartWidth = 500;
 
                   return chartData.map((team, index) => {
@@ -323,7 +321,6 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                 })()}
 
                 {(() => {
-                  const _chartHeight = 200; // Unused variable
                   const chartWidth = 500;
                   const leftMargin = 100;
 
