@@ -377,16 +377,34 @@ async function simulateMatchup(
       // Sample a few players to show the correct approach
       const samplePlayers = team1Players.slice(0, 3);
       samplePlayers.forEach(player => {
-        const isLivePlayer = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
-        const effectiveProgress = isLivePlayer ? gameProgress : 0;
-        const remainingProjection = player.projection * (1 - effectiveProgress);
         const currentScore = player.currentScore || 0;
-        const expectedFinal = currentScore + remainingProjection;
-        const liveStatus = isLivePlayer
-          ? `🔴 LIVE (${player.nflTeam})`
-          : `⚫ NON-LIVE (${player.nflTeam})`;
+        const hasActualStats = currentScore > 0;
+
+        // If player has actual stats but no live games detected, treat as "post-game"
+        const isLivePlayer = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
+        const isPostGame = hasActualStats && !isLivePlayer && gameProgress === 0;
+
+        let effectiveProgress = 0;
+        let remainingProjection = player.projection;
+        let expectedFinal = currentScore + remainingProjection;
+        let status = `⚫ NON-LIVE (${player.nflTeam})`;
+
+        if (isLivePlayer) {
+          // Player in active game
+          effectiveProgress = gameProgress;
+          remainingProjection = player.projection * (1 - effectiveProgress);
+          expectedFinal = currentScore + remainingProjection;
+          status = `🔴 LIVE (${player.nflTeam})`;
+        } else if (isPostGame) {
+          // Player has stats but game is over - use actual score with minimal projection
+          effectiveProgress = 0.95; // Treat as 95% complete
+          remainingProjection = player.projection * (1 - effectiveProgress);
+          expectedFinal = currentScore + remainingProjection;
+          status = `✅ POST-GAME (${player.nflTeam})`;
+        }
+
         console.log(
-          `✅ Player ${player.name} (${player.position}): Current ${currentScore.toFixed(1)}, Full proj ${player.projection.toFixed(1)}, Progress ${(effectiveProgress * 100).toFixed(1)}%, Remaining proj ${remainingProjection.toFixed(1)}, Expected final ~${expectedFinal.toFixed(1)} ${liveStatus}`
+          `✅ Player ${player.name} (${player.position}): Current ${currentScore.toFixed(1)}, Full proj ${player.projection.toFixed(1)}, Progress ${(effectiveProgress * 100).toFixed(1)}%, Remaining proj ${remainingProjection.toFixed(1)}, Expected final ~${expectedFinal.toFixed(1)} ${status}`
         );
       });
     }
@@ -700,32 +718,8 @@ async function main() {
         `   🥊 Final target week ${targetWeek}: ${uniqueMatchupIdsAfterFallback.length} matchups to simulate`
       );
 
-      // Staleness guard: skip recompute if recent and complete
-      const latestSim = await db.matchupSimulation.findFirst({
-        where: { leagueId: league.id, week: targetWeek },
-        orderBy: { createdAt: 'desc' },
-      });
-      const simsCount = await db.matchupSimulation.count({
-        where: { leagueId: league.id, week: targetWeek },
-      });
-
-      const now = Date.now();
-      const lastRunMs = latestSim ? new Date(latestSim.createdAt).getTime() : 0;
-      const ageMinutes = latestSim ? (now - lastRunMs) / (60 * 1000) : Infinity;
-      const freshnessThresholdMinutes = options.isLive ? 10 : 12 * 60; // 10m live, 12h non-live
-
-      if (
-        latestSim &&
-        simsCount >= uniqueMatchupIdsAfterFallback.length &&
-        ageMinutes < freshnessThresholdMinutes
-      ) {
-        console.log(
-          `   ⏭️  Skipping ${league.name} (week ${targetWeek}) — fresh results exist (${ageMinutes.toFixed(
-            1
-          )}m old, threshold ${freshnessThresholdMinutes}m)`
-        );
-        continue;
-      }
+      // Always run simulations to ensure fresh data for live games
+      console.log(`   🔄 Running simulations for ${league.name} (week ${targetWeek})...`);
 
       // Delete existing simulation data for this week/league
       await db.matchupSimulation.deleteMany({
@@ -853,9 +847,140 @@ async function storeHistoricalOdds(
     console.log(
       `   ✅ Stored ${result.count} historical odds snapshots${scoresNote} in ${historyTime}ms`
     );
+
+    // Store league-wide odds for highest/lowest scoring matchups
+    await storeLeagueOdds(week, simulations, isLive, triggerType);
   } catch (error) {
     console.error('⚠️ Error storing historical odds (non-critical):', error);
     // Don't throw - simulations are the primary goal
+  }
+}
+
+/**
+ * Store league-wide odds for highest/lowest scoring matchups
+ */
+async function storeLeagueOdds(
+  week: number,
+  simulations: any[],
+  isLive: boolean,
+  triggerType: string
+): Promise<void> {
+  try {
+    console.log('   🎯 Calculating league-wide matchup odds...');
+
+    // Group simulations by league
+    const leagueGroups = simulations.reduce(
+      (groups, sim) => {
+        const leagueId = sim.leagueId;
+        if (!groups[leagueId]) groups[leagueId] = [];
+        groups[leagueId].push(sim);
+        return groups;
+      },
+      {} as Record<string, any[]>
+    );
+
+    // Process each league
+    for (const [leagueId, leagueSimulations] of Object.entries(leagueGroups)) {
+      // Calculate total points for each matchup (team1Mean + team2Mean)
+      const matchupTotals = leagueSimulations.map(sim => ({
+        matchupId: sim.matchupId,
+        leagueName: sim.league.name,
+        team1Mean: sim.teamAMean,
+        team2Mean: sim.teamBMean,
+        totalPoints: sim.teamAMean + sim.teamBMean,
+        totalLine: sim.totalLine,
+        spread: sim.impliedSpread,
+        team1WinPct: sim.teamAWinPct,
+        team2WinPct: sim.teamBWinPct,
+      }));
+
+      // Find highest and lowest scoring matchups
+      const highestScoring = matchupTotals.reduce((prev, current) =>
+        current.totalPoints > prev.totalPoints ? current : prev
+      );
+
+      const lowestScoring = matchupTotals.reduce((prev, current) =>
+        current.totalPoints < prev.totalPoints ? current : prev
+      );
+
+      // Create probability distributions for betting odds
+      const totalMatchups = matchupTotals.length;
+
+      // For highest scoring matchup: each matchup has probability of being highest
+      const highestScoringOdds = matchupTotals.map(matchup => {
+        // Simple model: probability based on how much higher this matchup is than average
+        const avgTotal = matchupTotals.reduce((sum, m) => sum + m.totalPoints, 0) / totalMatchups;
+        const deviation = matchup.totalPoints - avgTotal;
+        const maxDeviation = Math.max(
+          ...matchupTotals.map(m => Math.abs(m.totalPoints - avgTotal))
+        );
+
+        // Probability increases with positive deviation from average
+        const probability =
+          maxDeviation > 0
+            ? (Math.max(0.1, 0.1 + (deviation / maxDeviation) * 0.8) / totalMatchups) * 2
+            : 1 / totalMatchups;
+
+        return {
+          matchupId: matchup.matchupId,
+          leagueName: matchup.leagueName,
+          totalPoints: matchup.totalPoints,
+          probability: Math.min(0.8, Math.max(0.05, probability)),
+          odds: Math.round(1 / Math.min(0.8, Math.max(0.05, probability))),
+        };
+      });
+
+      // For lowest scoring matchup: inverse logic
+      const lowestScoringOdds = matchupTotals.map(matchup => {
+        const avgTotal = matchupTotals.reduce((sum, m) => sum + m.totalPoints, 0) / totalMatchups;
+        const deviation = avgTotal - matchup.totalPoints; // Inverse: lower is better
+        const maxDeviation = Math.max(
+          ...matchupTotals.map(m => Math.abs(m.totalPoints - avgTotal))
+        );
+
+        const probability =
+          maxDeviation > 0
+            ? (Math.max(0.1, 0.1 + (deviation / maxDeviation) * 0.8) / totalMatchups) * 2
+            : 1 / totalMatchups;
+
+        return {
+          matchupId: matchup.matchupId,
+          leagueName: matchup.leagueName,
+          totalPoints: matchup.totalPoints,
+          probability: Math.min(0.8, Math.max(0.05, probability)),
+          odds: Math.round(1 / Math.min(0.8, Math.max(0.05, probability))),
+        };
+      });
+
+      const leagueName = leagueSimulations[0]?.league?.name || 'Unknown League';
+      console.log(
+        `   🏆 ${leagueName} - Highest scoring: Matchup ${highestScoring.matchupId} (${highestScoring.totalPoints.toFixed(1)} pts)`
+      );
+      console.log(
+        `   🥉 ${leagueName} - Lowest scoring: Matchup ${lowestScoring.matchupId} (${lowestScoring.totalPoints.toFixed(1)} pts)`
+      );
+
+      // Store in LeagueOddsHistory
+      await (prisma as any).leagueOddsHistory.create({
+        data: {
+          week,
+          highestScorerOdds: [], // Keep existing empty for now
+          lowestScorerOdds: [], // Keep existing empty for now
+          closestMatchup: [], // Keep existing empty for now
+          biggestBlowout: [], // Keep existing empty for now
+          highestScoringMatchup: highestScoringOdds,
+          lowestScoringMatchup: lowestScoringOdds,
+          isLive,
+          triggeredBy: triggerType,
+          computeTimeMs: leagueSimulations[0]?.computeTimeMs || 0,
+        },
+      });
+    }
+
+    console.log('   ✅ Stored league-wide matchup scoring odds');
+  } catch (error) {
+    console.error('⚠️ Error storing league odds (non-critical):', error);
+    // Don't throw - this is supplementary data
   }
 }
 

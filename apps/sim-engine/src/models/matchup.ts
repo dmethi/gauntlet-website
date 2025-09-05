@@ -203,10 +203,11 @@ export async function simulateMatchupProbabilityFromPlayers(
     for (const player of team1Players) {
       // Determine if this player's NFL team is currently playing live
       const playerIsLive = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
-      const effectiveGameProgress = playerIsLive ? gameProgress : 0;
+      const hasActualStats = player.currentScore !== undefined && player.currentScore > 0;
 
-      if (player.currentScore !== undefined && effectiveGameProgress > 0) {
+      if (hasActualStats && playerIsLive) {
         // Live simulation: currentScore + simulate remaining projection
+        const effectiveGameProgress = gameProgress;
         const remainingProjection = player.projection * (1 - effectiveGameProgress);
         const simulatedRemaining = samplePlayerScoreFromContext(
           ctx,
@@ -215,9 +216,22 @@ export async function simulateMatchupProbabilityFromPlayers(
           remainingProjection,
           0 // No additional gameProgress reduction for remaining portion
         );
-        team1Total += player.currentScore + simulatedRemaining;
+        team1Total += (player.currentScore as number) + simulatedRemaining;
+      } else if (hasActualStats && !playerIsLive) {
+        // Post-game simulation: currentScore + minimal remaining projection (game likely over)
+        const postGameProgress = 0.95; // Treat as 95% complete
+        const remainingProjection = player.projection * (1 - postGameProgress);
+        const simulatedRemaining = samplePlayerScoreFromContext(
+          ctx,
+          player.id,
+          player.position,
+          remainingProjection,
+          0
+        );
+        team1Total += (player.currentScore as number) + simulatedRemaining;
       } else {
-        // Pre-game or non-live team simulation: use full projection
+        // Pre-game simulation: use full projection with appropriate progress
+        const effectiveGameProgress = playerIsLive ? gameProgress : 0;
         team1Total += samplePlayerScoreFromContext(
           ctx,
           player.id,
@@ -230,10 +244,11 @@ export async function simulateMatchupProbabilityFromPlayers(
     for (const player of team2Players) {
       // Determine if this player's NFL team is currently playing live
       const playerIsLive = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
-      const effectiveGameProgress = playerIsLive ? gameProgress : 0;
+      const hasActualStats = player.currentScore !== undefined && player.currentScore > 0;
 
-      if (player.currentScore !== undefined && effectiveGameProgress > 0) {
+      if (hasActualStats && playerIsLive) {
         // Live simulation: currentScore + simulate remaining projection
+        const effectiveGameProgress = gameProgress;
         const remainingProjection = player.projection * (1 - effectiveGameProgress);
         const simulatedRemaining = samplePlayerScoreFromContext(
           ctx,
@@ -242,9 +257,22 @@ export async function simulateMatchupProbabilityFromPlayers(
           remainingProjection,
           0 // No additional gameProgress reduction for remaining portion
         );
-        team2Total += player.currentScore + simulatedRemaining;
+        team2Total += (player.currentScore as number) + simulatedRemaining;
+      } else if (hasActualStats && !playerIsLive) {
+        // Post-game simulation: currentScore + minimal remaining projection (game likely over)
+        const postGameProgress = 0.95; // Treat as 95% complete
+        const remainingProjection = player.projection * (1 - postGameProgress);
+        const simulatedRemaining = samplePlayerScoreFromContext(
+          ctx,
+          player.id,
+          player.position,
+          remainingProjection,
+          0
+        );
+        team2Total += (player.currentScore as number) + simulatedRemaining;
       } else {
-        // Pre-game or non-live team simulation: use full projection
+        // Pre-game simulation: use full projection with appropriate progress
+        const effectiveGameProgress = playerIsLive ? gameProgress : 0;
         team2Total += samplePlayerScoreFromContext(
           ctx,
           player.id,

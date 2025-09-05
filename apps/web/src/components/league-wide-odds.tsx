@@ -4,15 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  AlertCircle,
-  Crown,
-  RefreshCw,
-  Target,
-  TrendingDown,
-  TrendingUp,
-  Zap,
-} from 'lucide-react';
+import { AlertCircle, Crown, RefreshCw, Target, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface TeamOdds {
@@ -43,6 +35,8 @@ interface LeagueWideOdds {
   lowestScorer: TeamOdds[];
   closestMatchup: MatchupOdds[];
   biggestBlowout: MatchupOdds[];
+  highestScoringMatchup: MatchupOdds[];
+  lowestScoringMatchup: MatchupOdds[];
   lastUpdated: string;
 }
 
@@ -401,6 +395,136 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                       </td>
                       <td className='py-2 text-right font-mono'>
                         {matchup.projectedMargin?.toFixed(1) || '0'} pts
+                      </td>
+                      <td className='py-2 text-right'>
+                        <Badge
+                          variant='outline'
+                          className='font-mono text-xs'
+                          style={{
+                            backgroundColor: `${matchup.color}20`,
+                            borderColor: matchup.color,
+                          }}
+                        >
+                          {matchup.odds}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Highest Scoring Matchup Table */}
+          <div>
+            <div className='flex items-center gap-2 mb-4'>
+              <TrendingUp className='h-5 w-5 text-green-600' />
+              <h3 className='text-lg font-semibold text-green-700 dark:text-green-400'>
+                Highest Scoring Matchup
+              </h3>
+            </div>
+            <div className='overflow-x-auto'>
+              <table className='w-full text-sm'>
+                <thead>
+                  <tr className='border-b border-muted'>
+                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
+                    <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
+                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                      Total Points
+                    </th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(odds.highestScoringMatchup || []).map((matchup, index) => (
+                    <tr
+                      key={`${matchup.matchupId}-${matchup.team1.leagueId}-highest`}
+                      className='border-b border-muted/50 hover:bg-muted/30'
+                    >
+                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
+                      <td className='py-2'>
+                        <div className='font-medium'>
+                          {matchup.team1.name}
+                          <span className='text-xs text-muted-foreground mx-1'>vs</span>
+                          {matchup.team2.name}
+                        </div>
+                      </td>
+                      <td className='py-2'>
+                        <Badge
+                          className={getLeagueBadgeColor(matchup.team1.leagueId)}
+                          variant='secondary'
+                        >
+                          {getLeagueShortName(matchup.team1.leagueId)}
+                        </Badge>
+                      </td>
+                      <td className='py-2 text-right font-mono'>
+                        {(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts
+                      </td>
+                      <td className='py-2 text-right'>
+                        <Badge
+                          variant='outline'
+                          className='font-mono text-xs'
+                          style={{
+                            backgroundColor: `${matchup.color}20`,
+                            borderColor: matchup.color,
+                          }}
+                        >
+                          {matchup.odds}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Lowest Scoring Matchup Table */}
+          <div>
+            <div className='flex items-center gap-2 mb-4'>
+              <TrendingDown className='h-5 w-5 text-orange-600' />
+              <h3 className='text-lg font-semibold text-orange-700 dark:text-orange-400'>
+                Lowest Scoring Matchup
+              </h3>
+            </div>
+            <div className='overflow-x-auto'>
+              <table className='w-full text-sm'>
+                <thead>
+                  <tr className='border-b border-muted'>
+                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
+                    <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
+                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                      Total Points
+                    </th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(odds.lowestScoringMatchup || []).map((matchup, index) => (
+                    <tr
+                      key={`${matchup.matchupId}-${matchup.team1.leagueId}-lowest`}
+                      className='border-b border-muted/50 hover:bg-muted/30'
+                    >
+                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
+                      <td className='py-2'>
+                        <div className='font-medium'>
+                          {matchup.team1.name}
+                          <span className='text-xs text-muted-foreground mx-1'>vs</span>
+                          {matchup.team2.name}
+                        </div>
+                      </td>
+                      <td className='py-2'>
+                        <Badge
+                          className={getLeagueBadgeColor(matchup.team1.leagueId)}
+                          variant='secondary'
+                        >
+                          {getLeagueShortName(matchup.team1.leagueId)}
+                        </Badge>
+                      </td>
+                      <td className='py-2 text-right font-mono'>
+                        {(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts
                       </td>
                       <td className='py-2 text-right'>
                         <Badge

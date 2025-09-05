@@ -603,6 +603,8 @@ model LeagueOddsHistory {
   lowestScorerOdds  Json   // Array of team odds for lowest scorer  
   closestMatchup    Json   // Array of matchup odds for closest game
   biggestBlowout    Json   // Array of matchup odds for biggest blowout
+  highestScoringMatchup Json @default("[]") // Array of matchup odds for highest total points
+  lowestScoringMatchup  Json @default("[]") // Array of matchup odds for lowest total points
   
   // Context
   isLive        Boolean  @default(false)

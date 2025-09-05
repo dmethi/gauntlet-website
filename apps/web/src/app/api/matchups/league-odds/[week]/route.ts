@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { type LineupPlayer, simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
 import { ScoringSettings, calculateLeagueProjections } from '@/lib/calculate-league-projections';
+import { prisma } from '@/lib/prisma';
 
 interface TeamOdds {
   teamId: string;
@@ -30,6 +31,8 @@ interface LeagueWideOdds {
   lowestScorer: TeamOdds[];
   closestMatchup: MatchupOdds[];
   biggestBlowout: MatchupOdds[];
+  highestScoringMatchup: MatchupOdds[];
+  lowestScoringMatchup: MatchupOdds[];
   lastUpdated: string;
 }
 
@@ -324,6 +327,47 @@ function calculateMatchupMarginProbabilities(
   return marginCounts.map(count => count / iterations);
 }
 
+// Calculate probabilities for matchup total scores using Monte Carlo simulation
+function calculateMatchupScoringProbabilities(
+  actualMatchups: Array<{ team1: any; team2: any; simulation: any }>,
+  isHighest: boolean = true,
+  iterations: number = 5000
+) {
+  const scoringCounts = new Array(actualMatchups.length).fill(0);
+
+  // Run simulations to see which matchup most often has the highest/lowest total score
+  for (let iter = 0; iter < iterations; iter++) {
+    const simulatedTotals = actualMatchups.map(matchup => {
+      const team1Score = sampleTeamScore(matchup.team1.simulation);
+      const team2Score = sampleTeamScore(matchup.team2.simulation);
+      return team1Score + team2Score;
+    });
+
+    // Find the matchup with the highest/lowest total in this iteration
+    let targetIndex = 0;
+    let bestTotal = simulatedTotals[0];
+
+    for (let i = 1; i < simulatedTotals.length; i++) {
+      if (isHighest) {
+        if (simulatedTotals[i] > bestTotal) {
+          bestTotal = simulatedTotals[i];
+          targetIndex = i;
+        }
+      } else {
+        if (simulatedTotals[i] < bestTotal) {
+          bestTotal = simulatedTotals[i];
+          targetIndex = i;
+        }
+      }
+    }
+
+    scoringCounts[targetIndex]++;
+  }
+
+  // Convert to probabilities
+  return scoringCounts.map(count => count / iterations);
+}
+
 // Get stored simulation results for a team from the database
 async function getStoredTeamSimulation(
   leagueId: string,
@@ -601,6 +645,125 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     console.log(`💥 Running Monte Carlo for biggest blowout probabilities...`);
     const biggestProbabilities = calculateMatchupMarginProbabilities(actualMatchups, false, 15000);
 
+    console.log(`🏆 Running Monte Carlo for highest scoring matchup probabilities...`);
+    const highestScoringProbabilities = calculateMatchupScoringProbabilities(
+      actualMatchups,
+      true,
+      15000
+    );
+    console.log(`📉 Running Monte Carlo for lowest scoring matchup probabilities...`);
+    const lowestScoringProbabilities = calculateMatchupScoringProbabilities(
+      actualMatchups,
+      false,
+      15000
+    );
+
+    // Fetch LATEST matchup simulations for live scoring data (separate from actualMatchups)
+    const latestMatchupSimulations = await prisma.matchupSimulation.findMany({
+      where: {
+        week,
+        league: {
+          name: { in: ['Gauntlet AFC', 'Gauntlet NFC'] },
+        },
+      },
+      include: {
+        league: {
+          select: { id: true, name: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Get unique latest simulations (most recent per matchup)
+    const uniqueLatestSims = new Map();
+    latestMatchupSimulations.forEach(sim => {
+      const key = `${sim.leagueId}-${sim.matchupId}`;
+      if (!uniqueLatestSims.has(key)) {
+        uniqueLatestSims.set(key, sim);
+      }
+    });
+
+    const latestSimulations = Array.from(uniqueLatestSims.values());
+    console.log(`🔄 Using ${latestSimulations.length} latest simulations for live scoring data`);
+
+    // Fetch matchup details for latest simulations to get real team names
+    const latestMatchupDetails = new Map();
+    for (const sim of latestSimulations) {
+      const matchups = await prisma.matchup.findMany({
+        where: { leagueId: sim.leagueId, week, matchupId: sim.matchupId },
+        include: {
+          roster: {
+            include: {
+              owner: {
+                select: { displayName: true, username: true, metadata: true },
+              },
+            },
+          },
+        },
+      });
+
+      if (matchups.length === 2) {
+        latestMatchupDetails.set(`${sim.leagueId}-${sim.matchupId}`, {
+          team1: getTeamName(matchups[0]),
+          team2: getTeamName(matchups[1]),
+          leagueId: sim.leagueId,
+          team1Simulation: {
+            mean: sim.teamAMean,
+            p10: sim.teamAP10,
+            p50: sim.teamAMedian,
+            p90: sim.teamAP90,
+          },
+          team2Simulation: {
+            mean: sim.teamBMean,
+            p10: sim.teamBP10,
+            p50: sim.teamBMedian,
+            p90: sim.teamBP90,
+          },
+        });
+      }
+    }
+
+    // Create latest matchups structure for scoring calculations
+    const latestMatchupsForScoring = latestSimulations
+      .map(sim => {
+        const details = latestMatchupDetails.get(`${sim.leagueId}-${sim.matchupId}`);
+        if (!details) return null;
+
+        return {
+          matchupId: sim.matchupId,
+          leagueId: sim.leagueId,
+          team1: {
+            leagueId: sim.leagueId,
+            simulation: details.team1Simulation,
+          },
+          team2: {
+            leagueId: sim.leagueId,
+            simulation: details.team2Simulation,
+          },
+          margin: Math.abs(sim.teamAMean - sim.teamBMean),
+          simulation: sim,
+        };
+      })
+      .filter(Boolean);
+
+    console.log(
+      `🎯 Created ${latestMatchupsForScoring.length} latest matchups for scoring calculations`
+    );
+
+    // Recalculate scoring probabilities with LATEST live data
+    console.log(`🏆 Running Monte Carlo for LIVE highest scoring matchup probabilities...`);
+    const liveHighestScoringProbabilities = calculateMatchupScoringProbabilities(
+      latestMatchupsForScoring,
+      true,
+      15000
+    );
+    console.log(`📉 Running Monte Carlo for LIVE lowest scoring matchup probabilities...`);
+    const liveLowestScoringProbabilities = calculateMatchupScoringProbabilities(
+      latestMatchupsForScoring,
+      false,
+      15000
+    );
+
     console.log(
       `⚖️ Top 3 closest matchup probabilities:`,
       closestProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
@@ -609,12 +772,37 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       `💥 Top 3 biggest blowout probabilities:`,
       biggestProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
     );
+    console.log(
+      `🏆 Top 3 highest scoring probabilities:`,
+      highestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
+    );
+    console.log(
+      `📉 Top 3 lowest scoring probabilities:`,
+      lowestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
+    );
+    console.log(
+      `🔥 LIVE highest scoring probabilities:`,
+      liveHighestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
+    );
+    console.log(
+      `❄️ LIVE lowest scoring probabilities:`,
+      liveLowestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
+    );
 
     // Add probabilities to matchups
     const matchupsWithProbs = [...actualMatchups].map((matchup, index) => ({
       ...matchup,
       closestProb: closestProbabilities[index],
       biggestProb: biggestProbabilities[index],
+      highestScoringProb: highestScoringProbabilities[index],
+      lowestScoringProb: lowestScoringProbabilities[index],
+    }));
+
+    // Add LIVE scoring probabilities to latest matchups
+    const liveMatchupsWithProbs = [...latestMatchupsForScoring].map((matchup, index) => ({
+      ...matchup,
+      liveHighestScoringProb: liveHighestScoringProbabilities[index],
+      liveLowestScoringProb: liveLowestScoringProbabilities[index],
     }));
 
     // Build closest matchup odds (ALL matchups, sorted by highest probability of being closest)
@@ -659,6 +847,60 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       }))
       .sort((a, b) => b.probability - a.probability); // Sort by highest probability first
 
+    // Build highest scoring matchup odds using LIVE Monte Carlo probabilities
+    const highestScoringMatchup: MatchupOdds[] = liveMatchupsWithProbs
+      .map(matchup => {
+        const details = latestMatchupDetails.get(`${matchup.leagueId}-${matchup.matchupId}`);
+        if (!details) return null;
+
+        return {
+          matchupId: matchup.matchupId,
+          team1: {
+            name: details.team1,
+            leagueId: matchup.leagueId,
+            projection: Math.round(matchup.team1.simulation.mean * 100) / 100,
+          },
+          team2: {
+            name: details.team2,
+            leagueId: matchup.leagueId,
+            projection: Math.round(matchup.team2.simulation.mean * 100) / 100,
+          },
+          projectedMargin: Math.round(matchup.margin * 100) / 100,
+          probability: Math.round(matchup.liveHighestScoringProb * 1000) / 1000,
+          odds: probabilityToAmericanOdds(matchup.liveHighestScoringProb),
+          color: probabilityToColor(matchup.liveHighestScoringProb),
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.probability - a.probability); // Sort by highest probability first
+
+    // Build lowest scoring matchup odds using LIVE Monte Carlo probabilities
+    const lowestScoringMatchup: MatchupOdds[] = liveMatchupsWithProbs
+      .map(matchup => {
+        const details = latestMatchupDetails.get(`${matchup.leagueId}-${matchup.matchupId}`);
+        if (!details) return null;
+
+        return {
+          matchupId: matchup.matchupId,
+          team1: {
+            name: details.team1,
+            leagueId: matchup.leagueId,
+            projection: Math.round(matchup.team1.simulation.mean * 100) / 100,
+          },
+          team2: {
+            name: details.team2,
+            leagueId: matchup.leagueId,
+            projection: Math.round(matchup.team2.simulation.mean * 100) / 100,
+          },
+          projectedMargin: Math.round(matchup.margin * 100) / 100,
+          probability: Math.round(matchup.liveLowestScoringProb * 1000) / 1000,
+          odds: probabilityToAmericanOdds(matchup.liveLowestScoringProb),
+          color: probabilityToColor(matchup.liveLowestScoringProb),
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.probability - a.probability); // Sort by highest probability first
+
     // Build response
     const leagueWideOdds: LeagueWideOdds = {
       week,
@@ -666,6 +908,8 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       lowestScorer: lowestScorerOdds,
       closestMatchup: closestMatchupOdds,
       biggestBlowout: biggestBlowoutOdds,
+      highestScoringMatchup,
+      lowestScoringMatchup,
       lastUpdated: new Date().toISOString(),
     };
 
@@ -681,6 +925,12 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     );
     console.log(
       `💥 Biggest blowout: ${biggestBlowoutOdds[0].team1.name} vs ${biggestBlowoutOdds[0].team2.name} (${biggestBlowoutOdds[0].projectedMargin} pt margin)`
+    );
+    console.log(
+      `🔥 LIVE highest scoring: ${highestScoringMatchup[0]?.team1.name} vs ${highestScoringMatchup[0]?.team2.name} (${(highestScoringMatchup[0]?.team1.projection + highestScoringMatchup[0]?.team2.projection)?.toFixed(1)} pts)`
+    );
+    console.log(
+      `❄️ LIVE lowest scoring: ${lowestScoringMatchup[0]?.team1.name} vs ${lowestScoringMatchup[0]?.team2.name} (${(lowestScoringMatchup[0]?.team1.projection + lowestScoringMatchup[0]?.team2.projection)?.toFixed(1)} pts)`
     );
 
     return NextResponse.json(leagueWideOdds);
