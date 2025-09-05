@@ -174,6 +174,14 @@ function calculateLeagueProjections(
  * Convert probability to American odds format
  */
 function probabilityToAmericanOdds(probability: number): number {
+  // Handle extreme cases to avoid infinity values
+  if (probability >= 0.999) {
+    return -10000; // Very heavy favorite (like -10000 odds)
+  }
+  if (probability <= 0.001) {
+    return 10000; // Very heavy underdog (like +10000 odds)
+  }
+  
   if (probability >= 0.5) {
     return Math.round((-100 * probability) / (1 - probability));
   } else {
