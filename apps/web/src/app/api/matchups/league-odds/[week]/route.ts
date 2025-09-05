@@ -645,18 +645,7 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     console.log(`💥 Running Monte Carlo for biggest blowout probabilities...`);
     const biggestProbabilities = calculateMatchupMarginProbabilities(actualMatchups, false, 15000);
 
-    console.log(`🏆 Running Monte Carlo for highest scoring matchup probabilities...`);
-    const highestScoringProbabilities = calculateMatchupScoringProbabilities(
-      latestMatchupsForScoring,
-      true,
-      15000
-    );
-    console.log(`📉 Running Monte Carlo for lowest scoring matchup probabilities...`);
-    const lowestScoringProbabilities = calculateMatchupScoringProbabilities(
-      latestMatchupsForScoring,
-      false,
-      15000
-    );
+    // NOTE: Will calculate highest/lowest scoring probabilities after latestMatchupsForScoring is defined below
 
     // Fetch LATEST matchup simulations for live scoring data (separate from actualMatchups)
     const latestMatchupSimulations = await prisma.matchupSimulation.findMany({
@@ -750,7 +739,7 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       `🎯 Created ${latestMatchupsForScoring.length} latest matchups for scoring calculations`
     );
 
-    // Recalculate scoring probabilities with LATEST live data
+    // Now calculate scoring probabilities with LATEST live data
     console.log(`🏆 Running Monte Carlo for LIVE highest scoring matchup probabilities...`);
     const liveHighestScoringProbabilities = calculateMatchupScoringProbabilities(
       latestMatchupsForScoring,
@@ -764,6 +753,7 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       15000
     );
 
+
     console.log(
       `⚖️ Top 3 closest matchup probabilities:`,
       closestProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
@@ -771,14 +761,6 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     console.log(
       `💥 Top 3 biggest blowout probabilities:`,
       biggestProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
-    );
-    console.log(
-      `🏆 Top 3 highest scoring probabilities:`,
-      highestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
-    );
-    console.log(
-      `📉 Top 3 lowest scoring probabilities:`,
-      lowestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
     );
     console.log(
       `🔥 LIVE highest scoring probabilities:`,
@@ -789,13 +771,11 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       liveLowestScoringProbabilities.slice(0, 3).map(p => (p * 100).toFixed(1) + '%')
     );
 
-    // Add probabilities to matchups
+    // Add probabilities to matchups (for closest/biggest blowouts)
     const matchupsWithProbs = [...actualMatchups].map((matchup, index) => ({
       ...matchup,
       closestProb: closestProbabilities[index],
       biggestProb: biggestProbabilities[index],
-      highestScoringProb: highestScoringProbabilities[index],
-      lowestScoringProb: lowestScoringProbabilities[index],
     }));
 
     // Add LIVE scoring probabilities to latest matchups
