@@ -329,15 +329,15 @@ function calculateMatchupMarginProbabilities(
 
 // Calculate probabilities for matchup total scores using Monte Carlo simulation
 function calculateMatchupScoringProbabilities(
-  actualMatchups: Array<{ team1: any; team2: any; simulation: any }>,
+  matchups: Array<{ team1: { simulation: any }; team2: { simulation: any }; simulation?: any }>,
   isHighest: boolean = true,
   iterations: number = 5000
 ) {
-  const scoringCounts = new Array(actualMatchups.length).fill(0);
+  const scoringCounts = new Array(matchups.length).fill(0);
 
   // Run simulations to see which matchup most often has the highest/lowest total score
   for (let iter = 0; iter < iterations; iter++) {
-    const simulatedTotals = actualMatchups.map(matchup => {
+    const simulatedTotals = matchups.map(matchup => {
       const team1Score = sampleTeamScore(matchup.team1.simulation);
       const team2Score = sampleTeamScore(matchup.team2.simulation);
       return team1Score + team2Score;
@@ -647,13 +647,13 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
 
     console.log(`🏆 Running Monte Carlo for highest scoring matchup probabilities...`);
     const highestScoringProbabilities = calculateMatchupScoringProbabilities(
-      actualMatchups,
+      latestMatchupsForScoring,
       true,
       15000
     );
     console.log(`📉 Running Monte Carlo for lowest scoring matchup probabilities...`);
     const lowestScoringProbabilities = calculateMatchupScoringProbabilities(
-      actualMatchups,
+      latestMatchupsForScoring,
       false,
       15000
     );
