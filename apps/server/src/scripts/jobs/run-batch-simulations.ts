@@ -314,7 +314,7 @@ async function simulateMatchup(
     const db = prisma as any;
     const simulationRecord = await db.matchupSimulation.create({
       data: {
-        leagueId,
+        league: { connect: { id: leagueId } },
         week,
         matchupId,
 
@@ -594,7 +594,7 @@ async function main() {
     // Store historical odds snapshot after successful simulation
     console.log(`\n💾 Storing historical odds snapshot...`);
     await storeHistoricalOdds(options.week, options.isLive, options.triggerType);
-    
+
     console.log(`\n🎉 All operations complete! Cleaning up and exiting...`);
   } catch (error) {
     console.error('❌ Batch simulation failed:', error);
@@ -793,7 +793,7 @@ async function runWithTimeout() {
     await main();
     clearTimeout(timeout);
     console.log('🏁 Script completed successfully, cleaning up...');
-    
+
     // Force cleanup and exit
     await prisma.$disconnect();
     process.exit(0);
