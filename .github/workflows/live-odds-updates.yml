@@ -10,7 +10,7 @@ on:
     # Monday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
     - cron: '*/10 1-4 * 9-12,1-2 2' # Sep-Dec & Jan-Feb, Tuesday 1:15AM-4:30AM UTC (Monday night)
 
-    # Thursday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
+    # Thursday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)  
     - cron: '*/10 1-4 * 9-12,1-2 5' # Sep-Dec & Jan-Feb, Friday 1:15AM-4:30AM UTC (Thursday night)
 
     # Daily updates: Every day at 6:00 AM ET (11:00 UTC) for pre-game odds
@@ -71,14 +71,15 @@ jobs:
             IS_LIVE="true"
             TRIGGER_TYPE="manual-live"
           elif [ "$CURRENT_MONTH" -ge 9 ] || [ "$CURRENT_MONTH" -le 2 ]; then
-            if [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"
+            # Note: date +%u uses 1-7 (Mon-Sun), while cron uses 0-6 (Sun-Sat)
+            if [ "$CURRENT_DAY" = "2" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
+              IS_LIVE="true"  # Tuesday 1-4 AM UTC = Monday 8:15-11:30 PM ET
             elif [ "$CURRENT_DAY" = "5" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"
+              IS_LIVE="true"  # Friday 1-4 AM UTC = Thursday 8:15-11:30 PM ET  
             elif [ "$CURRENT_DAY" = "7" ] && [ "$CURRENT_HOUR" -ge 18 ]; then
-              IS_LIVE="true"
+              IS_LIVE="true"  # Sunday 6 PM - 11:59 PM UTC
             elif [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"
+              IS_LIVE="true"  # Monday 12-4 AM UTC = Sunday night games
             fi
           fi
 
@@ -91,6 +92,9 @@ jobs:
           echo "  Is Live: $IS_LIVE"
           echo "  Trigger: $TRIGGER_TYPE"
           echo "  Time: $(date -u)"
+          echo "  Day: $CURRENT_DAY ($(date -u +%A))"
+          echo "  Hour: $CURRENT_HOUR UTC"
+          echo "  Month: $CURRENT_MONTH"
 
       - name: Run live odds update
         run: |
