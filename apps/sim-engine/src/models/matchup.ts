@@ -9,6 +9,8 @@ export interface LineupPlayer {
   name: string;
   position: string;
   projection: number;
+  currentScore?: number; // Actual points scored so far (for live simulations)
+  nflTeam?: string; // NFL team abbreviation (for selective game progress)
 }
 
 export interface Lineup {
@@ -182,7 +184,8 @@ export async function simulateMatchupProbabilityFromPlayers(
   team1Players: LineupPlayer[],
   team2Players: LineupPlayer[],
   iterations: number = 10000,
-  gameProgress: number = 0
+  gameProgress: number = 0,
+  liveNflTeams?: Set<string>
 ): Promise<MatchupSimulationResult> {
   const results: MatchupResult[] = [];
   const team1Scores: number[] = [];
@@ -198,22 +201,58 @@ export async function simulateMatchupProbabilityFromPlayers(
     let team2Total = 0;
 
     for (const player of team1Players) {
-      team1Total += samplePlayerScoreFromContext(
-        ctx,
-        player.id,
-        player.position,
-        player.projection,
-        gameProgress
-      );
+      // Determine if this player's NFL team is currently playing live
+      const playerIsLive = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
+      const effectiveGameProgress = playerIsLive ? gameProgress : 0;
+
+      if (player.currentScore !== undefined && effectiveGameProgress > 0) {
+        // Live simulation: currentScore + simulate remaining projection
+        const remainingProjection = player.projection * (1 - effectiveGameProgress);
+        const simulatedRemaining = samplePlayerScoreFromContext(
+          ctx,
+          player.id,
+          player.position,
+          remainingProjection,
+          0 // No additional gameProgress reduction for remaining portion
+        );
+        team1Total += player.currentScore + simulatedRemaining;
+      } else {
+        // Pre-game or non-live team simulation: use full projection
+        team1Total += samplePlayerScoreFromContext(
+          ctx,
+          player.id,
+          player.position,
+          player.projection,
+          effectiveGameProgress
+        );
+      }
     }
     for (const player of team2Players) {
-      team2Total += samplePlayerScoreFromContext(
-        ctx,
-        player.id,
-        player.position,
-        player.projection,
-        gameProgress
-      );
+      // Determine if this player's NFL team is currently playing live
+      const playerIsLive = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
+      const effectiveGameProgress = playerIsLive ? gameProgress : 0;
+
+      if (player.currentScore !== undefined && effectiveGameProgress > 0) {
+        // Live simulation: currentScore + simulate remaining projection
+        const remainingProjection = player.projection * (1 - effectiveGameProgress);
+        const simulatedRemaining = samplePlayerScoreFromContext(
+          ctx,
+          player.id,
+          player.position,
+          remainingProjection,
+          0 // No additional gameProgress reduction for remaining portion
+        );
+        team2Total += player.currentScore + simulatedRemaining;
+      } else {
+        // Pre-game or non-live team simulation: use full projection
+        team2Total += samplePlayerScoreFromContext(
+          ctx,
+          player.id,
+          player.position,
+          player.projection,
+          effectiveGameProgress
+        );
+      }
     }
 
     const winner = team1Total > team2Total ? 1 : 2;

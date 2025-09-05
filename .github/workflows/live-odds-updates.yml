@@ -10,7 +10,7 @@ on:
     # Monday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
     - cron: '*/10 1-4 * 9-12,1-2 2' # Sep-Dec & Jan-Feb, Tuesday 1:15AM-4:30AM UTC (Monday night)
 
-    # Thursday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)  
+    # Thursday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
     - cron: '*/10 1-4 * 9-12,1-2 5' # Sep-Dec & Jan-Feb, Friday 1:15AM-4:30AM UTC (Thursday night)
 
     # Daily updates: Every day at 6:00 AM ET (11:00 UTC) for pre-game odds

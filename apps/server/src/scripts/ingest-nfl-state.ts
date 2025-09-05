@@ -58,17 +58,19 @@ export async function getLiveGameProgress(now: Date = new Date()): Promise<
   return (sb.events || []).map(ev => {
     const comp = ev.competitions?.[0];
     const st = comp?.status?.type || ev.status?.type;
+    const status = comp?.status || ev.status;
     return {
       eventId: ev.id,
       startTime: ev.date,
       state: st?.state || 'pre',
-      period: (comp?.status?.type as any)?.period,
-      clock: (comp?.status?.type as any)?.clock,
+      period: status?.period,
+      clock: status?.clock,
     };
   });
 }
 
-if (require.main === module) {
+// Only run if this file is executed directly (ES module version)
+if (import.meta.url === `file://${process.argv[1]}`) {
   getLiveGameProgress()
     .then(games => {
       console.log(JSON.stringify(games, null, 2));
