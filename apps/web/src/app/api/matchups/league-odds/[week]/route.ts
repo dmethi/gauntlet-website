@@ -408,6 +408,7 @@ async function getStoredTeamSimulation(
         week,
         matchupId: matchup.matchupId,
       },
+      orderBy: { createdAt: 'desc' },
     });
 
     if (!storedSim) {
@@ -733,7 +734,18 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
           simulation: sim,
         };
       })
-      .filter(Boolean);
+      .filter(
+        (
+          m
+        ): m is {
+          matchupId: number;
+          leagueId: string;
+          team1: { leagueId: string; simulation: any };
+          team2: { leagueId: string; simulation: any };
+          margin: number;
+          simulation: any;
+        } => Boolean(m)
+      );
 
     console.log(
       `🎯 Created ${latestMatchupsForScoring.length} latest matchups for scoring calculations`
@@ -742,13 +754,21 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     // Now calculate scoring probabilities with LATEST live data
     console.log(`🏆 Running Monte Carlo for LIVE highest scoring matchup probabilities...`);
     const liveHighestScoringProbabilities = calculateMatchupScoringProbabilities(
-      latestMatchupsForScoring,
+      latestMatchupsForScoring.map(m => ({
+        team1: m.team1,
+        team2: m.team2,
+        simulation: m.simulation,
+      })),
       true,
       15000
     );
     console.log(`📉 Running Monte Carlo for LIVE lowest scoring matchup probabilities...`);
     const liveLowestScoringProbabilities = calculateMatchupScoringProbabilities(
-      latestMatchupsForScoring,
+      latestMatchupsForScoring.map(m => ({
+        team1: m.team1,
+        team2: m.team2,
+        simulation: m.simulation,
+      })),
       false,
       15000
     );
@@ -850,7 +870,7 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
           color: probabilityToColor(matchup.liveHighestScoringProb),
         };
       })
-      .filter(Boolean)
+      .filter((m): m is MatchupOdds => Boolean(m))
       .sort((a, b) => b.probability - a.probability); // Sort by highest probability first
 
     // Build lowest scoring matchup odds using LIVE Monte Carlo probabilities
@@ -877,7 +897,7 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
           color: probabilityToColor(matchup.liveLowestScoringProb),
         };
       })
-      .filter(Boolean)
+      .filter((m): m is MatchupOdds => Boolean(m))
       .sort((a, b) => b.probability - a.probability); // Sort by highest probability first
 
     // Build response

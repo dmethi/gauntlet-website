@@ -46,6 +46,7 @@ export async function GET(
           week: weekNumber,
           matchupId: matchupIdNumber,
         },
+        orderBy: { createdAt: 'desc' },
         include: {
           playerSimulations: true,
         },
