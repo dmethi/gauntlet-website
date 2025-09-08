@@ -305,6 +305,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                     <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
                     <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
                     <th className='text-right py-2 font-medium text-muted-foreground'>Margin</th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                      Probability
+                    </th>
                     <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
                   </tr>
                 </thead>
@@ -332,6 +335,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                       </td>
                       <td className='py-2 text-right font-mono'>
                         {matchup.projectedMargin?.toFixed(1) || '0'} pts
+                      </td>
+                      <td className='py-2 text-right font-mono'>
+                        {(matchup.probability * 100).toFixed(1)}%
                       </td>
                       <td className='py-2 text-right'>
                         <Badge
@@ -368,6 +374,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                     <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
                     <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
                     <th className='text-right py-2 font-medium text-muted-foreground'>Margin</th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                      Probability
+                    </th>
                     <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
                   </tr>
                 </thead>
@@ -395,6 +404,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                       </td>
                       <td className='py-2 text-right font-mono'>
                         {matchup.projectedMargin?.toFixed(1) || '0'} pts
+                      </td>
+                      <td className='py-2 text-right font-mono'>
+                        {(matchup.probability * 100).toFixed(1)}%
                       </td>
                       <td className='py-2 text-right'>
                         <Badge
@@ -433,6 +445,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                     <th className='text-right py-2 font-medium text-muted-foreground'>
                       Total Points
                     </th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                      Probability
+                    </th>
                     <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
                   </tr>
                 </thead>
@@ -460,6 +475,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                       </td>
                       <td className='py-2 text-right font-mono'>
                         {(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts
+                      </td>
+                      <td className='py-2 text-right font-mono'>
+                        {(matchup.probability * 100).toFixed(1)}%
                       </td>
                       <td className='py-2 text-right'>
                         <Badge
@@ -498,6 +516,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                     <th className='text-right py-2 font-medium text-muted-foreground'>
                       Total Points
                     </th>
+                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                      Probability
+                    </th>
                     <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
                   </tr>
                 </thead>
@@ -525,6 +546,9 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
                       </td>
                       <td className='py-2 text-right font-mono'>
                         {(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts
+                      </td>
+                      <td className='py-2 text-right font-mono'>
+                        {(matchup.probability * 100).toFixed(1)}%
                       </td>
                       <td className='py-2 text-right'>
                         <Badge

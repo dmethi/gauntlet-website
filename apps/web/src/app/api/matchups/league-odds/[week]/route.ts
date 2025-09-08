@@ -142,11 +142,11 @@ function probabilityToAmericanOdds(probability: number): string {
 
   if (probability >= 0.5) {
     // Negative odds for favorites
-    const odds = Math.round(-100 / (probability / (1 - probability)));
+    const odds = Math.round(-(probability / (1 - probability)) * 100);
     return `${odds}`;
   } else {
     // Positive odds for underdogs
-    const odds = Math.round(100 * ((1 - probability) / probability));
+    const odds = Math.round(((1 - probability) / probability) * 100);
     return `+${odds}`;
   }
 }
@@ -752,7 +752,6 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       false,
       15000
     );
-
 
     console.log(
       `⚖️ Top 3 closest matchup probabilities:`,

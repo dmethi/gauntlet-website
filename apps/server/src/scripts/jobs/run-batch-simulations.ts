@@ -1,8 +1,8 @@
 import prisma from '../../lib/prisma.js';
 import {
-  simulateMatchupProbabilityFromPlayers,
   type LineupPlayer,
   type MatchupSimulationResult,
+  simulateMatchupProbabilityFromPlayers,
 } from '@gauntlet/sim-engine/src/index.js';
 import { fetchEspnScoreboard, getLiveGameProgress } from '../ingest-nfl-state.js';
 
@@ -191,13 +191,81 @@ function probabilityToAmericanOdds(probability: number): number {
 }
 
 /**
- * Build lineup players from roster data
+ * Normalize ESPN team abbreviations to align with Sleeper/DB values
+ * Example: ESPN uses 'WSH' while many data sources use 'WAS'
+ */
+function normalizeNflTeamAbbreviation(abbreviation?: string): string | undefined {
+  if (!abbreviation) return abbreviation;
+  const mapping: Record<string, string> = {
+    WSH: 'WAS',
+    JAC: 'JAX',
+  };
+  return mapping[abbreviation] || abbreviation;
+}
+
+type GameState = 'pre' | 'live' | 'post';
+
+function getPlayerGameState(
+  team?: string,
+  liveNflTeams?: Set<string>,
+  postGameTeams?: Set<string>
+): GameState {
+  const normalized = normalizeNflTeamAbbreviation(team);
+  if (normalized && postGameTeams && postGameTeams.has(normalized)) return 'post';
+  if (normalized && liveNflTeams && liveNflTeams.has(normalized)) return 'live';
+  return 'pre';
+}
+
+/**
+ * Fetch current lineup from Sleeper API to ensure 1:1 accuracy
+ */
+async function fetchSleeperLineup(
+  leagueId: string,
+  week: number,
+  rosterId: number
+): Promise<string[]> {
+  try {
+    const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`, {
+      headers: { 'User-Agent': 'Gauntlet-Website/1.0.0' },
+    });
+
+    if (!response.ok) {
+      console.warn(`⚠️ Failed to fetch Sleeper lineup for roster ${rosterId}: ${response.status}`);
+      return [];
+    }
+
+    const matchups = await response.json();
+    const sleeperRosterId = leagueId === '1263740549504962561' ? rosterId - 2000 : rosterId; // Convert DB roster ID back to Sleeper roster ID
+    const matchup = matchups.find((m: any) => m.roster_id === sleeperRosterId);
+
+    if (!matchup) {
+      console.warn(
+        `⚠️ No Sleeper matchup found for roster ${rosterId} (Sleeper ID: ${sleeperRosterId})`
+      );
+      return [];
+    }
+
+    const starters = matchup.starters || [];
+    console.log(
+      `   🔄 Fetched fresh lineup from Sleeper: Roster ${rosterId} has ${starters.length} starters`
+    );
+    return starters;
+  } catch (error) {
+    console.error(`❌ Error fetching Sleeper lineup for roster ${rosterId}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Build lineup players using FRESH Sleeper data for 1:1 accuracy
  */
 async function buildLineupPlayers(
   rosterId: number,
   week: number,
   leagueProjections: Record<string, LeagueProjection>,
-  livePlayerScores: Record<string, number> = {}
+  livePlayerScores: Record<string, number> = {},
+  liveNflTeams?: Set<string>,
+  postGameTeams?: Set<string>
 ): Promise<LineupPlayer[]> {
   // Get roster and matchup data
   const matchupData = await prisma.matchup.findFirst({
@@ -209,8 +277,19 @@ async function buildLineupPlayers(
     throw new Error(`No matchup data found for roster ${rosterId}, week ${week}`);
   }
 
+  // 🔥 CRITICAL FIX: Fetch CURRENT starters from Sleeper API instead of using potentially stale DB data
+  const freshStarters = await fetchSleeperLineup(matchupData.leagueId, week, rosterId);
+  const playerIds = freshStarters.length > 0 ? freshStarters : matchupData.starters || []; // Fallback to DB if API fails
+
+  if (freshStarters.length > 0) {
+    console.log(`   ✅ Using fresh Sleeper lineup data (${freshStarters.length} starters)`);
+  } else {
+    console.log(
+      `   ⚠️ Using fallback DB lineup data (${matchupData.starters?.length || 0} starters)`
+    );
+  }
+
   // Get player details
-  const playerIds = matchupData.starters || [];
   const players = await prisma.player.findMany({
     where: { id: { in: playerIds } },
   });
@@ -222,11 +301,23 @@ async function buildLineupPlayers(
       const player = playersMap.get(playerId);
       if (!player) return null;
 
-      const projection = leagueProjections[playerId]?.points || 0;
+      let projection = leagueProjections[playerId]?.points || 0;
       // Use live scores if available, otherwise fall back to stored matchup data
       const liveScore = livePlayerScores[playerId];
       const storedScore = (matchupData.playersPoints as Record<string, number>)?.[playerId] || 0;
       const currentPoints = liveScore ?? storedScore;
+
+      // Single source of truth for game state
+      const state = getPlayerGameState(player.team || undefined, liveNflTeams, postGameTeams);
+
+      if (state === 'post') {
+        projection = 0;
+        console.log(`   ✅ POST-GAME: ${player.fullName} exact ${currentPoints} (projection=0)`);
+      } else if (state === 'live') {
+        console.log(`   🔴 LIVE: ${player.fullName} projection ${projection.toFixed(1)}`);
+      } else {
+        console.log(`   ⏳ PRE-GAME: ${player.fullName} projection ${projection.toFixed(1)}`);
+      }
 
       // Debug live score application
       if (liveScore !== undefined && liveScore > 0) {
@@ -264,7 +355,8 @@ async function simulateMatchup(
   leagueProjections: Record<string, LeagueProjection>,
   gameProgress: number = 0,
   triggerType: string = 'manual',
-  liveNflTeams?: Set<string>
+  liveNflTeams?: Set<string>,
+  postGameTeams?: Set<string>
 ): Promise<void> {
   console.log(`🔄 Simulating matchup ${matchupId} (League: ${leagueId}, Week: ${week})`);
   if (gameProgress > 0) {
@@ -276,6 +368,7 @@ async function simulateMatchup(
     const matchups = await prisma.matchup.findMany({
       where: { leagueId, week, matchupId },
       include: { roster: { include: { owner: true } } },
+      orderBy: { rosterId: 'asc' }, // Ensure consistent team ordering
     });
 
     if (matchups.length !== 2) {
@@ -300,10 +393,28 @@ async function simulateMatchup(
       });
     }
 
+    // Use the parameters that were passed to this function
+    const extractedLiveTeams = liveNflTeams;
+    const extractedPostGameTeams = postGameTeams;
+
     // Build lineup players for both teams
     const [team1Players, team2Players] = await Promise.all([
-      buildLineupPlayers(teamA.rosterId, week, leagueProjections, livePlayerScores),
-      buildLineupPlayers(teamB.rosterId, week, leagueProjections, livePlayerScores),
+      buildLineupPlayers(
+        teamA.rosterId,
+        week,
+        leagueProjections,
+        livePlayerScores,
+        extractedLiveTeams,
+        extractedPostGameTeams
+      ),
+      buildLineupPlayers(
+        teamB.rosterId,
+        week,
+        leagueProjections,
+        livePlayerScores,
+        extractedLiveTeams,
+        extractedPostGameTeams
+      ),
     ]);
 
     // Update matchup points in database if we have live scores
@@ -380,9 +491,10 @@ async function simulateMatchup(
         const currentScore = player.currentScore || 0;
         const hasActualStats = currentScore > 0;
 
-        // If player has actual stats but no live games detected, treat as "post-game"
+        // Check actual game status for this player's NFL team
         const isLivePlayer = liveNflTeams && player.nflTeam && liveNflTeams.has(player.nflTeam);
-        const isPostGame = hasActualStats && !isLivePlayer && gameProgress === 0;
+        // If we're in live mode and player isn't in a currently live game, assume game is complete (even with 0 points)
+        const isPostGame = gameProgress > 0 && !isLivePlayer;
 
         let effectiveProgress = 0;
         let remainingProjection = player.projection;
@@ -592,17 +704,46 @@ async function parseArgs(): Promise<SimulationOptions> {
         const liveNflTeams = new Set<string>();
         liveGames.forEach(game => {
           game.competitions?.[0]?.competitors?.forEach((comp: any) => {
-            liveNflTeams.add(comp.team?.abbreviation);
+            liveNflTeams.add(normalizeNflTeamAbbreviation(comp.team?.abbreviation) as string);
           });
         });
-        console.log(`   🏈 Live NFL teams: ${Array.from(liveNflTeams).join(', ')}`);
 
-        // Store live NFL teams for player filtering (create object to carry both values)
-        const gameProgressWithTeams = { value: gameProgress, liveNflTeams };
+        // Also extract teams from completed games
+        const postGames = scoreboard.events.filter(
+          event => event.competitions?.[0]?.status?.type?.state === 'post'
+        );
+        const postGameTeams = new Set<string>();
+        postGames.forEach(game => {
+          game.competitions?.[0]?.competitors?.forEach((comp: any) => {
+            postGameTeams.add(normalizeNflTeamAbbreviation(comp.team?.abbreviation) as string);
+          });
+        });
+
+        console.log(`   🏈 Live NFL teams: ${Array.from(liveNflTeams).join(', ')}`);
+        console.log(`   ✅ Post-game NFL teams: ${Array.from(postGameTeams).join(', ')}`);
+
+        // Store both live and post-game teams for player filtering
+        const gameProgressWithTeams = { value: gameProgress, liveNflTeams, postGameTeams };
         gameProgress = gameProgressWithTeams as any;
       } else {
-        console.log('   ⚠️ No live NFL games found, using default progress estimation');
-        // Fallback to time-based estimation if no live games
+        console.log('   ⚠️ No live NFL games found, checking for completed games');
+
+        // Even if no live games, still extract post-game teams
+        const postGames = scoreboard.events.filter(
+          event => event.competitions?.[0]?.status?.type?.state === 'post'
+        );
+        const postGameTeams = new Set<string>();
+        postGames.forEach(game => {
+          game.competitions?.[0]?.competitors?.forEach((comp: any) => {
+            postGameTeams.add(normalizeNflTeamAbbreviation(comp.team?.abbreviation) as string);
+          });
+        });
+
+        if (postGameTeams.size > 0) {
+          console.log(`   ✅ Post-game NFL teams: ${Array.from(postGameTeams).join(', ')}`);
+        }
+
+        // Fallback to time-based estimation for non-live, non-post games
         const now = new Date();
         const currentHour = now.getUTCHours();
 
@@ -613,6 +754,14 @@ async function parseArgs(): Promise<SimulationOptions> {
         } else {
           gameProgress = 0.9; // ~54 minutes played (6 min left)
         }
+
+        // Store post-game teams even when no live games
+        const gameProgressWithTeams = {
+          value: gameProgress,
+          liveNflTeams: new Set<string>(),
+          postGameTeams,
+        };
+        gameProgress = gameProgressWithTeams as any;
       }
     } catch (error) {
       console.error('❌ Error fetching ESPN data, using fallback:', error);
@@ -733,10 +882,12 @@ async function main() {
           typeof options.gameProgress === 'number'
             ? options.gameProgress
             : (options.gameProgress as any).value;
+        const gameProgressData = options.gameProgress as any;
         const liveNflTeams =
-          typeof options.gameProgress === 'number'
-            ? undefined
-            : (options.gameProgress as any).liveNflTeams;
+          typeof options.gameProgress === 'number' ? undefined : gameProgressData.liveNflTeams;
+        const postGameTeams =
+          typeof options.gameProgress === 'number' ? undefined : gameProgressData.postGameTeams;
+
         await simulateMatchup(
           league.id,
           targetWeek,
@@ -744,7 +895,8 @@ async function main() {
           leagueProjections,
           gameProgressValue,
           options.triggerType,
-          liveNflTeams
+          liveNflTeams,
+          postGameTeams
         );
       }
 
