@@ -407,19 +407,19 @@ export async function computeWeeklyRollups({ leagueId, season, week }: ComputeOp
   }
 }
 
-// Run when environment variables are provided (safe for ESM and imports)
-if (process.env.ROLLUP_LEAGUE_ID) {
-  const leagueId = process.env.ROLLUP_LEAGUE_ID as string;
-  const season = Number(process.env.ROLLUP_SEASON || '2024');
-  const week = Number(process.env.ROLLUP_WEEK || '1');
-
-  computeWeeklyRollups({ leagueId, season, week })
-    .then(() => {
-      console.log('Weekly rollups computed.');
-      process.exit(0);
-    })
-    .catch(err => {
-      console.error(err);
-      process.exit(1);
-    });
+// Add CLI main for convenience
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const leagueIds = ['1263744209295245312', '1263740549504962561'];
+  const season = 2025;
+  const week = Number(process.env.WEEK || 1);
+  (async () => {
+    for (const leagueId of leagueIds) {
+      await computeWeeklyRollups({ leagueId, season, week });
+      console.log(`Computed rollups for ${leagueId}, week ${week}`);
+    }
+    process.exit(0);
+  })().catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
 }

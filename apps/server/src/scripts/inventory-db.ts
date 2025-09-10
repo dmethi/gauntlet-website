@@ -35,6 +35,10 @@ async function safeGetGlobalCounts(): Promise<TableCount[]> {
     'liveWinProbSample',
     'playerStatusHistory',
     'seasonSuperlatives',
+    // Added odds/simulation tables for auditing GitHub Actions outputs
+    'matchupSimulation',
+    'matchupOddsHistory',
+    'leagueOddsHistory',
   ];
   const counts: TableCount[] = [];
   for (const key of modelKeys) {
@@ -202,6 +206,61 @@ async function inventoryLiveSamples() {
   }
 }
 
+async function inventoryOddsAndSims() {
+  try {
+    const db: any = prisma as any;
+    const [simCount, matchupHistCount, leagueHistCount] = await Promise.all([
+      db.matchupSimulation?.count?.() ?? Promise.resolve(-1),
+      db.matchupOddsHistory?.count?.() ?? Promise.resolve(-1),
+      db.leagueOddsHistory?.count?.() ?? Promise.resolve(-1),
+    ]);
+
+    const [simWeeks, matchupHistWeeks, leagueHistWeeks] = await Promise.all([
+      db.matchupSimulation?.findMany?.({
+        select: { week: true },
+        distinct: ['week'],
+        orderBy: { week: 'asc' },
+      }) ?? [],
+      db.matchupOddsHistory?.findMany?.({
+        select: { week: true },
+        distinct: ['week'],
+        orderBy: { week: 'asc' },
+      }) ?? [],
+      db.leagueOddsHistory?.findMany?.({
+        select: { week: true },
+        distinct: ['week'],
+        orderBy: { week: 'asc' },
+      }) ?? [],
+    ]);
+
+    const week1 = 1;
+    const [simWeek1, matchupHistWeek1, leagueHistWeek1] = await Promise.all([
+      db.matchupSimulation?.count?.({ where: { week: week1 } }) ?? Promise.resolve(-1),
+      db.matchupOddsHistory?.count?.({ where: { week: week1 } }) ?? Promise.resolve(-1),
+      db.leagueOddsHistory?.count?.({ where: { week: week1 } }) ?? Promise.resolve(-1),
+    ]);
+
+    console.log('\n=== Odds & Simulations ===');
+    console.log({ simCount, matchupHistCount, leagueHistCount });
+    console.log(
+      'Weeks with MatchupSimulation:',
+      simWeeks.map((w: any) => w.week)
+    );
+    console.log(
+      'Weeks with MatchupOddsHistory:',
+      matchupHistWeeks.map((w: any) => w.week)
+    );
+    console.log(
+      'Weeks with LeagueOddsHistory:',
+      leagueHistWeeks.map((w: any) => w.week)
+    );
+    console.log('Week 1 counts:', { simWeek1, matchupHistWeek1, leagueHistWeek1 });
+  } catch {
+    console.log('\n=== Odds & Simulations ===');
+    console.log({ error: 'tables not available' });
+  }
+}
+
 async function inventoryDb() {
   try {
     const specificLeagueId = process.env.LEAGUE_ID;
@@ -236,6 +295,7 @@ async function inventoryDb() {
 
     await inventoryPlayersAndStats();
     await inventoryLiveSamples();
+    await inventoryOddsAndSims();
 
     console.log('\n--- Inventory Complete ---');
   } catch (error) {

@@ -417,7 +417,7 @@ async function simulateMatchup(
       ),
     ]);
 
-    // Update matchup points in database if we have live scores
+    // Update matchup points and starters in database if we have live scores
     if (gameProgress > 0 && Object.keys(livePlayerScores).length > 0) {
       const team1LiveTotal = team1Players.reduce(
         (sum, player) => sum + (player.currentScore || 0),
@@ -448,13 +448,20 @@ async function simulateMatchup(
         `   📊 Updating individual player scores for ${team1Players.length + team2Players.length} players`
       );
 
-      // Update both teams' points and playersPoints in the database
+      // Also fetch the latest starters from Sleeper and persist them
+      const [freshStartersA, freshStartersB] = await Promise.all([
+        fetchSleeperLineup(leagueId, week, teamA.roster.id),
+        fetchSleeperLineup(leagueId, week, teamB.roster.id),
+      ]);
+
+      // Update both teams' points, playersPoints, and starters in the database
       await Promise.all([
         prisma.matchup.update({
           where: { leagueId_week_rosterId: { leagueId, week, rosterId: teamA.rosterId } },
           data: {
             points: team1LiveTotal,
             playersPoints: team1PlayersPoints,
+            ...(freshStartersA.length > 0 ? { starters: freshStartersA } : {}),
           },
         }),
         prisma.matchup.update({
@@ -462,6 +469,7 @@ async function simulateMatchup(
           data: {
             points: team2LiveTotal,
             playersPoints: team2PlayersPoints,
+            ...(freshStartersB.length > 0 ? { starters: freshStartersB } : {}),
           },
         }),
       ]);
