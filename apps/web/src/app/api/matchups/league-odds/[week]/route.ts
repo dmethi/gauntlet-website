@@ -478,10 +478,23 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       '1263740549504962561': 'Gauntlet NFC',
     };
 
-    // Fetch raw projections once for both leagues (use 2024 for current NFL season)
-    const rawProjections = await fetchRawProjections('2024', week);
-    if (rawProjections.length === 0) {
-      throw new Error('No projection data available');
+    // Determine season dynamically from leagues (fallback to current calendar year)
+    const leaguesMeta = await prisma.league.findMany({
+      where: { id: { in: ['1263744209295245312', '1263740549504962561'] } },
+      select: { id: true, season: true },
+    });
+    const detectedSeason =
+      leaguesMeta.find(l => l.id === '1263744209295245312')?.season ||
+      leaguesMeta.find(l => l.id === '1263740549504962561')?.season ||
+      new Date().getFullYear().toString();
+
+    // Fetch raw projections once for both leagues using detected season
+    const rawProjections = await fetchRawProjections(detectedSeason, week);
+    const hasProjections = rawProjections.length > 0;
+    if (!hasProjections) {
+      console.warn(
+        `⚠️ [LEAGUE ODDS] No projections available for season ${detectedSeason}, week ${week}. Falling back to stored simulations only.`
+      );
     }
 
     // Collect all teams and their simulated scores
@@ -507,7 +520,9 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
 
         // Calculate league-specific projections
         const scoringSettings = (league.scoringSettings as ScoringSettings) || {};
-        const leagueProjections = calculateLeagueProjections(rawProjections, scoringSettings);
+        const leagueProjections = hasProjections
+          ? calculateLeagueProjections(rawProjections, scoringSettings)
+          : ({} as Record<string, { points: number }>);
         const getPlayerProjection = (playerId: string): number => {
           return leagueProjections[playerId]?.points || 0;
         };
@@ -544,10 +559,13 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
             continue;
           }
 
-          const totalProjection = (team.starters || []).reduce(
+          let totalProjection = (team.starters || []).reduce(
             (sum: number, playerId: string) => sum + getPlayerProjection(playerId),
             0
           );
+          if (!hasProjections && simulation) {
+            totalProjection = simulation.mean;
+          }
 
           console.log(`✅ [LEAGUE ODDS] Adding team ${team.rosterId} to allTeams array`);
 

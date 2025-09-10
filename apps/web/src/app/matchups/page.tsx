@@ -161,7 +161,40 @@ function MatchupsPageContent() {
   };
 
   useEffect(() => {
-    fetchMatchupsForWeek(selectedWeek);
+    // Determine current NFL week via Sleeper slate; fallback to 1
+    const detectWeek = async () => {
+      try {
+        // Try both leagues; whichever returns matchups with current activity implies the slate week
+        const leagueToProbe = filteredLeagues[0]?.id || LEAGUES[0].id;
+        // Probe last few weeks (1..18) around current time would be overkill; fetch server-detected current week via API if available
+        const res = await fetch('/api/leagues');
+        if (res.ok) {
+          const leagues = await res.json();
+          const season = leagues?.find((l: any) => l.id === leagueToProbe)?.season;
+          // Simple current-week heuristic (aligns with server jobs)
+          const seasonStart = season ? new Date(`${season}-09-05`) : new Date('2025-09-04');
+          const now = new Date();
+          const week = Math.max(
+            1,
+            Math.min(
+              18,
+              Math.floor((now.getTime() - seasonStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1
+            )
+          );
+          setSelectedWeek(week);
+          fetchMatchupsForWeek(week);
+          return;
+        }
+      } catch (_) {
+        // ignore and fallback
+      }
+      fetchMatchupsForWeek(selectedWeek);
+    };
+    detectWeek();
+  }, []);
+
+  useEffect(() => {
+    if (selectedWeek) fetchMatchupsForWeek(selectedWeek);
   }, [selectedWeek]);
 
   if (error) {

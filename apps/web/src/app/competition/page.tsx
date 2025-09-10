@@ -138,6 +138,28 @@ export default function CompetitionPage() {
         </Card>
       </div>
 
+      {/* Reports Section */}
+      <div className='mb-8'>
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <Trophy className='h-5 w-5 text-gauntlet-gold' />
+              Reports
+            </CardTitle>
+            <CardDescription>Weekly recaps and draft analysis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link
+              href='/competition/reports'
+              className='inline-flex items-center text-primary hover:underline'
+            >
+              Week 1 Report — 2025
+              <ChevronRight className='h-4 w-4 ml-1' />
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className='grid gap-6 md:grid-cols-2'>
         {leagues.map((league, index) => (
           <Card key={league.id} className='hover:shadow-lg transition-shadow'>

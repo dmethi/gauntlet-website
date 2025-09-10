@@ -23,12 +23,15 @@ purposes.
 
 - `stats-week1.json` - Week 1 player statistics (749KB, 2,310 players)
 - `projections-week1.json` - Week 1 player projections (726KB)
+- `playerstats-2025-week1-stats.json` - 2025 regular season, week 1 stats snapshot (cached)
+- `playerstats-2025-week1-projections.json` - 2025 regular season, week 1 projections snapshot (cached)
 - `players-sample.json` - Sample of 50 players with metadata (names, positions,
   teams)
 
 ### NFL Data
 
 - `nfl-state.json` - Current NFL season state
+- `winprob-timeseries-week1.json` - Derived time-series win probabilities from stored odds history
 - `user-dmethi.json` - Sample user profile
 
 ### Configuration

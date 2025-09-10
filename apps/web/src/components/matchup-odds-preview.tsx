@@ -46,13 +46,20 @@ export function MatchupOddsPreview({
         const response = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`);
 
         if (!response.ok) {
+          if (response.status === 404) {
+            // No stored simulation yet for this matchup/week; show unavailable without error
+            setOddsData(null);
+            return;
+          }
           throw new Error(`Failed to fetch odds`);
         }
 
         const data = await response.json();
 
         if (!data.success) {
-          throw new Error('Simulation failed');
+          // Gracefully handle absence of simulation data
+          setOddsData(null);
+          return;
         }
 
         setOddsData(data.simulation);

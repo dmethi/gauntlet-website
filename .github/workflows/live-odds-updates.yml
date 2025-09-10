@@ -58,7 +58,7 @@ jobs:
       - name: Determine update type and week
         id: determine-context
         run: |
-          WEEK="${{ github.event.inputs.week || '1' }}"
+          WEEK="${{ github.event.inputs.week || '' }}"
           CURRENT_HOUR=$(date -u +%H)
           CURRENT_DAY=$(date -u +%u)
           CURRENT_MONTH=$(date -u +%m)
@@ -102,6 +102,12 @@ jobs:
           IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
           TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
 
+          echo "🔄 Syncing team names from Sleeper metadata..."
+          pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/sync-team-names.ts
+
+          echo "🔄 Refreshing matchups and starters from Sleeper..."
+          pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/refresh-lineups.ts ${WEEK:+$WEEK}
+
           echo "🚀 Starting odds update..."
           echo "  Week: $WEEK"
           echo "  Live Mode: $IS_LIVE"
@@ -109,10 +115,10 @@ jobs:
 
           if [ "$IS_LIVE" = "true" ]; then
             echo "⚡ Running LIVE odds update with current scores..."
-            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --live --trigger="$TRIGGER_TYPE"
+            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts ${WEEK:+$WEEK} --live --trigger="$TRIGGER_TYPE"
           else
             echo "📅 Running daily pre-game odds update..."
-            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts $WEEK --trigger="$TRIGGER_TYPE"
+            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts ${WEEK:+$WEEK} --trigger="$TRIGGER_TYPE"
           fi
 
       - name: Report completion
