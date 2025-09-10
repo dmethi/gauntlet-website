@@ -2,6 +2,8 @@ import { geizer, montserrat } from '@/lib/fonts';
 import './globals.css';
 import ClientLayout from '@/components/client-layout';
 import { Providers } from '@/components/providers';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   title: 'The Gauntlet - Fantasy Football',
@@ -35,6 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <ClientLayout>{children}</ClientLayout>
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

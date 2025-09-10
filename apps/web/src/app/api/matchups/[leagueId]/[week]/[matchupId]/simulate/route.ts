@@ -87,8 +87,8 @@ async function generateProjectionBasedSimulation(
 
   // Get player details
   const allPlayerIds = new Set<string>();
-  matchupTeams.forEach(team => {
-    [...(team.starters || []), ...(team.players || [])].forEach(playerId => {
+  matchupTeams.forEach((team: any) => {
+    [...(team.starters || []), ...(team.players || [])].forEach((playerId: string) => {
       if (playerId) allPlayerIds.add(playerId);
     });
   });
@@ -97,12 +97,12 @@ async function generateProjectionBasedSimulation(
     where: { id: { in: Array.from(allPlayerIds) } },
     select: { id: true, fullName: true, position: true, team: true },
   });
-  const playersMap = new Map(players.map(p => [p.id, p]));
+  const playersMap = new Map(players.map((p: any) => [p.id, p]));
 
   // Build team lineups with projections
   const [teamA, teamB] = matchupTeams;
   const team1Players = (teamA.starters || []).map((playerId: string) => {
-    const player = playersMap.get(playerId);
+    const player = playersMap.get(playerId) as any;
     const projection = leagueProjections[playerId]?.points || 0;
     return {
       id: playerId,
@@ -113,7 +113,7 @@ async function generateProjectionBasedSimulation(
   });
 
   const team2Players = (teamB.starters || []).map((playerId: string) => {
-    const player = playersMap.get(playerId);
+    const player = playersMap.get(playerId) as any;
     const projection = leagueProjections[playerId]?.points || 0;
     return {
       id: playerId,
@@ -209,7 +209,7 @@ async function generateProjectionBasedSimulation(
     generatedAt: new Date().toISOString(),
   };
 
-  const playersDistributions = [...team1Players, ...team2Players].map(player => ({
+  const playersDistributions = [...team1Players, ...team2Players].map((player: any) => ({
     playerId: player.id,
     playerName: player.name,
     position: player.position,
@@ -370,17 +370,19 @@ export async function GET(
         where: { id: { in: Array.from(allPlayerIds) } },
         select: { id: true, fullName: true, position: true, team: true },
       });
-      const playersMap = new Map(players.map(p => [p.id, p]));
+      const playersMap = new Map(players.map((p: any) => [p.id, p]));
 
       // Build teams data for frontend
-      const teamsData = matchupTeams.map(team => {
+      const teamsData = matchupTeams.map((team: any) => {
         const teamMetadata = team.roster.owner?.metadata as any;
         const teamName = teamMetadata?.teamName || team.roster.owner?.displayName || 'Unknown Team';
 
         const playersWithProjections = (team.starters || [])
-          .map(playerId => {
-            const player = playersMap.get(playerId);
-            const playerSim = storedSimulation.playerSimulations.find(p => p.playerId === playerId);
+          .map((playerId: string) => {
+            const player = playersMap.get(playerId) as any;
+            const playerSim = storedSimulation.playerSimulations.find(
+              (p: any) => p.playerId === playerId
+            );
 
             return {
               id: playerId,
@@ -389,7 +391,7 @@ export async function GET(
               projection: playerSim?.projection || 0,
             };
           })
-          .filter(p => p.name !== 'Unknown Player');
+          .filter((p: any) => p.name !== 'Unknown Player');
 
         return {
           rosterId: team.rosterId,
@@ -447,7 +449,7 @@ export async function GET(
         success: true,
         simulation: simulationResult,
         source: 'stored', // Indicate this came from database
-        playersDistributions: storedSimulation.playerSimulations.map(player => ({
+        playersDistributions: storedSimulation.playerSimulations.map((player: any) => ({
           playerId: player.playerId,
           playerName: player.playerName,
           position: player.position,

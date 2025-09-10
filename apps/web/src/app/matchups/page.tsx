@@ -82,7 +82,7 @@ function MatchupsPageContent() {
 
   // Function to update URL with week parameter
   const updateWeekInURL = (week: number) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set('week', week.toString());
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
