@@ -45,15 +45,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
-      - name: Install pnpm
-        run: npm install -g pnpm@9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
         run: pnpm install -w --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @gauntlet/server exec prisma generate
+        run: cd apps/server && pnpm exec prisma generate
 
       - name: Determine update type and week
         id: determine-context
