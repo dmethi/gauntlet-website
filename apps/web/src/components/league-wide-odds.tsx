@@ -55,13 +55,26 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
       if (showLoading) setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/matchups/league-odds/${week}`);
+      // Add cache busting to ensure fresh data, especially for new weeks
+      const cacheBuster = Date.now();
+      const response = await fetch(`/api/matchups/league-odds/${week}?t=${cacheBuster}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch odds: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log(`🎯 [LEAGUE ODDS UI] Fetched fresh odds for week ${week}:`, {
+        highestScorer: data.highestScorer?.[0]?.teamName,
+        probability: data.highestScorer?.[0]?.probability,
+        source: data.source || 'api',
+        timestamp: new Date().toISOString(),
+      });
       setOdds(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load odds');

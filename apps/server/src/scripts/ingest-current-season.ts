@@ -84,16 +84,24 @@ async function ingestUsers(leagueId: string) {
   );
 }
 
+function getRosterIdOffset(leagueId: string): number {
+  // NFC league has roster ID offset of +2000 in database to avoid collision with AFC
+  return leagueId === '1263740549504962561' ? 2000 : 0;
+}
+
 async function ingestRosters(leagueId: string) {
   logger.info(`Ingesting rosters for league ${leagueId}`);
 
   const rosters = await api.getRosters(leagueId);
-  logger.info(`Found ${rosters.length} rosters for league ${leagueId}`);
+  const offset = getRosterIdOffset(leagueId);
+  const leagueName = leagueId === '1263740549504962561' ? 'NFC' : 'AFC';
+  logger.info(`Found ${rosters.length} rosters for league ${leagueId} (${leagueName}), applying offset: +${offset}`);
 
   const results = await Promise.allSettled(
     rosters.map(async roster => {
+      const dbRosterId = roster.roster_id + offset;
       logger.info(
-        `Processing roster ${roster.roster_id}: owner=${roster.owner_id}, players=${roster.players?.length || 0}`
+        `Processing roster ${roster.roster_id} → DB ID ${dbRosterId}: owner=${roster.owner_id}, players=${roster.players?.length || 0}`
       );
 
       const baseData = {
@@ -107,15 +115,15 @@ async function ingestRosters(leagueId: string) {
       };
 
       const result = await prisma.roster.upsert({
-        where: { id: roster.roster_id },
+        where: { id: dbRosterId },
         update: baseData,
         create: {
-          id: roster.roster_id,
+          id: dbRosterId,
           ...baseData,
         },
       });
 
-      logger.info(`✅ Saved roster ${roster.roster_id} with ${baseData.players.length} players`);
+      logger.info(`✅ Saved roster ${dbRosterId} with ${baseData.players.length} players`);
       return result;
     })
   );

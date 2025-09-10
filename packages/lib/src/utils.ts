@@ -101,11 +101,80 @@ export function calculateStdDev(values: number[]): number {
   return Math.sqrt(variance);
 }
 
-export function getCurrentWeek(): number {
+/**
+ * NFL state structure from Sleeper API
+ */
+export interface NFLState {
+  week: number;
+  leg: number;
+  season: string;
+  season_type: 'pre' | 'regular' | 'post';
+  league_season: string;
+  previous_season: string;
+  season_start_date: string;
+  display_week: number;
+  league_create_season: string;
+  season_has_scores: boolean;
+}
+
+/**
+ * Fetch current NFL state from Sleeper API
+ */
+export async function fetchNFLState(): Promise<NFLState> {
+  try {
+    const response = await fetch('https://api.sleeper.app/v1/state/nfl', {
+      headers: {
+        'User-Agent': 'Gauntlet-Website/1.0.0',
+      },
+      cache: 'no-store', // Always get fresh data
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch NFL state: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching NFL state from Sleeper API:', error);
+    
+    // Fallback to manual calculation if API fails
+    const now = new Date();
+    const seasonStart = new Date('2025-09-04'); // 2025 season start
+    const weekMs = 7 * 24 * 60 * 60 * 1000;
+    const calculatedWeek = Math.max(1, Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1));
+    
+    return {
+      week: calculatedWeek,
+      leg: 0,
+      season: new Date().getFullYear().toString(),
+      season_type: 'regular',
+      league_season: new Date().getFullYear().toString(),
+      previous_season: (new Date().getFullYear() - 1).toString(),
+      season_start_date: '2025-09-04',
+      display_week: calculatedWeek,
+      league_create_season: new Date().getFullYear().toString(),
+      season_has_scores: true,
+    };
+  }
+}
+
+/**
+ * Get current NFL week from Sleeper API
+ */
+export async function getCurrentWeek(): Promise<number> {
+  const nflState = await fetchNFLState();
+  return nflState.display_week || nflState.week;
+}
+
+/**
+ * Synchronous version of getCurrentWeek for backward compatibility
+ * @deprecated Use getCurrentWeek() async version instead
+ */
+export function getCurrentWeekSync(): number {
   const now = new Date();
-  const seasonStart = new Date('2024-09-05'); // Update each season
+  const seasonStart = new Date('2025-09-04'); // 2025 season start
   const weekMs = 7 * 24 * 60 * 60 * 1000;
-  return Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1;
+  return Math.max(1, Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1));
 }
 
 /**

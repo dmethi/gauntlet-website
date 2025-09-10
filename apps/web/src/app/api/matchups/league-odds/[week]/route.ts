@@ -542,14 +542,40 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
             continue;
           }
 
+          // Compute projection total up front
+          let totalProjection = (team.starters || []).reduce(
+            (sum: number, playerId: string) => sum + getPlayerProjection(playerId),
+            0
+          );
+
           let simulation;
           try {
             simulation = await getStoredTeamSimulation(leagueId, week, team.rosterId);
             if (!simulation) {
-              console.warn(
-                `❌ [LEAGUE ODDS] Skipping team ${team.rosterId} - no stored simulation found`
-              );
-              continue;
+              if (hasProjections && totalProjection > 0) {
+                // Build a simulation fallback from projections
+                // Estimate std dev as 18% of mean, derive p10/p90 using ~1.28 std devs
+                const mean = totalProjection;
+                const stdDev = Math.max(6, mean * 0.18);
+                const p10 = Math.max(0, mean - 1.28 * stdDev);
+                const p90 = Math.max(p10 + 1, mean + 1.28 * stdDev);
+                simulation = {
+                  mean,
+                  p10,
+                  p50: mean,
+                  p90,
+                };
+                console.warn(
+                  `🧮 [LEAGUE ODDS] Using projection-based fallback sim for team ${team.rosterId}: mean=${mean.toFixed(
+                    1
+                  )}`
+                );
+              } else {
+                console.warn(
+                  `❌ [LEAGUE ODDS] Skipping team ${team.rosterId} - no stored simulation and no projections`
+                );
+                continue;
+              }
             }
           } catch (error) {
             console.error(
@@ -559,10 +585,6 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
             continue;
           }
 
-          let totalProjection = (team.starters || []).reduce(
-            (sum: number, playerId: string) => sum + getPlayerProjection(playerId),
-            0
-          );
           if (!hasProjections && simulation) {
             totalProjection = simulation.mean;
           }
@@ -586,7 +608,18 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     }
 
     if (allTeams.length === 0) {
-      throw new Error('No teams found across both leagues');
+      console.warn('⚠️ [LEAGUE ODDS] No teams available to compute odds. Returning empty payload.');
+      const empty: LeagueWideOdds = {
+        week,
+        highestScorer: [],
+        lowestScorer: [],
+        closestMatchup: [],
+        biggestBlowout: [],
+        highestScoringMatchup: [],
+        lowestScoringMatchup: [],
+        lastUpdated: new Date().toISOString(),
+      };
+      return NextResponse.json(empty);
     }
 
     console.log(`📈 Running calculations on ${allTeams.length} teams total...`);
@@ -769,27 +802,47 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       `🎯 Created ${latestMatchupsForScoring.length} latest matchups for scoring calculations`
     );
 
-    // Now calculate scoring probabilities with LATEST live data
-    console.log(`🏆 Running Monte Carlo for LIVE highest scoring matchup probabilities...`);
-    const liveHighestScoringProbabilities = calculateMatchupScoringProbabilities(
-      latestMatchupsForScoring.map(m => ({
-        team1: m.team1,
-        team2: m.team2,
-        simulation: m.simulation,
-      })),
-      true,
-      15000
-    );
-    console.log(`📉 Running Monte Carlo for LIVE lowest scoring matchup probabilities...`);
-    const liveLowestScoringProbabilities = calculateMatchupScoringProbabilities(
-      latestMatchupsForScoring.map(m => ({
-        team1: m.team1,
-        team2: m.team2,
-        simulation: m.simulation,
-      })),
-      false,
-      15000
-    );
+    // Calculate scoring probabilities with LATEST live data or fallback to actual matchups
+    let liveHighestScoringProbabilities: number[] = [];
+    let liveLowestScoringProbabilities: number[] = [];
+
+    if (latestMatchupsForScoring.length > 0) {
+      console.log(`🏆 Running Monte Carlo for LIVE highest scoring matchup probabilities...`);
+      liveHighestScoringProbabilities = calculateMatchupScoringProbabilities(
+        latestMatchupsForScoring.map(m => ({
+          team1: m.team1,
+          team2: m.team2,
+          simulation: m.simulation,
+        })),
+        true,
+        15000
+      );
+      console.log(`📉 Running Monte Carlo for LIVE lowest scoring matchup probabilities...`);
+      liveLowestScoringProbabilities = calculateMatchupScoringProbabilities(
+        latestMatchupsForScoring.map(m => ({
+          team1: m.team1,
+          team2: m.team2,
+          simulation: m.simulation,
+        })),
+        false,
+        15000
+      );
+    } else {
+      console.log(
+        `⚠️ No stored simulations found - using actual matchups for LIVE scoring calculations`
+      );
+      // Fallback to using actual matchups when no stored simulations exist
+      liveHighestScoringProbabilities = calculateMatchupScoringProbabilities(
+        actualMatchups,
+        true,
+        15000
+      );
+      liveLowestScoringProbabilities = calculateMatchupScoringProbabilities(
+        actualMatchups,
+        false,
+        15000
+      );
+    }
 
     console.log(
       `⚖️ Top 3 closest matchup probabilities:`,
@@ -815,12 +868,19 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
       biggestProb: biggestProbabilities[index],
     }));
 
-    // Add LIVE scoring probabilities to latest matchups
-    const liveMatchupsWithProbs = [...latestMatchupsForScoring].map((matchup, index) => ({
-      ...matchup,
-      liveHighestScoringProb: liveHighestScoringProbabilities[index],
-      liveLowestScoringProb: liveLowestScoringProbabilities[index],
-    }));
+    // Add LIVE scoring probabilities to matchups (use stored sims if available, otherwise actual matchups)
+    const liveMatchupsWithProbs =
+      latestMatchupsForScoring.length > 0
+        ? [...latestMatchupsForScoring].map((matchup, index) => ({
+            ...matchup,
+            liveHighestScoringProb: liveHighestScoringProbabilities[index],
+            liveLowestScoringProb: liveLowestScoringProbabilities[index],
+          }))
+        : [...actualMatchups].map((matchup, index) => ({
+            ...matchup,
+            liveHighestScoringProb: liveHighestScoringProbabilities[index],
+            liveLowestScoringProb: liveLowestScoringProbabilities[index],
+          }));
 
     // Build closest matchup odds (ALL matchups, sorted by highest probability of being closest)
     const closestMatchupOdds: MatchupOdds[] = matchupsWithProbs
@@ -867,22 +927,44 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     // Build highest scoring matchup odds using LIVE Monte Carlo probabilities
     const highestScoringMatchup: MatchupOdds[] = liveMatchupsWithProbs
       .map(matchup => {
-        const details = latestMatchupDetails.get(`${matchup.leagueId}-${matchup.matchupId}`);
-        if (!details) return null;
+        // Handle both stored simulation data and fallback actual matchup data
+        let team1Name: string,
+          team2Name: string,
+          team1Proj: number,
+          team2Proj: number,
+          margin: number;
+
+        if (latestMatchupsForScoring.length > 0) {
+          // Using stored simulation data
+          const details = latestMatchupDetails.get(`${matchup.leagueId}-${matchup.matchupId}`);
+          if (!details) return null;
+          team1Name = details.team1;
+          team2Name = details.team2;
+          team1Proj = matchup.team1.simulation.mean;
+          team2Proj = matchup.team2.simulation.mean;
+          margin = matchup.margin;
+        } else {
+          // Using actual matchup fallback data - get names using getTeamName helper
+          team1Name = getTeamName((matchup as any).team1.team);
+          team2Name = getTeamName((matchup as any).team2.team);
+          team1Proj = (matchup as any).team1.simulation.mean;
+          team2Proj = (matchup as any).team2.simulation.mean;
+          margin = (matchup as any).margin;
+        }
 
         return {
           matchupId: matchup.matchupId,
           team1: {
-            name: details.team1,
+            name: team1Name,
             leagueId: matchup.leagueId,
-            projection: Math.round(matchup.team1.simulation.mean * 100) / 100,
+            projection: Math.round(team1Proj * 100) / 100,
           },
           team2: {
-            name: details.team2,
+            name: team2Name,
             leagueId: matchup.leagueId,
-            projection: Math.round(matchup.team2.simulation.mean * 100) / 100,
+            projection: Math.round(team2Proj * 100) / 100,
           },
-          projectedMargin: Math.round(matchup.margin * 100) / 100,
+          projectedMargin: Math.round(margin * 100) / 100,
           probability: Math.round(matchup.liveHighestScoringProb * 1000) / 1000,
           odds: probabilityToAmericanOdds(matchup.liveHighestScoringProb),
           color: probabilityToColor(matchup.liveHighestScoringProb),
@@ -894,22 +976,44 @@ export async function GET(request: NextRequest, { params }: { params: { week: st
     // Build lowest scoring matchup odds using LIVE Monte Carlo probabilities
     const lowestScoringMatchup: MatchupOdds[] = liveMatchupsWithProbs
       .map(matchup => {
-        const details = latestMatchupDetails.get(`${matchup.leagueId}-${matchup.matchupId}`);
-        if (!details) return null;
+        // Handle both stored simulation data and fallback actual matchup data
+        let team1Name: string,
+          team2Name: string,
+          team1Proj: number,
+          team2Proj: number,
+          margin: number;
+
+        if (latestMatchupsForScoring.length > 0) {
+          // Using stored simulation data
+          const details = latestMatchupDetails.get(`${matchup.leagueId}-${matchup.matchupId}`);
+          if (!details) return null;
+          team1Name = details.team1;
+          team2Name = details.team2;
+          team1Proj = matchup.team1.simulation.mean;
+          team2Proj = matchup.team2.simulation.mean;
+          margin = matchup.margin;
+        } else {
+          // Using actual matchup fallback data - get names using getTeamName helper
+          team1Name = getTeamName((matchup as any).team1.team);
+          team2Name = getTeamName((matchup as any).team2.team);
+          team1Proj = (matchup as any).team1.simulation.mean;
+          team2Proj = (matchup as any).team2.simulation.mean;
+          margin = (matchup as any).margin;
+        }
 
         return {
           matchupId: matchup.matchupId,
           team1: {
-            name: details.team1,
+            name: team1Name,
             leagueId: matchup.leagueId,
-            projection: Math.round(matchup.team1.simulation.mean * 100) / 100,
+            projection: Math.round(team1Proj * 100) / 100,
           },
           team2: {
-            name: details.team2,
+            name: team2Name,
             leagueId: matchup.leagueId,
-            projection: Math.round(matchup.team2.simulation.mean * 100) / 100,
+            projection: Math.round(team2Proj * 100) / 100,
           },
-          projectedMargin: Math.round(matchup.margin * 100) / 100,
+          projectedMargin: Math.round(margin * 100) / 100,
           probability: Math.round(matchup.liveLowestScoringProb * 1000) / 1000,
           odds: probabilityToAmericanOdds(matchup.liveLowestScoringProb),
           color: probabilityToColor(matchup.liveLowestScoringProb),

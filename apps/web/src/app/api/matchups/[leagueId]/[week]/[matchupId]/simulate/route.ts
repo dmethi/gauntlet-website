@@ -1,4 +1,232 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
+import { calculateLeagueProjections, ScoringSettings } from '@/lib/calculate-league-projections';
+
+// Fetch raw projections from Sleeper
+async function fetchRawProjections(season: string, week: number): Promise<any[]> {
+  try {
+    const response = await fetch(
+      `https://api.sleeper.com/projections/nfl/${season}/${week}?season_type=regular&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF&order_by=pts_half_ppr`,
+      {
+        headers: {
+          'User-Agent': 'Gauntlet-Website/1.0.0',
+        },
+        cache: 'no-store',
+      }
+    );
+
+    if (!response.ok) {
+      console.warn(`🔥 [SIMULATION FALLBACK] Failed to fetch projections: ${response.status}`);
+      return [];
+    }
+
+    const projections = await response.json();
+    console.log(
+      `📊 [SIMULATION FALLBACK] Fetched raw projections for ${projections.length} players`
+    );
+    return projections;
+  } catch (error) {
+    console.error('❌ [SIMULATION FALLBACK] Error fetching projections:', error);
+    return [];
+  }
+}
+
+// Generate simulation data from projections when no stored simulation exists
+async function generateProjectionBasedSimulation(
+  prisma: any,
+  leagueId: string,
+  week: number,
+  matchupId: number
+) {
+  console.log(
+    `🧮 [SIMULATION FALLBACK] Generating projection-based simulation for matchup ${matchupId}`
+  );
+
+  // Get matchup teams and league info
+  const [matchupTeams, league] = await Promise.all([
+    prisma.matchup.findMany({
+      where: { leagueId, week, matchupId },
+      include: {
+        roster: {
+          include: {
+            owner: {
+              select: {
+                id: true,
+                username: true,
+                displayName: true,
+                avatar: true,
+                metadata: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { rosterId: 'asc' },
+    }),
+    prisma.league.findUnique({
+      where: { id: leagueId },
+      select: { season: true, scoringSettings: true },
+    }),
+  ]);
+
+  if (!matchupTeams || matchupTeams.length !== 2 || !league) {
+    console.error(`❌ [SIMULATION FALLBACK] Invalid matchup data or league not found`);
+    return null;
+  }
+
+  // Fetch projections
+  const rawProjections = await fetchRawProjections(league.season || '2025', week);
+  if (rawProjections.length === 0) {
+    console.warn(`⚠️ [SIMULATION FALLBACK] No projections available for simulation`);
+    return null;
+  }
+
+  // Calculate league-specific projections
+  const scoringSettings = (league.scoringSettings as ScoringSettings) || {};
+  const leagueProjections = calculateLeagueProjections(rawProjections, scoringSettings);
+
+  // Get player details
+  const allPlayerIds = new Set<string>();
+  matchupTeams.forEach(team => {
+    [...(team.starters || []), ...(team.players || [])].forEach(playerId => {
+      if (playerId) allPlayerIds.add(playerId);
+    });
+  });
+
+  const players = await prisma.player.findMany({
+    where: { id: { in: Array.from(allPlayerIds) } },
+    select: { id: true, fullName: true, position: true, team: true },
+  });
+  const playersMap = new Map(players.map(p => [p.id, p]));
+
+  // Build team lineups with projections
+  const [teamA, teamB] = matchupTeams;
+  const team1Players = (teamA.starters || []).map((playerId: string) => {
+    const player = playersMap.get(playerId);
+    const projection = leagueProjections[playerId]?.points || 0;
+    return {
+      id: playerId,
+      name: player?.fullName || 'Unknown Player',
+      position: player?.position || 'UNKNOWN',
+      projection,
+    };
+  });
+
+  const team2Players = (teamB.starters || []).map((playerId: string) => {
+    const player = playersMap.get(playerId);
+    const projection = leagueProjections[playerId]?.points || 0;
+    return {
+      id: playerId,
+      name: player?.fullName || 'Unknown Player',
+      position: player?.position || 'UNKNOWN',
+      projection,
+    };
+  });
+
+  // Run simulation
+  console.log(
+    `🎲 [SIMULATION FALLBACK] Running simulation with ${team1Players.length} vs ${team2Players.length} players`
+  );
+  const simResult = await simulateMatchupProbabilityFromPlayers(
+    team1Players,
+    team2Players,
+    5000,
+    0
+  );
+
+  // Build team roster data for frontend
+  const getTeamName = (team: any) =>
+    team.roster?.owner?.metadata?.team_name ||
+    team.roster?.owner?.displayName ||
+    team.roster?.owner?.username ||
+    `Team ${team.rosterId}`;
+
+  const getOwnerName = (team: any) =>
+    team.roster?.owner?.displayName || team.roster?.owner?.username || 'Unknown Owner';
+
+  const teamsData = [
+    {
+      rosterId: teamA.rosterId,
+      teamName: getTeamName(teamA),
+      ownerName: getOwnerName(teamA),
+      avatar: teamA.roster?.owner?.avatar,
+      players: team1Players,
+    },
+    {
+      rosterId: teamB.rosterId,
+      teamName: getTeamName(teamB),
+      ownerName: getOwnerName(teamB),
+      avatar: teamB.roster?.owner?.avatar,
+      players: team2Players,
+    },
+  ];
+
+  // Calculate implied odds (simple approximation)
+  const team1WinPct = simResult.team1WinPct;
+  const team2WinPct = simResult.team2WinPct;
+  const spread = simResult.team1Scores.mean - simResult.team2Scores.mean;
+  const total = simResult.team1Scores.mean + simResult.team2Scores.mean;
+
+  const team1MoneyLine =
+    team1WinPct >= 0.5
+      ? Math.round(-(team1WinPct / (1 - team1WinPct)) * 100)
+      : Math.round(((1 - team1WinPct) / team1WinPct) * 100);
+
+  const team2MoneyLine =
+    team2WinPct >= 0.5
+      ? Math.round(-(team2WinPct / (1 - team2WinPct)) * 100)
+      : Math.round(((1 - team2WinPct) / team2WinPct) * 100);
+
+  const simulation = {
+    team1Scores: {
+      mean: simResult.team1Scores.mean,
+      p10: simResult.team1Scores.p10,
+      median: simResult.team1Scores.median, // Sim-engine returns median, not p50
+      p90: simResult.team1Scores.p90,
+      stdDev: (simResult.team1Scores.p90 - simResult.team1Scores.p10) / 2.56, // Rough approximation
+    },
+    team2Scores: {
+      mean: simResult.team2Scores.mean,
+      p10: simResult.team2Scores.p10,
+      median: simResult.team2Scores.median, // Sim-engine returns median, not p50
+      p90: simResult.team2Scores.p90,
+      stdDev: (simResult.team2Scores.p90 - simResult.team2Scores.p10) / 2.56,
+    },
+    team1WinPct,
+    team2WinPct,
+    medianMargin: Math.abs(simResult.team1Scores.median - simResult.team2Scores.median),
+    impliedOdds: {
+      spread: Math.round(spread * 10) / 10,
+      total: Math.round(total * 10) / 10,
+      team1MoneyLine,
+      team2MoneyLine,
+      overPct: 0.5, // Default
+      underPct: 0.5, // Default
+    },
+    teams: teamsData,
+    iterations: 5000,
+    computeTimeMs: 0,
+    generatedAt: new Date().toISOString(),
+  };
+
+  const playersDistributions = [...team1Players, ...team2Players].map(player => ({
+    playerId: player.id,
+    playerName: player.name,
+    position: player.position,
+    mean: player.projection,
+    p10: Math.max(0, player.projection * 0.7),
+    median: player.projection,
+    p90: player.projection * 1.3,
+    stdDev: player.projection * 0.15,
+    projection: player.projection,
+    dataSource: 'projection-fallback',
+  }));
+
+  return {
+    simulation,
+    playersDistributions,
+  };
+}
 
 export async function GET(
   request: NextRequest,
@@ -56,9 +284,37 @@ export async function GET(
 
       if (!storedSimulation) {
         console.warn(
-          `❌ [STORED SIMULATION API] No stored simulation found for league ${leagueId}, week ${weekNumber}, matchup ${matchupIdNumber}`
+          `⚠️ [STORED SIMULATION API] No stored simulation found for league ${leagueId}, week ${weekNumber}, matchup ${matchupIdNumber}`
         );
-        console.warn(`❌ [STORED SIMULATION API] Returning 404 - simulation not found`);
+        console.log(`🧮 [STORED SIMULATION API] Attempting projection-based fallback...`);
+
+        // Fallback: Generate simulation from current projections
+        try {
+          const fallbackResult = await generateProjectionBasedSimulation(
+            prisma,
+            leagueId,
+            weekNumber,
+            matchupIdNumber
+          );
+
+          if (fallbackResult) {
+            console.log(
+              `✅ [STORED SIMULATION API] Successfully generated projection-based simulation`
+            );
+            return NextResponse.json({
+              success: true,
+              simulation: fallbackResult.simulation,
+              source: 'projection-fallback',
+              playersDistributions: fallbackResult.playersDistributions || [],
+            });
+          }
+        } catch (fallbackError) {
+          console.error(`❌ [STORED SIMULATION API] Projection fallback failed:`, fallbackError);
+        }
+
+        console.warn(
+          `❌ [STORED SIMULATION API] Both stored and projection fallback failed - returning 404`
+        );
         return NextResponse.json(
           {
             success: false,

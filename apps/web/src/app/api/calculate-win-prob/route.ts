@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         const [team1, team2] = pair;
 
         // Build fixed-shape lineups from roster starters stored in DB
-        const currentWeek = getCurrentWeek();
+        const currentWeek = await getCurrentWeek();
         const prisma = await getPrisma();
         const [team1Lineup, team2Lineup, roster1, roster2] = await Promise.all([
           buildLineupFromRoster(team1.roster_id, currentWeek),
@@ -235,9 +235,26 @@ async function buildLineupFromRoster(rosterId: number, week: number): Promise<Li
   };
 }
 
-function getCurrentWeek(): number {
+async function getCurrentWeek(): Promise<number> {
+  try {
+    // Use Sleeper API as source of truth for current NFL week
+    const response = await fetch('https://api.sleeper.app/v1/state/nfl', {
+      headers: { 'User-Agent': 'Gauntlet-Website/1.0.0' },
+    });
+    if (response.ok) {
+      const nflState = await response.json();
+      return nflState.display_week || nflState.week || 2;
+    }
+  } catch (error) {
+    console.warn('[WIN PROB API] Failed to fetch NFL state from Sleeper, using fallback');
+  }
+
+  // Fallback to date calculation
   const now = new Date();
-  const seasonStart = new Date('2024-09-05'); // Update each season
+  const seasonStart = new Date('2025-09-04'); // 2025 season start
   const weekMs = 7 * 24 * 60 * 60 * 1000;
-  return Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1;
+  return Math.max(
+    1,
+    Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1)
+  );
 }

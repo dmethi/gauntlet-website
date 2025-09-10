@@ -34,7 +34,8 @@ interface ApiResponse {
 }
 
 function getCurrentWeek(): number {
-  const seasonStart = new Date('2024-09-05');
+  // Updated to 2025 season
+  const seasonStart = new Date('2025-09-04'); // 2025 season start
   const now = new Date();
   const diffTime = now.getTime() - seasonStart.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

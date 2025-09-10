@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -62,17 +62,38 @@ const WEEKS = Array.from({ length: 18 }, (_, i) => i + 1);
 
 function MatchupsPageContent() {
   const searchParams = useSearchParams();
-  const leagueIdParam = searchParams.get('leagueId');
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [selectedWeek, setSelectedWeek] = useState(1);
+  const leagueIdParam = searchParams.get('leagueId');
+  const weekParam = searchParams.get('week');
+
+  // Use URL as source of truth, with fallback to component state during initial load
+  const [selectedWeek, setSelectedWeek] = useState(weekParam ? parseInt(weekParam) : 0); // 0 = loading
   const [leagueMatchups, setLeagueMatchups] = useState<LeagueMatchups[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true); // Prevent showing stale data
 
   // Filter leagues based on query parameter
   const filteredLeagues = leagueIdParam
     ? LEAGUES.filter(league => league.id === leagueIdParam)
     : LEAGUES;
+
+  // Function to update URL with week parameter
+  const updateWeekInURL = (week: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('week', week.toString());
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  // Function to handle week changes
+  const handleWeekChange = (week: number) => {
+    console.log(`📅 [MATCHUPS CLIENT] Week changed to: ${week}`);
+    setSelectedWeek(week);
+    updateWeekInURL(week);
+    fetchMatchupsForWeek(week);
+  };
 
   const fetchMatchupsForWeek = async (week: number) => {
     setLoading(true);
@@ -160,42 +181,102 @@ function MatchupsPageContent() {
     }
   };
 
+  // Single useEffect to handle initialization and URL param changes
   useEffect(() => {
-    // Determine current NFL week via Sleeper slate; fallback to 1
-    const detectWeek = async () => {
-      try {
-        // Try both leagues; whichever returns matchups with current activity implies the slate week
-        const leagueToProbe = filteredLeagues[0]?.id || LEAGUES[0].id;
-        // Probe last few weeks (1..18) around current time would be overkill; fetch server-detected current week via API if available
-        const res = await fetch('/api/leagues');
-        if (res.ok) {
-          const leagues = await res.json();
-          const season = leagues?.find((l: any) => l.id === leagueToProbe)?.season;
-          // Simple current-week heuristic (aligns with server jobs)
-          const seasonStart = season ? new Date(`${season}-09-05`) : new Date('2025-09-04');
-          const now = new Date();
-          const week = Math.max(
-            1,
-            Math.min(
-              18,
-              Math.floor((now.getTime() - seasonStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1
-            )
-          );
-          setSelectedWeek(week);
-          fetchMatchupsForWeek(week);
-          return;
-        }
-      } catch (_) {
-        // ignore and fallback
-      }
-      fetchMatchupsForWeek(selectedWeek);
-    };
-    detectWeek();
-  }, []);
+    const initialize = async () => {
+      console.log(
+        `🔄 [MATCHUPS CLIENT] Initializing... URL week: ${weekParam}, selectedWeek: ${selectedWeek}`
+      );
 
+      // If week is in URL, use it directly
+      if (weekParam && !isNaN(parseInt(weekParam))) {
+        const urlWeek = parseInt(weekParam);
+        console.log(`📅 [MATCHUPS CLIENT] Using week from URL: ${urlWeek}`);
+        setSelectedWeek(urlWeek);
+        await fetchMatchupsForWeek(urlWeek);
+        setIsInitializing(false);
+        return;
+      }
+
+      // If no URL week, fetch current NFL week from Sleeper API
+      try {
+        console.log(
+          '🏈 [MATCHUPS CLIENT] No URL week, fetching current NFL state from Sleeper API...'
+        );
+        const res = await fetch('/api/nfl-state', {
+          headers: { 'Cache-Control': 'no-cache' },
+        });
+        if (res.ok) {
+          const nflState = await res.json();
+          const currentWeek = nflState.display_week || nflState.week || 2;
+          console.log(`📅 [MATCHUPS CLIENT] Current NFL week from Sleeper: ${currentWeek}`);
+
+          // Update both state and URL
+          setSelectedWeek(currentWeek);
+          updateWeekInURL(currentWeek);
+          await fetchMatchupsForWeek(currentWeek);
+          setIsInitializing(false);
+          return;
+        } else {
+          console.warn('⚠️ [MATCHUPS CLIENT] Failed to fetch NFL state, using fallback');
+        }
+      } catch (error) {
+        console.error('❌ [MATCHUPS CLIENT] Error fetching NFL state:', error);
+      }
+
+      // Final fallback to week 2
+      const fallbackWeek = 2;
+      console.log(`📅 [MATCHUPS CLIENT] Using final fallback to week ${fallbackWeek}`);
+      setSelectedWeek(fallbackWeek);
+      updateWeekInURL(fallbackWeek);
+      await fetchMatchupsForWeek(fallbackWeek);
+      setIsInitializing(false);
+    };
+
+    if (isInitializing) {
+      initialize();
+    }
+  }, [weekParam, isInitializing]); // Depend on URL param changes
+
+  // Handle URL week param changes after initialization
   useEffect(() => {
-    if (selectedWeek) fetchMatchupsForWeek(selectedWeek);
-  }, [selectedWeek]);
+    if (!isInitializing && weekParam && !isNaN(parseInt(weekParam))) {
+      const urlWeek = parseInt(weekParam);
+      if (urlWeek !== selectedWeek) {
+        console.log(`📅 [MATCHUPS CLIENT] URL week changed to: ${urlWeek}`);
+        setSelectedWeek(urlWeek);
+        fetchMatchupsForWeek(urlWeek);
+      }
+    }
+  }, [weekParam, isInitializing, selectedWeek]);
+
+  // Show loading during initialization to prevent flash of wrong data
+  if (isInitializing || selectedWeek === 0) {
+    return (
+      <div className='min-h-screen bg-background p-6'>
+        <div className='max-w-7xl mx-auto space-y-8'>
+          <div className='space-y-4'>
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+              <div>
+                <h1 className='text-3xl font-bold font-geizer tracking-wide text-foreground'>
+                  Matchups
+                </h1>
+                <p className='text-muted-foreground mt-2 font-avenir'>
+                  Loading current NFL week...
+                </p>
+              </div>
+              <Skeleton className='h-10 w-32' />
+            </div>
+          </div>
+          <div className='grid gap-4'>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className='h-32 w-full' />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -204,7 +285,7 @@ function MatchupsPageContent() {
           <div className='text-center py-12'>
             <div className='text-red-500 text-lg mb-4'>Error loading matchups</div>
             <p className='text-muted-foreground'>{error}</p>
-            <Button onClick={() => fetchMatchupsForWeek(selectedWeek)} className='mt-4'>
+            <Button onClick={() => handleWeekChange(selectedWeek)} className='mt-4'>
               Retry
             </Button>
           </div>
@@ -241,7 +322,7 @@ function MatchupsPageContent() {
             <div className='flex items-center gap-3'>
               <Select
                 value={selectedWeek.toString()}
-                onValueChange={value => setSelectedWeek(parseInt(value))}
+                onValueChange={value => handleWeekChange(parseInt(value))}
               >
                 <SelectTrigger className='w-32'>
                   <SelectValue />
