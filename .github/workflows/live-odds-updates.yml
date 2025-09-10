@@ -53,7 +53,7 @@ jobs:
         run: pnpm install -w --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: cd apps/server && npx prisma generate
+        run: pnpm --filter @gauntlet/server exec prisma generate
 
       - name: Determine update type and week
         id: determine-context
