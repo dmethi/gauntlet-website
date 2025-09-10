@@ -535,14 +535,26 @@ export async function GET(
 
         function attachNarrative(m: any): any {
           const isNFC = l.id === '1263740549504962561';
-          const items = isNFC ? parsed.itemsNFC : parsed.itemsAFC;
+          const items: Array<{ a: string; b: string; recap: string; odds: string[] }> = isNFC
+            ? ((parsed as any).itemsNFC as Array<{
+                a: string;
+                b: string;
+                recap: string;
+                odds: string[];
+              }>)
+            : ((parsed as any).itemsAFC as Array<{
+                a: string;
+                b: string;
+                recap: string;
+                odds: string[];
+              }>);
           const aAlts = altNamesByRoster.get(m.rosterAId) || [];
           const bAlts = altNamesByRoster.get(m.rosterBId) || [];
           const aName = (m.teamAName || '').toLowerCase();
           const bName = (m.teamBName || '').toLowerCase();
           const allA = new Set([...aAlts, aName]);
           const allB = new Set([...bAlts, bName]);
-          const hit = items.find(it => {
+          const hit = items.find((it: { a: string; b: string }) => {
             const na = it.a.toLowerCase();
             const nb = it.b.toLowerCase();
             const aMatches = Array.from(allA).some(n => n.includes(na));

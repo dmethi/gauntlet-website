@@ -29,11 +29,8 @@ const WEEK1_NARRATIVE = {
       {
         matchup: 'joshrubatFD (82.4) vs Bego60 (111.4) — Bego60 wins',
         recap:
-          'Thursday night set the tone in the worst way for joshrub: A.J. Brown, Ferguson, and Day all face-planted, leaving him in a crater before the weekend even began. His running backs tried to shoulder the load, but Lamar erupted on the other side Sunday night and ended the suspense. No superhero performances were needed elsewhere — steady double-digit scoring up and down the opponent’s lineup was enough to cruise past a team already gasping from the opening whistle.',
-        odds_and_ends: [
-          'joshrub’s top RB duo carried most of the team total; the backfield did the heavy lifting after the Thursday collapse.',
-          'Turnovers plagued both sides, but Lamar’s fireworks erased any doubt — the result was comfortable despite the miscues.',
-        ],
+          'Marginal Returns opened Thursday with a faceplant — A.J. Brown, Ferguson, and Dak all duds — and dug a deep hole. The rescue came on the ground: Bijan + Derrick Henry combined for 50 and effectively erased a 30-piece from Lamar on joshrub’s side. Once the backs stabilized the floor, it turned into clock control and a composed finish — a comeback win built on running-back muscle, not fireworks.',
+        odds_and_ends: [],
       },
       {
         matchup: 'RithikP (100.2) vs cescott25 (111.4) — cescott25 wins',
@@ -645,7 +642,7 @@ export default function Week1Report2025() {
                       <div className='text-sm'>
                         <div className='font-semibold mb-1'>Odds & Ends</div>
                         <ul className='list-disc pl-4 space-y-1'>
-                          {m.odds.map((t, idx) => (
+                          {(m.odds || []).map((t: string, idx: number) => (
                             <li key={idx}>{t}</li>
                           ))}
                         </ul>
