@@ -181,7 +181,7 @@ export default function HallOfFamePage() {
             <span className='hidden sm:inline'>All</span>
             <span className='sm:hidden'>All</span>
           </TabsTrigger>
-          {Array.from(categoriesByGroup.keys()).map(groupName => (
+          {(Array.from(categoriesByGroup.keys()) as string[]).map(groupName => (
             <TabsTrigger key={groupName} value={groupName} className='flex items-center gap-1'>
               {getGroupIcon(groupName)}
               <span className='hidden lg:inline'>{groupName}</span>
@@ -192,7 +192,7 @@ export default function HallOfFamePage() {
 
         <TabsContent value={activeGroup} className='mt-6'>
           <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-            {categoriesToDisplay.map(categoryId => {
+            {categoriesToDisplay.map((categoryId: string) => {
               const records = recordsByCategory.get(categoryId);
               if (!records || records.length === 0) return null;
 
@@ -218,8 +218,8 @@ export default function HallOfFamePage() {
             <div className='text-2xl font-bold'>
               {(() => {
                 const teamCounts = new Map<string, number>();
-                recordsByCategory.forEach(records => {
-                  records.forEach(r => {
+                recordsByCategory.forEach((records: any[]) => {
+                  records.forEach((r: any) => {
                     teamCounts.set(r.teamName, (teamCounts.get(r.teamName) || 0) + 1);
                   });
                 });

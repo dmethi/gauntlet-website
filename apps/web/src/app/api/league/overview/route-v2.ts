@@ -32,16 +32,18 @@ export async function GET(request: NextRequest) {
     const currentWeek = await getCurrentWeek();
 
     // Fetch all data in parallel from Sleeper
-    const [league, rosters, users, nflState] = await Promise.all([
+    const [league, rosters, users, nflState] = (await Promise.all([
       sleeper.getLeague(leagueId),
       sleeper.getRosters(leagueId),
       sleeper.getUsers(leagueId),
       sleeper.getNFLState(),
-    ]);
+    ])) as [any, any[], any[], any];
 
     // Fetch all matchups for the season in parallel
     const weeks = Array.from({ length: currentWeek }, (_, i) => i + 1);
-    const allMatchups = await Promise.all(weeks.map(week => sleeper.getMatchups(leagueId, week)));
+    const allMatchups = (await Promise.all(
+      weeks.map(week => sleeper.getMatchups(leagueId, week))
+    )) as any[][];
 
     // Build user map for quick lookups
     const userMap = new Map(users.map(u => [u.user_id, u]));
@@ -51,7 +53,11 @@ export async function GET(request: NextRequest) {
       const owner = userMap.get(roster.owner_id) || null;
 
       // Format matchups for this roster
-      const rosterMatchups = [];
+      const rosterMatchups: Array<{
+        week: number;
+        points: number;
+        matchupId: number;
+      }> = [];
       allMatchups.forEach((weekMatchups, weekIndex) => {
         const week = weekIndex + 1;
         const matchup = weekMatchups.find(m => m.roster_id === roster.roster_id);
@@ -175,7 +181,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Cache headers for edge caching
-    const isLive = sleeper.isGameLive();
+    const isLive = await sleeper.isGameLive();
     const cacheSeconds = isLive ? 30 : 300; // 30s if live, 5 min otherwise
 
     return NextResponse.json(response, {

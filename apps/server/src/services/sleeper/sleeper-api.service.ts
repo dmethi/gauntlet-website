@@ -81,7 +81,7 @@ export class SleeperAPIService {
     );
 
     return results.reduce((acc, { key, data }) => {
-      acc[key] = data;
+      acc[key] = data as T[keyof T];
       return acc;
     }, {} as T);
   }

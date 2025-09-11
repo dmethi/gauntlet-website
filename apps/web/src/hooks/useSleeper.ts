@@ -274,8 +274,8 @@ export function useCacheStats() {
   return {
     totalQueries: queries.length,
     staleQueries: queries.filter(q => q.isStale()).length,
-    fetchingQueries: queries.filter(q => q.isFetching()).length,
-    errorQueries: queries.filter(q => q.isError()).length,
+    fetchingQueries: queries.filter(q => q.state.fetchStatus === 'fetching').length,
+    errorQueries: queries.filter(q => q.state.status === 'error').length,
     cacheSize: JSON.stringify(cache).length,
   };
 }

@@ -262,13 +262,13 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               .reduce<Record<string, { team: number; opponent: number }>>((acc, r) => {
                 const pos = (r.positionalPoints as Record<string, number>) || {};
                 const opp = (r.opponentPositionalPoints as Record<string, number>) || {};
-                for (const p of Object.keys(pos)) {
+                for (const p of Object.keys(pos) as (typeof VALID_POSITIONS)[number][]) {
                   // Filter out unknown positions like 'UNK'
                   if (!VALID_POSITIONS.includes(p as any)) continue;
                   if (!acc[p]) acc[p] = { team: 0, opponent: 0 };
                   acc[p].team += Number(pos[p] ?? 0);
                 }
-                for (const p of Object.keys(opp)) {
+                for (const p of Object.keys(opp) as (typeof VALID_POSITIONS)[number][]) {
                   if (!VALID_POSITIONS.includes(p as any)) continue;
                   if (!acc[p]) acc[p] = { team: 0, opponent: 0 };
                   acc[p].opponent += Number(opp[p] ?? 0);
@@ -286,7 +286,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               .filter(r => r.week >= 1 && r.week < Number(playoffStart))
               .forEach(r => {
                 const pos = (r.positionalPoints as Record<string, number>) || {};
-                for (const p of Object.keys(pos)) {
+                for (const p of Object.keys(pos) as (typeof VALID_POSITIONS)[number][]) {
                   if (!VALID_POSITIONS.includes(p as any)) continue;
                   perRosterTotals[r.rosterId][p] =
                     (perRosterTotals[r.rosterId][p] ?? 0) + Number(pos[p] ?? 0);
@@ -345,7 +345,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 )
                 .forEach(r => {
                   const pos = (r.positionalPoints as Record<string, number>) || {};
-                  for (const p of Object.keys(pos)) {
+                  for (const p of Object.keys(pos) as (typeof VALID_POSITIONS)[number][]) {
                     if (!allowedPositions.includes(p)) continue;
                     compareTotals[p] = (compareTotals[p] ?? 0) + Number(pos[p] ?? 0);
                   }

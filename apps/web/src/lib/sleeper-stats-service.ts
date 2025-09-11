@@ -315,17 +315,17 @@ export function calculateBoomBust(
 ): { boom: boolean; bust: boolean; delta: number } {
   const actualPoints =
     scoringType === 'ppr'
-      ? actualStats.pts_ppr
+      ? (actualStats.pts_ppr ?? 0)
       : scoringType === 'half_ppr'
-        ? actualStats.pts_half_ppr
-        : actualStats.pts_std || 0;
+        ? (actualStats.pts_half_ppr ?? 0)
+        : (actualStats.pts_std ?? 0);
 
   const projectedPoints =
     scoringType === 'ppr'
-      ? projectedStats.pts_ppr
+      ? (projectedStats.pts_ppr ?? 0)
       : scoringType === 'half_ppr'
-        ? projectedStats.pts_half_ppr
-        : projectedStats.pts_std || 0;
+        ? (projectedStats.pts_half_ppr ?? 0)
+        : (projectedStats.pts_std ?? 0);
 
   const delta = actualPoints - projectedPoints;
 

@@ -4,8 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import SleeperAPIService from '@/../../../../../../server/src/services/sleeper/sleeper-api.service';
-import prisma from '@/../../../../../../server/src/lib/prisma';
+import SleeperAPIService from '../../../../../../../server/src/services/sleeper/sleeper-api.service';
+import prisma from '../../../../../../../server/src/lib/prisma';
 
 export async function GET(
   request: NextRequest,
@@ -25,19 +25,21 @@ export async function GET(
 
     const sleeper = SleeperAPIService.getInstance();
 
+    // First get NFL state to use in projections call
+    const nflState = await sleeper.getNFLState();
+
     // Fetch all required data in parallel
-    const [league, rosters, users, matchups, projections, nflState, players] = await Promise.all([
+    const [league, rosters, users, matchups, projections, players] = (await Promise.all([
       sleeper.getLeague(leagueId),
       sleeper.getRosters(leagueId),
       sleeper.getUsers(leagueId),
       sleeper.getMatchups(leagueId, weekNumber),
       sleeper.getProjections(weekNumber, nflState?.season || '2025'),
-      sleeper.getNFLState(),
       sleeper.getPlayers(),
-    ]);
+    ])) as [any, any[], any[], any[], any, any];
 
     // Try to fetch odds/simulations from our minimal DB (if they exist)
-    let simulations = [];
+    let simulations: any[] = [];
     try {
       simulations = await prisma.matchupSimulation.findMany({
         where: {
@@ -61,10 +63,10 @@ export async function GET(
 
       // Calculate projected points for starters
       let projectedPoints = 0;
-      const starterProjections = {};
+      const starterProjections: Record<string, number> = {};
 
       if (matchup.starters) {
-        matchup.starters.forEach(playerId => {
+        matchup.starters.forEach((playerId: string) => {
           const projection = projections[playerId];
           if (projection) {
             const points = calculateProjectedPoints(projection, league.scoring_settings);

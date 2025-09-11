@@ -12,6 +12,11 @@ export interface ArchiveMetadata {
   identifier: string;
   version: string;
   checksum?: string;
+  reason?: string;
+  itemCount?: number;
+  count?: number;
+  week?: number;
+  season?: string;
 }
 
 export class ArchiveService {
