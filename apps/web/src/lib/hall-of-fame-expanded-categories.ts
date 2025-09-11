@@ -14,9 +14,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_passing_yards',
     name: 'Team Passing Yards',
-    description: 'Total passing yards by all starters in a week',
+    description: 'Total passing yards by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -36,9 +36,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_passing_tds',
     name: 'Team Passing TDs',
-    description: 'Total passing TDs by all starters in a week',
+    description: 'Total passing TDs by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -60,9 +60,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_rushing_yards',
     name: 'Team Rushing Yards',
-    description: 'Total rushing yards by all starters in a week',
+    description: 'Total rushing yards by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -82,9 +82,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_rushing_tds',
     name: 'Team Rushing TDs',
-    description: 'Total rushing TDs by all starters in a week',
+    description: 'Total rushing TDs by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -106,9 +106,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_receiving_yards',
     name: 'Team Receiving Yards',
-    description: 'Total receiving yards by all starters in a week',
+    description: 'Total receiving yards by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -128,9 +128,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_receptions',
     name: 'Team Receptions',
-    description: 'Total receptions by all starters in a week',
+    description: 'Total receptions by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -152,9 +152,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_pass_completions',
     name: 'Team Pass Completions',
-    description: 'Total completions by all starters in a week',
+    description: 'Total completions by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -174,9 +174,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_pass_attempts',
     name: 'Team Pass Attempts',
-    description: 'Total pass attempts by all starters in a week',
+    description: 'Total pass attempts by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -196,9 +196,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_rush_attempts',
     name: 'Team Rush Attempts',
-    description: 'Total rushing attempts by all starters in a week',
+    description: 'Total rushing attempts by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -239,11 +239,11 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
 
   // Total Touchdowns - Team Total
   {
-    id: 'most_total_tds',
+    id: 'total_tds_weekly',
     name: 'Team Total TDs',
-    description: 'Total TDs by all starters (pass + rush + rec)',
+    description: 'Total TDs by all starters (pass + rush + rec) - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;
@@ -263,9 +263,9 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
   {
     id: 'most_targets',
     name: 'Team Targets',
-    description: 'Total targets by all starters in a week',
+    description: 'Total targets by all starters in a week - highest and lowest',
     group: 'weekly_player',
-    type: 'highest',
+    type: 'both',
     scope: 'weekly',
     calculateValue: (matchup: EnhancedMatchup) => {
       if (!matchup.starters || !matchup.playerStats) return null;

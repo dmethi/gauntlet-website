@@ -1,6 +1,6 @@
 'use client';
 
-import { Container, PageHeader } from '@gauntlet/ui';
+import { PageHeader } from '@gauntlet/ui';
 import { useEffect, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { DerbyBadge } from '@/components/MatchupTags';
@@ -8,6 +8,10 @@ import { Callout } from '@/components/Callout';
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { useChartColors } from '@/lib/chart-colors';
 import { colors as brandColors } from '@/lib/colors';
+
+// Helper to derive conference abbreviation (AFC/NFC) from league name
+const getConference = (name: string) =>
+  name.toUpperCase().includes('AFC') ? 'AFC' : name.toUpperCase().includes('NFC') ? 'NFC' : name;
 
 // Hardcoded Week 1 narrative overlay
 const WEEK1_NARRATIVE = {
@@ -444,7 +448,7 @@ export default function Week1Report2025() {
     return { a: clean(left), b: clean(right) } as const;
   };
   const extractScores = (line: string) => {
-    const m = Array.from(line.matchAll(/\(([-\d\.]+)\)/g)).map(x => Number(x[1]));
+    const m = Array.from(line.matchAll(/\(([-\d.]+)\)/g)).map(x => Number(x[1]));
     if (m.length >= 2) return { a: m[0], b: m[1] } as const;
     return { a: NaN, b: NaN } as const;
   };
@@ -554,7 +558,7 @@ export default function Week1Report2025() {
           {augmentedLeagues.map(l => (
             <div key={l.leagueId} className='space-y-4'>
               <div className='flex items-center gap-2'>
-                <Badge variant='outline'>{l.leagueName}</Badge>
+                <Badge variant='outline'>{getConference(l.leagueName)}</Badge>
               </div>
               {/* League Overview moved into Assistant Overview combined paragraph */}
               <div className='space-y-6'>
@@ -668,38 +672,9 @@ export default function Week1Report2025() {
             </div>
           ))}
 
-          <h2 className='text-lg font-semibold'>Standings</h2>
-          <div className='space-y-6'>
-            {data.data.standings?.map(s => (
-              <div key={s.leagueId} className='space-y-2'>
-                <div className='flex items-center gap-2'>
-                  <Badge variant='outline'>{s.leagueName}</Badge>
-                </div>
-                <div className='grid md:grid-cols-3 gap-4'>
-                  {Object.entries(s.divisions || {}).map(([divName, teams]: any) => (
-                    <div key={divName} className='space-y-2'>
-                      <div className='text-sm font-semibold'>{divName}</div>
-                      <div className='space-y-1 text-xs'>
-                        {(teams as any[]).map(t => (
-                          <div key={t.rosterId} className='flex items-center justify-between'>
-                            <div className='truncate'>{t.name}</div>
-                            <div className='ml-2'>
-                              {t.wins}-{t.losses} • {t.points.toFixed(1)} pts
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <hr className='border-border' />
-              </div>
-            ))}
-          </div>
-
           <h2 className='text-lg font-semibold'>Power Rankings</h2>
           <div className='space-y-2 text-sm'>
-            {(data.data.powerRankings || []).map((p: any) => {
+            {((data.data.powerRankings || []) as any[]).map((p: any) => {
               const val = p.normalized as number;
               // Normalize to 0..1 around 100 baseline, clamp to [-2, +2] z approx → [80,120]
               const min = 80;
@@ -733,6 +708,9 @@ export default function Week1Report2025() {
                 >
                   <div className='truncate'>
                     #{p.rank} {p.name}
+                    <Badge variant='outline' className='ml-2 text-xs'>
+                      {data?.data?.leagues?.find(l => l.leagueId === p.leagueId)?.leagueName}
+                    </Badge>
                     {Number.isFinite(p.wins) && Number.isFinite(p.losses) ? (
                       <span className='text-muted-foreground ml-2 text-xs'>
                         ({p.wins}-{p.losses})
@@ -745,6 +723,73 @@ export default function Week1Report2025() {
             })}
           </div>
           <hr className='border-border' />
+          {/* League-by-League Power Rankings */}
+          <h2 className='text-lg font-semibold'>League Power Rankings</h2>
+          <div className='space-y-4'>
+            {data?.data?.leagues?.map(l => {
+              const leagueRanks = ((data?.data?.powerRankings || []) as any[]).filter(
+                (p: any) => p.leagueId === l.leagueId
+              );
+              return (
+                <div key={l.leagueId} className='mb-4'>
+                  <h3 className='text-md font-semibold'>{getConference(l.leagueName)}</h3>
+                  <div className='space-y-1 text-sm'>
+                    {leagueRanks.map(p => (
+                      <div
+                        key={p.rosterId}
+                        className='flex items-center justify-between rounded px-2 py-1'
+                      >
+                        <div className='truncate'>
+                          #{p.rank} {p.name}
+                        </div>
+                        <div className='ml-2 text-xs text-muted-foreground'>{p.normalized}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <hr className='border-border' />
+          {/* Updated Standings Section */}
+          <h2 className='text-lg font-semibold'>Standings</h2>
+          <div className='space-y-6'>
+            {data?.data?.standings?.map(s => (
+              <div key={s.leagueId} className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <Badge variant='outline'>{getConference(s.leagueName)}</Badge>
+                </div>
+                <div className='grid md:grid-cols-3 gap-4'>
+                  {Object.entries(s.divisions || {}).map(([divName, teams]: any) => (
+                    <div key={divName} className='space-y-2'>
+                      <div className='text-sm font-semibold'>{divName}</div>
+                      <div className='space-y-1 text-xs'>
+                        {(teams as any[]).map(t => (
+                          <div key={t.rosterId} className='flex items-center justify-between'>
+                            <div className='truncate'>
+                              {t.name}
+                              <span className='text-xs text-muted-foreground ml-2'>
+                                PR #
+                                {((data?.data?.powerRankings || []) as any[]).find(
+                                  (p: any) =>
+                                    p.leagueId === s.leagueId &&
+                                    String(p.rosterId) === String(t.rosterId)
+                                )?.rank ?? '-'}
+                              </span>
+                            </div>
+                            <div className='ml-2'>
+                              {t.wins}-{t.losses} • {t.points.toFixed(1)} pts
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <hr className='border-border' />
+              </div>
+            ))}
+          </div>
 
           <h2 className='text-lg font-semibold'>
             Upcoming Matchups (Week {Number((data.data as any).week) + 1})
@@ -754,8 +799,10 @@ export default function Week1Report2025() {
               <div key={leagueId} className='space-y-2'>
                 <div className='flex items-center gap-2'>
                   <Badge variant='outline'>
-                    {(data.data?.leagues || []).find(l => l.leagueId === leagueId)?.leagueName ||
-                      leagueId}
+                    {getConference(
+                      (data.data?.leagues || []).find(l => l.leagueId === leagueId)?.leagueName ||
+                        leagueId
+                    )}
                   </Badge>
                 </div>
                 <div className='grid md:grid-cols-2 gap-2 text-sm'>

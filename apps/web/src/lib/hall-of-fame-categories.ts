@@ -199,56 +199,11 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
 
   // 3. Positional Splits (starters only)
   {
-    id: 'highest_qb_weekly',
-    name: 'QB Points Record',
-    description: 'Highest QB starter points in a week',
+    id: 'qb_points_weekly',
+    name: 'QB Points',
+    description: 'QB starter points in a week - highest and lowest',
     group: 'weekly_team',
-    type: 'highest',
-    calculateValue: matchup => getPositionalPoints(matchup, 'QB'),
-    formatValue: value => `${value.toFixed(2)} QB pts`,
-  },
-  {
-    id: 'highest_rb_weekly',
-    name: 'RB Points Record',
-    description: 'Highest RB starter points in a week',
-    group: 'weekly_team',
-    type: 'highest',
-    calculateValue: matchup => getPositionalPoints(matchup, 'RB'),
-    formatValue: value => `${value.toFixed(2)} RB pts`,
-  },
-  {
-    id: 'highest_wr_weekly',
-    name: 'WR Points Record',
-    description: 'Highest WR starter points in a week',
-    group: 'weekly_team',
-    type: 'highest',
-    calculateValue: matchup => getPositionalPoints(matchup, 'WR'),
-    formatValue: value => `${value.toFixed(2)} WR pts`,
-  },
-  {
-    id: 'highest_te_weekly',
-    name: 'TE Points Record',
-    description: 'Highest TE starter points in a week',
-    group: 'weekly_team',
-    type: 'highest',
-    calculateValue: matchup => getPositionalPoints(matchup, 'TE'),
-    formatValue: value => `${value.toFixed(2)} TE pts`,
-  },
-  {
-    id: 'highest_def_weekly',
-    name: 'DEF Points Record',
-    description: 'Highest DEF starter points in a week',
-    group: 'weekly_team',
-    type: 'highest',
-    calculateValue: matchup => getPositionalPoints(matchup, 'DEF'),
-    formatValue: value => `${value.toFixed(2)} DEF pts`,
-  },
-  {
-    id: 'lowest_qb_weekly',
-    name: 'QB Points Floor',
-    description: 'Lowest QB starter points in a week',
-    group: 'weekly_team',
-    type: 'lowest',
+    type: 'both',
     calculateValue: matchup => {
       const pts = getPositionalPoints(matchup, 'QB');
       return pts > 0 ? pts : null; // Exclude weeks with no QB
@@ -256,11 +211,11 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
     formatValue: value => `${value.toFixed(2)} QB pts`,
   },
   {
-    id: 'lowest_rb_weekly',
-    name: 'RB Points Floor',
-    description: 'Lowest RB starter points in a week',
+    id: 'rb_points_weekly',
+    name: 'RB Points',
+    description: 'RB starter points in a week - highest and lowest',
     group: 'weekly_team',
-    type: 'lowest',
+    type: 'both',
     calculateValue: matchup => {
       const pts = getPositionalPoints(matchup, 'RB');
       return pts > 0 ? pts : null;
@@ -268,11 +223,11 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
     formatValue: value => `${value.toFixed(2)} RB pts`,
   },
   {
-    id: 'lowest_wr_weekly',
-    name: 'WR Points Floor',
-    description: 'Lowest WR starter points in a week',
+    id: 'wr_points_weekly',
+    name: 'WR Points',
+    description: 'WR starter points in a week - highest and lowest',
     group: 'weekly_team',
-    type: 'lowest',
+    type: 'both',
     calculateValue: matchup => {
       const pts = getPositionalPoints(matchup, 'WR');
       return pts > 0 ? pts : null;
@@ -280,11 +235,11 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
     formatValue: value => `${value.toFixed(2)} WR pts`,
   },
   {
-    id: 'lowest_te_weekly',
-    name: 'TE Points Floor',
-    description: 'Lowest TE starter points in a week',
+    id: 'te_points_weekly',
+    name: 'TE Points',
+    description: 'TE starter points in a week - highest and lowest',
     group: 'weekly_team',
-    type: 'lowest',
+    type: 'both',
     calculateValue: matchup => {
       const pts = getPositionalPoints(matchup, 'TE');
       return pts > 0 ? pts : null;
@@ -292,8 +247,20 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
     formatValue: value => `${value.toFixed(2)} TE pts`,
   },
   {
+    id: 'def_points_weekly',
+    name: 'DEF Points',
+    description: 'DEF starter points in a week - highest and lowest',
+    group: 'weekly_team',
+    type: 'both',
+    calculateValue: matchup => {
+      const pts = getPositionalPoints(matchup, 'DEF');
+      return pts > 0 ? pts : null;
+    },
+    formatValue: value => `${value.toFixed(2)} DEF pts`,
+  },
+  {
     id: 'highest_top3_sum',
-    name: 'Top 3 Starters Sum',
+    name: 'Highest Top 3 Starters',
     description: 'Highest combined points from top 3 starters',
     group: 'weekly_team',
     type: 'highest',
@@ -306,7 +273,7 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
   },
   {
     id: 'lowest_bottom3_sum',
-    name: 'Bottom 3 Starters Sum',
+    name: 'Lowest Bottom 3 Starters',
     description: 'Lowest combined points from bottom 3 starters',
     group: 'weekly_team',
     type: 'lowest',
