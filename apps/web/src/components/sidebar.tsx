@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Home,
   Menu,
+  Star,
   Swords,
   Trophy,
   Users,
@@ -261,6 +262,20 @@ function SidebarNavigationWithSearchParams({
       >
         <Swords className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
         <span className='flex-1 text-left'>Matchups</span>
+      </Link>
+
+      {/* Hall of Fame */}
+      <Link
+        href='/hall-of-fame-enhanced'
+        onClick={onItemClick}
+        className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left transition-all duration-200 ease ${
+          pathname === '/hall-of-fame-enhanced'
+            ? 'bg-gauntlet-crimson text-white shadow-sm'
+            : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
+        } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
+      >
+        <Star className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
+        <span className='flex-1 text-left'>Hall of Fame</span>
       </Link>
 
       {/* TODOs */}

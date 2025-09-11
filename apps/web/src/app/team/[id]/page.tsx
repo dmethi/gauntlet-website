@@ -29,6 +29,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { MatchupLink } from '@/components/matchup-link';
+import { VALID_POSITIONS } from '@/lib/constants';
 
 const TeamPageLoader = () => (
   <ContentLoader
@@ -72,7 +73,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   const { data: seasonal } = useSeasonalAggregates(leagueIdForHooks, seasonForHooks);
   const { data: rosterDetails } = useRosterDetails(leagueIdForHooks, rosterIdForHooks);
   const { data: tx } = useLeagueTransactions(leagueIdForHooks);
-  const allowedPositions = useMemo(() => ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'], []);
+  const allowedPositions = useMemo(() => VALID_POSITIONS, []);
   const [compareTeamId, setCompareTeamId] = useState<number | undefined>(undefined);
 
   if (loading) {
@@ -263,12 +264,12 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 const opp = (r.opponentPositionalPoints as Record<string, number>) || {};
                 for (const p of Object.keys(pos)) {
                   // Filter out unknown positions like 'UNK'
-                  if (!['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].includes(p)) continue;
+                  if (!VALID_POSITIONS.includes(p as any)) continue;
                   if (!acc[p]) acc[p] = { team: 0, opponent: 0 };
                   acc[p].team += Number(pos[p] ?? 0);
                 }
                 for (const p of Object.keys(opp)) {
-                  if (!['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].includes(p)) continue;
+                  if (!VALID_POSITIONS.includes(p as any)) continue;
                   if (!acc[p]) acc[p] = { team: 0, opponent: 0 };
                   acc[p].opponent += Number(opp[p] ?? 0);
                 }
@@ -286,7 +287,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               .forEach(r => {
                 const pos = (r.positionalPoints as Record<string, number>) || {};
                 for (const p of Object.keys(pos)) {
-                  if (!['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].includes(p)) continue;
+                  if (!VALID_POSITIONS.includes(p as any)) continue;
                   perRosterTotals[r.rosterId][p] =
                     (perRosterTotals[r.rosterId][p] ?? 0) + Number(pos[p] ?? 0);
                 }
@@ -309,7 +310,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               leagueAverages[p] = count > 0 ? sum / count : 0;
             }
 
-            const positionalRows = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(position => ({
+            const positionalRows = VALID_POSITIONS.map(position => ({
               position,
               team: Number(rows[position]?.team ?? 0),
               opponent: Number(rows[position]?.opponent ?? 0),

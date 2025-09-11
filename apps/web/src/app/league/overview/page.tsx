@@ -4,6 +4,7 @@
 
 import { LeagueChart } from '@/components/league-chart';
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
+import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { Suspense, useMemo, useState } from 'react';
@@ -51,14 +52,10 @@ function LeagueOverviewContent() {
   const router = useRouter();
   const leagueIdParam = searchParams.get('leagueId');
 
-  // Call both hooks unconditionally to follow Rules of Hooks
-  const leagueDataById = useLeagueDataById(leagueIdParam || undefined);
-  const leagueDataFallback = useLeagueData();
-
-  // Use the appropriate data based on whether we have a league ID parameter
-  const { league, loading, teamStats, weeklyAverages } = leagueIdParam
-    ? leagueDataById
-    : leagueDataFallback;
+  // Use the new client-side calculation hook
+  const { league, loading, teamStats, weeklyAverages } = useLeagueOverviewClient(
+    leagueIdParam || undefined
+  );
   const [sortKey, setSortKey] = useState<'team' | 'record' | 'points' | 'expectedWins' | 'luck'>(
     'points'
   );

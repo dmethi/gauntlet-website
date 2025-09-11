@@ -1,0 +1,303 @@
+// Minimal Prisma schema - Only odds, simulations, and computed data
+// All Sleeper data is fetched directly from API
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// SIMULATION & ODDS TABLES (Core functionality)
+// ============================================
+
+model MatchupSimulation {
+  id                String             @id @default(cuid())
+  leagueId          String
+  week              Int
+  matchupId         Int
+  
+  // Team A Statistics
+  teamAMean         Float
+  teamAP10          Float
+  teamAP25          Float?
+  teamAMedian       Float
+  teamAP75          Float?
+  teamAP90          Float
+  teamAStdDev       Float
+  
+  // Team B Statistics  
+  teamBMean         Float
+  teamBP10          Float
+  teamBP25          Float?
+  teamBMedian       Float
+  teamBP75          Float?
+  teamBP90          Float
+  teamBStdDev       Float
+  
+  // Win Probabilities
+  teamAWinPct       Float
+  teamBWinPct       Float
+  
+  // Betting Lines
+  impliedSpread     Float
+  moneyLineA        Int
+  moneyLineB        Int
+  totalLine         Float
+  overPct           Float
+  underPct          Float
+  
+  // Metadata
+  iterations        Int                @default(100000)
+  simulationSeed    Int?
+  computeTimeMs     Int?
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  
+  // Relations
+  playerSimulations PlayerSimulation[]
+  
+  @@unique([leagueId, week, matchupId])
+  @@index([leagueId, week])
+  @@index([createdAt])
+}
+
+model PlayerSimulation {
+  id                  String            @id @default(cuid())
+  matchupSimulationId String
+  playerId            String
+  playerName          String
+  position            String
+  teamRosterId        Int
+  isStarter           Boolean
+  
+  // Statistical Distribution
+  mean                Float
+  p10                 Float
+  p25                 Float?
+  median              Float
+  p75                 Float?
+  p90                 Float
+  stdDev              Float
+  
+  // Source Data
+  projection          Float
+  dataSource          String
+  sampleSize          Int?
+  
+  createdAt           DateTime          @default(now())
+  
+  // Relations
+  matchupSimulation   MatchupSimulation @relation(fields: [matchupSimulationId], references: [id], onDelete: Cascade)
+  
+  @@unique([matchupSimulationId, playerId])
+  @@index([playerId])
+}
+
+model MatchupOddsHistory {
+  id             String   @id @default(cuid())
+  leagueId       String
+  week           Int
+  matchupId      Int
+  
+  // Odds at this point in time
+  team1WinPct    Float
+  team2WinPct    Float
+  spread         Float
+  total          Float
+  team1MoneyLine Int
+  team2MoneyLine Int
+  
+  // Live scoring context
+  team1Score     Float?
+  team2Score     Float?
+  gameProgress   Float    // 0-1 representing game completion
+  isLive         Boolean  @default(false)
+  
+  // Metadata
+  triggeredBy    String   // 'scheduled', 'live_update', 'manual', etc.
+  computeTimeMs  Int?
+  
+  createdAt      DateTime @default(now())
+  
+  @@index([leagueId, week, matchupId])
+  @@index([createdAt])
+  @@index([isLive])
+}
+
+model LeagueOddsHistory {
+  id                    String   @id @default(cuid())
+  week                  Int
+  
+  // League-wide betting markets (JSON for flexibility)
+  highestScorerOdds     Json     // { rosterId: probability }
+  lowestScorerOdds      Json
+  closestMatchup        Json
+  biggestBlowout        Json
+  highestScoringMatchup Json     @default("[]")
+  lowestScoringMatchup  Json     @default("[]")
+  
+  // Context
+  isLive                Boolean  @default(false)
+  triggeredBy           String
+  computeTimeMs         Int?
+  
+  createdAt             DateTime @default(now())
+  
+  @@index([week])
+  @@index([createdAt])
+  @@index([isLive])
+}
+
+// ============================================
+// VARIANCE & ERROR TRACKING
+// ============================================
+
+model PositionVariance {
+  id          String   @id @default(cuid())
+  position    String
+  season      String
+  sampleSize  Int
+  meanError   Float
+  stdDev      Float
+  
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  
+  @@unique([position, season])
+  @@index([position])
+}
+
+model PlayerVariance {
+  id          String   @id @default(cuid())
+  playerId    String
+  season      String
+  sampleSize  Int
+  meanError   Float
+  stdDev      Float
+  
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  
+  @@unique([playerId, season])
+  @@index([playerId])
+}
+
+model ProjectionError {
+  id              String   @id @default(cuid())
+  playerId        String
+  week            Int
+  season          String
+  projectedPoints Float
+  actualPoints    Float
+  normalizedError Float
+  
+  createdAt       DateTime @default(now())
+  
+  @@unique([playerId, week, season])
+  @@index([playerId])
+  @@index([season, week])
+}
+
+// ============================================
+// LIVE TRACKING
+// ============================================
+
+model LiveWinProbSample {
+  id              String   @id @default(cuid())
+  leagueId        String
+  week            Int
+  matchupId       Int
+  rosterAId       Int
+  rosterBId       Int
+  
+  // Snapshot data
+  timestamp       DateTime @default(now())
+  gameProgress    Float
+  winProbA        Float
+  winProbB        Float
+  projectedFinalA Float
+  projectedFinalB Float
+  currentScoreA   Float
+  currentScoreB   Float
+  spread          Float
+  total           Float
+  
+  @@index([leagueId, week, matchupId])
+  @@index([timestamp])
+}
+
+// ============================================
+// HALL OF FAME (Computed achievements)
+// ============================================
+
+model HallOfFameCategory {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  displayName String
+  description String?
+  groupName   String
+  statType    String
+  isActive    Boolean            @default(true)
+  sortOrder   Int                @default(0)
+  
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  
+  records     HallOfFameRecord[]
+  
+  @@index([groupName])
+  @@index([statType])
+}
+
+model HallOfFameRecord {
+  id          String             @id @default(cuid())
+  categoryId  String
+  leagueId    String
+  rosterId    Int
+  week        Int
+  season      String
+  value       Float
+  recordType  String              // 'fame' or 'shame'
+  rank        Int
+  contextData Json?
+  isAllTime   Boolean            @default(false)
+  achievedAt  DateTime
+  
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  
+  category    HallOfFameCategory @relation(fields: [categoryId], references: [id])
+  
+  @@unique([categoryId, leagueId, recordType, rank])
+  @@index([leagueId, season])
+  @@index([categoryId, recordType, rank])
+  @@index([rosterId])
+}
+
+// ============================================
+// OPTIONAL: Keep aggregated stats for performance
+// ============================================
+
+model SeasonSuperlatives {
+  id        String   @id @default(cuid())
+  leagueId  String
+  season    String
+  category  String
+  week      Int?
+  rosterId  Int?
+  playerId  String?
+  matchupId Int?
+  value     Float?
+  metadata  Json?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([leagueId, season])
+  @@index([category])
+}
