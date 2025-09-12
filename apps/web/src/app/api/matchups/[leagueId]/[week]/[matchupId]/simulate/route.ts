@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
-import { calculateLeagueProjections, ScoringSettings } from '@/lib/calculate-league-projections';
+import { ScoringSettings, calculateLeagueProjections } from '@/lib/calculate-league-projections';
 
 // Fetch raw projections from Sleeper
 async function fetchRawProjections(season: string, week: number): Promise<any[]> {
@@ -61,7 +61,7 @@ async function generateProjectionBasedSimulation(
           },
         },
       },
-      orderBy: { rosterId: 'asc' },
+      orderBy: { rosterId: 'asc' }, // CRITICAL: Ensure consistent team ordering
     }),
     prisma.league.findUnique({
       where: { id: leagueId },
@@ -354,6 +354,7 @@ export async function GET(
             },
           },
         },
+        orderBy: { rosterId: 'asc' }, // CRITICAL: Ensure same ordering as when storing simulation
       });
 
       console.log(`🏈 [STORED SIMULATION API] Found ${matchupTeams.length} teams for this matchup`);

@@ -116,10 +116,10 @@ jobs:
 
           if [ "$IS_LIVE" = "true" ]; then
             echo "⚡ Running LIVE odds update with current scores..."
-            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts ${WEEK:+$WEEK} --live --trigger="$TRIGGER_TYPE"
+            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations-optimized.ts ${WEEK:+$WEEK} --live --trigger="$TRIGGER_TYPE"
           else
             echo "📅 Running daily pre-game odds update..."
-            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations.ts ${WEEK:+$WEEK} --trigger="$TRIGGER_TYPE"
+            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/run-batch-simulations-optimized.ts ${WEEK:+$WEEK} --trigger="$TRIGGER_TYPE"
           fi
 
       - name: Report completion
