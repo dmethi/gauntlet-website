@@ -11,7 +11,7 @@
  * Result: DB compute time reduced from minutes to seconds!
  */
 
-import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
+import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/src/index.js';
 import { PrismaClient } from '@prisma/client';
 
 // Types

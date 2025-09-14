@@ -56,20 +56,6 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm --filter @gauntlet/server exec prisma generate
 
-      - name: Build workspace packages  
-        run: |
-          echo "🔨 Building packages in correct order for CI environment..."
-          echo "Building @gauntlet/types..."
-          pnpm --filter @gauntlet/types run build
-          echo "Building @gauntlet/lib..."
-          pnpm --filter @gauntlet/lib run build  
-          echo "Building @gauntlet/models..."
-          pnpm --filter @gauntlet/models run build
-          echo "Installing after builds to ensure linking..."
-          pnpm install --frozen-lockfile
-          echo "Building @gauntlet/sim-engine..."
-          pnpm --filter @gauntlet/sim-engine run build
-
       - name: Determine update type and week
         id: determine-context
         run: |
