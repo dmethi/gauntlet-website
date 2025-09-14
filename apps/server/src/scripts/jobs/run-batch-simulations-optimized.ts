@@ -160,7 +160,10 @@ async function runSimulationsInMemory(matchupData: any[]): Promise<SimulationRes
  * Calculate fantasy points based on scoring settings
  */
 function calculateFantasyPoints(projection: any, scoringSettings: any): number {
-  if (!projection?.stats) return 0;
+  if (!projection?.stats) {
+    console.log(`⚠️ No projection stats for player`, { projection });
+    return 0;
+  }
 
   let points = 0;
   const stats = projection.stats;
@@ -180,6 +183,14 @@ function calculateFantasyPoints(projection: any, scoringSettings: any): number {
   points += (stats.rec_td || 0) * (scoringSettings.rec_td || 6);
 
   // Add other scoring categories as needed...
+
+  if (points === 0) {
+    console.log(`⚠️ Zero points calculated for player`, {
+      projection,
+      stats,
+      scoringSettings: Object.keys(scoringSettings || {}),
+    });
+  }
 
   return points;
 }

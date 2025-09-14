@@ -88,7 +88,12 @@ async function buildLineupPlayers(
     if (!player) continue;
 
     // Calculate projected points based on scoring settings
-    const points = calculateProjectedPoints(projection || {}, scoringSettings);
+    const points = calculateProjectedPoints(
+      projection || {},
+      scoringSettings,
+      playerId,
+      player.full_name
+    );
 
     lineup.push({
       playerId,
@@ -106,41 +111,62 @@ async function buildLineupPlayers(
 /**
  * Calculate projected points based on scoring settings
  */
-function calculateProjectedPoints(projection: any, scoringSettings: any): number {
+function calculateProjectedPoints(
+  projection: any,
+  scoringSettings: any,
+  playerId?: string,
+  playerName?: string
+): number {
   let points = 0;
   const scoring = scoringSettings || {};
+  const breakdown: any = {};
+  const unusedCategories: string[] = [];
+  const usedCategories: string[] = [];
 
-  // Passing
-  if (projection.pass_yd !== undefined) {
-    points += projection.pass_yd * (scoring.pass_yd || 0.04);
-  }
-  if (projection.pass_td !== undefined) {
-    points += projection.pass_td * (scoring.pass_td || 4);
-  }
-  if (projection.pass_int !== undefined) {
-    points += projection.pass_int * (scoring.pass_int || -1);
-  }
-
-  // Rushing
-  if (projection.rush_yd !== undefined) {
-    points += projection.rush_yd * (scoring.rush_yd || 0.1);
-  }
-  if (projection.rush_td !== undefined) {
-    points += projection.rush_td * (scoring.rush_td || 6);
-  }
-
-  // Receiving
-  if (projection.rec !== undefined) {
-    points += projection.rec * (scoring.rec || 0.5);
-  }
-  if (projection.rec_yd !== undefined) {
-    points += projection.rec_yd * (scoring.rec_yd || 0.1);
-  }
-  if (projection.rec_td !== undefined) {
-    points += projection.rec_td * (scoring.rec_td || 6);
+  // Dynamically iterate through ALL scoring categories the league actually uses
+  for (const [category, multiplier] of Object.entries(scoring)) {
+    if (multiplier !== 0 && multiplier != null) {
+      // Check if we have projection data for this scoring category
+      if (projection[category] !== undefined && projection[category] !== null) {
+        const categoryPoints = projection[category] * multiplier;
+        points += categoryPoints;
+        breakdown[category] =
+          `${projection[category]} * ${multiplier} = ${categoryPoints.toFixed(2)}`;
+        usedCategories.push(category);
+      } else {
+        // Track categories we have scoring for but no projection data
+        unusedCategories.push(category);
+      }
+    }
   }
 
-  // Defense and other categories...
+  const finalPoints = Math.max(0, points);
+
+  // Debug: Show diagnostic info for understanding projection coverage
+  if (playerId && Math.random() < 0.1) {
+    // Show ~10% of players for sampling
+    console.log(`📊 ${playerName || playerId} (${finalPoints.toFixed(2)} pts):`);
+    console.log(`   ✅ Used categories (${usedCategories.length}):`, usedCategories);
+    console.log(
+      `   ❌ League scoring categories without projection data (${unusedCategories.length}):`,
+      unusedCategories
+    );
+    console.log(`   📈 Point breakdown:`, breakdown);
+
+    if (unusedCategories.length > 0) {
+      console.log(
+        `   ⚠️ Missing ${unusedCategories.length} scoring categories - potential point undercount`
+      );
+    }
+
+    if (finalPoints < 3) {
+      console.log(`   🔍 Available projection stats:`, Object.keys(projection));
+      console.log(
+        `   🔍 League scoring settings:`,
+        Object.keys(scoring).filter(key => scoring[key] !== 0)
+      );
+    }
+  }
 
   return Math.round(points * 100) / 100;
 }
@@ -193,8 +219,15 @@ async function simulateMatchup(
       ),
     ]);
 
-    console.log(`   Team 1 (Roster ${team1Matchup.roster_id}): ${team1Players.length} starters`);
-    console.log(`   Team 2 (Roster ${team2Matchup.roster_id}): ${team2Players.length} starters`);
+    const team1Total = team1Players.reduce((sum, p) => sum + p.projection, 0);
+    const team2Total = team2Players.reduce((sum, p) => sum + p.projection, 0);
+
+    console.log(
+      `   Team 1 (Roster ${team1Matchup.roster_id}): ${team1Players.length} starters, ${team1Total.toFixed(1)} projected pts`
+    );
+    console.log(
+      `   Team 2 (Roster ${team2Matchup.roster_id}): ${team2Players.length} starters, ${team2Total.toFixed(1)} projected pts`
+    );
 
     // Run simulation
     const simResult = await simulateMatchupProbabilityFromPlayers(
@@ -429,8 +462,8 @@ async function main() {
   }
 }
 
-// Execute if run directly
-if (require.main === module) {
+// Execute if run directly (ES module version)
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(console.error);
 }
 
