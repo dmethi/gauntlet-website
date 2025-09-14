@@ -114,12 +114,27 @@ async function runSimulationsInMemory(matchupData: any[]): Promise<SimulationRes
       };
     });
 
+    const team1Total = team1Players.reduce((sum, p) => sum + p.projection, 0);
+    const team2Total = team2Players.reduce((sum, p) => sum + p.projection, 0);
+
+    // Debug: Log projection totals
+    console.log(
+      `🏈 Matchup ${data.matchupId}: Team1 ${team1Total.toFixed(1)} pts vs Team2 ${team2Total.toFixed(1)} pts`
+    );
+
     // Run simulation
     const simResult = await simulateMatchupProbabilityFromPlayers(
       team1Players,
       team2Players,
       10000, // Reduced from 100k - still very accurate
       0 // Game progress
+    );
+
+    // Debug: Log simulation results
+    const team1ML = simResult.impliedOdds?.team1MoneyLine;
+    const team2ML = simResult.impliedOdds?.team2MoneyLine;
+    console.log(
+      `🎯 Matchup ${data.matchupId}: ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}% | ML: ${isFinite(team1ML) ? team1ML : 'INF'} / ${isFinite(team2ML) ? team2ML : 'INF'}`
     );
 
     // Store result
@@ -180,7 +195,9 @@ async function writeResultsToDatabase(results: SimulationResult[]) {
 
   try {
     // Use transaction for atomic write
-    await prisma.$transaction(async tx => {
+    // Type workaround until Prisma client types refresh in monorepo build
+    const db = prisma as any;
+    await db.$transaction(async (tx: any) => {
       // Clear old simulations
       for (const result of results) {
         await tx.matchupSimulation.deleteMany({
@@ -196,7 +213,7 @@ async function writeResultsToDatabase(results: SimulationResult[]) {
       for (const result of results) {
         await tx.matchupSimulation.create({
           data: {
-            leagueId: result.leagueId,
+            league: { connect: { id: result.leagueId } },
             week: result.week,
             matchupId: result.matchupId,
             teamAWinPct: result.simulation.team1WinPct,
@@ -215,11 +232,14 @@ async function writeResultsToDatabase(results: SimulationResult[]) {
             computeTimeMs: 0,
             impliedSpread: result.simulation.impliedOdds?.spread || 0,
             totalLine: result.simulation.impliedOdds?.total || 0,
-            moneyLineA: result.simulation.impliedOdds?.team1MoneyLine || 0,
-            moneyLineB: result.simulation.impliedOdds?.team2MoneyLine || 0,
+            moneyLineA: isFinite(result.simulation.impliedOdds?.team1MoneyLine || 0)
+              ? result.simulation.impliedOdds.team1MoneyLine
+              : 0,
+            moneyLineB: isFinite(result.simulation.impliedOdds?.team2MoneyLine || 0)
+              ? result.simulation.impliedOdds.team2MoneyLine
+              : 0,
             overPct: 0.5,
             underPct: 0.5,
-            triggeredBy: 'optimized',
             // Add player simulations if needed
           },
         });
@@ -236,16 +256,41 @@ async function writeResultsToDatabase(results: SimulationResult[]) {
 }
 
 /**
+ * Fetch current NFL week from Sleeper API
+ */
+async function getCurrentNFLWeek(): Promise<number> {
+  try {
+    console.log('📅 Fetching current NFL week from Sleeper API...');
+    const response = await fetch('https://api.sleeper.app/v1/state/nfl');
+    const nflState = await response.json();
+
+    const currentWeek = nflState.display_week || nflState.week || 1;
+    console.log(
+      `📊 Current NFL State: Week ${currentWeek}, Season ${nflState.season}, Type: ${nflState.season_type}`
+    );
+    return currentWeek;
+  } catch (error) {
+    console.error('⚠️ Error fetching NFL state, defaulting to week 1:', error);
+    return 1;
+  }
+}
+
+/**
  * Main execution
  */
 async function main() {
-  const week = parseInt(process.argv[2] || '1');
+  // Get current NFL week dynamically (or allow override via command line)
+  const weekOverride = process.argv[2] ? parseInt(process.argv[2]) : null;
+  const week = weekOverride || (await getCurrentNFLWeek());
+
   const leagueIds = [
     '1263744209295245312', // Gauntlet AFC
     '1263740549504962561', // Gauntlet NFC
   ];
 
-  console.log(`🚀 Starting OPTIMIZED batch simulations for Week ${week}`);
+  console.log(
+    `🚀 Starting OPTIMIZED batch simulations for Week ${week}${weekOverride ? ' (manual override)' : ' (current NFL week)'}`
+  );
   console.log(`📊 Strategy: Fetch from API → Simulate in memory → Single DB write`);
 
   try {
