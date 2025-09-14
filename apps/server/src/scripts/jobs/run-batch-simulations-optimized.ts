@@ -44,6 +44,15 @@ async function fetchAllDataFromSleeper(leagueIds: string[], week: number) {
       ).then(r => r.json()),
     ]);
 
+    console.log(`📊 League ${leagueId} API responses:`, {
+      league: league ? 'OK' : 'NULL',
+      rosters: Array.isArray(rosters) ? `${rosters.length} rosters` : 'NOT_ARRAY',
+      matchups: Array.isArray(matchups)
+        ? `${matchups.length} matchups`
+        : `ERROR: ${typeof matchups} - ${JSON.stringify(matchups)}`,
+      projections: projections ? Object.keys(projections).length + ' players' : 'NULL',
+    });
+
     // Group matchups by matchup_id
     const matchupGroups = new Map<number, any[]>();
     for (const matchup of matchups) {
