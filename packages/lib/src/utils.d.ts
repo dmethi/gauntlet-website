@@ -46,7 +46,34 @@ export declare function calculateNormalizedError(projected: number, actual: numb
  * Calculate standard deviation for an array of numbers
  */
 export declare function calculateStdDev(values: number[]): number;
-export declare function getCurrentWeek(): number;
+/**
+ * NFL state structure from Sleeper API
+ */
+export interface NFLState {
+    week: number;
+    leg: number;
+    season: string;
+    season_type: 'pre' | 'regular' | 'post';
+    league_season: string;
+    previous_season: string;
+    season_start_date: string;
+    display_week: number;
+    league_create_season: string;
+    season_has_scores: boolean;
+}
+/**
+ * Fetch current NFL state from Sleeper API
+ */
+export declare function fetchNFLState(): Promise<NFLState>;
+/**
+ * Get current NFL week from Sleeper API
+ */
+export declare function getCurrentWeek(): Promise<number>;
+/**
+ * Synchronous version of getCurrentWeek for backward compatibility
+ * @deprecated Use getCurrentWeek() async version instead
+ */
+export declare function getCurrentWeekSync(): number;
 /**
  * Check if current time is during NFL season
  */

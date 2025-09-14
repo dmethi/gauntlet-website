@@ -27,7 +27,13 @@
       "@/components/*": ["./apps/web/src/components/*"],
       "@/lib/*": ["./apps/web/src/lib/*"],
       "@/styles/*": ["./apps/web/src/styles/*"],
-      "@/utils/*": ["./apps/web/src/utils/*"]
+      "@/utils/*": ["./apps/web/src/utils/*"],
+      "@gauntlet/lib": ["./packages/lib/src/index"],
+      "@gauntlet/lib/*": ["./packages/lib/src/*"],
+      "@gauntlet/types": ["./packages/types/src/index"],
+      "@gauntlet/types/*": ["./packages/types/src/*"],
+      "@gauntlet/models": ["./packages/models/src/index"],
+      "@gauntlet/models/*": ["./packages/models/src/*"]
     }
   },
   "exclude": ["node_modules"]
