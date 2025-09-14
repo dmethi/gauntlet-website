@@ -258,8 +258,8 @@ async function main() {
   }
 }
 
-// Run if called directly
-if (require.main === module) {
+// Run if called directly (ES module version)
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
