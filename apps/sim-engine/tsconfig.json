@@ -4,8 +4,13 @@
     "outDir": "./dist",
     "declaration": true,
     "noEmit": false,
-    "composite": true
+    "composite": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "src/**/*.json"
+  ],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

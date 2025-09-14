@@ -1,39 +1,74 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getPlayersByIds, getAllPlayers, searchPlayersByName } from '@/data/players-loader';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const ids = searchParams.get('ids');
+    const search = searchParams.get('search');
+    const limit = parseInt(searchParams.get('limit') || '50');
 
-async function getPrisma() {
-  const { prisma } = await import('@/lib/prisma');
-  return prisma;
+    if (ids) {
+      // Batch fetch specific players by IDs
+      const playerIds = ids.split(',').map(id => id.trim());
+      const players = getPlayersByIds(playerIds);
+
+      return NextResponse.json({
+        players,
+        count: Object.keys(players).length,
+        dbQueries: 0,
+        dataSource: 'static-player-data',
+      });
+    }
+
+    if (search) {
+      // Search players by name
+      const players = searchPlayersByName(search).slice(0, limit);
+
+      return NextResponse.json({
+        players,
+        count: players.length,
+        searchTerm: search,
+        dbQueries: 0,
+        dataSource: 'static-player-data',
+      });
+    }
+
+    // Return all players (use with caution - this is large!)
+    const allPlayers = getAllPlayers();
+
+    return NextResponse.json({
+      players: Object.fromEntries(Object.entries(allPlayers).slice(0, limit)),
+      count: Object.keys(allPlayers).length,
+      showing: Math.min(limit, Object.keys(allPlayers).length),
+      dbQueries: 0,
+      dataSource: 'static-player-data',
+    });
+  } catch (error) {
+    console.error('Error in batch players endpoint:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { playerIds } = (await request.json()) as { playerIds: string[] };
-    const ids = Array.isArray(playerIds) ? playerIds.filter(Boolean) : [];
-    if (ids.length === 0) {
-      return NextResponse.json({ players: {}, found: 0, requested: 0 });
+    const body = await request.json();
+    const { playerIds } = body;
+
+    if (!Array.isArray(playerIds)) {
+      return NextResponse.json({ error: 'playerIds must be an array' }, { status: 400 });
     }
-    const prisma = await getPrisma();
-    const players = await prisma.player.findMany({ where: { id: { in: ids } } });
-    const map = Object.fromEntries(
-      players.map(p => [
-        p.id,
-        {
-          id: p.id,
-          firstName: p.firstName,
-          lastName: p.lastName,
-          fullName: p.fullName,
-          team: p.team,
-          position: p.position,
-        },
-      ])
-    );
-    return NextResponse.json({ players: map, found: players.length, requested: ids.length });
+
+    const players = getPlayersByIds(playerIds);
+
+    return NextResponse.json({
+      players,
+      count: Object.keys(players).length,
+      dbQueries: 0,
+      dataSource: 'static-player-data',
+    });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('players:batch error', { message: (error as Error).message });
-    return NextResponse.json({ error: 'Failed to fetch players' }, { status: 500 });
+    console.error('Error in POST batch players endpoint:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

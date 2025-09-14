@@ -232,7 +232,7 @@ async function writeResultsToDatabase(results: SimulationResult[]) {
 async function main() {
   const week = parseInt(process.argv[2] || '1');
   const leagueIds = [
-    '1263740549504962560', // Gauntlet AFC
+    '1263744209295245312', // Gauntlet AFC
     '1263740549504962561', // Gauntlet NFC
   ];
 

@@ -1,67 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getVarianceModel } from '@gauntlet/sim-engine/src/models/variance';
-import { PrismaClient } from '@prisma/client';
+import { getPlayerById } from '@/data/players-loader';
+import {
+  getPlayerOutcomes,
+  getPositionDistribution,
+} from '@gauntlet/sim-engine/src/data/variance-loader';
 
-const prisma = new PrismaClient();
-
-export async function GET(request: NextRequest, { params }: { params: { playerId: string } }) {
+export async function GET(_request: NextRequest, { params }: { params: { playerId: string } }) {
   try {
-    const { playerId } = params;
-    const { searchParams } = new URL(request.url);
+    const playerId = params.playerId;
 
-    const position = searchParams.get('position');
-    const projectionStr = searchParams.get('projection');
-
-    if (!position || !projectionStr) {
-      return NextResponse.json(
-        { error: 'Missing required parameters: position, projection' },
-        { status: 400 }
-      );
+    if (!playerId) {
+      return NextResponse.json({ error: 'Player ID is required' }, { status: 400 });
     }
 
-    const projection = parseFloat(projectionStr);
-    if (isNaN(projection) || projection < 0) {
-      return NextResponse.json({ error: 'Invalid projection value' }, { status: 400 });
+    // Get player info
+    const player = getPlayerById(playerId);
+
+    if (!player) {
+      return NextResponse.json({ error: 'Player not found' }, { status: 404 });
     }
 
-    // Get distribution data from simulation engine
-    const distributionResult = await getVarianceModel(playerId, position, projection);
+    // Get player-specific outcomes and position distribution
+    const [playerOutcomes, positionDistribution] = await Promise.all([
+      getPlayerOutcomes(playerId),
+      getPositionDistribution(player.position || 'RB'),
+    ]);
 
-    // Determine data source based on sample sizes
-    let dataSource: 'player' | 'position' | 'synthetic' = 'synthetic';
-    let sampleSize = 0;
-
-    if (distributionResult.playerOutcomes.sampleSize >= 8) {
-      dataSource = 'player';
-      sampleSize = distributionResult.playerOutcomes.sampleSize;
-    } else if (distributionResult.positionDist.sampleSize >= 25) {
-      dataSource = 'position';
-      sampleSize = distributionResult.positionDist.sampleSize;
-    }
-
-    const response = {
-      p10: distributionResult.p10,
-      p25: distributionResult.p25,
-      median: distributionResult.median,
-      p75: distributionResult.p75,
-      p90: distributionResult.p90,
-      mean: distributionResult.mean,
-      sampleSize,
-      dataSource,
+    // Format response
+    const distribution = {
+      player: {
+        id: playerId,
+        name: player.full_name || player.first_name + ' ' + player.last_name,
+        position: player.position,
+        team: player.team,
+      },
+      playerOutcomes: {
+        outcomes: playerOutcomes.outcomes,
+        sampleSize: playerOutcomes.sampleSize,
+        hasPlayerSpecificData: playerOutcomes.sampleSize > 0,
+      },
+      positionDistribution: {
+        outcomes: positionDistribution.outcomes,
+        sampleSize: positionDistribution.sampleSize,
+        position: player.position,
+      },
+      dbQueries: 0,
+      dataSource: 'static-variance-data',
     };
 
-    return NextResponse.json(response);
+    return NextResponse.json(distribution);
   } catch (error) {
-    console.error('❌ [PLAYER DISTRIBUTION API] Error:', error);
+    console.error('Error fetching player distribution:', error);
     return NextResponse.json(
       {
-        success: false,
-        error: 'Failed to get player distribution',
+        error: 'Internal server error',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

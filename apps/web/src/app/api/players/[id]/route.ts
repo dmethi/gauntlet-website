@@ -1,31 +1,27 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getPlayerById } from '@/data/players-loader';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
-async function getPrisma() {
-  const { prisma } = await import('@/lib/prisma');
-  return prisma;
-}
-
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const prisma = await getPrisma();
-    const player = await prisma.player.findUnique({ where: { id: params.id } });
-    if (!player) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    const playerId = params.id;
+
+    if (!playerId) {
+      return NextResponse.json({ error: 'Player ID is required' }, { status: 400 });
+    }
+
+    const player = getPlayerById(playerId);
+
+    if (!player) {
+      return NextResponse.json({ error: 'Player not found' }, { status: 404 });
+    }
+
     return NextResponse.json({
-      player: {
-        id: player.id,
-        firstName: player.firstName,
-        lastName: player.lastName,
-        fullName: player.fullName,
-        team: player.team,
-        position: player.position,
-      },
+      player,
+      dbQueries: 0,
+      dataSource: 'static-player-data',
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('players:[id] error', { id: params.id, message: (error as Error).message });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('Error fetching player:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

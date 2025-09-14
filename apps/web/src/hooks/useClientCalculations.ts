@@ -120,10 +120,11 @@ export function useClientTeamStats(leagueId?: string) {
 
       // Get current week from NFL state
       const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
-      const currentWeek = Math.min(nflState.week, 14); // Cap at regular season
+      // Only count completed weeks - current week minus 1 (since current week is in progress)
+      const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
 
-      // Get all matchups
-      const matchupsByWeek = await getAllMatchups(effectiveLeagueId, currentWeek);
+      // Get all matchups for completed weeks only
+      const matchupsByWeek = await getAllMatchups(effectiveLeagueId, completedWeeks);
 
       // Calculate team stats
       const teamStats = calculateTeamStats(rosters, matchupsByWeek, users);

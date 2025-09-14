@@ -1,56 +1,40 @@
-import { NextResponse } from 'next/server';
-
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
-
-async function getPrisma() {
-  const { prisma } = await import('@/lib/prisma');
-  return prisma;
-}
+import { NextRequest, NextResponse } from 'next/server';
+import { computeWeeklyRollups } from '@/lib/api-replacements';
 
 export async function GET(
-  request: Request,
+  _request: NextRequest,
   { params }: { params: { leagueId: string; season: string; week: string } }
 ) {
-  const { leagueId, week } = params;
-  const { searchParams } = new URL(request.url);
-  const debug = searchParams.has('debug');
   try {
-    const w = Number(week);
-    if (!leagueId || Number.isNaN(w)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: { code: 'BAD_REQUEST', message: 'leagueId and numeric week are required' },
-        },
-        { status: 400 }
-      );
+    const { leagueId, season, week } = params;
+    const weekNumber = parseInt(week, 10);
+
+    if (!leagueId || !season) {
+      return NextResponse.json({ error: 'League ID and season are required' }, { status: 400 });
     }
-    const prisma = await getPrisma();
-    const data = await prisma.rosterWeekAggregate.findMany({ where: { leagueId, week: w } });
-    return NextResponse.json({ ok: true, data, meta: { leagueId, week: w, count: data.length } });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('rollups:week error', {
+
+    if (!Number.isFinite(weekNumber) || weekNumber < 1 || weekNumber > 18) {
+      return NextResponse.json({ error: 'Invalid week parameter' }, { status: 400 });
+    }
+
+    const rollup = await computeWeeklyRollups(leagueId, weekNumber);
+
+    return NextResponse.json({
       leagueId,
-      week,
-      hasDbUrl: Boolean(process.env.DATABASE_URL),
-      message: (error as Error).message,
-      stack: (error as Error).stack,
+      season,
+      week: weekNumber,
+      ...rollup,
+      dbQueries: 0,
+      dataSource: 'sleeper-api-computed',
     });
-    const body = debug
-      ? {
-          ok: false,
-          error: {
-            code: 'INTERNAL',
-            message: 'Failed to fetch week rollups',
-            leagueId,
-            week,
-            hasDbUrl: Boolean(process.env.DATABASE_URL),
-            detail: (error as Error).message,
-          },
-        }
-      : { ok: false, error: { code: 'INTERNAL', message: 'Failed to fetch week rollups' } };
-    return NextResponse.json(body, { status: 500 });
+  } catch (error) {
+    console.error(`Error computing rollup for week ${params.week}:`, error);
+    return NextResponse.json(
+      {
+        error: 'Failed to compute weekly rollup',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }

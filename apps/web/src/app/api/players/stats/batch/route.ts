@@ -1,76 +1,195 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getPlayersByIds } from '@/data/players-loader';
+import { getProjections, getNFLState, getCurrentWeek } from '@/lib/api-replacements';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
-async function getPrisma() {
-  const { prisma } = await import('@/lib/prisma');
-  return prisma;
-}
-
-export async function POST(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { playerIds, season, week } = (await request.json()) as {
-      playerIds: string[];
-      season: string;
-      week: number;
-    };
-    const ids = Array.isArray(playerIds) ? playerIds.filter(Boolean) : [];
-    if (ids.length === 0 || !season || !week) {
-      return NextResponse.json({
-        playerStats: {},
+    const { searchParams } = new URL(request.url);
+    const ids = searchParams.get('ids');
+    const weekParam = searchParams.get('week');
+    const season = searchParams.get('season') || '2025';
+
+    if (!ids) {
+      return NextResponse.json(
+        { error: 'Player IDs are required (comma-separated list)' },
+        { status: 400 }
+      );
+    }
+
+    // Parse player IDs
+    const playerIds = ids.split(',').map(id => id.trim());
+
+    // Get week (use provided or current week)
+    const week = weekParam ? parseInt(weekParam, 10) : await getCurrentWeek();
+
+    if (!Number.isFinite(week) || week < 1 || week > 18) {
+      return NextResponse.json({ error: 'Invalid week parameter' }, { status: 400 });
+    }
+
+    // Fetch player info and projections
+    const [players, projections, nflState] = await Promise.all([
+      Promise.resolve(getPlayersByIds(playerIds)),
+      getProjections(week, season),
+      getNFLState(),
+    ]);
+
+    // Combine player info with their projections/stats
+    const playerStats = Object.entries(players).map(([playerId, player]) => {
+      const projection = projections[playerId] || {};
+
+      return {
+        id: playerId,
+        name: player.full_name || `${player.first_name} ${player.last_name}`,
+        position: player.position,
+        team: player.team,
         week,
         season,
-        requested: ids.length,
-        foundStats: 0,
-        foundProjections: 0,
-      });
-    }
-    const prisma = await getPrisma();
-    const rows = await prisma.playerStats.findMany({
-      where: { playerId: { in: ids }, season, week: Number(week) },
-    });
-    const statsMap: Record<
-      string,
-      {
-        actual: Record<string, number> | null;
-        projections: Record<string, number> | null;
-        hasActual: boolean;
-        hasProjections: boolean;
-      }
-    > = {};
-    for (const pid of ids) {
-      statsMap[pid] = { actual: null, projections: null, hasActual: false, hasProjections: false };
-    }
-    for (const row of rows) {
-      const entry = statsMap[row.playerId] || {
-        actual: null,
-        projections: null,
-        hasActual: false,
-        hasProjections: false,
+        projections: {
+          points: projection.pts_half_ppr || projection.pts_ppr || 0,
+          passing: {
+            yards: projection.pass_yd || 0,
+            touchdowns: projection.pass_td || 0,
+            interceptions: projection.pass_int || 0,
+            completions: projection.pass_cmp || 0,
+            attempts: projection.pass_att || 0,
+          },
+          rushing: {
+            yards: projection.rush_yd || 0,
+            touchdowns: projection.rush_td || 0,
+            attempts: projection.rush_att || 0,
+          },
+          receiving: {
+            yards: projection.rec_yd || 0,
+            touchdowns: projection.rec_td || 0,
+            receptions: projection.rec || 0,
+            targets: projection.rec_tgt || 0,
+          },
+          kicking: {
+            fieldGoals: projection.fgm || 0,
+            extraPoints: projection.xpm || 0,
+          },
+          defense: {
+            sacks: projection.def_sack || 0,
+            interceptions: projection.def_int || 0,
+            fumbleRecoveries: projection.def_fr || 0,
+            touchdowns: projection.def_td || 0,
+            pointsAllowed: projection.def_pa || 0,
+          },
+        },
+        // Store raw projection data for reference
+        rawProjection: projection,
       };
-      if (row.statsType === 'stats') {
-        entry.actual = row.stats as unknown as Record<string, number>;
-        entry.hasActual = true;
-      } else if (row.statsType === 'projections') {
-        entry.projections = row.stats as unknown as Record<string, number>;
-        entry.hasProjections = true;
-      }
-      statsMap[row.playerId] = entry;
-    }
-    const foundStats = rows.filter(r => r.statsType === 'stats').length;
-    const foundProjections = rows.filter(r => r.statsType === 'projections').length;
+    });
+
     return NextResponse.json({
-      playerStats: statsMap,
+      playerStats,
+      count: playerStats.length,
       week,
       season,
-      requested: ids.length,
-      foundStats,
-      foundProjections,
+      currentWeek: nflState?.week || week,
+      dbQueries: 0,
+      dataSource: 'sleeper-api-projections',
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('players:stats:batch error', { message: (error as Error).message });
-    return NextResponse.json({ error: 'Failed to fetch player stats' }, { status: 500 });
+    console.error('Error fetching player stats:', error);
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch player stats',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { playerIds, week, season = '2025' } = body;
+
+    if (!Array.isArray(playerIds)) {
+      return NextResponse.json({ error: 'playerIds must be an array' }, { status: 400 });
+    }
+
+    // Use provided week or current week
+    const targetWeek = week || (await getCurrentWeek());
+
+    if (!Number.isFinite(targetWeek) || targetWeek < 1 || targetWeek > 18) {
+      return NextResponse.json({ error: 'Invalid week parameter' }, { status: 400 });
+    }
+
+    // Fetch player info and projections
+    const [players, projections, nflState] = await Promise.all([
+      Promise.resolve(getPlayersByIds(playerIds)),
+      getProjections(targetWeek, season),
+      getNFLState(),
+    ]);
+
+    // Format the same way as GET endpoint
+    const playerStats = Object.entries(players).map(([playerId, player]) => {
+      const projection = projections[playerId] || {};
+
+      return {
+        id: playerId,
+        name: player.full_name || `${player.first_name} ${player.last_name}`,
+        position: player.position,
+        team: player.team,
+        week: targetWeek,
+        season,
+        projections: {
+          points: projection.pts_half_ppr || projection.pts_ppr || 0,
+          // Include all the same projection breakdowns as GET
+          passing: {
+            yards: projection.pass_yd || 0,
+            touchdowns: projection.pass_td || 0,
+            interceptions: projection.pass_int || 0,
+            completions: projection.pass_cmp || 0,
+            attempts: projection.pass_att || 0,
+          },
+          rushing: {
+            yards: projection.rush_yd || 0,
+            touchdowns: projection.rush_td || 0,
+            attempts: projection.rush_att || 0,
+          },
+          receiving: {
+            yards: projection.rec_yd || 0,
+            touchdowns: projection.rec_td || 0,
+            receptions: projection.rec || 0,
+            targets: projection.rec_tgt || 0,
+          },
+          kicking: {
+            fieldGoals: projection.fgm || 0,
+            extraPoints: projection.xpm || 0,
+          },
+          defense: {
+            sacks: projection.def_sack || 0,
+            interceptions: projection.def_int || 0,
+            fumbleRecoveries: projection.def_fr || 0,
+            touchdowns: projection.def_td || 0,
+            pointsAllowed: projection.def_pa || 0,
+          },
+        },
+        rawProjection: projection,
+      };
+    });
+
+    return NextResponse.json({
+      playerStats,
+      count: playerStats.length,
+      week: targetWeek,
+      season,
+      currentWeek: nflState?.week || targetWeek,
+      dbQueries: 0,
+      dataSource: 'sleeper-api-projections',
+    });
+  } catch (error) {
+    console.error('Error in POST player stats:', error);
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch player stats',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }

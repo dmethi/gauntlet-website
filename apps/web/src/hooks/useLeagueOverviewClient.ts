@@ -174,13 +174,13 @@ export function useLeagueOverviewClient(leagueId?: string): LeagueOverviewData {
         fetchSleeperData<SleeperUser[]>(`league/${effectiveLeagueId}/users`),
       ]);
 
-      // Get current week
+      // Get current week - only count completed weeks
       const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
-      const currentWeek = Math.min(nflState.week, 14);
+      const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
 
-      // Get matchups for all rosters
+      // Get matchups for all rosters (completed weeks only)
       const rosterIds = rosters.map(r => r.roster_id);
-      const rosterMatchups = await getRosterMatchups(effectiveLeagueId, rosterIds, currentWeek);
+      const rosterMatchups = await getRosterMatchups(effectiveLeagueId, rosterIds, completedWeeks);
 
       // Build user map
       const userMap = new Map(users.map(u => [u.user_id, u]));

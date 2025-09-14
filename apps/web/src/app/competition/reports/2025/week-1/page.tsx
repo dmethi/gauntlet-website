@@ -686,15 +686,16 @@ export default function Week1Report2025() {
               const i0 = Math.floor(pos);
               const i1 = Math.min(rdylgn.length - 1, i0 + 1);
               const f = pos - i0;
-              const hexToRgb = (hex: string) => {
+              const hexToRgb = (hex: string | undefined) => {
+                if (!hex) return { r: 128, g: 128, b: 128 }; // Default gray if undefined
                 const m = hex.replace('#', '');
                 const r = parseInt(m.slice(0, 2), 16);
                 const g = parseInt(m.slice(2, 4), 16);
                 const b = parseInt(m.slice(4, 6), 16);
                 return { r, g, b };
               };
-              const c0 = hexToRgb(rdylgn[i0]);
-              const c1 = hexToRgb(rdylgn[i1]);
+              const c0 = hexToRgb(rdylgn[i0] || rdylgn[0]); // Fallback to first color
+              const c1 = hexToRgb(rdylgn[i1] || rdylgn[rdylgn.length - 1]); // Fallback to last color
               const r = Math.round(c0.r + (c1.r - c0.r) * f);
               const g = Math.round(c0.g + (c1.g - c0.g) * f);
               const b = Math.round(c0.b + (c1.b - c0.b) * f);
@@ -767,7 +768,7 @@ export default function Week1Report2025() {
                         {(teams as any[]).map(t => (
                           <div key={t.rosterId} className='flex items-center justify-between'>
                             <div className='truncate'>
-                              {t.name}
+                              {t.teamName || t.name}
                               <span className='text-xs text-muted-foreground ml-2'>
                                 PR #
                                 {((data?.data?.powerRankings || []) as any[]).find(

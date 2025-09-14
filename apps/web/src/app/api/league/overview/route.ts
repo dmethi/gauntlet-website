@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
+import {
+  getLeagueById,
+  getRostersByLeague,
+  getUsersByLeague,
+  getMatchupsByWeek,
+  getCurrentWeek,
+  getAllLeagues,
+} from '@/lib/api-replacements';
+import { getCurrentLeagues } from '@/config/leagues';
 
 export const runtime = 'nodejs';
-
-async function getPrisma() {
-  const { prisma } = await import('@/lib/prisma');
-  return prisma;
-}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -13,61 +17,63 @@ export async function GET(request: Request) {
   const leagueId = searchParams.get('leagueId');
 
   try {
-    const prisma = await getPrisma();
-
     let league;
+    let selectedLeagueId = leagueId;
 
-    if (leagueId) {
-      // Fetch specific league by ID
-      league = await prisma.league.findUnique({
-        where: { id: leagueId },
-        include: {
-          rosters: {
-            include: {
-              owner: true,
-              // Provide matchups used by UI (week + points at minimum)
-              matchups: {
-                select: {
-                  week: true,
-                  points: true,
-                  matchupId: true,
-                },
-              },
-              // Optional metrics if available
-              weeklyMetrics: true,
-            },
-          },
-        },
-      });
-    } else {
-      // Fallback: return the first league
-      const leagues = await prisma.league.findMany({
-        include: {
-          rosters: {
-            include: {
-              owner: true,
-              // Provide matchups used by UI (week + points at minimum)
-              matchups: {
-                select: {
-                  week: true,
-                  points: true,
-                  matchupId: true,
-                },
-              },
-              // Optional metrics if available
-              weeklyMetrics: true,
-            },
-          },
-        },
-      });
-      league = leagues[0];
+    if (!selectedLeagueId) {
+      // Use first current league as default
+      const currentLeagues = getCurrentLeagues();
+      if (currentLeagues.length === 0) {
+        return NextResponse.json({ error: 'No leagues configured' }, { status: 404 });
+      }
+      selectedLeagueId = currentLeagues[0].id;
     }
+
+    // Fetch league data from Sleeper API (no database!)
+    league = await getLeagueById(selectedLeagueId);
 
     if (!league) {
-      return NextResponse.json({ error: 'No league found' }, { status: 404 });
+      return NextResponse.json({ error: 'League not found' }, { status: 404 });
     }
 
-    return NextResponse.json(league);
+    // Fetch additional data
+    const currentWeek = await getCurrentWeek();
+    const [rosters, users, matchups] = await Promise.all([
+      getRostersByLeague(selectedLeagueId),
+      getUsersByLeague(selectedLeagueId),
+      getMatchupsByWeek(selectedLeagueId, currentWeek),
+    ]);
+
+    // Map users to rosters and add matchup data
+    const usersMap = new Map(users.map((u: any) => [u.id, u]));
+    const matchupsByRoster = new Map<number, any[]>();
+
+    matchups.forEach((m: any) => {
+      if (!matchupsByRoster.has(m.rosterId)) {
+        matchupsByRoster.set(m.rosterId, []);
+      }
+      matchupsByRoster.get(m.rosterId)!.push({
+        week: m.week,
+        points: m.points,
+        matchupId: m.matchupId,
+      });
+    });
+
+    const rostersWithDetails = rosters.map((roster: any) => ({
+      ...roster,
+      owner: usersMap.get(roster.ownerId),
+      matchups: matchupsByRoster.get(roster.rosterId) || [],
+      weeklyMetrics: [], // Can be calculated if needed
+    }));
+
+    const leagueWithDetails = {
+      ...league,
+      rosters: rostersWithDetails,
+      dbQueries: 0, // ZERO database queries!
+      dataSource: 'sleeper-api',
+    };
+
+    return NextResponse.json(leagueWithDetails);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('league:overview error', {

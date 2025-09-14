@@ -1,6 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+// Import static variance data loader instead of Prisma
+import {
+  getPositionDistribution as getPositionDistributionStatic,
+  getPlayerOutcomes as getPlayerOutcomesStatic,
+} from '../data/variance-loader';
 
 /**
  * Position-specific standard deviation values based on fantasy football research
@@ -59,33 +61,15 @@ async function getPositionDistribution(position: string): Promise<{
   }
 
   try {
-    // TEMPORARY FIX: Use synthetic distributions while we fix historical data outliers
-    console.log(
-      `Using synthetic distribution for ${position} (historical data has outlier issues)`
-    );
+    // Use static data loader
+    const result = await getPositionDistributionStatic(position);
 
-    const positionStdDev = getPositionStdDev(position);
-    let outcomes: number[] = [];
-    for (let i = 0; i < 1000; i++) {
-      // Generate normal distribution with mean=1.0, position-specific std dev
-      let u = 0,
-        v = 0;
-      while (u === 0) u = Math.random();
-      while (v === 0) v = Math.random();
-      const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-      const outcome = Math.max(0.1, 1.0 + z * positionStdDev); // Min 0.1 to avoid 0 scores
-      outcomes.push(outcome);
-    }
-    // Normalize to exact mean 1.0 after truncation to avoid inflation
-    const mean = outcomes.reduce((s, x) => s + x, 0) / outcomes.length;
-    outcomes = outcomes.map(x => x / (mean === 0 ? 1 : mean));
-
-    const result = {
-      outcomes: outcomes.sort((a, b) => a - b),
-      sampleSize: 1000, // Mark as synthetic but sufficient
+    // Cache the result
+    const cachedResult = {
+      ...result,
       lastUpdated: new Date(),
     };
-    positionDistributionCache.set(position, result);
+    positionDistributionCache.set(position, cachedResult);
 
     return result;
   } catch (error) {
@@ -124,37 +108,15 @@ async function getPlayerOutcomes(playerId: string): Promise<{
   }
 
   try {
-    // Get player's recent outcomes
-    const errors = await prisma.projectionError.findMany({
-      where: { playerId },
-      orderBy: { week: 'desc' },
-      take: 16, // Look at last 16 weeks
-    });
-
-    if (errors.length < 4) {
-      return { outcomes: [], sampleSize: 0 }; // Not enough data
-    }
-
-    // Calculate relative outcomes
-    const rawOutcomes = errors
-      .filter((e: any) => e.projectedPoints > 0)
-      .map((e: any) => e.actualPoints / e.projectedPoints);
-
-    // Normalize around 1.0 to preserve variance but remove mean bias
-    const median = rawOutcomes.sort((a, b) => a - b)[Math.floor(rawOutcomes.length / 2)];
-    const normalizationFactor = 1.0 / median;
-
-    const outcomes = rawOutcomes
-      .map((outcome: number) => outcome * normalizationFactor)
-      .sort((a: number, b: number) => a - b);
+    // Use static data loader
+    const result = await getPlayerOutcomesStatic(playerId);
 
     // Cache the result
-    const result = {
-      outcomes,
-      sampleSize: outcomes.length,
+    const cachedResult = {
+      ...result,
       lastUpdated: new Date(),
     };
-    playerOutcomeCache.set(playerId, result);
+    playerOutcomeCache.set(playerId, cachedResult);
 
     return result;
   } catch (error) {

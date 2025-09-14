@@ -23,6 +23,7 @@ interface PlayerBoxPlotProps {
   width?: number;
   height?: number;
   maxProjection?: number; // Max projection across all players in matchup for scaling
+  distribution?: PlayerDistribution; // Optional: pass distribution data directly
 }
 
 export function PlayerBoxPlot({
@@ -33,12 +34,22 @@ export function PlayerBoxPlot({
   width = 140,
   height = 32,
   maxProjection = 30, // Default fallback, should be passed from parent
+  distribution: providedDistribution,
 }: PlayerBoxPlotProps) {
   const [distribution, setDistribution] = useState<PlayerDistribution | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // If distribution is provided as prop, use it directly
+    if (providedDistribution) {
+      setDistribution(providedDistribution);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    // Otherwise, try to fetch it (fallback for backward compatibility)
     async function fetchPlayerDistribution() {
       try {
         setLoading(true);
@@ -61,7 +72,7 @@ export function PlayerBoxPlot({
     }
 
     fetchPlayerDistribution();
-  }, [playerId, position, projection]);
+  }, [playerId, position, projection, providedDistribution]);
 
   if (loading) {
     return <Skeleton className={`${className}`} style={{ width, height }} />;
@@ -88,16 +99,19 @@ export function PlayerBoxPlot({
     return Math.min(zeroPosition + value * scale, 100);
   };
 
-  // Calculate positions as percentages
-  const p10Percent = valueToPercent(distribution.p10);
+  // Calculate positions as percentages with safety checks
+  const p10Percent = valueToPercent(distribution.p10 ?? 0);
   const p25Percent = valueToPercent(
-    distribution.p25 ?? (distribution.p10 + distribution.median) / 2
+    distribution.p25 ??
+      (distribution.p10 && distribution.median ? (distribution.p10 + distribution.median) / 2 : 0)
   );
-  const medianPercent = valueToPercent(distribution.median);
+  const medianPercent = valueToPercent(distribution.median ?? 0);
   const p75Percent = valueToPercent(
-    distribution.p75 ?? (distribution.median + distribution.p90) / 2
+    distribution.p75 ??
+      (distribution.median && distribution.p90 ? (distribution.median + distribution.p90) / 2 : 0)
   );
-  const p90Percent = valueToPercent(distribution.p90);
+  const p90Percent = valueToPercent(distribution.p90 ?? 0);
+  const meanPercent = valueToPercent(distribution.mean ?? 0);
   const projectionPercent = valueToPercent(projection);
 
   // Enhanced data source colors
@@ -206,18 +220,30 @@ export function PlayerBoxPlot({
               📊 Scaled: 0 pts at 30%, max {maxProjection.toFixed(0)} pts at 100%
             </div>
             <div className='grid grid-cols-2 gap-x-3 gap-y-1'>
-              <div>P10: {distribution.p10.toFixed(1)} pts</div>
-              <div>P90: {distribution.p90.toFixed(1)} pts</div>
+              <div>P10: {distribution.p10?.toFixed(1) ?? 'N/A'} pts</div>
+              <div>P90: {distribution.p90?.toFixed(1) ?? 'N/A'} pts</div>
               <div>
-                Q1: {(distribution.p25 ?? (distribution.p10 + distribution.median) / 2).toFixed(1)}{' '}
+                Q1:{' '}
+                {(
+                  distribution.p25 ??
+                  (distribution.p10 && distribution.median
+                    ? (distribution.p10 + distribution.median) / 2
+                    : null)
+                )?.toFixed(1) ?? 'N/A'}{' '}
                 pts
               </div>
               <div>
-                Q3: {(distribution.p75 ?? (distribution.median + distribution.p90) / 2).toFixed(1)}{' '}
+                Q3:{' '}
+                {(
+                  distribution.p75 ??
+                  (distribution.median && distribution.p90
+                    ? (distribution.median + distribution.p90) / 2
+                    : null)
+                )?.toFixed(1) ?? 'N/A'}{' '}
                 pts
               </div>
-              <div>Median: {distribution.median.toFixed(1)} pts</div>
-              <div>Mean: {distribution.mean.toFixed(1)} pts</div>
+              <div>Median: {distribution.median?.toFixed(1) ?? 'N/A'} pts</div>
+              <div>Mean: {distribution.mean?.toFixed(1) ?? 'N/A'} pts</div>
             </div>
             <div className='pt-1 border-t border-muted'>
               <div>🎯 This week: {projection.toFixed(1)} pts</div>

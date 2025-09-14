@@ -1,71 +1,50 @@
 import { NextResponse } from 'next/server';
+import { getAllLeagues, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 
 export const runtime = 'nodejs';
-
-async function getPrisma() {
-  const { prisma } = await import('@/lib/prisma');
-  return prisma;
-}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const debug = searchParams.has('debug');
 
   try {
-    const prisma = await getPrisma();
+    // Fetch all leagues from Sleeper API (no database!)
+    const leagues = await getAllLeagues();
 
-    // Fetch all leagues with rosters, owners, and co-owners
-    const leagues = await prisma.league.findMany({
-      include: {
-        rosters: {
-          include: {
-            owner: true,
+    // Fetch rosters and users for each league
+    const leaguesWithDetails = await Promise.all(
+      leagues.map(async league => {
+        const [rosters, users] = await Promise.all([
+          getRostersByLeague(league.id),
+          getUsersByLeague(league.id),
+        ]);
+
+        // Map users to rosters
+        const usersMap = new Map(users.map((u: any) => [u.id, u]));
+        const rostersWithOwners = rosters.map((roster: any) => ({
+          ...roster,
+          owner: usersMap.get(roster.ownerId),
+          coOwnerDetails: [], // Co-owners can be added if needed
+        }));
+
+        return {
+          ...league,
+          rosters: rostersWithOwners,
+          _count: {
+            rosters: rosters.length,
+            matchups: 0, // Can be calculated if needed
+            transactions: 0, // Can be calculated if needed
           },
-        },
-        _count: {
-          select: {
-            rosters: true,
-            matchups: true,
-            transactions: true,
-          },
-        },
-      },
-      orderBy: [{ season: 'desc' }, { name: 'asc' }],
-    });
-
-    // Fetch co-owner details for all rosters
-    const allCoOwnerIds = new Set<string>();
-    leagues.forEach(league => {
-      league.rosters.forEach(roster => {
-        if (roster.coOwners && roster.coOwners.length > 0) {
-          roster.coOwners.forEach(coOwnerId => allCoOwnerIds.add(coOwnerId));
-        }
-      });
-    });
-
-    const coOwnerUsers =
-      allCoOwnerIds.size > 0
-        ? await prisma.user.findMany({
-            where: { id: { in: Array.from(allCoOwnerIds) } },
-          })
-        : [];
-
-    // Add co-owner details to each roster
-    const leaguesWithCoOwners = leagues.map(league => ({
-      ...league,
-      rosters: league.rosters.map(roster => ({
-        ...roster,
-        coOwnerDetails:
-          roster.coOwners
-            ?.map(coOwnerId => coOwnerUsers.find(user => user.id === coOwnerId))
-            .filter(Boolean) || [],
-      })),
-    }));
+        };
+      })
+    );
 
     return NextResponse.json({
       ok: true,
-      data: leaguesWithCoOwners,
-      count: leaguesWithCoOwners.length,
+      data: leaguesWithDetails,
+      count: leaguesWithDetails.length,
+      dbQueries: 0, // ZERO database queries!
+      dataSource: 'sleeper-api',
     });
   } catch (error) {
     // console.error('leagues API error:', {

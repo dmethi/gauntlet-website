@@ -101,6 +101,8 @@ export default function MatchupDetailPage() {
   const { leagueId, week, matchupId } = params;
 
   const [matchup, setMatchup] = useState<MatchupDetails | null>(null);
+  const [simulationData, setSimulationData] = useState<any>(null);
+  const [playerDistributions, setPlayerDistributions] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -112,12 +114,44 @@ export default function MatchupDetailPage() {
       setError(null);
 
       try {
-        const response = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}`);
-        if (!response.ok) {
+        // Fetch both matchup details and simulation data
+        const [matchupResponse, simulationResponse] = await Promise.all([
+          fetch(`/api/matchups/${leagueId}/${week}/${matchupId}`),
+          fetch(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`),
+        ]);
+
+        if (!matchupResponse.ok) {
           throw new Error('Failed to fetch matchup details');
         }
 
-        const data = await response.json();
+        const data = await matchupResponse.json();
+
+        // Handle simulation data
+        let simData = null;
+        let distributions: Record<string, any> = {};
+
+        if (simulationResponse.ok) {
+          simData = await simulationResponse.json();
+
+          // Create a lookup map for player distributions
+          if (simData.playersDistributions) {
+            for (const playerDist of simData.playersDistributions) {
+              distributions[playerDist.playerId] = {
+                p10: playerDist.p10,
+                p25: playerDist.p25,
+                median: playerDist.median,
+                p75: playerDist.p75,
+                p90: playerDist.p90,
+                mean: playerDist.mean,
+                sampleSize: 1000, // Default sample size
+                dataSource: playerDist.dataSource || 'projection',
+              };
+            }
+          }
+        }
+
+        setSimulationData(simData);
+        setPlayerDistributions(distributions);
 
         console.log('🔍 [INDIVIDUAL MATCHUP] Raw API response:', data);
 
@@ -298,11 +332,13 @@ export default function MatchupDetailPage() {
             team={teamA}
             isLeading={teamA.points > teamB.points}
             maxProjection={maxProjection}
+            playerDistributions={playerDistributions}
           />
           <TeamRosterCard
             team={teamB}
             isLeading={teamB.points > teamA.points}
             maxProjection={maxProjection}
+            playerDistributions={playerDistributions}
           />
         </div>
       </div>
@@ -365,10 +401,12 @@ function TeamRosterCard({
   team,
   isLeading,
   maxProjection,
+  playerDistributions,
 }: {
   team: TeamRoster;
   isLeading: boolean;
   maxProjection: number;
+  playerDistributions: Record<string, any>;
 }) {
   const sortedStarters = [...team.starters].sort((a, b) => {
     const aIndex = POSITION_ORDER.indexOf(a.position);
@@ -408,7 +446,12 @@ function TeamRosterCard({
           </h3>
           <div className='space-y-2'>
             {sortedStarters.map(player => (
-              <PlayerRow key={player.id} player={player} maxProjection={maxProjection} />
+              <PlayerRow
+                key={player.id}
+                player={player}
+                maxProjection={maxProjection}
+                distribution={playerDistributions[player.id]}
+              />
             ))}
           </div>
         </div>
@@ -421,7 +464,12 @@ function TeamRosterCard({
             </h3>
             <div className='space-y-2'>
               {team.bench.map(player => (
-                <PlayerRow key={player.id} player={player} maxProjection={maxProjection} />
+                <PlayerRow
+                  key={player.id}
+                  player={player}
+                  maxProjection={maxProjection}
+                  distribution={playerDistributions[player.id]}
+                />
               ))}
             </div>
           </div>
@@ -452,9 +500,11 @@ function TeamRosterCard({
 function PlayerRow({
   player,
   maxProjection: _maxProjection,
+  distribution,
 }: {
   player: PlayerDetails;
   maxProjection: number;
+  distribution?: any;
 }) {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
@@ -499,6 +549,7 @@ function PlayerRow({
           height={28}
           className='hidden sm:block justify-self-end'
           maxProjection={40}
+          distribution={distribution}
         />
 
         <div className='text-right whitespace-nowrap'>
