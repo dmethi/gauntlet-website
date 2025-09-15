@@ -5,6 +5,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import crypto from 'crypto';
 
 export interface ArchiveMetadata {
   timestamp: string;
@@ -39,7 +40,6 @@ export class ArchiveService {
    * Generate a checksum for data integrity
    */
   private generateChecksum(data: any): string {
-    const crypto = require('crypto');
     const stringified = JSON.stringify(data);
     return crypto.createHash('md5').update(stringified).digest('hex');
   }
