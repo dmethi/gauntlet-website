@@ -85,7 +85,11 @@ async function buildLineupPlayers(
     const player = players[playerId];
     const projection = projections[playerId];
 
-    if (!player) continue;
+    // Skip players without basic data
+    if (!player) {
+      console.warn(`⚠️ Player ${playerId} not found in players data`);
+      continue;
+    }
 
     // Calculate projected points based on scoring settings
     const points = calculateProjectedPoints(
@@ -95,11 +99,19 @@ async function buildLineupPlayers(
       player.full_name
     );
 
+    // Skip players with zero projections (likely missing data)
+    if (points <= 0 && !projection) {
+      console.warn(
+        `⚠️ Skipping ${player.full_name} (${player.position}) - no projection data available`
+      );
+      continue;
+    }
+
     lineup.push({
       playerId,
       playerName: `${player.first_name} ${player.last_name}`,
       position: player.position,
-      projection: points,
+      projection: Math.max(0.1, points), // Ensure minimum 0.1 points
       team: player.team,
       isStarter: true,
     });
@@ -194,6 +206,43 @@ async function simulateMatchup(
       sleeper.getPlayers(),
     ]);
 
+    // =====================================================
+    // COMPREHENSIVE DEBUGGING - Show actual data structure
+    // =====================================================
+    console.log(`\n🔍 ========== PROJECTIONS API DEBUG ==========`);
+    console.log(`🔍 Data type:`, typeof projections);
+    console.log(`🔍 Is null/undefined:`, projections == null);
+
+    if (projections && typeof projections === 'object') {
+      const projectionKeys = Object.keys(projections);
+      console.log(`🔍 Total projection entries: ${projectionKeys.length}`);
+
+      // Show sample projection keys
+      console.log(`🔍 First 10 projection player IDs:`, projectionKeys.slice(0, 10));
+
+      // Show detailed structure of first 3 players
+      for (let i = 0; i < Math.min(3, projectionKeys.length); i++) {
+        const playerId = projectionKeys[i];
+        const proj = projections[playerId];
+        console.log(`\n🎯 PROJECTION SAMPLE ${i + 1} - Player ID: ${playerId}`);
+        console.log(`   Type: ${typeof proj}`);
+        console.log(`   Is null/undefined: ${proj == null}`);
+
+        if (proj && typeof proj === 'object') {
+          const categories = Object.keys(proj);
+          console.log(`   Categories (${categories.length}): ${categories.join(', ')}`);
+          console.log(`   Full data:`, proj);
+        } else {
+          console.log(`   Value:`, proj);
+        }
+      }
+
+      // Lineup analysis will be done after matchup pairs are found
+    } else {
+      console.error(`❌ Projections API returned: ${JSON.stringify(projections)}`);
+    }
+    console.log(`🔍 ============================================\n`);
+
     // Find the matchup pair
     const matchupPair = matchups.filter(m => m.matchup_id === matchupId);
     if (matchupPair.length !== 2) {
@@ -202,6 +251,45 @@ async function simulateMatchup(
     }
 
     const [team1Matchup, team2Matchup] = matchupPair;
+
+    // =====================================================
+    // LINEUP AND MATCHING ANALYSIS
+    // =====================================================
+    if (projections && typeof projections === 'object') {
+      console.log(`\n🔍 ========== LINEUP STARTERS DEBUG ==========`);
+      const team1Starters = team1Matchup.starters || [];
+      const team2Starters = team2Matchup.starters || [];
+      const allStarters = [...team1Starters, ...team2Starters];
+
+      console.log(`🔍 Team 1 starters (${team1Starters.length}): ${team1Starters.join(', ')}`);
+      console.log(`🔍 Team 2 starters (${team2Starters.length}): ${team2Starters.join(', ')}`);
+
+      // Check exact matches
+      console.log(`\n🔍 ========== PLAYER ID MATCHING ==========`);
+      let found = 0;
+      const missing = [];
+
+      for (const starterId of allStarters.slice(0, 10)) {
+        // Check first 10
+        if (projections[starterId]) {
+          found++;
+          console.log(
+            `✅ Found projection for starter ${starterId}:`,
+            Object.keys(projections[starterId])
+          );
+        } else {
+          missing.push(starterId);
+        }
+      }
+
+      console.log(
+        `🔍 MATCH RESULTS: ${found}/${Math.min(allStarters.length, 10)} starters have projections`
+      );
+      if (missing.length > 0) {
+        console.log(`❌ Missing projections for: ${missing.join(', ')}`);
+      }
+      console.log(`🔍 ============================================\n`);
+    }
 
     // Build lineups - using FRESH data from Sleeper!
     const [team1Players, team2Players] = await Promise.all([

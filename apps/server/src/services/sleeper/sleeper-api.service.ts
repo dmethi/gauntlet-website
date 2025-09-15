@@ -129,10 +129,32 @@ export class SleeperAPIService {
   }
 
   async getProjections(week: number, season: string = '2025', seasonType: string = 'regular') {
-    return this.fetchWithCache<Record<string, any>>(
-      `/projections/nfl/${seasonType}/${season}/${week}`,
+    const endpoint = `/projections/nfl/${seasonType}/${season}/${week}`;
+    const result = await this.fetchWithCache<Record<string, any>>(
+      endpoint,
       300 // 5 min cache
     );
+
+    // Debug projections API response
+    console.log(`🔍 Projections API endpoint: ${endpoint}`);
+    console.log(`🔍 Projections API response type:`, typeof result);
+    console.log(
+      `🔍 Projections API response:`,
+      result === null
+        ? 'NULL'
+        : result === undefined
+          ? 'UNDEFINED'
+          : `Object with ${Object.keys(result || {}).length} keys`
+    );
+
+    if (result && typeof result === 'object') {
+      const firstKey = Object.keys(result)[0];
+      if (firstKey) {
+        console.log(`🔍 Sample projection structure for ${firstKey}:`, result[firstKey]);
+      }
+    }
+
+    return result;
   }
 
   async getStats(week: number, season: string = '2025', seasonType: string = 'regular') {
