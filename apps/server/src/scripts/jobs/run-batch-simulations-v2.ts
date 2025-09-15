@@ -511,17 +511,24 @@ async function main() {
 
     // Clear Sleeper API cache for next run
     sleeper.clearCache();
+
+    console.log('🗑️ Cache cleared: all');
   } catch (error) {
     console.error('❌ Fatal error:', error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();
+    // Ensure process exits cleanly after cleanup
+    process.exit(0);
   }
 }
 
 // Execute if run directly (ES module version)
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(console.error);
+  main().catch(error => {
+    console.error('❌ Script failed:', error);
+    process.exit(1);
+  });
 }
 
 export { simulateMatchup, simulateLeague };

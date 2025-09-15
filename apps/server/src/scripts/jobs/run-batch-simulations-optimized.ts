@@ -307,6 +307,9 @@ async function main() {
     await writeResultsToDatabase(results);
 
     console.log(`🎉 Complete! Database was only active for the final write operation.`);
+
+    // Ensure clean exit after successful completion
+    process.exit(0);
   } catch (error) {
     console.error('❌ Error:', error);
     process.exit(1);
@@ -315,7 +318,10 @@ async function main() {
 
 // Run if called directly (ES module version)
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
+  main().catch(error => {
+    console.error('❌ Script failed:', error);
+    process.exit(1);
+  });
 }
 
 export { main };
