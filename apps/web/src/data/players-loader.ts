@@ -7,7 +7,7 @@ import playersData from './players-data.json';
 import type { PlayersData, SleeperPlayer } from './players-data.types';
 
 // Type assertion for imported JSON
-const data = playersData as PlayersData;
+const data = playersData as unknown as PlayersData;
 
 // In-memory index for fast lookups (just player IDs, not full data)
 const playersById = new Map<string, SleeperPlayer>();

@@ -53,7 +53,7 @@ export async function GET(
       ? rawProjections
       : rawProjections
         ? Object.entries(rawProjections).map(([playerId, projection]) => ({
-            ...projection,
+            ...(typeof projection === 'object' && projection !== null ? projection : {}),
             player_id: playerId,
           }))
         : [];

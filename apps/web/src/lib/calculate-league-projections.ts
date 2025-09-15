@@ -82,11 +82,7 @@ export interface ScoringSettings {
   def_fum_td?: number; // Points per fumble TD
   pass_int_td?: number; // Points per pick-six
   tkl_loss?: number; // Points per tackle for loss
-  fum_rec_td?: number; // Points per fumble recovery TD
-  st_fum_rec?: number; // Points per ST fumble recovery
-  st_ff?: number; // Points per ST forced fumble
-  ff?: number; // Points per forced fumble (alt mapping)
-  fum_rec?: number; // Points per fumble recovery (alt mapping)
+  ff?: number; // Points per forced fumble
 
   // Legacy defense keys (for backward compatibility)
   def_int?: number; // Points per interception

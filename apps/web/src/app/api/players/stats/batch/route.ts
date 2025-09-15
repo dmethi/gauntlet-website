@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayersByIds } from '@/data/players-loader';
-import { getProjections, getNFLState, getCurrentWeek } from '@/lib/api-replacements';
+import { getCurrentWeek } from '@/lib/api-replacements';
+import { getProjections, getNFLState } from '@/lib/sleeper-direct';
 
 export async function GET(request: NextRequest) {
   try {

@@ -5,7 +5,7 @@ export interface SleeperPlayer {
   first_name: string;
   last_name: string;
   position: string;
-  team: string;
+  team: string | null;
   status: string;
   height: string;
   weight: string;

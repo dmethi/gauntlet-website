@@ -99,7 +99,7 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
       ? rawProjections
       : rawProjections
         ? Object.entries(rawProjections).map(([playerId, projection]) => ({
-            ...projection,
+            ...(typeof projection === 'object' && projection !== null ? projection : {}),
             player_id: playerId,
           }))
         : [];

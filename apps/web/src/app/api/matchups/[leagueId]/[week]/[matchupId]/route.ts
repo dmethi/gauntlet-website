@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   getLeague,
   getMatchups,
-  getUsers,
-  getRosters,
   getPlayers,
   getProjections,
+  getRosters,
+  getUsers,
 } from '@/lib/sleeper-direct';
 import {
   type ScoringSettings,
@@ -67,7 +67,7 @@ export async function GET(
       getMatchups(leagueId, weekNumber),
       getUsers(leagueId),
       getRosters(leagueId),
-      getProjections(weekNumber, 2025),
+      getProjections(weekNumber, '2025'),
       getPlayers(),
     ]);
 
@@ -86,7 +86,7 @@ export async function GET(
       ? rawProjections
       : rawProjections
         ? Object.entries(rawProjections).map(([playerId, projection]) => ({
-            ...projection,
+            ...(typeof projection === 'object' && projection !== null ? projection : {}),
             player_id: playerId,
           }))
         : [];
@@ -140,11 +140,11 @@ export async function GET(
         teamName: owner?.display_name || owner?.username || `Team ${matchup.roster_id}`,
         ownerName: owner?.display_name || owner?.username || `Owner ${matchup.roster_id}`,
         points: matchup.points || 0,
-        projectedPoints: starterPlayers.reduce((sum, p) => sum + p.projectedPoints, 0),
+        projectedPoints: starterPlayers.reduce((sum: number, p: any) => sum + p.projectedPoints, 0),
         starters: starterPlayers,
         bench: benchPlayers,
-        remainingPlayers: starterPlayers.filter(p => p.points === 0).length,
-        playersActive: starterPlayers.filter(p => p.points > 0).length,
+        remainingPlayers: starterPlayers.filter((p: any) => p.points === 0).length,
+        playersActive: starterPlayers.filter((p: any) => p.points > 0).length,
         owner: {
           id: owner?.user_id || '',
           username: owner?.username || '',

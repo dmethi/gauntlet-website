@@ -48,8 +48,8 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
 
   try {
     // Parse team ID - format could be "leagueId-rosterId" or just "rosterId"
-    let leagueId: string;
-    let rosterId: number;
+    let leagueId!: string; // Will be assigned in both branches
+    let rosterId!: number; // Will be assigned in both branches
 
     if (teamId.includes('-')) {
       const parts = teamId.split('-');

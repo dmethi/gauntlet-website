@@ -97,7 +97,15 @@ export async function GET(
       biggestBlowout: (() => {
         const biggest = allMatchupSummaries.reduce(
           (max, matchup) => (matchup.margin > max.margin ? matchup : max),
-          { margin: -1, winnerRosterId: 0, pointsA: 0, pointsB: 0, week: 0 }
+          {
+            margin: -1,
+            winnerRosterId: 0,
+            pointsA: 0,
+            pointsB: 0,
+            week: 0,
+            rosterAId: 0,
+            rosterBId: 0,
+          }
         );
 
         const winner = biggest.pointsA > biggest.pointsB ? biggest.rosterAId : biggest.rosterBId;
@@ -119,7 +127,15 @@ export async function GET(
       closestMatchup: (() => {
         const closest = allMatchupSummaries.reduce(
           (min, matchup) => (matchup.margin < min.margin && matchup.margin >= 0 ? matchup : min),
-          { margin: Infinity, winnerRosterId: 0, pointsA: 0, pointsB: 0, week: 0 }
+          {
+            margin: Infinity,
+            winnerRosterId: 0,
+            pointsA: 0,
+            pointsB: 0,
+            week: 0,
+            rosterAId: 0,
+            rosterBId: 0,
+          }
         );
 
         const winner = closest.pointsA > closest.pointsB ? closest.rosterAId : closest.rosterBId;

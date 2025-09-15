@@ -42,7 +42,7 @@ async function calculatePowerRankings(week: number) {
             .length /
           (matchups.length - 1);
 
-        const owner = usersMap.get(roster.owner_id);
+        const owner: any = usersMap.get(roster.owner_id);
         const teamName =
           owner?.metadata?.team_name ||
           owner?.display_name ||
@@ -149,7 +149,7 @@ async function calculateStandings(week: number) {
         else if (points < opponentPoints) losses = 1;
         else ties = 1;
 
-        const owner = usersMap.get(roster.owner_id);
+        const owner: any = usersMap.get(roster.owner_id);
         const teamName =
           owner?.metadata?.team_name ||
           owner?.display_name ||
@@ -244,10 +244,10 @@ async function calculateUpcomingMatchups(nextWeek: number) {
         if (matchupPair.length === 2) {
           const [teamA, teamB] = matchupPair;
 
-          const rosterA = rostersMap.get(teamA.roster_id);
-          const rosterB = rostersMap.get(teamB.roster_id);
-          const ownerA = usersMap.get(rosterA?.owner_id);
-          const ownerB = usersMap.get(rosterB?.owner_id);
+          const rosterA: any = rostersMap.get(teamA.roster_id);
+          const rosterB: any = rostersMap.get(teamB.roster_id);
+          const ownerA: any = usersMap.get(rosterA?.owner_id);
+          const ownerB: any = usersMap.get(rosterB?.owner_id);
 
           const teamAName =
             ownerA?.metadata?.team_name ||
@@ -633,8 +633,8 @@ export async function GET(
             .filter(group => group.length === 2)
             .map(([teamA, teamB]) => {
               const getTeamName = (roster_id: number) => {
-                const roster = rostersByRosterId.get(roster_id);
-                const user = roster ? usersById.get(roster.owner_id) : null;
+                const roster: any = rostersByRosterId.get(roster_id);
+                const user: any = roster ? usersById.get(roster.owner_id) : null;
                 return (
                   user?.metadata?.team_name ||
                   user?.display_name ||
@@ -706,7 +706,7 @@ export async function GET(
             matchups,
             detectors: {},
             teams: rosters.map((r: any) => {
-              const user = usersById.get(r.owner_id);
+              const user: any = usersById.get(r.owner_id);
               return {
                 rosterId: r.roster_id,
                 teamName:
