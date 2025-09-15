@@ -1,29 +1,24 @@
 /**
  * Direct Sleeper API client - bypasses database entirely
  * This replaces expensive DB queries with free API calls
+ * NO CACHING - Always fetches live data
  */
 
-// Simple in-memory cache to avoid hitting Sleeper too often
-const cache = new Map<string, { data: any; expires: number }>();
 const DEBUG = process.env.SLEEPER_DEBUG === '1';
-const NO_CACHE = process.env.SLEEPER_NO_CACHE === '1';
 
 /**
- * Fetch with caching
+ * Fetch directly from Sleeper API (no caching)
  */
-async function fetchWithCache(url: string, cacheMinutes = 5): Promise<any> {
-  const now = Date.now();
-  const cached = cache.get(url);
-
-  if (!NO_CACHE && cached && cached.expires > now) {
-    if (DEBUG) console.log(`[CACHE HIT] ${url}`);
-    return cached.data;
-  }
-
-  if (DEBUG) console.log(`[SLEEPER API] Fetching ${url}`);
+async function fetchFromSleeper(url: string): Promise<any> {
+  if (DEBUG) console.log(`[SLEEPER API] Fetching ${url} (live data)`);
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Gauntlet-Fantasy/1.0',
+      },
+      cache: 'no-store', // Ensure no browser/CDN caching
+    });
 
     if (DEBUG)
       console.log(`[DEBUG] Fetch response:`, {
@@ -63,18 +58,12 @@ async function fetchWithCache(url: string, cacheMinutes = 5): Promise<any> {
       return null;
     }
 
-    if (DEBUG)
-      console.log(`[DEBUG] Parsed data:`, {
+    if (DEBUG) {
+      console.log(`[FETCH DEBUG] Parsed data:`, {
         type: typeof data,
         isArray: Array.isArray(data),
-        isNull: data === null,
-        keys: data && typeof data === 'object' && !Array.isArray(data) ? Object.keys(data) : 'N/A',
-      });
-
-    if (!NO_CACHE) {
-      cache.set(url, {
-        data,
-        expires: now + cacheMinutes * 60 * 1000,
+        length: Array.isArray(data) ? data.length : 'N/A',
+        samplePoints: Array.isArray(data) && data.length > 0 ? data[0]?.points : 'N/A',
       });
     }
 
@@ -94,10 +83,7 @@ async function fetchWithCache(url: string, cacheMinutes = 5): Promise<any> {
  * Replaces: prisma.league.findUnique()
  */
 export async function getLeague(leagueId: string) {
-  return fetchWithCache(
-    `https://api.sleeper.app/v1/league/${leagueId}`,
-    10 // Cache for 10 minutes
-  );
+  return fetchFromSleeper(`https://api.sleeper.app/v1/league/${leagueId}`);
 }
 
 /**
@@ -106,7 +92,7 @@ export async function getLeague(leagueId: string) {
  */
 export async function getRosters(leagueId: string) {
   if (DEBUG) console.log(`[DEBUG] getRosters called with leagueId: ${leagueId}`);
-  const rosters = await fetchWithCache(`https://api.sleeper.app/v1/league/${leagueId}/rosters`, 5);
+  const rosters = await fetchFromSleeper(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
 
   if (DEBUG)
     console.log(`[DEBUG] Rosters response:`, {
@@ -141,7 +127,7 @@ export async function getRosters(leagueId: string) {
  */
 export async function getUsers(leagueId: string) {
   if (DEBUG) console.log(`[DEBUG] getUsers called with leagueId: ${leagueId}`);
-  const users = await fetchWithCache(`https://api.sleeper.app/v1/league/${leagueId}/users`, 10);
+  const users = await fetchFromSleeper(`https://api.sleeper.app/v1/league/${leagueId}/users`);
 
   if (DEBUG)
     console.log(`[DEBUG] Users response:`, {
@@ -167,10 +153,18 @@ export async function getUsers(leagueId: string) {
  * Replaces: prisma.matchup.findMany()
  */
 export async function getMatchups(leagueId: string, week: number) {
-  const matchups = await fetchWithCache(
-    `https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`,
-    2 // Shorter cache during games
+  console.log(`[DEBUG] getMatchups called for league ${leagueId} week ${week}`);
+  const matchups = await fetchFromSleeper(
+    `https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`
   );
+
+  console.log(`[DEBUG] getMatchups received:`, {
+    type: typeof matchups,
+    isArray: Array.isArray(matchups),
+    length: Array.isArray(matchups) ? matchups.length : 'N/A',
+    samplePoints: Array.isArray(matchups) && matchups.length > 0 ? matchups[0].points : 'N/A',
+    sampleRosterId: Array.isArray(matchups) && matchups.length > 0 ? matchups[0].roster_id : 'N/A',
+  });
 
   // Handle null response from Sleeper API
   if (!matchups || !Array.isArray(matchups)) {
@@ -195,42 +189,30 @@ export async function getPlayers() {
  */
 export async function getProjections(week: number, season = '2025') {
   // Use v1 API style to match server-side service shapes
-  return fetchWithCache(
-    `https://api.sleeper.app/v1/projections/nfl/regular/${season}/${week}`,
-    30 // Cache projections longer
-  );
+  return fetchFromSleeper(`https://api.sleeper.app/v1/projections/nfl/regular/${season}/${week}`);
 }
 
 /**
  * Get NFL state (current week, etc)
  */
 export async function getNFLState() {
-  return fetchWithCache(
-    `https://api.sleeper.app/v1/state/nfl`,
-    60 // Cache for 1 hour
-  );
+  return fetchFromSleeper(`https://api.sleeper.app/v1/state/nfl`);
 }
 
 /**
- * Clear cache (useful for testing or forcing refresh)
+ * No-op function - cache has been removed for always-live data
  */
 export function clearCache() {
-  cache.clear();
-  console.log('[CACHE] Cleared all cached data');
+  console.log('[SLEEPER] No cache to clear - always fetching live data');
 }
 
 /**
- * Get cache stats (for debugging)
+ * No cache stats since caching has been removed
  */
 export function getCacheStats() {
-  const now = Date.now();
-  const entries = Array.from(cache.entries()).map(([key, value]) => ({
-    url: key,
-    expiresIn: Math.max(0, Math.round((value.expires - now) / 1000)) + 's',
-  }));
-
   return {
-    size: cache.size,
-    entries,
+    message: 'Caching disabled - all data is fetched live from Sleeper API',
+    size: 0,
+    entries: [],
   };
 }

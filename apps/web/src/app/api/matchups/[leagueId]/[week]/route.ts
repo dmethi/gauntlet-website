@@ -146,7 +146,11 @@ export async function GET(
         // Create actual points mapping using array indices
         const starterActualPoints: Record<string, number> = {};
         starters.forEach((playerId, index) => {
-          starterActualPoints[playerId] = Number(starterPoints[index.toString()] || 0);
+          // Handle both array and object formats from Sleeper API
+          const pointValue = Array.isArray(starterPoints)
+            ? starterPoints[index]
+            : starterPoints[index.toString()];
+          starterActualPoints[playerId] = Number(pointValue || 0);
         });
 
         return {
