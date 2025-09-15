@@ -160,34 +160,24 @@ async function runSimulationsInMemory(matchupData: any[]): Promise<SimulationRes
  * Calculate fantasy points based on scoring settings
  */
 function calculateFantasyPoints(projection: any, scoringSettings: any): number {
-  if (!projection?.stats) {
-    console.log(`⚠️ No projection stats for player`, { projection });
+  if (!projection || typeof projection !== 'object') {
+    console.log(`⚠️ No projection data for player`, { projection });
     return 0;
   }
 
   let points = 0;
-  const stats = projection.stats;
-
-  // Passing
-  points += (stats.pass_yd || 0) * (scoringSettings.pass_yd || 0.04);
-  points += (stats.pass_td || 0) * (scoringSettings.pass_td || 4);
-  points += (stats.pass_int || 0) * (scoringSettings.pass_int || -2);
-
-  // Rushing
-  points += (stats.rush_yd || 0) * (scoringSettings.rush_yd || 0.1);
-  points += (stats.rush_td || 0) * (scoringSettings.rush_td || 6);
-
-  // Receiving
-  points += (stats.rec || 0) * (scoringSettings.rec || 0.5);
-  points += (stats.rec_yd || 0) * (scoringSettings.rec_yd || 0.1);
-  points += (stats.rec_td || 0) * (scoringSettings.rec_td || 6);
-
-  // Add other scoring categories as needed...
+  // Use dynamic scoring to match exact league settings (like v2 script)
+  if (scoringSettings && typeof scoringSettings === 'object') {
+    for (const [category, multiplier] of Object.entries(scoringSettings)) {
+      if (multiplier !== 0 && multiplier != null && projection[category] !== undefined) {
+        points += (projection[category] || 0) * multiplier;
+      }
+    }
+  }
 
   if (points === 0) {
     console.log(`⚠️ Zero points calculated for player`, {
-      projection,
-      stats,
+      projection: projection ? Object.keys(projection) : null,
       scoringSettings: Object.keys(scoringSettings || {}),
     });
   }

@@ -8,7 +8,7 @@
 import SleeperAPIService from '../../services/sleeper/sleeper-api.service';
 import ArchiveService from '../../services/archive/archive.service';
 import prisma from '../../lib/prisma';
-import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
+import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/src/index.js';
 
 // Types
 interface SimulationOptions {
@@ -206,42 +206,11 @@ async function simulateMatchup(
       sleeper.getPlayers(),
     ]);
 
-    // =====================================================
-    // COMPREHENSIVE DEBUGGING - Show actual data structure
-    // =====================================================
-    console.log(`\n🔍 ========== PROJECTIONS API DEBUG ==========`);
-    console.log(`🔍 Data type:`, typeof projections);
-    console.log(`🔍 Is null/undefined:`, projections == null);
-
-    if (projections && typeof projections === 'object') {
-      const projectionKeys = Object.keys(projections);
-      console.log(`🔍 Total projection entries: ${projectionKeys.length}`);
-
-      // Show sample projection keys
-      console.log(`🔍 First 10 projection player IDs:`, projectionKeys.slice(0, 10));
-
-      // Show detailed structure of first 3 players
-      for (let i = 0; i < Math.min(3, projectionKeys.length); i++) {
-        const playerId = projectionKeys[i];
-        const proj = projections[playerId];
-        console.log(`\n🎯 PROJECTION SAMPLE ${i + 1} - Player ID: ${playerId}`);
-        console.log(`   Type: ${typeof proj}`);
-        console.log(`   Is null/undefined: ${proj == null}`);
-
-        if (proj && typeof proj === 'object') {
-          const categories = Object.keys(proj);
-          console.log(`   Categories (${categories.length}): ${categories.join(', ')}`);
-          console.log(`   Full data:`, proj);
-        } else {
-          console.log(`   Value:`, proj);
-        }
-      }
-
-      // Lineup analysis will be done after matchup pairs are found
-    } else {
-      console.error(`❌ Projections API returned: ${JSON.stringify(projections)}`);
+    // Basic validation
+    if (!projections || typeof projections !== 'object') {
+      console.error(`❌ Invalid projections data received`);
+      return;
     }
-    console.log(`🔍 ============================================\n`);
 
     // Find the matchup pair
     const matchupPair = matchups.filter(m => m.matchup_id === matchupId);
