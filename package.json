@@ -15,7 +15,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "prepare": "husky install",
-    "inspect:sleeper": "tsx scripts/inspect-sleeper-data.ts"
+    "inspect:sleeper": "tsx scripts/inspect-sleeper-data.ts",
+    "calculate-report": "tsx scripts/calculate-report-data.ts"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

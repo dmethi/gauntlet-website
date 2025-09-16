@@ -149,13 +149,34 @@ export default function CompetitionPage() {
             <CardDescription>Weekly recaps and draft analysis</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link
-              href='/competition/reports'
-              className='inline-flex items-center text-primary hover:underline'
-            >
-              Week 1 Report — 2025
-              <ChevronRight className='h-4 w-4 ml-1' />
-            </Link>
+            <div className='space-y-2'>
+              <Link
+                href='/competition/reports/2025/week-2'
+                className='block p-3 rounded-md bg-gauntlet-gold/10 hover:bg-gauntlet-gold/20 transition-colors'
+              >
+                <div className='flex items-center justify-between'>
+                  <div>
+                    <div className='font-semibold text-gauntlet-gold'>Week 2 Report — 2025</div>
+                    <div className='text-sm text-muted-foreground'>Latest • AFC + NFC recaps</div>
+                  </div>
+                  <ChevronRight className='h-4 w-4 text-gauntlet-gold' />
+                </div>
+              </Link>
+              <Link
+                href='/competition/reports/2025/week-1'
+                className='block p-3 rounded-md hover:bg-muted/50 transition-colors'
+              >
+                <div className='flex items-center justify-between'>
+                  <div>
+                    <div className='font-medium'>Week 1 Report — 2025</div>
+                    <div className='text-sm text-muted-foreground'>
+                      Draft analysis + first matchups
+                    </div>
+                  </div>
+                  <ChevronRight className='h-4 w-4 text-muted-foreground' />
+                </div>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
