@@ -2,6 +2,11 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { config } from 'dotenv';
+import { PrismaClient } from '@prisma/client';
+
+// Load environment variables from root .env file
+config({ path: path.resolve(process.cwd(), '.env') });
 
 const GAUNTLET_LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },
@@ -77,6 +82,11 @@ class ReportDataCalculator {
   private playersData: Map<string, Player> = new Map();
   private teamRecords: Map<string, TeamRecord> = new Map();
   private weeklyMatchups: Map<string, any[]> = new Map();
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
 
   async calculateReportData(week: number) {
     console.log(`🚀 Calculating report data for Week ${week}...`);
@@ -537,9 +547,10 @@ class ReportDataCalculator {
         }
       });
 
-      const matchups = Array.from(matchupGroups.values())
-        .filter(group => group.length === 2)
-        .map(([teamA, teamB]) => {
+      // Build matchups with async series data
+      const matchupPairs = Array.from(matchupGroups.values()).filter(group => group.length === 2);
+      const matchups = await Promise.all(
+        matchupPairs.map(async ([teamA, teamB]) => {
           const teamAName = this.getTeamName(league.id, teamA.roster_id);
           const teamBName = this.getTeamName(league.id, teamB.roster_id);
           const pointsA = teamA.points || 0;
@@ -575,14 +586,15 @@ class ReportDataCalculator {
                 'FLEX',
               points: teamB.starters_points?.[index.toString()] || 0,
             })),
-            // Add realistic win probability progression
-            series: this.generateWinProbSeries(pointsA, pointsB, teamAName, teamBName, week),
+            // Add real win probability progression from database
+            series: await this.fetchLiveOddsSeries(league.id, teamA.matchup_id, week),
             excitementMetrics: {
               leadChanges: Math.floor(Math.random() * 6), // Placeholder for now
               avgDeltaPct: Math.min(50, Math.abs(pointsA - pointsB) * 2), // Rough estimate
             },
           };
-        });
+        })
+      );
 
       leagues.push({
         leagueId: league.id,
@@ -611,65 +623,70 @@ class ReportDataCalculator {
     return player?.position || null;
   }
 
-  private generateWinProbSeries(
-    pointsA: number,
-    pointsB: number,
-    teamAName: string,
-    teamBName: string,
-    week: number = 2
-  ) {
-    // Week 1: 2025-09-08, Week 2: 2025-09-15, etc.
-    const week1Date = new Date('2025-09-08T13:00:00Z');
-    const baseTime = new Date(week1Date.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000);
-    const times = [
-      { offset: 0, label: 'Thursday' },
-      { offset: 3 * 24 * 60 * 60 * 1000, label: 'Sunday Early' },
-      { offset: 3 * 24 * 60 * 60 * 1000 + 4 * 60 * 60 * 1000, label: 'Sunday Late' },
-      { offset: 3 * 24 * 60 * 60 * 1000 + 8 * 60 * 60 * 1000, label: 'Sunday Night' },
-      { offset: 4 * 24 * 60 * 60 * 1000, label: 'Monday' },
-    ];
+  private async fetchLiveOddsSeries(leagueId: string, matchupId: number, week: number) {
+    try {
+      // Fetch live odds progression from database
+      const oddsHistory = await this.prisma.matchupOddsHistory.findMany({
+        where: {
+          leagueId,
+          week,
+          matchupId,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
 
-    return times.map((time, index) => {
-      const progress = index / (times.length - 1);
-      const timestamp = new Date(baseTime.getTime() + time.offset).toISOString();
-
-      let winProbA: number;
-      if (index === 0) {
-        winProbA = 0.5; // Start even
-      } else if (index === times.length - 1) {
-        winProbA = pointsA > pointsB ? 1.0 : 0.0; // Final result
-      } else {
-        // Gradual progression with some variance
-        const finalWinnerIsA = pointsA > pointsB;
-        const baseProb = finalWinnerIsA ? 0.5 + progress * 0.4 : 0.5 - progress * 0.4;
-        const variance = 0.05 * Math.sin(progress * Math.PI * 3);
-        winProbA = Math.max(0.05, Math.min(0.95, baseProb + variance));
+      if (oddsHistory.length === 0) {
+        console.log(
+          `⚠️ No live odds found for league ${leagueId.slice(-4)} matchup ${matchupId} week ${week}`
+        );
+        // Return empty series if no data
+        return [];
       }
 
-      return {
-        timestamp,
-        winProbA,
-        winProbB: 1 - winProbA,
-        gameProgress: progress * 100,
-        team1Score: index === times.length - 1 ? pointsA : pointsA * progress,
-        team2Score: index === times.length - 1 ? pointsB : pointsB * progress,
-      };
-    });
+      console.log(
+        `✅ Found ${oddsHistory.length} live odds entries for league ${leagueId.slice(-4)} matchup ${matchupId}`
+      );
+
+      // Convert database entries to series format
+      return oddsHistory.map((entry: any) => ({
+        timestamp: entry.createdAt.toISOString(),
+        winProbA: entry.team1WinPct,
+        winProbB: entry.team2WinPct,
+        gameProgress: Math.round(entry.gameProgress * 100),
+        team1Score: entry.team1Score || null,
+        team2Score: entry.team2Score || null,
+      }));
+    } catch (error) {
+      console.error(`❌ Error fetching live odds for matchup ${matchupId}:`, error);
+      return [];
+    }
+  }
+
+  async disconnect() {
+    await this.prisma.$disconnect();
   }
 }
 
 // Main execution
 async function main() {
+  let calculator: ReportDataCalculator | null = null;
   try {
     // Get week from command line argument, default to 2
     const week = parseInt(process.argv[2]) || 2;
 
-    const calculator = new ReportDataCalculator();
+    calculator = new ReportDataCalculator();
     await calculator.calculateReportData(week);
     console.log('🎉 Report data calculation complete!');
   } catch (error) {
     console.error('💥 Error calculating report data:', error);
     process.exit(1);
+  } finally {
+    // Clean up database connection
+    if (calculator) {
+      await calculator.disconnect();
+    }
   }
 }
 

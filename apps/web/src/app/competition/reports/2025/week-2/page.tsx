@@ -1,10 +1,11 @@
 'use client';
 
 import { PageHeader } from '@gauntlet/ui';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Callout } from '@/components/Callout';
 import { colors as brandColors } from '@/lib/colors';
+import reportData from '@/data/report-week2';
 
 // Helper to derive conference abbreviation (AFC/NFC) from league name
 const getConference = (name: string) =>
@@ -235,59 +236,12 @@ function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
 }
 
 export default function Week2Report2025() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-
-  useEffect(() => {
-    fetch('/api/reports/2025/week-2', { cache: 'no-store' })
-      .then(r => r.json())
-      .then(json => {
-        console.log('[Week2Report] API response', json);
-        setData(json);
-      })
-      .catch(() => setData({ ok: false } as any));
-  }, []);
-
-  useEffect(() => {
-    if (!data?.ok || !data.data) return;
-    try {
-      console.log(
-        '[Week2Report] leagues',
-        data.data.leagues.map(l => ({
-          id: l.leagueId,
-          name: l.leagueName,
-          matchups: l.matchups.length,
-        }))
-      );
-      for (const l of data.data.leagues) {
-        const sample = l.matchups[0];
-        if (sample) {
-          console.log('[Week2Report] sample matchup', {
-            leagueId: l.leagueId,
-            leagueName: l.leagueName,
-            matchupId: sample.matchupId,
-            rosterAId: sample.rosterAId,
-            rosterBId: sample.rosterBId,
-            teamAName: sample.teamAName,
-            teamBName: sample.teamBName,
-            startersA: sample.startersA?.length,
-            startersB: sample.startersB?.length,
-            boxA: sample.boxscoreA?.length,
-            boxB: sample.boxscoreB?.length,
-            seriesPoints: sample.series?.length,
-          });
-        } else {
-          console.log('[Week2Report] no matchups for league', l.leagueId);
-        }
-      }
-    } catch (e) {
-      console.warn('[Week2Report] logging error', e);
-    }
-  }, [data]);
+  // Use hardcoded data instead of API fetch
+  const data = { ok: true, data: reportData } as const;
 
   // Overlay helpers for narrative matching (simplified for week 2 framework)
 
   const augmentedLeagues = useMemo(() => {
-    if (!data?.ok || !data.data) return [] as ApiLeague[];
     return (data.data.leagues || []).map(l => {
       const isAFC = (l.leagueName || '').toLowerCase().includes('afc');
       const section = isAFC ? WEEK2_NARRATIVE.afc : WEEK2_NARRATIVE.nfc;
@@ -315,7 +269,7 @@ export default function Week2Report2025() {
 
       return { ...l, overview: section.league_overview || l.overview, matchups };
     });
-  }, [data]);
+  }, []);
 
   return (
     <div className='px-2 md:px-4 py-6 space-y-6 overflow-x-hidden'>
@@ -631,7 +585,7 @@ export default function Week2Report2025() {
           ) : null}
         </div>
       ) : (
-        <div className='text-sm text-muted-foreground'>Loading…</div>
+        <div className='text-sm text-muted-foreground'>No data available</div>
       )}
     </div>
   );

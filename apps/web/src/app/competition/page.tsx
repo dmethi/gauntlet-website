@@ -151,15 +151,43 @@ export default function CompetitionPage() {
           <CardContent>
             <div className='space-y-2'>
               <Link
-                href='/competition/reports/2025/week-2'
+                href='/competition/preview/2025/week-3'
+                className='block p-3 rounded-md bg-blue-500/10 hover:bg-blue-500/20 transition-colors'
+              >
+                <div className='flex items-center justify-between'>
+                  <div>
+                    <div className='font-semibold text-blue-600'>Week 3 Preview — 2025</div>
+                    <div className='text-sm text-muted-foreground'>
+                      Next up • Fantasy matchup preview data
+                    </div>
+                  </div>
+                  <ChevronRight className='h-4 w-4 text-blue-600' />
+                </div>
+              </Link>
+              <Link
+                href='/competition/reports/2025/week-3'
                 className='block p-3 rounded-md bg-gauntlet-gold/10 hover:bg-gauntlet-gold/20 transition-colors'
               >
                 <div className='flex items-center justify-between'>
                   <div>
-                    <div className='font-semibold text-gauntlet-gold'>Week 2 Report — 2025</div>
-                    <div className='text-sm text-muted-foreground'>Latest • AFC + NFC recaps</div>
+                    <div className='font-semibold text-gauntlet-gold'>Week 3 Report — 2025</div>
+                    <div className='text-sm text-muted-foreground'>
+                      Latest • Championship contenders emerge
+                    </div>
                   </div>
                   <ChevronRight className='h-4 w-4 text-gauntlet-gold' />
+                </div>
+              </Link>
+              <Link
+                href='/competition/reports/2025/week-2'
+                className='block p-3 rounded-md hover:bg-muted/50 transition-colors'
+              >
+                <div className='flex items-center justify-between'>
+                  <div>
+                    <div className='font-medium'>Week 2 Report — 2025</div>
+                    <div className='text-sm text-muted-foreground'>AFC + NFC recaps</div>
+                  </div>
+                  <ChevronRight className='h-4 w-4 text-muted-foreground' />
                 </div>
               </Link>
               <Link
