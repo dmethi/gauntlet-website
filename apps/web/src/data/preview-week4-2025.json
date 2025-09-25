@@ -1,0 +1,2424 @@
+{
+  "week": 4,
+  "season": "2025",
+  "overview": "Week 4 looks spicy. Three undefeated squads are trying to protect their perfect records, while four 0–3 teams are already in must-win purgatory. The models peg Mach 10 vs. Herbussy as the highest-scoring shootout, while Saint Brown Does Mahomes vs. lukebowsh has \"rock fight\" energy. And at the extremes: Nacua Matata vs. vchak could be the week's biggest blowout, while NielGetsCarried vs. achak7 projects as the coin-flip closest matchup.",
+  "afc": [
+    {
+      "teamA": {
+        "name": "no14n",
+        "record": "1-2",
+        "projection": 103.8,
+        "players": [
+          {
+            "name": "Josh Allen",
+            "position": "QB",
+            "team": "BUF",
+            "projection": 23.719199999999994,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Chuba Hubbard",
+            "position": "RB",
+            "team": "CAR",
+            "projection": 16.192000000000004,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Kareem Hunt",
+            "position": "RB",
+            "team": "KC",
+            "projection": 9.336,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Amon-Ra St. Brown",
+            "position": "WR",
+            "team": "DET",
+            "projection": 14.481,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Davante Adams",
+            "position": "WR",
+            "team": "LAR",
+            "projection": 12.691,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Dallas Goedert",
+            "position": "TE",
+            "team": "PHI",
+            "projection": 7.483999999999999,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Kenneth Gainwell",
+            "position": "RB",
+            "team": "PIT",
+            "projection": 8.177,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Wan'Dale Robinson",
+            "position": "WR",
+            "team": "NYG",
+            "projection": 8.041,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "DAL",
+            "projection": 3.715,
+            "timeWindow": "sundayNight"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "nkjchamp",
+        "record": "2-1",
+        "projection": 121.3,
+        "players": [
+          {
+            "name": "Justin Fields",
+            "position": "QB",
+            "team": "NYJ",
+            "projection": 19.571800000000003,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Jonathan Taylor",
+            "position": "RB",
+            "team": "IND",
+            "projection": 22.312,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Quinshon Judkins",
+            "position": "RB",
+            "team": "CLE",
+            "projection": 16.313000000000002,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tetairoa McMillan",
+            "position": "WR",
+            "team": "CAR",
+            "projection": 12.574000000000002,
+            "timeWindow": "early"
+          },
+          {
+            "name": "A.J. Brown",
+            "position": "WR",
+            "team": "PHI",
+            "projection": 12.018999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Trey McBride",
+            "position": "TE",
+            "team": "ARI",
+            "projection": 11.644,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "George Pickens",
+            "position": "WR",
+            "team": "DAL",
+            "projection": 12.138,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Tre Tucker",
+            "position": "WR",
+            "team": "LV",
+            "projection": 7.845000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "GB",
+            "projection": 6.869999999999999,
+            "timeWindow": "sundayNight"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 17.5,
+        "moneylineA": -4100,
+        "moneylineB": 4100,
+        "total": 225,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 0,
+          "teamB": 1
+        },
+        "early": {
+          "teamA": 6,
+          "teamB": 3
+        },
+        "late": {
+          "teamA": 2,
+          "teamB": 2
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 2
+        },
+        "mondayNight": {
+          "teamA": 0,
+          "teamB": 1
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Vegas has this as a 17.5-point spread, and the rosters back it up: Fields on Monday night plus Taylor late Sunday give nkjchamp a strong anchor. no14n leans heavily on Josh Allen and Amon-Ra in the early window, which means if they don't hit, it could be over before Sunday Night Football."
+    },
+    {
+      "teamA": {
+        "name": "NielGetsCarried",
+        "record": "0-3",
+        "projection": 118,
+        "players": [
+          {
+            "name": "Baker Mayfield",
+            "position": "QB",
+            "team": "TB",
+            "projection": 18.580799999999996,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Josh Jacobs",
+            "position": "RB",
+            "team": "GB",
+            "projection": 20.388,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Alvin Kamara",
+            "position": "RB",
+            "team": "NO",
+            "projection": 15.788999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Justin Jefferson",
+            "position": "WR",
+            "team": "MIN",
+            "projection": 12.271999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Michael Pittman",
+            "position": "WR",
+            "team": "IND",
+            "projection": 9.985000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Mark Andrews",
+            "position": "TE",
+            "team": "BAL",
+            "projection": 7.208000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "name": "DK Metcalf",
+            "position": "WR",
+            "team": "PIT",
+            "projection": 10.762,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Trey Benson",
+            "position": "RB",
+            "team": "ARI",
+            "projection": 16.378,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "position": "DEF",
+            "team": "LAC",
+            "projection": 6.62,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "achak7",
+        "record": "2-1",
+        "projection": 114.2,
+        "players": [
+          {
+            "name": "Dak Prescott",
+            "position": "QB",
+            "team": "DAL",
+            "projection": 16.4192,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Kyren Williams",
+            "position": "RB",
+            "team": "LAR",
+            "projection": 18.118000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "James Cook",
+            "position": "RB",
+            "team": "BUF",
+            "projection": 19.910999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Malik Nabers",
+            "position": "WR",
+            "team": "NYG",
+            "projection": 12.583,
+            "timeWindow": "early"
+          },
+          {
+            "name": "DeVonta Smith",
+            "position": "WR",
+            "team": "PHI",
+            "projection": 10.438999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Sam LaPorta",
+            "position": "TE",
+            "team": "DET",
+            "projection": 9.598,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Rome Odunze",
+            "position": "WR",
+            "team": "CHI",
+            "projection": 11.514999999999999,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Jakobi Meyers",
+            "position": "WR",
+            "team": "LV",
+            "projection": 11.024000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "BAL",
+            "projection": 4.605,
+            "timeWindow": "late"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamA",
+        "spread": 4,
+        "moneylineA": -163,
+        "moneylineB": 163,
+        "total": 232,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "early": {
+          "teamA": 5,
+          "teamB": 4
+        },
+        "late": {
+          "teamA": 2,
+          "teamB": 4
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "mondayNight": {
+          "teamA": 0,
+          "teamB": 0
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Our \"closest matchup\" of the slate. Niel is favored by 4 thanks to Jefferson + Jacobs anchoring, but achak has steady pieces (Kyren, Cook, Nabers). Both teams have heavy early exposure, so this one may be decided by 4:30pm ET. Upset potential is high — and for Niel, 0–4 is a death sentence."
+    },
+    {
+      "teamA": {
+        "name": "hunterzogg",
+        "record": "3-0",
+        "projection": 113.4,
+        "players": [
+          {
+            "name": "Caleb Williams",
+            "position": "QB",
+            "team": "CHI",
+            "projection": 17.3336,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Jahmyr Gibbs",
+            "position": "RB",
+            "team": "DET",
+            "projection": 21.077,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Derrick Henry",
+            "position": "RB",
+            "team": "BAL",
+            "projection": 19.685000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Keenan Allen",
+            "position": "WR",
+            "team": "LAC",
+            "projection": 10.846,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tyquan Thornton",
+            "position": "WR",
+            "team": "KC",
+            "projection": 6.922,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Juwan Johnson",
+            "position": "TE",
+            "team": "NO",
+            "projection": 9.363999999999999,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Ja'Marr Chase",
+            "position": "WR",
+            "team": "CIN",
+            "projection": 12.863,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Matthew Golden",
+            "position": "WR",
+            "team": "GB",
+            "projection": 6.8260000000000005,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "position": "DEF",
+            "team": "DET",
+            "projection": 8.475000000000001,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "kanzelm3",
+        "record": "2-1",
+        "projection": 118.7,
+        "players": [
+          {
+            "name": "Patrick Mahomes",
+            "position": "QB",
+            "team": "KC",
+            "projection": 19.0926,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Bijan Robinson",
+            "position": "RB",
+            "team": "ATL",
+            "projection": 21.22,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Javonte Williams",
+            "position": "RB",
+            "team": "DAL",
+            "projection": 14.929999999999998,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Quentin Johnston",
+            "position": "WR",
+            "team": "LAC",
+            "projection": 10.759,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Marvin Harrison",
+            "position": "WR",
+            "team": "ARI",
+            "projection": 9.322,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Travis Kelce",
+            "position": "TE",
+            "team": "KC",
+            "projection": 8.295,
+            "timeWindow": "late"
+          },
+          {
+            "name": "David Montgomery",
+            "position": "RB",
+            "team": "DET",
+            "projection": 13.243999999999994,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Travis Etienne",
+            "position": "RB",
+            "team": "JAX",
+            "projection": 14.436000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "NE",
+            "projection": 7.359999999999999,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 5.5,
+        "moneylineA": 199,
+        "moneylineB": -199,
+        "total": 232,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 0,
+          "teamB": 1
+        },
+        "early": {
+          "teamA": 4,
+          "teamB": 4
+        },
+        "late": {
+          "teamA": 3,
+          "teamB": 3
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Undefeated vs. contender. Mahomes + Bijan + Etienne on kanzelm3's side make him a narrow favorite, but Hunter counters with Gibbs, Henry, and a Monday-night Chase sweat. Expect swings all weekend — this matchup screams \"decided by prime time\"."
+    },
+    {
+      "teamA": {
+        "name": "anantjindani",
+        "record": "1-2",
+        "projection": 120.6,
+        "players": [
+          {
+            "name": "Daniel Jones",
+            "position": "QB",
+            "team": "IND",
+            "projection": 18.609,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Saquon Barkley",
+            "position": "RB",
+            "team": "PHI",
+            "projection": 21.136,
+            "timeWindow": "early"
+          },
+          {
+            "name": "De'Von Achane",
+            "position": "RB",
+            "team": "MIA",
+            "projection": 20.526999999999994,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Brian Thomas",
+            "position": "WR",
+            "team": "JAX",
+            "projection": 11.854999999999999,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Deebo Samuel",
+            "position": "WR",
+            "team": "WAS",
+            "projection": 10.439,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jake Ferguson",
+            "position": "TE",
+            "team": "DAL",
+            "projection": 8.645,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Jaylen Warren",
+            "position": "RB",
+            "team": "PIT",
+            "projection": 14.209999999999997,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Xavier Worthy",
+            "position": "WR",
+            "team": "KC",
+            "projection": 9.231,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "SEA",
+            "projection": 5.934999999999999,
+            "timeWindow": "thursdayNight"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "benweinfeld",
+        "record": "1-2",
+        "projection": 111,
+        "players": [
+          {
+            "name": "Justin Herbert",
+            "position": "QB",
+            "team": "LAC",
+            "projection": 19.525000000000002,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Ashton Jeanty",
+            "position": "RB",
+            "team": "LV",
+            "projection": 14.936,
+            "timeWindow": "late"
+          },
+          {
+            "name": "J.K. Dobbins",
+            "position": "RB",
+            "team": "DEN",
+            "projection": 16.340999999999998,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Garrett Wilson",
+            "position": "WR",
+            "team": "NYJ",
+            "projection": 12.068999999999999,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Emeka Egbuka",
+            "position": "WR",
+            "team": "TB",
+            "projection": 12.031999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Hunter Henry",
+            "position": "TE",
+            "team": "NE",
+            "projection": 8.057,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Terry McLaurin",
+            "position": "WR",
+            "team": "WAS",
+            "projection": 10.847000000000001,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jameson Williams",
+            "position": "WR",
+            "team": "DET",
+            "projection": 10.704,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "MIN",
+            "projection": 6.45,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamA",
+        "spread": 9.5,
+        "moneylineA": -365,
+        "moneylineB": 365,
+        "total": 231.5,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "early": {
+          "teamA": 3,
+          "teamB": 6
+        },
+        "late": {
+          "teamA": 3,
+          "teamB": 1
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 2
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "A desperation bowl: loser falls to 1–3. Anant is favored by 9.5 with Saquon, Achane (MN), and Deebo early. Ben banks on Herbert + Dobbins + Garrett Wilson (two of them Monday). Expect this one to go deep into MNF with Achane vs. Wilson possibly deciding it."
+    },
+    {
+      "teamA": {
+        "name": "lazy9669",
+        "record": "1-2",
+        "projection": 124.3,
+        "players": [
+          {
+            "name": "Jayden Daniels",
+            "position": "QB",
+            "team": "WAS",
+            "projection": 21.72,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Breece Hall",
+            "position": "RB",
+            "team": "NYJ",
+            "projection": 15.402000000000001,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Kenneth Walker",
+            "position": "RB",
+            "team": "SEA",
+            "projection": 14.483,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Puka Nacua",
+            "position": "WR",
+            "team": "LAR",
+            "projection": 16.87,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Zay Flowers",
+            "position": "WR",
+            "team": "BAL",
+            "projection": 11.166,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Tyler Warren",
+            "position": "TE",
+            "team": "IND",
+            "projection": 11.103,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Tyreek Hill",
+            "position": "WR",
+            "team": "MIA",
+            "projection": 11.245,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Tony Pollard",
+            "position": "RB",
+            "team": "TEN",
+            "projection": 16.318000000000005,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "PIT",
+            "projection": 5.965,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "vchak",
+        "record": "1-2",
+        "projection": 105.2,
+        "players": [
+          {
+            "name": "Bo Nix",
+            "position": "QB",
+            "team": "DEN",
+            "projection": 16.91,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Christian McCaffrey",
+            "position": "RB",
+            "team": "SF",
+            "projection": 24.464000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Isiah Pacheco",
+            "position": "RB",
+            "team": "KC",
+            "projection": 8.169000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "DJ Moore",
+            "position": "WR",
+            "team": "CHI",
+            "projection": 10.152999999999999,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Darnell Mooney",
+            "position": "WR",
+            "team": "ATL",
+            "projection": 8.295,
+            "timeWindow": "early"
+          },
+          {
+            "name": "T.J. Hockenson",
+            "position": "TE",
+            "team": "MIN",
+            "projection": 7.29,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Nico Collins",
+            "position": "WR",
+            "team": "HOU",
+            "projection": 12.94,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Ricky Pearsall",
+            "position": "WR",
+            "team": "SF",
+            "projection": 11.582999999999998,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "PHI",
+            "projection": 5.4,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamA",
+        "spread": 19,
+        "moneylineA": 1529,
+        "moneylineB": -1529,
+        "total": 229.5,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "early": {
+          "teamA": 3,
+          "teamB": 4
+        },
+        "late": {
+          "teamA": 3,
+          "teamB": 4
+        },
+        "sundayNight": {
+          "teamA": 0,
+          "teamB": 0
+        },
+        "mondayNight": {
+          "teamA": 2,
+          "teamB": 1
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "On paper this is the biggest mismatch — a 19-point spread. Jayden Daniels, Gibbs, Pollard, and Tyreek Hill give lazy huge firepower across multiple windows. Vchak has CMC (late) as his only true hammer; unless Pearsall and Nico pop, this could get ugly."
+    },
+    {
+      "teamA": {
+        "name": "dparikh3",
+        "record": "2-1",
+        "projection": 115.2,
+        "players": [
+          {
+            "name": "Lamar Jackson",
+            "position": "QB",
+            "team": "BAL",
+            "projection": 23.101999999999997,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Chase Brown",
+            "position": "RB",
+            "team": "CIN",
+            "projection": 13.566,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Jordan Mason",
+            "position": "RB",
+            "team": "MIN",
+            "projection": 19.04,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Drake London",
+            "position": "WR",
+            "team": "ATL",
+            "projection": 11.243,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Courtland Sutton",
+            "position": "WR",
+            "team": "DEN",
+            "projection": 10.52,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Brock Bowers",
+            "position": "TE",
+            "team": "LV",
+            "projection": 11.538,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Jacory Croskey-Merritt",
+            "position": "RB",
+            "team": "WAS",
+            "projection": 9.626999999999999,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Romeo Doubs",
+            "position": "WR",
+            "team": "GB",
+            "projection": 7.534,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "position": "DEF",
+            "team": "BUF",
+            "projection": 9,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "scboom5",
+        "record": "2-1",
+        "projection": 120.9,
+        "players": [
+          {
+            "name": "Jalen Hurts",
+            "position": "QB",
+            "team": "PHI",
+            "projection": 21.335399999999996,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Bucky Irving",
+            "position": "RB",
+            "team": "TB",
+            "projection": 20.89,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Omarion Hampton",
+            "position": "RB",
+            "team": "LAC",
+            "projection": 18.056,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "team": "SEA",
+            "projection": 14.722000000000001,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Khalil Shakir",
+            "position": "WR",
+            "team": "BUF",
+            "projection": 9.015,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tucker Kraft",
+            "position": "TE",
+            "team": "GB",
+            "projection": 9.181,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Zach Charbonnet",
+            "position": "RB",
+            "team": "SEA",
+            "projection": 11.608,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Elic Ayomanor",
+            "position": "WR",
+            "team": "TEN",
+            "projection": 7.923000000000001,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "HOU",
+            "projection": 8.205,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 5.5,
+        "moneylineA": 199,
+        "moneylineB": -199,
+        "total": 236,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 0,
+          "teamB": 2
+        },
+        "early": {
+          "teamA": 4,
+          "teamB": 6
+        },
+        "late": {
+          "teamA": 2,
+          "teamB": 0
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "mondayNight": {
+          "teamA": 2,
+          "teamB": 0
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "High-profile battle. Lamar + Jordan Mason give Darshan/Kyle early juice, but scboom counters with Hurts, Bucky Irving, and Omarion Hampton in the same window. Both teams are 2–1, both project north of 115. Models call it a shootout with 236 total — and likely one of the week's highest-scoring matchups."
+    }
+  ],
+  "nfc": [
+    {
+      "teamA": {
+        "name": "ziyanp22",
+        "record": "2-1",
+        "projection": 108.6,
+        "players": [
+          {
+            "name": "Jordan Love",
+            "position": "QB",
+            "team": "GB",
+            "projection": 16.767599999999995,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Ashton Jeanty",
+            "position": "RB",
+            "team": "LV",
+            "projection": 14.936,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Chase Brown",
+            "position": "RB",
+            "team": "CIN",
+            "projection": 13.566,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Puka Nacua",
+            "position": "WR",
+            "team": "LAR",
+            "projection": 16.87,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Keenan Allen",
+            "position": "WR",
+            "team": "LAC",
+            "projection": 10.846,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Zach Ertz",
+            "position": "TE",
+            "team": "WAS",
+            "projection": 6.9270000000000005,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Rome Odunze",
+            "position": "WR",
+            "team": "CHI",
+            "projection": 11.514999999999999,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Jameson Williams",
+            "position": "WR",
+            "team": "DET",
+            "projection": 10.704,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "MIN",
+            "projection": 6.45,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "jr212121",
+        "record": "2-1",
+        "projection": 125.6,
+        "players": [
+          {
+            "name": "Lamar Jackson",
+            "position": "QB",
+            "team": "BAL",
+            "projection": 23.101999999999997,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Quinshon Judkins",
+            "position": "RB",
+            "team": "CLE",
+            "projection": 16.313000000000002,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tony Pollard",
+            "position": "RB",
+            "team": "TEN",
+            "projection": 16.318000000000005,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "team": "SEA",
+            "projection": 14.722000000000001,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Davante Adams",
+            "position": "WR",
+            "team": "LAR",
+            "projection": 12.691,
+            "timeWindow": "late"
+          },
+          {
+            "name": "T.J. Hockenson",
+            "position": "TE",
+            "team": "MIN",
+            "projection": 7.29,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tyreek Hill",
+            "position": "WR",
+            "team": "MIA",
+            "projection": 11.245,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Javonte Williams",
+            "position": "RB",
+            "team": "DAL",
+            "projection": 14.929999999999998,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "position": "DEF",
+            "team": "BUF",
+            "projection": 9,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 17,
+        "moneylineA": -10100,
+        "moneylineB": 10100,
+        "total": 234,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 0,
+          "teamB": 1
+        },
+        "early": {
+          "teamA": 4,
+          "teamB": 4
+        },
+        "late": {
+          "teamA": 3,
+          "teamB": 2
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "The sims peg this as a lopsided affair, with jr favored by 17. Lamar + Pollard + Tyreek Hill staggered across late and MNF windows give him a lot of control. Ziyan will need Puka and Odunze to shine to keep it competitive."
+    },
+    {
+      "teamA": {
+        "name": "dmethi",
+        "record": "2-1",
+        "projection": 125.1,
+        "players": [
+          {
+            "name": "Jayden Daniels",
+            "position": "QB",
+            "team": "WAS",
+            "projection": 21.72,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jahmyr Gibbs",
+            "position": "RB",
+            "team": "DET",
+            "projection": 21.077,
+            "timeWindow": "early"
+          },
+          {
+            "name": "De'Von Achane",
+            "position": "RB",
+            "team": "MIA",
+            "projection": 20.526999999999994,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "George Pickens",
+            "position": "WR",
+            "team": "DAL",
+            "projection": 12.138,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Jordan Addison",
+            "position": "WR",
+            "team": "MIN",
+            "projection": 8.339,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Harold Fannin",
+            "position": "TE",
+            "team": "CLE",
+            "projection": 7.824000000000001,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jaylen Waddle",
+            "position": "WR",
+            "team": "MIA",
+            "projection": 8.892,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "J.K. Dobbins",
+            "position": "RB",
+            "team": "DEN",
+            "projection": 16.340999999999998,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "position": "DEF",
+            "team": "HOU",
+            "projection": 8.205,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "Akill13",
+        "record": "3-0",
+        "projection": 124.3,
+        "players": [
+          {
+            "name": "Justin Herbert",
+            "position": "QB",
+            "team": "LAC",
+            "projection": 19.525000000000002,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jonathan Taylor",
+            "position": "RB",
+            "team": "IND",
+            "projection": 22.312,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Bucky Irving",
+            "position": "RB",
+            "team": "TB",
+            "projection": 20.89,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Marvin Harrison",
+            "position": "WR",
+            "team": "ARI",
+            "projection": 9.322,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Emeka Egbuka",
+            "position": "WR",
+            "team": "TB",
+            "projection": 12.031999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tyler Warren",
+            "position": "TE",
+            "team": "IND",
+            "projection": 11.103,
+            "timeWindow": "late"
+          },
+          {
+            "name": "DJ Moore",
+            "position": "WR",
+            "team": "CHI",
+            "projection": 10.152999999999999,
+            "timeWindow": "late"
+          },
+          {
+            "name": "David Montgomery",
+            "position": "RB",
+            "team": "DET",
+            "projection": 13.243999999999994,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "WAS",
+            "projection": 5.7,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamA",
+        "spread": 1,
+        "moneylineA": -113,
+        "moneylineB": 113,
+        "total": 249.5,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 0,
+          "teamB": 1
+        },
+        "early": {
+          "teamA": 5,
+          "teamB": 5
+        },
+        "late": {
+          "teamA": 0,
+          "teamB": 3
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "mondayNight": {
+          "teamA": 3,
+          "teamB": 0
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Pick'em of the week: projected totals nearly identical, and Vegas calls it a 1-point spread with a massive 249.5 implied total. Daniels/Gibbs/Achane vs. Herbert/Taylor/Bucky Irving. Early window will be chaotic, but with Achane and Waddle late Monday, Dhruv could be sweating this one to the wire."
+    },
+    {
+      "teamA": {
+        "name": "vayyala",
+        "record": "0-3",
+        "projection": 116.1,
+        "players": [
+          {
+            "name": "Jalen Hurts",
+            "position": "QB",
+            "team": "PHI",
+            "projection": 21.335399999999996,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Kyren Williams",
+            "position": "RB",
+            "team": "LAR",
+            "projection": 18.118000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Kenneth Walker",
+            "position": "RB",
+            "team": "SEA",
+            "projection": 14.483,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Brian Thomas",
+            "position": "WR",
+            "team": "JAX",
+            "projection": 11.854999999999999,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Terry McLaurin",
+            "position": "WR",
+            "team": "WAS",
+            "projection": 10.847000000000001,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tucker Kraft",
+            "position": "TE",
+            "team": "GB",
+            "projection": 9.181,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Chris Olave",
+            "position": "WR",
+            "team": "NO",
+            "projection": 11.284,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jakobi Meyers",
+            "position": "WR",
+            "team": "LV",
+            "projection": 11.024000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "DEN",
+            "projection": 7.9399999999999995,
+            "timeWindow": "mondayNight"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "cescott25",
+        "record": "2-1",
+        "projection": 102.6,
+        "players": [
+          {
+            "name": "Josh Allen",
+            "position": "QB",
+            "team": "BUF",
+            "projection": 23.719199999999994,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Woody Marks",
+            "position": "RB",
+            "team": "HOU",
+            "projection": 7.9799999999999995,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Kareem Hunt",
+            "position": "RB",
+            "team": "KC",
+            "projection": 9.336,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Nico Collins",
+            "position": "WR",
+            "team": "HOU",
+            "projection": 12.94,
+            "timeWindow": "early"
+          },
+          {
+            "name": "DeVonta Smith",
+            "position": "WR",
+            "team": "PHI",
+            "projection": 10.438999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Trey McBride",
+            "position": "TE",
+            "team": "ARI",
+            "projection": 11.644,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Ricky Pearsall",
+            "position": "WR",
+            "team": "SF",
+            "projection": 11.582999999999998,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Travis Kelce",
+            "position": "TE",
+            "team": "KC",
+            "projection": 8.295,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "LAC",
+            "projection": 6.62,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamA",
+        "spread": 13.5,
+        "moneylineA": -953,
+        "moneylineB": 953,
+        "total": 218.5,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "early": {
+          "teamA": 3,
+          "teamB": 5
+        },
+        "late": {
+          "teamA": 3,
+          "teamB": 3
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Oddsmakers actually like winless Vinny by 13.5 despite the records. Hurts + Kyren + Olave is a nice foundation; cescott leans on Josh Allen early but doesn't have the same ceiling behind him. If Vinny doesn't get this dub, it's panic time."
+    },
+    {
+      "teamA": {
+        "name": "arnavmehta",
+        "record": "0-3",
+        "projection": 122.5,
+        "players": [
+          {
+            "name": "Kyler Murray",
+            "position": "QB",
+            "team": "ARI",
+            "projection": 17.6726,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Saquon Barkley",
+            "position": "RB",
+            "team": "PHI",
+            "projection": 21.136,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Bijan Robinson",
+            "position": "RB",
+            "team": "ATL",
+            "projection": 21.22,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Ja'Marr Chase",
+            "position": "WR",
+            "team": "CIN",
+            "projection": 12.863,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Quentin Johnston",
+            "position": "WR",
+            "team": "LAC",
+            "projection": 10.759,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Hunter Henry",
+            "position": "TE",
+            "team": "NE",
+            "projection": 8.057,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Trey Benson",
+            "position": "RB",
+            "team": "ARI",
+            "projection": 16.378,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Jeremy McNichols",
+            "position": "RB",
+            "team": "WAS",
+            "projection": 7.502999999999999,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "GB",
+            "projection": 6.869999999999999,
+            "timeWindow": "sundayNight"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "Bego60",
+        "record": "3-0",
+        "projection": 125.4,
+        "players": [
+          {
+            "name": "Caleb Williams",
+            "position": "QB",
+            "team": "CHI",
+            "projection": 17.3336,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Josh Jacobs",
+            "position": "RB",
+            "team": "GB",
+            "projection": 20.388,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Derrick Henry",
+            "position": "RB",
+            "team": "BAL",
+            "projection": 19.685000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "A.J. Brown",
+            "position": "WR",
+            "team": "PHI",
+            "projection": 12.018999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Garrett Wilson",
+            "position": "WR",
+            "team": "NYJ",
+            "projection": 12.068999999999999,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Jake Ferguson",
+            "position": "TE",
+            "team": "DAL",
+            "projection": 8.645,
+            "timeWindow": "sundayNight"
+          },
+          {
+            "name": "Tetairoa McMillan",
+            "position": "WR",
+            "team": "CAR",
+            "projection": 12.574000000000002,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Jaylen Warren",
+            "position": "RB",
+            "team": "PIT",
+            "projection": 14.209999999999997,
+            "timeWindow": "early"
+          },
+          {
+            "position": "DEF",
+            "team": "DET",
+            "projection": 8.475000000000001,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 3,
+        "moneylineA": 144,
+        "moneylineB": -144,
+        "total": 248,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 2,
+          "teamB": 0
+        },
+        "early": {
+          "teamA": 5,
+          "teamB": 4
+        },
+        "late": {
+          "teamA": 0,
+          "teamB": 2
+        },
+        "sundayNight": {
+          "teamA": 1,
+          "teamB": 2
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "The \"perfect season vs. desperation\" clash. Bego leans on Jacobs, Derrick Henry, and Garrett Wilson late; Arnav counters with Bijan + Saquon early and Ja'Marr on MNF. Spread is only 3 despite the record gap — and Arnav has to throw everything at this to avoid 0–4."
+    },
+    {
+      "teamA": {
+        "name": "RithikP",
+        "record": "0-3",
+        "projection": 113.3,
+        "players": [
+          {
+            "name": "Sam Darnold",
+            "position": "QB",
+            "team": "SEA",
+            "projection": 15.7814,
+            "timeWindow": "thursdayNight"
+          },
+          {
+            "name": "Jordan Mason",
+            "position": "RB",
+            "team": "MIN",
+            "projection": 19.04,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Breece Hall",
+            "position": "RB",
+            "team": "NYJ",
+            "projection": 15.402000000000001,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "name": "Malik Nabers",
+            "position": "WR",
+            "team": "NYG",
+            "projection": 12.583,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Drake London",
+            "position": "WR",
+            "team": "ATL",
+            "projection": 11.243,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Dallas Goedert",
+            "position": "TE",
+            "team": "PHI",
+            "projection": 7.483999999999999,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Ladd McConkey",
+            "position": "WR",
+            "team": "LAC",
+            "projection": 11.353,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Travis Etienne",
+            "position": "RB",
+            "team": "JAX",
+            "projection": 14.436000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "PIT",
+            "projection": 5.965,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "lurski",
+        "record": "1-2",
+        "projection": 118.6,
+        "players": [
+          {
+            "name": "Jared Goff",
+            "position": "QB",
+            "team": "DET",
+            "projection": 17.391599999999997,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Alvin Kamara",
+            "position": "RB",
+            "team": "NO",
+            "projection": 15.788999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Chuba Hubbard",
+            "position": "RB",
+            "team": "CAR",
+            "projection": 16.192000000000004,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Zay Flowers",
+            "position": "WR",
+            "team": "BAL",
+            "projection": 11.166,
+            "timeWindow": "late"
+          },
+          {
+            "name": "DK Metcalf",
+            "position": "WR",
+            "team": "PIT",
+            "projection": 10.762,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Brock Bowers",
+            "position": "TE",
+            "team": "LV",
+            "projection": 11.538,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Cam Skattebo",
+            "position": "RB",
+            "team": "NYG",
+            "projection": 17.906,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Courtland Sutton",
+            "position": "WR",
+            "team": "DEN",
+            "projection": 10.52,
+            "timeWindow": "mondayNight"
+          },
+          {
+            "position": "DEF",
+            "team": "NE",
+            "projection": 7.359999999999999,
+            "timeWindow": "early"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 5.5,
+        "moneylineA": 199,
+        "moneylineB": -199,
+        "total": 232,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "early": {
+          "teamA": 6,
+          "teamB": 6
+        },
+        "late": {
+          "teamA": 1,
+          "teamB": 2
+        },
+        "sundayNight": {
+          "teamA": 0,
+          "teamB": 0
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 1
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Both sides have volume early. Rithik rides Mason + Nabers, while Lurski counters with Kamara, Hubbard, and Metcalf. Lurski is favored by 5.5, but this is the kind of mid-tier duel where variance reigns. Both desperately need a statement win."
+    },
+    {
+      "teamA": {
+        "name": "YouSmellLikeDaal",
+        "record": "1-2",
+        "projection": 109.5,
+        "players": [
+          {
+            "name": "Patrick Mahomes",
+            "position": "QB",
+            "team": "KC",
+            "projection": 19.0926,
+            "timeWindow": "late"
+          },
+          {
+            "name": "James Cook",
+            "position": "RB",
+            "team": "BUF",
+            "projection": 19.910999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Rhamondre Stevenson",
+            "position": "RB",
+            "team": "NE",
+            "projection": 10.942999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Justin Jefferson",
+            "position": "WR",
+            "team": "MIN",
+            "projection": 12.271999999999998,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Amon-Ra St. Brown",
+            "position": "WR",
+            "team": "DET",
+            "projection": 14.481,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Sam LaPorta",
+            "position": "TE",
+            "team": "DET",
+            "projection": 9.598,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Stefon Diggs",
+            "position": "WR",
+            "team": "NE",
+            "projection": 8.472999999999999,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Isiah Pacheco",
+            "position": "RB",
+            "team": "KC",
+            "projection": 8.169000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "MIA",
+            "projection": 6.5649999999999995,
+            "timeWindow": "mondayNight"
+          }
+        ]
+      },
+      "teamB": {
+        "name": "lukebowsh",
+        "record": "2-1",
+        "projection": 109.7,
+        "players": [
+          {
+            "name": "Baker Mayfield",
+            "position": "QB",
+            "team": "TB",
+            "projection": 18.580799999999996,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Christian McCaffrey",
+            "position": "RB",
+            "team": "SF",
+            "projection": 24.464000000000002,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Omarion Hampton",
+            "position": "RB",
+            "team": "LAC",
+            "projection": 18.056,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Deebo Samuel",
+            "position": "WR",
+            "team": "WAS",
+            "projection": 10.439,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Elic Ayomanor",
+            "position": "WR",
+            "team": "TEN",
+            "projection": 7.923000000000001,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Mark Andrews",
+            "position": "TE",
+            "team": "BAL",
+            "projection": 7.208000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "name": "Rashid Shaheed",
+            "position": "WR",
+            "team": "NO",
+            "projection": 8.657,
+            "timeWindow": "early"
+          },
+          {
+            "name": "Tre Tucker",
+            "position": "WR",
+            "team": "LV",
+            "projection": 7.845000000000001,
+            "timeWindow": "late"
+          },
+          {
+            "position": "DEF",
+            "team": "SF",
+            "projection": 6.515,
+            "timeWindow": "late"
+          }
+        ]
+      },
+      "bettingOdds": {
+        "favorite": "teamB",
+        "spread": 0,
+        "moneylineA": -100,
+        "moneylineB": -100,
+        "total": 219,
+        "over": "-110",
+        "under": "-110"
+      },
+      "timeWindows": {
+        "thursdayNight": {
+          "teamA": 0,
+          "teamB": 0
+        },
+        "early": {
+          "teamA": 6,
+          "teamB": 5
+        },
+        "late": {
+          "teamA": 2,
+          "teamB": 4
+        },
+        "sundayNight": {
+          "teamA": 0,
+          "teamB": 0
+        },
+        "mondayNight": {
+          "teamA": 1,
+          "teamB": 0
+        },
+        "other": {
+          "teamA": 0,
+          "teamB": 0
+        }
+      },
+      "narrative": "Evenly matched with a true pick'em line. Aman has Mahomes + Jefferson + Amon-Ra, all firing early/late. Luke's anchor is CMC late. Whoever emerges will have a crucial foothold in NFC standings; loser slides toward the mushy middle."
+    }
+  ],
+  "leagueOdds": {
+    "highestScorer": [
+      {
+        "team": "C&G^2",
+        "leagueId": "NFC",
+        "probability": 0.119,
+        "odds": "+738"
+      },
+      {
+        "team": "DJ Herbussy",
+        "leagueId": "NFC",
+        "probability": 0.103,
+        "odds": "+869"
+      },
+      {
+        "team": "Marginal Returns",
+        "leagueId": "NFC",
+        "probability": 0.103,
+        "odds": "+869"
+      },
+      {
+        "team": "Mach 10",
+        "leagueId": "NFC",
+        "probability": 0.098,
+        "odds": "+917"
+      },
+      {
+        "team": "Nacua Matata",
+        "leagueId": "AFC",
+        "probability": 0.094,
+        "odds": "+965"
+      },
+      {
+        "team": "Dont go Chasing Saquon",
+        "leagueId": "NFC",
+        "probability": 0.072,
+        "odds": "+1297"
+      }
+    ],
+    "lowestScorer": [
+      {
+        "team": "cescott25",
+        "leagueId": "NFC",
+        "probability": 0.132,
+        "odds": "+658"
+      },
+      {
+        "team": "vchak",
+        "leagueId": "AFC",
+        "probability": 0.12,
+        "odds": "+731"
+      },
+      {
+        "team": "2 Dolla Balla$",
+        "leagueId": "AFC",
+        "probability": 0.117,
+        "odds": "+752"
+      },
+      {
+        "team": "lukebowsh",
+        "leagueId": "NFC",
+        "probability": 0.077,
+        "odds": "+1205"
+      },
+      {
+        "team": "ziyanp22",
+        "leagueId": "NFC",
+        "probability": 0.068,
+        "odds": "+1377"
+      },
+      {
+        "team": "Saint Brown Does Mahomes",
+        "leagueId": "NFC",
+        "probability": 0.063,
+        "odds": "+1487"
+      }
+    ],
+    "closestMatchup": [
+      {
+        "teams": [
+          "NielGetsCarried",
+          "achak7"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.099,
+        "odds": "+913"
+      },
+      {
+        "teams": [
+          "Dr Patel Parikh MD MBA",
+          "scboom5"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.095,
+        "odds": "+954"
+      },
+      {
+        "teams": [
+          "Saint Brown Does Mahomes",
+          "lukebowsh"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.094,
+        "odds": "+959"
+      },
+      {
+        "teams": [
+          "RithikP",
+          "Jaxson Dart-Njigba"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.093,
+        "odds": "+973"
+      },
+      {
+        "teams": [
+          "Dont go Chasing Saquon",
+          "Marginal Returns"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.092,
+        "odds": "+987"
+      },
+      {
+        "teams": [
+          "The Golden Age",
+          "To Infinity and Bijan"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.092,
+        "odds": "+992"
+      }
+    ],
+    "biggestBlowout": [
+      {
+        "teams": [
+          "Nacua Matata",
+          "vchak"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.156,
+        "odds": "+541"
+      },
+      {
+        "teams": [
+          "ziyanp22",
+          "C&G^2"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.14,
+        "odds": "+617"
+      },
+      {
+        "teams": [
+          "2 Dolla Balla$",
+          "lol jerry jones"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.122,
+        "odds": "+720"
+      },
+      {
+        "teams": [
+          "vayyala",
+          "cescott25"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.078,
+        "odds": "+1179"
+      },
+      {
+        "teams": [
+          "Mach 10",
+          "DJ Herbussy"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.076,
+        "odds": "+1212"
+      },
+      {
+        "teams": [
+          "Quonspiracy Theorists",
+          "benweinfeld"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.074,
+        "odds": "+1250"
+      }
+    ],
+    "highestScoringMatchup": [
+      {
+        "teams": [
+          "Mach 10",
+          "DJ Herbussy"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.267,
+        "odds": "+275"
+      },
+      {
+        "teams": [
+          "Dont go Chasing Saquon",
+          "Marginal Returns"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.231,
+        "odds": "+333"
+      },
+      {
+        "teams": [
+          "Dr Patel Parikh MD MBA",
+          "scboom5"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.086,
+        "odds": "+1061"
+      },
+      {
+        "teams": [
+          "ziyanp22",
+          "C&G^2"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.078,
+        "odds": "+1182"
+      },
+      {
+        "teams": [
+          "The Golden Age",
+          "To Infinity and Bijan"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.062,
+        "odds": "+1508"
+      },
+      {
+        "teams": [
+          "Quonspiracy Theorists",
+          "benweinfeld"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.062,
+        "odds": "+1518"
+      }
+    ],
+    "lowestScoringMatchup": [
+      {
+        "teams": [
+          "Saint Brown Does Mahomes",
+          "lukebowsh"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.202,
+        "odds": "+396"
+      },
+      {
+        "teams": [
+          "vayyala",
+          "cescott25"
+        ],
+        "leagueId": "NFC",
+        "probability": 0.18,
+        "odds": "+456"
+      },
+      {
+        "teams": [
+          "2 Dolla Balla$",
+          "lol jerry jones"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.112,
+        "odds": "+795"
+      },
+      {
+        "teams": [
+          "Nacua Matata",
+          "vchak"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.084,
+        "odds": "+1093"
+      },
+      {
+        "teams": [
+          "The Golden Age",
+          "To Infinity and Bijan"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.076,
+        "odds": "+1209"
+      },
+      {
+        "teams": [
+          "Quonspiracy Theorists",
+          "benweinfeld"
+        ],
+        "leagueId": "AFC",
+        "probability": 0.073,
+        "odds": "+1268"
+      }
+    ]
+  },
+  "generatedAt": "2025-09-25T20:47:51.550Z"
+}
