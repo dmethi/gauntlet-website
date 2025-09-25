@@ -73,6 +73,7 @@ interface TeamSlateInfo {
 
 interface TeamInfo {
   rosterId: number;
+  leagueId: string;
   teamName: string;
   ownerName: string;
   starters: string[];
@@ -243,11 +244,11 @@ export async function GET(
 
     // Build power rankings lookup using hardcoded Week 2 data
     const powerRankingsLookup = new Map<string, { rank: number; score: number }>();
-    if (reportData.data?.powerRankings) {
-      for (const pr of reportData.data.powerRankings) {
+    if (reportData.powerRankings) {
+      for (const pr of reportData.powerRankings) {
         powerRankingsLookup.set(`${pr.leagueId}-${pr.rosterId}`, {
           rank: pr.rank,
-          score: pr.normalized || pr.score || 0,
+          score: pr.normalized || 0,
         });
       }
     }
@@ -470,6 +471,7 @@ export async function GET(
             leagueName: league.name,
             teamA: {
               rosterId: a.rosterId,
+              leagueId: league.id,
               teamName: resolveTeamName(rosterA, ownerA),
               ownerName: ownerA?.displayName || ownerA?.username || 'Unknown',
               starters: startersA,
@@ -481,6 +483,7 @@ export async function GET(
             },
             teamB: {
               rosterId: b.rosterId,
+              leagueId: league.id,
               teamName: resolveTeamName(rosterB, ownerB),
               ownerName: ownerB?.displayName || ownerB?.username || 'Unknown',
               starters: startersB,

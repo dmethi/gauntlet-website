@@ -267,7 +267,7 @@ export default function Week2Report2025() {
         };
       });
 
-      return { ...l, overview: section.league_overview || l.overview, matchups };
+      return { ...l, overview: section.league_overview, matchups };
     });
   }, []);
 

@@ -2347,9 +2347,9 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                   />
                   <Scatter
                     dataKey='pointsFor'
-                    shape={props => {
+                    shape={(props: any) => {
                       const { cx, cy, payload } = props;
-                      if (!payload || !cx || !cy) return null;
+                      if (!payload || !cx || !cy) return <g></g>;
 
                       // Find team data to get avatar
                       const teamData = allTeamEntries.find(([k]) => k === payload.teamKey)?.[1];
@@ -2380,7 +2380,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                         // Fallback to initials
                         const initials = payload.teamName
                           .split(' ')
-                          .map(word => word[0])
+                          .map((word: string) => word[0])
                           .join('')
                           .substring(0, 2)
                           .toUpperCase();
@@ -2668,9 +2668,9 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                     />
                     <Scatter
                       dataKey='pointsFor'
-                      shape={props => {
+                      shape={(props: any) => {
                         const { cx, cy, payload } = props;
-                        if (!payload || !cx || !cy) return null;
+                        if (!payload || !cx || !cy) return <g></g>;
 
                         // Find team data to get avatar
                         const teamData = allTeamEntries.find(([k]) => k === payload.teamKey)?.[1];
@@ -2701,7 +2701,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                           // Fallback to initials
                           const initials = payload.teamName
                             .split(' ')
-                            .map(word => word[0])
+                            .map((word: string) => word[0])
                             .join('')
                             .substring(0, 2)
                             .toUpperCase();
@@ -3787,7 +3787,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                             consistency: 100 - Math.min(stdDev * 4, 100), // Position scores are smaller, so adjust multiplier
                           };
                         })
-                        .filter(Boolean)
+                        .filter((item): item is NonNullable<typeof item> => Boolean(item))
                         .sort((a, b) => b.consistency - a.consistency); // Sort by consistency
 
                       return posConsistencyData;
@@ -3910,7 +3910,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                             );
                             return { teamKey, consistency: 100 - Math.min(stdDev * 4, 100) };
                           })
-                          .filter(Boolean);
+                          .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
                         const consistencyValues = data.map(d => d.consistency);
                         const minConsistency = Math.min(...consistencyValues);

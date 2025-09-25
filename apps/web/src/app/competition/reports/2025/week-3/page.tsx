@@ -129,8 +129,8 @@ interface SeriesPoint {
   winProbA: number;
   winProbB: number;
   gameProgress: number;
-  team1Score?: number;
-  team2Score?: number;
+  team1Score?: number | null;
+  team2Score?: number | null;
 }
 
 interface BoxRow {
@@ -373,7 +373,7 @@ export default function Week3Report2025() {
         };
       });
 
-      return { ...l, overview: section.league_overview || l.overview, matchups };
+      return { ...l, overview: section.league_overview, matchups };
     });
   }, []);
 
@@ -668,15 +668,19 @@ export default function Week3Report2025() {
         <div className='space-y-4'>
           <h2 className='text-lg font-semibold'>Week 3 Hall of Fame</h2>
           <div className='space-y-2'>
-            {data.data.hallOfFame.map((entry, idx) => (
-              <div key={idx} className='p-3 bg-yellow-50 border border-yellow-200 rounded'>
-                <div className='font-medium'>{entry.category}</div>
-                <div className='text-sm'>{entry.description}</div>
-                <div className='text-xs text-muted-foreground'>
-                  {entry.player} ({entry.team}) - {entry.value}
+            {data.data.hallOfFame.length > 0 ? (
+              data.data.hallOfFame.map((entry: any, idx) => (
+                <div key={idx} className='p-3 bg-yellow-50 border border-yellow-200 rounded'>
+                  <div className='font-medium'>{entry.category}</div>
+                  <div className='text-sm'>{entry.description}</div>
+                  <div className='text-xs text-muted-foreground'>
+                    {entry.player} ({entry.team}) - {entry.value}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className='text-sm text-muted-foreground'>No hall of fame entries yet.</div>
+            )}
           </div>
         </div>
       )}

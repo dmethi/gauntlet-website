@@ -18,6 +18,7 @@ interface TeamSlateInfo {
 
 interface TeamInfo {
   rosterId: number;
+  leagueId: string;
   teamName: string;
   ownerName: string;
   starters: string[];
@@ -192,7 +193,7 @@ export default function Week3Preview2025() {
       .flatMap(m => [m.teamA, m.teamB])
       .filter(
         (team, index, arr) =>
-          arr.findIndex(t => t.rosterId === team.rosterId && t.leagueId) === index
+          arr.findIndex(t => t.rosterId === team.rosterId && t.leagueId === team.leagueId) === index
       );
 
     // Highest Scorers (by current projected points)
@@ -335,8 +336,8 @@ export default function Week3Preview2025() {
 
               {/* Matchup Narrative */}
               <div className='text-sm leading-relaxed'>
-                {WEEK3_NARRATIVES.matchups[matchup.teamA.teamName]?.narrative ||
-                  WEEK3_NARRATIVES.matchups[matchup.teamB.teamName]?.narrative || (
+                {(WEEK3_NARRATIVES.matchups as any)[matchup.teamA.teamName]?.narrative ||
+                  (WEEK3_NARRATIVES.matchups as any)[matchup.teamB.teamName]?.narrative || (
                     <em>Matchup preview: Analysis of key players and game flow coming soon...</em>
                   )}
               </div>
