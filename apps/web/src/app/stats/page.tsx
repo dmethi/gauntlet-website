@@ -13,6 +13,8 @@ export const dynamic = 'force-dynamic';
 interface StatsPageProps {
   searchParams: {
     team?: string;
+    view?: string;
+    week?: string;
   };
 }
 

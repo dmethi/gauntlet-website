@@ -7,6 +7,7 @@ import { mean, median } from '@/lib/stats/medians';
 import { rank } from '@/lib/stats/ranks';
 import { colors } from '../../../../../brand/colors';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
   SelectContent,
@@ -19,6 +20,8 @@ interface StatsContentProps {
   dataset: PlainStatsDataset;
   searchParams: {
     team?: string;
+    view?: string;
+    week?: string;
   };
   leagues: Array<{ id: string; name: string; season: number }>;
 }
@@ -90,6 +93,20 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
 
   const [selectedTeamKey, setSelectedTeamKey] = useState<string>(
     searchParams.team || teamOptions[0]?.key || ''
+  );
+
+  const [currentView, setCurrentView] = useState<'team' | 'league'>(
+    (searchParams.view as 'team' | 'league') || 'team'
+  );
+
+  const [selectedWeek, setSelectedWeek] = useState<string>(searchParams.week || 'season');
+
+  // Available weeks for dropdown
+  const availableWeeks = Array.from({ length: dataset.currentWeek }, (_, i) => i + 1).filter(
+    week => {
+      // Only include weeks that have some non-zero scores
+      return allTeamEntries.some(([, t]) => t.teamScores.find(d => d.week === week && d.value > 0));
+    }
   );
 
   console.log('[DEBUG] StatsContent: team selection', {
@@ -196,811 +213,1120 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
   });
   const avgOppRank = mean(oppRanks24ByWeek.filter(r => r > 0));
 
-  return (
-    <div className='space-y-6'>
+  // League View Component
+  function LeagueView() {
+    const isSeasonView = selectedWeek === 'season';
+    const weekNum = isSeasonView ? null : parseInt(selectedWeek, 10);
+
+    // Build league rankings data
+    const leagueData = useMemo(() => {
+      const teams = allTeamEntries
+        .map(([key, t]) => {
+          const teamTotal = isSeasonView
+            ? t.teamScores.filter(d => d.value > 0).reduce((a, d) => a + d.value, 0)
+            : t.teamScores.find(d => d.week === weekNum)?.value || 0;
+
+          // Get positional data
+          const posScores: Record<TrackedPosition, number> = {
+            QB: 0,
+            RB: 0,
+            WR: 0,
+            TE: 0,
+            DEF: 0,
+          };
+
+          for (const position of ['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]) {
+            const posData = positionsMap.get(position);
+            const posTeamsMap = new Map(posData?.teams || []);
+            const teamPosData = posTeamsMap.get(key);
+
+            if (teamPosData) {
+              posScores[position] = isSeasonView
+                ? teamPosData.scores.filter(d => d.value > 0).reduce((a, d) => a + d.value, 0)
+                : teamPosData.scores.find(d => d.week === weekNum)?.value || 0;
+            }
+          }
+
+          return {
+            key,
+            teamInfo: t.teamInfo,
+            teamTotal,
+            positions: posScores,
+          };
+        })
+        .filter(team => team.teamTotal > 0); // Only include teams with data
+
+      // Calculate ranks
+      const teamTotals = teams.map(t => t.teamTotal);
+      const teamRanks = rank(teamTotals);
+
+      const positionRanks: Record<TrackedPosition, number[]> = {
+        QB: rank(teams.map(t => t.positions.QB)),
+        RB: rank(teams.map(t => t.positions.RB)),
+        WR: rank(teams.map(t => t.positions.WR)),
+        TE: rank(teams.map(t => t.positions.TE)),
+        DEF: rank(teams.map(t => t.positions.DEF)),
+      };
+
+      return teams
+        .map((team, index) => ({
+          ...team,
+          rank: teamRanks[index],
+          positionRanks: {
+            QB: positionRanks.QB[index],
+            RB: positionRanks.RB[index],
+            WR: positionRanks.WR[index],
+            TE: positionRanks.TE[index],
+            DEF: positionRanks.DEF[index],
+          },
+        }))
+        .sort((a, b) => a.rank - b.rank); // Sort by overall rank
+    }, [allTeamEntries, positionsMap, selectedWeek, weekNum, isSeasonView]);
+
+    return (
       <Card>
         <CardHeader>
-          <CardTitle>Team Analysis</CardTitle>
-          <CardDescription>Season totals and weekly breakdown for individual teams</CardDescription>
+          <CardTitle>League Rankings</CardTitle>
+          <CardDescription>
+            {isSeasonView ? 'Season totals' : `Week ${weekNum}`} - All 24 teams ranked by
+            performance
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='mb-6 flex items-center gap-3'>
-            <label className='text-sm font-medium'>Select Team</label>
-            <Select value={selectedTeamKey} onValueChange={setSelectedTeamKey}>
-              <SelectTrigger className='w-80'>
-                <SelectValue placeholder='Select team' />
+          <div className='mb-4 flex items-center gap-3'>
+            <label className='text-sm font-medium'>View</label>
+            <Select value={selectedWeek} onValueChange={setSelectedWeek}>
+              <SelectTrigger className='w-48'>
+                <SelectValue placeholder='Select week' />
               </SelectTrigger>
               <SelectContent>
-                {teamOptions.map(opt => (
-                  <SelectItem key={opt.key} value={opt.key}>
-                    {opt.label}
+                <SelectItem value='season'>Season Overview</SelectItem>
+                {availableWeeks.map(week => (
+                  <SelectItem key={week} value={String(week)}>
+                    Week {week}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div className='space-y-6'>
-            {/* Season Summary */}
-            <div>
-              <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
-                Season Summary (Weeks {fromWeek}-{toWeek})
-              </h3>
-              <div className='rounded-md border'>
-                <table className='w-full text-sm'>
-                  <thead className='bg-muted/50'>
-                    <tr>
-                      <th className='px-4 py-3 text-left'>Metric</th>
-                      <th className='px-4 py-3 text-right'>Team</th>
-                      <th className='px-4 py-3 text-right'>Opponent</th>
-                      <th className='px-4 py-3 text-right'>League Avg</th>
-                      <th className='px-4 py-3 text-right'>League Median</th>
-                      <th className='px-4 py-3 text-center'>Rank (24)</th>
-                      <th className='px-4 py-3 text-center'>Rank (League)</th>
-                      <th className='px-4 py-3 text-center'>Avg Opp Rank</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className='px-4 py-3 font-medium'>Total Points</td>
-                      <td
-                        className='px-4 py-3 text-right font-mono font-bold'
-                        style={{ color: colors.core.regalGold }}
-                      >
-                        {teamTotal.toFixed(1)}
-                      </td>
-                      <td className='px-4 py-3 text-right font-mono'>{oppTotal.toFixed(1)}</td>
-                      <td className='px-4 py-3 text-right font-mono'>
-                        {mean(leagueTotals).toFixed(1)}
-                      </td>
-                      <td className='px-4 py-3 text-right font-mono'>
-                        {median(leagueTotals).toFixed(1)}
-                      </td>
-                      <td className='px-4 py-3 text-center'>
-                        <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
-                          style={{
-                            backgroundColor: getRankColor(seasonRank24, 24),
-                            color: getTextColor(getRankColor(seasonRank24, 24)),
-                          }}
-                        >
-                          {seasonRank24}
-                        </span>
-                      </td>
-                      <td className='px-4 py-3 text-center'>
-                        <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
-                          style={{
-                            backgroundColor: getRankColor(seasonRankLeague, 12),
-                            color: getTextColor(getRankColor(seasonRankLeague, 12)),
-                          }}
-                        >
-                          {seasonRankLeague}
-                        </span>
-                      </td>
-                      <td className='px-4 py-3 text-center'>
-                        <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
-                          style={{
-                            backgroundColor: getRankColor(Math.round(avgOppRank), 24),
-                            color: getTextColor(getRankColor(Math.round(avgOppRank), 24)),
-                          }}
-                          title={`Average opponent rank: ${avgOppRank.toFixed(1)} (lower = tougher schedule)`}
-                        >
-                          {avgOppRank.toFixed(1)}
-                        </span>
-                      </td>
-                    </tr>
-                    <tr className='border-t'>
-                      <td className='px-4 py-3 font-medium'>Point Differential</td>
-                      <td
-                        className='px-4 py-3 text-right font-mono font-bold'
+          <div className='rounded-md border'>
+            <table className='w-full text-sm'>
+              <thead className='bg-muted/50'>
+                <tr>
+                  <th className='px-3 py-2 text-center'>Rank</th>
+                  <th className='px-3 py-2 text-left'>Team</th>
+                  <th className='px-3 py-2 text-right'>Total</th>
+                  <th className='px-3 py-2 text-center'>QB</th>
+                  <th className='px-3 py-2 text-center'>RB</th>
+                  <th className='px-3 py-2 text-center'>WR</th>
+                  <th className='px-3 py-2 text-center'>TE</th>
+                  <th className='px-3 py-2 text-center'>DEF</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leagueData.map((team, index) => (
+                  <tr key={team.key} className='border-t hover:bg-muted/20'>
+                    <td className='px-3 py-2 text-center'>
+                      <span
+                        className='rounded-full px-2 py-1 text-xs font-medium'
                         style={{
-                          color: getPerformanceColor(
-                            teamTotal - oppTotal,
-                            teamTotal - oppTotal > 0
-                          ),
+                          backgroundColor: getRankColor(team.rank, 24),
+                          color: getTextColor(getRankColor(team.rank, 24)),
                         }}
                       >
-                        {teamTotal - oppTotal > 0 ? '+' : ''}
-                        {(teamTotal - oppTotal).toFixed(1)}
+                        {team.rank}
+                      </span>
+                    </td>
+                    <td className='px-3 py-2'>
+                      <div className='font-medium'>{team.teamInfo.teamName}</div>
+                      <div className='text-xs text-muted-foreground'>
+                        {team.teamInfo.leagueName}
+                      </div>
+                    </td>
+                    <td
+                      className='px-3 py-2 text-right font-mono font-bold'
+                      style={{ color: colors.core.regalGold }}
+                    >
+                      {team.teamTotal.toFixed(1)}
+                    </td>
+                    {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => (
+                      <td key={position} className='px-3 py-2 text-center'>
+                        <div className='space-y-1'>
+                          <div className='font-mono text-xs'>
+                            {team.positions[position].toFixed(1)}
+                          </div>
+                          <span
+                            className='inline-block rounded-full px-1.5 py-0.5 text-xs font-medium'
+                            style={{
+                              backgroundColor: getRankColor(team.positionRanks[position], 24),
+                              color: getTextColor(getRankColor(team.positionRanks[position], 24)),
+                            }}
+                          >
+                            {team.positionRanks[position]}
+                          </span>
+                        </div>
                       </td>
-                      <td className='px-4 py-3'></td>
-                      <td className='px-4 py-3'></td>
-                      <td className='px-4 py-3'></td>
-                      <td className='px-4 py-3'></td>
-                      <td className='px-4 py-3'></td>
-                      <td className='px-4 py-3'></td>
-                    </tr>
-                    <tr className='border-t bg-muted/20'>
-                      <td className='px-4 py-3 font-medium'>Weekly Average</td>
-                      <td
-                        className='px-4 py-3 text-right font-mono font-bold'
-                        style={{ color: colors.core.regalGold }}
-                      >
-                        {gamesPlayed > 0 ? (teamTotal / gamesPlayed).toFixed(1) : '0.0'}
-                      </td>
-                      <td className='px-4 py-3 text-right font-mono'>
-                        {gamesPlayed > 0 ? (oppTotal / gamesPlayed).toFixed(1) : '0.0'}
-                      </td>
-                      <td className='px-4 py-3 text-right font-mono'>
-                        {mean(leagueAvgByWeek).toFixed(1)}
-                      </td>
-                      <td className='px-4 py-3 text-right font-mono'>
-                        {mean(leagueMedByWeek).toFixed(1)}
-                      </td>
-                      <td className='px-4 py-3 text-center'>
-                        <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
-                          style={{
-                            backgroundColor: getRankColor(seasonRank24, 24),
-                            color: getTextColor(getRankColor(seasonRank24, 24)),
-                          }}
-                        >
-                          {seasonRank24}
-                        </span>
-                      </td>
-                      <td className='px-4 py-3 text-center'>
-                        <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
-                          style={{
-                            backgroundColor: getRankColor(seasonRankLeague, 12),
-                            color: getTextColor(getRankColor(seasonRankLeague, 12)),
-                          }}
-                        >
-                          {seasonRankLeague}
-                        </span>
-                      </td>
-                      <td className='px-4 py-3 text-center'>
-                        <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
-                          style={{
-                            backgroundColor: getRankColor(Math.round(avgOppRank), 24),
-                            color: getTextColor(getRankColor(Math.round(avgOppRank), 24)),
-                          }}
-                          title={`Average opponent rank: ${avgOppRank.toFixed(1)} (lower = tougher schedule)`}
-                        >
-                          {avgOppRank.toFixed(1)}
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Position Tables */}
+          <div className='mt-8 space-y-6'>
+            <h3 className='text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+              Position Rankings
+            </h3>
+
+            {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => {
+              // Build position-specific data
+              const positionData = useMemo(() => {
+                const teams = allTeamEntries
+                  .map(([key, t]) => {
+                    const posData = positionsMap.get(position);
+                    const posTeamsMap = new Map(posData?.teams || []);
+                    const teamPosData = posTeamsMap.get(key);
+
+                    if (!teamPosData) return null;
+
+                    const posScore = isSeasonView
+                      ? teamPosData.scores.filter(d => d.value > 0).reduce((a, d) => a + d.value, 0)
+                      : teamPosData.scores.find(d => d.week === weekNum)?.value || 0;
+
+                    return {
+                      key,
+                      teamInfo: t.teamInfo,
+                      posScore,
+                    };
+                  })
+                  .filter(Boolean)
+                  .filter(team => team!.posScore > 0) as Array<{
+                  key: string;
+                  teamInfo: any;
+                  posScore: number;
+                }>;
+
+                // Calculate ranks
+                const posScores = teams.map(t => t.posScore);
+                const posRanks = rank(posScores);
+
+                return teams
+                  .map((team, index) => ({
+                    ...team,
+                    rank: posRanks[index],
+                  }))
+                  .sort((a, b) => a.rank - b.rank);
+              }, [allTeamEntries, positionsMap, position, selectedWeek, weekNum, isSeasonView]);
+
+              return (
+                <div key={position} className='rounded-md border'>
+                  <div className='px-4 py-2' style={{ backgroundColor: colors.core.charcoalSteel }}>
+                    <h4 className='font-semibold text-white'>{position} Rankings</h4>
+                  </div>
+
+                  <div className='p-4'>
+                    <div className='rounded-md border'>
+                      <table className='w-full text-sm'>
+                        <thead className='bg-muted/20'>
+                          <tr>
+                            <th className='px-3 py-2 text-center'>Rank</th>
+                            <th className='px-3 py-2 text-left'>Team</th>
+                            <th className='px-3 py-2 text-right'>Points</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {positionData.map(team => (
+                            <tr key={team.key} className='border-t hover:bg-muted/20'>
+                              <td className='px-3 py-2 text-center'>
+                                <span
+                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  style={{
+                                    backgroundColor: getRankColor(team.rank, positionData.length),
+                                    color: getTextColor(
+                                      getRankColor(team.rank, positionData.length)
+                                    ),
+                                  }}
+                                >
+                                  {team.rank}
+                                </span>
+                              </td>
+                              <td className='px-3 py-2'>
+                                <div className='font-medium'>{team.teamInfo.teamName}</div>
+                                <div className='text-xs text-muted-foreground'>
+                                  {team.teamInfo.leagueName}
+                                </div>
+                              </td>
+                              <td
+                                className='px-3 py-2 text-right font-mono font-bold'
+                                style={{ color: colors.core.regalGold }}
+                              >
+                                {team.posScore.toFixed(1)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className='space-y-6'>
+      <Tabs value={currentView} onValueChange={v => setCurrentView(v as 'team' | 'league')}>
+        <TabsList>
+          <TabsTrigger value='team'>Team Analysis</TabsTrigger>
+          <TabsTrigger value='league'>League View</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value='team'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Team Analysis</CardTitle>
+              <CardDescription>
+                Season totals and weekly breakdown for individual teams
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='mb-6 flex items-center gap-3'>
+                <label className='text-sm font-medium'>Select Team</label>
+                <Select value={selectedTeamKey} onValueChange={setSelectedTeamKey}>
+                  <SelectTrigger className='w-80'>
+                    <SelectValue placeholder='Select team' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teamOptions.map(opt => (
+                      <SelectItem key={opt.key} value={opt.key}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </div>
 
-            {/* Weekly Breakdown */}
-            <div>
-              <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
-                Weekly Breakdown
-              </h3>
-              <div className='rounded-md border'>
-                <table className='w-full text-sm'>
-                  <thead className='bg-muted/50'>
-                    <tr>
-                      <th className='px-4 py-3 text-left'>Week</th>
-                      <th className='px-4 py-3 text-right'>Team</th>
-                      <th className='px-4 py-3 text-center'>Rank (24)</th>
-                      <th className='px-4 py-3 text-center'>Rank (League)</th>
-                      <th className='px-4 py-3 text-right'>Opponent</th>
-                      <th className='px-4 py-3 text-center'>Opp Rank (24)</th>
-                      <th className='px-4 py-3 text-center'>Opp Rank (League)</th>
-                      <th className='px-4 py-3 text-right'>vs League Avg</th>
-                      <th className='px-4 py-3 text-right'>vs League Median</th>
-                      <th className='px-4 py-3 text-center'>Result</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {weeks.map(week => {
-                      const myTeam = t.teamScores.find(d => d.week === week)?.value || 0;
-                      const myOpp = t.opponentScores.find(d => d.week === week)?.value || 0;
-                      const vals = allTeamEntries.map(
-                        ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0
-                      );
-                      const ranks24 = rank(vals);
-                      const teamIndex24Weekly = allTeamEntries.findIndex(
-                        ([k]) => k === selectedTeamKey
-                      );
-                      const rank24 = ranks24[teamIndex24Weekly] || 0;
-
-                      const leagueEntriesWeek = allTeamEntries.filter(
-                        ([, tt]) => tt.teamInfo.leagueId === leagueId
-                      );
-                      const valsLeague = leagueEntriesWeek.map(
-                        ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0
-                      );
-                      const ranksLeague = rank(valsLeague);
-                      const teamIndexLeagueWeekly = leagueEntriesWeek.findIndex(
-                        ([k]) => k === selectedTeamKey
-                      );
-                      const rankLeague = ranksLeague[teamIndexLeagueWeekly] || 0;
-
-                      // Calculate opponent ranks
-                      const oppVals = allTeamEntries.map(
-                        ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0
-                      );
-                      const oppRanks24 = rank(oppVals);
-                      const oppRank24 = oppRanks24[teamIndex24Weekly] || 0;
-
-                      const oppValsLeague = leagueEntriesWeek.map(
-                        ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0
-                      );
-                      const oppRanksLeague = rank(oppValsLeague);
-                      const oppRankLeague = oppRanksLeague[teamIndexLeagueWeekly] || 0;
-
-                      // Debug weekly ranking for first week only
-                      if (week === fromWeek) {
-                        console.log(`[DEBUG] Week ${week} rankings for ${t.teamInfo.teamName}`, {
-                          myTeam,
-                          myOpp,
-                          valsLength: vals.length,
-                          valsLeagueLength: valsLeague.length,
-                          teamIndex24Weekly,
-                          teamIndexLeagueWeekly,
-                          rank24,
-                          rankLeague,
-                          oppRank24,
-                          oppRankLeague,
-                          valsSample: vals.slice(0, 5),
-                          valsLeagueSample: valsLeague.slice(0, 5),
-                        });
-                      }
-                      const won = myTeam > myOpp;
-                      const weekIdx = week - fromWeek;
-                      const vsAvg = myTeam - (leagueAvgByWeek[weekIdx] || 0);
-                      const vsMedian = myTeam - (leagueMedByWeek[weekIdx] || 0);
-
-                      if (myTeam === 0) return null; // Skip weeks with no data
-
-                      return (
-                        <tr key={week} className='border-t hover:bg-muted/20'>
-                          <td className='px-4 py-3 font-medium'>Week {week}</td>
+              <div className='space-y-6'>
+                {/* Season Summary */}
+                <div>
+                  <h3
+                    className='mb-3 text-lg font-semibold'
+                    style={{ color: colors.core.crimsonRed }}
+                  >
+                    Season Summary (Weeks {fromWeek}-{toWeek})
+                  </h3>
+                  <div className='rounded-md border'>
+                    <table className='w-full text-sm'>
+                      <thead className='bg-muted/50'>
+                        <tr>
+                          <th className='px-4 py-3 text-left'>Metric</th>
+                          <th className='px-4 py-3 text-right'>Team</th>
+                          <th className='px-4 py-3 text-right'>Opponent</th>
+                          <th className='px-4 py-3 text-right'>League Avg</th>
+                          <th className='px-4 py-3 text-right'>League Median</th>
+                          <th className='px-4 py-3 text-center'>Rank (24)</th>
+                          <th className='px-4 py-3 text-center'>Rank (League)</th>
+                          <th className='px-4 py-3 text-center'>Avg Opp Rank</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className='px-4 py-3 font-medium'>Total Points</td>
                           <td
                             className='px-4 py-3 text-right font-mono font-bold'
                             style={{ color: colors.core.regalGold }}
                           >
-                            {myTeam.toFixed(1)}
+                            {teamTotal.toFixed(1)}
+                          </td>
+                          <td className='px-4 py-3 text-right font-mono'>{oppTotal.toFixed(1)}</td>
+                          <td className='px-4 py-3 text-right font-mono'>
+                            {mean(leagueTotals).toFixed(1)}
+                          </td>
+                          <td className='px-4 py-3 text-right font-mono'>
+                            {median(leagueTotals).toFixed(1)}
                           </td>
                           <td className='px-4 py-3 text-center'>
                             <span
                               className='rounded-full px-2 py-1 text-xs font-medium'
                               style={{
-                                backgroundColor: getRankColor(rank24, 24),
-                                color: getTextColor(getRankColor(rank24, 24)),
+                                backgroundColor: getRankColor(seasonRank24, 24),
+                                color: getTextColor(getRankColor(seasonRank24, 24)),
                               }}
                             >
-                              {rank24}
+                              {seasonRank24}
                             </span>
                           </td>
                           <td className='px-4 py-3 text-center'>
                             <span
                               className='rounded-full px-2 py-1 text-xs font-medium'
                               style={{
-                                backgroundColor: getRankColor(rankLeague, 12),
-                                color: getTextColor(getRankColor(rankLeague, 12)),
+                                backgroundColor: getRankColor(seasonRankLeague, 12),
+                                color: getTextColor(getRankColor(seasonRankLeague, 12)),
                               }}
                             >
-                              {rankLeague}
-                            </span>
-                          </td>
-                          <td className='px-4 py-3 text-right font-mono'>{myOpp.toFixed(1)}</td>
-                          <td className='px-4 py-3 text-center'>
-                            <span
-                              className='rounded-full px-2 py-1 text-xs font-medium'
-                              style={{
-                                backgroundColor: getRankColor(oppRank24, 24),
-                                color: getTextColor(getRankColor(oppRank24, 24)),
-                              }}
-                              title={`Opponent ranked ${oppRank24} of 24 teams`}
-                            >
-                              {oppRank24}
+                              {seasonRankLeague}
                             </span>
                           </td>
                           <td className='px-4 py-3 text-center'>
                             <span
                               className='rounded-full px-2 py-1 text-xs font-medium'
                               style={{
-                                backgroundColor: getRankColor(oppRankLeague, 12),
-                                color: getTextColor(getRankColor(oppRankLeague, 12)),
+                                backgroundColor: getRankColor(Math.round(avgOppRank), 24),
+                                color: getTextColor(getRankColor(Math.round(avgOppRank), 24)),
                               }}
-                              title={`Opponent ranked ${oppRankLeague} of 12 in league`}
+                              title={`Average opponent rank: ${avgOppRank.toFixed(1)} (lower = tougher schedule)`}
                             >
-                              {oppRankLeague}
-                            </span>
-                          </td>
-                          <td
-                            className='px-4 py-3 text-right font-mono text-xs'
-                            style={{ color: getPerformanceColor(vsAvg, vsAvg > 0) }}
-                          >
-                            {vsAvg > 0 ? '+' : ''}
-                            {vsAvg.toFixed(1)}
-                          </td>
-                          <td
-                            className='px-4 py-3 text-right font-mono text-xs'
-                            style={{ color: getPerformanceColor(vsMedian, vsMedian > 0) }}
-                          >
-                            {vsMedian > 0 ? '+' : ''}
-                            {vsMedian.toFixed(1)}
-                          </td>
-                          <td className='px-4 py-3 text-center'>
-                            <span
-                              className={`rounded-full px-2 py-1 text-xs font-bold text-white ${
-                                won ? 'bg-green-600' : 'bg-red-600'
-                              }`}
-                            >
-                              {won ? 'W' : 'L'}
+                              {avgOppRank.toFixed(1)}
                             </span>
                           </td>
                         </tr>
+                        <tr className='border-t'>
+                          <td className='px-4 py-3 font-medium'>Point Differential</td>
+                          <td
+                            className='px-4 py-3 text-right font-mono font-bold'
+                            style={{
+                              color: getPerformanceColor(
+                                teamTotal - oppTotal,
+                                teamTotal - oppTotal > 0
+                              ),
+                            }}
+                          >
+                            {teamTotal - oppTotal > 0 ? '+' : ''}
+                            {(teamTotal - oppTotal).toFixed(1)}
+                          </td>
+                          <td className='px-4 py-3'></td>
+                          <td className='px-4 py-3'></td>
+                          <td className='px-4 py-3'></td>
+                          <td className='px-4 py-3'></td>
+                          <td className='px-4 py-3'></td>
+                          <td className='px-4 py-3'></td>
+                        </tr>
+                        <tr className='border-t bg-muted/20'>
+                          <td className='px-4 py-3 font-medium'>Weekly Average</td>
+                          <td
+                            className='px-4 py-3 text-right font-mono font-bold'
+                            style={{ color: colors.core.regalGold }}
+                          >
+                            {gamesPlayed > 0 ? (teamTotal / gamesPlayed).toFixed(1) : '0.0'}
+                          </td>
+                          <td className='px-4 py-3 text-right font-mono'>
+                            {gamesPlayed > 0 ? (oppTotal / gamesPlayed).toFixed(1) : '0.0'}
+                          </td>
+                          <td className='px-4 py-3 text-right font-mono'>
+                            {mean(leagueAvgByWeek).toFixed(1)}
+                          </td>
+                          <td className='px-4 py-3 text-right font-mono'>
+                            {mean(leagueMedByWeek).toFixed(1)}
+                          </td>
+                          <td className='px-4 py-3 text-center'>
+                            <span
+                              className='rounded-full px-2 py-1 text-xs font-medium'
+                              style={{
+                                backgroundColor: getRankColor(seasonRank24, 24),
+                                color: getTextColor(getRankColor(seasonRank24, 24)),
+                              }}
+                            >
+                              {seasonRank24}
+                            </span>
+                          </td>
+                          <td className='px-4 py-3 text-center'>
+                            <span
+                              className='rounded-full px-2 py-1 text-xs font-medium'
+                              style={{
+                                backgroundColor: getRankColor(seasonRankLeague, 12),
+                                color: getTextColor(getRankColor(seasonRankLeague, 12)),
+                              }}
+                            >
+                              {seasonRankLeague}
+                            </span>
+                          </td>
+                          <td className='px-4 py-3 text-center'>
+                            <span
+                              className='rounded-full px-2 py-1 text-xs font-medium'
+                              style={{
+                                backgroundColor: getRankColor(Math.round(avgOppRank), 24),
+                                color: getTextColor(getRankColor(Math.round(avgOppRank), 24)),
+                              }}
+                              title={`Average opponent rank: ${avgOppRank.toFixed(1)} (lower = tougher schedule)`}
+                            >
+                              {avgOppRank.toFixed(1)}
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Weekly Breakdown */}
+                <div>
+                  <h3
+                    className='mb-3 text-lg font-semibold'
+                    style={{ color: colors.core.crimsonRed }}
+                  >
+                    Weekly Breakdown
+                  </h3>
+                  <div className='rounded-md border'>
+                    <table className='w-full text-sm'>
+                      <thead className='bg-muted/50'>
+                        <tr>
+                          <th className='px-4 py-3 text-left'>Week</th>
+                          <th className='px-4 py-3 text-right'>Team</th>
+                          <th className='px-4 py-3 text-center'>Rank (24)</th>
+                          <th className='px-4 py-3 text-center'>Rank (League)</th>
+                          <th className='px-4 py-3 text-right'>Opponent</th>
+                          <th className='px-4 py-3 text-center'>Opp Rank (24)</th>
+                          <th className='px-4 py-3 text-center'>Opp Rank (League)</th>
+                          <th className='px-4 py-3 text-right'>vs League Avg</th>
+                          <th className='px-4 py-3 text-right'>vs League Median</th>
+                          <th className='px-4 py-3 text-center'>Result</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {weeks.map(week => {
+                          const myTeam = t.teamScores.find(d => d.week === week)?.value || 0;
+                          const myOpp = t.opponentScores.find(d => d.week === week)?.value || 0;
+                          const vals = allTeamEntries.map(
+                            ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0
+                          );
+                          const ranks24 = rank(vals);
+                          const teamIndex24Weekly = allTeamEntries.findIndex(
+                            ([k]) => k === selectedTeamKey
+                          );
+                          const rank24 = ranks24[teamIndex24Weekly] || 0;
+
+                          const leagueEntriesWeek = allTeamEntries.filter(
+                            ([, tt]) => tt.teamInfo.leagueId === leagueId
+                          );
+                          const valsLeague = leagueEntriesWeek.map(
+                            ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0
+                          );
+                          const ranksLeague = rank(valsLeague);
+                          const teamIndexLeagueWeekly = leagueEntriesWeek.findIndex(
+                            ([k]) => k === selectedTeamKey
+                          );
+                          const rankLeague = ranksLeague[teamIndexLeagueWeekly] || 0;
+
+                          // Calculate opponent ranks
+                          const oppVals = allTeamEntries.map(
+                            ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0
+                          );
+                          const oppRanks24 = rank(oppVals);
+                          const oppRank24 = oppRanks24[teamIndex24Weekly] || 0;
+
+                          const oppValsLeague = leagueEntriesWeek.map(
+                            ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0
+                          );
+                          const oppRanksLeague = rank(oppValsLeague);
+                          const oppRankLeague = oppRanksLeague[teamIndexLeagueWeekly] || 0;
+
+                          // Debug weekly ranking for first week only
+                          if (week === fromWeek) {
+                            console.log(
+                              `[DEBUG] Week ${week} rankings for ${t.teamInfo.teamName}`,
+                              {
+                                myTeam,
+                                myOpp,
+                                valsLength: vals.length,
+                                valsLeagueLength: valsLeague.length,
+                                teamIndex24Weekly,
+                                teamIndexLeagueWeekly,
+                                rank24,
+                                rankLeague,
+                                oppRank24,
+                                oppRankLeague,
+                                valsSample: vals.slice(0, 5),
+                                valsLeagueSample: valsLeague.slice(0, 5),
+                              }
+                            );
+                          }
+                          const won = myTeam > myOpp;
+                          const weekIdx = week - fromWeek;
+                          const vsAvg = myTeam - (leagueAvgByWeek[weekIdx] || 0);
+                          const vsMedian = myTeam - (leagueMedByWeek[weekIdx] || 0);
+
+                          if (myTeam === 0) return null; // Skip weeks with no data
+
+                          return (
+                            <tr key={week} className='border-t hover:bg-muted/20'>
+                              <td className='px-4 py-3 font-medium'>Week {week}</td>
+                              <td
+                                className='px-4 py-3 text-right font-mono font-bold'
+                                style={{ color: colors.core.regalGold }}
+                              >
+                                {myTeam.toFixed(1)}
+                              </td>
+                              <td className='px-4 py-3 text-center'>
+                                <span
+                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  style={{
+                                    backgroundColor: getRankColor(rank24, 24),
+                                    color: getTextColor(getRankColor(rank24, 24)),
+                                  }}
+                                >
+                                  {rank24}
+                                </span>
+                              </td>
+                              <td className='px-4 py-3 text-center'>
+                                <span
+                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  style={{
+                                    backgroundColor: getRankColor(rankLeague, 12),
+                                    color: getTextColor(getRankColor(rankLeague, 12)),
+                                  }}
+                                >
+                                  {rankLeague}
+                                </span>
+                              </td>
+                              <td className='px-4 py-3 text-right font-mono'>{myOpp.toFixed(1)}</td>
+                              <td className='px-4 py-3 text-center'>
+                                <span
+                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  style={{
+                                    backgroundColor: getRankColor(oppRank24, 24),
+                                    color: getTextColor(getRankColor(oppRank24, 24)),
+                                  }}
+                                  title={`Opponent ranked ${oppRank24} of 24 teams`}
+                                >
+                                  {oppRank24}
+                                </span>
+                              </td>
+                              <td className='px-4 py-3 text-center'>
+                                <span
+                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  style={{
+                                    backgroundColor: getRankColor(oppRankLeague, 12),
+                                    color: getTextColor(getRankColor(oppRankLeague, 12)),
+                                  }}
+                                  title={`Opponent ranked ${oppRankLeague} of 12 in league`}
+                                >
+                                  {oppRankLeague}
+                                </span>
+                              </td>
+                              <td
+                                className='px-4 py-3 text-right font-mono text-xs'
+                                style={{ color: getPerformanceColor(vsAvg, vsAvg > 0) }}
+                              >
+                                {vsAvg > 0 ? '+' : ''}
+                                {vsAvg.toFixed(1)}
+                              </td>
+                              <td
+                                className='px-4 py-3 text-right font-mono text-xs'
+                                style={{ color: getPerformanceColor(vsMedian, vsMedian > 0) }}
+                              >
+                                {vsMedian > 0 ? '+' : ''}
+                                {vsMedian.toFixed(1)}
+                              </td>
+                              <td className='px-4 py-3 text-center'>
+                                <span
+                                  className={`rounded-full px-2 py-1 text-xs font-bold text-white ${
+                                    won ? 'bg-green-600' : 'bg-red-600'
+                                  }`}
+                                >
+                                  {won ? 'W' : 'L'}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Position Breakdowns */}
+                <div>
+                  <h3
+                    className='mb-3 text-lg font-semibold'
+                    style={{ color: colors.core.crimsonRed }}
+                  >
+                    Position Breakdowns
+                  </h3>
+                  <div className='space-y-4'>
+                    {positions.map(position => {
+                      const posData = positionsMap.get(position);
+                      const posTeamsMap = new Map(posData?.teams || []);
+                      const teamPosData = posTeamsMap.get(selectedTeamKey);
+
+                      if (!teamPosData) {
+                        return (
+                          <div key={position} className='rounded-md border p-4'>
+                            <h4 className='mb-2 font-semibold'>{position}</h4>
+                            <div className='text-sm text-muted-foreground'>No data available</div>
+                          </div>
+                        );
+                      }
+
+                      // Calculate season totals for this position
+                      const posSeasonTotal = teamPosData.scores
+                        .filter(d => d.week >= fromWeek && d.week <= toWeek)
+                        .reduce((a, d) => a + d.value, 0);
+                      const posValidWeeks = teamPosData.scores.filter(
+                        d => d.week >= fromWeek && d.week <= toWeek && d.value > 0
                       );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                      const posGamesPlayed = posValidWeeks.length;
 
-            {/* Position Breakdowns */}
-            <div>
-              <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
-                Position Breakdowns
-              </h3>
-              <div className='space-y-4'>
-                {positions.map(position => {
-                  const posData = positionsMap.get(position);
-                  const posTeamsMap = new Map(posData?.teams || []);
-                  const teamPosData = posTeamsMap.get(selectedTeamKey);
+                      // Calculate league averages and ranks for this position
+                      const allPosTeams = Array.from(posTeamsMap.values());
+                      const allPosTotals = allPosTeams.map(pt =>
+                        pt.scores
+                          .filter(d => d.week >= fromWeek && d.week <= toWeek)
+                          .reduce((a, d) => a + d.value, 0)
+                      );
+                      const posRanks24 = rank(allPosTotals);
+                      const posRank24 =
+                        posRanks24[
+                          allPosTeams.findIndex(
+                            pt =>
+                              pt.teamInfo.leagueId === t.teamInfo.leagueId &&
+                              pt.teamInfo.rosterId === t.teamInfo.rosterId
+                          )
+                        ] || 0;
 
-                  if (!teamPosData) {
-                    return (
-                      <div key={position} className='rounded-md border p-4'>
-                        <h4 className='mb-2 font-semibold'>{position}</h4>
-                        <div className='text-sm text-muted-foreground'>No data available</div>
-                      </div>
-                    );
-                  }
+                      const leaguePosTeams = allPosTeams.filter(
+                        pt => pt.teamInfo.leagueId === leagueId
+                      );
+                      const leagePosTotals = leaguePosTeams.map(pt =>
+                        pt.scores
+                          .filter(d => d.week >= fromWeek && d.week <= toWeek)
+                          .reduce((a, d) => a + d.value, 0)
+                      );
+                      const posRanksLeague = rank(leagePosTotals);
+                      const posRankLeague =
+                        posRanksLeague[
+                          leaguePosTeams.findIndex(
+                            pt =>
+                              pt.teamInfo.leagueId === t.teamInfo.leagueId &&
+                              pt.teamInfo.rosterId === t.teamInfo.rosterId
+                          )
+                        ] || 0;
 
-                  // Calculate season totals for this position
-                  const posSeasonTotal = teamPosData.scores
-                    .filter(d => d.week >= fromWeek && d.week <= toWeek)
-                    .reduce((a, d) => a + d.value, 0);
-                  const posValidWeeks = teamPosData.scores.filter(
-                    d => d.week >= fromWeek && d.week <= toWeek && d.value > 0
-                  );
-                  const posGamesPlayed = posValidWeeks.length;
+                      const posLeagueAvg = mean(allPosTotals);
+                      const posLeagueMedian = median(allPosTotals);
 
-                  // Calculate league averages and ranks for this position
-                  const allPosTeams = Array.from(posTeamsMap.values());
-                  const allPosTotals = allPosTeams.map(pt =>
-                    pt.scores
-                      .filter(d => d.week >= fromWeek && d.week <= toWeek)
-                      .reduce((a, d) => a + d.value, 0)
-                  );
-                  const posRanks24 = rank(allPosTotals);
-                  const posRank24 =
-                    posRanks24[
-                      allPosTeams.findIndex(
-                        pt =>
-                          pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                          pt.teamInfo.rosterId === t.teamInfo.rosterId
-                      )
-                    ] || 0;
+                      // Calculate opponent positional data by finding opponents from team weekly data
+                      const myWeeklyOpponentData = weeks.map(week => {
+                        const weeklyTeamEntry = allTeamEntries.find(([k]) => k === selectedTeamKey);
+                        const myOppData = weeklyTeamEntry?.[1].opponentScores.find(
+                          d => d.week === week
+                        );
 
-                  const leaguePosTeams = allPosTeams.filter(
-                    pt => pt.teamInfo.leagueId === leagueId
-                  );
-                  const leagePosTotals = leaguePosTeams.map(pt =>
-                    pt.scores
-                      .filter(d => d.week >= fromWeek && d.week <= toWeek)
-                      .reduce((a, d) => a + d.value, 0)
-                  );
-                  const posRanksLeague = rank(leagePosTotals);
-                  const posRankLeague =
-                    posRanksLeague[
-                      leaguePosTeams.findIndex(
-                        pt =>
-                          pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                          pt.teamInfo.rosterId === t.teamInfo.rosterId
-                      )
-                    ] || 0;
+                        // Find opponent by matching scores in reverse (my opponent = who scored my opponent points)
+                        const opponentEntry = allTeamEntries.find(([k, tt]) => {
+                          const theirScore = tt.teamScores.find(d => d.week === week)?.value;
+                          return (
+                            k !== selectedTeamKey &&
+                            Math.abs((theirScore || 0) - (myOppData?.value || 0)) < 0.01
+                          );
+                        });
 
-                  const posLeagueAvg = mean(allPosTotals);
-                  const posLeagueMedian = median(allPosTotals);
+                        const opponentPosData = opponentEntry
+                          ? posTeamsMap.get(opponentEntry[0])
+                          : null;
+                        const oppPosScore =
+                          opponentPosData?.scores.find(d => d.week === week)?.value || 0;
 
-                  // Calculate opponent positional data by finding opponents from team weekly data
-                  const myWeeklyOpponentData = weeks.map(week => {
-                    const weeklyTeamEntry = allTeamEntries.find(([k]) => k === selectedTeamKey);
-                    const myOppData = weeklyTeamEntry?.[1].opponentScores.find(
-                      d => d.week === week
-                    );
+                        return { week, oppPosScore, opponentKey: opponentEntry?.[0] };
+                      });
 
-                    // Find opponent by matching scores in reverse (my opponent = who scored my opponent points)
-                    const opponentEntry = allTeamEntries.find(([k, tt]) => {
-                      const theirScore = tt.teamScores.find(d => d.week === week)?.value;
+                      const oppPosSeasonTotal = myWeeklyOpponentData.reduce(
+                        (a, d) => a + d.oppPosScore,
+                        0
+                      );
+
+                      // Calculate opponent positional ranks
+                      const oppPosRank24 = myWeeklyOpponentData[0]?.opponentKey
+                        ? posRanks24[
+                            allPosTeams.findIndex(pt => {
+                              const oppKey = myWeeklyOpponentData[0].opponentKey;
+                              return (
+                                oppKey &&
+                                pt.teamInfo.leagueId === oppKey.split('-')[0] &&
+                                pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
+                              );
+                            })
+                          ] || 0
+                        : 0;
+
+                      const oppPosRankLeague = myWeeklyOpponentData[0]?.opponentKey
+                        ? posRanksLeague[
+                            leaguePosTeams.findIndex(pt => {
+                              const oppKey = myWeeklyOpponentData[0].opponentKey;
+                              return (
+                                oppKey &&
+                                pt.teamInfo.leagueId === oppKey.split('-')[0] &&
+                                pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
+                              );
+                            })
+                          ] || 0
+                        : 0;
+
                       return (
-                        k !== selectedTeamKey &&
-                        Math.abs((theirScore || 0) - (myOppData?.value || 0)) < 0.01
-                      );
-                    });
+                        <div key={position} className='rounded-md border'>
+                          <div
+                            className='px-4 py-2'
+                            style={{ backgroundColor: colors.core.charcoalSteel }}
+                          >
+                            <h4 className='font-semibold text-white'>{position}</h4>
+                          </div>
 
-                    const opponentPosData = opponentEntry
-                      ? posTeamsMap.get(opponentEntry[0])
-                      : null;
-                    const oppPosScore =
-                      opponentPosData?.scores.find(d => d.week === week)?.value || 0;
-
-                    return { week, oppPosScore, opponentKey: opponentEntry?.[0] };
-                  });
-
-                  const oppPosSeasonTotal = myWeeklyOpponentData.reduce(
-                    (a, d) => a + d.oppPosScore,
-                    0
-                  );
-
-                  // Calculate opponent positional ranks
-                  const oppPosRank24 = myWeeklyOpponentData[0]?.opponentKey
-                    ? posRanks24[
-                        allPosTeams.findIndex(pt => {
-                          const oppKey = myWeeklyOpponentData[0].opponentKey;
-                          return (
-                            oppKey &&
-                            pt.teamInfo.leagueId === oppKey.split('-')[0] &&
-                            pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
-                          );
-                        })
-                      ] || 0
-                    : 0;
-
-                  const oppPosRankLeague = myWeeklyOpponentData[0]?.opponentKey
-                    ? posRanksLeague[
-                        leaguePosTeams.findIndex(pt => {
-                          const oppKey = myWeeklyOpponentData[0].opponentKey;
-                          return (
-                            oppKey &&
-                            pt.teamInfo.leagueId === oppKey.split('-')[0] &&
-                            pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
-                          );
-                        })
-                      ] || 0
-                    : 0;
-
-                  return (
-                    <div key={position} className='rounded-md border'>
-                      <div
-                        className='px-4 py-2'
-                        style={{ backgroundColor: colors.core.charcoalSteel }}
-                      >
-                        <h4 className='font-semibold text-white'>{position}</h4>
-                      </div>
-
-                      {/* Position Season Summary */}
-                      <div className='p-4'>
-                        <div className='mb-4 rounded-md border'>
-                          <table className='w-full text-sm'>
-                            <thead className='bg-muted/20'>
-                              <tr>
-                                <th className='px-3 py-2 text-left'>Season Total</th>
-                                <th className='px-3 py-2 text-right'>Team</th>
-                                <th className='px-3 py-2 text-center'>Rank (24)</th>
-                                <th className='px-3 py-2 text-center'>Rank (League)</th>
-                                <th className='px-3 py-2 text-right'>Opponent</th>
-                                <th className='px-3 py-2 text-center'>Opp Rank (24)</th>
-                                <th className='px-3 py-2 text-center'>Opp Rank (League)</th>
-                                <th className='px-3 py-2 text-right'>League Avg</th>
-                                <th className='px-3 py-2 text-right'>League Median</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td className='px-3 py-2 font-medium'>
-                                  Weeks {fromWeek}-{toWeek}
-                                </td>
-                                <td
-                                  className='px-3 py-2 text-right font-mono font-bold'
-                                  style={{ color: colors.core.regalGold }}
-                                >
-                                  {posSeasonTotal.toFixed(1)}
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(posRank24, 24),
-                                      color: getTextColor(getRankColor(posRank24, 24)),
-                                    }}
-                                  >
-                                    {posRank24}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(posRankLeague, 12),
-                                      color: getTextColor(getRankColor(posRankLeague, 12)),
-                                    }}
-                                  >
-                                    {posRankLeague}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-right font-mono'>
-                                  {oppPosSeasonTotal.toFixed(1)}
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(oppPosRank24, 24),
-                                      color: getTextColor(getRankColor(oppPosRank24, 24)),
-                                    }}
-                                  >
-                                    {oppPosRank24}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(oppPosRankLeague, 12),
-                                      color: getTextColor(getRankColor(oppPosRankLeague, 12)),
-                                    }}
-                                  >
-                                    {oppPosRankLeague}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-right font-mono'>
-                                  {posLeagueAvg.toFixed(1)}
-                                </td>
-                                <td className='px-3 py-2 text-right font-mono'>
-                                  {posLeagueMedian.toFixed(1)}
-                                </td>
-                              </tr>
-                              <tr className='border-t bg-muted/20'>
-                                <td className='px-3 py-2 font-medium'>Weekly Average</td>
-                                <td
-                                  className='px-3 py-2 text-right font-mono font-bold'
-                                  style={{ color: colors.core.regalGold }}
-                                >
-                                  {posGamesPlayed > 0
-                                    ? (posSeasonTotal / posGamesPlayed).toFixed(1)
-                                    : '0.0'}
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(posRank24, 24),
-                                      color: getTextColor(getRankColor(posRank24, 24)),
-                                    }}
-                                  >
-                                    {posRank24}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(posRankLeague, 12),
-                                      color: getTextColor(getRankColor(posRankLeague, 12)),
-                                    }}
-                                  >
-                                    {posRankLeague}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-right font-mono'>
-                                  {posGamesPlayed > 0
-                                    ? (oppPosSeasonTotal / posGamesPlayed).toFixed(1)
-                                    : '0.0'}
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(oppPosRank24, 24),
-                                      color: getTextColor(getRankColor(oppPosRank24, 24)),
-                                    }}
-                                  >
-                                    {oppPosRank24}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-center'>
-                                  <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
-                                    style={{
-                                      backgroundColor: getRankColor(oppPosRankLeague, 12),
-                                      color: getTextColor(getRankColor(oppPosRankLeague, 12)),
-                                    }}
-                                  >
-                                    {oppPosRankLeague}
-                                  </span>
-                                </td>
-                                <td className='px-3 py-2 text-right font-mono'>
-                                  {(posLeagueAvg / weeks.length).toFixed(1)}
-                                </td>
-                                <td className='px-3 py-2 text-right font-mono'>
-                                  {(posLeagueMedian / weeks.length).toFixed(1)}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-
-                        {/* Position Weekly Breakdown */}
-                        <div className='max-h-48 overflow-auto rounded-md border'>
-                          <table className='w-full text-sm'>
-                            <thead className='bg-muted/20 sticky top-0'>
-                              <tr>
-                                <th className='px-3 py-2 text-left'>Week</th>
-                                <th className='px-3 py-2 text-right'>Team</th>
-                                <th className='px-3 py-2 text-center'>Rank (24)</th>
-                                <th className='px-3 py-2 text-center'>Rank (Lg)</th>
-                                <th className='px-3 py-2 text-right'>Opponent</th>
-                                <th className='px-3 py-2 text-center'>Opp Rank (24)</th>
-                                <th className='px-3 py-2 text-center'>Opp Rank (Lg)</th>
-                                <th className='px-3 py-2 text-right'>vs Avg</th>
-                                <th className='px-3 py-2 text-right'>vs Median</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {weeks.map(week => {
-                                const myPosPoints =
-                                  teamPosData.scores.find(d => d.week === week)?.value || 0;
-
-                                if (myPosPoints === 0) return null;
-
-                                // Get opponent positional data for this week
-                                const oppWeekData = myWeeklyOpponentData.find(d => d.week === week);
-                                const oppPosPoints = oppWeekData?.oppPosScore || 0;
-
-                                // Calculate weekly ranks for this position
-                                const allWeeklyPosVals = allPosTeams.map(
-                                  pt => pt.scores.find(d => d.week === week)?.value || 0
-                                );
-                                const weeklyPosRanks24 = rank(allWeeklyPosVals);
-                                const weeklyPosRank24 =
-                                  weeklyPosRanks24[
-                                    allPosTeams.findIndex(
-                                      pt =>
-                                        pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                                        pt.teamInfo.rosterId === t.teamInfo.rosterId
-                                    )
-                                  ] || 0;
-
-                                const leagueWeeklyPosVals = leaguePosTeams.map(
-                                  pt => pt.scores.find(d => d.week === week)?.value || 0
-                                );
-                                const weeklyPosRanksLeague = rank(leagueWeeklyPosVals);
-                                const weeklyPosRankLeague =
-                                  weeklyPosRanksLeague[
-                                    leaguePosTeams.findIndex(
-                                      pt =>
-                                        pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                                        pt.teamInfo.rosterId === t.teamInfo.rosterId
-                                    )
-                                  ] || 0;
-
-                                // Calculate opponent weekly ranks
-                                const oppWeeklyPosRank24 = oppWeekData?.opponentKey
-                                  ? weeklyPosRanks24[
-                                      allPosTeams.findIndex(pt => {
-                                        const oppKey = oppWeekData.opponentKey;
-                                        return (
-                                          oppKey &&
-                                          pt.teamInfo.leagueId === oppKey.split('-')[0] &&
-                                          pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
-                                        );
-                                      })
-                                    ] || 0
-                                  : 0;
-
-                                const oppWeeklyPosRankLeague = oppWeekData?.opponentKey
-                                  ? weeklyPosRanksLeague[
-                                      leaguePosTeams.findIndex(pt => {
-                                        const oppKey = oppWeekData.opponentKey;
-                                        return (
-                                          oppKey &&
-                                          pt.teamInfo.leagueId === oppKey.split('-')[0] &&
-                                          pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
-                                        );
-                                      })
-                                    ] || 0
-                                  : 0;
-
-                                const weeklyPosAvg = mean(allWeeklyPosVals);
-                                const weeklyPosMedian = median(allWeeklyPosVals);
-                                const vsAvg = myPosPoints - weeklyPosAvg;
-                                const vsMedian = myPosPoints - weeklyPosMedian;
-
-                                return (
-                                  <tr key={week} className='border-t hover:bg-muted/10'>
-                                    <td className='px-3 py-2 font-medium'>Week {week}</td>
+                          {/* Position Season Summary */}
+                          <div className='p-4'>
+                            <div className='mb-4 rounded-md border'>
+                              <table className='w-full text-sm'>
+                                <thead className='bg-muted/20'>
+                                  <tr>
+                                    <th className='px-3 py-2 text-left'>Season Total</th>
+                                    <th className='px-3 py-2 text-right'>Team</th>
+                                    <th className='px-3 py-2 text-center'>Rank (24)</th>
+                                    <th className='px-3 py-2 text-center'>Rank (League)</th>
+                                    <th className='px-3 py-2 text-right'>Opponent</th>
+                                    <th className='px-3 py-2 text-center'>Opp Rank (24)</th>
+                                    <th className='px-3 py-2 text-center'>Opp Rank (League)</th>
+                                    <th className='px-3 py-2 text-right'>League Avg</th>
+                                    <th className='px-3 py-2 text-right'>League Median</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td className='px-3 py-2 font-medium'>
+                                      Weeks {fromWeek}-{toWeek}
+                                    </td>
                                     <td
                                       className='px-3 py-2 text-right font-mono font-bold'
                                       style={{ color: colors.core.regalGold }}
                                     >
-                                      {myPosPoints.toFixed(1)}
+                                      {posSeasonTotal.toFixed(1)}
                                     </td>
                                     <td className='px-3 py-2 text-center'>
                                       <span
                                         className='rounded-full px-2 py-1 text-xs font-medium'
                                         style={{
-                                          backgroundColor: getRankColor(weeklyPosRank24, 24),
-                                          color: getTextColor(getRankColor(weeklyPosRank24, 24)),
+                                          backgroundColor: getRankColor(posRank24, 24),
+                                          color: getTextColor(getRankColor(posRank24, 24)),
                                         }}
                                       >
-                                        {weeklyPosRank24}
+                                        {posRank24}
                                       </span>
                                     </td>
                                     <td className='px-3 py-2 text-center'>
                                       <span
                                         className='rounded-full px-2 py-1 text-xs font-medium'
                                         style={{
-                                          backgroundColor: getRankColor(weeklyPosRankLeague, 12),
-                                          color: getTextColor(
-                                            getRankColor(weeklyPosRankLeague, 12)
-                                          ),
+                                          backgroundColor: getRankColor(posRankLeague, 12),
+                                          color: getTextColor(getRankColor(posRankLeague, 12)),
                                         }}
                                       >
-                                        {weeklyPosRankLeague}
+                                        {posRankLeague}
                                       </span>
                                     </td>
                                     <td className='px-3 py-2 text-right font-mono'>
-                                      {oppPosPoints.toFixed(1)}
+                                      {oppPosSeasonTotal.toFixed(1)}
                                     </td>
                                     <td className='px-3 py-2 text-center'>
                                       <span
                                         className='rounded-full px-2 py-1 text-xs font-medium'
                                         style={{
-                                          backgroundColor: getRankColor(oppWeeklyPosRank24, 24),
-                                          color: getTextColor(getRankColor(oppWeeklyPosRank24, 24)),
+                                          backgroundColor: getRankColor(oppPosRank24, 24),
+                                          color: getTextColor(getRankColor(oppPosRank24, 24)),
                                         }}
-                                        title={`Opponent ${position} ranked ${oppWeeklyPosRank24} of 24 teams`}
                                       >
-                                        {oppWeeklyPosRank24}
+                                        {oppPosRank24}
                                       </span>
                                     </td>
                                     <td className='px-3 py-2 text-center'>
                                       <span
                                         className='rounded-full px-2 py-1 text-xs font-medium'
                                         style={{
-                                          backgroundColor: getRankColor(oppWeeklyPosRankLeague, 12),
-                                          color: getTextColor(
-                                            getRankColor(oppWeeklyPosRankLeague, 12)
-                                          ),
+                                          backgroundColor: getRankColor(oppPosRankLeague, 12),
+                                          color: getTextColor(getRankColor(oppPosRankLeague, 12)),
                                         }}
-                                        title={`Opponent ${position} ranked ${oppWeeklyPosRankLeague} of 12 in league`}
                                       >
-                                        {oppWeeklyPosRankLeague}
+                                        {oppPosRankLeague}
                                       </span>
                                     </td>
-                                    <td
-                                      className='px-3 py-2 text-right font-mono text-xs'
-                                      style={{ color: getPerformanceColor(vsAvg, vsAvg > 0) }}
-                                    >
-                                      {vsAvg > 0 ? '+' : ''}
-                                      {vsAvg.toFixed(1)}
+                                    <td className='px-3 py-2 text-right font-mono'>
+                                      {posLeagueAvg.toFixed(1)}
                                     </td>
-                                    <td
-                                      className='px-3 py-2 text-right font-mono text-xs'
-                                      style={{ color: getPerformanceColor(vsMedian, vsMedian > 0) }}
-                                    >
-                                      {vsMedian > 0 ? '+' : ''}
-                                      {vsMedian.toFixed(1)}
+                                    <td className='px-3 py-2 text-right font-mono'>
+                                      {posLeagueMedian.toFixed(1)}
                                     </td>
                                   </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
+                                  <tr className='border-t bg-muted/20'>
+                                    <td className='px-3 py-2 font-medium'>Weekly Average</td>
+                                    <td
+                                      className='px-3 py-2 text-right font-mono font-bold'
+                                      style={{ color: colors.core.regalGold }}
+                                    >
+                                      {posGamesPlayed > 0
+                                        ? (posSeasonTotal / posGamesPlayed).toFixed(1)
+                                        : '0.0'}
+                                    </td>
+                                    <td className='px-3 py-2 text-center'>
+                                      <span
+                                        className='rounded-full px-2 py-1 text-xs font-medium'
+                                        style={{
+                                          backgroundColor: getRankColor(posRank24, 24),
+                                          color: getTextColor(getRankColor(posRank24, 24)),
+                                        }}
+                                      >
+                                        {posRank24}
+                                      </span>
+                                    </td>
+                                    <td className='px-3 py-2 text-center'>
+                                      <span
+                                        className='rounded-full px-2 py-1 text-xs font-medium'
+                                        style={{
+                                          backgroundColor: getRankColor(posRankLeague, 12),
+                                          color: getTextColor(getRankColor(posRankLeague, 12)),
+                                        }}
+                                      >
+                                        {posRankLeague}
+                                      </span>
+                                    </td>
+                                    <td className='px-3 py-2 text-right font-mono'>
+                                      {posGamesPlayed > 0
+                                        ? (oppPosSeasonTotal / posGamesPlayed).toFixed(1)
+                                        : '0.0'}
+                                    </td>
+                                    <td className='px-3 py-2 text-center'>
+                                      <span
+                                        className='rounded-full px-2 py-1 text-xs font-medium'
+                                        style={{
+                                          backgroundColor: getRankColor(oppPosRank24, 24),
+                                          color: getTextColor(getRankColor(oppPosRank24, 24)),
+                                        }}
+                                      >
+                                        {oppPosRank24}
+                                      </span>
+                                    </td>
+                                    <td className='px-3 py-2 text-center'>
+                                      <span
+                                        className='rounded-full px-2 py-1 text-xs font-medium'
+                                        style={{
+                                          backgroundColor: getRankColor(oppPosRankLeague, 12),
+                                          color: getTextColor(getRankColor(oppPosRankLeague, 12)),
+                                        }}
+                                      >
+                                        {oppPosRankLeague}
+                                      </span>
+                                    </td>
+                                    <td className='px-3 py-2 text-right font-mono'>
+                                      {(posLeagueAvg / weeks.length).toFixed(1)}
+                                    </td>
+                                    <td className='px-3 py-2 text-right font-mono'>
+                                      {(posLeagueMedian / weeks.length).toFixed(1)}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+
+                            {/* Position Weekly Breakdown */}
+                            <div className='max-h-48 overflow-auto rounded-md border'>
+                              <table className='w-full text-sm'>
+                                <thead className='bg-muted/20 sticky top-0'>
+                                  <tr>
+                                    <th className='px-3 py-2 text-left'>Week</th>
+                                    <th className='px-3 py-2 text-right'>Team</th>
+                                    <th className='px-3 py-2 text-center'>Rank (24)</th>
+                                    <th className='px-3 py-2 text-center'>Rank (Lg)</th>
+                                    <th className='px-3 py-2 text-right'>Opponent</th>
+                                    <th className='px-3 py-2 text-center'>Opp Rank (24)</th>
+                                    <th className='px-3 py-2 text-center'>Opp Rank (Lg)</th>
+                                    <th className='px-3 py-2 text-right'>vs Avg</th>
+                                    <th className='px-3 py-2 text-right'>vs Median</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {weeks.map(week => {
+                                    const myPosPoints =
+                                      teamPosData.scores.find(d => d.week === week)?.value || 0;
+
+                                    if (myPosPoints === 0) return null;
+
+                                    // Get opponent positional data for this week
+                                    const oppWeekData = myWeeklyOpponentData.find(
+                                      d => d.week === week
+                                    );
+                                    const oppPosPoints = oppWeekData?.oppPosScore || 0;
+
+                                    // Calculate weekly ranks for this position
+                                    const allWeeklyPosVals = allPosTeams.map(
+                                      pt => pt.scores.find(d => d.week === week)?.value || 0
+                                    );
+                                    const weeklyPosRanks24 = rank(allWeeklyPosVals);
+                                    const weeklyPosRank24 =
+                                      weeklyPosRanks24[
+                                        allPosTeams.findIndex(
+                                          pt =>
+                                            pt.teamInfo.leagueId === t.teamInfo.leagueId &&
+                                            pt.teamInfo.rosterId === t.teamInfo.rosterId
+                                        )
+                                      ] || 0;
+
+                                    const leagueWeeklyPosVals = leaguePosTeams.map(
+                                      pt => pt.scores.find(d => d.week === week)?.value || 0
+                                    );
+                                    const weeklyPosRanksLeague = rank(leagueWeeklyPosVals);
+                                    const weeklyPosRankLeague =
+                                      weeklyPosRanksLeague[
+                                        leaguePosTeams.findIndex(
+                                          pt =>
+                                            pt.teamInfo.leagueId === t.teamInfo.leagueId &&
+                                            pt.teamInfo.rosterId === t.teamInfo.rosterId
+                                        )
+                                      ] || 0;
+
+                                    // Calculate opponent weekly ranks
+                                    const oppWeeklyPosRank24 = oppWeekData?.opponentKey
+                                      ? weeklyPosRanks24[
+                                          allPosTeams.findIndex(pt => {
+                                            const oppKey = oppWeekData.opponentKey;
+                                            return (
+                                              oppKey &&
+                                              pt.teamInfo.leagueId === oppKey.split('-')[0] &&
+                                              pt.teamInfo.rosterId ===
+                                                parseInt(oppKey.split('-')[1])
+                                            );
+                                          })
+                                        ] || 0
+                                      : 0;
+
+                                    const oppWeeklyPosRankLeague = oppWeekData?.opponentKey
+                                      ? weeklyPosRanksLeague[
+                                          leaguePosTeams.findIndex(pt => {
+                                            const oppKey = oppWeekData.opponentKey;
+                                            return (
+                                              oppKey &&
+                                              pt.teamInfo.leagueId === oppKey.split('-')[0] &&
+                                              pt.teamInfo.rosterId ===
+                                                parseInt(oppKey.split('-')[1])
+                                            );
+                                          })
+                                        ] || 0
+                                      : 0;
+
+                                    const weeklyPosAvg = mean(allWeeklyPosVals);
+                                    const weeklyPosMedian = median(allWeeklyPosVals);
+                                    const vsAvg = myPosPoints - weeklyPosAvg;
+                                    const vsMedian = myPosPoints - weeklyPosMedian;
+
+                                    return (
+                                      <tr key={week} className='border-t hover:bg-muted/10'>
+                                        <td className='px-3 py-2 font-medium'>Week {week}</td>
+                                        <td
+                                          className='px-3 py-2 text-right font-mono font-bold'
+                                          style={{ color: colors.core.regalGold }}
+                                        >
+                                          {myPosPoints.toFixed(1)}
+                                        </td>
+                                        <td className='px-3 py-2 text-center'>
+                                          <span
+                                            className='rounded-full px-2 py-1 text-xs font-medium'
+                                            style={{
+                                              backgroundColor: getRankColor(weeklyPosRank24, 24),
+                                              color: getTextColor(
+                                                getRankColor(weeklyPosRank24, 24)
+                                              ),
+                                            }}
+                                          >
+                                            {weeklyPosRank24}
+                                          </span>
+                                        </td>
+                                        <td className='px-3 py-2 text-center'>
+                                          <span
+                                            className='rounded-full px-2 py-1 text-xs font-medium'
+                                            style={{
+                                              backgroundColor: getRankColor(
+                                                weeklyPosRankLeague,
+                                                12
+                                              ),
+                                              color: getTextColor(
+                                                getRankColor(weeklyPosRankLeague, 12)
+                                              ),
+                                            }}
+                                          >
+                                            {weeklyPosRankLeague}
+                                          </span>
+                                        </td>
+                                        <td className='px-3 py-2 text-right font-mono'>
+                                          {oppPosPoints.toFixed(1)}
+                                        </td>
+                                        <td className='px-3 py-2 text-center'>
+                                          <span
+                                            className='rounded-full px-2 py-1 text-xs font-medium'
+                                            style={{
+                                              backgroundColor: getRankColor(oppWeeklyPosRank24, 24),
+                                              color: getTextColor(
+                                                getRankColor(oppWeeklyPosRank24, 24)
+                                              ),
+                                            }}
+                                            title={`Opponent ${position} ranked ${oppWeeklyPosRank24} of 24 teams`}
+                                          >
+                                            {oppWeeklyPosRank24}
+                                          </span>
+                                        </td>
+                                        <td className='px-3 py-2 text-center'>
+                                          <span
+                                            className='rounded-full px-2 py-1 text-xs font-medium'
+                                            style={{
+                                              backgroundColor: getRankColor(
+                                                oppWeeklyPosRankLeague,
+                                                12
+                                              ),
+                                              color: getTextColor(
+                                                getRankColor(oppWeeklyPosRankLeague, 12)
+                                              ),
+                                            }}
+                                            title={`Opponent ${position} ranked ${oppWeeklyPosRankLeague} of 12 in league`}
+                                          >
+                                            {oppWeeklyPosRankLeague}
+                                          </span>
+                                        </td>
+                                        <td
+                                          className='px-3 py-2 text-right font-mono text-xs'
+                                          style={{ color: getPerformanceColor(vsAvg, vsAvg > 0) }}
+                                        >
+                                          {vsAvg > 0 ? '+' : ''}
+                                          {vsAvg.toFixed(1)}
+                                        </td>
+                                        <td
+                                          className='px-3 py-2 text-right font-mono text-xs'
+                                          style={{
+                                            color: getPerformanceColor(vsMedian, vsMedian > 0),
+                                          }}
+                                        >
+                                          {vsMedian > 0 ? '+' : ''}
+                                          {vsMedian.toFixed(1)}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value='league'>
+          <LeagueView />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
