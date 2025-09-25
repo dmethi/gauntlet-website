@@ -52,13 +52,13 @@ function computeGameProgressFromEspn(espnData: any): number {
   if (!espnData?.events?.[0]?.competitions?.[0]?.status?.type) {
     return 0.5; // Default fallback
   }
-  
+
   const status = espnData.events[0].competitions[0].status.type;
   const state = status.state; // 'pre', 'in', 'post'
-  
+
   if (state === 'pre') return 0;
   if (state === 'post') return 1;
-  
+
   // In-game progress calculation
   const period = status.period || 1;
   const clock = status.clock || 0;
@@ -158,9 +158,10 @@ async function buildLineupPlayers(
     }
 
     // Get current score if live and available
-    const currentScore = isLive && matchupData?.players_points?.[playerId] 
-      ? Number(matchupData.players_points[playerId]) || 0 
-      : undefined;
+    const currentScore =
+      isLive && matchupData?.players_points?.[playerId]
+        ? Number(matchupData.players_points[playerId]) || 0
+        : undefined;
 
     lineup.push({
       playerId,
@@ -262,7 +263,7 @@ async function simulateMatchup(
       sleeper.getProjections(week),
       sleeper.getPlayers(),
     ]);
-    
+
     // Type assertions for better TypeScript handling
     const leagueData = league as any;
     const matchupsData = matchups as any[];
@@ -324,12 +325,12 @@ async function simulateMatchup(
     // Get ESPN game progress for live simulations
     let gameProgress = 0;
     let liveNflTeams: Set<string> | undefined;
-    
+
     if (options.isLive) {
       console.log('🏈 Fetching ESPN scoreboard for live game data...');
       const espnData = await fetchEspnScoreboard();
       gameProgress = computeGameProgressFromEspn(espnData);
-      
+
       // Extract live NFL teams from ESPN data
       liveNflTeams = new Set();
       if (espnData?.events) {
@@ -342,7 +343,7 @@ async function simulateMatchup(
           }
         }
       }
-      
+
       console.log(`⏱️ Game Progress: ${(gameProgress * 100).toFixed(1)}%`);
       console.log(`🔴 Live NFL Teams: ${Array.from(liveNflTeams).join(', ') || 'None'}`);
     }
@@ -372,24 +373,24 @@ async function simulateMatchup(
     const team1Current = team1Players.reduce((sum, p) => sum + (p.currentScore || 0), 0);
     const team2Current = team2Players.reduce((sum, p) => sum + (p.currentScore || 0), 0);
 
+    console.log(`   Team 1 (Roster ${team1Matchup.roster_id}): ${team1Players.length} starters`);
     console.log(
-      `   Team 1 (Roster ${team1Matchup.roster_id}): ${team1Players.length} starters`
+      `     Projected: ${team1Total.toFixed(1)} pts | Current: ${team1Current.toFixed(1)} pts`
     );
-    console.log(`     Projected: ${team1Total.toFixed(1)} pts | Current: ${team1Current.toFixed(1)} pts`);
+    console.log(`   Team 2 (Roster ${team2Matchup.roster_id}): ${team2Players.length} starters`);
     console.log(
-      `   Team 2 (Roster ${team2Matchup.roster_id}): ${team2Players.length} starters`
+      `     Projected: ${team2Total.toFixed(1)} pts | Current: ${team2Current.toFixed(1)} pts`
     );
-    console.log(`     Projected: ${team2Total.toFixed(1)} pts | Current: ${team2Current.toFixed(1)} pts`);
 
     // Check if game is essentially over (all players done or very late in games)
     const allPlayersDone = gameProgress >= 0.98;
     let simResult;
     const team1Score = team1Matchup.points || team1Current;
     const team2Score = team2Matchup.points || team2Current;
-    
+
     if (allPlayersDone && options.isLive) {
       console.log('🏁 Game essentially complete - using final score resolution');
-      
+
       // Force final resolution based on current scores
       simResult = {
         team1WinPct: team1Score > team2Score ? 1 : 0,
@@ -397,9 +398,11 @@ async function simulateMatchup(
         team1Scores: { mean: team1Score, p10: team1Score, median: team1Score, p90: team1Score },
         team2Scores: { mean: team2Score, p10: team2Score, median: team2Score, p90: team2Score },
       };
-      
+
       console.log(`🏆 FINAL: Team 1: ${team1Score.toFixed(1)} | Team 2: ${team2Score.toFixed(1)}`);
-      console.log(`📊 Win Probability: ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}%`);
+      console.log(
+        `📊 Win Probability: ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}%`
+      );
     } else {
       // Run simulation with real game progress and live data
       simResult = await simulateMatchupProbabilityFromPlayers(
@@ -501,7 +504,16 @@ async function simulateMatchup(
 
     // Store odds history if requested
     if (options.triggerType !== 'test') {
-      await storeOddsHistory(leagueId, week, matchupId, simResult, options, gameProgress, team1Score, team2Score);
+      await storeOddsHistory(
+        leagueId,
+        week,
+        matchupId,
+        simResult,
+        options,
+        gameProgress,
+        team1Score,
+        team2Score
+      );
     }
   } catch (error) {
     console.error(`❌ Error simulating matchup ${matchupId}:`, error);
@@ -551,8 +563,10 @@ async function storeOddsHistory(
         team2Score: team2Score || null,
       },
     });
-    
-    console.log(`✅ Stored odds: ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}% (Progress: ${(gameProgress * 100).toFixed(1)}%)`);
+
+    console.log(
+      `✅ Stored odds: ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}% (Progress: ${(gameProgress * 100).toFixed(1)}%)`
+    );
   } catch (error) {
     console.error('Failed to store odds history:', error);
   }

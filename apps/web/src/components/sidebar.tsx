@@ -19,7 +19,10 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
 
-const navigationItems = [{ name: 'Competition', icon: Home, href: '/competition' }];
+const navigationItems = [
+  { name: 'Competition', icon: Home, href: '/competition' },
+  { name: 'Stats Hub', icon: BarChart3, href: '/stats' },
+];
 
 const leagues = [
   { id: '1263744209295245312', name: 'Gauntlet AFC', shortName: 'AFC' },

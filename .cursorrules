@@ -1,0 +1,86 @@
+# Gauntlet Fantasy Football - Cursor Rules
+
+## Project Architecture
+
+This is a Next.js app for a fantasy football league system called "The Gauntlet" with unique multi-league architecture.
+
+### Critical: Multi-League Structure
+
+⚠️ **IMPORTANT**: This system manages TWO separate Sleeper leagues that function as one umbrella competition:
+
+- **AFC League**: `1263744209295245312` (12 teams)
+- **NFC League**: `1263740549504962561` (12 teams)
+- **Total**: 24 teams competing across both leagues
+
+### Sleeper API Data Conflicts
+
+🚨 **CRITICAL BUG PATTERN**: When aggregating data across both leagues, you MUST be aware that:
+
+1. **Matchup IDs are NOT unique across leagues**
+   - AFC league uses matchup_ids: 1, 2, 3, 4, 5, 6
+   - NFC league uses matchup_ids: 1, 2, 3, 4, 5, 6
+   - Combining them naively creates 6 groups of 4 teams instead of 12 groups of 2 teams
+
+2. **Roster IDs are only unique within a league**
+   - Use `{leagueId}-{rosterId}` as the unique team key
+   - Never assume roster_id alone is globally unique
+
+3. **User IDs may overlap** between leagues (same person in both leagues)
+
+### Data Processing Best Practices
+
+```typescript
+// ❌ WRONG: Combining matchups directly causes ID conflicts
+const allMatchups = [...afc_matchups, ...nfc_matchups];
+const grouped = groupBy(allMatchups, m => m.matchup_id); // Creates 6 groups of 4!
+
+// ✅ CORRECT: Process leagues separately, then combine results
+const afcResults = processLeagueMatchups(afc_matchups);
+const nfcResults = processLeagueMatchups(nfc_matchups);
+const combined = [...afcResults, ...nfcResults];
+
+// ✅ CORRECT: Use composite keys for uniqueness
+const teamKey = `${leagueId}-${roster_id}`;
+const teamMap = new Map<string, TeamData>();
+```
+
+### League Configuration
+
+- League IDs and names are defined in `/apps/web/src/config/leagues.ts`
+- Use `CURRENT_LEAGUES` for active season leagues
+- Each league has 12 teams (standard fantasy football)
+
+### Ranking System
+
+When calculating ranks:
+- **Rank (24)**: Across all 24 teams in both leagues
+- **Rank (League)**: Within the specific 12-team league only
+
+### Data Sources
+
+- **Primary**: Sleeper API (no database dependency)
+- **Fresh data**: All fetches use `cache: 'no-store'`
+- **Team info**: Combined from Sleeper rosters + users APIs
+- **Matchup data**: Retrieved per league per week
+
+### Common Pitfalls
+
+1. **Don't assume 1:1 matchup pairing** when combining leagues
+2. **Always validate team keys** use league+roster, not just roster
+3. **Process incomplete weeks carefully** (Week 4+ may have zeros)
+4. **Consider bye weeks** in playoff schedules
+
+### File Structure
+
+- `/apps/web/src/lib/sleeper/` - Sleeper API clients
+- `/apps/web/src/lib/stats/` - Data aggregation utilities  
+- `/apps/web/src/config/leagues.ts` - League configuration
+- `/apps/web/src/app/stats/` - Stats Hub pages
+
+### Testing
+
+When testing data aggregation:
+- Always test with both leagues
+- Verify 24 total teams in results
+- Check for proper opponent pairing
+- Validate ranks within and across leagues
