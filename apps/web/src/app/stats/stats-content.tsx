@@ -2227,7 +2227,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                     dataKey='pointsFor'
                     domain={['dataMin - 10', 'dataMax + 10']}
                     label={{
-                      value: 'Average Points For',
+                      value: 'Skill',
                       position: 'insideBottom',
                       offset: -10,
                       style: { textAnchor: 'middle', fontSize: '12px' },
@@ -2239,8 +2239,9 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                     type='number'
                     dataKey='pointsAgainst'
                     domain={['dataMin - 10', 'dataMax + 10']}
+                    reversed={true}
                     label={{
-                      value: 'Average Points Against',
+                      value: 'Luck',
                       angle: -90,
                       position: 'insideLeft',
                       style: { textAnchor: 'middle', fontSize: '12px' },
@@ -2504,7 +2505,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                       dataKey='pointsFor'
                       domain={['dataMin - 2', 'dataMax + 2']}
                       label={{
-                        value: `${position} Points For (Avg)`,
+                        value: 'Skill',
                         position: 'insideBottom',
                         offset: -10,
                         style: { textAnchor: 'middle', fontSize: '12px' },
@@ -2516,8 +2517,9 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                       type='number'
                       dataKey='pointsAgainst'
                       domain={['dataMin - 2', 'dataMax + 2']}
+                      reversed={true}
                       label={{
-                        value: `${position} Points Against (Avg)`,
+                        value: 'Luck',
                         angle: -90,
                         position: 'insideLeft',
                         style: { textAnchor: 'middle', fontSize: '12px' },

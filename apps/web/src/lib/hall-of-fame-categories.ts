@@ -3,39 +3,30 @@
  * Organized by scope and subject as specified
  */
 
-import { HallOfFameCategory } from './hall-of-fame-calculations';
+import { HallOfFameCategory, ProcessedMatchup } from './hall-of-fame-calculations';
 
 // Helper function to get positional points from a matchup
-function getPositionalPoints(matchup: any, position: string): number {
+function getPositionalPoints(matchup: ProcessedMatchup, position: string): number {
   if (!matchup.starters || !matchup.starters_points || !matchup.playerData) return 0;
 
   let total = 0;
   matchup.starters.forEach((playerId: string, idx: number) => {
     const player = matchup.playerData?.get(playerId);
     if (player?.position === position) {
-      total += matchup.starters_points[idx] || 0;
+      total += matchup.starters_points?.[idx] || 0;
     }
   });
   return total;
 }
 
 // Helper to count starters with 0 points
-function countDonuts(matchup: any): number {
+function countDonuts(matchup: ProcessedMatchup): number {
   if (!matchup.starters_points) return 0;
   return matchup.starters_points.filter((pts: number) => pts === 0).length;
 }
 
-// Helper to get bench points
-function getBenchPoints(matchup: any): number {
-  if (!matchup.players_points || !matchup.starters) return 0;
-  const benchPoints = Object.entries(matchup.players_points)
-    .filter(([playerId]) => !matchup.starters?.includes(playerId))
-    .reduce((sum, [_, points]) => sum + (points as number), 0);
-  return benchPoints;
-}
-
 // Helper to calculate optimal lineup score
-function getOptimalScore(matchup: any): number {
+function getOptimalScore(matchup: ProcessedMatchup): number {
   if (!matchup.players_points || !matchup.playerData) return matchup.points || 0;
 
   // Group players by position
@@ -303,6 +294,36 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
   // Note: Boom/bust counts would require positional baselines which need historical data
 ];
 
+// Helper to calculate combined positional points for both teams in a matchup
+// Note: This will be calculated during the record processing phase where we have access to both teams
+function getCombinedPositionalPoints(
+  matchup: ProcessedMatchup,
+  position: string,
+  allMatchups?: ProcessedMatchup[]
+): number {
+  const teamPoints = getPositionalPoints(matchup, position);
+
+  // If we have access to all matchups, find the opponent
+  if (allMatchups && matchup.matchupId && matchup.leagueId && matchup.week) {
+    const opponentMatchup = allMatchups.find(
+      m =>
+        m.matchupId === matchup.matchupId &&
+        m.leagueId === matchup.leagueId &&
+        m.week === matchup.week &&
+        m.rosterId !== matchup.rosterId
+    );
+
+    if (opponentMatchup) {
+      const opponentPoints = getPositionalPoints(opponentMatchup, position);
+      const combined = teamPoints + opponentPoints;
+      return combined;
+    }
+  }
+
+  // Fallback: just return team points if opponent data not available
+  return teamPoints;
+}
+
 /**
  * B. WEEKLY - MATCHUP SUBJECT
  */
@@ -388,6 +409,128 @@ export const WEEKLY_MATCHUP_CATEGORIES: HallOfFameCategory[] = [
       return margin * (2 - loserScore / 100);
     },
     formatValue: value => `${value.toFixed(1)} dominance score`,
+  },
+
+  // Combined Positional Superlatives
+  {
+    id: 'highest_combined_qb',
+    name: 'Highest Combined QB Score',
+    description: 'Most QB points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'highest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'QB', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined QB pts`,
+  },
+  {
+    id: 'lowest_combined_qb',
+    name: 'Lowest Combined QB Score',
+    description: 'Fewest QB points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'lowest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'QB', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined QB pts`,
+  },
+  {
+    id: 'highest_combined_rb',
+    name: 'Highest Combined RB Score',
+    description: 'Most RB points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'highest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'RB', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined RB pts`,
+  },
+  {
+    id: 'lowest_combined_rb',
+    name: 'Lowest Combined RB Score',
+    description: 'Fewest RB points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'lowest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'RB', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined RB pts`,
+  },
+  {
+    id: 'highest_combined_wr',
+    name: 'Highest Combined WR Score',
+    description: 'Most WR points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'highest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'WR', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined WR pts`,
+  },
+  {
+    id: 'lowest_combined_wr',
+    name: 'Lowest Combined WR Score',
+    description: 'Fewest WR points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'lowest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'WR', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined WR pts`,
+  },
+  {
+    id: 'highest_combined_te',
+    name: 'Highest Combined TE Score',
+    description: 'Most TE points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'highest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'TE', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined TE pts`,
+  },
+  {
+    id: 'lowest_combined_te',
+    name: 'Lowest Combined TE Score',
+    description: 'Fewest TE points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'lowest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'TE', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined TE pts`,
+  },
+  {
+    id: 'highest_combined_def',
+    name: 'Highest Combined DEF Score',
+    description: 'Most DEF points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'highest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'DEF', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined DEF pts`,
+  },
+  {
+    id: 'lowest_combined_def',
+    name: 'Lowest Combined DEF Score',
+    description: 'Fewest DEF points from both teams in a matchup',
+    group: 'weekly_matchup',
+    type: 'lowest',
+    calculateValue: (matchup, allMatchups) => {
+      const combined = getCombinedPositionalPoints(matchup, 'DEF', allMatchups);
+      return combined > 0 ? combined : null;
+    },
+    formatValue: value => `${value.toFixed(2)} combined DEF pts`,
   },
 ];
 

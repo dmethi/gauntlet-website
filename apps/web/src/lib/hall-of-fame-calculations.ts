@@ -29,7 +29,7 @@ export interface HallOfFameCategory {
   description: string;
   group: string;
   type: 'highest' | 'lowest' | 'both';
-  calculateValue: (data: any) => number | null;
+  calculateValue: (data: any, allData?: any[]) => number | null;
   formatValue: (value: number) => string;
   scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime';
 }
@@ -86,6 +86,16 @@ export function calculateHallOfFameRecords(
     'lowest_combined',
     'most_one_sided',
     'most_exciting_game',
+    'highest_combined_qb',
+    'lowest_combined_qb',
+    'highest_combined_rb',
+    'lowest_combined_rb',
+    'highest_combined_wr',
+    'lowest_combined_wr',
+    'highest_combined_te',
+    'lowest_combined_te',
+    'highest_combined_def',
+    'lowest_combined_def',
   ];
   const processedMatchupPairs = new Set<string>();
 
@@ -101,7 +111,7 @@ export function calculateHallOfFameRecords(
         processedMatchupPairs.add(matchupKey);
       }
 
-      const value = category.calculateValue(matchup);
+      const value = category.calculateValue(matchup, matchups);
       if (value !== null && !isNaN(value)) {
         const record: HallOfFameRecord = {
           category: category.id,
@@ -121,6 +131,24 @@ export function calculateHallOfFameRecords(
             opponentPoints: matchup.opponentPoints,
             projectedPoints: matchup.projectedPoints,
             won: matchup.won,
+            // Add matchup-specific data for linking
+            matchupId: matchup.matchupId,
+            isMatchupRecord: matchupCategories.includes(category.id),
+            // For matchup records, include both teams
+            ...(matchupCategories.includes(category.id) && {
+              bothTeams: {
+                teamA: {
+                  name: matchup.teamName,
+                  id: matchup.rosterId,
+                  points: matchup.points,
+                },
+                teamB: {
+                  name: matchup.opponentName,
+                  id: matchup.opponentId,
+                  points: matchup.opponentPoints,
+                },
+              },
+            }),
           },
         };
 

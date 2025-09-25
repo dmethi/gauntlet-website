@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, TrendingDown, Zap, Target, Sparkles, Swords } from 'lucide-react';
 import Link from 'next/link';
+import { ExternalLink } from 'lucide-react';
 
 const HallOfFameLoader = () => (
   <ContentLoader
@@ -82,36 +83,81 @@ function CategoryCard({ categoryId, records }: { categoryId: string; records: an
       </CardHeader>
       <CardContent>
         <div className='space-y-3'>
-          {records.map((record, index) => (
-            <div
-              key={`${record.teamId}-${record.week}`}
-              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
-            >
-              <div className='flex items-start gap-2 flex-1'>
-                <span className='font-mono text-sm mt-0.5'>{getRankEmoji(index + 1)}</span>
-                <div className='flex-1 min-w-0'>
-                  <Link
-                    href={`/team/${record.teamId}`}
-                    className='font-medium hover:underline block truncate'
-                  >
-                    {record.teamName}
-                  </Link>
-                  <div className='flex items-center gap-2 mt-1'>
-                    <Badge variant='outline' className={getLeagueBadgeColor(record.leagueId)}>
-                      {getLeagueShortName(record.leagueId)}
-                    </Badge>
-                    <span className='text-xs text-muted-foreground'>Week {record.week}</span>
-                    {record.opponent && (
-                      <span className='text-xs text-muted-foreground'>vs {record.opponent}</span>
+          {records.map((record, index) => {
+            const isMatchupRecord = record.contextData?.isMatchupRecord;
+            const matchupId = record.contextData?.matchupId;
+            const bothTeams = record.contextData?.bothTeams;
+
+            return (
+              <div
+                key={`${categoryId}-${record.leagueId}-${record.teamId || 'na'}-${record.week}-${record.value}-${index}`}
+                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+              >
+                <div className='flex items-start gap-2 flex-1'>
+                  <span className='font-mono text-sm mt-0.5'>{getRankEmoji(index + 1)}</span>
+                  <div className='flex-1 min-w-0'>
+                    {isMatchupRecord && bothTeams ? (
+                      // Display for matchup records - show both teams
+                      <div>
+                        <div className='font-medium text-sm'>
+                          <Link href={`/team/${bothTeams.teamA.id}`} className='hover:underline'>
+                            {bothTeams.teamA.name}
+                          </Link>
+                          <span className='text-muted-foreground mx-2'>vs</span>
+                          <Link href={`/team/${bothTeams.teamB.id}`} className='hover:underline'>
+                            {bothTeams.teamB.name}
+                          </Link>
+                        </div>
+                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                          <Badge variant='outline' className={getLeagueBadgeColor(record.leagueId)}>
+                            {getLeagueShortName(record.leagueId)}
+                          </Badge>
+                          <span className='text-xs text-muted-foreground'>Week {record.week}</span>
+                          {matchupId && (
+                            <Link
+                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
+                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                            >
+                              <ExternalLink className='h-3 w-3' />
+                              View Matchup
+                            </Link>
+                          )}
+                        </div>
+                        <div className='text-xs text-muted-foreground mt-1'>
+                          ({bothTeams.teamA.points?.toFixed(1)} -{' '}
+                          {bothTeams.teamB.points?.toFixed(1)})
+                        </div>
+                      </div>
+                    ) : (
+                      // Display for individual team records
+                      <div>
+                        <Link
+                          href={`/team/${record.teamId}`}
+                          className='font-medium hover:underline block truncate'
+                        >
+                          {record.teamName}
+                        </Link>
+                        <div className='flex items-center gap-2 mt-1'>
+                          <Badge variant='outline' className={getLeagueBadgeColor(record.leagueId)}>
+                            {getLeagueShortName(record.leagueId)}
+                          </Badge>
+                          <span className='text-xs text-muted-foreground'>Week {record.week}</span>
+                          {record.opponent && (
+                            <span className='text-xs text-muted-foreground'>
+                              vs {record.opponent}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
+                <div className='text-right'>
+                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                </div>
               </div>
-              <div className='text-right'>
-                <div className='font-bold text-sm'>{formatRecord(record)}</div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>

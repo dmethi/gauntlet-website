@@ -1,32 +1,15 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
-import {
-  BarChart3,
-  CheckSquare,
-  ChevronDown,
-  ChevronRight,
-  Home,
-  Menu,
-  Star,
-  Swords,
-  Trophy,
-  Users,
-  X,
-} from 'lucide-react';
+import React, { Suspense } from 'react';
+import { BarChart3, Home, Menu, Star, Swords, Users, X } from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
 
 const navigationItems = [
   { name: 'Competition', icon: Home, href: '/competition' },
   { name: 'Stats Hub', icon: BarChart3, href: '/stats' },
-];
-
-const leagues = [
-  { id: '1263744209295245312', name: 'Gauntlet AFC', shortName: 'AFC' },
-  { id: '1263740549504962561', name: 'Gauntlet NFC', shortName: 'NFC' },
 ];
 
 interface SidebarProps {
@@ -146,15 +129,6 @@ function SidebarNavigationWithSearchParams({
   isError?: boolean;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [leaguesExpanded, setLeaguesExpanded] = useState(false);
-
-  // Auto-expand when on league overview page
-  useEffect(() => {
-    if (pathname === '/league/overview') {
-      setLeaguesExpanded(true);
-    }
-  }, [pathname]);
 
   return (
     <div className='space-y-1'>
@@ -179,79 +153,6 @@ function SidebarNavigationWithSearchParams({
           </Link>
         );
       })}
-
-      {/* Leagues Section */}
-      <div>
-        <button
-          onClick={() => setLeaguesExpanded(!leaguesExpanded)}
-          className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left w-full transition-all duration-200 ease ${
-            pathname.startsWith('/league/overview')
-              ? 'bg-gauntlet-crimson text-white shadow-sm'
-              : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
-          } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
-        >
-          <Trophy className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
-          <span className='flex-1 text-left'>Leagues</span>
-          <div className='transition-transform duration-300 origin-center motion-reduce:transition-none'>
-            {leaguesExpanded ? (
-              <ChevronDown className='h-4 w-4 flex-shrink-0' />
-            ) : (
-              <ChevronRight className='h-4 w-4 flex-shrink-0' />
-            )}
-          </div>
-        </button>
-
-        <div
-          className={`ml-6 overflow-hidden transition-all duration-300 ease-out motion-reduce:transition-none ${
-            leaguesExpanded ? 'max-h-32 opacity-100 mt-1' : 'max-h-0 opacity-0 mt-0'
-          }`}
-        >
-          <div className='space-y-1'>
-            {leagues.map(league => {
-              const currentLeagueId = searchParams.get('leagueId');
-              const isLeagueActive =
-                pathname === `/league/overview` && currentLeagueId === league.id;
-
-              return (
-                <Link
-                  key={league.id}
-                  href={`/league/overview?leagueId=${league.id}`}
-                  onClick={onItemClick}
-                  className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[36px] text-left transition-all duration-200 ease border ${
-                    isLeagueActive
-                      ? 'bg-gauntlet-regal-gold/20 text-card-foreground border-gauntlet-regal-gold/30 shadow-sm'
-                      : 'text-muted-foreground border-transparent hover:text-card-foreground hover:bg-muted hover:border-border/50'
-                  } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
-                >
-                  <div
-                    className={`h-3 w-3 rounded-sm flex-shrink-0 transition-all duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110 ${
-                      isLeagueActive ? 'bg-gauntlet-regal-gold shadow-sm' : 'bg-muted-foreground'
-                    }`}
-                  />
-                  <span className='flex-1 text-left font-medium'>{league.shortName}</span>
-                  {isLeagueActive && (
-                    <div className='h-1.5 w-1.5 rounded-full animate-pulse bg-gauntlet-regal-gold' />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Teams */}
-      <Link
-        href='/teams'
-        onClick={onItemClick}
-        className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left transition-all duration-200 ease ${
-          pathname === '/teams'
-            ? 'bg-gauntlet-crimson text-white shadow-sm'
-            : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
-        } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
-      >
-        <Users className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
-        <span className='flex-1 text-left'>Teams</span>
-      </Link>
 
       {/* Matchups */}
       <Link
@@ -279,20 +180,6 @@ function SidebarNavigationWithSearchParams({
       >
         <Star className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
         <span className='flex-1 text-left'>Hall of Fame</span>
-      </Link>
-
-      {/* TODOs */}
-      <Link
-        href='/todos'
-        onClick={onItemClick}
-        className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left transition-all duration-200 ease ${
-          pathname === '/todos'
-            ? 'bg-gauntlet-crimson text-white shadow-sm'
-            : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
-        } @media (hover: hover) and (pointer: fine) { hover:shadow-sm }`}
-      >
-        <CheckSquare className='h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110' />
-        <span className='flex-1 text-left'>TODOs</span>
       </Link>
 
       {/* Draft Analysis */}

@@ -703,7 +703,14 @@ export const ALL_EXPANDED_CATEGORIES: HallOfFameCategory[] = [
  */
 export function getAllCategories(): HallOfFameCategory[] {
   const { ALL_HALL_OF_FAME_CATEGORIES } = require('./hall-of-fame-categories');
-  return [...ALL_HALL_OF_FAME_CATEGORIES, ...ALL_EXPANDED_CATEGORIES];
+  console.log('📦 getAllCategories: Base categories:', ALL_HALL_OF_FAME_CATEGORIES.length);
+  console.log('📦 getAllCategories: Expanded categories:', ALL_EXPANDED_CATEGORIES.length);
+
+  const combined = [...ALL_HALL_OF_FAME_CATEGORIES, ...ALL_EXPANDED_CATEGORIES];
+  const newCombinedIds = combined.filter(c => c.id.includes('combined_')).map(c => c.id);
+  console.log('📦 getAllCategories: Combined categories with "combined_":', newCombinedIds);
+
+  return combined;
 }
 
 /**

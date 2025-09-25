@@ -89,12 +89,12 @@ Alex had the pieces to steal it: TB D/ST (21.3), Cam Skattebo (22.6), Courtland 
 Notables: QB gap –17 vs. Jeffrey (Caleb edge); D/ST gap +19 Alex; TE gap –15 Alex.`,
       },
       {
-        title: 'C&G² (Josh, 2–1) def. vayyala (Vinny, 0–3)',
+        title: 'C&G² (Josh, 2–1) def. vayyala (Vinay, 0–3)',
         recap: `This was the NFC's shootout, and Josh won with balance. Lamar (27) set tempo, but the real story was a lineup with no soft spots — every starter but one cleared 11. That profile wins fireworks weekends.
 
-Vinny is the league's hard-luck case. Hurts (31) and Kyren (21.7) combined for nearly 60 and he still fell. It's the second time in three weeks he's cleared 110 and left empty-handed. The team is better than 0–3; the record won't care.
+Vinay is the league's hard-luck case. Hurts (31) and Kyren (21.7) combined for nearly 60 and he still fell. It's the second time in three weeks he's cleared 110 and left empty-handed. The team is better than 0–3; the record won't care.
 
-Notables: WR gap –21 vs. Josh; QB gap +4 Vinny; D/ST gap +11 Vinny.`,
+Notables: WR gap –21 vs. Josh; QB gap +4 Vinay; D/ST gap +11 Vinay.`,
       },
       {
         title: 'DJ Herbussy (Akhil, 3–0) def. RithikP (0–3)',

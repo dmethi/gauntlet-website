@@ -5,8 +5,19 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, ChevronRight, Trophy, Users } from 'lucide-react';
+import { Calendar, ChevronDown, ChevronRight, ChevronUp, Trophy, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
+import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface League {
   id: string;
@@ -41,6 +52,237 @@ async function fetchLeagues(): Promise<LeaguesResponse> {
     throw new Error('Failed to fetch leagues');
   }
   return response.json();
+}
+
+// Component to display league standings for both leagues
+function LeagueStandingsSection() {
+  const afcLeagueId = '1263744209295245312';
+  const nfcLeagueId = '1263740549504962561';
+
+  const {
+    league: afcLeague,
+    loading: afcLoading,
+    teamStats: afcTeamStats,
+  } = useLeagueOverviewClient(afcLeagueId);
+  const {
+    league: nfcLeague,
+    loading: nfcLoading,
+    teamStats: nfcTeamStats,
+  } = useLeagueOverviewClient(nfcLeagueId);
+
+  const [sortKey, setSortKey] = useState<'team' | 'record' | 'points' | 'expectedWins' | 'luck'>(
+    'points'
+  );
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  const onSort = (key: typeof sortKey) => {
+    if (sortKey === key) {
+      setSortDir(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'team' ? 'asc' : 'desc');
+    }
+  };
+
+  const getSortedTeamStats = (teamStats: any[]) => {
+    const data = [...teamStats];
+    const winPct = (t: any) => (t.wins + t.losses > 0 ? t.wins / (t.wins + t.losses) : 0);
+
+    data.sort((a, b) => {
+      let av: number | string = 0;
+      let bv: number | string = 0;
+      switch (sortKey) {
+        case 'team':
+          av = a.name;
+          bv = b.name;
+          break;
+        case 'record':
+          av = winPct(a);
+          bv = winPct(b);
+          break;
+        case 'points':
+          av = a.totalPoints;
+          bv = b.totalPoints;
+          break;
+        case 'expectedWins':
+          av = a.expectedWins;
+          bv = b.expectedWins;
+          break;
+        case 'luck':
+          av = a.luckRating;
+          bv = b.luckRating;
+          break;
+        default:
+          av = a.totalPoints;
+          bv = b.totalPoints;
+      }
+      if (typeof av === 'string' && typeof bv === 'string') {
+        return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+      }
+      const diff = Number(av) - Number(bv);
+      return sortDir === 'asc' ? diff : -diff;
+    });
+    return data;
+  };
+
+  const getDivisionName = (division: number) => {
+    const divisions = ['North', 'South', 'East', 'West'];
+    return divisions[division - 1] || 'N/A';
+  };
+
+  if (afcLoading || nfcLoading) {
+    return (
+      <div className='mb-8'>
+        <Card>
+          <CardHeader>
+            <CardTitle>League Standings</CardTitle>
+            <CardDescription>Loading standings...</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='animate-pulse'>
+              <div className='h-32 bg-muted rounded'></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const afcSortedStats = getSortedTeamStats(afcTeamStats);
+  const nfcSortedStats = getSortedTeamStats(nfcTeamStats);
+
+  return (
+    <div className='mb-8'>
+      <Card>
+        <CardHeader>
+          <CardTitle className='flex items-center gap-2'>
+            <Trophy className='h-5 w-5 text-gauntlet-gold' />
+            League Standings
+          </CardTitle>
+          <CardDescription>Current team rankings across both leagues</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='grid gap-8 lg:grid-cols-2'>
+            {/* AFC Standings */}
+            <div>
+              <h3 className='mb-4 text-lg font-semibold'>{afcLeague?.name || 'Gauntlet AFC'}</h3>
+              <div className='overflow-x-auto rounded-md border border-border bg-card'>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className='w-[60px]'>Rank</TableHead>
+                      <TableHead>
+                        <button
+                          className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                          onClick={() => onSort('team')}
+                          aria-label='Sort by Team'
+                        >
+                          <span>Team</span>
+                          {sortKey === 'team' &&
+                            (sortDir === 'asc' ? (
+                              <ChevronUp className='h-3 w-3' />
+                            ) : (
+                              <ChevronDown className='h-3 w-3' />
+                            ))}
+                        </button>
+                      </TableHead>
+                      <TableHead className='w-[80px]'>Division</TableHead>
+                      <TableHead>
+                        <button
+                          className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                          onClick={() => onSort('record')}
+                          aria-label='Sort by Record'
+                        >
+                          <span>Record</span>
+                          {sortKey === 'record' &&
+                            (sortDir === 'asc' ? (
+                              <ChevronUp className='h-3 w-3' />
+                            ) : (
+                              <ChevronDown className='h-3 w-3' />
+                            ))}
+                        </button>
+                      </TableHead>
+                      <TableHead>
+                        <button
+                          className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                          onClick={() => onSort('points')}
+                          aria-label='Sort by Points'
+                        >
+                          <span>Points</span>
+                          {sortKey === 'points' &&
+                            (sortDir === 'asc' ? (
+                              <ChevronUp className='h-3 w-3' />
+                            ) : (
+                              <ChevronDown className='h-3 w-3' />
+                            ))}
+                        </button>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {afcSortedStats.map((team: any) => (
+                      <TableRow key={team.id} className='hover:bg-muted/50'>
+                        <TableCell>{team.canonicalRank}</TableCell>
+                        <TableCell className='font-medium'>{team.name}</TableCell>
+                        <TableCell>
+                          <Badge variant='outline' className='text-xs'>
+                            {getDivisionName(team.division)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant='secondary'>
+                            {team.wins}-{team.losses}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+
+            {/* NFC Standings */}
+            <div>
+              <h3 className='mb-4 text-lg font-semibold'>{nfcLeague?.name || 'Gauntlet NFC'}</h3>
+              <div className='overflow-x-auto rounded-md border border-border bg-card'>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className='w-[60px]'>Rank</TableHead>
+                      <TableHead>Team</TableHead>
+                      <TableHead className='w-[80px]'>Division</TableHead>
+                      <TableHead>Record</TableHead>
+                      <TableHead>Points</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {nfcSortedStats.map((team: any) => (
+                      <TableRow key={team.id} className='hover:bg-muted/50'>
+                        <TableCell>{team.canonicalRank}</TableCell>
+                        <TableCell className='font-medium'>{team.name}</TableCell>
+                        <TableCell>
+                          <Badge variant='outline' className='text-xs'>
+                            {getDivisionName(team.division)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant='secondary'>
+                            {team.wins}-{team.losses}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 export default function CompetitionPage() {
@@ -151,20 +393,6 @@ export default function CompetitionPage() {
           <CardContent>
             <div className='space-y-2'>
               <Link
-                href='/competition/preview/2025/week-3'
-                className='block p-3 rounded-md bg-blue-500/10 hover:bg-blue-500/20 transition-colors'
-              >
-                <div className='flex items-center justify-between'>
-                  <div>
-                    <div className='font-semibold text-blue-600'>Week 3 Preview — 2025</div>
-                    <div className='text-sm text-muted-foreground'>
-                      Next up • Fantasy matchup preview data
-                    </div>
-                  </div>
-                  <ChevronRight className='h-4 w-4 text-blue-600' />
-                </div>
-              </Link>
-              <Link
                 href='/competition/reports/2025/week-3'
                 className='block p-3 rounded-md bg-gauntlet-gold/10 hover:bg-gauntlet-gold/20 transition-colors'
               >
@@ -208,6 +436,9 @@ export default function CompetitionPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* League Standings */}
+      <LeagueStandingsSection />
 
       <div className='grid gap-6 md:grid-cols-2'>
         {leagues.map((league, index) => (

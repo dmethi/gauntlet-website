@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useHallOfFameEnhanced } from '@/hooks/useHallOfFameEnhanced';
-import { formatRecord, getRankEmoji, getCategoryInfo } from '@/lib/hall-of-fame-calculations';
+import { formatRecord, getCategoryInfo, getRankEmoji } from '@/lib/hall-of-fame-calculations';
 import { Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,16 +17,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Trophy,
-  TrendingDown,
-  Zap,
-  Target,
+  Calendar,
+  Clock,
+  Filter,
   Sparkles,
   Swords,
-  Clock,
-  Calendar,
+  Target,
+  TrendingDown,
+  Trophy,
   Users,
-  Filter,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { LEAGUE_IDS } from '@/lib/constants';
@@ -349,40 +349,70 @@ export default function EnhancedHallOfFamePage() {
                       </CardHeader>
                       <CardContent>
                         <div className='space-y-3'>
-                          {records.slice(0, 5).map((record, index) => (
-                            <div
-                              key={`${record.teamId}-${record.week}`}
-                              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
-                            >
-                              <div className='flex items-start gap-2 flex-1'>
-                                <span className='font-mono text-sm mt-0.5'>
-                                  {getRankEmoji(index + 1)}
-                                </span>
-                                <div className='flex-1 min-w-0'>
-                                  <Link
-                                    href={`/team/${record.teamId}`}
-                                    className='font-medium hover:underline block truncate'
-                                  >
-                                    {record.teamName}
-                                  </Link>
-                                  <div className='flex items-center gap-2 mt-1'>
-                                    <Badge
-                                      variant='outline'
-                                      className={getLeagueBadgeColor(record.leagueId)}
+                          {records.slice(0, 5).map((record, index) => {
+                            const matchupId = record.contextData?.matchupId;
+
+                            return (
+                              <div
+                                key={`${categoryId}-${record.leagueId}-${record.teamId || 'na'}-${record.week}-${record.value}-${index}`}
+                                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                              >
+                                <div className='flex items-start gap-2 flex-1'>
+                                  <span className='font-mono text-sm mt-0.5'>
+                                    {getRankEmoji(index + 1)}
+                                  </span>
+                                  <div className='flex-1 min-w-0'>
+                                    <Link
+                                      href={`/team/${record.teamId}`}
+                                      className='font-medium hover:underline block truncate'
                                     >
-                                      {getLeagueShortName(record.leagueId)}
-                                    </Badge>
-                                    <span className='text-xs text-muted-foreground'>
-                                      Week {record.week}
-                                    </span>
+                                      {record.teamName}
+                                    </Link>
+                                    <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                      <Badge
+                                        variant='outline'
+                                        className={getLeagueBadgeColor(record.leagueId)}
+                                      >
+                                        {getLeagueShortName(record.leagueId)}
+                                      </Badge>
+                                      <span className='text-xs text-muted-foreground'>
+                                        Week {record.week}
+                                      </span>
+                                      {record.opponent && (
+                                        <span className='text-xs text-muted-foreground'>
+                                          vs {record.opponent}
+                                        </span>
+                                      )}
+                                      {matchupId && (
+                                        <Link
+                                          href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
+                                          className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                        >
+                                          <svg
+                                            className='h-3 w-3'
+                                            fill='none'
+                                            viewBox='0 0 24 24'
+                                            stroke='currentColor'
+                                          >
+                                            <path
+                                              strokeLinecap='round'
+                                              strokeLinejoin='round'
+                                              strokeWidth={2}
+                                              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                            />
+                                          </svg>
+                                          View Matchup
+                                        </Link>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
+                                <div className='text-right'>
+                                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                                </div>
                               </div>
-                              <div className='text-right'>
-                                <div className='font-bold text-sm'>{formatRecord(record)}</div>
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </CardContent>
                     </Card>
@@ -429,7 +459,7 @@ export default function EnhancedHallOfFamePage() {
                           <div className='space-y-3'>
                             {topRecords.map((record, index) => (
                               <div
-                                key={`${record.teamId}-${record.week}-high`}
+                                key={`${record.teamId}-${record.week}-high-${categoryId}`}
                                 className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
                               >
                                 <div className='flex items-start gap-2 flex-1'>
@@ -443,7 +473,7 @@ export default function EnhancedHallOfFamePage() {
                                     >
                                       {record.teamName}
                                     </Link>
-                                    <div className='flex items-center gap-2 mt-1'>
+                                    <div className='flex items-center gap-2 mt-1 flex-wrap'>
                                       <Badge
                                         variant='outline'
                                         className={getLeagueBadgeColor(record.leagueId)}
@@ -453,6 +483,32 @@ export default function EnhancedHallOfFamePage() {
                                       <span className='text-xs text-muted-foreground'>
                                         Week {record.week}
                                       </span>
+                                      {record.opponent && (
+                                        <span className='text-xs text-muted-foreground'>
+                                          vs {record.opponent}
+                                        </span>
+                                      )}
+                                      {record.contextData?.matchupId && (
+                                        <Link
+                                          href={`/matchups/${record.leagueId}/${record.week}/${record.contextData.matchupId}`}
+                                          className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                        >
+                                          <svg
+                                            className='h-3 w-3'
+                                            fill='none'
+                                            viewBox='0 0 24 24'
+                                            stroke='currentColor'
+                                          >
+                                            <path
+                                              strokeLinecap='round'
+                                              strokeLinejoin='round'
+                                              strokeWidth={2}
+                                              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                            />
+                                          </svg>
+                                          View Matchup
+                                        </Link>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -472,40 +528,72 @@ export default function EnhancedHallOfFamePage() {
                               Hall of Shame
                             </h4>
                             <div className='space-y-3'>
-                              {bottomRecords.map((record, index) => (
-                                <div
-                                  key={`${record.teamId}-${record.week}-low`}
-                                  className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
-                                >
-                                  <div className='flex items-start gap-2 flex-1'>
-                                    <span className='font-mono text-sm mt-0.5'>
-                                      {getRankEmoji(index + 1)}
-                                    </span>
-                                    <div className='flex-1 min-w-0'>
-                                      <Link
-                                        href={`/team/${record.teamId}`}
-                                        className='font-medium hover:underline block truncate'
-                                      >
-                                        {record.teamName}
-                                      </Link>
-                                      <div className='flex items-center gap-2 mt-1'>
-                                        <Badge
-                                          variant='outline'
-                                          className={getLeagueBadgeColor(record.leagueId)}
+                              {bottomRecords.map((record, index) => {
+                                const matchupId = record.contextData?.matchupId;
+
+                                return (
+                                  <div
+                                    key={`${record.teamId}-${record.week}-low-${categoryId}`}
+                                    className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                  >
+                                    <div className='flex items-start gap-2 flex-1'>
+                                      <span className='font-mono text-sm mt-0.5'>
+                                        {getRankEmoji(index + 1)}
+                                      </span>
+                                      <div className='flex-1 min-w-0'>
+                                        <Link
+                                          href={`/team/${record.teamId}`}
+                                          className='font-medium hover:underline block truncate'
                                         >
-                                          {getLeagueShortName(record.leagueId)}
-                                        </Badge>
-                                        <span className='text-xs text-muted-foreground'>
-                                          Week {record.week}
-                                        </span>
+                                          {record.teamName}
+                                        </Link>
+                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                          <Badge
+                                            variant='outline'
+                                            className={getLeagueBadgeColor(record.leagueId)}
+                                          >
+                                            {getLeagueShortName(record.leagueId)}
+                                          </Badge>
+                                          <span className='text-xs text-muted-foreground'>
+                                            Week {record.week}
+                                          </span>
+                                          {record.opponent && (
+                                            <span className='text-xs text-muted-foreground'>
+                                              vs {record.opponent}
+                                            </span>
+                                          )}
+                                          {matchupId && (
+                                            <Link
+                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
+                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                            >
+                                              <svg
+                                                className='h-3 w-3'
+                                                fill='none'
+                                                viewBox='0 0 24 24'
+                                                stroke='currentColor'
+                                              >
+                                                <path
+                                                  strokeLinecap='round'
+                                                  strokeLinejoin='round'
+                                                  strokeWidth={2}
+                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                />
+                                              </svg>
+                                              View Matchup
+                                            </Link>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='text-right'>
+                                      <div className='font-bold text-sm'>
+                                        {formatRecord(record)}
                                       </div>
                                     </div>
                                   </div>
-                                  <div className='text-right'>
-                                    <div className='font-bold text-sm'>{formatRecord(record)}</div>
-                                  </div>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           </div>
                         )}
@@ -565,7 +653,7 @@ export default function EnhancedHallOfFamePage() {
                           <div className='space-y-3'>
                             {topRecords.map((record, index) => (
                               <div
-                                key={`${record.teamId}-${record.week}-high`}
+                                key={`${record.teamId}-${record.week}-high-${categoryId}`}
                                 className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
                               >
                                 <div className='flex items-start gap-2 flex-1'>
@@ -579,7 +667,7 @@ export default function EnhancedHallOfFamePage() {
                                     >
                                       {record.teamName}
                                     </Link>
-                                    <div className='flex items-center gap-2 mt-1'>
+                                    <div className='flex items-center gap-2 mt-1 flex-wrap'>
                                       <Badge
                                         variant='outline'
                                         className={getLeagueBadgeColor(record.leagueId)}
@@ -589,6 +677,32 @@ export default function EnhancedHallOfFamePage() {
                                       <span className='text-xs text-muted-foreground'>
                                         Week {record.week}
                                       </span>
+                                      {record.opponent && (
+                                        <span className='text-xs text-muted-foreground'>
+                                          vs {record.opponent}
+                                        </span>
+                                      )}
+                                      {record.contextData?.matchupId && (
+                                        <Link
+                                          href={`/matchups/${record.leagueId}/${record.week}/${record.contextData.matchupId}`}
+                                          className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                        >
+                                          <svg
+                                            className='h-3 w-3'
+                                            fill='none'
+                                            viewBox='0 0 24 24'
+                                            stroke='currentColor'
+                                          >
+                                            <path
+                                              strokeLinecap='round'
+                                              strokeLinejoin='round'
+                                              strokeWidth={2}
+                                              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                            />
+                                          </svg>
+                                          View Matchup
+                                        </Link>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -608,40 +722,72 @@ export default function EnhancedHallOfFamePage() {
                               Hall of Shame
                             </h4>
                             <div className='space-y-3'>
-                              {bottomRecords.map((record, index) => (
-                                <div
-                                  key={`${record.teamId}-${record.week}-low`}
-                                  className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
-                                >
-                                  <div className='flex items-start gap-2 flex-1'>
-                                    <span className='font-mono text-sm mt-0.5'>
-                                      {getRankEmoji(index + 1)}
-                                    </span>
-                                    <div className='flex-1 min-w-0'>
-                                      <Link
-                                        href={`/team/${record.teamId}`}
-                                        className='font-medium hover:underline block truncate'
-                                      >
-                                        {record.teamName}
-                                      </Link>
-                                      <div className='flex items-center gap-2 mt-1'>
-                                        <Badge
-                                          variant='outline'
-                                          className={getLeagueBadgeColor(record.leagueId)}
+                              {bottomRecords.map((record, index) => {
+                                const matchupId = record.contextData?.matchupId;
+
+                                return (
+                                  <div
+                                    key={`${record.teamId}-${record.week}-low-${categoryId}`}
+                                    className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                  >
+                                    <div className='flex items-start gap-2 flex-1'>
+                                      <span className='font-mono text-sm mt-0.5'>
+                                        {getRankEmoji(index + 1)}
+                                      </span>
+                                      <div className='flex-1 min-w-0'>
+                                        <Link
+                                          href={`/team/${record.teamId}`}
+                                          className='font-medium hover:underline block truncate'
                                         >
-                                          {getLeagueShortName(record.leagueId)}
-                                        </Badge>
-                                        <span className='text-xs text-muted-foreground'>
-                                          Week {record.week}
-                                        </span>
+                                          {record.teamName}
+                                        </Link>
+                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                          <Badge
+                                            variant='outline'
+                                            className={getLeagueBadgeColor(record.leagueId)}
+                                          >
+                                            {getLeagueShortName(record.leagueId)}
+                                          </Badge>
+                                          <span className='text-xs text-muted-foreground'>
+                                            Week {record.week}
+                                          </span>
+                                          {record.opponent && (
+                                            <span className='text-xs text-muted-foreground'>
+                                              vs {record.opponent}
+                                            </span>
+                                          )}
+                                          {matchupId && (
+                                            <Link
+                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
+                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                            >
+                                              <svg
+                                                className='h-3 w-3'
+                                                fill='none'
+                                                viewBox='0 0 24 24'
+                                                stroke='currentColor'
+                                              >
+                                                <path
+                                                  strokeLinecap='round'
+                                                  strokeLinejoin='round'
+                                                  strokeWidth={2}
+                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                />
+                                              </svg>
+                                              View Matchup
+                                            </Link>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='text-right'>
+                                      <div className='font-bold text-sm'>
+                                        {formatRecord(record)}
                                       </div>
                                     </div>
                                   </div>
-                                  <div className='text-right'>
-                                    <div className='font-bold text-sm'>{formatRecord(record)}</div>
-                                  </div>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           </div>
                         )}
@@ -663,6 +809,16 @@ export default function EnhancedHallOfFamePage() {
                   'lowest_combined',
                   'most_one_sided',
                   'most_exciting_game',
+                  'highest_combined_qb',
+                  'lowest_combined_qb',
+                  'highest_combined_rb',
+                  'lowest_combined_rb',
+                  'highest_combined_wr',
+                  'lowest_combined_wr',
+                  'highest_combined_te',
+                  'lowest_combined_te',
+                  'highest_combined_def',
+                  'lowest_combined_def',
                 ].map(categoryId => {
                   const records = weeklyRecords.get(categoryId);
                   const category = getCategoryInfo(categoryId);
@@ -675,40 +831,132 @@ export default function EnhancedHallOfFamePage() {
                       </CardHeader>
                       <CardContent>
                         <div className='space-y-3'>
-                          {records.slice(0, 5).map((record, index) => (
-                            <div
-                              key={`${record.teamId}-${record.week}`}
-                              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
-                            >
-                              <div className='flex items-start gap-2 flex-1'>
-                                <span className='font-mono text-sm mt-0.5'>
-                                  {getRankEmoji(index + 1)}
-                                </span>
-                                <div className='flex-1 min-w-0'>
-                                  <Link
-                                    href={`/team/${record.teamId}`}
-                                    className='font-medium hover:underline block truncate'
-                                  >
-                                    {record.teamName}
-                                  </Link>
-                                  <div className='flex items-center gap-2 mt-1'>
-                                    <Badge
-                                      variant='outline'
-                                      className={getLeagueBadgeColor(record.leagueId)}
-                                    >
-                                      {getLeagueShortName(record.leagueId)}
-                                    </Badge>
-                                    <span className='text-xs text-muted-foreground'>
-                                      Week {record.week}
-                                    </span>
+                          {records.slice(0, 5).map((record, index) => {
+                            const isMatchupRecord = record.contextData?.isMatchupRecord;
+                            const matchupId = record.contextData?.matchupId;
+                            const bothTeams = record.contextData?.bothTeams;
+
+                            return (
+                              <div
+                                key={`${categoryId}-${record.leagueId}-${record.teamId || 'na'}-${record.week}-${record.value}-${index}`}
+                                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                              >
+                                <div className='flex items-start gap-2 flex-1'>
+                                  <span className='font-mono text-sm mt-0.5'>
+                                    {getRankEmoji(index + 1)}
+                                  </span>
+                                  <div className='flex-1 min-w-0'>
+                                    {isMatchupRecord && bothTeams ? (
+                                      // Display for matchup records - show both teams
+                                      <div>
+                                        <div className='font-medium text-sm'>
+                                          <Link
+                                            href={`/team/${bothTeams.teamA.id}`}
+                                            className='hover:underline'
+                                          >
+                                            {bothTeams.teamA.name}
+                                          </Link>
+                                          <span className='text-muted-foreground mx-2'>vs</span>
+                                          <Link
+                                            href={`/team/${bothTeams.teamB.id}`}
+                                            className='hover:underline'
+                                          >
+                                            {bothTeams.teamB.name}
+                                          </Link>
+                                        </div>
+                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                          <Badge
+                                            variant='outline'
+                                            className={getLeagueBadgeColor(record.leagueId)}
+                                          >
+                                            {getLeagueShortName(record.leagueId)}
+                                          </Badge>
+                                          <span className='text-xs text-muted-foreground'>
+                                            Week {record.week}
+                                          </span>
+                                          {matchupId && (
+                                            <Link
+                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
+                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                            >
+                                              <svg
+                                                className='h-3 w-3'
+                                                fill='none'
+                                                viewBox='0 0 24 24'
+                                                stroke='currentColor'
+                                              >
+                                                <path
+                                                  strokeLinecap='round'
+                                                  strokeLinejoin='round'
+                                                  strokeWidth={2}
+                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                />
+                                              </svg>
+                                              View Matchup
+                                            </Link>
+                                          )}
+                                        </div>
+                                        <div className='text-xs text-muted-foreground mt-1'>
+                                          ({bothTeams.teamA.points?.toFixed(1)} -{' '}
+                                          {bothTeams.teamB.points?.toFixed(1)})
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      // Display for individual team records
+                                      <div>
+                                        <Link
+                                          href={`/team/${record.teamId}`}
+                                          className='font-medium hover:underline block truncate'
+                                        >
+                                          {record.teamName}
+                                        </Link>
+                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                          <Badge
+                                            variant='outline'
+                                            className={getLeagueBadgeColor(record.leagueId)}
+                                          >
+                                            {getLeagueShortName(record.leagueId)}
+                                          </Badge>
+                                          <span className='text-xs text-muted-foreground'>
+                                            Week {record.week}
+                                          </span>
+                                          {record.opponent && (
+                                            <span className='text-xs text-muted-foreground'>
+                                              vs {record.opponent}
+                                            </span>
+                                          )}
+                                          {matchupId && (
+                                            <Link
+                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
+                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                            >
+                                              <svg
+                                                className='h-3 w-3'
+                                                fill='none'
+                                                viewBox='0 0 24 24'
+                                                stroke='currentColor'
+                                              >
+                                                <path
+                                                  strokeLinecap='round'
+                                                  strokeLinejoin='round'
+                                                  strokeWidth={2}
+                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                />
+                                              </svg>
+                                              View Matchup
+                                            </Link>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
+                                <div className='text-right'>
+                                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                                </div>
                               </div>
-                              <div className='text-right'>
-                                <div className='font-bold text-sm'>{formatRecord(record)}</div>
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </CardContent>
                     </Card>

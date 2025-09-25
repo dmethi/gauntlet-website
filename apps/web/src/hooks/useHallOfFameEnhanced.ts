@@ -5,19 +5,19 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS } from '@/lib/constants';
-import { hallOfFameDataService, EnhancedMatchup } from '@/lib/hall-of-fame-data-service';
+import { EnhancedMatchup, hallOfFameDataService } from '@/lib/hall-of-fame-data-service';
 import {
+  RollingWindowData,
+  SeasonalData,
+  StreakData,
   calculateRollingWindows,
-  calculateStreaks,
   calculateSeasonalData,
+  calculateStreaks,
   findBestRollingWindows,
   findLongestStreaks,
   findSeasonalRecords,
-  RollingWindowData,
-  StreakData,
-  SeasonalData,
 } from '@/lib/hall-of-fame-aggregations';
-import { calculateHallOfFameRecords, HallOfFameRecord } from '@/lib/hall-of-fame-calculations';
+import { HallOfFameRecord, calculateHallOfFameRecords } from '@/lib/hall-of-fame-calculations';
 import { getAllCategories } from '@/lib/hall-of-fame-expanded-categories';
 
 export interface ComprehensiveHallOfFameData {
@@ -69,68 +69,80 @@ export interface ComprehensiveHallOfFameData {
  */
 export function useHallOfFameEnhanced() {
   return useQuery({
-    queryKey: ['hall-of-fame-enhanced', 'all'],
+    queryKey: ['hall-of-fame-enhanced', 'all', 'v2'], // Stable key
     queryFn: async (): Promise<ComprehensiveHallOfFameData> => {
-      // Fetch all enhanced matchups with player stats and win probability
-      const allMatchups = await hallOfFameDataService.getAllHistoricalMatchups(true);
+      try {
+        // Fetch all enhanced matchups with player stats and win probability
+        const allMatchups = await hallOfFameDataService.getAllHistoricalMatchups(true);
 
-      // Calculate weekly records using all categories
-      const allCategories = getAllCategories();
-      const weeklyRecords = calculateHallOfFameRecords(allMatchups, allCategories);
+        // Calculate weekly records using all categories
+        const allCategories = getAllCategories();
+        const weeklyRecords = calculateHallOfFameRecords(allMatchups, allCategories);
 
-      // Calculate rolling windows
-      const threeWeekWindows = calculateRollingWindows(allMatchups, 3);
-      const fiveWeekWindows = calculateRollingWindows(allMatchups, 5);
+        // Calculate rolling windows
+        const threeWeekWindows = calculateRollingWindows(allMatchups, 3);
+        const fiveWeekWindows = calculateRollingWindows(allMatchups, 5);
 
-      // Find best rolling windows
-      const rollingWindows = {
-        threeWeek: {
-          highest: findBestRollingWindows(threeWeekWindows, 'highest', 5),
-          lowest: findBestRollingWindows(threeWeekWindows, 'lowest', 5),
-        },
-        fiveWeek: {
-          highest: findBestRollingWindows(fiveWeekWindows, 'highest', 5),
-          lowest: findBestRollingWindows(fiveWeekWindows, 'lowest', 5),
-        },
-      };
+        // Find best rolling windows
+        const rollingWindows = {
+          threeWeek: {
+            highest: findBestRollingWindows(threeWeekWindows, 'highest', 5),
+            lowest: findBestRollingWindows(threeWeekWindows, 'lowest', 5),
+          },
+          fiveWeek: {
+            highest: findBestRollingWindows(fiveWeekWindows, 'highest', 5),
+            lowest: findBestRollingWindows(fiveWeekWindows, 'lowest', 5),
+          },
+        };
 
-      // Calculate streaks (only win/loss streaks)
-      const allStreaks = calculateStreaks(allMatchups);
-      const streaks = {
-        winStreaks: findLongestStreaks(allStreaks, 'win', 5),
-        lossStreaks: findLongestStreaks(allStreaks, 'loss', 5),
-        hotStreaks: [], // Removed per requirements
-        coldStreaks: [], // Removed per requirements
-      };
+        // Calculate streaks (only win/loss streaks)
+        const allStreaks = calculateStreaks(allMatchups);
+        const streaks = {
+          winStreaks: findLongestStreaks(allStreaks, 'win', 5),
+          lossStreaks: findLongestStreaks(allStreaks, 'loss', 5),
+          hotStreaks: [], // Removed per requirements
+          coldStreaks: [], // Removed per requirements
+        };
 
-      // Calculate seasonal data
-      const seasonalData = calculateSeasonalData(allMatchups);
-      const seasonal = {
-        mostWins: findSeasonalRecords(seasonalData, 'wins', 'highest', 5),
-        mostPoints: findSeasonalRecords(seasonalData, 'totalPoints', 'highest', 5),
-        luckiest: findSeasonalRecords(seasonalData, 'luckDelta', 'highest', 5),
-        unluckiest: findSeasonalRecords(seasonalData, 'luckDelta', 'lowest', 5),
-        mostDonuts: findSeasonalRecords(seasonalData, 'totalDonuts', 'highest', 5),
-        longestWinStreak: findSeasonalRecords(seasonalData, 'longestWinStreak', 'highest', 5),
-        longestLosingStreak: findSeasonalRecords(seasonalData, 'longestLosingStreak', 'highest', 5),
-        mostBlowouts: findSeasonalRecords(seasonalData, 'blowoutWins', 'highest', 5),
-        strongestSchedule: findSeasonalRecords(seasonalData, 'scheduleStrength', 'highest', 5),
-      };
+        // Calculate seasonal data
+        const seasonalData = calculateSeasonalData(allMatchups);
+        const seasonal = {
+          mostWins: findSeasonalRecords(seasonalData, 'wins', 'highest', 5),
+          mostPoints: findSeasonalRecords(seasonalData, 'totalPoints', 'highest', 5),
+          luckiest: findSeasonalRecords(seasonalData, 'luckDelta', 'highest', 5),
+          unluckiest: findSeasonalRecords(seasonalData, 'luckDelta', 'lowest', 5),
+          mostDonuts: findSeasonalRecords(seasonalData, 'totalDonuts', 'highest', 5),
+          longestWinStreak: findSeasonalRecords(seasonalData, 'longestWinStreak', 'highest', 5),
+          longestLosingStreak: findSeasonalRecords(
+            seasonalData,
+            'longestLosingStreak',
+            'highest',
+            5
+          ),
+          mostBlowouts: findSeasonalRecords(seasonalData, 'blowoutWins', 'highest', 5),
+          strongestSchedule: findSeasonalRecords(seasonalData, 'scheduleStrength', 'highest', 5),
+        };
 
-      // Calculate metadata
-      const uniqueSeasons = new Set(allMatchups.map(m => m.season));
-      const uniqueLeagues = new Set(allMatchups.map(m => m.leagueId));
+        // Calculate metadata
+        const uniqueSeasons = new Set(allMatchups.map(m => m.season));
+        const uniqueLeagues = new Set(allMatchups.map(m => m.leagueId));
 
-      return {
-        weeklyRecords,
-        rollingWindows,
-        streaks,
-        seasonal,
-        totalMatchups: allMatchups.length,
-        totalSeasons: uniqueSeasons.size,
-        totalLeagues: uniqueLeagues.size,
-        lastUpdated: new Date().toISOString(),
-      };
+        const data = {
+          weeklyRecords,
+          rollingWindows,
+          streaks,
+          seasonal,
+          totalMatchups: allMatchups.length,
+          totalSeasons: uniqueSeasons.size,
+          totalLeagues: uniqueLeagues.size,
+          lastUpdated: new Date().toISOString(),
+        };
+
+        return data;
+      } catch (error) {
+        console.error('🚨 ENHANCED HOOK ERROR:', error);
+        throw error;
+      }
     },
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,

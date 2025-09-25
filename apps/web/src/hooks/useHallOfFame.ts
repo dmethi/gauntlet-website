@@ -150,11 +150,6 @@ export function useHallOfFame() {
   return useQuery({
     queryKey: ['hall-of-fame', 'all-leagues'],
     queryFn: async () => {
-      // Check cache
-      const cacheKey = 'hall-of-fame-all';
-      const cached = calculationCache.get(cacheKey);
-      if (cached) return cached;
-
       // Get all league IDs
       const leagueIds = [LEAGUE_IDS.AFC, LEAGUE_IDS.NFC];
 
@@ -180,9 +175,6 @@ export function useHallOfFame() {
         totalMatchups: allMatchups.length,
         lastUpdated: new Date().toISOString(),
       };
-
-      // Cache the results
-      calculationCache.set(cacheKey, formattedData);
 
       return formattedData;
     },
