@@ -1,16 +1,18 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PlainStatsDataset } from '@/lib/stats/compose';
 import type { TrackedPosition } from '@/lib/stats/positions';
 import { PlayerBreakdownRow } from '@/components/stats/PlayerBreakdown';
 import { mean, median } from '@/lib/stats/medians';
 import { rank } from '@/lib/stats/ranks';
 import { colors } from '../../../../../brand/colors';
+import * as d3 from 'd3';
 import {
   Bar,
   BarChart,
   Cell,
+  Customized,
   Line,
   LineChart,
   ReferenceLine,
@@ -63,6 +65,243 @@ function getTextColor(backgroundColor: string): string {
   // For yellow/orange colors, use black text. For green/red, use white text.
   const lightColors = [colors.rdylgn[3], colors.rdylgn[4], colors.rdylgn[5], colors.rdylgn[6]]; // orange and yellow range
   return lightColors.includes(backgroundColor) ? '#000000' : '#ffffff';
+}
+
+// D3-based Ridge Plot Component
+interface RidgePlotProps {
+  data: any[];
+  domain: [number, number];
+  height: number;
+  title?: string;
+}
+
+function D3RidgePlot({ data, domain, height, title }: RidgePlotProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredTeam, setHoveredTeam] = useState<any>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [containerWidth, setContainerWidth] = useState(800);
+
+  // Monitor container width for responsiveness
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver(entries => {
+      const entry = entries[0];
+      if (entry) {
+        setContainerWidth(entry.contentRect.width);
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!svgRef.current || !data.length) return;
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove(); // Clear previous render
+
+    // Chart dimensions - responsive width
+    const margin = { top: 20, right: 30, bottom: 60, left: 150 };
+    const width = containerWidth - margin.left - margin.right;
+
+    // Calculate height based on number of ridges to prevent bleeding
+    const ridgeHeight = 25;
+    const ridgeGap = 28;
+
+    // For positional charts, use smaller dimensions and tighter spacing
+    const isPositional =
+      title?.includes('QB') ||
+      title?.includes('RB') ||
+      title?.includes('WR') ||
+      title?.includes('TE') ||
+      title?.includes('DEF');
+    const adjustedRidgeGap = isPositional ? 24 : ridgeGap;
+
+    // Calculate exact chart height needed
+    const contentHeight = 45 + data.length * adjustedRidgeGap + 20; // start + ridges + bottom padding
+    const chartHeight = contentHeight;
+
+    // Create scales
+    const xScale = d3.scaleLinear().domain(domain).range([0, width]);
+
+    // Create container group
+    const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Add X-axis at the bottom of content area
+    const axisY = contentHeight;
+    const xAxis = d3.axisBottom(xScale).tickFormat(d => d.toString());
+
+    g.append('g')
+      .attr('transform', `translate(0, ${axisY})`)
+      .call(xAxis)
+      .selectAll('text')
+      .style('font-size', '11px');
+
+    // Add axis label
+    g.append('text')
+      .attr('x', width / 2)
+      .attr('y', axisY + 35)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '12px')
+      .text(title || 'Weekly Scores');
+
+    // Render ridges
+    data.forEach((team, idx) => {
+      // Adjust baseY to prevent bleeding below axis for positional charts
+      const isPositional =
+        title?.includes('QB') ||
+        title?.includes('RB') ||
+        title?.includes('WR') ||
+        title?.includes('TE') ||
+        title?.includes('DEF');
+      const adjustedRidgeHeight = isPositional ? 20 : ridgeHeight;
+      const adjustedRidgeGap = isPositional ? 24 : ridgeGap;
+
+      const baseY = 45 + idx * adjustedRidgeGap;
+      const pairs = team.densityPairs as [number, number][];
+
+      if (!pairs?.length) return;
+
+      // Create ridge path
+      const points = pairs.map(([x, y]: [number, number]) => [
+        xScale(x),
+        baseY - (y / team.maxDensity) * adjustedRidgeHeight,
+      ]);
+
+      // Build path string
+      let pathData = `M ${points[0][0]} ${baseY}`;
+      pathData += ` L ${points[0][0]} ${points[0][1]}`;
+
+      for (let i = 1; i < points.length; i++) {
+        pathData += ` L ${points[i][0]} ${points[i][1]}`;
+      }
+
+      pathData += ` L ${points[points.length - 1][0]} ${baseY} Z`;
+
+      // Add ridge path
+      const ridgeGroup = g.append('g');
+
+      ridgeGroup
+        .append('path')
+        .attr('d', pathData)
+        .attr('fill', colors.core.regalGold)
+        .attr('fill-opacity', 0.35)
+        .attr('stroke', colors.core.regalGold)
+        .attr('stroke-width', 1);
+
+      // Add median line
+      const medianX = xScale(team.median);
+      ridgeGroup
+        .append('line')
+        .attr('x1', medianX)
+        .attr('y1', baseY)
+        .attr('x2', medianX)
+        .attr('y2', baseY - adjustedRidgeHeight)
+        .attr('stroke', colors.core.charcoalSteel)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '3 2');
+
+      // Add team name
+      g.append('text')
+        .attr('x', -10)
+        .attr('y', baseY - adjustedRidgeHeight / 2)
+        .attr('text-anchor', 'end')
+        .attr('dominant-baseline', 'central')
+        .style('font-size', '11px')
+        .style('font-weight', '600')
+        .style('fill', colors.core.regalGold)
+        .text(team.teamName);
+
+      // Add invisible hover area
+      ridgeGroup
+        .append('rect')
+        .attr('x', xScale(team.min) - 5)
+        .attr('y', baseY - adjustedRidgeHeight - 5)
+        .attr('width', xScale(team.max) - xScale(team.min) + 10)
+        .attr('height', adjustedRidgeHeight + 10)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .on('mouseenter', event => {
+          setHoveredTeam(team);
+          setMousePos({ x: event.pageX, y: event.pageY });
+        })
+        .on('mousemove', event => {
+          setMousePos({ x: event.pageX, y: event.pageY });
+        })
+        .on('mouseleave', () => {
+          setHoveredTeam(null);
+        });
+    });
+  }, [data, domain, height, title, containerWidth]);
+
+  // Calculate total SVG height based on content - more precise
+  const isPositional =
+    title?.includes('QB') ||
+    title?.includes('RB') ||
+    title?.includes('WR') ||
+    title?.includes('TE') ||
+    title?.includes('DEF');
+  const gapSize = isPositional ? 24 : 28;
+
+  // Precise height: margins + content + axis space
+  const contentHeight = 45 + data.length * gapSize + 20; // ridge content
+  const totalSvgHeight = 20 + contentHeight + 55; // top margin + content + axis space
+
+  return (
+    <div ref={containerRef} className='relative w-full'>
+      <svg ref={svgRef} width='100%' height={totalSvgHeight}></svg>
+
+      {/* Custom Tooltip */}
+      {hoveredTeam && (
+        <div
+          className='absolute pointer-events-none z-10 rounded-lg border bg-background p-3 shadow-lg'
+          style={{
+            left: mousePos.x + 10,
+            top: mousePos.y - 10,
+            transform: 'translate(-50%, -100%)',
+          }}
+        >
+          <div className='mb-2'>
+            <div className='font-semibold text-sm'>{hoveredTeam.teamName}</div>
+            <div className='text-xs text-muted-foreground'>{hoveredTeam.leagueName}</div>
+          </div>
+          <div className='grid grid-cols-2 gap-4 text-xs'>
+            <div>
+              <div className='font-semibold'>Median Score</div>
+              <div className='text-lg font-bold'>{hoveredTeam.median.toFixed(1)}</div>
+              <div className='text-xs text-gray-400'>50th percentile</div>
+            </div>
+            <div>
+              <div className='font-semibold'>Score Range</div>
+              <div className='text-sm'>
+                {hoveredTeam.min.toFixed(1)} - {hoveredTeam.max.toFixed(1)}
+              </div>
+              <div className='text-xs text-gray-400'>Range: {hoveredTeam.range.toFixed(1)}</div>
+            </div>
+            <div>
+              <div className='font-semibold'>Games Played</div>
+              <div className='text-lg font-bold'>{hoveredTeam.gamesPlayed}</div>
+            </div>
+            <div>
+              <div className='font-semibold'>Consistency</div>
+              <div className='text-sm'>
+                <span className='font-semibold'>
+                  {hoveredTeam.range < 20
+                    ? '🎯 Narrow'
+                    : hoveredTeam.range < 40
+                      ? '📊 Medium'
+                      : '🌊 Wide'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function StatsContent({ dataset, searchParams }: StatsContentProps) {
@@ -1938,7 +2177,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
     );
   }
 
-  // Scatter Analysis Component  
+  // Scatter Analysis Component
   function ScatterAnalysis() {
     return (
       <div className='space-y-8'>
@@ -1954,225 +2193,225 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
           <CardContent>
             <div className='h-96'>
               <ResponsiveContainer width='100%' height='100%'>
-                    <ScatterChart
-                      data={(() => {
-                        const data = allTeamEntries
-                          .map(([teamKey, team]) => {
-                            const pointsFor = team.teamScores
-                              .filter(d => d.value > 0)
-                              .reduce((sum, d) => sum + d.value, 0);
-                            const pointsAgainst = team.opponentScores
-                              .filter(d => d.value > 0)
-                              .reduce((sum, d) => sum + d.value, 0);
-                            const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
+                <ScatterChart
+                  data={(() => {
+                    const data = allTeamEntries
+                      .map(([teamKey, team]) => {
+                        const pointsFor = team.teamScores
+                          .filter(d => d.value > 0)
+                          .reduce((sum, d) => sum + d.value, 0);
+                        const pointsAgainst = team.opponentScores
+                          .filter(d => d.value > 0)
+                          .reduce((sum, d) => sum + d.value, 0);
+                        const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
 
-                            return {
-                              teamKey,
-                              teamName: team.teamInfo.teamName,
-                              leagueName: team.teamInfo.leagueName,
-                              pointsFor: gamesPlayed > 0 ? pointsFor / gamesPlayed : 0,
-                              pointsAgainst: gamesPlayed > 0 ? pointsAgainst / gamesPlayed : 0,
-                              totalFor: pointsFor,
-                              totalAgainst: pointsAgainst,
-                              gamesPlayed,
-                            };
-                          })
-                          .filter(t => t.gamesPlayed > 0);
+                        return {
+                          teamKey,
+                          teamName: team.teamInfo.teamName,
+                          leagueName: team.teamInfo.leagueName,
+                          pointsFor: gamesPlayed > 0 ? pointsFor / gamesPlayed : 0,
+                          pointsAgainst: gamesPlayed > 0 ? pointsAgainst / gamesPlayed : 0,
+                          totalFor: pointsFor,
+                          totalAgainst: pointsAgainst,
+                          gamesPlayed,
+                        };
+                      })
+                      .filter(t => t.gamesPlayed > 0);
 
-                        return data;
-                      })()}
-                      margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
-                    >
-                      <XAxis
-                        type='number'
-                        dataKey='pointsFor'
-                        domain={['dataMin - 10', 'dataMax + 10']}
-                        label={{
-                          value: 'Average Points For',
-                          position: 'insideBottom',
-                          offset: -10,
-                          style: { textAnchor: 'middle', fontSize: '12px' },
-                        }}
-                        tick={{ fontSize: 11 }}
-                        tickFormatter={value => Number(value).toFixed(0)}
-                      />
-                      <YAxis
-                        type='number'
-                        dataKey='pointsAgainst'
-                        domain={['dataMin - 10', 'dataMax + 10']}
-                        label={{
-                          value: 'Average Points Against',
-                          angle: -90,
-                          position: 'insideLeft',
-                          style: { textAnchor: 'middle', fontSize: '12px' },
-                        }}
-                        tick={{ fontSize: 11 }}
-                        tickFormatter={value => Number(value).toFixed(0)}
-                      />
-                      {/* Median reference lines */}
-                      <ReferenceLine
-                        x={median(
-                          allTeamEntries
-                            .map(([, team]) => {
-                              const pointsFor = team.teamScores
-                                .filter(d => d.value > 0)
-                                .reduce((sum, d) => sum + d.value, 0);
-                              const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
-                              return gamesPlayed > 0 ? pointsFor / gamesPlayed : 0;
-                            })
-                            .filter(x => x > 0)
-                        )}
-                        stroke='rgba(156, 163, 175, 0.8)'
-                        strokeDasharray='5 5'
-                        strokeWidth={2}
-                      />
-                      <ReferenceLine
-                        y={median(
-                          allTeamEntries
-                            .map(([, team]) => {
-                              const pointsAgainst = team.opponentScores
-                                .filter(d => d.value > 0)
-                                .reduce((sum, d) => sum + d.value, 0);
-                              const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
-                              return gamesPlayed > 0 ? pointsAgainst / gamesPlayed : 0;
-                            })
-                            .filter(x => x > 0)
-                        )}
-                        stroke='rgba(156, 163, 175, 0.8)'
-                        strokeDasharray='5 5'
-                        strokeWidth={2}
-                      />
-                      <Tooltip
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length > 0) {
-                            const data = payload[0].payload;
-                            return (
-                              <div
-                                className='p-4 rounded-lg shadow-xl border min-w-[240px]'
-                                style={{
-                                  backgroundColor: colors.core.charcoalSteel,
-                                  borderColor: colors.core.regalGold,
-                                  color: 'white',
-                                }}
-                              >
-                                <div
-                                  className='font-bold text-lg mb-1'
-                                  style={{ color: colors.core.regalGold }}
-                                >
-                                  {data.teamName}
+                    return data;
+                  })()}
+                  margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
+                >
+                  <XAxis
+                    type='number'
+                    dataKey='pointsFor'
+                    domain={['dataMin - 10', 'dataMax + 10']}
+                    label={{
+                      value: 'Average Points For',
+                      position: 'insideBottom',
+                      offset: -10,
+                      style: { textAnchor: 'middle', fontSize: '12px' },
+                    }}
+                    tick={{ fontSize: 11 }}
+                    tickFormatter={value => Number(value).toFixed(0)}
+                  />
+                  <YAxis
+                    type='number'
+                    dataKey='pointsAgainst'
+                    domain={['dataMin - 10', 'dataMax + 10']}
+                    label={{
+                      value: 'Average Points Against',
+                      angle: -90,
+                      position: 'insideLeft',
+                      style: { textAnchor: 'middle', fontSize: '12px' },
+                    }}
+                    tick={{ fontSize: 11 }}
+                    tickFormatter={value => Number(value).toFixed(0)}
+                  />
+                  {/* Median reference lines */}
+                  <ReferenceLine
+                    x={median(
+                      allTeamEntries
+                        .map(([, team]) => {
+                          const pointsFor = team.teamScores
+                            .filter(d => d.value > 0)
+                            .reduce((sum, d) => sum + d.value, 0);
+                          const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
+                          return gamesPlayed > 0 ? pointsFor / gamesPlayed : 0;
+                        })
+                        .filter(x => x > 0)
+                    )}
+                    stroke='rgba(156, 163, 175, 0.8)'
+                    strokeDasharray='5 5'
+                    strokeWidth={2}
+                  />
+                  <ReferenceLine
+                    y={median(
+                      allTeamEntries
+                        .map(([, team]) => {
+                          const pointsAgainst = team.opponentScores
+                            .filter(d => d.value > 0)
+                            .reduce((sum, d) => sum + d.value, 0);
+                          const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
+                          return gamesPlayed > 0 ? pointsAgainst / gamesPlayed : 0;
+                        })
+                        .filter(x => x > 0)
+                    )}
+                    stroke='rgba(156, 163, 175, 0.8)'
+                    strokeDasharray='5 5'
+                    strokeWidth={2}
+                  />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length > 0) {
+                        const data = payload[0].payload;
+                        return (
+                          <div
+                            className='p-4 rounded-lg shadow-xl border min-w-[240px]'
+                            style={{
+                              backgroundColor: colors.core.charcoalSteel,
+                              borderColor: colors.core.regalGold,
+                              color: 'white',
+                            }}
+                          >
+                            <div
+                              className='font-bold text-lg mb-1'
+                              style={{ color: colors.core.regalGold }}
+                            >
+                              {data.teamName}
+                            </div>
+                            <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+
+                            <div className='space-y-3'>
+                              <div>
+                                <div className='flex items-center gap-2 mb-1'>
+                                  <div
+                                    className='w-3 h-3 rounded-full'
+                                    style={{ backgroundColor: colors.rdylgn[8] }}
+                                  ></div>
+                                  <span className='font-medium'>Points Scored</span>
                                 </div>
-                                <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
-
-                                <div className='space-y-3'>
-                                  <div>
-                                    <div className='flex items-center gap-2 mb-1'>
-                                      <div
-                                        className='w-3 h-3 rounded-full'
-                                        style={{ backgroundColor: colors.rdylgn[8] }}
-                                      ></div>
-                                      <span className='font-medium'>Points Scored</span>
-                                    </div>
-                                    <div className='ml-5'>
-                                      <div className='font-bold text-lg'>
-                                        {data.pointsFor.toFixed(1)}/game
-                                      </div>
-                                      <div className='text-xs text-gray-400'>
-                                        {data.totalFor.toFixed(1)} season total
-                                      </div>
-                                    </div>
+                                <div className='ml-5'>
+                                  <div className='font-bold text-lg'>
+                                    {data.pointsFor.toFixed(1)}/game
                                   </div>
-
-                                  <div>
-                                    <div className='flex items-center gap-2 mb-1'>
-                                      <div
-                                        className='w-3 h-3 rounded-full'
-                                        style={{ backgroundColor: colors.rdylgn[2] }}
-                                      ></div>
-                                      <span className='font-medium'>Points Allowed</span>
-                                    </div>
-                                    <div className='ml-5'>
-                                      <div className='font-bold text-lg'>
-                                        {data.pointsAgainst.toFixed(1)}/game
-                                      </div>
-                                      <div className='text-xs text-gray-400'>
-                                        {data.totalAgainst.toFixed(1)} season total
-                                      </div>
-                                    </div>
+                                  <div className='text-xs text-gray-400'>
+                                    {data.totalFor.toFixed(1)} season total
                                   </div>
                                 </div>
                               </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
-                      <Scatter
-                        dataKey='pointsFor'
-                        shape={props => {
-                          const { cx, cy, payload } = props;
-                          if (!payload || !cx || !cy) return null;
 
-                          // Find team data to get avatar
-                          const teamData = allTeamEntries.find(([k]) => k === payload.teamKey)?.[1];
-                          const avatarUrl = teamData?.teamInfo.avatar;
+                              <div>
+                                <div className='flex items-center gap-2 mb-1'>
+                                  <div
+                                    className='w-3 h-3 rounded-full'
+                                    style={{ backgroundColor: colors.rdylgn[2] }}
+                                  ></div>
+                                  <span className='font-medium'>Points Allowed</span>
+                                </div>
+                                <div className='ml-5'>
+                                  <div className='font-bold text-lg'>
+                                    {data.pointsAgainst.toFixed(1)}/game
+                                  </div>
+                                  <div className='text-xs text-gray-400'>
+                                    {data.totalAgainst.toFixed(1)} season total
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Scatter
+                    dataKey='pointsFor'
+                    shape={props => {
+                      const { cx, cy, payload } = props;
+                      if (!payload || !cx || !cy) return null;
 
-                          if (avatarUrl) {
-                            return (
-                              <g>
-                                <circle
-                                  cx={cx}
-                                  cy={cy}
-                                  r={14}
-                                  fill='white'
-                                  stroke={colors.core.regalGold}
-                                  strokeWidth={3}
-                                />
-                                <image
-                                  x={cx - 12}
-                                  y={cy - 12}
-                                  width={24}
-                                  height={24}
-                                  href={avatarUrl}
-                                  clipPath='circle(12px at 12px 12px)'
-                                />
-                              </g>
-                            );
-                          } else {
-                            // Fallback to initials
-                            const initials = payload.teamName
-                              .split(' ')
-                              .map(word => word[0])
-                              .join('')
-                              .substring(0, 2)
-                              .toUpperCase();
+                      // Find team data to get avatar
+                      const teamData = allTeamEntries.find(([k]) => k === payload.teamKey)?.[1];
+                      const avatarUrl = teamData?.teamInfo.avatar;
 
-                            return (
-                              <g>
-                                <circle
-                                  cx={cx}
-                                  cy={cy}
-                                  r={12}
-                                  fill={colors.core.regalGold}
-                                  stroke='rgba(0,0,0,0.3)'
-                                  strokeWidth={2}
-                                />
-                                <text
-                                  x={cx}
-                                  y={cy + 1}
-                                  textAnchor='middle'
-                                  fontSize='9'
-                                  fontWeight='bold'
-                                  fill='white'
-                                >
-                                  {initials}
-                                </text>
-                              </g>
-                            );
-                          }
-                        }}
-                      />
-                    </ScatterChart>
-                  </ResponsiveContainer>
+                      if (avatarUrl) {
+                        return (
+                          <g>
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={14}
+                              fill='white'
+                              stroke={colors.core.regalGold}
+                              strokeWidth={3}
+                            />
+                            <image
+                              x={cx - 12}
+                              y={cy - 12}
+                              width={24}
+                              height={24}
+                              href={avatarUrl}
+                              clipPath='circle(12px at 12px 12px)'
+                            />
+                          </g>
+                        );
+                      } else {
+                        // Fallback to initials
+                        const initials = payload.teamName
+                          .split(' ')
+                          .map(word => word[0])
+                          .join('')
+                          .substring(0, 2)
+                          .toUpperCase();
+
+                        return (
+                          <g>
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={12}
+                              fill={colors.core.regalGold}
+                              stroke='rgba(0,0,0,0.3)'
+                              strokeWidth={2}
+                            />
+                            <text
+                              x={cx}
+                              y={cy + 1}
+                              textAnchor='middle'
+                              fontSize='9'
+                              fontWeight='bold'
+                              fill='white'
+                            >
+                              {initials}
+                            </text>
+                          </g>
+                        );
+                      }
+                    }}
+                  />
+                </ScatterChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
@@ -2190,309 +2429,311 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
             <CardContent>
               <div className='h-80'>
                 <ResponsiveContainer width='100%' height='100%'>
-                      <ScatterChart
-                        data={(() => {
-                          const posData = positionsMap.get(position);
-                          const posTeamsMap = new Map(posData?.teams || []);
+                  <ScatterChart
+                    data={(() => {
+                      const posData = positionsMap.get(position);
+                      const posTeamsMap = new Map(posData?.teams || []);
 
-                          return allTeamEntries
-                            .map(([teamKey, team]) => {
-                              const teamPosData = posTeamsMap.get(teamKey);
+                      return allTeamEntries
+                        .map(([teamKey, team]) => {
+                          const teamPosData = posTeamsMap.get(teamKey);
 
-                              // Points for (our position scoring)
-                              const posPointsFor =
-                                teamPosData?.scores
-                                  .filter(d => d.value !== 0)
-                                  .reduce((sum, d) => sum + d.value, 0) || 0;
+                          // Points for (our position scoring)
+                          const posPointsFor =
+                            teamPosData?.scores
+                              .filter(d => d.value !== 0)
+                              .reduce((sum, d) => sum + d.value, 0) || 0;
 
-                              // Points against (opponent position scoring vs us) - CALCULATE MANUALLY
-                              let posPointsAgainst = 0;
-                              if (teamPosData) {
-                                // For each week this team played, get opponent's position score
-                                for (const scoreData of teamPosData.scores) {
-                                  if (scoreData.value === 0) continue;
+                          // Points against (opponent position scoring vs us) - CALCULATE MANUALLY
+                          let posPointsAgainst = 0;
+                          if (teamPosData) {
+                            // For each week this team played, get opponent's position score
+                            for (const scoreData of teamPosData.scores) {
+                              if (scoreData.value === 0) continue;
 
-                                  // Find who this team played against that week
-                                  const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
-                                  const opponentScore = teamData?.opponentScores.find(
+                              // Find who this team played against that week
+                              const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
+                              const opponentScore = teamData?.opponentScores.find(
+                                d => d.week === scoreData.week
+                              );
+
+                              if (opponentScore && opponentScore.value > 0) {
+                                // Find the opponent team by looking for matching opponent score
+                                for (const [oppKey, oppTeam] of allTeamEntries) {
+                                  if (oppKey === teamKey) continue;
+                                  const oppTeamScore = oppTeam.teamScores.find(
                                     d => d.week === scoreData.week
                                   );
+                                  if (
+                                    oppTeamScore &&
+                                    Math.abs(oppTeamScore.value - opponentScore.value) < 0.01
+                                  ) {
+                                    // Found the opponent - get their position score that week
+                                    const oppPosData = posTeamsMap.get(oppKey);
+                                    const oppPosScore =
+                                      oppPosData?.scores.find(d => d.week === scoreData.week)
+                                        ?.value || 0;
+                                    posPointsAgainst += oppPosScore;
+                                    break;
+                                  }
+                                }
+                              }
+                            }
+                          }
 
-                                  if (opponentScore && opponentScore.value > 0) {
-                                    // Find the opponent team by looking for matching opponent score
-                                    for (const [oppKey, oppTeam] of allTeamEntries) {
-                                      if (oppKey === teamKey) continue;
-                                      const oppTeamScore = oppTeam.teamScores.find(
-                                        d => d.week === scoreData.week
-                                      );
-                                      if (
-                                        oppTeamScore &&
-                                        Math.abs(oppTeamScore.value - opponentScore.value) < 0.01
-                                      ) {
-                                        // Found the opponent - get their position score that week
-                                        const oppPosData = posTeamsMap.get(oppKey);
-                                        const oppPosScore =
-                                          oppPosData?.scores.find(d => d.week === scoreData.week)
-                                            ?.value || 0;
-                                        posPointsAgainst += oppPosScore;
-                                        break;
-                                      }
+                          const gamesPlayed =
+                            teamPosData?.scores.filter(d => d.value !== 0).length || 0;
+
+                          return {
+                            teamKey,
+                            teamName: team.teamInfo.teamName,
+                            leagueName: team.teamInfo.leagueName,
+                            pointsFor: gamesPlayed > 0 ? posPointsFor / gamesPlayed : 0,
+                            pointsAgainst: gamesPlayed > 0 ? posPointsAgainst / gamesPlayed : 0,
+                            gamesPlayed,
+                            totalFor: posPointsFor,
+                            totalAgainst: posPointsAgainst,
+                          };
+                        })
+                        .filter(t => t.gamesPlayed > 0);
+                    })()}
+                    margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
+                  >
+                    <XAxis
+                      type='number'
+                      dataKey='pointsFor'
+                      domain={['dataMin - 2', 'dataMax + 2']}
+                      label={{
+                        value: `${position} Points For (Avg)`,
+                        position: 'insideBottom',
+                        offset: -10,
+                        style: { textAnchor: 'middle', fontSize: '12px' },
+                      }}
+                      tick={{ fontSize: 11 }}
+                      tickFormatter={value => Number(value).toFixed(0)}
+                    />
+                    <YAxis
+                      type='number'
+                      dataKey='pointsAgainst'
+                      domain={['dataMin - 2', 'dataMax + 2']}
+                      label={{
+                        value: `${position} Points Against (Avg)`,
+                        angle: -90,
+                        position: 'insideLeft',
+                        style: { textAnchor: 'middle', fontSize: '12px' },
+                      }}
+                      tick={{ fontSize: 11 }}
+                      tickFormatter={value => Number(value).toFixed(0)}
+                    />
+                    {/* Median reference lines */}
+                    <ReferenceLine
+                      x={(() => {
+                        const posData = positionsMap.get(position);
+                        const posTeamsMap = new Map(posData?.teams || []);
+                        const values = allTeamEntries
+                          .map(([teamKey]) => {
+                            const teamPosData = posTeamsMap.get(teamKey);
+                            const pointsFor =
+                              teamPosData?.scores
+                                .filter(d => d.value !== 0)
+                                .reduce((sum, d) => sum + d.value, 0) || 0;
+                            const gamesPlayed =
+                              teamPosData?.scores.filter(d => d.value !== 0).length || 0;
+                            return gamesPlayed > 0 ? pointsFor / gamesPlayed : 0;
+                          })
+                          .filter(x => x !== 0);
+                        return median(values);
+                      })()}
+                      stroke='#6b7280'
+                      strokeDasharray='8 4'
+                      strokeWidth={2}
+                    />
+                    <ReferenceLine
+                      y={(() => {
+                        const posData = positionsMap.get(position);
+                        const posTeamsMap = new Map(posData?.teams || []);
+
+                        // Use same calculation as chart data
+                        const chartData = allTeamEntries
+                          .map(([teamKey, team]) => {
+                            const teamPosData = posTeamsMap.get(teamKey);
+
+                            let posPointsAgainst = 0;
+                            if (teamPosData) {
+                              for (const scoreData of teamPosData.scores) {
+                                if (scoreData.value === 0) continue;
+
+                                const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
+                                const opponentScore = teamData?.opponentScores.find(
+                                  d => d.week === scoreData.week
+                                );
+
+                                if (opponentScore && opponentScore.value > 0) {
+                                  for (const [oppKey, oppTeam] of allTeamEntries) {
+                                    if (oppKey === teamKey) continue;
+                                    const oppTeamScore = oppTeam.teamScores.find(
+                                      d => d.week === scoreData.week
+                                    );
+                                    if (
+                                      oppTeamScore &&
+                                      Math.abs(oppTeamScore.value - opponentScore.value) < 0.01
+                                    ) {
+                                      const oppPosData = posTeamsMap.get(oppKey);
+                                      const oppPosScore =
+                                        oppPosData?.scores.find(d => d.week === scoreData.week)
+                                          ?.value || 0;
+                                      posPointsAgainst += oppPosScore;
+                                      break;
                                     }
                                   }
                                 }
                               }
+                            }
 
-                              const gamesPlayed =
-                                teamPosData?.scores.filter(d => d.value !== 0).length || 0;
+                            const gamesPlayed =
+                              teamPosData?.scores.filter(d => d.value !== 0).length || 0;
+                            return gamesPlayed > 0 ? posPointsAgainst / gamesPlayed : 0;
+                          })
+                          .filter(x => x > 0);
 
-                              return {
-                                teamKey,
-                                teamName: team.teamInfo.teamName,
-                                leagueName: team.teamInfo.leagueName,
-                                pointsFor: gamesPlayed > 0 ? posPointsFor / gamesPlayed : 0,
-                                pointsAgainst: gamesPlayed > 0 ? posPointsAgainst / gamesPlayed : 0,
-                                gamesPlayed,
-                                totalFor: posPointsFor,
-                                totalAgainst: posPointsAgainst,
-                              };
-                            })
-                            .filter(t => t.gamesPlayed > 0);
-                        })()}
-                        margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
-                      >
-                        <XAxis
-                          type='number'
-                          dataKey='pointsFor'
-                          domain={['dataMin - 2', 'dataMax + 2']}
-                          label={{
-                            value: `${position} Points For (Avg)`,
-                            position: 'insideBottom',
-                            offset: -10,
-                            style: { textAnchor: 'middle', fontSize: '12px' },
-                          }}
-                          tick={{ fontSize: 11 }}
-                          tickFormatter={value => Number(value).toFixed(0)}
-                        />
-                        <YAxis
-                          type='number'
-                          dataKey='pointsAgainst'
-                          domain={['dataMin - 2', 'dataMax + 2']}
-                          label={{
-                            value: `${position} Points Against (Avg)`,
-                            angle: -90,
-                            position: 'insideLeft',
-                            style: { textAnchor: 'middle', fontSize: '12px' },
-                          }}
-                          tick={{ fontSize: 11 }}
-                          tickFormatter={value => Number(value).toFixed(0)}
-                        />
-                        {/* Median reference lines */}
-                        <ReferenceLine
-                          x={(() => {
-                            const posData = positionsMap.get(position);
-                            const posTeamsMap = new Map(posData?.teams || []);
-                            const values = allTeamEntries
-                              .map(([teamKey]) => {
-                                const teamPosData = posTeamsMap.get(teamKey);
-                                const pointsFor =
-                                  teamPosData?.scores
-                                    .filter(d => d.value !== 0)
-                                    .reduce((sum, d) => sum + d.value, 0) || 0;
-                                const gamesPlayed =
-                                  teamPosData?.scores.filter(d => d.value !== 0).length || 0;
-                                return gamesPlayed > 0 ? pointsFor / gamesPlayed : 0;
-                              })
-                              .filter(x => x !== 0);
-                            return median(values);
-                          })()}
-                          stroke='#6b7280'
-                          strokeDasharray='8 4'
-                          strokeWidth={2}
-                        />
-                        <ReferenceLine
-                          y={(() => {
-                            const posData = positionsMap.get(position);
-                            const posTeamsMap = new Map(posData?.teams || []);
+                        return median(chartData);
+                      })()}
+                      stroke='#6b7280'
+                      strokeDasharray='8 4'
+                      strokeWidth={2}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length > 0) {
+                          const data = payload[0].payload;
+                          return (
+                            <div
+                              className='p-4 rounded-lg shadow-xl border min-w-[280px]'
+                              style={{
+                                backgroundColor: colors.core.charcoalSteel,
+                                borderColor: colors.core.regalGold,
+                                color: 'white',
+                              }}
+                            >
+                              <div
+                                className='font-bold text-lg mb-1'
+                                style={{ color: colors.core.regalGold }}
+                              >
+                                {data.teamName}
+                              </div>
+                              <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
 
-                            // Use same calculation as chart data
-                            const chartData = allTeamEntries
-                              .map(([teamKey, team]) => {
-                                const teamPosData = posTeamsMap.get(teamKey);
-
-                                let posPointsAgainst = 0;
-                                if (teamPosData) {
-                                  for (const scoreData of teamPosData.scores) {
-                                    if (scoreData.value === 0) continue;
-
-                                    const teamData = allTeamEntries.find(
-                                      ([k]) => k === teamKey
-                                    )?.[1];
-                                    const opponentScore = teamData?.opponentScores.find(
-                                      d => d.week === scoreData.week
-                                    );
-
-                                    if (opponentScore && opponentScore.value > 0) {
-                                      for (const [oppKey, oppTeam] of allTeamEntries) {
-                                        if (oppKey === teamKey) continue;
-                                        const oppTeamScore = oppTeam.teamScores.find(
-                                          d => d.week === scoreData.week
-                                        );
-                                        if (
-                                          oppTeamScore &&
-                                          Math.abs(oppTeamScore.value - opponentScore.value) < 0.01
-                                        ) {
-                                          const oppPosData = posTeamsMap.get(oppKey);
-                                          const oppPosScore =
-                                            oppPosData?.scores.find(d => d.week === scoreData.week)
-                                              ?.value || 0;
-                                          posPointsAgainst += oppPosScore;
-                                          break;
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-
-                                const gamesPlayed =
-                                  teamPosData?.scores.filter(d => d.value !== 0).length || 0;
-                                return gamesPlayed > 0 ? posPointsAgainst / gamesPlayed : 0;
-                              })
-                              .filter(x => x > 0);
-
-                            return median(chartData);
-                          })()}
-                          stroke='#6b7280'
-                          strokeDasharray='8 4'
-                          strokeWidth={2}
-                        />
-                        <Tooltip
-                          content={({ active, payload }) => {
-                            if (active && payload && payload.length > 0) {
-                              const data = payload[0].payload;
-                              return (
-                                <div
-                                  className='p-4 rounded-lg shadow-xl border min-w-[280px]'
-                                  style={{
-                                    backgroundColor: colors.core.charcoalSteel,
-                                    borderColor: colors.core.regalGold,
-                                    color: 'white',
-                                  }}
-                                >
-                                  <div
-                                    className='font-bold text-lg mb-1'
-                                    style={{ color: colors.core.regalGold }}
-                                  >
-                                    {data.teamName}
+                              <div className='space-y-3'>
+                                <div>
+                                  <div className='flex items-center gap-2 mb-1'>
+                                    <div
+                                      className='w-3 h-3 rounded-full'
+                                      style={{ backgroundColor: colors.rdylgn[8] }}
+                                    ></div>
+                                    <span className='font-medium'>{position} Scored</span>
                                   </div>
-                                  <div className='text-xs text-gray-300 mb-3'>
-                                    {data.leagueName}
-                                  </div>
-
-                                  <div className='space-y-3'>
-                                    <div>
-                                      <div className='flex items-center gap-2 mb-1'>
-                                        <div
-                                          className='w-3 h-3 rounded-full'
-                                          style={{ backgroundColor: colors.rdylgn[8] }}
-                                        ></div>
-                                        <span className='font-medium'>{position} Scored</span>
-                                      </div>
-                                      <div className='ml-5'>
-                                        <div className='font-bold text-lg'>{data.pointsFor.toFixed(1)}/game</div>
-                                        <div className='text-xs text-gray-400'>{data.totalFor.toFixed(1)} season total</div>
-                                      </div>
+                                  <div className='ml-5'>
+                                    <div className='font-bold text-lg'>
+                                      {data.pointsFor.toFixed(1)}/game
                                     </div>
-
-                                    <div>
-                                      <div className='flex items-center gap-2 mb-1'>
-                                        <div
-                                          className='w-3 h-3 rounded-full'
-                                          style={{ backgroundColor: colors.rdylgn[2] }}
-                                        ></div>
-                                        <span className='font-medium'>{position} Allowed</span>
-                                      </div>
-                                      <div className='ml-5'>
-                                        <div className='font-bold text-lg'>{data.pointsAgainst.toFixed(1)}/game</div>
-                                        <div className='text-xs text-gray-400'>{data.totalAgainst.toFixed(1)} season total</div>
-                                      </div>
+                                    <div className='text-xs text-gray-400'>
+                                      {data.totalFor.toFixed(1)} season total
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                            return null;
-                          }}
-                        />
-                        <Scatter
-                          dataKey='pointsFor'
-                          shape={props => {
-                            const { cx, cy, payload } = props;
-                            if (!payload || !cx || !cy) return null;
 
-                            // Find team data to get avatar
-                            const teamData = allTeamEntries.find(
-                              ([k]) => k === payload.teamKey
-                            )?.[1];
-                            const avatarUrl = teamData?.teamInfo.avatar;
+                                <div>
+                                  <div className='flex items-center gap-2 mb-1'>
+                                    <div
+                                      className='w-3 h-3 rounded-full'
+                                      style={{ backgroundColor: colors.rdylgn[2] }}
+                                    ></div>
+                                    <span className='font-medium'>{position} Allowed</span>
+                                  </div>
+                                  <div className='ml-5'>
+                                    <div className='font-bold text-lg'>
+                                      {data.pointsAgainst.toFixed(1)}/game
+                                    </div>
+                                    <div className='text-xs text-gray-400'>
+                                      {data.totalAgainst.toFixed(1)} season total
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Scatter
+                      dataKey='pointsFor'
+                      shape={props => {
+                        const { cx, cy, payload } = props;
+                        if (!payload || !cx || !cy) return null;
 
-                            if (avatarUrl) {
-                              return (
-                                <g>
-                                  <circle
-                                    cx={cx}
-                                    cy={cy}
-                                    r={12}
-                                    fill='white'
-                                    stroke={colors.core.regalGold}
-                                    strokeWidth={2}
-                                  />
-                                  <image
-                                    x={cx - 10}
-                                    y={cy - 10}
-                                    width={20}
-                                    height={20}
-                                    href={avatarUrl}
-                                    clipPath='circle(10px at 10px 10px)'
-                                  />
-                                </g>
-                              );
-                            } else {
-                              // Fallback to initials
-                              const initials = payload.teamName
-                                .split(' ')
-                                .map(word => word[0])
-                                .join('')
-                                .substring(0, 2)
-                                .toUpperCase();
+                        // Find team data to get avatar
+                        const teamData = allTeamEntries.find(([k]) => k === payload.teamKey)?.[1];
+                        const avatarUrl = teamData?.teamInfo.avatar;
 
-                              return (
-                                <g>
-                                  <circle
-                                    cx={cx}
-                                    cy={cy}
-                                    r={10}
-                                    fill={colors.core.regalGold}
-                                    stroke='rgba(0,0,0,0.3)'
-                                    strokeWidth={2}
-                                  />
-                                  <text
-                                    x={cx}
-                                    y={cy + 1}
-                                    textAnchor='middle'
-                                    fontSize='8'
-                                    fontWeight='bold'
-                                    fill='white'
-                                  >
-                                    {initials}
-                                  </text>
-                                </g>
-                              );
-                            }
-                          }}
-                        />
-                      </ScatterChart>
-                    </ResponsiveContainer>
-                  </div>
+                        if (avatarUrl) {
+                          return (
+                            <g>
+                              <circle
+                                cx={cx}
+                                cy={cy}
+                                r={12}
+                                fill='white'
+                                stroke={colors.core.regalGold}
+                                strokeWidth={2}
+                              />
+                              <image
+                                x={cx - 10}
+                                y={cy - 10}
+                                width={20}
+                                height={20}
+                                href={avatarUrl}
+                                clipPath='circle(10px at 10px 10px)'
+                              />
+                            </g>
+                          );
+                        } else {
+                          // Fallback to initials
+                          const initials = payload.teamName
+                            .split(' ')
+                            .map(word => word[0])
+                            .join('')
+                            .substring(0, 2)
+                            .toUpperCase();
+
+                          return (
+                            <g>
+                              <circle
+                                cx={cx}
+                                cy={cy}
+                                r={10}
+                                fill={colors.core.regalGold}
+                                stroke='rgba(0,0,0,0.3)'
+                                strokeWidth={2}
+                              />
+                              <text
+                                x={cx}
+                                y={cy + 1}
+                                textAnchor='middle'
+                                fontSize='8'
+                                fontWeight='bold'
+                                fill='white'
+                              >
+                                {initials}
+                              </text>
+                            </g>
+                          );
+                        }
+                      }}
+                    />
+                  </ScatterChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -2556,10 +2797,10 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                       </th>
                     ))}
                     <th
-                      className='px-3 py-3 text-center font-semibold min-w-[60px]'
+                      className='px-3 py-3 text-center font-semibold min-w-[80px]'
                       style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
                     >
-                      Trend
+                      Weekly Trend
                     </th>
                   </tr>
                 </thead>
@@ -2752,7 +2993,49 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                             );
                           }
                         )}
-                        <td className='px-3 py-2 text-center text-lg'>{data.trend}</td>
+                        <td className='px-3 py-2 text-center'>
+                          <div className='w-16 h-8'>
+                            <ResponsiveContainer width='100%' height='100%'>
+                              <LineChart
+                                data={(() => {
+                                  // Get actual weekly data with correct week numbers using teamKey
+                                  const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
+                                  if (!teamData) return [];
+
+                                  return teamData.teamScores
+                                    .filter(d => d.value > 0)
+                                    .map(d => ({
+                                      week: d.week,
+                                      score: d.value,
+                                    }));
+                                })()}
+                              >
+                                <Line
+                                  type='monotone'
+                                  dataKey='score'
+                                  stroke={colors.core.regalGold}
+                                  strokeWidth={2}
+                                  dot={false}
+                                />
+                                <Tooltip
+                                  contentStyle={{
+                                    backgroundColor: 'rgba(0,0,0,0.8)',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    color: 'white',
+                                    fontSize: '11px',
+                                    padding: '4px 8px',
+                                  }}
+                                  formatter={(value, name) => [
+                                    `${Number(value).toFixed(1)} pts`,
+                                    'Score',
+                                  ]}
+                                  labelFormatter={week => `Week ${week}`}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </td>
                       </tr>
                     ));
                   })()}
@@ -2813,10 +3096,10 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                       </th>
                     ))}
                     <th
-                      className='px-3 py-3 text-center font-semibold min-w-[60px]'
+                      className='px-3 py-3 text-center font-semibold min-w-[80px]'
                       style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
                     >
-                      Trend
+                      Weekly Trend
                     </th>
                   </tr>
                 </thead>
@@ -2930,7 +3213,49 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                             );
                           }
                         )}
-                        <td className='px-3 py-2 text-center text-lg'>{data.trend}</td>
+                        <td className='px-3 py-2 text-center'>
+                          <div className='w-16 h-8'>
+                            <ResponsiveContainer width='100%' height='100%'>
+                              <LineChart
+                                data={(() => {
+                                  // Get actual weekly data with correct week numbers using teamKey
+                                  const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
+                                  if (!teamData) return [];
+
+                                  return teamData.teamScores
+                                    .filter(d => d.value > 0)
+                                    .map(d => ({
+                                      week: d.week,
+                                      score: d.value,
+                                    }));
+                                })()}
+                              >
+                                <Line
+                                  type='monotone'
+                                  dataKey='score'
+                                  stroke={colors.core.regalGold}
+                                  strokeWidth={2}
+                                  dot={false}
+                                />
+                                <Tooltip
+                                  contentStyle={{
+                                    backgroundColor: 'rgba(0,0,0,0.8)',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    color: 'white',
+                                    fontSize: '11px',
+                                    padding: '4px 8px',
+                                  }}
+                                  formatter={(value, name) => [
+                                    `${Number(value).toFixed(1)} pts`,
+                                    'Score',
+                                  ]}
+                                  labelFormatter={week => `Week ${week}`}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </td>
                       </tr>
                     ));
                   })()}
@@ -3152,7 +3477,41 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                               );
                             }
                           )}
-                          <td className='px-3 py-2 text-center text-lg'>{data.trend}</td>
+                          <td className='px-3 py-2 text-center'>
+                            <div className='w-16 h-8'>
+                              <ResponsiveContainer width='100%' height='100%'>
+                                <LineChart
+                                  data={data.weeklyScores.map((score, index) => ({
+                                    week: index + 1,
+                                    score: score,
+                                  }))}
+                                >
+                                  <Line
+                                    type='monotone'
+                                    dataKey='score'
+                                    stroke={colors.core.regalGold}
+                                    strokeWidth={2}
+                                    dot={false}
+                                  />
+                                  <Tooltip
+                                    contentStyle={{
+                                      backgroundColor: 'rgba(0,0,0,0.8)',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      color: 'white',
+                                      fontSize: '11px',
+                                      padding: '4px 8px',
+                                    }}
+                                    formatter={(value, name) => [
+                                      `${Number(value).toFixed(1)}`,
+                                      'Score',
+                                    ]}
+                                    labelFormatter={week => `Week ${week}`}
+                                  />
+                                </LineChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </td>
                         </tr>
                       ));
                     })()}
@@ -3170,6 +3529,750 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
                   <p>
                     <strong>Trends:</strong> 📈 Improving, ➡️ Stable, 📉 Declining
                   </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+
+        {/* Team Consistency Analysis */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Team Consistency Analysis</CardTitle>
+            <CardDescription>
+              Consistency scores showing scoring reliability vs volatility. Higher bars = more
+              predictable teams.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='h-96'>
+              <ResponsiveContainer width='100%' height='100%'>
+                <BarChart
+                  data={(() => {
+                    // Calculate consistency metrics for each team
+                    const consistencyData = allTeamEntries
+                      .map(([teamKey, team]) => {
+                        const weeklyScores = team.teamScores
+                          .filter(d => d.value > 0)
+                          .map(d => d.value)
+                          .sort((a, b) => a - b);
+
+                        if (weeklyScores.length === 0) return null;
+
+                        // Calculate statistics
+                        const medianValue = median(weeklyScores);
+                        const meanValue = mean(weeklyScores);
+                        const min = weeklyScores[0];
+                        const max = weeklyScores[weeklyScores.length - 1];
+                        const range = max - min;
+                        const stdDev = Math.sqrt(
+                          weeklyScores.reduce(
+                            (sum, score) => sum + Math.pow(score - meanValue, 2),
+                            0
+                          ) / weeklyScores.length
+                        );
+
+                        return {
+                          teamKey,
+                          teamName: team.teamInfo.teamName,
+                          leagueName: team.teamInfo.leagueName,
+                          median: medianValue,
+                          mean: meanValue,
+                          min,
+                          max,
+                          range,
+                          stdDev,
+                          gamesPlayed: weeklyScores.length,
+                          scores: weeklyScores,
+                          // Consistency metrics for bar height
+                          consistency: 100 - Math.min(stdDev * 3, 100), // Higher = more consistent
+                        };
+                      })
+                      .filter(Boolean)
+                      .sort((a, b) => (b?.consistency || 0) - (a?.consistency || 0)); // Sort by consistency
+
+                    return consistencyData;
+                  })()}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                >
+                  <XAxis
+                    dataKey='teamName'
+                    angle={-45}
+                    textAnchor='end'
+                    height={80}
+                    interval={0}
+                    tick={{ fontSize: 10 }}
+                  />
+                  <YAxis
+                    label={{ value: 'Consistency Score', angle: -90, position: 'insideLeft' }}
+                    tick={{ fontSize: 11 }}
+                    domain={[0, 100]}
+                    tickFormatter={value => Number(value).toFixed(0)}
+                  />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length > 0) {
+                        const data = payload[0].payload;
+                        return (
+                          <div
+                            className='p-4 rounded-lg shadow-xl border min-w-[320px]'
+                            style={{
+                              backgroundColor: colors.core.charcoalSteel,
+                              borderColor: colors.core.regalGold,
+                              color: 'white',
+                            }}
+                          >
+                            <div
+                              className='font-bold text-lg mb-1'
+                              style={{ color: colors.core.regalGold }}
+                            >
+                              {data.teamName}
+                            </div>
+                            <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+
+                            <div className='space-y-3 text-sm'>
+                              <div className='grid grid-cols-2 gap-4'>
+                                <div>
+                                  <div className='font-semibold'>Consistency Score</div>
+                                  <div className='text-lg font-bold'>
+                                    {data.consistency.toFixed(1)}/100
+                                  </div>
+                                  <div className='text-xs text-gray-400'>
+                                    {data.stdDev < 15
+                                      ? '🎯 Very Steady'
+                                      : data.stdDev < 25
+                                        ? '📊 Somewhat Predictable'
+                                        : '🎲 Highly Volatile'}
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className='font-semibold'>Score Range</div>
+                                  <div className='text-lg font-bold'>{data.range.toFixed(1)}</div>
+                                  <div className='text-xs text-gray-400'>
+                                    {data.min.toFixed(1)} - {data.max.toFixed(1)}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className='border-t border-gray-600 pt-2'>
+                                <div className='grid grid-cols-2 gap-3 text-xs'>
+                                  <div>
+                                    Median:{' '}
+                                    <span className='font-semibold'>{data.median.toFixed(1)}</span>
+                                  </div>
+                                  <div>
+                                    Mean:{' '}
+                                    <span className='font-semibold'>{data.mean.toFixed(1)}</span>
+                                  </div>
+                                  <div>
+                                    Std Dev:{' '}
+                                    <span className='font-semibold'>{data.stdDev.toFixed(1)}</span>
+                                  </div>
+                                  <div>
+                                    Games: <span className='font-semibold'>{data.gamesPlayed}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+
+                  <Bar dataKey='consistency'>
+                    {(() => {
+                      const data = allTeamEntries
+                        .map(([teamKey, team]) => {
+                          const weeklyScores = team.teamScores
+                            .filter(d => d.value > 0)
+                            .map(d => d.value);
+                          if (weeklyScores.length === 0) return null;
+                          const meanValue = mean(weeklyScores);
+                          const stdDev = Math.sqrt(
+                            weeklyScores.reduce(
+                              (sum, score) => sum + Math.pow(score - meanValue, 2),
+                              0
+                            ) / weeklyScores.length
+                          );
+                          return { teamKey, consistency: 100 - Math.min(stdDev * 3, 100) };
+                        })
+                        .filter(Boolean);
+
+                      return data.map((team, index) => {
+                        if (!team) return null;
+
+                        return <Cell key={`cell-${index}`} fill={colors.core.regalGold} />;
+                      });
+                    })()}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
+              <h4 className='font-semibold mb-2'>How to Read Consistency</h4>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+                <div>
+                  <span className='font-semibold'>🎯 Steady Teams:</span> Low standard deviation
+                  (&lt;15), narrow score ranges. Reliable for playoffs.
+                </div>
+                <div>
+                  <span className='font-semibold'>📊 Average Teams:</span> Medium volatility (15-25
+                  std dev). Some variance but predictable.
+                </div>
+                <div>
+                  <span className='font-semibold'>🎲 Volatile Teams:</span> High volatility (&gt;25
+                  std dev). Boom-or-bust potential.
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Positional Consistency Analysis */}
+        {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => (
+          <Card key={position}>
+            <CardHeader>
+              <CardTitle>{position} Consistency Analysis</CardTitle>
+              <CardDescription>
+                {position} scoring consistency across all teams. Green = reliable {position}{' '}
+                production, Red = volatile {position} performance.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='h-80'>
+                <ResponsiveContainer width='100%' height='100%'>
+                  <BarChart
+                    data={(() => {
+                      const posData = positionsMap.get(position);
+                      const posTeamsMap = new Map(posData?.teams || []);
+
+                      // Calculate positional consistency for each team
+                      const posConsistencyData = allTeamEntries
+                        .map(([teamKey, team]) => {
+                          const teamPosData = posTeamsMap.get(teamKey);
+                          const weeklyPosScores =
+                            teamPosData?.scores.filter(d => d.value !== 0).map(d => d.value) || [];
+
+                          if (weeklyPosScores.length === 0) return null;
+
+                          // Calculate statistics
+                          const meanValue = mean(weeklyPosScores);
+                          const medianValue = median(weeklyPosScores);
+                          const min = Math.min(...weeklyPosScores);
+                          const max = Math.max(...weeklyPosScores);
+                          const range = max - min;
+                          const stdDev = Math.sqrt(
+                            weeklyPosScores.reduce(
+                              (sum, score) => sum + Math.pow(score - meanValue, 2),
+                              0
+                            ) / weeklyPosScores.length
+                          );
+
+                          return {
+                            teamKey,
+                            teamName: team.teamInfo.teamName,
+                            leagueName: team.teamInfo.leagueName,
+                            median: medianValue,
+                            mean: meanValue,
+                            min,
+                            max,
+                            range,
+                            stdDev,
+                            gamesPlayed: weeklyPosScores.length,
+                            scores: weeklyPosScores,
+                            // Consistency score for this position
+                            consistency: 100 - Math.min(stdDev * 4, 100), // Position scores are smaller, so adjust multiplier
+                          };
+                        })
+                        .filter(Boolean)
+                        .sort((a, b) => b.consistency - a.consistency); // Sort by consistency
+
+                      return posConsistencyData;
+                    })()}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                  >
+                    <XAxis
+                      dataKey='teamName'
+                      angle={-45}
+                      textAnchor='end'
+                      height={80}
+                      interval={0}
+                      tick={{ fontSize: 10 }}
+                    />
+                    <YAxis
+                      label={{
+                        value: `${position} Consistency`,
+                        angle: -90,
+                        position: 'insideLeft',
+                      }}
+                      tick={{ fontSize: 11 }}
+                      domain={[0, 100]}
+                      tickFormatter={value => Number(value).toFixed(0)}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length > 0) {
+                          const data = payload[0].payload;
+                          return (
+                            <div
+                              className='p-4 rounded-lg shadow-xl border min-w-[320px]'
+                              style={{
+                                backgroundColor: colors.core.charcoalSteel,
+                                borderColor: colors.core.regalGold,
+                                color: 'white',
+                              }}
+                            >
+                              <div
+                                className='font-bold text-lg mb-1'
+                                style={{ color: colors.core.regalGold }}
+                              >
+                                {data.teamName}
+                              </div>
+                              <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+
+                              <div className='space-y-3 text-sm'>
+                                <div className='grid grid-cols-2 gap-4'>
+                                  <div>
+                                    <div className='font-semibold'>{position} Consistency</div>
+                                    <div className='text-lg font-bold'>
+                                      {data.consistency.toFixed(1)}/100
+                                    </div>
+                                    <div className='text-xs text-gray-400'>
+                                      {data.stdDev < 8
+                                        ? '🎯 Very Steady'
+                                        : data.stdDev < 15
+                                          ? '📊 Somewhat Predictable'
+                                          : '🎲 Highly Volatile'}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className='font-semibold'>{position} Range</div>
+                                    <div className='text-lg font-bold'>{data.range.toFixed(1)}</div>
+                                    <div className='text-xs text-gray-400'>
+                                      {data.min.toFixed(1)} - {data.max.toFixed(1)}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className='border-t border-gray-600 pt-2'>
+                                  <div className='grid grid-cols-2 gap-3 text-xs'>
+                                    <div>
+                                      Median:{' '}
+                                      <span className='font-semibold'>
+                                        {data.median.toFixed(1)}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      Mean:{' '}
+                                      <span className='font-semibold'>{data.mean.toFixed(1)}</span>
+                                    </div>
+                                    <div>
+                                      Std Dev:{' '}
+                                      <span className='font-semibold'>
+                                        {data.stdDev.toFixed(1)}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      Games:{' '}
+                                      <span className='font-semibold'>{data.gamesPlayed}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+
+                    <Bar dataKey='consistency'>
+                      {(() => {
+                        const posData = positionsMap.get(position);
+                        const posTeamsMap = new Map(posData?.teams || []);
+
+                        const data = allTeamEntries
+                          .map(([teamKey, team]) => {
+                            const teamPosData = posTeamsMap.get(teamKey);
+                            const weeklyPosScores =
+                              teamPosData?.scores.filter(d => d.value !== 0).map(d => d.value) ||
+                              [];
+                            if (weeklyPosScores.length === 0) return null;
+                            const meanValue = mean(weeklyPosScores);
+                            const stdDev = Math.sqrt(
+                              weeklyPosScores.reduce(
+                                (sum, score) => sum + Math.pow(score - meanValue, 2),
+                                0
+                              ) / weeklyPosScores.length
+                            );
+                            return { teamKey, consistency: 100 - Math.min(stdDev * 4, 100) };
+                          })
+                          .filter(Boolean);
+
+                        const consistencyValues = data.map(d => d.consistency);
+                        const minConsistency = Math.min(...consistencyValues);
+                        const maxConsistency = Math.max(...consistencyValues);
+
+                        return data.map((team, index) => {
+                          // Normalize consistency score to 0-1 for color mapping
+                          const normalized =
+                            maxConsistency === minConsistency
+                              ? 0.5
+                              : (team.consistency - minConsistency) /
+                                (maxConsistency - minConsistency);
+
+                          return <Cell key={`cell-${index}`} fill={colors.core.regalGold} />;
+                        });
+                      })().filter(Boolean)}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
+                <h4 className='font-semibold mb-2'>{position} Consistency Guide</h4>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+                  <div>
+                    <span className='font-semibold'>🎯 Steady {position}:</span> Low week-to-week
+                    variance. Reliable production.
+                  </div>
+                  <div>
+                    <span className='font-semibold'>📊 Average {position}:</span> Some volatility
+                    but generally predictable.
+                  </div>
+                  <div>
+                    <span className='font-semibold'>🎲 Volatile {position}:</span> High variance.
+                    Boom-or-bust potential.
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+
+        {/* Team Scoring Distribution (Ridge Plots) */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Team Scoring Distribution Analysis</CardTitle>
+            <CardDescription>
+              Ridge plots showing each team&apos;s scoring distribution shape. Narrow ridges =
+              consistent, Wide ridges = volatile.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='h-[800px]'>
+              {(() => {
+                // 1) Build chartData BEFORE the JSX:
+                const helpers = {
+                  median(arr: number[]) {
+                    if (!arr.length) return NaN;
+                    const m = Math.floor(arr.length / 2);
+                    return arr.length % 2 ? arr[m] : (arr[m - 1] + arr[m]) / 2;
+                  },
+                  linspace(a: number, b: number, n: number) {
+                    return Array.from({ length: n }, (_, i) => a + (i * (b - a)) / (n - 1));
+                  },
+                  kde(samples: number[], xs: number[]) {
+                    if (!samples.length) return xs.map(x => [x, 0] as [number, number]);
+                    const n = samples.length;
+                    const mean = samples.reduce((s, v) => s + v, 0) / n;
+                    const std =
+                      Math.sqrt(
+                        samples.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, n - 1)
+                      ) || 1e-6;
+                    const h = Math.max(1e-6, 1.06 * std * Math.pow(n, -1 / 5));
+                    const inv = 1 / (Math.sqrt(2 * Math.PI) * h);
+                    const twoH2 = 2 * h * h;
+                    return xs.map(x => {
+                      const s = samples.reduce(
+                        (acc, v) => acc + Math.exp(-((x - v) ** 2) / twoH2),
+                        0
+                      );
+                      return [x, (inv * s) / n] as [number, number];
+                    });
+                  },
+                };
+
+                // Build ridgeData + chartData once
+                const ridgeData = allTeamEntries
+                  .map(([teamKey, team]) => {
+                    const weekly = team.teamScores
+                      .filter(d => d.value > 0)
+                      .map(d => d.value)
+                      .sort((a, b) => a - b);
+                    if (!weekly.length) return null;
+
+                    const min = weekly[0];
+                    const max = weekly[weekly.length - 1];
+                    const med = helpers.median(weekly);
+                    const pad = Math.max(2, (max - min) * 0.05); // Small padding for domain calculation
+
+                    const xs = helpers.linspace(min, max, Math.min(80, 20 + 3 * weekly.length));
+                    const densityPairs = helpers.kde(weekly, xs);
+                    const maxDensity = Math.max(...densityPairs.map(([, y]) => y)) || 1;
+
+                    return {
+                      teamName: team.teamInfo.teamName,
+                      leagueName: team.teamInfo.leagueName,
+                      teamKey,
+                      min,
+                      max,
+                      pad, // Add pad back for domain calculation
+                      median: med,
+                      range: max - min,
+                      scores: weekly,
+                      gamesPlayed: weekly.length,
+                      xs,
+                      densityPairs,
+                      maxDensity,
+                    };
+                  })
+                  .filter(Boolean)
+                  .sort((a, b) => b!.median - a!.median) as any[];
+
+                const chartData = ridgeData.map((t, i) => ({
+                  x: t.median,
+                  y: (ridgeData.length - i) * 3, // for tooltip/Y domain only
+                  type: 'ridge',
+                  ...t,
+                }));
+
+                // 👉 domain must use min/max across ALL ridges (with pad), not medians
+                let xDomain: [number, number] = [80, 180]; // Default fallback for fantasy scores
+
+                if (ridgeData && ridgeData.length > 0) {
+                  const validData = ridgeData.filter(
+                    t =>
+                      typeof t.min === 'number' &&
+                      !isNaN(t.min) &&
+                      typeof t.max === 'number' &&
+                      !isNaN(t.max) &&
+                      typeof t.pad === 'number' &&
+                      !isNaN(t.pad)
+                  );
+
+                  if (validData.length > 0) {
+                    // Calculate domain from all teams' ranges
+                    const allMins = validData.map(t => t.min - t.pad);
+                    const allMaxs = validData.map(t => t.max + t.pad);
+
+                    const calculatedMin = Math.min(...allMins);
+                    const calculatedMax = Math.max(...allMaxs);
+
+                    xDomain = [calculatedMin, calculatedMax];
+
+                    // Check for valid domain
+                    if (!isFinite(xDomain[0]) || !isFinite(xDomain[1])) {
+                      console.warn('Invalid xDomain calculated, using fallback', xDomain);
+                      xDomain = [80, 180]; // More reasonable fallback for fantasy scores
+                    } else {
+                      // Add 5% buffer to prevent bleeding over axis range
+                      const domainRange = xDomain[1] - xDomain[0];
+                      const buffer = domainRange * 0.05;
+                      xDomain[0] -= buffer;
+                      xDomain[1] += buffer;
+                    }
+                  } else {
+                    console.warn('No valid ridge data for team chart');
+                  }
+                } else {
+                  console.warn('Empty ridge data for team chart');
+                }
+
+                return (
+                  <D3RidgePlot
+                    data={chartData}
+                    domain={xDomain}
+                    height={800}
+                    title='Weekly Scores'
+                  />
+                );
+              })()}
+            </div>
+
+            <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
+              <h4 className='font-semibold mb-2'>Ridge Plot Guide</h4>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+                <div>
+                  <span className='font-semibold'>🎯 Narrow Ridge:</span> Tall, thin curve =
+                  consistent scoring week-to-week.
+                </div>
+                <div>
+                  <span className='font-semibold'>🌊 Wide Ridge:</span> Flat, spread curve =
+                  volatile performance with high variance.
+                </div>
+                <div>
+                  <span className='font-semibold'>📍 Median Line:</span> Dashed line shows typical
+                  weekly performance.
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Positional Scoring Distribution (Ridge Plots) */}
+        {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => (
+          <Card key={position}>
+            <CardHeader>
+              <CardTitle>{position} Scoring Distribution Analysis</CardTitle>
+              <CardDescription>
+                {position} scoring distribution by team. Ridge plots show {position} consistency vs.
+                volatility patterns.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='h-[700px]'>
+                {(() => {
+                  const posData = positionsMap.get(position);
+                  const posTeamsMap = new Map(posData?.teams || []);
+
+                  // Reuse the same KDE helpers
+                  const helpers = {
+                    median(arr: number[]) {
+                      if (!arr.length) return NaN;
+                      const m = Math.floor(arr.length / 2);
+                      return arr.length % 2 ? arr[m] : (arr[m - 1] + arr[m]) / 2;
+                    },
+                    linspace(a: number, b: number, n: number) {
+                      return Array.from({ length: n }, (_, i) => a + (i * (b - a)) / (n - 1));
+                    },
+                    kde(samples: number[], xs: number[]) {
+                      if (!samples.length) return xs.map(x => [x, 0] as [number, number]);
+                      const n = samples.length;
+                      const mean = samples.reduce((s, v) => s + v, 0) / n;
+                      const std =
+                        Math.sqrt(
+                          samples.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, n - 1)
+                        ) || 1e-6;
+                      const h = Math.max(1e-6, 1.06 * std * Math.pow(n, -1 / 5));
+                      const inv = 1 / (Math.sqrt(2 * Math.PI) * h);
+                      const twoH2 = 2 * h * h;
+                      return xs.map(x => {
+                        const s = samples.reduce(
+                          (acc, v) => acc + Math.exp(-((x - v) ** 2) / twoH2),
+                          0
+                        );
+                        return [x, (inv * s) / n] as [number, number];
+                      });
+                    },
+                  };
+
+                  // Build positional ridgeData + chartData
+                  const posRidgeData = allTeamEntries
+                    .map(([teamKey, team]) => {
+                      const teamPosData = posTeamsMap.get(teamKey);
+                      const weekly =
+                        teamPosData?.scores
+                          .filter(d => d.value !== 0)
+                          .map(d => d.value)
+                          .sort((a, b) => a - b) || [];
+                      if (!weekly.length) return null;
+
+                      const min = weekly[0];
+                      const max = weekly[weekly.length - 1];
+                      const med = helpers.median(weekly);
+                      const pad = Math.max(1, (max - min) * 0.05); // Small padding for domain calculation
+                      const xs = helpers.linspace(min, max, Math.min(60, 15 + 2 * weekly.length));
+                      const densityPairs = helpers.kde(weekly, xs);
+                      const maxDensity = Math.max(...densityPairs.map(([, y]) => y)) || 1;
+
+                      return {
+                        teamName: team.teamInfo.teamName,
+                        leagueName: team.teamInfo.leagueName,
+                        teamKey,
+                        min,
+                        max,
+                        pad, // Add pad back for domain calculation
+                        median: med,
+                        range: max - min,
+                        scores: weekly,
+                        gamesPlayed: weekly.length,
+                        xs,
+                        densityPairs,
+                        maxDensity,
+                      };
+                    })
+                    .filter(Boolean)
+                    .sort((a, b) => b!.median - a!.median) as any[];
+
+                  const posChartData = posRidgeData.map((t, i) => ({
+                    x: t.median,
+                    y: (posRidgeData.length - i) * 2.5, // for tooltip/Y domain only
+                    type: 'ridge',
+                    ...t,
+                  }));
+
+                  // Domain must use min/max across ALL ridges (with pad), not medians
+                  let posXDomain: [number, number] = [0, 50]; // Default fallback for positional scores
+
+                  if (posRidgeData && posRidgeData.length > 0) {
+                    const validPosData = posRidgeData.filter(
+                      t =>
+                        typeof t.min === 'number' &&
+                        !isNaN(t.min) &&
+                        typeof t.max === 'number' &&
+                        !isNaN(t.max) &&
+                        typeof t.pad === 'number' &&
+                        !isNaN(t.pad)
+                    );
+
+                    if (validPosData.length > 0) {
+                      // Calculate domain from all teams' ranges
+                      const allPosMins = validPosData.map(t => t.min - t.pad);
+                      const allPosMaxs = validPosData.map(t => t.max + t.pad);
+
+                      const posCalculatedMin = Math.min(...allPosMins);
+                      const posCalculatedMax = Math.max(...allPosMaxs);
+
+                      posXDomain = [posCalculatedMin, posCalculatedMax];
+
+                      // Check for valid domain
+                      if (!isFinite(posXDomain[0]) || !isFinite(posXDomain[1])) {
+                        console.warn('Invalid posXDomain calculated, using fallback');
+                        posXDomain = [0, 50];
+                      } else {
+                        // Add 5% buffer to prevent bleeding over axis range
+                        const posDomainRange = posXDomain[1] - posXDomain[0];
+                        const posBuffer = posDomainRange * 0.05;
+                        posXDomain[0] -= posBuffer;
+                        posXDomain[1] += posBuffer;
+                      }
+                    } else {
+                      console.warn('No valid ridge data for positional chart:', position);
+                    }
+                  } else {
+                    console.warn('Empty ridge data for positional chart:', position);
+                  }
+
+                  return (
+                    <D3RidgePlot
+                      data={posChartData}
+                      domain={posXDomain}
+                      height={600}
+                      title={`${position} Weekly Scores`}
+                    />
+                  );
+                })()}
+              </div>
+
+              <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
+                <h4 className='font-semibold mb-2'>{position} Ridge Plot Guide</h4>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+                  <div>
+                    <span className='font-semibold'>🎯 Narrow Ridge:</span> Tall, thin curve =
+                    consistent {position} scoring.
+                  </div>
+                  <div>
+                    <span className='font-semibold'>🌊 Wide Ridge:</span> Flat, spread curve =
+                    volatile {position} performance.
+                  </div>
+                  <div>
+                    <span className='font-semibold'>📍 Median Line:</span> Dashed line shows typical{' '}
+                    {position} performance.
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -4095,4 +5198,4 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
       </Tabs>
     </div>
   );
-};
+}
