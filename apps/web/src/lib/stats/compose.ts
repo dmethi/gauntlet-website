@@ -9,6 +9,7 @@ import {
   fetchUsers,
   fetchMatchups,
   fetchPlayersIndex,
+  fetchWeeklyPlayerStats,
 } from '@/lib/sleeper/client';
 import { getStarterPositionPoints, aggregatePositionPoints, TRACKED_POSITIONS } from './positions';
 import { getTeamAndOpponentPoints, aggregateTeamPoints } from './teams';
@@ -25,6 +26,26 @@ export interface WeeklyDataPoint {
   value: number;
   rank24?: number;
   rankLeague?: number;
+}
+
+export interface PlayerBreakdown {
+  playerId: string;
+  name: string;
+  team?: string;
+  fantasyPoints: number;
+  stats: Record<string, number>; // All available stats from Sleeper API
+}
+
+export interface WeeklyPlayerData {
+  week: number;
+  teamKey: string;
+  positions: {
+    QB: PlayerBreakdown[];
+    RB: PlayerBreakdown[];
+    WR: PlayerBreakdown[];
+    TE: PlayerBreakdown[];
+    DEF: PlayerBreakdown[];
+  };
 }
 
 export interface TeamStatsData {
@@ -67,6 +88,7 @@ export interface StatsDataset {
   weekRange: { from: number; to: number };
   teams: Map<string, TeamStatsData>;
   positions: Map<TrackedPosition, PositionStatsData>;
+  weeklyPlayerData: Map<number, Map<string, WeeklyPlayerData>>; // week -> teamKey -> player data
   weeklyMedians: Map<
     number,
     {
@@ -115,6 +137,7 @@ export interface PlainStatsDataset {
       },
     ]
   >;
+  weeklyPlayerData: Record<number, Record<string, WeeklyPlayerData>>; // week -> teamKey -> player data
   weeklyMedians: Record<
     number,
     {
@@ -210,6 +233,15 @@ export async function buildStatsDataset({
     allMatchups.set(week, weekLeagueMatchups);
   }
 
+  // 5.5. Fetch weekly player stats for player breakdowns
+  console.log('[DEBUG] buildStatsDataset: fetching weekly player stats');
+  const weeklyPlayerStatsMap = new Map<number, Record<string, any>>();
+
+  for (let week = actualRange.from; week <= actualRange.to; week++) {
+    const playerStats = await fetchWeeklyPlayerStats(week);
+    weeklyPlayerStatsMap.set(week, playerStats);
+  }
+
   // 6. Calculate team and position points
   console.log(
     '[DEBUG] buildStatsDataset: calling getTeamAndOpponentPoints with',
@@ -227,6 +259,65 @@ export async function buildStatsDataset({
   console.log(
     '[DEBUG] buildStatsDataset: getStarterPositionPoints returned',
     positionWeeklyData.size,
+    'weeks'
+  );
+
+  // 6.5. Build weekly player breakdowns
+  console.log('[DEBUG] buildStatsDataset: building weekly player breakdowns');
+  const weeklyPlayerData = new Map<number, Map<string, WeeklyPlayerData>>();
+
+  for (let week = actualRange.from; week <= actualRange.to; week++) {
+    const weekLeagueMatchups = allMatchups.get(week);
+    const weekPlayerStats = weeklyPlayerStatsMap.get(week) || {};
+    const weekPlayerDataMap = new Map<string, WeeklyPlayerData>();
+
+    if (weekLeagueMatchups) {
+      for (const [leagueId, leagueMatchups] of weekLeagueMatchups.entries()) {
+        for (const matchup of leagueMatchups) {
+          const teamKey = `${leagueId}-${matchup.roster_id}`;
+
+          const positionBreakdowns: WeeklyPlayerData['positions'] = {
+            QB: [],
+            RB: [],
+            WR: [],
+            TE: [],
+            DEF: [],
+          };
+
+          // Process each starter
+          for (const playerId of matchup.starters) {
+            const player = playersIndex[playerId];
+            const playerStats = weekPlayerStats[playerId];
+            const fantasyPoints = matchup.players_points[playerId] || 0;
+
+            if (player?.position && player.position in positionBreakdowns && fantasyPoints > 0) {
+              const breakdown: PlayerBreakdown = {
+                playerId,
+                name: player.full_name || 'Unknown Player',
+                team: player.team,
+                fantasyPoints,
+                stats: playerStats || {}, // Include all available stats
+              };
+
+              positionBreakdowns[player.position as TrackedPosition].push(breakdown);
+            }
+          }
+
+          weekPlayerDataMap.set(teamKey, {
+            week,
+            teamKey,
+            positions: positionBreakdowns,
+          });
+        }
+      }
+    }
+
+    weeklyPlayerData.set(week, weekPlayerDataMap);
+  }
+
+  console.log(
+    '[DEBUG] buildStatsDataset: weekly player data built for',
+    weeklyPlayerData.size,
     'weeks'
   );
 
@@ -456,6 +547,7 @@ export async function buildStatsDataset({
     weekRange: actualRange,
     teams,
     positions,
+    weeklyPlayerData,
     weeklyMedians,
     weeklyAverages,
   };
@@ -487,6 +579,12 @@ export function serializeStatsDataset(ds: StatsDataset): PlainStatsDataset {
 
   const teamsArr: Array<[string, TeamStatsData]> = Array.from(ds.teams.entries());
   console.log('[DEBUG] serializeStatsDataset: teams array built', teamsArr.length, 'teams');
+
+  // Serialize weekly player data
+  const weeklyPlayerDataPlain: PlainStatsDataset['weeklyPlayerData'] = {};
+  for (const [week, weekData] of ds.weeklyPlayerData.entries()) {
+    weeklyPlayerDataPlain[week] = Object.fromEntries(weekData.entries());
+  }
 
   const weeklyMediansPlain: PlainStatsDataset['weeklyMedians'] = {};
   for (const [week, w] of ds.weeklyMedians.entries()) {
@@ -533,6 +631,7 @@ export function serializeStatsDataset(ds: StatsDataset): PlainStatsDataset {
     weekRange: ds.weekRange,
     teams: teamsArr,
     positions: positionsPlain,
+    weeklyPlayerData: weeklyPlayerDataPlain,
     weeklyMedians: weeklyMediansPlain,
     weeklyAverages: weeklyAveragesPlain,
   };

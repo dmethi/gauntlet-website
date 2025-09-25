@@ -11,6 +11,7 @@ export interface TeamInfo {
   teamName: string;
   managerName: string;
   ownerId: string;
+  avatar?: string;
 }
 
 /**
@@ -42,6 +43,16 @@ export function buildTeamInfoMap({
       const user = userMap.get(roster.owner_id);
       const teamKey = `${league.id}-${roster.roster_id}`;
 
+      // Build avatar URL
+      const getAvatarUrl = (user: SleeperUser | undefined) => {
+        const teamAvatar = (user?.metadata as any)?.avatar;
+        const userAvatar = user?.avatar;
+        const avatar = teamAvatar || userAvatar;
+        if (!avatar) return undefined;
+        if (avatar.startsWith('http')) return avatar;
+        return `https://sleepercdn.com/avatars/${avatar}`;
+      };
+
       teamInfoMap.set(teamKey, {
         leagueId: league.id,
         leagueName: league.name,
@@ -49,6 +60,7 @@ export function buildTeamInfoMap({
         teamName: user?.metadata?.team_name || user?.display_name || 'Unknown Team',
         managerName: user?.display_name || user?.username || 'Unknown Manager',
         ownerId: roster.owner_id,
+        avatar: getAvatarUrl(user),
       });
     }
   }

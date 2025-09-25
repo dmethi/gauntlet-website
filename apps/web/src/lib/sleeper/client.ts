@@ -182,3 +182,35 @@ export async function fetchPlayersIndex(): Promise<PlayerIndex> {
 
   return playerIndex;
 }
+
+/**
+ * Fetch weekly player statistics
+ */
+export async function fetchWeeklyPlayerStats(week: number): Promise<Record<string, any>> {
+  console.log('[DEBUG] fetchWeeklyPlayerStats: starting fetch for week', week);
+  const response = await fetch(`${SLEEPER_API_BASE}/stats/nfl/regular/2025/${week}`, {
+    cache: 'no-store',
+    headers: {
+      'User-Agent': 'Gauntlet-Stats-Hub/1.0',
+    },
+  });
+
+  if (!response.ok) {
+    console.error(
+      '[DEBUG] fetchWeeklyPlayerStats: failed for week',
+      week,
+      response.status,
+      response.statusText
+    );
+    return {};
+  }
+
+  const data = await response.json();
+  console.log(
+    '[DEBUG] fetchWeeklyPlayerStats: success for week',
+    week,
+    'players count:',
+    Object.keys(data || {}).length
+  );
+  return data || {};
+}

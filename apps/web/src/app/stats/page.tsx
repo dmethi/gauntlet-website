@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 interface StatsPageProps {
   searchParams: {
     team?: string;
-    view?: string;
+    view?: 'team' | 'league' | 'schedule';
     week?: string;
   };
 }
