@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 interface StatsPageProps {
   searchParams: {
     team?: string;
-    view?: 'team' | 'league' | 'schedule';
+    view?: 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit';
     week?: string;
   };
 }
@@ -73,7 +73,7 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
   const urlSearchParams = useSearchParams();
   const clientSearchParams = {
     team: urlSearchParams.get('team') || searchParams.team,
-    view: (urlSearchParams.get('view') as 'team' | 'league' | 'schedule') || searchParams.view,
+    view: (urlSearchParams.get('view') as 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit') || searchParams.view,
     week: urlSearchParams.get('week') || searchParams.week,
   };
 

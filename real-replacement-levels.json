@@ -1,0 +1,4594 @@
+{
+  "generatedAt": "2025-09-26T13:36:18.121Z",
+  "weeksCovered": [
+    1,
+    2,
+    3
+  ],
+  "leaguesCovered": [
+    "AFC",
+    "NFC"
+  ],
+  "replacementLevels": {
+    "QB": {
+      "targetRank": 13,
+      "replacementLevel": 27.8,
+      "totalPerformances": 72,
+      "samplePlayer": "11564"
+    },
+    "RB": {
+      "targetRank": 31,
+      "replacementLevel": 21.3,
+      "totalPerformances": 197,
+      "samplePlayer": "8151"
+    },
+    "WR": {
+      "targetRank": 31,
+      "replacementLevel": 17.3,
+      "totalPerformances": 231,
+      "samplePlayer": "9493"
+    },
+    "TE": {
+      "targetRank": 13,
+      "replacementLevel": 12.8,
+      "totalPerformances": 76,
+      "samplePlayer": "11604"
+    },
+    "DEF": {
+      "targetRank": 13,
+      "replacementLevel": 16.8,
+      "totalPerformances": 72,
+      "samplePlayer": "ARI"
+    }
+  },
+  "rawData": {
+    "QB": [
+      {
+        "playerId": "4984",
+        "points": 39.76,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4984",
+        "points": 39.76,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "4881",
+        "points": 31.36,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "4881",
+        "points": 31.36,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "6904",
+        "points": 31.04,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "6904",
+        "points": 31.04,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "7591",
+        "points": 31.02,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "11560",
+        "points": 29.12,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "11560",
+        "points": 29.12,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "6797",
+        "points": 28.42,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4046",
+        "points": 28.02,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "4046",
+        "points": 28.02,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "11564",
+        "points": 27.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "11564",
+        "points": 27.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4881",
+        "points": 27.02,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "4881",
+        "points": 27.02,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "6904",
+        "points": 26.78,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "6904",
+        "points": 26.78,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "4881",
+        "points": 26.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "4881",
+        "points": 26.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "11560",
+        "points": 25.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "4892",
+        "points": 24.08,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "4046",
+        "points": 24.08,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "4892",
+        "points": 24.08,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "4046",
+        "points": 24.08,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "4984",
+        "points": 22.02,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4984",
+        "points": 22.02,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "3294",
+        "points": 21.64,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "11566",
+        "points": 21.62,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "11566",
+        "points": 21.62,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "6804",
+        "points": 21.38,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "2307",
+        "points": 20.78,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "11563",
+        "points": 20.74,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "4892",
+        "points": 20.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "4892",
+        "points": 20.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "5849",
+        "points": 19.82,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11566",
+        "points": 19.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "11566",
+        "points": 19.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "6797",
+        "points": 18.78,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "7523",
+        "points": 18.74,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "11560",
+        "points": 17.98,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "4892",
+        "points": 17.72,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "4892",
+        "points": 17.72,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "5870",
+        "points": 16.82,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "5870",
+        "points": 16.82,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8183",
+        "points": 16.78,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "6804",
+        "points": 16.42,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "6797",
+        "points": 15.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "6797",
+        "points": 15.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "5849",
+        "points": 15.06,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "5849",
+        "points": 14.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11564",
+        "points": 14.28,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "11563",
+        "points": 13.42,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "4984",
+        "points": 13.32,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4984",
+        "points": 13.32,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "6904",
+        "points": 12.54,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "6904",
+        "points": 12.54,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "3163",
+        "points": 12.18,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "3163",
+        "points": 12.18,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "3294",
+        "points": 12.04,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "96",
+        "points": 11.66,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "6804",
+        "points": 11.62,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "4046",
+        "points": 11.16,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "4046",
+        "points": 11.16,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "6770",
+        "points": 8.82,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "6770",
+        "points": 8.82,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "11563",
+        "points": 7.84,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "3294",
+        "points": 7.82,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "3294",
+        "points": 7.82,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "6770",
+        "points": 7.04,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "6770",
+        "points": 7.04,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "7591",
+        "points": 3.98,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      }
+    ],
+    "RB": [
+      {
+        "playerId": "6813",
+        "points": 32.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "6813",
+        "points": 32.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "5892",
+        "points": 30.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "6813",
+        "points": 30.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "6813",
+        "points": 30.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "3198",
+        "points": 30.2,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "3198",
+        "points": 30.2,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "8138",
+        "points": 27,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "8138",
+        "points": 27,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "8408",
+        "points": 26.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "8408",
+        "points": 26.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "9221",
+        "points": 25.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "9221",
+        "points": 25.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "7588",
+        "points": 24,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "7588",
+        "points": 24,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "12481",
+        "points": 22.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "12507",
+        "points": 22.4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "12507",
+        "points": 22.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "9226",
+        "points": 22.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "9226",
+        "points": 22.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8138",
+        "points": 21.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "8138",
+        "points": 21.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "4034",
+        "points": 21.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "4034",
+        "points": 21.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "8150",
+        "points": 21.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "4034",
+        "points": 21.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "4034",
+        "points": 21.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "8150",
+        "points": 21.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "9509",
+        "points": 21.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "9509",
+        "points": 21.4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "8151",
+        "points": 21.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8151",
+        "points": 21.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "9509",
+        "points": 20.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "9509",
+        "points": 20.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "4034",
+        "points": 20.5,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "4034",
+        "points": 20.5,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "9221",
+        "points": 19.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "9221",
+        "points": 19.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8138",
+        "points": 19.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "8138",
+        "points": 19.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "7611",
+        "points": 19.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "8155",
+        "points": 19,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8155",
+        "points": 19,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "7543",
+        "points": 18.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "7543",
+        "points": 18.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "8151",
+        "points": 18.5,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8151",
+        "points": 18.5,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "7594",
+        "points": 18.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7594",
+        "points": 18.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "12512",
+        "points": 18,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "12512",
+        "points": 18,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "7594",
+        "points": 17.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4866",
+        "points": 17.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "8228",
+        "points": 17.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "4866",
+        "points": 17.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "7594",
+        "points": 17.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "4866",
+        "points": 17.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "7543",
+        "points": 17.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "4866",
+        "points": 17.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "7543",
+        "points": 17.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "6806",
+        "points": 17,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "11584",
+        "points": 16.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "11584",
+        "points": 16.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "9226",
+        "points": 16,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "9226",
+        "points": 16,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "5850",
+        "points": 15.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "5850",
+        "points": 15.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "6806",
+        "points": 15.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "6806",
+        "points": 15.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "12533",
+        "points": 15.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "9509",
+        "points": 15.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "9509",
+        "points": 15.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "5967",
+        "points": 15.4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "5967",
+        "points": 15.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "4035",
+        "points": 15,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "4035",
+        "points": 15,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "4199",
+        "points": 14.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4199",
+        "points": 14.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "5850",
+        "points": 14.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "5850",
+        "points": 14.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "8150",
+        "points": 14.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "8150",
+        "points": 14.4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "12469",
+        "points": 14.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "4035",
+        "points": 13.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "4035",
+        "points": 13.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "8228",
+        "points": 13.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "6790",
+        "points": 13.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "8228",
+        "points": 13.4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "6790",
+        "points": 13.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "9224",
+        "points": 13.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "9226",
+        "points": 13.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "8228",
+        "points": 13.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "9224",
+        "points": 13.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "9226",
+        "points": 13.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8228",
+        "points": 13.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "11584",
+        "points": 13,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "11584",
+        "points": 13,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4137",
+        "points": 12.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "11584",
+        "points": 12.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "4137",
+        "points": 12.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "11584",
+        "points": 12.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "6813",
+        "points": 12.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "6813",
+        "points": 12.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4137",
+        "points": 12.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "4137",
+        "points": 12.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "7543",
+        "points": 12.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "7543",
+        "points": 12.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "5967",
+        "points": 11.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "7588",
+        "points": 11.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "5967",
+        "points": 11.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "7588",
+        "points": 11.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "12527",
+        "points": 11.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "12527",
+        "points": 11.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "4098",
+        "points": 11.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "6790",
+        "points": 11.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "3198",
+        "points": 10.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "3198",
+        "points": 10.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "9221",
+        "points": 10.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "8150",
+        "points": 10.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "9221",
+        "points": 10.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8150",
+        "points": 10.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "12469",
+        "points": 10.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "12469",
+        "points": 10.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "12533",
+        "points": 10.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "12533",
+        "points": 10.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "5850",
+        "points": 9.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "5850",
+        "points": 9.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "7594",
+        "points": 9.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7567",
+        "points": 9.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7594",
+        "points": 9.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "8408",
+        "points": 9.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "9224",
+        "points": 9.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "8408",
+        "points": 9.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "9224",
+        "points": 9.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "12507",
+        "points": 9.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "12507",
+        "points": 9.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "6790",
+        "points": 9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "4866",
+        "points": 9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "6790",
+        "points": 9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4866",
+        "points": 9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "12529",
+        "points": 8.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "12529",
+        "points": 8.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "5967",
+        "points": 8.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "5967",
+        "points": 8.4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "11655",
+        "points": 8.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "11655",
+        "points": 8.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "4988",
+        "points": 8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "12489",
+        "points": 7.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "12527",
+        "points": 7.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "12527",
+        "points": 7.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "4663",
+        "points": 7.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "8155",
+        "points": 7.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8155",
+        "points": 7.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "4035",
+        "points": 7.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "11589",
+        "points": 7.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "4035",
+        "points": 7.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "12527",
+        "points": 7.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "12527",
+        "points": 7.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "5892",
+        "points": 6.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "5892",
+        "points": 6.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "11589",
+        "points": 6.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "8205",
+        "points": 6.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "8205",
+        "points": 6.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "11655",
+        "points": 6.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4988",
+        "points": 6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8155",
+        "points": 5.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8408",
+        "points": 5.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "8155",
+        "points": 5.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "8408",
+        "points": 5.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "4137",
+        "points": 5.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "4137",
+        "points": 5.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "12529",
+        "points": 5.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "12529",
+        "points": 5.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "11655",
+        "points": 5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "11655",
+        "points": 5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "4098",
+        "points": 4.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "8205",
+        "points": 4.3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "8205",
+        "points": 4.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "12507",
+        "points": 4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "12507",
+        "points": 4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "8151",
+        "points": 3.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8205",
+        "points": 3.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "8151",
+        "points": 3.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "8205",
+        "points": 3.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "7611",
+        "points": 3.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "7611",
+        "points": 3.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "9224",
+        "points": 3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "9224",
+        "points": 3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "4199",
+        "points": 2.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "12533",
+        "points": 2.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "3198",
+        "points": 1.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "3198",
+        "points": 1.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "7528",
+        "points": 1.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "12495",
+        "points": 1.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "8143",
+        "points": 1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "9753",
+        "points": 1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "8143",
+        "points": 1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      }
+    ],
+    "WR": [
+      {
+        "playerId": "7547",
+        "points": 35.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7547",
+        "points": 35.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "11632",
+        "points": 33.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "11632",
+        "points": 33.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "7564",
+        "points": 29.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "7564",
+        "points": 29.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11620",
+        "points": 28.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "11620",
+        "points": 28.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "9997",
+        "points": 24.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "9493",
+        "points": 23.6,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "9493",
+        "points": 23.6,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "12514",
+        "points": 21.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "5045",
+        "points": 20.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "5045",
+        "points": 20.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "5859",
+        "points": 19.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "5859",
+        "points": 19.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "2133",
+        "points": 19.6,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "2133",
+        "points": 19.6,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "8146",
+        "points": 19.4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "8146",
+        "points": 19.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "5872",
+        "points": 19.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "5872",
+        "points": 19.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "8146",
+        "points": 19,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "7569",
+        "points": 18.4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "7569",
+        "points": 18.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "9493",
+        "points": 18.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "9488",
+        "points": 18.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "9493",
+        "points": 18.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "9488",
+        "points": 18.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "8148",
+        "points": 17.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "9493",
+        "points": 17.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "9493",
+        "points": 17.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "7547",
+        "points": 17.2,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7547",
+        "points": 17.2,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "6819",
+        "points": 17,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "1479",
+        "points": 16.3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "1479",
+        "points": 16,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "7525",
+        "points": 16,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "1479",
+        "points": 16,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "7525",
+        "points": 16,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "6786",
+        "points": 15.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "11638",
+        "points": 15.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "6786",
+        "points": 15.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "11638",
+        "points": 15.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "11628",
+        "points": 15.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "11628",
+        "points": 15.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "8137",
+        "points": 15.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "8137",
+        "points": 15.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "8137",
+        "points": 15.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "7526",
+        "points": 15.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8137",
+        "points": 15.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "5045",
+        "points": 15.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "5045",
+        "points": 15.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "1479",
+        "points": 14.6,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "6786",
+        "points": 14.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "6786",
+        "points": 14.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "9754",
+        "points": 14.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "9488",
+        "points": 14.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "9488",
+        "points": 14.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "9488",
+        "points": 13.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "5872",
+        "points": 13.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "3321",
+        "points": 13.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "9488",
+        "points": 13.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "5872",
+        "points": 13.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "3321",
+        "points": 13.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "11620",
+        "points": 13.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "10444",
+        "points": 13.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "11620",
+        "points": 13.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "3321",
+        "points": 13.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "8676",
+        "points": 13.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "6801",
+        "points": 13.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "2133",
+        "points": 13.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "6801",
+        "points": 13.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "2133",
+        "points": 13.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "12526",
+        "points": 13,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "12526",
+        "points": 13,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "6794",
+        "points": 12.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "11638",
+        "points": 12.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "6794",
+        "points": 12.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "11638",
+        "points": 12.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "11620",
+        "points": 12.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "7569",
+        "points": 12.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "11620",
+        "points": 12.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "7569",
+        "points": 12.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "7526",
+        "points": 12.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "12499",
+        "points": 11.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "12499",
+        "points": 11.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "9997",
+        "points": 11.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "9997",
+        "points": 11.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "2216",
+        "points": 11.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "2216",
+        "points": 11.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "12514",
+        "points": 10.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "12514",
+        "points": 10.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4983",
+        "points": 10.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "4983",
+        "points": 10.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "5846",
+        "points": 10.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "5846",
+        "points": 10.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "11635",
+        "points": 10.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "11635",
+        "points": 10.4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "5846",
+        "points": 10.3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "6794",
+        "points": 10,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "6794",
+        "points": 10,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "5947",
+        "points": 9.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "11632",
+        "points": 9.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "6794",
+        "points": 9.6,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "11632",
+        "points": 9.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "6794",
+        "points": 9.6,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "8112",
+        "points": 9.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "5846",
+        "points": 9.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "8112",
+        "points": 9.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "5846",
+        "points": 9.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "8134",
+        "points": 9.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "12526",
+        "points": 9.3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "12526",
+        "points": 9.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "10444",
+        "points": 9.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "10444",
+        "points": 9.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "6783",
+        "points": 9.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "6783",
+        "points": 9.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "5927",
+        "points": 8.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "5927",
+        "points": 8.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "2449",
+        "points": 8.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "7670",
+        "points": 8.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11631",
+        "points": 8.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "11631",
+        "points": 8.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "2216",
+        "points": 8.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "9504",
+        "points": 8.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "2216",
+        "points": 8.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "8112",
+        "points": 8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "8112",
+        "points": 8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "8121",
+        "points": 7.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "5947",
+        "points": 7.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "5947",
+        "points": 7.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "2216",
+        "points": 7.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "4983",
+        "points": 7.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "2216",
+        "points": 7.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "4983",
+        "points": 7.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "5927",
+        "points": 7.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "11635",
+        "points": 7.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "7525",
+        "points": 7.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "5927",
+        "points": 7.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "7525",
+        "points": 7.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "11635",
+        "points": 7.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "4981",
+        "points": 7.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "11638",
+        "points": 7.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "11638",
+        "points": 7.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "2133",
+        "points": 7.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "6783",
+        "points": 7.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4983",
+        "points": 7.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "2133",
+        "points": 7.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "6783",
+        "points": 7.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "4983",
+        "points": 7.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "11631",
+        "points": 6.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "11631",
+        "points": 6.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "7547",
+        "points": 6.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "11631",
+        "points": 6.5,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "7547",
+        "points": 6.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "11631",
+        "points": 6.5,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "7564",
+        "points": 6.4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "7564",
+        "points": 6.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "12526",
+        "points": 6.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "8676",
+        "points": 6.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "12530",
+        "points": 6.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "12526",
+        "points": 6.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "5848",
+        "points": 6.2,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "11635",
+        "points": 6.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "3321",
+        "points": 6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "8146",
+        "points": 6,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "3321",
+        "points": 6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "6819",
+        "points": 6,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "8146",
+        "points": 6,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11628",
+        "points": 5.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "11628",
+        "points": 5.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "5848",
+        "points": 5.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "8148",
+        "points": 5.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "8148",
+        "points": 5.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "5859",
+        "points": 5.2,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "5859",
+        "points": 5.2,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "7526",
+        "points": 5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "7526",
+        "points": 5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "6801",
+        "points": 4.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "6801",
+        "points": 4.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "4981",
+        "points": 4.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "8148",
+        "points": 4.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "8148",
+        "points": 4.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "8137",
+        "points": 4.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "8137",
+        "points": 4.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "8112",
+        "points": 4.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "8112",
+        "points": 4.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "11637",
+        "points": 4.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "4039",
+        "points": 4.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "7569",
+        "points": 4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "7569",
+        "points": 4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "5872",
+        "points": 3.9,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "5872",
+        "points": 3.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "9504",
+        "points": 3.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "5927",
+        "points": 3.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "11628",
+        "points": 3.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "5927",
+        "points": 3.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "11628",
+        "points": 3.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "7564",
+        "points": 3.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "7564",
+        "points": 3.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "8121",
+        "points": 3.5,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "11637",
+        "points": 3.5,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "11637",
+        "points": 3.5,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "4981",
+        "points": 3.2,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "7525",
+        "points": 3.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "8126",
+        "points": 3.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7525",
+        "points": 3.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "8126",
+        "points": 3.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "7090",
+        "points": 3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "8125",
+        "points": 2.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "12501",
+        "points": 2.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "11632",
+        "points": 2.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "9997",
+        "points": 2.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "11632",
+        "points": 2.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "9997",
+        "points": 2.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "6783",
+        "points": 2.2,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "6801",
+        "points": 2,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "7571",
+        "points": 2,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11627",
+        "points": 1.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "8134",
+        "points": 1.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "5859",
+        "points": 1.3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "5859",
+        "points": 1.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "5045",
+        "points": 1.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "5045",
+        "points": 1.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "7670",
+        "points": 1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "11624",
+        "points": 0,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "10222",
+        "points": 0,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "6786",
+        "points": 0,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "11624",
+        "points": 0,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "6786",
+        "points": 0,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      }
+    ],
+    "TE": [
+      {
+        "playerId": "3214",
+        "points": 25,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "5012",
+        "points": 24.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "9484",
+        "points": 21.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "9484",
+        "points": 21.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "1339",
+        "points": 15.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "8110",
+        "points": 14.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "8110",
+        "points": 14.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "7002",
+        "points": 13.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "7002",
+        "points": 13.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "5844",
+        "points": 13.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "11604",
+        "points": 12.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "8130",
+        "points": 12.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "11604",
+        "points": 12.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "8130",
+        "points": 12.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "8110",
+        "points": 12.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "12518",
+        "points": 11.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "12518",
+        "points": 11.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "1466",
+        "points": 11.7,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "1466",
+        "points": 11.7,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "10859",
+        "points": 10.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "10859",
+        "points": 10.9,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "8130",
+        "points": 10.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "8130",
+        "points": 10.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "4217",
+        "points": 10.5,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "4217",
+        "points": 10.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "12518",
+        "points": 9.9,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "12518",
+        "points": 9.9,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "5022",
+        "points": 9.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "7553",
+        "points": 9.4,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "8130",
+        "points": 9.1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "8130",
+        "points": 9.1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "9484",
+        "points": 8.9,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "3214",
+        "points": 8.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "1466",
+        "points": 8.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "7002",
+        "points": 8.1,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "1466",
+        "points": 8.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "7002",
+        "points": 8.1,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "11604",
+        "points": 7.8,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "11604",
+        "points": 7.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "12506",
+        "points": 7.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "11604",
+        "points": 6.3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "11604",
+        "points": 6.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "4033",
+        "points": 6,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "7553",
+        "points": 5.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "7553",
+        "points": 5.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "1339",
+        "points": 5.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "10859",
+        "points": 5.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "12518",
+        "points": 5.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "1339",
+        "points": 5.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "12518",
+        "points": 5.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "10859",
+        "points": 5.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "4033",
+        "points": 5.2,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "4033",
+        "points": 5.2,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "8110",
+        "points": 4.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "8110",
+        "points": 4.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "1466",
+        "points": 4.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "1466",
+        "points": 4.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "9484",
+        "points": 4.4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "9484",
+        "points": 4.4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "10859",
+        "points": 4.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "10859",
+        "points": 4.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "12506",
+        "points": 4,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "12506",
+        "points": 4,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "4066",
+        "points": 3.6,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "5844",
+        "points": 3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "5844",
+        "points": 3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "12517",
+        "points": 2.2,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "5844",
+        "points": 1.7,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "5844",
+        "points": 1.7,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "5012",
+        "points": 1.4,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "5012",
+        "points": 1.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "3214",
+        "points": 1.4,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "5012",
+        "points": 1,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "12498",
+        "points": 1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "5012",
+        "points": 1,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "6869",
+        "points": 0,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      }
+    ],
+    "K": [],
+    "DEF": [
+      {
+        "playerId": "MIN",
+        "points": 36.45,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "MIN",
+        "points": 36.45,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "TB",
+        "points": 21.3,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "DEN",
+        "points": 20.75,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "DEN",
+        "points": 20.75,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "SEA",
+        "points": 20.6,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "SEA",
+        "points": 20.6,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "BAL",
+        "points": 19.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "BAL",
+        "points": 19.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "IND",
+        "points": 18.85,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "PIT",
+        "points": 18.25,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "PIT",
+        "points": 18.25,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "ARI",
+        "points": 16.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "ARI",
+        "points": 16.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "DEN",
+        "points": 15.9,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "NE",
+        "points": 15.8,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "NE",
+        "points": 15.8,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "KC",
+        "points": 14.8,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "GB",
+        "points": 14.15,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "GB",
+        "points": 14.15,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "BUF",
+        "points": 14.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "BUF",
+        "points": 14.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "PHI",
+        "points": 12.75,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "LAR",
+        "points": 12.5,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "LAR",
+        "points": 12.5,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "SF",
+        "points": 10.65,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "SF",
+        "points": 10.65,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "WAS",
+        "points": 10.55,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "GB",
+        "points": 10.55,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "PHI",
+        "points": 10.55,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "WAS",
+        "points": 10.55,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "GB",
+        "points": 10.55,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "LAR",
+        "points": 10.2,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "SF",
+        "points": 9.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Quonspiracy Theorists"
+      },
+      {
+        "playerId": "SF",
+        "points": 9.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "GB",
+        "points": 9.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "lol jerry jones"
+      },
+      {
+        "playerId": "GB",
+        "points": 9.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Dont go Chasing Saquon"
+      },
+      {
+        "playerId": "HOU",
+        "points": 9.55,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "JAX",
+        "points": 9.5,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "NYJ",
+        "points": 9.45,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "PIT",
+        "points": 9.05,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "PIT",
+        "points": 9.05,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "HOU",
+        "points": 8.4,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "HOU",
+        "points": 8.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "scboom5"
+      },
+      {
+        "playerId": "MIN",
+        "points": 7.85,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "MIN",
+        "points": 7.3,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "ziyanp22"
+      },
+      {
+        "playerId": "LAC",
+        "points": 7.2,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "cescott25"
+      },
+      {
+        "playerId": "TB",
+        "points": 6.15,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Jaxson Dart-Njigba"
+      },
+      {
+        "playerId": "NE",
+        "points": 6.05,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "PIT",
+        "points": 5.35,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Nacua Matata"
+      },
+      {
+        "playerId": "PIT",
+        "points": 5.35,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "RithikP"
+      },
+      {
+        "playerId": "KC",
+        "points": 5.25,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "SF",
+        "points": 5.15,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "The Golden Age"
+      },
+      {
+        "playerId": "SF",
+        "points": 5.15,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "lukebowsh"
+      },
+      {
+        "playerId": "DAL",
+        "points": 5.1,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "DAL",
+        "points": 5.1,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "Saint Brown Does Mahomes"
+      },
+      {
+        "playerId": "BUF",
+        "points": 4.95,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "BUF",
+        "points": 4.7,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "Dr Patel Parikh MD MBA"
+      },
+      {
+        "playerId": "BUF",
+        "points": 4.7,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "ARI",
+        "points": 2.8,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "benweinfeld"
+      },
+      {
+        "playerId": "ARI",
+        "points": 2.8,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "Mach 10"
+      },
+      {
+        "playerId": "ATL",
+        "points": 2.25,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "ATL",
+        "points": 2.25,
+        "week": 3,
+        "league": "NFC",
+        "teamName": "Marginal Returns"
+      },
+      {
+        "playerId": "PHI",
+        "points": 1.3,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "vchak"
+      },
+      {
+        "playerId": "PHI",
+        "points": 1.3,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "C&G^2"
+      },
+      {
+        "playerId": "DEN",
+        "points": 1.15,
+        "week": 2,
+        "league": "NFC",
+        "teamName": "vayyala"
+      },
+      {
+        "playerId": "0",
+        "points": 0,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "To Infinity and Bijan"
+      },
+      {
+        "playerId": "DAL",
+        "points": -0.3,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "2 Dolla Balla$"
+      },
+      {
+        "playerId": "BAL",
+        "points": -0.45,
+        "week": 1,
+        "league": "NFC",
+        "teamName": "DJ Herbussy "
+      },
+      {
+        "playerId": "BAL",
+        "points": -0.5,
+        "week": 3,
+        "league": "AFC",
+        "teamName": "achak7"
+      },
+      {
+        "playerId": "DET",
+        "points": -0.6,
+        "week": 1,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      },
+      {
+        "playerId": "CHI",
+        "points": -3,
+        "week": 2,
+        "league": "AFC",
+        "teamName": "NielGetsCarried"
+      }
+    ],
+    "UNKNOWN": []
+  }
+}

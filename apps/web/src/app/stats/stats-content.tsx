@@ -37,11 +37,86 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+// Transaction Analysis imports
+import {
+  Facts,
+  buildFacts,
+  firstOwnedWeek,
+  lastOwnedWeek,
+  playoffWeight,
+} from '@/lib/transactions-facts';
+import { CURRENT_LEAGUES } from '@/config/leagues';
+import { TrendingUp, ArrowUpDown, Filter, Search, Eye, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import StartSitEfficiencyTab from '@/components/stats/StartSitEfficiencyTab';
+
+// Color helper functions from original transactions page
+const RDYLGN = [
+  '#a50026',
+  '#d73027',
+  '#f46d43',
+  '#fdae61',
+  '#fee08b',
+  '#ffffbf',
+  '#d9ef8b',
+  '#a6d96a',
+  '#66bd63',
+  '#1a9850',
+  '#006837',
+];
+
+const hexToRgb = (hex: string) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return { r, g, b };
+};
+
+const mixHex = (hex1: string, hex2: string, t: number) => {
+  const { r: r1, g: g1, b: b1 } = hexToRgb(hex1);
+  const { r: r2, g: g2, b: b2 } = hexToRgb(hex2);
+  const r = Math.round(r1 + (r2 - r1) * t);
+  const g = Math.round(g1 + (g2 - g1) * t);
+  const b = Math.round(b1 + (b2 - b1) * t);
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
+const getDivergingBg = (normalized: number) => {
+  const t = Math.max(-1, Math.min(1, normalized));
+  const u = (t + 1) / 2;
+  const n = RDYLGN.length - 1;
+  const idx = Math.max(0, Math.min(n - 1, Math.floor(u * n)));
+  const frac = u * n - idx;
+  const from = RDYLGN[idx];
+  const to = RDYLGN[idx + 1] ?? RDYLGN[idx];
+  return mixHex(from, to, frac);
+};
+
+const getTextColorForBg = (hex: string) => {
+  const { r, g, b } = hexToRgb(hex);
+  const srgb = [r, g, b].map(v => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  const L = 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+  return L > 0.5 ? '#111827' : '#ffffff';
+};
+
 interface StatsContentProps {
   dataset: PlainStatsDataset;
   searchParams: {
     team?: string;
-    view?: 'team' | 'league' | 'schedule';
+    view?: 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit';
     week?: string;
   };
   leagues: Array<{ id: string; name: string; season: number }>;
@@ -308,6 +383,2008 @@ function D3RidgePlot({ data, domain, height, title }: RidgePlotProps) {
   );
 }
 
+// Transaction Analysis Types
+type GradeTxn = {
+  id: string;
+  type: string;
+  createdAt: string;
+  rosterIds: number[];
+  leagueId: string;
+  leagueName: string;
+  teamName?: string;
+  faabCost: number; // FAAB spent on this transaction (0 for free agents/trades)
+  rawScore: number; // Original VORP score before cost adjustment
+  costPenalty: number; // FAAB cost penalty applied
+  players: Array<{
+    playerId: string;
+    name: string;
+    position: string;
+    role: 'add' | 'drop';
+    pre: { ppg: number; pps: number; total: number };
+    post: { poPts: number };
+    forYou?: {
+      starts: number;
+      points: number;
+      weightedPoints: number;
+    };
+    afterDrop?: {
+      selfHarm: number;
+      oppHarm: number;
+      selfHarmWeighted: number;
+      oppHarmWeighted: number;
+    };
+    weeklyPoints: Array<{
+      week: number;
+      points: number;
+      started: boolean;
+      weight: number;
+    }>;
+  }>;
+  score: number; // Final cost-adjusted score
+  grade: string;
+};
+
+type RawTxn = {
+  id: string;
+  type: string;
+  status: string;
+  createdAt: string;
+  rosterIds: number[];
+  adds?: Array<{
+    rosterId: number;
+    players?: Array<{ id: string; fullName: string; position: string }>;
+  }>;
+  drops?: Array<{
+    rosterId: number;
+    players?: Array<{ id: string; fullName: string; position: string }>;
+  }>;
+  settings?: {
+    waiver_bid?: number; // FAAB cost for waiver transactions
+  };
+};
+
+type TeamInfo = {
+  rosterId: number;
+  teamName: string;
+  ownerName: string;
+  leagueId: string;
+  leagueName: string;
+};
+
+// Manager Rankings Component
+function ManagerRankings({
+  transactions,
+  allTeams,
+}: {
+  transactions: GradeTxn[];
+  allTeams: Map<string, TeamInfo>;
+}) {
+  const [selectedManager, setSelectedManager] = useState<string | null>(null);
+
+  // Don't render if no team data is loaded yet
+  if (allTeams.size === 0) {
+    return (
+      <Card className='mb-6'>
+        <CardHeader>
+          <CardTitle className='flex items-center gap-2'>
+            <TrendingUp className='h-5 w-5' />
+            Manager Rankings by Net VORP
+          </CardTitle>
+          <CardDescription>Loading team data...</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='flex items-center justify-center h-32'>
+            <div className='text-muted-foreground'>Loading manager data...</div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const managerStats = useMemo(() => {
+    const stats = new Map<
+      string,
+      {
+        teamName: string;
+        netVORP: number;
+        positiveTransactions: number;
+        negativeTransactions: number;
+        totalTransactions: number;
+        transactions: GradeTxn[];
+      }
+    >();
+
+    // Initialize ALL 24 managers with zero stats
+    console.log(`[Manager Rankings] Initializing rankings for ${allTeams.size} total teams`);
+    allTeams.forEach(team => {
+      stats.set(team.teamName, {
+        teamName: team.teamName,
+        netVORP: 0,
+        positiveTransactions: 0,
+        negativeTransactions: 0,
+        totalTransactions: 0,
+        transactions: [],
+      });
+    });
+
+    console.log(`[Manager Rankings] Initialized ${stats.size} manager entries`);
+    console.log(`[Manager Rankings] Manager names:`, Array.from(stats.keys()).sort());
+
+    // Now populate with actual transaction data
+    transactions.forEach(txn => {
+      if (!txn.teamName) return;
+
+      const existing = stats.get(txn.teamName);
+      if (!existing) return; // Skip if team not found (shouldn't happen)
+
+      existing.netVORP += txn.score;
+      existing.totalTransactions += 1;
+      existing.transactions.push(txn);
+
+      if (txn.score > 0) {
+        existing.positiveTransactions += 1;
+      } else if (txn.score < 0) {
+        existing.negativeTransactions += 1;
+      }
+      // Zero scores are neutral - don't count as positive or negative
+    });
+
+    console.log(`[Manager Rankings] Final manager count: ${stats.size}`);
+    console.log(
+      `[Manager Rankings] Managers with transactions:`,
+      Array.from(stats.values()).filter(m => m.totalTransactions > 0).length
+    );
+    console.log(
+      `[Manager Rankings] Managers without transactions:`,
+      Array.from(stats.values()).filter(m => m.totalTransactions === 0).length
+    );
+
+    return Array.from(stats.values()).sort((a, b) => b.netVORP - a.netVORP);
+  }, [transactions, allTeams]);
+
+  const selectedManagerData = selectedManager
+    ? managerStats.find(m => m.teamName === selectedManager)
+    : null;
+
+  return (
+    <>
+      <Card className='mb-6'>
+        <CardHeader>
+          <CardTitle className='flex items-center gap-2'>
+            <TrendingUp className='h-5 w-5' />
+            Manager Rankings by Net Cost-Adjusted VORP
+          </CardTitle>
+          <CardDescription>
+            Transaction efficiency ranking based on Cost-Adjusted VORP (FAAB penalties applied) with
+            playoff weighting. Click a manager to see their transaction history.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='overflow-x-auto'>
+            <table className='w-full'>
+              <thead>
+                <tr className='border-b'>
+                  <th className='text-left p-2 font-semibold'>Rank</th>
+                  <th className='text-left p-2 font-semibold'>Manager</th>
+                  <th className='text-right p-2 font-semibold'>Net Adj. VORP</th>
+                  <th className='text-right p-2 font-semibold'>Positive</th>
+                  <th className='text-right p-2 font-semibold'>Negative</th>
+                  <th className='text-right p-2 font-semibold'>Total</th>
+                  <th className='text-right p-2 font-semibold'>Success Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {managerStats.map((manager, index) => (
+                  <tr
+                    key={manager.teamName}
+                    className='border-b hover:bg-muted/50 cursor-pointer'
+                    onClick={() => setSelectedManager(manager.teamName)}
+                  >
+                    <td className='p-2 font-medium'>#{index + 1}</td>
+                    <td className='p-2 font-medium text-blue-600 hover:text-blue-800'>
+                      {manager.teamName}
+                    </td>
+                    <td
+                      className={`p-2 text-right font-mono font-bold ${manager.netVORP >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                    >
+                      {manager.netVORP >= 0 ? '+' : ''}
+                      {manager.netVORP.toFixed(1)}
+                    </td>
+                    <td className='p-2 text-right text-green-600 font-medium'>
+                      {manager.positiveTransactions}
+                    </td>
+                    <td className='p-2 text-right text-red-600 font-medium'>
+                      {manager.negativeTransactions}
+                    </td>
+                    <td className='p-2 text-right'>{manager.totalTransactions}</td>
+                    <td className='p-2 text-right'>
+                      {manager.totalTransactions > 0
+                        ? `${((manager.positiveTransactions / manager.totalTransactions) * 100).toFixed(0)}%`
+                        : '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Manager Detail Modal */}
+      {selectedManager && selectedManagerData && (
+        <ManagerDetailModal
+          manager={selectedManagerData}
+          isOpen={!!selectedManager}
+          onClose={() => setSelectedManager(null)}
+        />
+      )}
+    </>
+  );
+}
+
+// Manager Detail Modal Component
+interface ManagerDetailModalProps {
+  manager: {
+    teamName: string;
+    netVORP: number;
+    positiveTransactions: number;
+    negativeTransactions: number;
+    totalTransactions: number;
+    transactions: GradeTxn[];
+  };
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function ManagerDetailModal({ manager, isOpen, onClose }: ManagerDetailModalProps) {
+  if (!isOpen) return null;
+
+  const positiveTransactions = manager.transactions
+    .filter(t => t.score > 0)
+    .sort((a, b) => b.score - a.score);
+  const negativeTransactions = manager.transactions
+    .filter(t => t.score < 0)
+    .sort((a, b) => a.score - b.score);
+  const neutralTransactions = manager.transactions
+    .filter(t => t.score === 0)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  return (
+    <div
+      className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
+      onClick={onClose}
+    >
+      <div
+        className='bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden'
+        onClick={e => e.stopPropagation()}
+      >
+        <div className='sticky top-0 bg-white dark:bg-gray-800 border-b p-6 flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <h2 className='text-2xl font-bold'>{manager.teamName}</h2>
+            <div className='flex items-center gap-4'>
+              <div
+                className={`text-lg font-mono font-bold ${manager.netVORP >= 0 ? 'text-green-600' : 'text-red-600'}`}
+              >
+                Net Adj. VORP: {manager.netVORP >= 0 ? '+' : ''}
+                {manager.netVORP.toFixed(1)}
+              </div>
+              <div className='text-sm text-gray-500'>
+                {manager.positiveTransactions}W - {manager.negativeTransactions}L
+                {manager.totalTransactions > 0 && (
+                  <span>
+                    {' '}
+                    ({((manager.positiveTransactions / manager.totalTransactions) * 100).toFixed(0)}
+                    %)
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+          >
+            <X className='h-5 w-5' />
+          </button>
+        </div>
+
+        <div className='p-6 overflow-y-auto max-h-[calc(90vh-120px)]'>
+          {manager.totalTransactions === 0 ? (
+            <div className='text-center py-12'>
+              <div className='text-2xl font-bold text-gray-400 mb-2'>No Transactions Yet</div>
+              <div className='text-gray-500'>This manager hasn't made any moves this season.</div>
+              <div className='text-sm text-gray-400 mt-2'>
+                Net Adj. VORP: 0.0 • Activity Level: Inactive
+              </div>
+            </div>
+          ) : (
+            <div className='grid md:grid-cols-3 gap-6'>
+              {/* Positive Transactions */}
+              <div>
+                <h3 className='text-lg font-semibold text-green-700 mb-4 flex items-center gap-2'>
+                  <span className='bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium'>
+                    +{manager.positiveTransactions}
+                  </span>
+                  Wins (Positive VORP)
+                </h3>
+                <div className='space-y-3 max-h-96 overflow-y-auto'>
+                  {positiveTransactions.map(txn => (
+                    <div
+                      key={txn.id}
+                      className='border border-green-200 rounded-lg p-3 bg-green-50/50'
+                    >
+                      <div className='flex items-center justify-between mb-2'>
+                        <div className='flex items-center gap-2'>
+                          <span className='bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium'>
+                            {txn.grade}
+                          </span>
+                          <span className='text-xs text-gray-500 capitalize'>{txn.type}</span>
+                        </div>
+                        <div className='text-right'>
+                          <div className='font-mono font-bold text-green-600'>
+                            +{txn.score.toFixed(1)}
+                          </div>
+                          <div className='text-xs text-gray-500'>
+                            {new Date(txn.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-4 text-sm'>
+                        <div>
+                          <span className='text-green-700'>
+                            +
+                            {txn.players
+                              .filter(p => p.role === 'add')
+                              .map(p => p.name)
+                              .join(', ')}
+                          </span>
+                        </div>
+                        {txn.players.some(p => p.role === 'drop') && (
+                          <>
+                            <span className='text-gray-500'>for</span>
+                            <div>
+                              <span className='text-red-600'>
+                                -
+                                {txn.players
+                                  .filter(p => p.role === 'drop')
+                                  .map(p => p.name)
+                                  .join(', ')}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {positiveTransactions.length === 0 && (
+                    <div className='text-center py-8 text-gray-500'>
+                      No positive transactions yet
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Negative Transactions */}
+              <div>
+                <h3 className='text-lg font-semibold text-red-700 mb-4 flex items-center gap-2'>
+                  <span className='bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium'>
+                    -{manager.negativeTransactions}
+                  </span>
+                  Losses (Negative VORP)
+                </h3>
+                <div className='space-y-3 max-h-96 overflow-y-auto'>
+                  {negativeTransactions.map(txn => (
+                    <div key={txn.id} className='border border-red-200 rounded-lg p-3 bg-red-50/50'>
+                      <div className='flex items-center justify-between mb-2'>
+                        <div className='flex items-center gap-2'>
+                          <span className='bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium'>
+                            {txn.grade}
+                          </span>
+                          <span className='text-xs text-gray-500 capitalize'>{txn.type}</span>
+                        </div>
+                        <div className='text-right'>
+                          <div className='font-mono font-bold text-red-600'>
+                            {txn.score.toFixed(1)}
+                          </div>
+                          <div className='text-xs text-gray-500'>
+                            {new Date(txn.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-4 text-sm'>
+                        <div>
+                          <span className='text-green-700'>
+                            +
+                            {txn.players
+                              .filter(p => p.role === 'add')
+                              .map(p => p.name)
+                              .join(', ')}
+                          </span>
+                        </div>
+                        {txn.players.some(p => p.role === 'drop') && (
+                          <>
+                            <span className='text-gray-500'>for</span>
+                            <div>
+                              <span className='text-red-600'>
+                                -
+                                {txn.players
+                                  .filter(p => p.role === 'drop')
+                                  .map(p => p.name)
+                                  .join(', ')}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {negativeTransactions.length === 0 && (
+                    <div className='text-center py-8 text-gray-500'>
+                      No negative transactions yet
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Neutral Transactions */}
+              <div>
+                <h3 className='text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2'>
+                  <span className='bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-medium'>
+                    ={neutralTransactions.length}
+                  </span>
+                  Neutral (Zero VORP)
+                </h3>
+                <div className='space-y-3 max-h-96 overflow-y-auto'>
+                  {neutralTransactions.map(txn => (
+                    <div
+                      key={txn.id}
+                      className='border border-gray-200 rounded-lg p-3 bg-gray-50/50'
+                    >
+                      <div className='flex items-center justify-between mb-2'>
+                        <div className='flex items-center gap-2'>
+                          <span className='bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-medium'>
+                            {txn.grade}
+                          </span>
+                          <span className='text-xs text-gray-500 capitalize'>{txn.type}</span>
+                        </div>
+                        <div className='text-right'>
+                          <div className='font-mono font-bold text-gray-600'>0.0</div>
+                          <div className='text-xs text-gray-500'>
+                            {new Date(txn.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-4 text-sm'>
+                        <div>
+                          <span className='text-green-700'>
+                            +
+                            {txn.players
+                              .filter(p => p.role === 'add')
+                              .map(p => p.name)
+                              .join(', ')}
+                          </span>
+                        </div>
+                        {txn.players.some(p => p.role === 'drop') && (
+                          <>
+                            <span className='text-gray-500'>for</span>
+                            <div>
+                              <span className='text-red-600'>
+                                -
+                                {txn.players
+                                  .filter(p => p.role === 'drop')
+                                  .map(p => p.name)
+                                  .join(', ')}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {neutralTransactions.length === 0 && (
+                    <div className='text-center py-8 text-gray-500'>
+                      No neutral transactions yet
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Import the full working transaction analysis component logic
+function TransactionAnalysis() {
+  const [allData, setAllData] = useState<GradeTxn[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingStep, setLoadingStep] = useState('Initializing...');
+  const [selectedTxn, setSelectedTxn] = useState<GradeTxn | null>(null);
+  const [teamsMap, setTeamsMap] = useState<Map<string, TeamInfo>>(new Map());
+  const [currentNflWeek, setCurrentNflWeek] = useState(3);
+
+  // Additional loading states for better UX
+  const [teamsLoaded, setTeamsLoaded] = useState(false);
+  const [transactionsProcessed, setTransactionsProcessed] = useState(false);
+
+  // Filter and sort states (like original)
+  const [teamFilter, setTeamFilter] = useState<string>('all');
+  const [leagueFilter, setLeagueFilter] = useState<string>('all');
+  const [gradeFilter, setGradeFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [sortBy, setSortBy] = useState<'score' | 'grade' | 'date'>('score');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // Filter and sort data like the original sidebar page (MOVED TO TOP TO AVOID HOOK ORDER ISSUES)
+  const filteredData = useMemo(() => {
+    let filtered = allData.filter(txn => {
+      // Team filter
+      if (teamFilter !== 'all' && txn.teamName !== teamFilter) return false;
+
+      // League filter
+      if (leagueFilter !== 'all' && txn.leagueName !== leagueFilter) return false;
+
+      // Grade filter
+      if (gradeFilter !== 'all' && txn.grade !== gradeFilter) return false;
+
+      // Search filter
+      if (
+        searchTerm &&
+        !txn.players.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      )
+        return false;
+
+      return true;
+    });
+
+    // Sort data
+    filtered.sort((a, b) => {
+      let comparison = 0;
+
+      if (sortBy === 'score') {
+        comparison = a.score - b.score;
+      } else if (sortBy === 'grade') {
+        const gradeOrder = { 'A+': 6, A: 5, B: 4, C: 3, D: 2, F: 1 };
+        comparison =
+          (gradeOrder[a.grade as keyof typeof gradeOrder] || 0) -
+          (gradeOrder[b.grade as keyof typeof gradeOrder] || 0);
+      } else if (sortBy === 'date') {
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
+
+    return filtered;
+  }, [allData, teamFilter, leagueFilter, gradeFilter, searchTerm, sortBy, sortOrder]);
+
+  // Get unique teams and leagues for filters (MOVED TO TOP TO AVOID HOOK ORDER ISSUES)
+  const uniqueTeams = useMemo(
+    () => Array.from(new Set(allData.map(txn => txn.teamName).filter(Boolean))).sort(),
+    [allData]
+  );
+
+  const uniqueLeagues = useMemo(
+    () => Array.from(new Set(allData.map(txn => txn.leagueName).filter(Boolean))).sort(),
+    [allData]
+  );
+
+  // Load transaction data using the full working implementation
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTransactionData = async () => {
+      try {
+        setLoading(true);
+        setLoadingStep('Getting current NFL week...');
+
+        // Load current NFL week
+        try {
+          const nflRes = await fetch('/api/nfl-state');
+          if (nflRes.ok) {
+            const nflState = await nflRes.json();
+            const currentWeek = nflState.week || 3;
+            setCurrentNflWeek(currentWeek);
+          }
+        } catch (error) {
+          console.log('NFL state error, using default week 3');
+        }
+
+        // Load team information
+        setLoadingStep('Loading team information from both leagues...');
+        const teamsData = new Map<string, TeamInfo>();
+        try {
+          const teamsRes = await fetch('/api/league/teams');
+          if (teamsRes.ok) {
+            const teamsResponse = await teamsRes.json();
+            const teams = teamsResponse.teams || [];
+
+            teams.forEach((team: any) => {
+              const teamKey = `${team.leagueId}-${team.id}`;
+              teamsData.set(teamKey, {
+                rosterId: team.id,
+                teamName: team.name,
+                ownerName: team.owner,
+                leagueId: team.leagueId,
+                leagueName: team.leagueName,
+              });
+            });
+
+            console.log(`[Team Loading] Loaded ${teams.length} teams total`);
+            console.log(
+              `[Team Loading] Teams by league:`,
+              teams.reduce((acc: any, team: any) => {
+                acc[team.leagueName] = (acc[team.leagueName] || 0) + 1;
+                return acc;
+              }, {})
+            );
+          }
+        } catch (error) {
+          console.error('Failed to load team data:', error);
+        }
+
+        setTeamsMap(teamsData);
+        setTeamsLoaded(true);
+        const allTransactions: GradeTxn[] = [];
+
+        // Process each league using the full working implementation
+        for (const league of CURRENT_LEAGUES) {
+          if (cancelled) return;
+
+          setLoadingStep(`Processing ${league.name} transactions and calculating VORP...`);
+
+          try {
+            // Fetch transactions
+            const txnRes = await fetch(`/api/league/${league.id}/transactions`);
+            if (!txnRes.ok) continue;
+            const txnData = await txnRes.json();
+            const transactions = txnData.data || [];
+
+            // Build facts
+            const facts = await buildFacts(
+              league.id,
+              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+            );
+
+            // Grade transactions using the full working implementation
+            const gradedTransactions = await computeTransactionGradesForStatsHub(
+              transactions,
+              facts,
+              league.id,
+              league.name,
+              teamsData,
+              currentNflWeek
+            );
+
+            allTransactions.push(...gradedTransactions);
+          } catch (error) {
+            console.error(`Failed to process ${league.name}:`, error);
+          }
+        }
+
+        if (cancelled) return;
+
+        // Assign letter grades using the working logic
+        setLoadingStep('Calculating final transaction grades...');
+        if (allTransactions.length > 0) {
+          const vals = allTransactions.map(g => g.score);
+          const n = vals.length || 1;
+          const mean = vals.reduce((a, b) => a + b, 0) / n;
+          const variance = vals.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, n - 1);
+          const std = Math.sqrt(variance);
+
+          allTransactions.forEach(g => {
+            const z = std > 0 ? (g.score - mean) / std : 0;
+            const pct = 50 + 40 * Math.tanh(z);
+            g.grade =
+              pct >= 88
+                ? 'A+'
+                : pct >= 82
+                  ? 'A'
+                  : pct >= 70
+                    ? 'B'
+                    : pct >= 55
+                      ? 'C'
+                      : pct >= 40
+                        ? 'D'
+                        : 'F';
+          });
+        }
+
+        // Sort by score descending
+        setLoadingStep('Finalizing transaction rankings...');
+        allTransactions.sort((a, b) => b.score - a.score);
+        setAllData(allTransactions);
+        setTransactionsProcessed(true);
+      } catch (error) {
+        console.error('Failed to load transaction data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTransactionData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className='space-y-6'>
+        {/* Loading placeholder for manager rankings */}
+        <Card className='mb-6'>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <TrendingUp className='h-5 w-5' />
+              Manager Rankings by Net VORP
+            </CardTitle>
+            <CardDescription>Loading transaction efficiency rankings...</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='flex items-center justify-center h-32'>
+              <div className='flex items-center space-x-2'>
+                <div className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'></div>
+                <div
+                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.1s' }}
+                ></div>
+                <div
+                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.2s' }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Loading placeholder for transactions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <TrendingUp className='h-5 w-5' />
+              Transaction Analysis
+            </CardTitle>
+            <CardDescription>Loading transaction data with VORP calculations...</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='flex flex-col items-center justify-center h-64 space-y-4'>
+              <div className='flex items-center space-x-2'>
+                <div className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'></div>
+                <div
+                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.1s' }}
+                ></div>
+                <div
+                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.2s' }}
+                ></div>
+              </div>
+              <div className='text-center'>
+                <div className='text-lg font-medium text-muted-foreground mb-1'>
+                  Loading Transaction Analysis
+                </div>
+                <div className='text-sm text-muted-foreground'>{loadingStep}</div>
+              </div>
+
+              {/* Progress indicator */}
+              <div className='w-full max-w-md bg-gray-200 rounded-full h-2'>
+                <div
+                  className='bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse'
+                  style={{ width: '60%' }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Don't render anything until ALL data is fully loaded
+  if (loading || !teamsLoaded || !transactionsProcessed || allData.length === 0) {
+    return (
+      <div className='space-y-6'>
+        {/* Loading placeholder for manager rankings */}
+        <Card className='mb-6'>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <TrendingUp className='h-5 w-5' />
+              Manager Rankings by Net VORP
+            </CardTitle>
+            <CardDescription>Loading transaction efficiency rankings...</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='flex items-center justify-center h-32'>
+              <div className='flex items-center space-x-2'>
+                <div className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'></div>
+                <div
+                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.1s' }}
+                ></div>
+                <div
+                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.2s' }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Loading placeholder for transactions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <TrendingUp className='h-5 w-5' />
+              Transaction Analysis
+            </CardTitle>
+            <CardDescription>Loading transaction data with VORP calculations...</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='flex flex-col items-center justify-center h-64 space-y-4'>
+              <div className='flex items-center space-x-2'>
+                <div className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'></div>
+                <div
+                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.1s' }}
+                ></div>
+                <div
+                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  style={{ animationDelay: '0.2s' }}
+                ></div>
+              </div>
+              <div className='text-center'>
+                <div className='text-lg font-medium text-muted-foreground mb-1'>
+                  Loading Transaction Analysis
+                </div>
+                <div className='text-sm text-muted-foreground'>{loadingStep}</div>
+              </div>
+
+              {/* Progress indicator */}
+              <div className='w-full max-w-md bg-gray-200 rounded-full h-2'>
+                <div
+                  className='bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse'
+                  style={{ width: '60%' }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className='space-y-6'>
+      <ManagerRankings transactions={allData} allTeams={teamsMap} />
+
+      <Card>
+        <CardHeader>
+          <div className='flex items-center justify-between'>
+            <div>
+              <CardTitle className='flex items-center gap-2'>
+                <TrendingUp className='h-5 w-5' />
+                Transaction Analysis
+              </CardTitle>
+              <CardDescription>
+                All transactions ranked by Cost-Adjusted VORP (Raw VORP - FAAB Penalty)
+              </CardDescription>
+            </div>
+
+            {/* Stats Overview */}
+            <div className='grid grid-cols-4 gap-4 text-center'>
+              <div className='bg-green-50 p-3 rounded-lg'>
+                <div className='text-2xl font-bold text-green-600'>
+                  {filteredData.filter(t => t.score > 0).length}
+                </div>
+                <div className='text-xs text-green-700'>Positive</div>
+              </div>
+              <div className='bg-red-50 p-3 rounded-lg'>
+                <div className='text-2xl font-bold text-red-600'>
+                  {filteredData.filter(t => t.score < 0).length}
+                </div>
+                <div className='text-xs text-red-700'>Negative</div>
+              </div>
+              <div className='bg-gray-50 p-3 rounded-lg'>
+                <div className='text-2xl font-bold text-gray-600'>
+                  {filteredData.filter(t => t.score === 0).length}
+                </div>
+                <div className='text-xs text-gray-700'>Neutral</div>
+              </div>
+              <div className='bg-blue-50 p-3 rounded-lg'>
+                <div className='text-2xl font-bold text-blue-600'>{filteredData.length}</div>
+                <div className='text-xs text-blue-700'>Total</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filters Row */}
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mt-4'>
+            {/* Team Filter */}
+            <Select value={teamFilter} onValueChange={setTeamFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder='All Teams' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Teams</SelectItem>
+                {uniqueTeams.map(team => (
+                  <SelectItem key={team} value={team || ''}>
+                    {team}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* League Filter */}
+            <Select value={leagueFilter} onValueChange={setLeagueFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder='All Leagues' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Leagues</SelectItem>
+                {uniqueLeagues.map(league => (
+                  <SelectItem key={league} value={league || ''}>
+                    {league}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Grade Filter */}
+            <Select value={gradeFilter} onValueChange={setGradeFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder='All Grades' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Grades</SelectItem>
+                <SelectItem value='A+'>A+</SelectItem>
+                <SelectItem value='A'>A</SelectItem>
+                <SelectItem value='B'>B</SelectItem>
+                <SelectItem value='C'>C</SelectItem>
+                <SelectItem value='D'>D</SelectItem>
+                <SelectItem value='F'>F</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Search */}
+            <div className='relative'>
+              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
+              <input
+                type='text'
+                placeholder='Search players...'
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className='pl-10 pr-4 py-2 w-full border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+              />
+            </div>
+          </div>
+
+          {/* Sort Controls */}
+          <div className='flex items-center gap-4 mt-4'>
+            <div className='flex items-center gap-2'>
+              <span className='text-sm text-gray-600'>Sort by:</span>
+              <Select value={sortBy} onValueChange={value => setSortBy(value as typeof sortBy)}>
+                <SelectTrigger className='w-32'>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='score'>Score</SelectItem>
+                  <SelectItem value='grade'>Grade</SelectItem>
+                  <SelectItem value='date'>Date</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <button
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                className='p-2 hover:bg-gray-100 rounded-md'
+              >
+                <ArrowUpDown className='h-4 w-4' />
+              </button>
+            </div>
+
+            <div className='text-sm text-gray-500'>
+              Showing {filteredData.length} of {allData.length} transactions
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          {filteredData.length === 0 ? (
+            <div className='text-center py-12'>
+              <div className='text-muted-foreground'>No transactions match your filters</div>
+              <button
+                onClick={() => {
+                  setTeamFilter('all');
+                  setLeagueFilter('all');
+                  setGradeFilter('all');
+                  setSearchTerm('');
+                }}
+                className='mt-2 text-blue-600 hover:text-blue-800 text-sm'
+              >
+                Clear all filters
+              </button>
+            </div>
+          ) : (
+            <div className='overflow-x-auto rounded-md border border-border bg-card'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Team</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Players</TableHead>
+                    <TableHead className='text-right'>FAAB</TableHead>
+                    <TableHead className='text-right'>Raw VORP</TableHead>
+                    <TableHead className='text-right'>Adjusted VORP</TableHead>
+                    <TableHead className='text-right'>Grade</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredData.map(txn => {
+                    const scoreRange = Math.max(...allData.map(t => Math.abs(t.score))) || 1;
+                    return (
+                      <TableRow
+                        key={txn.id}
+                        className='cursor-pointer hover:bg-muted/50'
+                        onClick={() => setSelectedTxn(txn)}
+                      >
+                        <TableCell>{new Date(txn.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <div className='flex flex-col'>
+                            <div className='font-medium'>{txn.teamName}</div>
+                            <div className='text-xs text-muted-foreground'>{txn.leagueName}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className='capitalize'>{txn.type.replace('_', ' ')}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className='flex flex-col gap-1'>
+                            {txn.players.map(p => (
+                              <div key={p.playerId} className='text-sm text-muted-foreground'>
+                                {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
+                              </div>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell className='text-right'>
+                          {txn.faabCost > 0 ? (
+                            <div className='flex flex-col items-end'>
+                              <div className='font-mono font-medium'>${txn.faabCost}</div>
+                              <div className='text-xs text-muted-foreground'>
+                                {((txn.faabCost / 200) * 100).toFixed(0)}%
+                              </div>
+                            </div>
+                          ) : (
+                            <div className='text-xs text-green-600 font-medium'>FREE</div>
+                          )}
+                        </TableCell>
+                        <TableCell className='text-right'>
+                          {txn.rawScore !== undefined ? (
+                            <div className='flex flex-col items-end'>
+                              <div
+                                className={`font-mono font-medium ${
+                                  txn.rawScore >= 0 ? 'text-green-600' : 'text-red-600'
+                                }`}
+                              >
+                                {txn.rawScore >= 0 ? '+' : ''}
+                                {txn.rawScore.toFixed(1)}
+                              </div>
+                              {txn.faabCost === 0 && (
+                                <div className='text-xs text-muted-foreground'>No Cost</div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className='text-muted-foreground text-sm'>N/A</span>
+                          )}
+                        </TableCell>
+                        <TableCell className='text-right'>
+                          {(() => {
+                            const bg = getDivergingBg(txn.score / scoreRange);
+                            const fg = getTextColorForBg(bg);
+                            return (
+                              <div className='flex flex-col items-end'>
+                                <span
+                                  className='px-2 py-0.5 rounded font-mono font-medium'
+                                  style={{ backgroundColor: bg, color: fg }}
+                                >
+                                  {txn.score.toFixed(1)}
+                                </span>
+                                {txn.faabCost > 0 && (
+                                  <div className='text-xs text-red-400 font-mono'>
+                                    -{txn.costPenalty?.toFixed(1) || '0.0'}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
+                        </TableCell>
+                        <TableCell className='text-right'>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            className='h-6 px-2'
+                            onClick={e => {
+                              e.stopPropagation();
+                              setSelectedTxn(txn);
+                            }}
+                          >
+                            <Badge>{txn.grade}</Badge>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Original Dialog Modal */}
+      <Dialog open={!!selectedTxn} onOpenChange={open => !open && setSelectedTxn(null)}>
+        <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
+          <DialogHeader>
+            <DialogTitle>Transaction Details</DialogTitle>
+          </DialogHeader>
+          {selectedTxn && (
+            <div className='text-sm space-y-4'>
+              <div className='flex items-center gap-2'>
+                <Badge>{selectedTxn.grade}</Badge>
+                {(() => {
+                  const scoreRange = Math.max(...allData.map(t => Math.abs(t.score))) || 1;
+                  const bg = getDivergingBg(selectedTxn.score / scoreRange);
+                  const fg = getTextColorForBg(bg);
+                  return (
+                    <span className='px-1.5 rounded' style={{ backgroundColor: bg, color: fg }}>
+                      Score: {selectedTxn.score.toFixed(2)}
+                    </span>
+                  );
+                })()}
+              </div>
+
+              <div className='text-muted-foreground'>
+                <div className='flex flex-col gap-1'>
+                  <div>
+                    {new Date(selectedTxn.createdAt).toLocaleString()} •{' '}
+                    {selectedTxn.type.replace('_', ' ')}
+                  </div>
+                  <div className='text-xs'>
+                    Team: {selectedTxn.teamName} • League: {selectedTxn.leagueName}
+                  </div>
+                </div>
+              </div>
+
+              {/* Score Breakdown */}
+              <div className='bg-muted/30 rounded-lg p-3 space-y-2'>
+                <h3 className='font-semibold text-base'>Score Breakdown</h3>
+                {(() => {
+                  const contribution = selectedTxn.players
+                    .filter(p => p.role === 'add' && p.forYou)
+                    .reduce((s, p) => s + (p.forYou?.weightedPoints || 0), 0);
+                  const selfHarm = selectedTxn.players
+                    .filter(p => p.role === 'drop' && p.afterDrop)
+                    .reduce((s, p) => s + (p.afterDrop?.selfHarmWeighted || 0), 0);
+                  const oppHarm = selectedTxn.players
+                    .filter(p => p.role === 'drop' && p.afterDrop)
+                    .reduce((s, p) => s + (p.afterDrop?.oppHarmWeighted || 0), 0);
+                  const totalPenalties = selfHarm + oppHarm;
+
+                  return (
+                    <div className='grid grid-cols-1 md:grid-cols-4 gap-3 text-xs'>
+                      <div className='text-center'>
+                        <div className='font-medium text-green-600'>Contribution</div>
+                        <div className='text-lg font-bold'>+{contribution.toFixed(1)}</div>
+                        <div className='text-muted-foreground'>
+                          Playoff-weighted VORP when started
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='font-medium text-red-600'>Self-Harm</div>
+                        <div className='text-lg font-bold'>-{selfHarm.toFixed(1)}</div>
+                        <div className='text-muted-foreground'>
+                          Points lost vs your best starter
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='font-medium text-orange-600'>Opponent-Harm</div>
+                        <div className='text-lg font-bold'>-{oppHarm.toFixed(1)}</div>
+                        <div className='text-muted-foreground'>
+                          Points above replacement by any opponent
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='font-medium text-blue-600'>Net Score</div>
+                        <div
+                          className={`text-lg font-bold ${selectedTxn.score >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                        >
+                          {selectedTxn.score >= 0 ? '+' : ''}
+                          {selectedTxn.score.toFixed(1)}
+                        </div>
+                        <div className='text-muted-foreground'>
+                          {contribution.toFixed(1)} - {totalPenalties.toFixed(1)}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Players Section */}
+              <div className='space-y-4'>
+                {selectedTxn.players.map(player => (
+                  <div
+                    key={player.playerId}
+                    className={`rounded-lg p-3 border ${
+                      player.role === 'add'
+                        ? 'bg-green-50 border-green-200'
+                        : 'bg-red-50 border-red-200'
+                    }`}
+                  >
+                    <div className='flex items-start justify-between mb-2'>
+                      <div>
+                        <h4 className='font-semibold'>{player.name}</h4>
+                        <div className='text-sm text-muted-foreground'>
+                          {player.position} • {player.role === 'add' ? 'Added' : 'Dropped'}
+                        </div>
+                      </div>
+                      <div
+                        className={`text-lg font-bold ${
+                          player.role === 'add' ? 'text-green-600' : 'text-red-600'
+                        }`}
+                      >
+                        {player.role === 'add'
+                          ? `+${player.forYou?.weightedPoints.toFixed(1) || '0.0'}`
+                          : `-${player.afterDrop?.oppHarmWeighted.toFixed(1) || '0.0'}`}
+                      </div>
+                    </div>
+
+                    {player.role === 'add' && player.forYou && (
+                      <div className='grid grid-cols-2 gap-4 text-sm'>
+                        <div>
+                          <div className='font-medium'>Times Started</div>
+                          <div className='text-lg'>{player.forYou.starts}</div>
+                        </div>
+                        <div>
+                          <div className='font-medium'>Total Points</div>
+                          <div className='text-lg'>{player.forYou.points.toFixed(1)}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {player.role === 'drop' && player.afterDrop && (
+                      <div className='grid grid-cols-2 gap-4 text-sm'>
+                        <div>
+                          <div className='font-medium'>Self-Harm</div>
+                          <div className='text-lg'>{player.afterDrop.selfHarm.toFixed(1)}</div>
+                        </div>
+                        <div>
+                          <div className='font-medium'>Opponent-Harm</div>
+                          <div className='text-lg'>{player.afterDrop.oppHarm.toFixed(1)}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Weekly Performance */}
+                    <div className='mt-3'>
+                      <h5 className='font-medium mb-2'>Weekly Performance</h5>
+                      <div className='flex gap-2 overflow-x-auto'>
+                        {player.weeklyPoints
+                          .filter(w => w.week <= currentNflWeek)
+                          .map(week => (
+                            <div
+                              key={week.week}
+                              className={`min-w-16 text-center p-2 rounded text-sm ${
+                                week.started
+                                  ? player.role === 'add'
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-red-500 text-white'
+                                  : 'bg-gray-200 text-gray-600'
+                              }`}
+                            >
+                              <div className='font-semibold'>W{week.week}</div>
+                              <div className='font-bold'>{week.points.toFixed(1)}</div>
+                              {week.started && <div className='text-xs'>✓</div>}
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// Full working transaction grading implementation from sidebar page
+async function computeTransactionGradesForStatsHub(
+  transactions: RawTxn[],
+  facts: Facts,
+  leagueId: string,
+  leagueName: string,
+  teamsMap: Map<string, TeamInfo>,
+  currentNflWeek: number = 3
+): Promise<GradeTxn[]> {
+  if (transactions.length === 0) {
+    return [];
+  }
+
+  const f = facts;
+  const graded: GradeTxn[] = [];
+
+  // Build player info lookup
+  const idToPlayer = new Map<string, { name: string; position: string }>();
+  transactions.forEach(t => {
+    [t.adds, t.drops].forEach(group => {
+      if (group && Array.isArray(group)) {
+        group.forEach(item => {
+          item.players?.forEach(p => {
+            idToPlayer.set(p.id, { name: p.fullName || p.id, position: p.position || 'UNK' });
+          });
+        });
+      }
+    });
+  });
+
+  // Week-specific replacement levels (calculated earlier)
+  const REPLACEMENT_LEVELS = {
+    1: { QB: 20.1, RB: 7.4, WR: 9.1, TE: 9.1, DEF: 9.8 },
+    2: { QB: 19.9, RB: 8.6, WR: 11.4, TE: 7.3, DEF: 10.6 },
+    3: { QB: 14.6, RB: 7.5, WR: 10.7, TE: 8.1, DEF: 13.3 },
+  } as const;
+
+  // FAAB Cost Configuration (Based on sensitivity analysis)
+  const FAAB_COST_COEFFICIENT = 0.25; // Optimal: 4% of budget = 1 VORP penalty (Moderate weighting)
+  const LEAGUE_FAAB_BUDGET = 200; // Standard FAAB budget for this league
+
+  const replacementLevels = new Map<string, number>();
+  [1, 2, 3].forEach(week => {
+    const levels = REPLACEMENT_LEVELS[week as keyof typeof REPLACEMENT_LEVELS];
+    Object.entries(levels).forEach(([position, level]) => {
+      replacementLevels.set(`${week}:${position}`, level);
+      if (position === 'DEF') {
+        replacementLevels.set(`${week}:DST`, level); // Handle DST alias
+      }
+    });
+    // Add FLEX as average of RB+WR
+    const flexLevel = (levels.RB + levels.WR) / 2;
+    replacementLevels.set(`${week}:FLEX`, flexLevel);
+  });
+
+  // Date to NFL week mapping (2025 season)
+  const getTransactionWeek = (iso: string): number => {
+    const date = new Date(iso);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    // For 2025 season (current season)
+    // Precise NFL week boundaries for accurate transaction timing
+    if (year === 2025) {
+      if (month <= 8) return 0; // Preseason (Jan-Aug 2025)
+
+      if (month === 9) {
+        // September 2025 - be precise about week boundaries
+        if (date.getDate() <= 5) return 0; // Before Week 1 (preseason)
+        if (date.getDate() <= 9) return 1; // Week 1 (Sept 5-9)
+        if (date.getDate() <= 16) return 2; // Week 2 (Sept 12-16)
+        if (date.getDate() <= 23) return 3; // Week 3 (Sept 19-23)
+        return 4; // Week 4 (Sept 26-30)
+      }
+
+      if (month === 10) return 6; // October 2025 = Week 5-8
+      if (month === 11) return 10; // November 2025 = Week 9-13
+      if (month === 12) return 15; // December 2025 = Week 14-18
+      return 1; // Default to early season
+    }
+
+    // For 2024 (preseason transactions)
+    if (year === 2024) {
+      return 0; // All 2024 dates are preseason for 2025 season
+    }
+
+    // Default fallback
+    return 0;
+  };
+
+  // Helper to calculate VORP for a player in a specific week
+  const calculateVORP = (playerId: string, week: number): number => {
+    const playerInfo = idToPlayer.get(playerId);
+    const position = playerInfo?.position?.toUpperCase() || 'FLEX';
+    const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
+    const replacementLevel = replacementLevels.get(`${week}:${position}`) || 0;
+    return points - replacementLevel;
+  };
+
+  // Only count completed weeks (1-3 currently)
+  const completedWeeks = [1, 2, 3].filter(w => w <= currentNflWeek);
+
+  // Helper function to process each roster's perspective in a trade
+  async function processTransactionForRoster(
+    t: RawTxn,
+    rosterId: number,
+    createdAt: string,
+    startWeek: number,
+    leagueId: string,
+    leagueName: string,
+    teamsMap: Map<string, TeamInfo>,
+    faabCost: number = 0
+  ): Promise<GradeTxn> {
+    const playersOut: GradeTxn['players'] = [];
+    let totalAddedVORP = 0;
+    let totalDroppedVORP = 0;
+
+    // For THIS roster, get their specific adds (what they received in the trade)
+    const addPairs: Array<{ rosterId: number; playerId: string }> = [];
+    if (t.adds && Array.isArray(t.adds)) {
+      t.adds
+        .filter(a => a.rosterId === rosterId) // Only adds for this specific roster
+        .forEach(a => a.players?.forEach(p => addPairs.push({ rosterId, playerId: p.id })));
+    }
+
+    // For THIS roster, get their specific drops (what they gave up in the trade)
+    const dropPairs: Array<{ rosterId: number; playerId: string }> = [];
+    if (t.drops && Array.isArray(t.drops)) {
+      t.drops
+        .filter(d => d.rosterId === rosterId) // Only drops for this specific roster
+        .forEach(d => d.players?.forEach(p => dropPairs.push({ rosterId, playerId: p.id })));
+    }
+
+    console.log(
+      `[Trade Split] Roster ${rosterId}: +${addPairs.length} adds, -${dropPairs.length} drops`
+    );
+
+    // Process added players (same logic as before)
+    for (const { rosterId: rId, playerId } of addPairs) {
+      const playerInfo = idToPlayer.get(playerId);
+      let playerVORP = 0;
+      let starts = 0;
+      let totalPoints = 0;
+
+      const weeklyPoints: Array<{
+        week: number;
+        points: number;
+        started: boolean;
+        weight: number;
+      }> = [];
+
+      for (const week of completedWeeks) {
+        if (week < startWeek) continue;
+
+        const starters = f.weekRosterStarters.get(`${week}:${rId}`);
+        const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
+        const started = starters?.has(playerId) || false;
+
+        console.log(
+          `[Add Debug] ${playerInfo?.name} W${week}: ${points}pts, started=${started} by roster ${rId}`
+        );
+
+        if (started) {
+          const vorp = calculateVORP(playerId, week);
+          playerVORP += playoffWeight(week) * vorp;
+          starts++;
+          totalPoints += points;
+        }
+
+        weeklyPoints.push({
+          week,
+          points,
+          started,
+          weight: playoffWeight(week),
+        });
+      }
+
+      totalAddedVORP += playerVORP;
+
+      playersOut.push({
+        playerId,
+        name: playerInfo?.name || playerId,
+        position: playerInfo?.position || 'UNK',
+        role: 'add' as const,
+        pre: { ppg: 0, pps: 0, total: 0 },
+        post: { poPts: 0 },
+        forYou: {
+          starts,
+          points: totalPoints,
+          weightedPoints: playerVORP,
+        },
+        weeklyPoints,
+      });
+    }
+
+    // Process dropped players (same logic as before)
+    for (const { rosterId: rId, playerId } of dropPairs) {
+      const playerInfo = idToPlayer.get(playerId);
+      let playerVORP = 0;
+
+      const weeklyPoints: Array<{
+        week: number;
+        points: number;
+        started: boolean;
+        weight: number;
+      }> = [];
+
+      for (const week of completedWeeks) {
+        if (week < startWeek) {
+          console.log(
+            `[Drop Debug] ${playerInfo?.name} W${week}: SKIPPED (before transaction week ${startWeek})`
+          );
+          continue;
+        }
+
+        const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
+        let started = false;
+        let starterRosterId = null;
+
+        for (const [rosterKey, starters] of f.weekRosterStarters.entries()) {
+          const [weekStr, rosterIdStr] = rosterKey.split(':');
+          if (Number(weekStr) === week && starters.has(playerId)) {
+            started = true;
+            starterRosterId = Number(rosterIdStr);
+            break;
+          }
+        }
+
+        if (started) {
+          const vorp = calculateVORP(playerId, week);
+          console.log(
+            `[Drop Debug] ${playerInfo?.name} W${week}: ${points}pts, VORP=${vorp.toFixed(1)}, started by roster ${starterRosterId}, transaction week was ${startWeek}`
+          );
+          playerVORP += playoffWeight(week) * vorp;
+        } else {
+          console.log(
+            `[Drop Debug] ${playerInfo?.name} W${week}: ${points}pts, NOT STARTED (transaction week was ${startWeek})`
+          );
+        }
+
+        weeklyPoints.push({
+          week,
+          points,
+          started,
+          weight: playoffWeight(week),
+        });
+      }
+
+      totalDroppedVORP += playerVORP;
+
+      playersOut.push({
+        playerId,
+        name: playerInfo?.name || playerId,
+        position: playerInfo?.position || 'UNK',
+        role: 'drop' as const,
+        pre: { ppg: 0, pps: 0, total: 0 },
+        post: { poPts: 0 },
+        afterDrop: {
+          selfHarm: 0,
+          oppHarm: playerVORP,
+          selfHarmWeighted: 0,
+          oppHarmWeighted: playerVORP,
+        },
+        weeklyPoints,
+      });
+    }
+
+    // Calculate raw VORP score (before cost adjustment)
+    const rawScore = totalAddedVORP - totalDroppedVORP;
+
+    // Calculate FAAB cost penalty using optimal weighting from sensitivity analysis
+    const faabPercentage = (faabCost / LEAGUE_FAAB_BUDGET) * 100;
+    const costPenalty = faabPercentage * FAAB_COST_COEFFICIENT;
+
+    // Final cost-adjusted score
+    const score = rawScore - costPenalty;
+
+    console.log(
+      `[FAAB Cost Debug] Transaction ${t.id}-${rosterId}: $${faabCost} (${faabPercentage.toFixed(1)}%) | Raw: ${rawScore.toFixed(1)} → Adj: ${score.toFixed(1)} | Penalty: ${costPenalty.toFixed(1)}`
+    );
+
+    const teamKey = `${leagueId}-${rosterId}`;
+    const teamInfo = teamsMap.get(teamKey);
+
+    return {
+      id: `${t.id}-${rosterId}`, // Make unique ID for each roster's perspective
+      type: t.type,
+      createdAt,
+      rosterIds: [rosterId], // Only this roster
+      leagueId,
+      leagueName,
+      teamName: teamInfo?.teamName,
+      faabCost, // FAAB spent on this transaction
+      rawScore, // Original VORP before cost adjustment
+      costPenalty, // FAAB penalty applied
+      players: playersOut,
+      score, // Final cost-adjusted score
+      grade: 'N/A', // Will be calculated later
+    };
+  }
+
+  // Process each completed transaction
+  const validTransactions = transactions.filter(t => t.status === 'complete');
+
+  for (const t of validTransactions) {
+    // Parse transaction date - API now returns proper Sleeper dates
+    const createdAt =
+      typeof t.createdAt === 'string' ? t.createdAt : new Date(t.createdAt).toISOString();
+    const transactionWeek = getTransactionWeek(createdAt);
+
+    // Extract FAAB cost from transaction settings
+    const faabCost = t.settings?.waiver_bid || 0; // Default to 0 for free agents/trades
+
+    console.log(`[Date Debug] Transaction ${t.id}: ${createdAt} (Week ${transactionWeek})`);
+    console.log(`[FAAB Debug] Transaction ${t.id}: FAAB cost = $${faabCost}, Type = ${t.type}`);
+
+    // Start counting from Week 1 for preseason transactions, otherwise from transaction week
+    const startWeek = Math.max(transactionWeek, 1);
+
+    console.log(
+      `[Transaction Debug] ID ${t.id}: Date ${createdAt}, Week ${transactionWeek}, Start Week ${startWeek}`
+    );
+
+    // 🔄 TRADE PROCESSING: Create separate transactions for each owner in a trade
+    if (t.type === 'trade') {
+      // Identify all unique roster IDs involved in this trade
+      const uniqueRosterIds = new Set([
+        ...(t.adds?.map(a => a.rosterId) || []),
+        ...(t.drops?.map(d => d.rosterId) || []),
+      ]);
+
+      console.log(`[Trade Split] Transaction ${t.id}: ${uniqueRosterIds.size} owners involved`);
+      console.log(`[Trade Split] Unique roster IDs:`, Array.from(uniqueRosterIds));
+
+      // Create separate transaction for each owner
+      for (const rosterId of uniqueRosterIds) {
+        const gradedTransaction = await processTransactionForRoster(
+          t,
+          rosterId,
+          createdAt,
+          startWeek,
+          leagueId,
+          leagueName,
+          teamsMap,
+          faabCost // Pass FAAB cost (0 for trades)
+        );
+        graded.push(gradedTransaction);
+      }
+
+      // Skip the regular processing for trades - we've handled it above
+      continue;
+    }
+
+    // Regular (non-trade) transaction processing - use the same helper for consistency
+    const rosterId = t.rosterIds?.[0];
+    if (rosterId) {
+      const gradedTransaction = await processTransactionForRoster(
+        t,
+        rosterId,
+        createdAt,
+        startWeek,
+        leagueId,
+        leagueName,
+        teamsMap,
+        faabCost // Pass FAAB cost for waiver/free agent transactions
+      );
+      graded.push(gradedTransaction);
+    }
+  }
+
+  return graded;
+}
+
+// Transaction Detail Modal Component
+interface TransactionDetailModalProps {
+  transaction: GradeTxn;
+  isOpen: boolean;
+  onClose: () => void;
+  currentNflWeek: number;
+}
+
+function TransactionDetailModal({
+  transaction,
+  isOpen,
+  onClose,
+  currentNflWeek,
+}: TransactionDetailModalProps) {
+  if (!isOpen) return null;
+
+  const addedPlayers = transaction.players.filter(p => p.role === 'add');
+  const droppedPlayers = transaction.players.filter(p => p.role === 'drop');
+
+  return (
+    <div
+      className='fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4'
+      onClick={onClose}
+    >
+      <div
+        className='bg-white dark:bg-gray-800 rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden'
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className='sticky top-0 bg-white dark:bg-gray-800 border-b p-6 flex items-center justify-between'>
+          <div className='flex items-center gap-4'>
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                transaction.grade === 'A+'
+                  ? 'bg-green-500 text-white'
+                  : transaction.grade === 'A'
+                    ? 'bg-green-400 text-white'
+                    : transaction.grade === 'B'
+                      ? 'bg-blue-400 text-white'
+                      : transaction.grade === 'C'
+                        ? 'bg-yellow-400 text-white'
+                        : transaction.grade === 'D'
+                          ? 'bg-orange-400 text-white'
+                          : 'bg-red-500 text-white'
+              }`}
+            >
+              {transaction.grade}
+            </span>
+
+            <div>
+              <h2 className='text-2xl font-bold'>{transaction.teamName}</h2>
+              <div className='flex items-center gap-2 text-sm text-gray-500'>
+                <span className='capitalize'>{transaction.type}</span>
+                <span>•</span>
+                <span>{transaction.leagueName}</span>
+                <span>•</span>
+                <span>{new Date(transaction.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+
+            <div className='ml-auto text-right'>
+              <div
+                className={`text-3xl font-bold font-mono ${
+                  transaction.score >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
+                {transaction.score >= 0 ? '+' : ''}
+                {transaction.score.toFixed(1)}
+              </div>
+              <div className='text-sm text-gray-500'>Cost-Adjusted VORP</div>
+
+              {/* Show FAAB cost and penalty if applicable */}
+              {transaction.faabCost > 0 && (
+                <div className='mt-2 text-xs text-gray-400'>
+                  <div>
+                    Raw VORP: {transaction.rawScore >= 0 ? '+' : ''}
+                    {transaction.rawScore.toFixed(1)}
+                  </div>
+                  <div>
+                    FAAB Cost: ${transaction.faabCost} (
+                    {((transaction.faabCost / 200) * 100).toFixed(1)}%)
+                  </div>
+                  <div className='text-red-400'>
+                    Cost Penalty: -{transaction.costPenalty.toFixed(1)}
+                  </div>
+                </div>
+              )}
+
+              {transaction.faabCost === 0 && (
+                <div className='mt-1 text-xs text-green-400'>Free Agent / Trade</div>
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg'
+          >
+            <X className='h-6 w-6' />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className='p-6 overflow-y-auto max-h-[calc(90vh-120px)]'>
+          <div className='space-y-8'>
+            {/* Added Players Section */}
+            {addedPlayers.length > 0 && (
+              <div>
+                <h3 className='text-xl font-bold text-green-700 mb-4 flex items-center gap-2'>
+                  <div className='w-3 h-3 bg-green-500 rounded-full'></div>
+                  Added Players ({addedPlayers.length})
+                </h3>
+                <div className='grid gap-4'>
+                  {addedPlayers.map(player => (
+                    <div
+                      key={player.playerId}
+                      className='border border-green-200 rounded-lg p-4 bg-green-50/50'
+                    >
+                      <div className='flex items-start justify-between mb-3'>
+                        <div>
+                          <h4 className='font-bold text-lg'>{player.name}</h4>
+                          <div className='text-green-700 font-medium'>{player.position}</div>
+                        </div>
+                        <div className='text-right'>
+                          <div className='text-2xl font-bold text-green-600 font-mono'>
+                            +{player.forYou?.weightedPoints.toFixed(1) || '0.0'}
+                          </div>
+                          <div className='text-xs text-green-700'>VORP Contribution</div>
+                        </div>
+                      </div>
+
+                      <div className='grid grid-cols-2 gap-4 mb-4 text-sm'>
+                        <div className='bg-white/50 p-3 rounded'>
+                          <div className='font-semibold text-gray-700'>Times Started</div>
+                          <div className='text-xl font-bold text-green-600'>
+                            {player.forYou?.starts || 0}
+                          </div>
+                        </div>
+                        <div className='bg-white/50 p-3 rounded'>
+                          <div className='font-semibold text-gray-700'>Total Points</div>
+                          <div className='text-xl font-bold text-green-600'>
+                            {player.forYou?.points.toFixed(1) || '0.0'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Weekly Breakdown */}
+                      <div>
+                        <h5 className='font-semibold mb-2'>Weekly Performance</h5>
+                        <div className='flex gap-2 overflow-x-auto'>
+                          {player.weeklyPoints
+                            .filter(w => w.week <= currentNflWeek)
+                            .map(week => (
+                              <div
+                                key={week.week}
+                                className={`min-w-16 text-center p-2 rounded text-sm ${
+                                  week.started
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-gray-200 text-gray-600'
+                                }`}
+                              >
+                                <div className='font-semibold'>W{week.week}</div>
+                                <div className='font-bold'>{week.points.toFixed(1)}</div>
+                                {week.started && <div className='text-xs'>✓</div>}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Dropped Players Section */}
+            {droppedPlayers.length > 0 && (
+              <div>
+                <h3 className='text-xl font-bold text-red-700 mb-4 flex items-center gap-2'>
+                  <div className='w-3 h-3 bg-red-500 rounded-full'></div>
+                  Dropped Players ({droppedPlayers.length})
+                </h3>
+                <div className='grid gap-4'>
+                  {droppedPlayers.map(player => (
+                    <div
+                      key={player.playerId}
+                      className='border border-red-200 rounded-lg p-4 bg-red-50/50'
+                    >
+                      <div className='flex items-start justify-between mb-3'>
+                        <div>
+                          <h4 className='font-bold text-lg'>{player.name}</h4>
+                          <div className='text-red-700 font-medium'>{player.position}</div>
+                        </div>
+                        <div className='text-right'>
+                          <div className='text-2xl font-bold text-red-600 font-mono'>
+                            -{player.afterDrop?.oppHarmWeighted.toFixed(1) || '0.0'}
+                          </div>
+                          <div className='text-xs text-red-700'>Drop Penalty</div>
+                        </div>
+                      </div>
+
+                      {/* Penalty Breakdown */}
+                      <div className='bg-red-100 dark:bg-red-900/30 p-3 rounded mb-4'>
+                        <h5 className='font-semibold text-red-800 mb-2'>Penalty Analysis</h5>
+                        <div className='grid grid-cols-2 gap-4 text-sm'>
+                          <div>
+                            <div className='text-red-700'>Self-Harm</div>
+                            <div className='font-bold'>
+                              {player.afterDrop?.selfHarm.toFixed(1) || '0.0'}
+                            </div>
+                            <div className='text-xs text-red-600'>Lost starter value</div>
+                          </div>
+                          <div>
+                            <div className='text-red-700'>Opponent-Harm</div>
+                            <div className='font-bold'>
+                              {player.afterDrop?.oppHarm.toFixed(1) || '0.0'}
+                            </div>
+                            <div className='text-xs text-red-600'>VORP to opponents</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Weekly Breakdown */}
+                      <div>
+                        <h5 className='font-semibold mb-2'>Weekly Performance (After Drop)</h5>
+                        <div className='flex gap-2 overflow-x-auto'>
+                          {player.weeklyPoints
+                            .filter(w => w.week <= currentNflWeek)
+                            .map(week => (
+                              <div
+                                key={week.week}
+                                className={`min-w-16 text-center p-2 rounded text-sm ${
+                                  week.started
+                                    ? 'bg-red-500 text-white'
+                                    : 'bg-gray-200 text-gray-600'
+                                }`}
+                              >
+                                <div className='font-semibold'>W{week.week}</div>
+                                <div className='font-bold'>{week.points.toFixed(1)}</div>
+                                {week.started && <div className='text-xs'>✓ started</div>}
+                              </div>
+                            ))}
+                        </div>
+                        <div className='text-xs text-gray-500 mt-2'>
+                          ✓ = Started by any team after drop
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Summary */}
+            <div className='border-t pt-4'>
+              <div className='bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg'>
+                <h4 className='font-semibold mb-2'>Transaction Summary</h4>
+                <div className='grid grid-cols-3 gap-4 text-center text-sm'>
+                  <div>
+                    <div className='text-2xl font-bold text-green-600'>
+                      +
+                      {addedPlayers
+                        .reduce((sum, p) => sum + (p.forYou?.weightedPoints || 0), 0)
+                        .toFixed(1)}
+                    </div>
+                    <div className='text-gray-600'>Added VORP</div>
+                  </div>
+                  <div>
+                    <div className='text-2xl font-bold text-red-600'>
+                      -
+                      {droppedPlayers
+                        .reduce((sum, p) => sum + (p.afterDrop?.oppHarmWeighted || 0), 0)
+                        .toFixed(1)}
+                    </div>
+                    <div className='text-gray-600'>Drop Penalty</div>
+                  </div>
+                  <div>
+                    <div
+                      className={`text-2xl font-bold ${transaction.score >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                    >
+                      {transaction.score >= 0 ? '+' : ''}
+                      {transaction.score.toFixed(1)}
+                    </div>
+                    <div className='text-gray-600'>Cost-Adjusted VORP</div>
+
+                    {/* FAAB Cost Breakdown */}
+                    {transaction.faabCost > 0 && (
+                      <div className='mt-2 text-sm text-gray-500'>
+                        <div>
+                          Raw: {transaction.rawScore >= 0 ? '+' : ''}
+                          {transaction.rawScore.toFixed(1)}
+                        </div>
+                        <div>FAAB: ${transaction.faabCost}</div>
+                        <div className='text-red-500'>
+                          Penalty: -{transaction.costPenalty.toFixed(1)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function StatsContent({ dataset, searchParams }: StatsContentProps) {
   console.log('[DEBUG] StatsContent: received dataset', {
     currentWeek: dataset.currentWeek,
@@ -347,8 +2424,17 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
   );
 
   const [currentView, setCurrentView] = useState<
-    'team' | 'league' | 'schedule' | 'trends' | 'scatter'
-  >((searchParams.view as 'team' | 'league' | 'schedule' | 'trends' | 'scatter') || 'team');
+    'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit'
+  >(
+    (searchParams.view as
+      | 'team'
+      | 'league'
+      | 'schedule'
+      | 'trends'
+      | 'scatter'
+      | 'transactions'
+      | 'start-sit') || 'team'
+  );
 
   const [selectedWeek, setSelectedWeek] = useState<string>(searchParams.week || 'season');
 
@@ -4517,7 +6603,16 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
       <Tabs
         value={currentView}
         onValueChange={v =>
-          setCurrentView(v as 'team' | 'league' | 'schedule' | 'trends' | 'scatter')
+          setCurrentView(
+            v as
+              | 'team'
+              | 'league'
+              | 'schedule'
+              | 'trends'
+              | 'scatter'
+              | 'transactions'
+              | 'start-sit'
+          )
         }
       >
         <TabsList>
@@ -4526,6 +6621,8 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
           <TabsTrigger value='schedule'>Schedule Analysis</TabsTrigger>
           <TabsTrigger value='trends'>Performance Trends</TabsTrigger>
           <TabsTrigger value='scatter'>Scatter Analysis</TabsTrigger>
+          <TabsTrigger value='transactions'>Transaction Analysis</TabsTrigger>
+          <TabsTrigger value='start-sit'>Start/Sit Efficiency</TabsTrigger>
         </TabsList>
 
         <TabsContent value='team'>
@@ -5541,6 +7638,14 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
 
         <TabsContent value='scatter'>
           <ScatterAnalysis />
+        </TabsContent>
+
+        <TabsContent value='transactions'>
+          <TransactionAnalysis key='transaction-analysis' />
+        </TabsContent>
+
+        <TabsContent value='start-sit'>
+          <StartSitEfficiencyTab />
         </TabsContent>
       </Tabs>
     </div>

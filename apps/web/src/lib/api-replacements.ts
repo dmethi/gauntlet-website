@@ -186,7 +186,7 @@ export async function getTransactionsByWeek(leagueId: string, week: number) {
       adds: transformAddsDrops(t.adds),
       drops: transformAddsDrops(t.drops),
       rosterIds: t.roster_ids,
-      createdAt: new Date(t.created * 1000), // Convert Unix timestamp
+      createdAt: new Date(t.created), // Sleeper timestamps are already in milliseconds
       metadata: t.metadata,
       settings: t.settings || {},
     };
@@ -259,7 +259,7 @@ export async function getAllTransactionsByLeague(leagueId: string) {
           adds: transformAddsDrops(t.adds),
           drops: transformAddsDrops(t.drops),
           rosterIds: t.roster_ids,
-          createdAt: new Date(t.created * 1000), // Convert Unix timestamp
+          createdAt: new Date(t.created), // Sleeper timestamps are already in milliseconds
           metadata: t.metadata,
           settings: t.settings || {},
         };

@@ -196,6 +196,8 @@ function SidebarNavigationWithSearchParams({
         <span className='flex-1 text-left'>Draft Analysis</span>
       </Link>
 
+      {/* Transaction Analysis */}
+
       {/* Theme Toggle */}
       <div className='pt-2'>
         <ThemeToggle />

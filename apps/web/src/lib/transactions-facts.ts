@@ -17,6 +17,7 @@ type ApiMatchup = {
     starters: string[];
     players: string[];
     playersPoints: Record<string, number>;
+    starterActualPoints?: Record<string, number>;
   }>;
 };
 
@@ -32,9 +33,18 @@ export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promi
     try {
       const res = await fetch(`/api/matchups/${leagueId}/${week}`);
       if (!res.ok) {
+        if (week <= 4) console.log(`[buildFacts] Week ${week} failed: ${res.status}`);
         continue;
       }
       const json = (await res.json()) as { matchups: ApiMatchup[] };
+
+      if (week <= 4) {
+        console.log(`[buildFacts] Week ${week} success:`, {
+          matchupsCount: json.matchups?.length || 0,
+          hasMatchups: !!json.matchups,
+          structure: json.matchups?.[0] ? Object.keys(json.matchups[0]) : 'no matchups',
+        });
+      }
 
       const startersPtsByPos: Record<string, number[]> = {};
 
@@ -48,18 +58,35 @@ export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promi
         for (const t of m.teams) {
           weekRosterPlayers.set(`${week}:${t.rosterId}`, new Set(t.players.map(String)));
           weekRosterStarters.set(`${week}:${t.rosterId}`, new Set(t.starters.map(String)));
-          for (const pid of t.players) {
-            playerWeekPoints.set(
-              `${week}:${String(pid)}`,
-              Number(t.playersPoints[String(pid)] || 0)
+
+          // FIX: Use starterActualPoints instead of playersPoints
+          const playerPoints = t.starterActualPoints || t.playersPoints || {};
+
+          // Debug logging for Drake Maye specifically
+          if (t.starters.includes('11564')) {
+            console.log(
+              `[buildFacts] Week ${week}: Drake Maye (11564) started by roster ${t.rosterId}`
             );
+            console.log(`[buildFacts] Drake Maye points: ${playerPoints['11564'] || 'N/A'}`);
+          }
+
+          for (const pid of t.players) {
+            const points = Number(playerPoints[String(pid)] || 0);
+            playerWeekPoints.set(`${week}:${String(pid)}`, points);
             const k = `${t.rosterId}:${String(pid)}`;
             if (!rosterPlayerWeeks.has(k)) rosterPlayerWeeks.set(k, new Set<number>());
             rosterPlayerWeeks.get(k)!.add(week);
+
+            // Debug Drake Maye specifically
+            if (String(pid) === '11564' && points > 0) {
+              console.log(
+                `[buildFacts] Week ${week}: Drake Maye (${pid}) points set to ${points} for roster ${t.rosterId}`
+              );
+            }
           }
           // Store all starter points for position-specific replacement calculation
           for (const pid of t.starters) {
-            const pts = Number(t.playersPoints[String(pid)] || 0);
+            const pts = Number(playerPoints[String(pid)] || 0);
             const rkey = `${week}:ALL_STARTERS`;
             if (!startersPtsByPos[rkey]) startersPtsByPos[rkey] = [];
             startersPtsByPos[rkey].push(pts);
