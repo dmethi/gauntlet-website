@@ -226,17 +226,17 @@ export async function GET(
     // Calculate aggregate matchup game state for transparency
     const allPlayers = [...team1Players, ...team2Players];
     const gameStates = Array.from(new Set(allPlayers.map(p => p.nflTeam).filter(Boolean)))
-      .map(team => nflGameStates.get(team))
-      .filter(Boolean);
+      .map(team => team ? nflGameStates.get(team) : null)
+      .filter((state): state is NFLGameState => state !== null && state !== undefined);
 
     const avgMinutesRemaining =
       gameStates.length > 0
-        ? gameStates.reduce((sum, state) => sum + state.minutesRemaining, 0) / gameStates.length
+        ? gameStates.reduce((sum, state) => sum + (state?.minutesRemaining ?? 60), 0) / gameStates.length
         : 60;
 
     const avgGameProgress =
       gameStates.length > 0
-        ? gameStates.reduce((sum, state) => sum + state.gameProgress, 0) / gameStates.length
+        ? gameStates.reduce((sum, state) => sum + (state?.gameProgress ?? 0), 0) / gameStates.length
         : 0;
 
     const response = {
@@ -262,11 +262,11 @@ export async function GET(
           averageMinutesRemaining: avgMinutesRemaining,
           averageGameProgress: avgGameProgress,
           gameStates: gameStates.map(state => ({
-            team: state.team,
-            state: state.state,
-            gameDescription: state.gameDescription,
-            minutesRemaining: state.minutesRemaining,
-            gameProgress: state.gameProgress,
+            team: state?.team ?? 'UNK',
+            state: state?.state ?? 'pre',
+            gameDescription: state?.gameDescription ?? 'Scheduled',
+            minutesRemaining: state?.minutesRemaining ?? 60,
+            gameProgress: state?.gameProgress ?? 0,
           })),
         },
       },
