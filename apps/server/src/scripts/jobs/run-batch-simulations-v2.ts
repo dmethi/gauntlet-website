@@ -22,9 +22,132 @@ interface LeagueProjection {
   breakdown: Record<string, number>;
 }
 
-// SIMPLIFIED: Let's just use the SleeperAPIService projections directly for now
-// Since the matchups page works, the issue is not with projection calculation method
-// but with ensuring we use the same data source
+/**
+ * EXACT SAME comprehensive calculation as league odds page
+ * Calculate fantasy points for a single player using league scoring settings
+ */
+function calculateLeagueProjection(
+  rawProjection: any,
+  scoringSettings: ScoringSettings
+): LeagueProjection {
+  const breakdown: Record<string, number> = {};
+  let totalPoints = 0;
+
+  // Helper function to add points from a stat
+  const addStat = (statKey: string, settingKey: keyof ScoringSettings, statValue?: number) => {
+    const settingValue = scoringSettings[settingKey];
+    if (settingValue !== undefined && statValue !== undefined && statValue !== 0) {
+      const points = statValue * settingValue;
+      breakdown[statKey] = points;
+      totalPoints += points;
+    }
+  };
+
+  // COMPREHENSIVE scoring - EXACT SAME as apps/web/src/lib/calculate-league-projections.ts
+
+  // Passing stats
+  addStat('pass_yd', 'pass_yd', rawProjection.pass_yd);
+  addStat('pass_td', 'pass_td', rawProjection.pass_td);
+  addStat('pass_int', 'pass_int', rawProjection.pass_int);
+  addStat('pass_2pt', 'pass_2pt', rawProjection.pass_2pt);
+  addStat('pass_cmp', 'pass_cmp', rawProjection.pass_cmp);
+  addStat('pass_inc', 'pass_inc', rawProjection.pass_inc);
+  addStat('pass_cmp_40p', 'pass_cmp_40p', rawProjection.pass_cmp_40p);
+  addStat('pass_fd', 'pass_fd', rawProjection.pass_fd);
+
+  // Rushing stats
+  addStat('rush_yd', 'rush_yd', rawProjection.rush_yd);
+  addStat('rush_td', 'rush_td', rawProjection.rush_td);
+  addStat('rush_2pt', 'rush_2pt', rawProjection.rush_2pt);
+  addStat('rush_40p', 'rush_40p', rawProjection.rush_40p);
+  addStat('rush_fd', 'rush_fd', rawProjection.rush_fd);
+
+  // Receiving stats
+  addStat('rec_yd', 'rec_yd', rawProjection.rec_yd);
+  addStat('rec_td', 'rec_td', rawProjection.rec_td);
+  addStat('rec', 'rec', rawProjection.rec);
+  addStat('rec_2pt', 'rec_2pt', rawProjection.rec_2pt);
+  addStat('rec_40p', 'rec_40p', rawProjection.rec_40p);
+  addStat('rec_fd', 'rec_fd', rawProjection.rec_fd);
+
+  // Fumbles
+  addStat('fum', 'fum', rawProjection.fum);
+  addStat('fum_lost', 'fum_lost', rawProjection.fum_lost);
+  addStat('fum_rec', 'fum_rec', rawProjection.fum_rec);
+  addStat('fum_rec_td', 'fum_rec_td', rawProjection.fum_rec_td);
+
+  // Defense stats - ALL the categories from the comprehensive calculation
+  addStat('pts_allow_0', 'pts_allow_0', rawProjection.pts_allow_0);
+  addStat('pts_allow_1_6', 'pts_allow_1_6', rawProjection.pts_allow_1_6);
+  addStat('pts_allow_7_13', 'pts_allow_7_13', rawProjection.pts_allow_7_13);
+  addStat('pts_allow_14_20', 'pts_allow_14_20', rawProjection.pts_allow_14_20);
+  addStat('pts_allow_21_27', 'pts_allow_21_27', rawProjection.pts_allow_21_27);
+  addStat('pts_allow_28_34', 'pts_allow_28_34', rawProjection.pts_allow_28_34);
+  addStat('pts_allow_35p', 'pts_allow_35p', rawProjection.pts_allow_35p);
+  addStat('pts_allow', 'pts_allow', rawProjection.pts_allow);
+
+  addStat('yds_allow_0_100', 'yds_allow_0_100', rawProjection.yds_allow_0_100);
+  addStat('yds_allow_100_199', 'yds_allow_100_199', rawProjection.yds_allow_100_199);
+  addStat('yds_allow_200_299', 'yds_allow_200_299', rawProjection.yds_allow_200_299);
+  addStat('yds_allow_300_349', 'yds_allow_300_349', rawProjection.yds_allow_300_349);
+  addStat('yds_allow_350_399', 'yds_allow_350_399', rawProjection.yds_allow_350_399);
+  addStat('yds_allow_400_449', 'yds_allow_400_449', rawProjection.yds_allow_400_449);
+  addStat('yds_allow_450_499', 'yds_allow_450_499', rawProjection.yds_allow_450_499);
+  addStat('yds_allow_500_549', 'yds_allow_500_549', rawProjection.yds_allow_500_549);
+  addStat('yds_allow_550p', 'yds_allow_550p', rawProjection.yds_allow_550p);
+  addStat('yds_allow', 'yds_allow', rawProjection.yds_allow);
+
+  // Defense stats (using Sleeper's actual keys)
+  addStat('int', 'int', rawProjection.int);
+  addStat('sack', 'sack', rawProjection.sack);
+  addStat('fum_rec', 'def_st_fum_rec', rawProjection.fum_rec);
+  addStat('ff', 'def_st_ff', rawProjection.ff);
+  addStat('def_td', 'def_td', rawProjection.def_td);
+  addStat('def_st_td', 'def_st_td', rawProjection.def_st_td);
+  addStat('blk_kick', 'blk_kick', rawProjection.blk_kick);
+  addStat('def_2pt', 'def_2pt', rawProjection.def_2pt);
+  addStat('def_3_and_out', 'def_3_and_out', rawProjection.def_3_and_out);
+  addStat('def_4_and_stop', 'def_4_and_stop', rawProjection.def_4_and_stop);
+  addStat('def_fum_td', 'fum_rec_td', rawProjection.def_fum_td);
+  addStat('pass_int_td', 'pass_int_td', rawProjection.pass_int_td);
+  addStat('tkl_loss', 'tkl_loss', rawProjection.tkl_loss);
+
+  // Kicking stats
+  addStat('xpm', 'xpm', rawProjection.xpm);
+  addStat('xpmiss', 'xpmiss', rawProjection.xpmiss);
+  addStat('fgm_0_19', 'fgm_0_19', rawProjection.fgm_0_19);
+  addStat('fgm_20_29', 'fgm_20_29', rawProjection.fgm_20_29);
+  addStat('fgm_30_39', 'fgm_30_39', rawProjection.fgm_30_39);
+  addStat('fgm_40_49', 'fgm_40_49', rawProjection.fgm_40_49);
+  addStat('fgm_50_59', 'fgm_50_59', rawProjection.fgm_50_59);
+  addStat('fgm_60p', 'fgm_60p', rawProjection.fgm_60p);
+  addStat('fgmiss', 'fgmiss', rawProjection.fgmiss);
+
+  return {
+    playerId: rawProjection.player_id || '',
+    points: totalPoints,
+    breakdown,
+  };
+}
+
+/**
+ * Calculate projections for multiple players - EXACT SAME as league odds page
+ */
+function calculateCorrectLeagueProjections(
+  rawProjections: any[],
+  scoringSettings: ScoringSettings
+): Record<string, LeagueProjection> {
+  const result: Record<string, LeagueProjection> = {};
+
+  for (const rawProjection of rawProjections) {
+    const playerId = rawProjection.player_id;
+    if (playerId) {
+      result[playerId] = calculateLeagueProjection(rawProjection, scoringSettings);
+    }
+  }
+
+  return result;
+}
 
 // Types
 interface SimulationOptions {
@@ -243,32 +366,14 @@ async function buildLineupPlayers(
         ? Number(matchupData.players_points[playerId]) || 0
         : undefined;
 
-    // NEW: Apply MINUTES-BASED projection adjustments (the key fix!)
-    let adjustedProjection = fullProjection;
-    const nflTeam = normalizeNflTeamAbbreviation(player.team);
-    const gameState = nflTeam && nflGameStates ? nflGameStates.get(nflTeam) : null;
-
-    if (isLive && gameState) {
-      if (gameState.state === 'post') {
-        // Game is over - NO projection remaining
-        adjustedProjection = 0;
-      } else if (gameState.state === 'in') {
-        // Game in progress - projection proportional to minutes remaining
-        const projectionPerMinute = fullProjection / 60;
-        adjustedProjection = projectionPerMinute * gameState.minutesRemaining;
-      }
-
-      // Log significant adjustments only
-      if (gameState.state === 'post' && fullProjection > 5) {
-        console.log(`📊 ${player.full_name}: ${fullProjection.toFixed(1)} → 0.0 pts (final)`);
-      }
-    }
+    // SIMPLIFIED: Just use the same logic as working matchups page - no custom adjustments
+    const adjustedProjection = fullProjection;
 
     lineup.push({
       playerId,
       playerName: `${player.first_name} ${player.last_name}`,
       position: player.position,
-      projection: Math.max(0.1, adjustedProjection), // Use adjusted projection
+      projection: adjustedProjection, // Use exact adjusted projection (can be 0 for completed games)
       team: player.team,
       nflTeam: normalizeNflTeamAbbreviation(player.team),
       currentScore: currentScore,

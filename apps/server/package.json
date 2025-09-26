@@ -14,7 +14,7 @@
     "ingest:all": "tsx src/scripts/data-ingestion/index.ts",
     "ingest:current": "tsx src/scripts/ingest-current-season.ts",
     "superlatives:compute": "tsx src/scripts/analysis/compute-season-superlatives.ts",
-    "live-sims": "tsx src/scripts/jobs/run-live-sims.ts",
+    "live-sims": "tsx src/scripts/jobs/comprehensive-live-snapshot.ts",
     "batch-sims": "tsx src/scripts/jobs/run-batch-simulations.ts",
     "batch-sims:optimized": "tsx src/scripts/jobs/run-batch-simulations-optimized.ts",
     "regression:matchup": "tsx src/scripts/regression/run-matchup-sim.ts",
