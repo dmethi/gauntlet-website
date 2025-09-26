@@ -51,13 +51,13 @@ async function fetchEspnScoreboard() {
  */
 function buildNflGameStateMap(espnData: any): Map<string, any> {
   const gameStates = new Map();
-  
+
   if (!espnData?.events) return gameStates;
 
   for (const event of espnData.events) {
     const competition = event?.competitions?.[0];
     const status = competition?.status?.type;
-    
+
     if (!competition?.competitors || !status) continue;
 
     // Calculate actual game progress based on minutes
@@ -65,7 +65,7 @@ function buildNflGameStateMap(espnData: any): Map<string, any> {
     let minutesElapsed = 0;
     let minutesRemaining = 60; // NFL game is 60 minutes
     let gameDescription = status.description || 'Unknown';
-    
+
     if (status.state === 'pre') {
       gameProgress = 0;
       minutesElapsed = 0;
@@ -77,15 +77,15 @@ function buildNflGameStateMap(espnData: any): Map<string, any> {
     } else if (status.state === 'in') {
       const period = status.period || 1;
       const clock = status.clock || 0; // seconds remaining in period
-      
+
       // NFL: 4 quarters, 15 minutes (900 seconds) each
       const totalGameSeconds = 4 * 15 * 60; // 3600 seconds
       const elapsedSeconds = (period - 1) * 15 * 60 + (15 * 60 - clock);
-      
+
       gameProgress = Math.min(Math.max(elapsedSeconds / totalGameSeconds, 0), 1);
       minutesElapsed = elapsedSeconds / 60;
       minutesRemaining = Math.max(0, 60 - minutesElapsed);
-      
+
       // Enhanced description for live games
       const clockMinutes = Math.floor(clock / 60);
       const clockSeconds = clock % 60;
@@ -116,8 +116,10 @@ function buildNflGameStateMap(espnData: any): Map<string, any> {
  * Kept for compatibility but should not be used
  */
 function computeGameProgressFromEspn(espnData: any): number {
-  console.warn('⚠️ DEPRECATED: computeGameProgressFromEspn uses only first game - use buildNflGameStateMap instead');
-  
+  console.warn(
+    '⚠️ DEPRECATED: computeGameProgressFromEspn uses only first game - use buildNflGameStateMap instead'
+  );
+
   if (!espnData?.events?.[0]?.competitions?.[0]?.status?.type) {
     return 0.5; // Default fallback
   }
@@ -237,7 +239,7 @@ async function buildLineupPlayers(
     let adjustedProjection = fullProjection;
     const nflTeam = normalizeNflTeamAbbreviation(player.team);
     const gameState = nflTeam && nflGameStates ? nflGameStates.get(nflTeam) : null;
-    
+
     if (isLive && gameState) {
       if (gameState.state === 'post') {
         // Game is over - NO projection remaining
@@ -250,10 +252,10 @@ async function buildLineupPlayers(
         // Pre-game - full projection remains
         adjustedProjection = fullProjection;
       }
-      
-      // Log projection adjustment for transparency
-      if (gameState.state === 'post' || gameState.state === 'in') {
-        console.log(`📊 ${player.full_name} (${nflTeam}): ${fullProjection.toFixed(1)} → ${adjustedProjection.toFixed(1)} pts (${gameState.state}, ${gameState.minutesRemaining.toFixed(1)}m left)`);
+
+      // Simplified logging for completed games only
+      if (gameState.state === 'post' && fullProjection > 5) {
+        console.log(`📊 ${player.full_name}: ${fullProjection.toFixed(1)} → 0.0 pts (final)`);
       }
     }
 
@@ -292,7 +294,7 @@ function calculateProjectedPoints(
     if (multiplier !== 0 && multiplier != null) {
       // Check if we have projection data for this scoring category
       if (projection[category] !== undefined && projection[category] !== null) {
-        const categoryPoints = projection[category] * multiplier;
+        const categoryPoints = Number(projection[category]) * Number(multiplier);
         points += categoryPoints;
         breakdown[category] =
           `${projection[category]} * ${multiplier} = ${categoryPoints.toFixed(2)}`;
@@ -392,7 +394,7 @@ async function simulateMatchup(
       // Check exact matches
       console.log(`\n🔍 ========== PLAYER ID MATCHING ==========`);
       let found = 0;
-      const missing = [];
+      const missing: string[] = [];
 
       for (const starterId of allStarters.slice(0, 10)) {
         // Check first 10
@@ -423,7 +425,7 @@ async function simulateMatchup(
     if (options.isLive) {
       console.log('🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...');
       const espnData = await fetchEspnScoreboard();
-      
+
       // Build game state map instead of single progress value
       nflGameStates = buildNflGameStateMap(espnData);
 
@@ -440,12 +442,18 @@ async function simulateMatchup(
         }
       }
 
-      // Show NFL game states instead of single progress
-      console.log('📊 NFL Game States:');
-      for (const [team, state] of nflGameStates.entries()) {
-        console.log(`   ${team}: ${state.state} (${state.minutesElapsed.toFixed(1)}m elapsed, ${state.minutesRemaining.toFixed(1)}m remaining) - ${state.gameDescription}`);
-      }
-      console.log(`🔴 Live NFL Teams: ${Array.from(liveNflTeams).join(', ') || 'None'}`);
+      // Concise NFL game summary
+      const completedTeams = Array.from(nflGameStates.values())
+        .filter(s => s.state === 'post')
+        .map(s => s.team);
+      const liveTeams = Array.from(nflGameStates.values())
+        .filter(s => s.state === 'in')
+        .map(s => s.team);
+      console.log(
+        `📊 NFL: ${completedTeams.length} final, ${liveTeams.length} live, ${nflGameStates.size - completedTeams.length - liveTeams.length} scheduled`
+      );
+      if (completedTeams.length > 0) console.log(`✅ Final: ${completedTeams.join(', ')}`);
+      if (liveTeams.length > 0) console.log(`🔴 Live: ${liveTeams.join(', ')}`);
     }
 
     // Build lineups - using FRESH data from Sleeper with MINUTES-BASED projections!
@@ -475,17 +483,16 @@ async function simulateMatchup(
     const team1Current = team1Players.reduce((sum, p) => sum + (p.currentScore || 0), 0);
     const team2Current = team2Players.reduce((sum, p) => sum + (p.currentScore || 0), 0);
 
-    console.log(`   Team 1 (Roster ${team1Matchup.roster_id}): ${team1Players.length} starters`);
     console.log(
-      `     Projected: ${team1Total.toFixed(1)} pts | Current: ${team1Current.toFixed(1)} pts`
-    );
-    console.log(`   Team 2 (Roster ${team2Matchup.roster_id}): ${team2Players.length} starters`);
-    console.log(
-      `     Projected: ${team2Total.toFixed(1)} pts | Current: ${team2Current.toFixed(1)} pts`
+      `🏈 Matchup ${matchupId}: R${team1Matchup.roster_id} (${team1Total.toFixed(1)} proj, ${team1Current.toFixed(1)} curr) vs R${team2Matchup.roster_id} (${team2Total.toFixed(1)} proj, ${team2Current.toFixed(1)} curr)`
     );
 
-    // Check if game is essentially over (all players done or very late in games)
-    const allPlayersDone = gameProgress >= 0.98;
+    // Check if most games are essentially over by looking at NFL game states
+    const completedGames = Array.from(nflGameStates.values()).filter(
+      state => state.state === 'post'
+    ).length;
+    const totalGames = nflGameStates.size;
+    const allPlayersDone = totalGames > 0 && completedGames / totalGames >= 0.8;
     let simResult;
     const team1Score = team1Matchup.points || team1Current;
     const team2Score = team2Matchup.points || team2Current;
@@ -600,9 +607,16 @@ async function simulateMatchup(
       },
     });
 
-    console.log(`   ✅ Simulation complete in ${Date.now() - startTime}ms`);
-    console.log(`   📊 Results: Team 1 win% = ${(simResult.team1WinPct * 100).toFixed(1)}%`);
-    console.log(`   📊 Spread: ${spread.toFixed(1)}, Total: ${total.toFixed(1)}`);
+    console.log(
+      `✅ ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}% | Spread: ${spread > 0 ? '+' : ''}${spread.toFixed(1)} | Total: ${total.toFixed(1)}`
+    );
+
+    // Calculate overall game progress from NFL states
+    const avgGameProgress =
+      totalGames > 0
+        ? Array.from(nflGameStates.values()).reduce((sum, state) => sum + state.gameProgress, 0) /
+          totalGames
+        : 0;
 
     // Store odds history if requested
     if (options.triggerType !== 'test') {
@@ -612,7 +626,7 @@ async function simulateMatchup(
         matchupId,
         simResult,
         options,
-        gameProgress,
+        avgGameProgress,
         team1Score,
         team2Score
       );
@@ -742,9 +756,8 @@ async function main() {
 
     await archive.saveSnapshot('simulations', `week_${week}`, simulations, {
       week,
-      leagueIds,
       count: simulations.length,
-    });
+    } as any);
 
     console.log('\n✅ All simulations complete!');
     console.log(`📁 Archived ${simulations.length} simulation results`);
