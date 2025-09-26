@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { StatsContent } from './stats-content';
 import { type PlainStatsDataset } from '@/lib/stats/compose';
 import { CURRENT_LEAGUES } from '@/config/leagues';
@@ -62,7 +62,8 @@ async function fetchStatsData(): Promise<PlainStatsDataset> {
   return data;
 }
 
-export default function StatsPage({ searchParams }: StatsPageProps) {
+// Separate component for search params to avoid SSR issues
+function StatsPageContent({ searchParams }: StatsPageProps) {
   const [dataset, setDataset] = useState<PlainStatsDataset | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -167,6 +168,14 @@ export default function StatsPage({ searchParams }: StatsPageProps) {
         )}
       </div>
     </div>
+  );
+}
+
+export default function StatsPage({ searchParams }: StatsPageProps) {
+  return (
+    <Suspense fallback={<StatsPageSkeleton loadingProgress={0} />}>
+      <StatsPageContent searchParams={searchParams} />
+    </Suspense>
   );
 }
 

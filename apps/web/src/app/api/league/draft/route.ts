@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDraftByLeague } from '@/lib/api-replacements';
 
+// This route needs to be dynamic since it uses query parameters
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const leagueId = searchParams.get('leagueId');
+    const leagueId = request.nextUrl.searchParams.get('leagueId');
 
     if (!leagueId) {
       return NextResponse.json({ error: 'League ID is required' }, { status: 400 });

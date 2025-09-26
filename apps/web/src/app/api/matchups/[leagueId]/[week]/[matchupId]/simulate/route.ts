@@ -226,12 +226,13 @@ export async function GET(
     // Calculate aggregate matchup game state for transparency
     const allPlayers = [...team1Players, ...team2Players];
     const gameStates = Array.from(new Set(allPlayers.map(p => p.nflTeam).filter(Boolean)))
-      .map(team => team ? nflGameStates.get(team) : null)
+      .map(team => (team ? nflGameStates.get(team) : null))
       .filter((state): state is NFLGameState => state !== null && state !== undefined);
 
     const avgMinutesRemaining =
       gameStates.length > 0
-        ? gameStates.reduce((sum, state) => sum + (state?.minutesRemaining ?? 60), 0) / gameStates.length
+        ? gameStates.reduce((sum, state) => sum + (state?.minutesRemaining ?? 60), 0) /
+          gameStates.length
         : 60;
 
     const avgGameProgress =
