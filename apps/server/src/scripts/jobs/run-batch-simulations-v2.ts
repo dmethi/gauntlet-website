@@ -46,9 +46,78 @@ async function fetchEspnScoreboard() {
 }
 
 /**
- * Compute game progress from ESPN status
+ * NEW: Build NFL game state map from ESPN scoreboard - MINUTES-BASED APPROACH
+ * This gives us the actual minute-by-minute progress of each NFL game
+ */
+function buildNflGameStateMap(espnData: any): Map<string, any> {
+  const gameStates = new Map();
+  
+  if (!espnData?.events) return gameStates;
+
+  for (const event of espnData.events) {
+    const competition = event?.competitions?.[0];
+    const status = competition?.status?.type;
+    
+    if (!competition?.competitors || !status) continue;
+
+    // Calculate actual game progress based on minutes
+    let gameProgress = 0;
+    let minutesElapsed = 0;
+    let minutesRemaining = 60; // NFL game is 60 minutes
+    let gameDescription = status.description || 'Unknown';
+    
+    if (status.state === 'pre') {
+      gameProgress = 0;
+      minutesElapsed = 0;
+      minutesRemaining = 60;
+    } else if (status.state === 'post') {
+      gameProgress = 1;
+      minutesElapsed = 60;
+      minutesRemaining = 0; // Game is over, no time remaining
+    } else if (status.state === 'in') {
+      const period = status.period || 1;
+      const clock = status.clock || 0; // seconds remaining in period
+      
+      // NFL: 4 quarters, 15 minutes (900 seconds) each
+      const totalGameSeconds = 4 * 15 * 60; // 3600 seconds
+      const elapsedSeconds = (period - 1) * 15 * 60 + (15 * 60 - clock);
+      
+      gameProgress = Math.min(Math.max(elapsedSeconds / totalGameSeconds, 0), 1);
+      minutesElapsed = elapsedSeconds / 60;
+      minutesRemaining = Math.max(0, 60 - minutesElapsed);
+      
+      // Enhanced description for live games
+      const clockMinutes = Math.floor(clock / 60);
+      const clockSeconds = clock % 60;
+      gameDescription = `Q${period} ${clockMinutes}:${clockSeconds.toString().padStart(2, '0')}`;
+    }
+
+    // Apply to both teams in this game
+    for (const competitor of competition.competitors) {
+      const abbr = normalizeNflTeamAbbreviation(competitor.team?.abbreviation);
+      if (abbr) {
+        gameStates.set(abbr, {
+          team: abbr,
+          state: status.state,
+          gameProgress,
+          minutesElapsed,
+          minutesRemaining,
+          gameDescription,
+        });
+      }
+    }
+  }
+
+  return gameStates;
+}
+
+/**
+ * DEPRECATED: Old broken function that only looks at first game
+ * Kept for compatibility but should not be used
  */
 function computeGameProgressFromEspn(espnData: any): number {
+  console.warn('⚠️ DEPRECATED: computeGameProgressFromEspn uses only first game - use buildNflGameStateMap instead');
+  
   if (!espnData?.events?.[0]?.competitions?.[0]?.status?.type) {
     return 0.5; // Default fallback
   }
@@ -127,7 +196,8 @@ async function buildLineupPlayers(
   players: Record<string, any>,
   scoringSettings: any,
   matchupData?: any,
-  isLive: boolean = false
+  isLive: boolean = false,
+  nflGameStates?: Map<string, any>
 ): Promise<PlayerProjection[]> {
   const lineup: PlayerProjection[] = [];
 
@@ -142,7 +212,7 @@ async function buildLineupPlayers(
     }
 
     // Calculate projected points based on scoring settings
-    const points = calculateProjectedPoints(
+    const fullProjection = calculateProjectedPoints(
       projection || {},
       scoringSettings,
       playerId,
@@ -150,7 +220,7 @@ async function buildLineupPlayers(
     );
 
     // Skip players with zero projections (likely missing data)
-    if (points <= 0 && !projection) {
+    if (fullProjection <= 0 && !projection) {
       console.warn(
         `⚠️ Skipping ${player.full_name} (${player.position}) - no projection data available`
       );
@@ -163,11 +233,35 @@ async function buildLineupPlayers(
         ? Number(matchupData.players_points[playerId]) || 0
         : undefined;
 
+    // NEW: Apply MINUTES-BASED projection adjustments
+    let adjustedProjection = fullProjection;
+    const nflTeam = normalizeNflTeamAbbreviation(player.team);
+    const gameState = nflTeam && nflGameStates ? nflGameStates.get(nflTeam) : null;
+    
+    if (isLive && gameState) {
+      if (gameState.state === 'post') {
+        // Game is over - NO projection remaining
+        adjustedProjection = 0;
+      } else if (gameState.state === 'in') {
+        // Game in progress - projection proportional to minutes remaining
+        const projectionPerMinute = fullProjection / 60;
+        adjustedProjection = projectionPerMinute * gameState.minutesRemaining;
+      } else {
+        // Pre-game - full projection remains
+        adjustedProjection = fullProjection;
+      }
+      
+      // Log projection adjustment for transparency
+      if (gameState.state === 'post' || gameState.state === 'in') {
+        console.log(`📊 ${player.full_name} (${nflTeam}): ${fullProjection.toFixed(1)} → ${adjustedProjection.toFixed(1)} pts (${gameState.state}, ${gameState.minutesRemaining.toFixed(1)}m left)`);
+      }
+    }
+
     lineup.push({
       playerId,
       playerName: `${player.first_name} ${player.last_name}`,
       position: player.position,
-      projection: Math.max(0.1, points), // Ensure minimum 0.1 points
+      projection: Math.max(0.1, adjustedProjection), // Use adjusted projection with minimum 0.1
       team: player.team,
       nflTeam: normalizeNflTeamAbbreviation(player.team),
       currentScore: currentScore,
@@ -322,14 +416,16 @@ async function simulateMatchup(
       console.log(`🔍 ============================================\n`);
     }
 
-    // Get ESPN game progress for live simulations
-    let gameProgress = 0;
+    // NEW: Get NFL game states for MINUTES-BASED live simulations
+    let nflGameStates: Map<string, any> = new Map();
     let liveNflTeams: Set<string> | undefined;
 
     if (options.isLive) {
-      console.log('🏈 Fetching ESPN scoreboard for live game data...');
+      console.log('🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...');
       const espnData = await fetchEspnScoreboard();
-      gameProgress = computeGameProgressFromEspn(espnData);
+      
+      // Build game state map instead of single progress value
+      nflGameStates = buildNflGameStateMap(espnData);
 
       // Extract live NFL teams from ESPN data
       liveNflTeams = new Set();
@@ -344,11 +440,15 @@ async function simulateMatchup(
         }
       }
 
-      console.log(`⏱️ Game Progress: ${(gameProgress * 100).toFixed(1)}%`);
+      // Show NFL game states instead of single progress
+      console.log('📊 NFL Game States:');
+      for (const [team, state] of nflGameStates.entries()) {
+        console.log(`   ${team}: ${state.state} (${state.minutesElapsed.toFixed(1)}m elapsed, ${state.minutesRemaining.toFixed(1)}m remaining) - ${state.gameDescription}`);
+      }
       console.log(`🔴 Live NFL Teams: ${Array.from(liveNflTeams).join(', ') || 'None'}`);
     }
 
-    // Build lineups - using FRESH data from Sleeper with live scores!
+    // Build lineups - using FRESH data from Sleeper with MINUTES-BASED projections!
     const [team1Players, team2Players] = await Promise.all([
       buildLineupPlayers(
         team1Matchup.starters || [],
@@ -356,7 +456,8 @@ async function simulateMatchup(
         players,
         leagueData.scoring_settings,
         team1Matchup,
-        options.isLive
+        options.isLive,
+        nflGameStates
       ),
       buildLineupPlayers(
         team2Matchup.starters || [],
@@ -364,7 +465,8 @@ async function simulateMatchup(
         players,
         leagueData.scoring_settings,
         team2Matchup,
-        options.isLive
+        options.isLive,
+        nflGameStates
       ),
     ]);
 
@@ -404,12 +506,12 @@ async function simulateMatchup(
         `📊 Win Probability: ${(simResult.team1WinPct * 100).toFixed(1)}% vs ${(simResult.team2WinPct * 100).toFixed(1)}%`
       );
     } else {
-      // Run simulation with real game progress and live data
+      // Run MINUTES-BASED simulation with gameProgress=0 since projections are already adjusted
       simResult = await simulateMatchupProbabilityFromPlayers(
         team1Players as any,
         team2Players as any,
         options.iterations || 100000,
-        gameProgress,
+        0, // gameProgress=0 since projections are already adjusted based on actual NFL time
         liveNflTeams
       );
     }
