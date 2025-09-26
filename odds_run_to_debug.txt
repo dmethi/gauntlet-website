@@ -1,0 +1,3518 @@
+Run WEEK=""
+🔄 Syncing team names from Sleeper metadata...
+✅ Synced 0 team names for league 1263744209295245312
+✅ Synced 0 team names for league 1263740549504962561
+🔄 Refreshing matchups and starters from Sleeper...
+✅ Refreshed lineups for league 1263744209295245312, week 1
+✅ Refreshed lineups for league 1263740549504962561, week 1
+🚀 Starting odds update...
+  Week: 
+  Live Mode: true
+  Trigger: scheduled
+⚡ Running LIVE odds update with current scores...
+✅ Loaded 25 position variance records
+✅ Loaded 1619 player variance records
+✅ Loaded 5050 projection error records
+🚀 Starting Batch Simulations (V2 - Sleeper API)
+================================================
+🌐 Fetching: /state/nfl
+📅 Week: 4
+🏆 Leagues: 1263744209295245312, 1263740549504962561
+🎲 Iterations: 100000
+🔴 Live mode: Yes
+🏷️ Trigger: manual
+🏆 Simulating all matchups for league 1263744209295245312 week 4
+🌐 Fetching: /league/1263744209295245312/matchups/4
+   Found 6 matchups to simulate
+📊 Simulating matchup 5 in league 1263744209295245312 week 4
+🌐 Fetching: /league/1263744209295245312
+🌐 Fetching: /projections/nfl/regular/2025/4
+🌐 Fetching: /players/nfl
+📦 Cache hit: /league/1263744209295245312/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 4984, 7594, 4098, 7547, 2133, 5022, 7567, 8126, DAL
+🔍 Team 2 starters (9): 7591, 6813, 12512, 12526, 5859, 8130, 8137, 10213, GB
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 4984: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 7594: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 4098: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 7547: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 2133: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 5022: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 7567: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8126: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pr',
+  'pr_yd',          'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter DAL: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_td',
+  'def_kr_yd',         'def_pr_td',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_21_27',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'st_td',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_350_399'
+]
+✅ Found projection for starter 7591: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 A.J. Brown (12.02 pts):
+   ✅ Used categories (6): [ 'rec_td', 'rec_2pt', 'rec', 'fum_lost', 'fum', 'rec_yd' ]
+   ❌ League scoring categories without projection data (41): [
+  'sack',              'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449', 'xpmiss',
+  'rush_td',           'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399', 'rush_fd',
+  'st_fum_rec',        'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',     'tkl_loss',
+  'rush_2pt',          'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',            'safe',
+  'pass_yd',           'blk_kick',          'pass_td',
+  'yds_allow_100_199', 'rush_yd',           'fum_rec_td',
+  'def_st_ff',         'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.45 * 6 = 2.70',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rec: '4.58 * 0.5 = 2.29',
+  fum_lost: '0.02 * -1 = -0.02',
+  fum: '0.05 * -1 = -0.05',
+  rec_yd: '70.79 * 0.1 = 7.08'
+}
+   ⚠️ Missing 41 scoring categories - potential point undercount
+📊 Trey McBride: 11.6 → 0.0 pts (final)
+📊 Tre Tucker (7.86 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.23 * 6 = 1.38',
+  rush_td: '0.02 * 6 = 0.12',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.29 * 0.5 = 0.14',
+  rec: '3.11 * 0.5 = 1.55',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '2.92 * 0.1 = 0.29',
+  fum: '0.04 * -1 = -0.04',
+  rec_yd: '44.03 * 0.1 = 4.40'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+🏈 Matchup 5: R1 (103.1 proj, 0.0 curr) vs R2 (108.5 proj, 8.7 curr)
+No position variance data found for DEF, using defaults
+✅ 22.3% vs 77.7% | Spread: -13.8 | Total: 226.3
+✅ Stored odds: 22.3% vs 77.7% (Progress: 6.3%)
+📊 Simulating matchup 6 in league 1263744209295245312 week 4
+📦 Cache hit: /league/1263744209295245312
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263744209295245312/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 4892, 5850, 4035, 6794, 6819, 5012, 5846, 11589, LAC
+🔍 Team 2 starters (9): 3294, 8150, 8138, 11632, 7525, 10859, 11620, 5947, BAL
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 4892: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 5850: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 4035: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 6794: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 6819: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 5012: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 5846: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 11589: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter LAC: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_td',
+  'def_kr_yd',         'def_pr_td',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_14_20',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'st_td',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_300_349'
+]
+✅ Found projection for starter 3294: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Trey Benson: 16.4 → 0.0 pts (final)
+🏈 Matchup 6: R3 (100.8 proj, 8.4 curr) vs R9 (113.5 proj, 0.0 curr)
+✅ 40.1% vs 59.9% | Spread: -4.6 | Total: 228.8
+✅ Stored odds: 40.1% vs 59.9% (Progress: 6.3%)
+📊 Simulating matchup 1 in league 1263744209295245312 week 4
+📦 Cache hit: /league/1263744209295245312
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263744209295245312/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 11560, 9221, 3198, 1479, 12514, 7002, 8188, 12501, DET
+🔍 Team 2 starters (9): 4046, 9509, 7588, 9754, 11628, 1466, 5892, 7543, NE
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 11560: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 9221: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 3198: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 1479: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 12514: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 7002: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 8188: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 12501: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter DET: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_14_20',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_350_399'
+]
+✅ Found projection for starter 4046: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Matthew Golden (6.83 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.25 * 6 = 1.50',
+  rush_td: '0.01 * 6 = 0.06',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.13 * 0.5 = 0.07',
+  rec: '2.94 * 0.5 = 1.47',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '1.33 * 0.1 = 0.13',
+  fum: '0.04 * -1 = -0.04',
+  rec_yd: '36.38 * 0.1 = 3.64'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 DET (7.51 pts):
+   ✅ Used categories (10): [
+  'sack',
+  'pts_allow',
+  'yds_allow_350_399',
+  'ff',
+  'int',
+  'tkl_loss',
+  'fum_rec',
+  'def_td',
+  'safe',
+  'blk_kick'
+]
+   ❌ League scoring categories without projection data (37): [
+  'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',
+  'yds_allow_450_499', 'st_td',
+  'rec_td',            'yds_allow_400_449',
+  'xpmiss',            'rush_td',
+  'def_4_and_stop',    'yds_allow_550p',
+  'rec_2pt',           'rush_fd',
+  'st_fum_rec',        'fgmiss',
+  'rec',               'yds_allow_200_299',
+  'def_2pt',           'idp_def_td',
+  'def_st_fum_rec',    'fum_lost',
+  'yds_allow_500_549', 'xpm',
+  'def_3_and_out',     'rush_2pt',
+  'yds_allow_300_349', 'def_st_td',
+  'pass_yd',           'pass_td',
+  'yds_allow_100_199', 'rush_yd',
+  'fum',               'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  sack: '2.99 * 1 = 2.99',
+  pts_allow: '17.25 * -0.1 = -1.73',
+  yds_allow_350_399: '1 * -1.75 = -1.75',
+  ff: '1.09 * 1 = 1.09',
+  int: '0.88 * 2 = 1.76',
+  tkl_loss: '5.98 * 0.5 = 2.99',
+  fum_rec: '0.68 * 1 = 0.68',
+  def_td: '0.2 * 6 = 1.20',
+  safe: '0.07 * 2 = 0.14',
+  blk_kick: '0.07 * 2 = 0.14'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Javonte Williams (14.93 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.13 * 6 = 0.78',
+  rush_td: '0.49 * 6 = 2.94',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '5.55 * 0.5 = 2.77',
+  rec: '3.1 * 0.5 = 1.55',
+  fum_lost: '0.09 * -1 = -0.09',
+  rush_2pt: '0.02 * 2 = 0.04',
+  rush_yd: '55.51 * 0.1 = 5.55',
+  fum: '0.21 * -1 = -0.21',
+  rec_yd: '15.94 * 0.1 = 1.59'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Marvin Harrison: 9.3 → 0.0 pts (final)
+🏈 Matchup 1: R4 (111.5 proj, 0.0 curr) vs R10 (108.4 proj, 15.6 curr)
+✅ 24.2% vs 75.8% | Spread: -13.6 | Total: 242.9
+✅ Stored odds: 24.2% vs 75.8% (Progress: 6.3%)
+📊 Simulating matchup 3 in league 1263744209295245312 week 4
+📦 Cache hit: /league/1263744209295245312
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263744209295245312/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 5870, 4866, 9226, 11631, 5872, 8110, 8228, 11624, SEA
+🔍 Team 2 starters (9): 6797, 12527, 6806, 8146, 7564, 3214, 5927, 8148, MIN
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 5870: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 4866: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9226: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 11631: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 5872: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8110: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 8228: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 11624: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pr',           'pr_yd',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter SEA: [
+  'adp_dd_ppr',      'blk_kick',
+  'def_fum_td',      'def_kr_yd',
+  'def_pr_yd',       'def_td',
+  'ff',              'fum_rec',
+  'gp',              'int',
+  'pass_int_td',     'pos_adp_dd_ppr',
+  'pr_yd',           'pts_allow',
+  'pts_allow_21_27', 'pts_half_ppr',
+  'pts_ppr',         'pts_std',
+  'sack',            'tkl_loss',
+  'yds_allow',       'yds_allow_300_349'
+]
+✅ Found projection for starter 6797: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Jake Ferguson (8.64 pts):
+   ✅ Used categories (6): [ 'rec_td', 'rec_2pt', 'rec', 'fum_lost', 'fum', 'rec_yd' ]
+   ❌ League scoring categories without projection data (41): [
+  'sack',              'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449', 'xpmiss',
+  'rush_td',           'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399', 'rush_fd',
+  'st_fum_rec',        'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',     'tkl_loss',
+  'rush_2pt',          'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',            'safe',
+  'pass_yd',           'blk_kick',          'pass_td',
+  'yds_allow_100_199', 'rush_yd',           'fum_rec_td',
+  'def_st_ff',         'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.24 * 6 = 1.44',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rec: '5.4 * 0.5 = 2.70',
+  fum_lost: '0.03 * -1 = -0.03',
+  fum: '0.08 * -1 = -0.08',
+  rec_yd: '45.95 * 0.1 = 4.60'
+}
+   ⚠️ Missing 41 scoring categories - potential point undercount
+📊 undefined: 5.0 → 0.0 pts (final)
+🏈 Matchup 3: R5 (114.6 proj, 13.1 curr) vs R7 (111.0 proj, 0.0 curr)
+✅ 83.1% vs 16.9% | Spread: +18.3 | Total: 245.9
+✅ Stored odds: 83.1% vs 16.9% (Progress: 6.3%)
+📊 Simulating matchup 2 in league 1263744209295245312 week 4
+📦 Cache hit: /league/1263744209295245312
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263744209295245312/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 11566, 8155, 8151, 9493, 9997, 12518, 3321, 5967, PIT
+🔍 Team 2 starters (9): 11563, 4034, 8205, 4983, 7090, 5844, 7569, 11638, PHI
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 11566: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8155: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8151: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9493: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9997: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 12518: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 3321: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pr',           'pr_yd',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 5967: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter PIT: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_21_27',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_300_349'
+]
+✅ Found projection for starter 11563: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Kenneth Walker: 14.5 → 0.0 pts (final)
+📊 Ricky Pearsall (11.58 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.39 * 6 = 2.34',
+  rush_td: '0.01 * 6 = 0.06',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.21 * 0.5 = 0.10',
+  rec: '4.52 * 0.5 = 2.26',
+  fum_lost: '0.03 * -1 = -0.03',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '2.15 * 0.1 = 0.21',
+  fum: '0.07 * -1 = -0.07',
+  rec_yd: '66.83 * 0.1 = 6.68'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 PHI (4.72 pts):
+   ✅ Used categories (10): [
+  'sack',
+  'pts_allow',
+  'ff',
+  'int',
+  'tkl_loss',
+  'yds_allow_300_349',
+  'fum_rec',
+  'def_td',
+  'safe',
+  'blk_kick'
+]
+   ❌ League scoring categories without projection data (37): [
+  'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',
+  'yds_allow_450_499', 'st_td',
+  'rec_td',            'yds_allow_400_449',
+  'xpmiss',            'rush_td',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'rec_2pt',
+  'rush_fd',           'st_fum_rec',
+  'fgmiss',            'rec',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'def_st_fum_rec',
+  'fum_lost',          'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'rush_2pt',          'def_st_td',
+  'pass_yd',           'pass_td',
+  'yds_allow_100_199', 'rush_yd',
+  'fum',               'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  sack: '2.15 * 1 = 2.15',
+  pts_allow: '20.25 * -0.1 = -2.02',
+  ff: '0.86 * 1 = 0.86',
+  int: '0.77 * 2 = 1.54',
+  tkl_loss: '4.36 * 0.5 = 2.18',
+  yds_allow_300_349: '1 * -1.5 = -1.50',
+  fum_rec: '0.48 * 1 = 0.48',
+  def_td: '0.14 * 6 = 0.84',
+  safe: '0.05 * 2 = 0.10',
+  blk_kick: '0.05 * 2 = 0.10'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+🏈 Matchup 2: R6 (109.1 proj, 12.5 curr) vs R12 (104.5 proj, 0.0 curr)
+✅ 82.7% vs 17.3% | Spread: +17.3 | Total: 231.8
+✅ Stored odds: 82.7% vs 17.3% (Progress: 6.3%)
+📊 Simulating matchup 4 in league 1263744209295245312 week 4
+📦 Cache hit: /league/1263744209295245312
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263744209295245312/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 4881, 9224, 8408, 8112, 5045, 11604, 12533, 8121, BUF
+🔍 Team 2 starters (9): 6904, 11584, 12507, 9488, 8134, 9484, 9753, 12499, HOU
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 4881: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 9224: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8408: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8112: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 5045: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 11604: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 12533: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8121: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter BUF: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_14_20',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_300_349'
+]
+✅ Found projection for starter 6904: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Lamar Jackson (23.04 pts):
+   ✅ Used categories (10): [
+  'pass_int', 'pass_2pt',
+  'rush_td',  'rush_fd',
+  'fum_lost', 'rush_2pt',
+  'pass_yd',  'pass_td',
+  'rush_yd',  'fum'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'yds_allow_450_499',
+  'st_td',             'rec_td',
+  'yds_allow_400_449', 'xpmiss',
+  'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399',
+  'rec_2pt',           'st_fum_rec',
+  'fgmiss',            'ff',
+  'rec',               'yds_allow_200_299',
+  'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',
+  'yds_allow_500_549', 'xpm',
+  'def_3_and_out',     'tkl_loss',
+  'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',
+  'safe',              'blk_kick',
+  'yds_allow_100_199', 'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  pass_int: '0.55 * -2 = -1.10',
+  pass_2pt: '0.07 * 2 = 0.14',
+  rush_td: '0.25 * 6 = 1.50',
+  rush_fd: '5.01 * 0.5 = 2.50',
+  fum_lost: '0.26 * -1 = -0.26',
+  rush_2pt: '0.01 * 2 = 0.02',
+  pass_yd: '209 * 0.04 = 8.36',
+  pass_td: '1.87 * 4 = 7.48',
+  rush_yd: '50.07 * 0.1 = 5.01',
+  fum: '0.61 * -1 = -0.61'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Brock Bowers (11.55 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.29 * 6 = 1.74',
+  rush_td: '0.01 * 6 = 0.06',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.11 * 0.5 = 0.06',
+  rec: '6.01 * 0.5 = 3.00',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '1.11 * 0.1 = 0.11',
+  fum: '0.06 * -1 = -0.06',
+  rec_yd: '66.37 * 0.1 = 6.64'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 BUF (8.02 pts):
+   ✅ Used categories (10): [
+  'sack',
+  'pts_allow',
+  'ff',
+  'int',
+  'tkl_loss',
+  'yds_allow_300_349',
+  'fum_rec',
+  'def_td',
+  'safe',
+  'blk_kick'
+]
+   ❌ League scoring categories without projection data (37): [
+  'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',
+  'yds_allow_450_499', 'st_td',
+  'rec_td',            'yds_allow_400_449',
+  'xpmiss',            'rush_td',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'rec_2pt',
+  'rush_fd',           'st_fum_rec',
+  'fgmiss',            'rec',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'def_st_fum_rec',
+  'fum_lost',          'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'rush_2pt',          'def_st_td',
+  'pass_yd',           'pass_td',
+  'yds_allow_100_199', 'rush_yd',
+  'fum',               'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  sack: '3.05 * 1 = 3.05',
+  pts_allow: '16 * -0.1 = -1.60',
+  ff: '1.09 * 1 = 1.09',
+  int: '0.88 * 2 = 1.76',
+  tkl_loss: '6.11 * 0.5 = 3.06',
+  yds_allow_300_349: '1 * -1.5 = -1.50',
+  fum_rec: '0.68 * 1 = 0.68',
+  def_td: '0.2 * 6 = 1.20',
+  safe: '0.07 * 2 = 0.14',
+  blk_kick: '0.07 * 2 = 0.14'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Jaxon Smith-Njigba: 14.7 → 0.0 pts (final)
+📊 Zach Charbonnet: 11.6 → 0.0 pts (final)
+🏈 Matchup 4: R8 (114.1 proj, 0.0 curr) vs R11 (93.9 proj, 23.4 curr)
+✅ 44.3% vs 55.7% | Spread: -2.6 | Total: 237.7
+✅ Stored odds: 44.3% vs 55.7% (Progress: 6.3%)
+🏆 Simulating all matchups for league 1263740549504962561 week 4
+🌐 Fetching: /league/1263740549504962561/matchups/4
+   Found 6 matchups to simulate
+📊 Simulating matchup 3 in league 1263740549504962561 week 4
+🌐 Fetching: /league/1263740549504962561
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263740549504962561/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 6804, 12527, 9224, 9493, 1479, 1339, 11620, 8148, MIN
+🔍 Team 2 starters (9): 4881, 12512, 5967, 9488, 2133, 5844, 3321, 7588, BUF
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 6804: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 12527: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9224: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 9493: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 1479: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 1339: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 11620: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8148: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter MIN: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_14_20',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_300_349'
+]
+✅ Found projection for starter 4881: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Zach Ertz (6.93 pts):
+   ✅ Used categories (6): [ 'rec_td', 'rec_2pt', 'rec', 'fum_lost', 'fum', 'rec_yd' ]
+   ❌ League scoring categories without projection data (41): [
+  'sack',              'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449', 'xpmiss',
+  'rush_td',           'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399', 'rush_fd',
+  'st_fum_rec',        'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',     'tkl_loss',
+  'rush_2pt',          'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',            'safe',
+  'pass_yd',           'blk_kick',          'pass_td',
+  'yds_allow_100_199', 'rush_yd',           'fum_rec_td',
+  'def_st_ff',         'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.3 * 6 = 1.80',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rec: '3.73 * 0.5 = 1.86',
+  fum_lost: '0.02 * -1 = -0.02',
+  fum: '0.05 * -1 = -0.05',
+  rec_yd: '33.12 * 0.1 = 3.31'
+}
+   ⚠️ Missing 41 scoring categories - potential point undercount
+📊 Jaxon Smith-Njigba: 14.7 → 0.0 pts (final)
+📊 Davante Adams (12.69 pts):
+   ✅ Used categories (6): [ 'rec_td', 'rec_2pt', 'rec', 'fum_lost', 'fum', 'rec_yd' ]
+   ❌ League scoring categories without projection data (41): [
+  'sack',              'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449', 'xpmiss',
+  'rush_td',           'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399', 'rush_fd',
+  'st_fum_rec',        'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',     'tkl_loss',
+  'rush_2pt',          'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',            'safe',
+  'pass_yd',           'blk_kick',          'pass_td',
+  'yds_allow_100_199', 'rush_yd',           'fum_rec_td',
+  'def_st_ff',         'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.53 * 6 = 3.18',
+  rec_2pt: '0.02 * 2 = 0.04',
+  rec: '4.92 * 0.5 = 2.46',
+  fum_lost: '0.03 * -1 = -0.03',
+  fum: '0.07 * -1 = -0.07',
+  rec_yd: '71.11 * 0.1 = 7.11'
+}
+   ⚠️ Missing 41 scoring categories - potential point undercount
+📊 T.J. Hockenson (7.29 pts):
+   ✅ Used categories (6): [ 'rec_td', 'rec_2pt', 'rec', 'fum_lost', 'fum', 'rec_yd' ]
+   ❌ League scoring categories without projection data (41): [
+  'sack',              'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449', 'xpmiss',
+  'rush_td',           'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399', 'rush_fd',
+  'st_fum_rec',        'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',     'tkl_loss',
+  'rush_2pt',          'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',            'safe',
+  'pass_yd',           'blk_kick',          'pass_td',
+  'yds_allow_100_199', 'rush_yd',           'fum_rec_td',
+  'def_st_ff',         'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.24 * 6 = 1.44',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rec: '3.77 * 0.5 = 1.89',
+  fum_lost: '0.02 * -1 = -0.02',
+  fum: '0.05 * -1 = -0.05',
+  rec_yd: '40.15 * 0.1 = 4.01'
+}
+   ⚠️ Missing 41 scoring categories - potential point undercount
+🏈 Matchup 3: R1 (107.8 proj, 0.0 curr) vs R8 (110.0 proj, 11.0 curr)
+✅ 22.2% vs 77.8% | Spread: -14.1 | Total: 234.9
+✅ Stored odds: 22.2% vs 77.8% (Progress: 6.3%)
+📊 Simulating matchup 6 in league 1263740549504962561 week 4
+📦 Cache hit: /league/1263740549504962561
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263740549504962561/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 11566, 9221, 9226, 8137, 9756, 12506, 7526, 6806, HOU
+🔍 Team 2 starters (9): 6797, 6813, 11584, 11628, 12514, 12518, 4983, 5892, WAS
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 11566: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 9221: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9226: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8137: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9756: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 12506: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 7526: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 6806: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter HOU: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_14_20',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_300_349'
+]
+✅ Found projection for starter 6797: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Jordan Addison (8.34 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.35 * 6 = 2.10',
+  rush_td: '0.01 * 6 = 0.06',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.11 * 0.5 = 0.06',
+  rec: '3.13 * 0.5 = 1.56',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '1.09 * 0.1 = 0.11',
+  fum: '0.06 * -1 = -0.06',
+  rec_yd: '45.1 * 0.1 = 4.51'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Harold Fannin (7.82 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.28 * 6 = 1.68',
+  rush_td: '0 * 6 = 0.00',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0 * 0.5 = 0.00',
+  rec: '4.21 * 0.5 = 2.10',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '0.04 * 0.1 = 0.00',
+  fum: '0.04 * -1 = -0.04',
+  rec_yd: '40.75 * 0.1 = 4.08'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Marvin Harrison: 9.3 → 0.0 pts (final)
+🏈 Matchup 6: R2 (124.1 proj, 0.0 curr) vs R4 (114.1 proj, 15.6 curr)
+✅ 39.5% vs 60.5% | Spread: -5.5 | Total: 262.1
+✅ Stored odds: 39.5% vs 60.5% (Progress: 6.3%)
+📊 Simulating matchup 2 in league 1263740549504962561 week 4
+📦 Cache hit: /league/1263740549504962561
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263740549504962561/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 6904, 8150, 8151, 11631, 6801, 9484, 8144, 5947, DEN
+🔍 Team 2 starters (9): 4984, 12474, 4098, 7569, 7525, 8130, 11638, 1466, LAC
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 6904: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8150: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8151: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 11631: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 6801: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 9484: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8144: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 5947: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_cmp_40p', 'pass_int_td',
+  'pass_sack',    'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter DEN: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_14_20',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_200_299'
+]
+✅ Found projection for starter 4984: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Jalen Hurts (21.28 pts):
+   ✅ Used categories (10): [
+  'pass_int', 'pass_2pt',
+  'rush_td',  'rush_fd',
+  'fum_lost', 'rush_2pt',
+  'pass_yd',  'pass_td',
+  'rush_yd',  'fum'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'yds_allow_450_499',
+  'st_td',             'rec_td',
+  'yds_allow_400_449', 'xpmiss',
+  'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399',
+  'rec_2pt',           'st_fum_rec',
+  'fgmiss',            'ff',
+  'rec',               'yds_allow_200_299',
+  'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',
+  'yds_allow_500_549', 'xpm',
+  'def_3_and_out',     'tkl_loss',
+  'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',
+  'safe',              'blk_kick',
+  'yds_allow_100_199', 'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  pass_int: '0.55 * -2 = -1.10',
+  pass_2pt: '0.05 * 2 = 0.10',
+  rush_td: '0.83 * 6 = 4.98',
+  rush_fd: '3.55 * 0.5 = 1.77',
+  fum_lost: '0.22 * -1 = -0.22',
+  rush_2pt: '0.03 * 2 = 0.06',
+  pass_yd: '195.96 * 0.04 = 7.84',
+  pass_td: '1.2 * 4 = 4.80',
+  rush_yd: '35.52 * 0.1 = 3.55',
+  fum: '0.51 * -1 = -0.51'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Kyren Williams (18.12 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.14 * 6 = 0.84',
+  rush_td: '0.74 * 6 = 4.44',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '6.94 * 0.5 = 3.47',
+  rec: '2.24 * 0.5 = 1.12',
+  fum_lost: '0.09 * -1 = -0.09',
+  rush_2pt: '0.03 * 2 = 0.06',
+  rush_yd: '69.44 * 0.1 = 6.94',
+  fum: '0.2 * -1 = -0.20',
+  rec_yd: '15.34 * 0.1 = 1.53'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Kenneth Walker (14.48 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.12 * 6 = 0.72',
+  rush_td: '0.55 * 6 = 3.30',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '5.4 * 0.5 = 2.70',
+  rec: '2.18 * 0.5 = 1.09',
+  fum_lost: '0.08 * -1 = -0.08',
+  rush_2pt: '0.01 * 2 = 0.02',
+  rush_yd: '54.04 * 0.1 = 5.40',
+  fum: '0.18 * -1 = -0.18',
+  rec_yd: '15.09 * 0.1 = 1.51'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Kenneth Walker: 14.5 → 0.0 pts (final)
+📊 DEN (7.11 pts):
+   ✅ Used categories (10): [
+  'sack',
+  'pts_allow',
+  'ff',
+  'yds_allow_200_299',
+  'int',
+  'tkl_loss',
+  'fum_rec',
+  'def_td',
+  'safe',
+  'blk_kick'
+]
+   ❌ League scoring categories without projection data (37): [
+  'qb_hit',            'fgm_yds',
+  'pass_int',          'pass_2pt',
+  'yds_allow_450_499', 'st_td',
+  'rec_td',            'yds_allow_400_449',
+  'xpmiss',            'rush_td',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'rec_2pt',
+  'rush_fd',           'st_fum_rec',
+  'fgmiss',            'rec',
+  'def_2pt',           'idp_def_td',
+  'def_st_fum_rec',    'fum_lost',
+  'yds_allow_500_549', 'xpm',
+  'def_3_and_out',     'rush_2pt',
+  'yds_allow_300_349', 'def_st_td',
+  'pass_yd',           'pass_td',
+  'yds_allow_100_199', 'rush_yd',
+  'fum',               'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  sack: '2.71 * 1 = 2.71',
+  pts_allow: '18.25 * -0.1 = -1.83',
+  ff: '1 * 1 = 1.00',
+  yds_allow_200_299: '1 * -1 = -1.00',
+  int: '0.82 * 2 = 1.64',
+  tkl_loss: '5.35 * 0.5 = 2.67',
+  fum_rec: '0.59 * 1 = 0.59',
+  def_td: '0.18 * 6 = 1.08',
+  safe: '0.06 * 2 = 0.12',
+  blk_kick: '0.06 * 2 = 0.12'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Woody Marks (7.98 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.08 * 6 = 0.48',
+  rush_td: '0.2 * 6 = 1.20',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '2.9 * 0.5 = 1.45',
+  rec: '1.47 * 0.5 = 0.73',
+  fum_lost: '0.04 * -1 = -0.04',
+  rush_2pt: '0.01 * 2 = 0.02',
+  rush_yd: '29 * 0.1 = 2.90',
+  fum: '0.09 * -1 = -0.09',
+  rec_yd: '13.25 * 0.1 = 1.33'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Trey McBride: 11.6 → 0.0 pts (final)
+🏈 Matchup 2: R3 (98.8 proj, 12.5 curr) vs R12 (90.1 proj, 8.7 curr)
+✅ 78.4% vs 21.6% | Spread: +12.6 | Total: 214.2
+✅ Stored odds: 78.4% vs 21.6% (Progress: 6.3%)
+📊 Simulating matchup 4 in league 1263740549504962561 week 4
+📦 Cache hit: /league/1263740549504962561
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263740549504962561/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 5849, 4866, 9509, 7564, 9754, 3214, 11589, 4219, GB
+🔍 Team 2 starters (9): 11560, 5850, 3198, 5859, 8146, 8110, 12526, 8228, DET
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 5849: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 4866: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9509: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 7564: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 9754: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 3214: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 11589: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 4219: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter GB: [
+  'adp_dd_ppr',      'blk_kick',
+  'def_fum_td',      'def_kr_yd',
+  'def_pr_yd',       'def_td',
+  'ff',              'fum_rec',
+  'gp',              'int',
+  'pass_int_td',     'pos_adp_dd_ppr',
+  'pr_yd',           'pts_allow',
+  'pts_allow_14_20', 'pts_half_ppr',
+  'pts_ppr',         'pts_std',
+  'sack',            'tkl_loss',
+  'yds_allow',       'yds_allow_300_349'
+]
+✅ Found projection for starter 11560: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Kyler Murray: 17.6 → 0.0 pts (final)
+📊 Ja'Marr Chase (12.86 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.5 * 6 = 3.00',
+  rush_td: '0.01 * 6 = 0.06',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.07 * 0.5 = 0.04',
+  rec: '5.07 * 0.5 = 2.54',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '0.66 * 0.1 = 0.07',
+  fum: '0.04 * -1 = -0.04',
+  rec_yd: '72.07 * 0.1 = 7.21'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Trey Benson (16.38 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.14 * 6 = 0.84',
+  rush_td: '0.23 * 6 = 1.38',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '7.48 * 0.5 = 3.74',
+  rec: '2.53 * 0.5 = 1.26',
+  fum_lost: '0.1 * -1 = -0.10',
+  rush_2pt: '0.02 * 2 = 0.04',
+  rush_yd: '74.8 * 0.1 = 7.48',
+  fum: '0.23 * -1 = -0.23',
+  rec_yd: '19.63 * 0.1 = 1.96'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Trey Benson: 16.4 → 0.0 pts (final)
+📊 Derrick Henry (19.68 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.08 * 6 = 0.48',
+  rush_td: '0.85 * 6 = 5.10',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '8.61 * 0.5 = 4.30',
+  rec: '1.02 * 0.5 = 0.51',
+  fum_lost: '0.08 * -1 = -0.08',
+  rush_2pt: '0.03 * 2 = 0.06',
+  rush_yd: '86.08 * 0.1 = 8.61',
+  fum: '0.19 * -1 = -0.19',
+  rec_yd: '8.92 * 0.1 = 0.89'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+🏈 Matchup 4: R5 (87.4 proj, 25.0 curr) vs R9 (124.4 proj, 0.0 curr)
+✅ 25.0% vs 75.0% | Spread: -13.2 | Total: 243.4
+✅ Stored odds: 25.0% vs 75.0% (Progress: 6.3%)
+📊 Simulating matchup 1 in league 1263740549504962561 week 4
+📦 Cache hit: /league/1263740549504962561
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263740549504962561/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 4943, 8408, 8155, 11632, 8112, 5022, 11635, 7543, PIT
+🔍 Team 2 starters (9): 3163, 4035, 7594, 9997, 5846, 11604, 12481, 5045, NE
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 4943: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8408: [
+  'adp_dd_ppr',   'bonus_rec_rb',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8155: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 11632: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8112: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 5022: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 11635: [
+  'adp_dd_ppr',   'bonus_rec_wr',
+  'def_fum_td',   'def_kr_yd',
+  'fum',          'fum_lost',
+  'gp',           'pos_adp_dd_ppr',
+  'pr',           'pr_yd',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rec',
+  'rec_0_4',      'rec_10_19',
+  'rec_20_29',    'rec_2pt',
+  'rec_30_39',    'rec_40p',
+  'rec_5_9',      'rec_fd',
+  'rec_td',       'rec_tgt',
+  'rec_yd',       'rush_40p',
+  'rush_att',     'rush_fd',
+  'rush_td',      'rush_yd'
+]
+✅ Found projection for starter 7543: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter PIT: [
+  'adp_dd_ppr',        'blk_kick',
+  'def_fum_td',        'def_kr_yd',
+  'def_pr_yd',         'def_td',
+  'ff',                'fum_rec',
+  'gp',                'int',
+  'pass_int_td',       'pos_adp_dd_ppr',
+  'pr_yd',             'pts_allow',
+  'pts_allow_21_27',   'pts_half_ppr',
+  'pts_ppr',           'pts_std',
+  'sack',              'safe',
+  'tkl_loss',          'yds_allow',
+  'yds_allow_300_349'
+]
+✅ Found projection for starter 3163: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Sam Darnold (15.72 pts):
+   ✅ Used categories (10): [
+  'pass_int', 'pass_2pt',
+  'rush_td',  'rush_fd',
+  'fum_lost', 'rush_2pt',
+  'pass_yd',  'pass_td',
+  'rush_yd',  'fum'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'yds_allow_450_499',
+  'st_td',             'rec_td',
+  'yds_allow_400_449', 'xpmiss',
+  'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399',
+  'rec_2pt',           'st_fum_rec',
+  'fgmiss',            'ff',
+  'rec',               'yds_allow_200_299',
+  'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',
+  'yds_allow_500_549', 'xpm',
+  'def_3_and_out',     'tkl_loss',
+  'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',
+  'safe',              'blk_kick',
+  'yds_allow_100_199', 'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  pass_int: '0.73 * -2 = -1.46',
+  pass_2pt: '0.05 * 2 = 0.10',
+  rush_td: '0.1 * 6 = 0.60',
+  rush_fd: '1.16 * 0.5 = 0.58',
+  fum_lost: '0.21 * -1 = -0.21',
+  rush_2pt: '0 * 2 = 0.00',
+  pass_yd: '224.81 * 0.04 = 8.99',
+  pass_td: '1.61 * 4 = 6.44',
+  rush_yd: '11.59 * 0.1 = 1.16',
+  fum: '0.48 * -1 = -0.48'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Sam Darnold: 15.7 → 0.0 pts (final)
+📊 Malik Nabers (12.58 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.42 * 6 = 2.52',
+  rush_td: '0.02 * 6 = 0.12',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.21 * 0.5 = 0.10',
+  rec: '5.52 * 0.5 = 2.76',
+  fum_lost: '0.03 * -1 = -0.03',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '2.08 * 0.1 = 0.21',
+  fum: '0.06 * -1 = -0.06',
+  rec_yd: '69.4 * 0.1 = 6.94'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 DK Metcalf (10.76 pts):
+   ✅ Used categories (9): [
+  'rec_td',  'rush_td',
+  'rec_2pt', 'rush_fd',
+  'rec',     'fum_lost',
+  'rush_yd', 'fum',
+  'rec_yd'
+]
+   ❌ League scoring categories without projection data (38): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'rush_2pt',
+  'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',
+  'safe',              'pass_yd',
+  'blk_kick',          'pass_td',
+  'yds_allow_100_199', 'fum_rec_td',
+  'def_st_ff',         'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.47 * 6 = 2.82',
+  rush_td: '0 * 6 = 0.00',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.02 * 0.5 = 0.01',
+  rec: '3.96 * 0.5 = 1.98',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_yd: '0.19 * 0.1 = 0.02',
+  fum: '0.05 * -1 = -0.05',
+  rec_yd: '59.83 * 0.1 = 5.98'
+}
+   ⚠️ Missing 38 scoring categories - potential point undercount
+📊 Brock Bowers (11.55 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.29 * 6 = 1.74',
+  rush_td: '0.01 * 6 = 0.06',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '0.11 * 0.5 = 0.06',
+  rec: '6.01 * 0.5 = 3.00',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '1.11 * 0.1 = 0.11',
+  fum: '0.06 * -1 = -0.06',
+  rec_yd: '66.37 * 0.1 = 6.64'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Cam Skattebo (17.91 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.16 * 6 = 0.96',
+  rush_td: '0.59 * 6 = 3.54',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '6.82 * 0.5 = 3.41',
+  rec: '2.62 * 0.5 = 1.31',
+  fum_lost: '0.1 * -1 = -0.10',
+  rush_2pt: '0.01 * 2 = 0.02',
+  rush_yd: '68.2 * 0.1 = 6.82',
+  fum: '0.22 * -1 = -0.22',
+  rec_yd: '21.66 * 0.1 = 2.17'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+🏈 Matchup 1: R6 (96.9 proj, 15.6 curr) vs R7 (117.6 proj, 0.0 curr)
+✅ 36.9% vs 63.1% | Spread: -6.2 | Total: 236.6
+✅ Stored odds: 36.9% vs 63.1% (Progress: 6.3%)
+📊 Simulating matchup 5 in league 1263740549504962561 week 4
+📦 Cache hit: /league/1263740549504962561
+📦 Cache hit: /projections/nfl/regular/2025/4
+📦 Cache hit: /players/nfl
+📦 Cache hit: /league/1263740549504962561/matchups/4
+🔍 Projections API endpoint: /projections/nfl/regular/2025/4
+🔍 Projections API response type: object
+🔍 Projections API response: Object with 8622 keys
+🔍 Sample projection structure for 6: { adp_dd_ppr: 1000 }
+🔍 ========== LINEUP STARTERS DEBUG ==========
+🔍 Team 1 starters (9): 4046, 8138, 7611, 6794, 7547, 10859, 2449, 8205, MIA
+🔍 Team 2 starters (9): 4892, 4034, 12507, 5872, 12499, 5012, 8676, 10213, SF
+🔍 ========== PLAYER ID MATCHING ==========
+✅ Found projection for starter 4046: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 8138: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 7611: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 6794: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_40p',       'rush_att',
+  'rush_fd',        'rush_td',
+  'rush_yd'
+]
+✅ Found projection for starter 7547: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 10859: [
+  'adp_dd_ppr',     'bonus_rec_te',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd'
+]
+✅ Found projection for starter 2449: [
+  'adp_dd_ppr',     'bonus_rec_wr',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter 8205: [
+  'adp_dd_ppr',     'bonus_rec_rb',
+  'def_fum_td',     'fum',
+  'fum_lost',       'gp',
+  'pos_adp_dd_ppr', 'pts_half_ppr',
+  'pts_ppr',        'pts_std',
+  'rec',            'rec_0_4',
+  'rec_10_19',      'rec_20_29',
+  'rec_2pt',        'rec_30_39',
+  'rec_40p',        'rec_5_9',
+  'rec_fd',         'rec_td',
+  'rec_tgt',        'rec_yd',
+  'rush_2pt',       'rush_40p',
+  'rush_att',       'rush_fd',
+  'rush_td',        'rush_yd'
+]
+✅ Found projection for starter MIA: [
+  'adp_dd_ppr',      'blk_kick',
+  'def_fum_td',      'def_kr_yd',
+  'def_pr_yd',       'def_td',
+  'ff',              'fum_rec',
+  'gp',              'int',
+  'pass_int_td',     'pos_adp_dd_ppr',
+  'pr_yd',           'pts_allow',
+  'pts_allow_14_20', 'pts_half_ppr',
+  'pts_ppr',         'pts_std',
+  'sack',            'tkl_loss',
+  'yds_allow',       'yds_allow_300_349'
+]
+✅ Found projection for starter 4892: [
+  'adp_dd_ppr',   'cmp_pct',
+  'def_fum_td',   'fum',
+  'fum_lost',     'gp',
+  'pass_2pt',     'pass_att',
+  'pass_cmp',     'pass_cmp_40p',
+  'pass_fd',      'pass_inc',
+  'pass_int',     'pass_int_td',
+  'pass_sack',    'pass_td',
+  'pass_yd',      'pos_adp_dd_ppr',
+  'pts_half_ppr', 'pts_ppr',
+  'pts_std',      'rush_2pt',
+  'rush_40p',     'rush_att',
+  'rush_fd',      'rush_td',
+  'rush_yd'
+]
+🔍 MATCH RESULTS: 10/10 starters have projections
+🔍 ============================================
+🏈 Fetching ESPN scoreboard for MINUTES-BASED live game data...
+📊 NFL: 2 final, 0 live, 30 scheduled
+✅ Final: ARI, SEA
+📊 Isiah Pacheco (8.17 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.06 * 6 = 0.36',
+  rush_td: '0.19 * 6 = 1.14',
+  rec_2pt: '0 * 2 = 0.00',
+  rush_fd: '3.29 * 0.5 = 1.65',
+  rec: '1.54 * 0.5 = 0.77',
+  fum_lost: '0.04 * -1 = -0.04',
+  rush_2pt: '0.01 * 2 = 0.02',
+  rush_yd: '32.88 * 0.1 = 3.29',
+  fum: '0.09 * -1 = -0.09',
+  rec_yd: '10.76 * 0.1 = 1.08'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Baker Mayfield (18.52 pts):
+   ✅ Used categories (10): [
+  'pass_int', 'pass_2pt',
+  'rush_td',  'rush_fd',
+  'fum_lost', 'rush_2pt',
+  'pass_yd',  'pass_td',
+  'rush_yd',  'fum'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'yds_allow_450_499',
+  'st_td',             'rec_td',
+  'yds_allow_400_449', 'xpmiss',
+  'pts_allow',         'def_4_and_stop',
+  'yds_allow_550p',    'yds_allow_350_399',
+  'rec_2pt',           'st_fum_rec',
+  'fgmiss',            'ff',
+  'rec',               'yds_allow_200_299',
+  'def_2pt',           'idp_def_td',
+  'int',               'def_st_fum_rec',
+  'yds_allow_500_549', 'xpm',
+  'def_3_and_out',     'tkl_loss',
+  'yds_allow_300_349', 'fum_rec',
+  'def_st_td',         'def_td',
+  'safe',              'blk_kick',
+  'yds_allow_100_199', 'fum_rec_td',
+  'rec_yd',            'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  pass_int: '0.72 * -2 = -1.44',
+  pass_2pt: '0.07 * 2 = 0.14',
+  rush_td: '0.12 * 6 = 0.72',
+  rush_fd: '2.29 * 0.5 = 1.15',
+  fum_lost: '0.26 * -1 = -0.26',
+  rush_2pt: '0.01 * 2 = 0.02',
+  pass_yd: '221.27 * 0.04 = 8.85',
+  pass_td: '1.91 * 4 = 7.64',
+  rush_yd: '22.95 * 0.1 = 2.29',
+  fum: '0.59 * -1 = -0.59'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Christian McCaffrey (24.46 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.37 * 6 = 2.22',
+  rush_td: '0.57 * 6 = 3.42',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '7.78 * 0.5 = 3.89',
+  rec: '5.32 * 0.5 = 2.66',
+  fum_lost: '0.11 * -1 = -0.11',
+  rush_2pt: '0.03 * 2 = 0.06',
+  rush_yd: '77.83 * 0.1 = 7.78',
+  fum: '0.24 * -1 = -0.24',
+  rec_yd: '47.61 * 0.1 = 4.76'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+📊 Deebo Samuel (10.44 pts):
+   ✅ Used categories (10): [
+  'rec_td',   'rush_td',
+  'rec_2pt',  'rush_fd',
+  'rec',      'fum_lost',
+  'rush_2pt', 'rush_yd',
+  'fum',      'rec_yd'
+]
+   ❌ League scoring categories without projection data (37): [
+  'sack',              'qb_hit',
+  'fgm_yds',           'pass_int',
+  'pass_2pt',          'yds_allow_450_499',
+  'st_td',             'yds_allow_400_449',
+  'xpmiss',            'pts_allow',
+  'def_4_and_stop',    'yds_allow_550p',
+  'yds_allow_350_399', 'st_fum_rec',
+  'fgmiss',            'ff',
+  'yds_allow_200_299', 'def_2pt',
+  'idp_def_td',        'int',
+  'def_st_fum_rec',    'yds_allow_500_549',
+  'xpm',               'def_3_and_out',
+  'tkl_loss',          'yds_allow_300_349',
+  'fum_rec',           'def_st_td',
+  'def_td',            'safe',
+  'pass_yd',           'blk_kick',
+  'pass_td',           'yds_allow_100_199',
+  'fum_rec_td',        'def_st_ff',
+  'st_ff'
+]
+   📈 Point breakdown: {
+  rec_td: '0.3 * 6 = 1.80',
+  rush_td: '0.13 * 6 = 0.78',
+  rec_2pt: '0.01 * 2 = 0.02',
+  rush_fd: '1.03 * 0.5 = 0.52',
+  rec: '3.58 * 0.5 = 1.79',
+  fum_lost: '0.02 * -1 = -0.02',
+  rush_2pt: '0 * 2 = 0.00',
+  rush_yd: '10.3 * 0.1 = 1.03',
+  fum: '0.05 * -1 = -0.05',
+  rec_yd: '45.74 * 0.1 = 4.57'
+}
+   ⚠️ Missing 37 scoring categories - potential point undercount
+🏈 Matchup 5: R10 (108.5 proj, 0.0 curr) vs R11 (108.7 proj, 0.0 curr)
+✅ 49.0% vs 51.0% | Spread: -0.4 | Total: 223.8
+✅ Stored odds: 49.0% vs 51.0% (Progress: 6.3%)
+📁 Archived: simulations_week_4_2025-09-26.json (22b4d06fa7aa49002a484438328f779f)
+✅ All simulations complete!
+📁 Archived 12 simulation results
+🗑️ Cache cleared: all
+🗑️ Cache cleared: all

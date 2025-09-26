@@ -56,7 +56,7 @@ async function captureLeagueOdds(week: number): Promise<any> {
   const cacheBuster = Date.now();
 
   const response = await fetch(
-    `http://localhost:3000/api/matchups/league-odds/${week}?t=${cacheBuster}`,
+    `https://gauntlet-website.vercel.app/api/matchups/league-odds/${week}?t=${cacheBuster}`,
     {
       headers: {
         'Cache-Control': 'no-cache',
@@ -76,7 +76,7 @@ async function captureIndividualMatchup(
 ): Promise<CompleteSnapshot | null> {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/matchups/${leagueId}/${week}/${matchupId}/simulate`
+      `https://gauntlet-website.vercel.app/api/matchups/${leagueId}/${week}/${matchupId}/simulate`
     );
 
     if (!response.ok) return null;

@@ -97,31 +97,7 @@ jobs:
           echo "  Hour: $CURRENT_HOUR UTC"
           echo "  Month: $CURRENT_MONTH"
 
-      - name: Build and start Next.js server
-        run: |
-          echo "🏗️ Building Next.js app..."
-          pnpm --filter @gauntlet/web build
-
-          echo "🚀 Starting Next.js server..."
-          pnpm --filter @gauntlet/web start &
-          WEB_PID=$!
-          echo "WEB_PID=$WEB_PID" >> $GITHUB_ENV
-
-          echo "⏳ Waiting for server to be ready..."
-          for i in {1..30}; do
-            if curl -s http://localhost:3000/api/health > /dev/null 2>&1; then
-              echo "✅ Server is ready!"
-              break
-            fi
-            if [ $i -eq 30 ]; then
-              echo "❌ Server failed to start within 30 seconds"
-              kill $WEB_PID || true
-              exit 1
-            fi
-            sleep 1
-          done
-
-      - name: Run live odds update  
+      - name: Run live odds snapshot
         run: |
           WEEK="${{ steps.determine-context.outputs.week }}"
           IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
@@ -133,25 +109,18 @@ jobs:
           echo "🔄 Refreshing matchups and starters from Sleeper..."
           pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/refresh-lineups.ts ${WEEK:+$WEEK}
 
-          echo "🚀 Starting odds update..."
+          echo "🚀 Starting live odds snapshot..."
           echo "  Week: $WEEK"
           echo "  Live Mode: $IS_LIVE"
           echo "  Trigger: $TRIGGER_TYPE"
+          echo "  Using Production API: https://gauntlet-website.vercel.app"
 
           if [ "$IS_LIVE" = "true" ]; then
-            echo "⚡ Running LIVE odds snapshot with current scores..."
+            echo "⚡ Capturing LIVE snapshot with current scores..."
             pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
           else
-            echo "📅 Running daily pre-game odds snapshot..."
+            echo "📅 Capturing pre-game snapshot..."
             pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
-          fi
-
-      - name: Stop Next.js server
-        if: always()
-        run: |
-          if [ -n "$WEB_PID" ]; then
-            echo "🛑 Stopping Next.js server..."
-            kill $WEB_PID || true
           fi
 
       - name: Report completion

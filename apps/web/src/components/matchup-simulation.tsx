@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertCircle,
   BarChart3,
+  Clock,
   DollarSign,
   Info,
   RefreshCw,
@@ -356,7 +357,7 @@ export function MatchupSimulation({
             <Zap className='h-5 w-5 text-yellow-500' />
             Monte Carlo Simulation
             <Badge variant='outline' className='ml-2'>
-              10,000 sims
+              20,000 sims
             </Badge>
           </CardTitle>
           <div className='flex items-center gap-2'>
@@ -587,6 +588,72 @@ export function MatchupSimulation({
           </div>
         </div>
 
+        {/* NFL Game Context - Transparency Section */}
+        {(simulationData as any).nflGameContext && (
+          <div className='pt-4 border-t'>
+            <h4 className='font-semibold mb-3 flex items-center gap-2 text-sm'>
+              <Clock className='h-4 w-4' />
+              NFL Game Progress
+              <Badge variant='outline' className='text-xs'>
+                {((simulationData as any).nflGameContext.averageGameProgress * 100).toFixed(0)}%
+                Complete
+              </Badge>
+            </h4>
+
+            <div className='space-y-3'>
+              {/* Summary Stats */}
+              <div className='grid grid-cols-2 gap-4 text-sm'>
+                <div className='bg-muted/30 p-3 rounded-lg text-center'>
+                  <div className='font-medium'>Avg. Minutes Remaining</div>
+                  <div className='text-lg font-semibold text-blue-600'>
+                    {(simulationData as any).nflGameContext.averageMinutesRemaining.toFixed(1)}m
+                  </div>
+                </div>
+                <div className='bg-muted/30 p-3 rounded-lg text-center'>
+                  <div className='font-medium'>NFL Games</div>
+                  <div className='text-lg font-semibold text-green-600'>
+                    {(simulationData as any).nflGameContext.totalNflGames}
+                  </div>
+                </div>
+              </div>
+
+              {/* Game States */}
+              <div className='space-y-2'>
+                <div className='text-xs font-medium text-muted-foreground'>Game States:</div>
+                <div className='flex flex-wrap gap-2'>
+                  {(simulationData as any).nflGameContext.gameStates.map((state: any) => (
+                    <Badge
+                      key={state.team}
+                      variant={
+                        state.state === 'post'
+                          ? 'destructive'
+                          : state.state === 'in'
+                            ? 'default'
+                            : 'secondary'
+                      }
+                      className='text-xs'
+                    >
+                      {state.team}:{' '}
+                      {state.state === 'post'
+                        ? 'Final'
+                        : state.state === 'in'
+                          ? state.gameDescription
+                          : 'Scheduled'}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Explanation */}
+              <div className='text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 p-2 rounded border-l-2 border-blue-200'>
+                <strong>Minutes-Based Projections:</strong> Player projections are automatically
+                adjusted based on actual NFL game time remaining. Completed games = 0 projection
+                remaining, live games = proportional to time left.
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Simulation Stats */}
         <div className='pt-4 border-t'>
           <div className='grid grid-cols-3 gap-4 text-center text-sm'>
@@ -603,8 +670,8 @@ export function MatchupSimulation({
               </div>
             </div>
             <div>
-              <div className='font-medium'>Engine</div>
-              <div className='text-muted-foreground'>@gauntlet/sim-engine</div>
+              <div className='font-medium'>Method</div>
+              <div className='text-muted-foreground'>Minutes-Based</div>
             </div>
           </div>
         </div>
