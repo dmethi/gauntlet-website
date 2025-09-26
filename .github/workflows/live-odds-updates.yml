@@ -97,7 +97,31 @@ jobs:
           echo "  Hour: $CURRENT_HOUR UTC"
           echo "  Month: $CURRENT_MONTH"
 
-      - name: Run live odds update
+      - name: Build and start Next.js server
+        run: |
+          echo "🏗️ Building Next.js app..."
+          pnpm --filter @gauntlet/web build
+
+          echo "🚀 Starting Next.js server..."
+          pnpm --filter @gauntlet/web start &
+          WEB_PID=$!
+          echo "WEB_PID=$WEB_PID" >> $GITHUB_ENV
+
+          echo "⏳ Waiting for server to be ready..."
+          for i in {1..30}; do
+            if curl -s http://localhost:3000/api/health > /dev/null 2>&1; then
+              echo "✅ Server is ready!"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "❌ Server failed to start within 30 seconds"
+              kill $WEB_PID || true
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: Run live odds update  
         run: |
           WEEK="${{ steps.determine-context.outputs.week }}"
           IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
@@ -120,6 +144,14 @@ jobs:
           else
             echo "📅 Running daily pre-game odds snapshot..."
             pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
+          fi
+
+      - name: Stop Next.js server
+        if: always()
+        run: |
+          if [ -n "$WEB_PID" ]; then
+            echo "🛑 Stopping Next.js server..."
+            kill $WEB_PID || true
           fi
 
       - name: Report completion
