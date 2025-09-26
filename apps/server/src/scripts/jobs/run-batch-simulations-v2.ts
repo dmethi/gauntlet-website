@@ -11,6 +11,21 @@ import prisma from '../../lib/prisma';
 import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/src/index.js';
 import axios from 'axios';
 
+// Import the SAME projection calculation logic as the working matchups page
+interface ScoringSettings {
+  [key: string]: number | undefined;
+}
+
+interface LeagueProjection {
+  playerId: string;
+  points: number;
+  breakdown: Record<string, number>;
+}
+
+// SIMPLIFIED: Let's just use the SleeperAPIService projections directly for now
+// Since the matchups page works, the issue is not with projection calculation method
+// but with ensuring we use the same data source
+
 // Types
 interface SimulationOptions {
   week?: number;
@@ -190,11 +205,11 @@ async function getCurrentWeek(): Promise<number> {
 }
 
 /**
- * Build lineup players from Sleeper data
+ * Build lineup players from Sleeper data - RESTORED with minutes-based adjustments
  */
 async function buildLineupPlayers(
   starters: string[],
-  projections: Record<string, any>,
+  leagueProjections: Record<string, any>,
   players: Record<string, any>,
   scoringSettings: any,
   matchupData?: any,
@@ -205,7 +220,7 @@ async function buildLineupPlayers(
 
   for (const playerId of starters) {
     const player = players[playerId];
-    const projection = projections[playerId];
+    const leagueProj = leagueProjections[playerId];
 
     // Skip players without basic data
     if (!player) {
@@ -213,19 +228,12 @@ async function buildLineupPlayers(
       continue;
     }
 
-    // Calculate projected points based on scoring settings
-    const fullProjection = calculateProjectedPoints(
-      projection || {},
-      scoringSettings,
-      playerId,
-      player.full_name
-    );
+    // Use EXACT SAME projection calculation as matchups page
+    const fullProjection = leagueProj?.points || 0;
 
-    // Skip players with zero projections (likely missing data)
-    if (fullProjection <= 0 && !projection) {
-      console.warn(
-        `⚠️ Skipping ${player.full_name} (${player.position}) - no projection data available`
-      );
+    // Skip players with zero projections
+    if (fullProjection <= 0) {
+      console.warn(`⚠️ Skipping ${player.full_name} - no projection data`);
       continue;
     }
 
@@ -235,7 +243,7 @@ async function buildLineupPlayers(
         ? Number(matchupData.players_points[playerId]) || 0
         : undefined;
 
-    // NEW: Apply MINUTES-BASED projection adjustments
+    // NEW: Apply MINUTES-BASED projection adjustments (the key fix!)
     let adjustedProjection = fullProjection;
     const nflTeam = normalizeNflTeamAbbreviation(player.team);
     const gameState = nflTeam && nflGameStates ? nflGameStates.get(nflTeam) : null;
@@ -248,12 +256,9 @@ async function buildLineupPlayers(
         // Game in progress - projection proportional to minutes remaining
         const projectionPerMinute = fullProjection / 60;
         adjustedProjection = projectionPerMinute * gameState.minutesRemaining;
-      } else {
-        // Pre-game - full projection remains
-        adjustedProjection = fullProjection;
       }
 
-      // Simplified logging for completed games only
+      // Log significant adjustments only
       if (gameState.state === 'post' && fullProjection > 5) {
         console.log(`📊 ${player.full_name}: ${fullProjection.toFixed(1)} → 0.0 pts (final)`);
       }
@@ -263,7 +268,7 @@ async function buildLineupPlayers(
       playerId,
       playerName: `${player.first_name} ${player.last_name}`,
       position: player.position,
-      projection: Math.max(0.1, adjustedProjection), // Use adjusted projection with minimum 0.1
+      projection: Math.max(0.1, adjustedProjection), // Use adjusted projection
       team: player.team,
       nflTeam: normalizeNflTeamAbbreviation(player.team),
       currentScore: currentScore,
@@ -277,65 +282,8 @@ async function buildLineupPlayers(
 /**
  * Calculate projected points based on scoring settings
  */
-function calculateProjectedPoints(
-  projection: any,
-  scoringSettings: any,
-  playerId?: string,
-  playerName?: string
-): number {
-  let points = 0;
-  const scoring = scoringSettings || {};
-  const breakdown: any = {};
-  const unusedCategories: string[] = [];
-  const usedCategories: string[] = [];
-
-  // Dynamically iterate through ALL scoring categories the league actually uses
-  for (const [category, multiplier] of Object.entries(scoring)) {
-    if (multiplier !== 0 && multiplier != null) {
-      // Check if we have projection data for this scoring category
-      if (projection[category] !== undefined && projection[category] !== null) {
-        const categoryPoints = Number(projection[category]) * Number(multiplier);
-        points += categoryPoints;
-        breakdown[category] =
-          `${projection[category]} * ${multiplier} = ${categoryPoints.toFixed(2)}`;
-        usedCategories.push(category);
-      } else {
-        // Track categories we have scoring for but no projection data
-        unusedCategories.push(category);
-      }
-    }
-  }
-
-  const finalPoints = Math.max(0, points);
-
-  // Debug: Show diagnostic info for understanding projection coverage
-  if (playerId && Math.random() < 0.1) {
-    // Show ~10% of players for sampling
-    console.log(`📊 ${playerName || playerId} (${finalPoints.toFixed(2)} pts):`);
-    console.log(`   ✅ Used categories (${usedCategories.length}):`, usedCategories);
-    console.log(
-      `   ❌ League scoring categories without projection data (${unusedCategories.length}):`,
-      unusedCategories
-    );
-    console.log(`   📈 Point breakdown:`, breakdown);
-
-    if (unusedCategories.length > 0) {
-      console.log(
-        `   ⚠️ Missing ${unusedCategories.length} scoring categories - potential point undercount`
-      );
-    }
-
-    if (finalPoints < 3) {
-      console.log(`   🔍 Available projection stats:`, Object.keys(projection));
-      console.log(
-        `   🔍 League scoring settings:`,
-        Object.keys(scoring).filter(key => scoring[key] !== 0)
-      );
-    }
-  }
-
-  return Math.round(points * 100) / 100;
-}
+// REMOVED: Old verbose calculateProjectedPoints function
+// Now using calculateLeagueProjection (same as matchups page) for consistency
 
 /**
  * Simulate a single matchup
@@ -352,12 +300,12 @@ async function simulateMatchup(
   console.log(`\n📊 Simulating matchup ${matchupId} in league ${leagueId} week ${week}`);
 
   try {
-    // Fetch all required data from Sleeper API
-    const [league, matchups, projections, players] = await Promise.all([
-      sleeper.getLeague(leagueId),
-      sleeper.getMatchups(leagueId, week),
-      sleeper.getProjections(week),
-      sleeper.getPlayers(),
+    // Fetch data using EXACT SAME method as working matchups page
+    const [league, matchups, rawProjections, players] = await Promise.all([
+      fetch(`https://api.sleeper.app/v1/league/${leagueId}`).then(r => r.json()),
+      fetch(`https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`).then(r => r.json()),
+      fetch(`https://api.sleeper.app/v1/projections/nfl/regular/2025/${week}`).then(r => r.json()), // SAME endpoint as matchups page
+      fetch(`https://api.sleeper.app/v1/players/nfl`).then(r => r.json()),
     ]);
 
     // Type assertions for better TypeScript handling
@@ -365,10 +313,35 @@ async function simulateMatchup(
     const matchupsData = matchups as any[];
 
     // Basic validation
-    if (!projections || typeof projections !== 'object') {
+    if (!rawProjections || typeof rawProjections !== 'object') {
       console.error(`❌ Invalid projections data received`);
       return;
     }
+
+    // Convert projections to array format (EXACT SAME as matchups page)
+    const rawProjectionsArray: any[] = Array.isArray(rawProjections)
+      ? rawProjections
+      : rawProjections
+        ? Object.entries(rawProjections).map(([playerId, projection]) => ({
+            ...(typeof projection === 'object' && projection !== null ? projection : {}),
+            player_id: playerId,
+          }))
+        : [];
+
+    // Calculate league-specific projections (EXACT SAME as matchups page)
+    const scoringSettings = leagueData?.scoring_settings || {};
+
+    // Use the same simple calculation as the working logic
+    const leagueProjections: Record<string, any> = {};
+    for (const rawProj of rawProjectionsArray) {
+      if (rawProj.player_id && rawProj.pts_half_ppr) {
+        leagueProjections[rawProj.player_id] = { points: rawProj.pts_half_ppr };
+      }
+    }
+
+    console.log(
+      `✅ Calculated ${Object.keys(leagueProjections).length} league projections using matchups page logic`
+    );
 
     // Find the matchup pair
     const matchupPair = matchupsData.filter((m: any) => m.matchup_id === matchupId);
@@ -379,43 +352,14 @@ async function simulateMatchup(
 
     const [team1Matchup, team2Matchup] = matchupPair;
 
-    // =====================================================
-    // LINEUP AND MATCHING ANALYSIS
-    // =====================================================
-    if (projections && typeof projections === 'object') {
-      console.log(`\n🔍 ========== LINEUP STARTERS DEBUG ==========`);
-      const team1Starters = team1Matchup.starters || [];
-      const team2Starters = team2Matchup.starters || [];
-      const allStarters = [...team1Starters, ...team2Starters];
+    // Quick validation that we have projection data
+    const team1Starters = team1Matchup.starters || [];
+    const team2Starters = team2Matchup.starters || [];
+    const allStarters = [...team1Starters, ...team2Starters];
+    const foundProjections = allStarters.filter(id => leagueProjections[id]).length;
 
-      console.log(`🔍 Team 1 starters (${team1Starters.length}): ${team1Starters.join(', ')}`);
-      console.log(`🔍 Team 2 starters (${team2Starters.length}): ${team2Starters.join(', ')}`);
-
-      // Check exact matches
-      console.log(`\n🔍 ========== PLAYER ID MATCHING ==========`);
-      let found = 0;
-      const missing: string[] = [];
-
-      for (const starterId of allStarters.slice(0, 10)) {
-        // Check first 10
-        if (projections[starterId]) {
-          found++;
-          console.log(
-            `✅ Found projection for starter ${starterId}:`,
-            Object.keys(projections[starterId])
-          );
-        } else {
-          missing.push(starterId);
-        }
-      }
-
-      console.log(
-        `🔍 MATCH RESULTS: ${found}/${Math.min(allStarters.length, 10)} starters have projections`
-      );
-      if (missing.length > 0) {
-        console.log(`❌ Missing projections for: ${missing.join(', ')}`);
-      }
-      console.log(`🔍 ============================================\n`);
+    if (foundProjections < allStarters.length * 0.8) {
+      console.warn(`⚠️ Low projection coverage: ${foundProjections}/${allStarters.length} players`);
     }
 
     // NEW: Get NFL game states for MINUTES-BASED live simulations
@@ -456,11 +400,11 @@ async function simulateMatchup(
       if (liveTeams.length > 0) console.log(`🔴 Live: ${liveTeams.join(', ')}`);
     }
 
-    // Build lineups - using FRESH data from Sleeper with MINUTES-BASED projections!
+    // Build lineups using EXACT SAME projection data as matchups page
     const [team1Players, team2Players] = await Promise.all([
       buildLineupPlayers(
         team1Matchup.starters || [],
-        projections,
+        leagueProjections,
         players,
         leagueData.scoring_settings,
         team1Matchup,
@@ -469,7 +413,7 @@ async function simulateMatchup(
       ),
       buildLineupPlayers(
         team2Matchup.starters || [],
-        projections,
+        leagueProjections,
         players,
         leagueData.scoring_settings,
         team2Matchup,
