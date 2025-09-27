@@ -390,13 +390,11 @@ const RosterContextView = ({
   rosterContext: RosterContext[];
   players: Record<string, any>;
 }) => {
-  const [selectedManager, setSelectedManager] = useState<string>(
-    rosterContext[0]?.managerName || ''
-  );
+  const [selectedManager, setSelectedManager] = useState<string>('all');
   const [expandedAlternatives, setExpandedAlternatives] = useState<Set<string>>(new Set());
 
   const filteredContext = rosterContext.filter(
-    context => selectedManager === '' || context.managerName === selectedManager
+    context => selectedManager === 'all' || context.managerName === selectedManager
   );
 
   const managers = Array.from(new Set(rosterContext.map(c => c.managerName))).sort();
@@ -420,7 +418,7 @@ const RosterContextView = ({
             <SelectValue placeholder='All Managers' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=''>All Managers</SelectItem>
+            <SelectItem value='all'>All Managers</SelectItem>
             {managers.map(manager => (
               <SelectItem key={manager} value={manager}>
                 {manager}

@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes';
 import { useMemo } from 'react';
 import { colors } from './colors';
-import teamColorData from '../../data/team-colors.json';
+import teamColorData from '../../../../brand/team-colors.json';
 
 /**
  * Enhanced theme-aware chart colors hook

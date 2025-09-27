@@ -287,6 +287,39 @@ const facts = {
 const efficiency = (actualPoints - replacementLevel) / replacementLevel;
 ```
 
+## 🎯 Live Scoring & Real-Time Systems
+
+### Live Scoring Update Intervals
+- **Primary Interval**: 10 minutes during NFL games (provides 18 data points per 3-hour game)
+- **Rationale**: Perfect balance between granular trend visualization and API budget conservation
+- **Data Points**: Score progression, win probability changes, momentum tracking
+- **Alternative**: 5-minute intervals for critical matchups (doubles API calls)
+
+### Real-Time Data Patterns
+```typescript
+// ✅ Live scoring data structure
+interface LiveMatchupUpdate {
+  timestamp: string;
+  week: number;
+  matchupId: string;
+  team1Score: number;
+  team2Score: number;
+  team1WinProbability: number;
+  excitementScore: number; // Volatility metric
+  gameState: 'pre' | 'in' | 'post';
+}
+
+// ✅ Time-series storage pattern
+const timeSeriesKey = `${leagueId}-${week}-${matchupId}`;
+const updates = await getMatchupTimeSeries(timeSeriesKey);
+```
+
+### Excitement Metrics Calculation
+- **Volatility Index**: Standard deviation of win probability changes over time
+- **Lead Changes**: Number of times the lead switches during a game
+- **Clutch Performance**: Bonus weighting for 4th quarter and overtime scoring
+- **Momentum Tracking**: Rate of change in scoring differential
+
 ## 🎯 League-Specific Scoring Calculations
 
 ### Always Use League Scoring Settings
@@ -311,6 +344,32 @@ const calculateLeagueProjection = (rawProjection, scoringSettings) => {
 5. **Kicking**: FG distance tiers, Extra points
 
 ## ⚡ Performance Optimization Patterns
+
+### Multi-Layer Caching Architecture
+```typescript
+// ✅ Layer 1: Browser localStorage/sessionStorage (static data)
+const BROWSER_CACHE_KEYS = {
+  PLAYERS: 'gauntlet_players_v1', // 1 week expiry
+  LEAGUE_SETTINGS: 'gauntlet_settings_v1', // Season-long
+  USER_PREFERENCES: 'gauntlet_prefs_v1' // Persistent
+};
+
+// ✅ Layer 2: React Query in-memory cache (dynamic data)
+export const CACHE_STRATEGIES = {
+  LIVE_SCORES: { staleTime: 0, gcTime: 5 * 60 * 1000 }, // 5 min garbage collection
+  MATCHUPS: { staleTime: 30 * 1000, gcTime: 5 * 60 * 1000 }, // 30s stale
+  ROSTERS: { staleTime: 5 * 60 * 1000, gcTime: 30 * 60 * 1000 }, // 5 min stale
+  PLAYERS: { staleTime: 24 * 60 * 60 * 1000, gcTime: 7 * 24 * 60 * 60 * 1000 } // 1 day stale
+};
+
+// ✅ Layer 3: Server-side cache (API layer)
+const SERVER_CACHE_DURATION = {
+  PLAYERS: 7 * 24 * 60 * 60 * 1000, // 1 week - massive static data
+  STATS: 60 * 60 * 1000, // 1 hour - semi-static
+  LIVE_DATA: 0, // No cache - always fresh
+  PROJECTIONS: 60 * 60 * 1000 // 1 hour - updated periodically
+};
+```
 
 ### Precomputation Strategy
 - **Heavy Analytics**: Run `npm run precompute:real` for draft analysis, manager analytics

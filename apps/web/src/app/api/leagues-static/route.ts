@@ -13,21 +13,61 @@ export async function GET() {
     // Get league details from Sleeper for current leagues
     const leagueDetails = await Promise.all(
       getCurrentLeagues().map(async config => {
-        const sleeperData = await sleeperClient.fetchLeague(config.id);
-        return {
-          id: config.id,
-          name: config.name,
-          season: config.season,
-          conference: config.conference,
-          // Add Sleeper data
-          totalRosters: sleeperData.total_rosters,
-          settings: sleeperData.settings,
-          scoringSettings: sleeperData.scoring_settings,
-          rosterPositions: sleeperData.roster_positions,
-          // Metadata
-          dataSource: 'static-config',
-          dbQueries: 0,
-        };
+        try {
+          const sleeperData = await sleeperClient.fetchLeague(config.id);
+
+          if (!sleeperData) {
+            console.warn(`[STATIC API] No data returned for league ${config.id}`);
+            // Return basic config data if Sleeper API fails
+            return {
+              id: config.id,
+              name: config.name,
+              season: config.season,
+              conference: config.conference,
+              // Fallback values
+              totalRosters: 12,
+              settings: {},
+              scoringSettings: {},
+              rosterPositions: [],
+              // Metadata
+              dataSource: 'config-only',
+              dbQueries: 0,
+            };
+          }
+
+          return {
+            id: config.id,
+            name: config.name,
+            season: config.season,
+            conference: config.conference,
+            // Add Sleeper data
+            totalRosters: sleeperData.total_rosters || 12,
+            settings: sleeperData.settings || {},
+            scoringSettings: sleeperData.scoring_settings || {},
+            rosterPositions: sleeperData.roster_positions || [],
+            // Metadata
+            dataSource: 'static-config',
+            dbQueries: 0,
+          };
+        } catch (error) {
+          console.error(`[STATIC API] Failed to fetch league ${config.id}:`, error);
+          // Return config-only data on error
+          return {
+            id: config.id,
+            name: config.name,
+            season: config.season,
+            conference: config.conference,
+            // Fallback values
+            totalRosters: 12,
+            settings: {},
+            scoringSettings: {},
+            rosterPositions: [],
+            // Metadata
+            dataSource: 'config-only-error',
+            dbQueries: 0,
+            error: error instanceof Error ? error.message : String(error),
+          };
+        }
       })
     );
 
