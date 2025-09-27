@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  getLeague,
-  getMatchups,
-  getPlayers,
-  getProjections,
-  getRosters,
-  getUsers,
-} from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 import {
   type ScoringSettings,
   calculateLeagueProjections,
@@ -63,12 +56,12 @@ export async function GET(
 
     // Fetch all required data
     const [league, matchups, users, rosters, rawProjections, playersData] = await Promise.all([
-      getLeague(leagueId),
-      getMatchups(leagueId, weekNumber),
-      getUsers(leagueId),
-      getRosters(leagueId),
-      getProjections(weekNumber, '2025'),
-      getPlayers(),
+      sleeperClient.fetchLeague(leagueId),
+      sleeperClient.fetchMatchups(leagueId, weekNumber),
+      sleeperClient.fetchUsers(leagueId),
+      sleeperClient.fetchRosters(leagueId),
+      sleeperClient.fetchWeeklyProjections(weekNumber, '2025'),
+      sleeperClient.fetchAllPlayers(),
     ]);
 
     if (!matchups || !Array.isArray(matchups)) {
@@ -106,7 +99,7 @@ export async function GET(
       const starters = matchup.starters || [];
       const players = roster?.players || [];
       const bench = players.filter((p: string) => !starters.includes(p));
-      const starterPoints = matchup.starters_points || {};
+      const starterPoints = (matchup.starters_points as Record<string, number> | undefined) || {};
 
       // Build starter players
       const starterPlayers = starters.map((playerId: string, index: number) => {

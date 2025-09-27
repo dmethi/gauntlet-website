@@ -4,7 +4,8 @@
  */
 
 import { CACHE_DURATIONS, LEAGUE_IDS } from './constants';
-import { sleeperStatsService, PlayerStats } from './sleeper-stats-service';
+import { createServiceClient } from './sleeper/unified-client';
+import { PlayerStats } from './sleeper/unified-client';
 import { ProcessedMatchup } from './hall-of-fame-calculations';
 
 // All Gauntlet league IDs (current and historical)
@@ -59,6 +60,7 @@ export interface EnhancedMatchup extends ProcessedMatchup {
 
 class HallOfFameDataService {
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
+  private sleeperClient = createServiceClient();
 
   /**
    * Fetch all historical matchups across all leagues
@@ -100,9 +102,9 @@ class HallOfFameDataService {
 
     // Fetch basic matchup data from Sleeper
     const [league, rosters, users] = await Promise.all([
-      this.fetchSleeperData(`league/${leagueId}`),
-      this.fetchSleeperData<any[]>(`league/${leagueId}/rosters`),
-      this.fetchSleeperData<any[]>(`league/${leagueId}/users`),
+      this.sleeperClient.fetchLeague(leagueId),
+      this.sleeperClient.fetchRosters(leagueId),
+      this.sleeperClient.fetchUsers(leagueId),
     ]);
 
     // Determine number of weeks
@@ -148,7 +150,8 @@ class HallOfFameDataService {
 
     // Fetch all weeks in parallel
     const weekPromises = Array.from({ length: weeks }, (_, i) => i + 1).map(week =>
-      this.fetchSleeperData<any[]>(`league/${leagueId}/matchups/${week}`)
+      this.sleeperClient
+        .fetchMatchups(leagueId, week)
         .then(matchups => ({ week, matchups }))
         .catch(() => ({ week, matchups: [] }))
     );
@@ -215,7 +218,7 @@ class HallOfFameDataService {
     leagueName: string
   ): Promise<EnhancedMatchup[]> {
     // Fetch player data for position mapping
-    const playersData = await this.fetchSleeperData<Record<string, any>>('players/nfl');
+    const playersData = await this.sleeperClient.fetchAllPlayers();
     const playerDataMap = new Map(Object.entries(playersData));
     const enhanced: EnhancedMatchup[] = [];
 
@@ -232,8 +235,8 @@ class HallOfFameDataService {
     for (const [week, weekMatchups] of matchupsByWeek.entries()) {
       // Fetch stats and projections for this week
       const [stats, projections] = await Promise.all([
-        sleeperStatsService.getWeeklyStats(season, week),
-        sleeperStatsService.getWeeklyProjections(season, week),
+        this.sleeperClient.fetchWeeklyPlayerStats(week, season),
+        this.sleeperClient.fetchWeeklyProjections(week, season),
       ]);
 
       // Fetch win probability data if available
@@ -403,23 +406,11 @@ class HallOfFameDataService {
    */
   private async getCurrentWeek(): Promise<number> {
     try {
-      const response = await fetch('https://api.sleeper.app/v1/state/nfl');
-      const state = await response.json();
+      const state = await this.sleeperClient.fetchNFLState();
       return state.week || 1;
     } catch {
       return 1;
     }
-  }
-
-  /**
-   * Fetch data from Sleeper API
-   */
-  private async fetchSleeperData<T = any>(endpoint: string): Promise<T> {
-    const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
-    if (!response.ok) {
-      throw new Error(`Sleeper API error: ${response.status}`);
-    }
-    return response.json();
   }
 
   /**

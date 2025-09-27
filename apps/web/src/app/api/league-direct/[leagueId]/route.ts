@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLeague, getRosters, getMatchups, getNFLState } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 /**
  * Example API route that bypasses database entirely
@@ -10,14 +10,14 @@ export async function GET(request: NextRequest, { params }: { params: { leagueId
 
   try {
     // Get current week from NFL state
-    const nflState = await getNFLState();
+    const nflState = await sleeperClient.fetchNFLState();
     const currentWeek = nflState.week || 1;
 
     // Fetch all data from Sleeper API (no DB!)
     const [league, rosters, matchups] = await Promise.all([
-      getLeague(params.leagueId),
-      getRosters(params.leagueId),
-      getMatchups(params.leagueId, currentWeek),
+      sleeperClient.fetchLeague(params.leagueId),
+      sleeperClient.fetchRostersWithOwners(params.leagueId),
+      sleeperClient.fetchMatchups(params.leagueId, currentWeek),
     ]);
 
     // Group matchups by matchup_id

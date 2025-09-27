@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
-import { getLeague, getProjections, getNFLState } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 export async function GET(
   request: NextRequest,
@@ -24,15 +24,18 @@ export async function GET(
 
     // Fetch all data from Sleeper API (no database!)
     const [league, rosters, users, matchups, nflState] = await Promise.all([
-      getLeague(leagueId),
+      sleeperClient.fetchLeague(leagueId),
       getRostersByLeague(leagueId),
       getUsersByLeague(leagueId),
       getMatchupsByWeek(leagueId, weekNumber),
-      getNFLState(),
+      sleeperClient.fetchNFLState(),
     ]);
 
     // Get projections for the week
-    const projections = await getProjections(weekNumber, nflState?.season || '2025');
+    const projections = await sleeperClient.fetchWeeklyProjections(
+      weekNumber,
+      nflState?.season || '2025'
+    );
 
     // Map users to rosters
     const usersMap = new Map(users.map((u: any) => [u.id, u]));
@@ -46,7 +49,7 @@ export async function GET(
       }
       const roster = rostersMap.get(m.rosterId);
       const owner = roster ? usersMap.get(roster.ownerId) : null;
-      
+
       matchupPairs.get(m.matchupId)!.push({
         ...m,
         roster,
@@ -66,12 +69,14 @@ export async function GET(
           starters: team1.starters || [],
           owner: team1.owner,
         },
-        team2: team2 ? {
-          rosterId: team2.rosterId,
-          points: team2.points || 0,
-          starters: team2.starters || [],
-          owner: team2.owner,
-        } : null,
+        team2: team2
+          ? {
+              rosterId: team2.rosterId,
+              points: team2.points || 0,
+              starters: team2.starters || [],
+              owner: team2.owner,
+            }
+          : null,
       };
     });
 
@@ -82,7 +87,9 @@ export async function GET(
       week: weekNumber,
       dbQueries: 0, // ZERO database queries!
       dataSource: 'sleeper-api',
-      debug: debug ? { rosters: rosters.length, users: users.length, matchups: matchups.length } : undefined,
+      debug: debug
+        ? { rosters: rosters.length, users: users.length, matchups: matchups.length }
+        : undefined,
     });
   } catch (error) {
     console.error('Matchups v2 API error:', error);

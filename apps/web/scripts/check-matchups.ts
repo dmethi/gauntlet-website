@@ -4,14 +4,15 @@
 */
 
 import { CURRENT_LEAGUES } from '@/config/leagues';
-import { fetchMatchups } from '@/lib/sleeper/client';
+import { createStatsClient } from '@/lib/sleeper/unified-client';
 
 async function main() {
+  const statsClient = createStatsClient();
   const weeks = [1, 2, 3, 4, 5];
   for (const l of CURRENT_LEAGUES) {
     console.log(`\nLeague ${l.name} (${l.id})`);
     for (const w of weeks) {
-      const m = await fetchMatchups(l.id, w);
+      const m = await statsClient.fetchMatchups(l.id, w);
       const points = m.map(x => x.points).filter(v => typeof v === 'number');
       console.log(`  Week ${w}: matchups=${m.length}, samplePoints=${points.slice(0, 4)}`);
     }

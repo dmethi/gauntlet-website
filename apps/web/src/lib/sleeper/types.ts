@@ -30,6 +30,7 @@ export interface SleeperLeague {
     num_teams: number;
   };
   roster_positions: string[];
+  scoring_settings: Record<string, number>;
   total_rosters: number;
   draft_id: string;
 }

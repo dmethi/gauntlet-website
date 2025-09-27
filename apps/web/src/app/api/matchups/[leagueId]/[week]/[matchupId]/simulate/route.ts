@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
-import { getMatchups, getProjections, getPlayers, getLeague } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 import {
   calculateLeagueProjections,
   type ScoringSettings,
@@ -169,10 +169,10 @@ export async function GET(
 
     // Fetch data from Sleeper + ESPN
     const [matchups, rawProjections, players, league, espnScoreboard] = await Promise.all([
-      getMatchups(leagueId, week),
-      getProjections(week, '2025'),
-      getPlayers(),
-      getLeague(leagueId),
+      sleeperClient.fetchMatchups(leagueId, week),
+      sleeperClient.fetchWeeklyProjections(week, '2025'),
+      sleeperClient.fetchAllPlayers(),
+      sleeperClient.fetchLeague(leagueId),
       fetchEspnScoreboard(),
     ]);
 
@@ -190,7 +190,8 @@ export async function GET(
         : [];
 
     // Calculate league-specific projections
-    const scoringSettings: ScoringSettings = (league?.scoring_settings as ScoringSettings) || {};
+    const scoringSettings: ScoringSettings =
+      ((league as any)?.scoring_settings as ScoringSettings) || {};
     const leagueProjections = calculateLeagueProjections(rawProjectionsArray, scoringSettings);
 
     const pair = (matchups || []).filter((m: any) => m.matchup_id === matchupId);
@@ -204,14 +205,14 @@ export async function GET(
       team1.starters || [],
       leagueProjections,
       playersMap,
-      team1.starters_points,
+      team1.starters_points as Record<string, number> | undefined,
       nflGameStates
     );
     const team2Players = toLineupPlayersWithMinutes(
       team2.starters || [],
       leagueProjections,
       playersMap,
-      team2.starters_points,
+      team2.starters_points as Record<string, number> | undefined,
       nflGameStates
     );
 

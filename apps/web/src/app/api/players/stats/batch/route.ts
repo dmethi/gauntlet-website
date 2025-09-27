@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayersByIds } from '@/data/players-loader';
-import { getCurrentWeek } from '@/lib/api-replacements';
-import { getProjections, getNFLState } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
+
+// Helper function to get current week
+async function getCurrentWeek() {
+  const nflState = await sleeperClient.fetchNFLState();
+  return nflState.week || 1;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,8 +35,8 @@ export async function GET(request: NextRequest) {
     // Fetch player info and projections
     const [players, projections, nflState] = await Promise.all([
       Promise.resolve(getPlayersByIds(playerIds)),
-      getProjections(week, season),
-      getNFLState(),
+      sleeperClient.fetchWeeklyProjections(week, season),
+      sleeperClient.fetchNFLState(),
     ]);
 
     // Combine player info with their projections/stats
@@ -122,8 +127,8 @@ export async function POST(request: NextRequest) {
     // Fetch player info and projections
     const [players, projections, nflState] = await Promise.all([
       Promise.resolve(getPlayersByIds(playerIds)),
-      getProjections(targetWeek, season),
-      getNFLState(),
+      sleeperClient.fetchWeeklyProjections(targetWeek, season),
+      sleeperClient.fetchNFLState(),
     ]);
 
     // Format the same way as GET endpoint

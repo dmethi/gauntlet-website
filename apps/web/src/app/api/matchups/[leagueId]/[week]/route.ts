@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
-import { getLeague, getNFLState, getProjections } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 import {
   type ScoringSettings,
   calculateLeagueProjections,
@@ -63,8 +63,8 @@ export async function GET(
       getRostersByLeague(leagueId),
       getUsersByLeague(leagueId),
       getMatchupsByWeek(leagueId, weekNumber),
-      getNFLState(),
-      getLeague(leagueId),
+      sleeperClient.fetchNFLState(),
+      sleeperClient.fetchLeague(leagueId),
     ]);
 
     // Debug logs to verify data fidelity (guarded by env flag)
@@ -104,7 +104,7 @@ export async function GET(
 
     // Fetch projections for this week/season
     const season = nflState?.season || '2025';
-    const rawProjections = await getProjections(weekNumber, season);
+    const rawProjections = await sleeperClient.fetchWeeklyProjections(weekNumber, season);
 
     // Convert projections to array while preserving player_id
     const rawProjectionsArray: any[] = Array.isArray(rawProjections)

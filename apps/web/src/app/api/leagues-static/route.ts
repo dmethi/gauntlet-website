@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
-import { getLeague } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 /**
  * Get all leagues WITHOUT database
@@ -13,7 +13,7 @@ export async function GET() {
     // Get league details from Sleeper for current leagues
     const leagueDetails = await Promise.all(
       getCurrentLeagues().map(async config => {
-        const sleeperData = await getLeague(config.id);
+        const sleeperData = await sleeperClient.fetchLeague(config.id);
         return {
           id: config.id,
           name: config.name,

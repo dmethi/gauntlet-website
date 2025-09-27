@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
-import { getNFLState, getProjections, getPlayers, getLeague } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
 import {
   calculateLeagueProjections,
@@ -85,13 +85,13 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
 
   try {
     const leagueIds = ['1263744209295245312', '1263740549504962561'];
-    const nflState = await getNFLState();
+    const nflState = await sleeperClient.fetchNFLState();
     const season = nflState?.season || '2025';
 
     // Load projections, players, and league info for each league
     const [rawProjections, players] = await Promise.all([
-      getProjections(week, season),
-      getPlayers(),
+      sleeperClient.fetchWeeklyProjections(week, season),
+      sleeperClient.fetchAllPlayers(),
     ]);
 
     // Convert projections to array while preserving player_id
@@ -122,7 +122,7 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
         getRostersByLeague(leagueId),
         getUsersByLeague(leagueId),
         getMatchupsByWeek(leagueId, week),
-        getLeague(leagueId),
+        sleeperClient.fetchLeague(leagueId),
       ]);
       const usersById = new Map(users.map((u: any) => [u.id, u]));
       const rostersById = new Map(rosters.map((r: any) => [r.rosterId, r]));

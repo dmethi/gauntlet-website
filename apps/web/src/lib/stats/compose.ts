@@ -2,15 +2,7 @@
  * High-level stats dataset composition
  */
 
-import {
-  fetchNFLState,
-  fetchLeague,
-  fetchRosters,
-  fetchUsers,
-  fetchMatchups,
-  fetchPlayersIndex,
-  fetchWeeklyPlayerStats,
-} from '@/lib/sleeper/client';
+import { createStatsClient } from '@/lib/sleeper/unified-client';
 import { getStarterPositionPoints, aggregatePositionPoints, TRACKED_POSITIONS } from './positions';
 import { getTeamAndOpponentPoints, aggregateTeamPoints } from './teams';
 import { rank, rankWithinLeagues } from './ranks';
@@ -167,8 +159,11 @@ export async function buildStatsDataset({
 }): Promise<StatsDataset> {
   console.log('[DEBUG] buildStatsDataset: starting with', { leagueIds, labels, weekRange });
 
+  // Create stats client instance
+  const statsClient = createStatsClient();
+
   // 1. Fetch NFL state
-  const nflState = await fetchNFLState();
+  const nflState = await statsClient.fetchNFLState();
   const stateWeek = Number((nflState as any)?.week);
   const isValidWeek = Number.isFinite(stateWeek) && stateWeek >= 1 && stateWeek <= 18;
   const currentWeek = isValidWeek ? Math.min(stateWeek, 18) : weekRange.to;
@@ -189,10 +184,10 @@ export async function buildStatsDataset({
       leagueIds.map(async (id, i) => ({
         id,
         name: labels[i] || `League ${i + 1}`,
-        league: await fetchLeague(id),
+        league: await statsClient.fetchLeague(id),
       }))
     ),
-    fetchPlayersIndex(),
+    statsClient.fetchPlayersIndex(),
   ]);
 
   // 3. Fetch rosters and users for each league
@@ -201,7 +196,10 @@ export async function buildStatsDataset({
 
   await Promise.all(
     leagueIds.map(async leagueId => {
-      const [rosters, users] = await Promise.all([fetchRosters(leagueId), fetchUsers(leagueId)]);
+      const [rosters, users] = await Promise.all([
+        statsClient.fetchRosters(leagueId),
+        statsClient.fetchUsers(leagueId),
+      ]);
       rostersMap.set(leagueId, rosters);
       usersMap.set(leagueId, users);
     })
@@ -226,7 +224,7 @@ export async function buildStatsDataset({
 
     for (let i = 0; i < leagueIds.length; i++) {
       const leagueId = leagueIds[i];
-      const matchups = await fetchMatchups(leagueId, week);
+      const matchups = await statsClient.fetchMatchups(leagueId, week);
       weekLeagueMatchups.set(leagueId, matchups);
     }
 
@@ -238,7 +236,7 @@ export async function buildStatsDataset({
   const weeklyPlayerStatsMap = new Map<number, Record<string, any>>();
 
   for (let week = actualRange.from; week <= actualRange.to; week++) {
-    const playerStats = await fetchWeeklyPlayerStats(week);
+    const playerStats = await statsClient.fetchWeeklyPlayerStats(week);
     weeklyPlayerStatsMap.set(week, playerStats);
   }
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
-import { getLeague, getNFLState, getProjections } from '@/lib/sleeper-direct';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 import axios from 'axios';
 import reportData from '@/data/report-week2';
 
@@ -186,8 +186,7 @@ async function getPlayerData(season: string): Promise<{
   playerNames: Map<string, string>;
 }> {
   try {
-    const response = await fetch(`https://api.sleeper.app/v1/players/nfl`);
-    const players = await response.json();
+    const players = await sleeperClient.fetchAllPlayers();
 
     const teamMapping = new Map<string, string>();
     const playerNames = new Map<string, string>();
@@ -228,7 +227,7 @@ export async function GET(
       await Promise.all([
         fetchEspnScoreboard(),
         getPlayerData(season),
-        getNFLState(),
+        sleeperClient.fetchNFLState(),
         fetch(`http://localhost:3002/api/reports/2025/2`)
           .then(r => r.json())
           .catch(() => ({ ok: false })),
@@ -262,8 +261,8 @@ export async function GET(
           getRostersByLeague(league.id),
           getUsersByLeague(league.id),
           getMatchupsByWeek(league.id, weekNumber),
-          getLeague(league.id),
-          getProjections(weekNumber, season),
+          sleeperClient.fetchLeague(league.id),
+          sleeperClient.fetchWeeklyProjections(weekNumber, season),
         ]);
 
         // Build lookups
