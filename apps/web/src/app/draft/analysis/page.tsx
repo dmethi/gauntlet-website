@@ -24,7 +24,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { MockDraft, getPreGeneratedDrafts } from '@/lib/draft-generator';
-import { getRealDrafts } from '@/lib/sleeper-draft-fetcher';
+import { getRealDrafts } from '@/lib/draft-data-fetcher';
 import { DraftAnalytics, generateMockAnalytics } from '@/lib/draft-analytics';
 import { ManagerAnalytics, generateManagerAnalytics, inferStarters } from '@/lib/manager-analytics';
 import {

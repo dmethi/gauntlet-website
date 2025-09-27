@@ -3,14 +3,7 @@
  * These use Sleeper API + static data instead of database
  */
 
-import {
-  getLeague as getSleeperLeague,
-  getRosters as getSleeperRosters,
-  getMatchups as getSleeperMatchups,
-  getUsers as getSleeperUsers,
-  getProjections,
-  getNFLState,
-} from './sleeper-direct';
+import { sleeperClient } from './sleeper/unified-client';
 import { getCurrentLeagues, getLeagueConfig, ALL_LEAGUES } from '@/config/leagues';
 
 /**
@@ -19,12 +12,12 @@ import { getCurrentLeagues, getLeagueConfig, ALL_LEAGUES } from '@/config/league
 export async function getAllLeagues() {
   const leagues = await Promise.all(
     getCurrentLeagues().map(async config => {
-      const sleeperData = await getSleeperLeague(config.id);
+      const sleeperData = await sleeperClient.fetchLeague(config.id);
       return {
         id: config.id,
-        name: config.name,
-        season: config.season,
         ...sleeperData,
+        name: config.name, // Override sleeper name with config name
+        season: config.season, // Override sleeper season with config season
       };
     })
   );
@@ -38,12 +31,12 @@ export async function getLeagueById(leagueId: string) {
   const config = getLeagueConfig(leagueId);
   if (!config) return null;
 
-  const sleeperData = await getSleeperLeague(leagueId);
+  const sleeperData = await sleeperClient.fetchLeague(leagueId);
   return {
     id: leagueId,
-    name: config.name,
-    season: config.season,
     ...sleeperData,
+    name: config.name, // Override sleeper name with config name
+    season: config.season, // Override sleeper season with config season
   };
 }
 
@@ -52,7 +45,7 @@ export async function getLeagueById(leagueId: string) {
  */
 export async function getRostersByLeague(leagueId: string) {
   console.log(`[DEBUG] getRostersByLeague called with leagueId: ${leagueId}`);
-  const rosters = await getSleeperRosters(leagueId);
+  const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
 
   console.log(`[DEBUG] getRostersByLeague - rosters received:`, {
     type: typeof rosters,
@@ -87,7 +80,7 @@ export async function getRostersByLeague(leagueId: string) {
  * Replace: prisma.matchup.findMany({ where: { leagueId, week } })
  */
 export async function getMatchupsByWeek(leagueId: string, week: number) {
-  const matchups = await getSleeperMatchups(leagueId, week);
+  const matchups = await sleeperClient.fetchMatchups(leagueId, week);
   return matchups.map((m: any) => ({
     id: `${leagueId}-${week}-${m.roster_id}`,
     leagueId,
@@ -105,7 +98,7 @@ export async function getMatchupsByWeek(leagueId: string, week: number) {
  * Replace: prisma.user.findMany({ where: { leagues: { some: { id: leagueId } } } })
  */
 export async function getUsersByLeague(leagueId: string) {
-  const users = await getSleeperUsers(leagueId);
+  const users = await sleeperClient.fetchUsers(leagueId);
   return users.map((u: any) => ({
     id: u.user_id,
     username: u.username,
@@ -285,7 +278,7 @@ export async function getAllTransactionsByLeague(leagueId: string) {
  * Get current NFL week without database
  */
 export async function getCurrentWeek() {
-  const nflState = await getNFLState();
+  const nflState = await sleeperClient.fetchNFLState();
   return nflState.week || 1;
 }
 
@@ -294,7 +287,7 @@ export async function getCurrentWeek() {
  */
 export async function getDraftByLeague(leagueId: string) {
   // First get league info to find draft ID
-  const league = await getSleeperLeague(leagueId);
+  const league = await sleeperClient.fetchLeague(leagueId);
   if (!league?.draft_id) {
     return null;
   }
@@ -336,7 +329,7 @@ export async function calculateWinProbability(
   team2Starters: string[],
   week: number
 ) {
-  const projections = await getProjections(week);
+  const projections = await sleeperClient.fetchWeeklyProjections(week, '2025');
 
   // Simple simulation (can be expanded)
   let team1Wins = 0;
@@ -380,10 +373,10 @@ export async function computeWeeklyRollups(leagueId: string, week: number) {
   // Fetch all required data from Sleeper API
   const [matchups, league, rosters, users, projections] = await Promise.all([
     getMatchupsByWeek(leagueId, week),
-    getSleeperLeague(leagueId),
+    sleeperClient.fetchLeague(leagueId),
     getRostersByLeague(leagueId),
     getUsersByLeague(leagueId),
-    getProjections(week).catch(() => ({})), // Gracefully handle projection failures
+    sleeperClient.fetchWeeklyProjections(week, '2025').catch(() => ({})), // Gracefully handle projection failures
   ]);
 
   // Build lookup maps
@@ -458,7 +451,7 @@ export async function computeWeeklyRollups(leagueId: string, week: number) {
     // Calculate projected points for this roster's starters
     const starters = matchup.starters || roster?.starters || [];
     const projectedPoints = starters.reduce((total: number, playerId: string) => {
-      const proj = projections[playerId];
+      const proj = (projections as any)[playerId];
       return total + (proj?.pts_half_ppr || 0);
     }, 0);
 

@@ -4,15 +4,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import SleeperAPIService from '@/../../server/src/services/sleeper/sleeper-api.service';
-import ArchiveService from '@/../../server/src/services/archive/archive.service';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 /**
  * Get current NFL week
  */
 async function getCurrentWeek(): Promise<number> {
-  const sleeper = SleeperAPIService.getInstance();
-  const nflState = await sleeper.getNFLState();
+  const nflState = await sleeperClient.fetchNFLState();
   return nflState.week;
 }
 
@@ -20,29 +18,29 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.url
     ? new URL(request.url)
     : { searchParams: new URLSearchParams() };
-  const leagueId = searchParams.get('leagueId') || SleeperAPIService.LEAGUE_IDS.AFC;
+  const leagueId = searchParams.get('leagueId') || '1263744209295245312'; // AFC
   const debug = searchParams.has('debug');
 
   try {
     const startTime = Date.now();
-    const sleeper = SleeperAPIService.getInstance();
-    const archive = new ArchiveService();
+    // Use unified client instead of SleeperAPIService
+    // Note: ArchiveService removed - archiving functionality disabled for now
 
     // Get current week
     const currentWeek = await getCurrentWeek();
 
     // Fetch all data in parallel from Sleeper
     const [league, rosters, users, nflState] = (await Promise.all([
-      sleeper.getLeague(leagueId),
-      sleeper.getRosters(leagueId),
-      sleeper.getUsers(leagueId),
-      sleeper.getNFLState(),
+      sleeperClient.fetchLeague(leagueId),
+      sleeperClient.fetchRostersWithOwners(leagueId),
+      sleeperClient.fetchUsers(leagueId),
+      sleeperClient.fetchNFLState(),
     ])) as [any, any[], any[], any];
 
     // Fetch all matchups for the season in parallel
     const weeks = Array.from({ length: currentWeek }, (_, i) => i + 1);
     const allMatchups = (await Promise.all(
-      weeks.map(week => sleeper.getMatchups(leagueId, week))
+      weeks.map(week => sleeperClient.fetchMatchups(leagueId, week))
     )) as any[][];
 
     // Build user map for quick lookups
@@ -170,18 +168,11 @@ export async function GET(request: NextRequest) {
       },
     };
 
-    // Archive for historical tracking (async, don't wait)
-    if (!debug) {
-      archive
-        .saveSnapshot('league', leagueId, response, {
-          week: currentWeek,
-          season: league.season,
-        })
-        .catch(console.error);
-    }
+    // Archive functionality disabled
 
     // Cache headers for edge caching
-    const isLive = await sleeper.isGameLive();
+    // Note: isGameLive functionality not available in unified client - setting to false
+    const isLive = false;
     const cacheSeconds = isLive ? 30 : 300; // 30s if live, 5 min otherwise
 
     return NextResponse.json(response, {
@@ -194,31 +185,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('❌ API Error:', error);
 
-    // Try to load from archive as fallback
-    const archive = new ArchiveService();
-    const archived = await archive.loadSnapshot('league', leagueId);
-
-    if (archived) {
-      console.log('📁 Using archived data as fallback');
-      return NextResponse.json(
-        {
-          ...archived,
-          _meta: {
-            ...(archived._meta || {}),
-            fallback: true,
-            error: error instanceof Error ? error.message : 'Unknown error',
-          },
-        },
-        {
-          headers: {
-            'X-Data-Source': 'archive_fallback',
-            'Cache-Control': 'public, s-maxage=60', // Short cache for fallback
-          },
-        }
-      );
-    }
-
-    // No fallback available
+    // Archive fallback disabled
     return NextResponse.json(
       {
         error: 'Failed to fetch league data',

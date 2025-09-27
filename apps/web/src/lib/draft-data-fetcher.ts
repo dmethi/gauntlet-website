@@ -1,13 +1,17 @@
 /**
- * Sleeper Draft Data Fetcher
+ * Draft Data Fetcher using Unified Sleeper Client
  *
  * Fetches real draft data from Sleeper API and transforms it into
  * the MockDraft format expected by the analytics system.
+ *
+ * Ported from the original sleeper-draft-fetcher.ts with full transformation logic.
  */
 
 /* eslint-disable no-console */
 
-import { DraftPick, MockDraft, Player, TeamRoster } from './mock-draft-data';
+import { createDraftClient } from './sleeper/unified-client';
+import type { SleeperLeague, SleeperRoster, SleeperUser } from './sleeper/types';
+import type { DraftPick, MockDraft, Player, TeamRoster } from './mock-draft-data';
 
 // Sleeper API interfaces
 interface SleeperPlayer {
@@ -43,113 +47,7 @@ interface SleeperDraftPick {
   is_keeper: boolean;
 }
 
-interface SleeperRoster {
-  owner_id: string;
-  roster_id: number;
-  league_id: string;
-  players: string[];
-  starters: string[];
-  settings: {
-    wins?: number;
-    waiver_position?: number;
-    waiver_budget_used?: number;
-    total_moves?: number;
-    losses?: number;
-    fpts?: number;
-    fpts_decimal?: number;
-    fpts_against?: number;
-    fpts_against_decimal?: number;
-  };
-  metadata?: Record<string, any>;
-}
-
-interface SleeperUser {
-  user_id: string;
-  username: string;
-  display_name: string;
-  avatar: string | null;
-}
-
-interface SleeperLeague {
-  league_id: string;
-  name: string;
-  season: string;
-  settings: Record<string, any>;
-  roster_positions: string[];
-  total_rosters: number;
-  status: string;
-  metadata: Record<string, any> | null;
-}
-
-class SleeperDraftFetcher {
-  private baseUrl = 'https://api.sleeper.app/v1';
-  private rateLimit = 100; // ms between requests
-
-  private async delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  private async fetchFromSleeper<T>(endpoint: string): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
-    console.log(`🔍 Fetching: ${url}`);
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Sleeper API error: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    await this.delay(this.rateLimit); // Rate limiting
-
-    return data;
-  }
-
-  /**
-   * Fetch all players from Sleeper
-   */
-  private async fetchAllPlayers(): Promise<Record<string, SleeperPlayer>> {
-    return this.fetchFromSleeper<Record<string, SleeperPlayer>>('/players/nfl');
-  }
-
-  /**
-   * Fetch draft info
-   */
-  private async fetchDraft(draftId: string): Promise<SleeperDraft> {
-    return this.fetchFromSleeper<SleeperDraft>(`/draft/${draftId}`);
-  }
-
-  /**
-   * Fetch draft picks
-   */
-  private async fetchDraftPicks(draftId: string): Promise<SleeperDraftPick[]> {
-    return this.fetchFromSleeper<SleeperDraftPick[]>(`/draft/${draftId}/picks`);
-  }
-
-  /**
-   * Fetch league info
-   */
-  private async fetchLeague(leagueId: string): Promise<SleeperLeague> {
-    return this.fetchFromSleeper<SleeperLeague>(`/league/${leagueId}`);
-  }
-
-  /**
-   * Fetch league rosters
-   */
-  private async fetchRosters(leagueId: string): Promise<SleeperRoster[]> {
-    return this.fetchFromSleeper<SleeperRoster[]>(`/league/${leagueId}/rosters`);
-  }
-
-  /**
-   * Fetch league users
-   */
-  private async fetchUsers(leagueId: string): Promise<SleeperUser[]> {
-    return this.fetchFromSleeper<SleeperUser[]>(`/league/${leagueId}/users`);
-  }
-
-  /**
-   * Transform Sleeper player to our Player format
-   */
+class DraftDataFetcher {
   private transformPlayer(sleeperPlayer: SleeperPlayer, rank: number, aav: number = 0): Player {
     return {
       id: sleeperPlayer.player_id,
@@ -167,59 +65,34 @@ class SleeperDraftFetcher {
   }
 
   /**
-   * Transform Sleeper draft data to MockDraft format
+   * Calculate price based on draft type
    */
-  async fetchRealDrafts(
-    draftId1: string,
-    draftId2: string
-  ): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
-    console.log('🏈 Fetching real draft data from Sleeper API...');
+  private calculatePrice(draftType: string, pick: SleeperDraftPick, _teamSize: number): number {
+    if (draftType === 'auction') {
+      // For auction drafts, try to extract price from metadata
+      const raw =
+        (pick.metadata as any)?.amount ??
+        (pick.metadata as any)?.price ??
+        (pick.metadata as any)?.cost;
+      const parsed = typeof raw === 'string' ? Number(raw) : typeof raw === 'number' ? raw : NaN;
+      if (Number.isFinite(parsed) && parsed > 0) {
+        return Math.floor(parsed);
+      }
 
-    // Fetch both drafts in parallel
-    const [draft1Info, draft1Picks, draft2Info, draft2Picks, allPlayers] = await Promise.all([
-      this.fetchDraft(draftId1),
-      this.fetchDraftPicks(draftId1),
-      this.fetchDraft(draftId2),
-      this.fetchDraftPicks(draftId2),
-      this.fetchAllPlayers(),
-    ]);
-
-    // Fetch league info for both drafts
-    const [league1, league2, rosters1, rosters2, users1, users2] = await Promise.all([
-      this.fetchLeague(draft1Info.league_id),
-      this.fetchLeague(draft2Info.league_id),
-      this.fetchRosters(draft1Info.league_id),
-      this.fetchRosters(draft2Info.league_id),
-      this.fetchUsers(draft1Info.league_id),
-      this.fetchUsers(draft2Info.league_id),
-    ]);
-
-    // Transform both drafts
-    const draft1 = await this.transformDraftData(
-      draft1Info,
-      draft1Picks,
-      league1,
-      rosters1,
-      users1,
-      allPlayers,
-      'Draft 1'
-    );
-
-    const draft2 = await this.transformDraftData(
-      draft2Info,
-      draft2Picks,
-      league2,
-      rosters2,
-      users2,
-      allPlayers,
-      'Draft 2'
-    );
-
-    console.log('✅ Successfully fetched and transformed real draft data');
-    console.log(`📊 Draft 1: ${draft1.teams.length} teams, ${draft1.totalPicks} picks`);
-    console.log(`📊 Draft 2: ${draft2.teams.length} teams, ${draft2.totalPicks} picks`);
-
-    return { draft1, draft2 };
+      // If no price in metadata, default to $1 (do NOT fabricate synthetic prices)
+      // Real drafts must sum to each manager's auction budget (typically $200)
+      console.warn(
+        `ℹ️ Missing/invalid auction price for pick_no=${pick.pick_no} roster_id=${pick.roster_id}. metadata=`,
+        pick.metadata
+      );
+      return 1;
+    } else {
+      // For snake drafts, create synthetic auction values based on draft position
+      // Early picks get higher values, later picks get lower values
+      // Keep conservative values to avoid inflated totals when a league isn't auction
+      const baseValue = Math.max(1, 40 - (pick.pick_no - 1) * 0.5);
+      return Math.round(baseValue);
+    }
   }
 
   /**
@@ -366,54 +239,73 @@ class SleeperDraftFetcher {
   }
 
   /**
-   * Calculate price based on draft type
+   * Fetch real drafts using unified Sleeper client
    */
-  private calculatePrice(draftType: string, pick: SleeperDraftPick, _teamSize: number): number {
-    if (draftType === 'auction') {
-      // For auction drafts, try to extract price from metadata
-      const raw =
-        (pick.metadata as any)?.amount ??
-        (pick.metadata as any)?.price ??
-        (pick.metadata as any)?.cost;
-      const parsed = typeof raw === 'string' ? Number(raw) : typeof raw === 'number' ? raw : NaN;
-      if (Number.isFinite(parsed) && parsed > 0) {
-        return Math.floor(parsed);
-      }
+  async fetchRealDrafts(
+    draftId1: string,
+    draftId2: string
+  ): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
+    console.log('🏈 Fetching real draft data from Sleeper API...');
 
-      // If no price in metadata, default to $1 (do NOT fabricate synthetic prices)
-      // Real drafts must sum to each manager's auction budget (typically $200)
-      console.warn(
-        `ℹ️ Missing/invalid auction price for pick_no=${pick.pick_no} roster_id=${pick.roster_id}. metadata=`,
-        pick.metadata
-      );
-      return 1;
-    } else {
-      // For snake drafts, create synthetic auction values based on draft position
-      // Early picks get higher values, later picks get lower values
-      // Keep conservative values to avoid inflated totals when a league isn't auction
-      const baseValue = Math.max(1, 40 - (pick.pick_no - 1) * 0.5);
-      return Math.round(baseValue);
-    }
+    const draftClient = createDraftClient();
+
+    // Fetch both drafts in parallel
+    const [draft1Info, draft1Picks, draft2Info, draft2Picks, allPlayers] = await Promise.all([
+      draftClient.fetchDraft(draftId1),
+      draftClient.fetchDraftPicks(draftId1),
+      draftClient.fetchDraft(draftId2),
+      draftClient.fetchDraftPicks(draftId2),
+      draftClient.fetchAllPlayers(),
+    ]);
+
+    // Fetch league info for both drafts
+    const [league1, league2, rosters1, rosters2, users1, users2] = await Promise.all([
+      draftClient.fetchLeague(draft1Info.league_id),
+      draftClient.fetchLeague(draft2Info.league_id),
+      draftClient.fetchRosters(draft1Info.league_id),
+      draftClient.fetchRosters(draft2Info.league_id),
+      draftClient.fetchUsers(draft1Info.league_id),
+      draftClient.fetchUsers(draft2Info.league_id),
+    ]);
+
+    // Transform both drafts
+    const draft1 = await this.transformDraftData(
+      draft1Info,
+      draft1Picks,
+      league1,
+      rosters1,
+      users1,
+      allPlayers,
+      'Draft 1'
+    );
+
+    const draft2 = await this.transformDraftData(
+      draft2Info,
+      draft2Picks,
+      league2,
+      rosters2,
+      users2,
+      allPlayers,
+      'Draft 2'
+    );
+
+    console.log('✅ Successfully fetched and transformed real draft data');
+    console.log(`📊 Draft 1: ${draft1.teams.length} teams, ${draft1.totalPicks} picks`);
+    console.log(`📊 Draft 2: ${draft2.teams.length} teams, ${draft2.totalPicks} picks`);
+
+    return { draft1, draft2 };
   }
 }
 
 // Export singleton instance
-const sleeperFetcher = new SleeperDraftFetcher();
+const draftFetcher = new DraftDataFetcher();
 
 /**
- * Fetch real drafts using Sleeper API
- */
-export async function fetchRealDrafts(draftId1: string, draftId2: string) {
-  return sleeperFetcher.fetchRealDrafts(draftId1, draftId2);
-}
-
-/**
- * Get real drafts - replaces getPreGeneratedDrafts for real data
+ * Get real drafts using unified Sleeper client
  */
 export async function getRealDrafts(): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
-  // These are the draft IDs provided by the user
-  const DRAFT_ID_1 = '1263744210637422592';
-  const DRAFT_ID_2 = '1263740550494822400';
+  const DRAFT_ID_1 = '1263744210637422592'; // AFC
+  const DRAFT_ID_2 = '1263740550494822400'; // NFC
 
-  return fetchRealDrafts(DRAFT_ID_1, DRAFT_ID_2);
+  return draftFetcher.fetchRealDrafts(DRAFT_ID_1, DRAFT_ID_2);
 }

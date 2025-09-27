@@ -11,7 +11,7 @@
 
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { getRealDrafts } from '../lib/sleeper-draft-fetcher';
+import { getRealDrafts } from '../lib/draft-data-fetcher';
 import { generateMockAnalytics } from '../lib/draft-analytics';
 import { generateManagerAnalytics } from '../lib/manager-analytics';
 

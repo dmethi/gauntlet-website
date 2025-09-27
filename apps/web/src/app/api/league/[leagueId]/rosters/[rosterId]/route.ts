@@ -26,14 +26,14 @@ export async function GET(
     ]);
 
     // Find the specific roster
-    const roster = rosters.find(r => r.rosterId === rosterIdNumber);
+    const roster = rosters.find((r: any) => r.rosterId === rosterIdNumber);
     if (!roster) {
       return NextResponse.json({ error: 'Roster not found' }, { status: 404 });
     }
 
     // Find the owner
-    const userMap = new Map(users.map(u => [u.id, u]));
-    const owner = userMap.get(roster.ownerId);
+    const userMap = new Map(users.map((u: any) => [u.id, u]));
+    const owner = userMap.get(roster.ownerId) as any;
 
     // Fetch matchups for all weeks to get full season data
     const weeks = Array.from({ length: Math.min(currentWeek, 18) }, (_, i) => i + 1);

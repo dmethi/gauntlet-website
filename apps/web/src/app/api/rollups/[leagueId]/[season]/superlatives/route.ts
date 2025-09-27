@@ -44,14 +44,14 @@ export async function GET(
     const allMatchupSummaries = validRollups.flatMap(r => r.matchupSummaries);
 
     // Build user/roster lookup
-    const userMap = new Map(users.map(u => [u.id, u]));
-    const rosterMap = new Map(rosters.map(r => [r.rosterId, r]));
+    const userMap = new Map(users.map((u: any) => [u.id, u]));
+    const rosterMap = new Map(rosters.map((r: any) => [r.rosterId, r]));
 
     // Helper function to get team name
     const getTeamName = (rosterId: number) => {
-      const roster = rosterMap.get(rosterId);
+      const roster = rosterMap.get(rosterId) as any;
       if (!roster) return `Team ${rosterId}`;
-      const owner = userMap.get(roster.ownerId);
+      const owner = userMap.get(roster.ownerId) as any;
       return (
         owner?.metadata?.team_name || owner?.displayName || owner?.username || `Team ${rosterId}`
       );
