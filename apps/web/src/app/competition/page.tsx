@@ -8,8 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, ChevronDown, ChevronRight, ChevronUp, Trophy, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
-import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   Table,
   TableBody,

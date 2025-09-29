@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { StatsContent } from './stats-content';
 import { type PlainStatsDataset } from '@/lib/stats/compose';
 import { CURRENT_LEAGUES } from '@/config/leagues';
@@ -73,7 +73,15 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
   const urlSearchParams = useSearchParams();
   const clientSearchParams = {
     team: urlSearchParams.get('team') || searchParams.team,
-    view: (urlSearchParams.get('view') as 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit') || searchParams.view,
+    view:
+      (urlSearchParams.get('view') as
+        | 'team'
+        | 'league'
+        | 'schedule'
+        | 'trends'
+        | 'scatter'
+        | 'transactions'
+        | 'start-sit') || searchParams.view,
     week: urlSearchParams.get('week') || searchParams.week,
   };
 
