@@ -40,6 +40,9 @@ interface CompleteSnapshot {
   moneyLineB: number;
 
   capturedAt: string;
+  // Optional team names for better logging
+  team1Name?: string;
+  team2Name?: string;
 }
 
 async function getCurrentWeek(): Promise<number> {
@@ -69,12 +72,48 @@ async function captureLeagueOdds(week: number): Promise<any> {
   return response.json();
 }
 
+async function getTeamNames(leagueId: string): Promise<Map<number, string>> {
+  try {
+    const [usersResponse, rostersResponse] = await Promise.all([
+      fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`),
+      fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`),
+    ]);
+
+    const users = await usersResponse.json();
+    const rosters = await rostersResponse.json();
+
+    const teamNames = new Map<number, string>();
+
+    for (const roster of rosters) {
+      const owner = users.find((u: any) => u.user_id === roster.owner_id);
+      const teamName =
+        owner?.metadata?.team_name || owner?.display_name || `Team ${roster.roster_id}`;
+      teamNames.set(roster.roster_id, teamName);
+    }
+
+    return teamNames;
+  } catch (error) {
+    console.error(`Failed to fetch team names for league ${leagueId}:`, error);
+    return new Map();
+  }
+}
+
 async function captureIndividualMatchup(
   leagueId: string,
   week: number,
-  matchupId: number
+  matchupId: number,
+  teamNames: Map<number, string>
 ): Promise<CompleteSnapshot | null> {
   try {
+    // Get fresh current scores directly from Sleeper API
+    const sleeperResponse = await fetch(
+      `https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`
+    );
+    const matchups = await sleeperResponse.json();
+    const matchupPair = matchups.filter((m: any) => m.matchup_id === matchupId);
+
+    if (matchupPair.length !== 2) return null;
+
     const response = await fetch(
       `https://gauntlet-website.vercel.app/api/matchups/${leagueId}/${week}/${matchupId}/simulate`
     );
@@ -91,14 +130,11 @@ async function captureIndividualMatchup(
     const team1RawProj = sim.teams[0].players.reduce((sum, p) => sum + p.projection, 0);
     const team2RawProj = sim.teams[1].players.reduce((sum, p) => sum + p.projection, 0);
 
-    const team1CurrentScore = sim.teams[0].players.reduce(
-      (sum, p) => sum + (p.currentScore || 0),
-      0
-    );
-    const team2CurrentScore = sim.teams[1].players.reduce(
-      (sum, p) => sum + (p.currentScore || 0),
-      0
-    );
+    // Use FRESH current scores from direct Sleeper API instead of cached simulation data
+    const team1CurrentScore =
+      matchupPair.find((m: any) => m.roster_id === sim.teams[0].rosterId)?.points || 0;
+    const team2CurrentScore =
+      matchupPair.find((m: any) => m.roster_id === sim.teams[1].rosterId)?.points || 0;
 
     // The simulated means are what show as "Proj:" in your screenshot
     const team1SimMean = sim.team1Scores.mean;
@@ -107,6 +143,10 @@ async function captureIndividualMatchup(
     // Convert odds to win probabilities
     const team1WinProb = sim.team1WinPct;
     const team2WinProb = sim.team2WinPct;
+
+    // Get team names for better logging
+    const team1Name = teamNames.get(sim.teams[0].rosterId) || `Roster ${sim.teams[0].rosterId}`;
+    const team2Name = teamNames.get(sim.teams[1].rosterId) || `Roster ${sim.teams[1].rosterId}`;
 
     // Calculate money lines
     const calculateMoneyLine = prob => {
@@ -140,6 +180,9 @@ async function captureIndividualMatchup(
       moneyLineA: calculateMoneyLine(team1WinProb),
       moneyLineB: calculateMoneyLine(team2WinProb),
       capturedAt: new Date().toISOString(),
+      // Add team names for better logging
+      team1Name,
+      team2Name,
     };
   } catch (error) {
     console.error(`❌ Failed to capture matchup ${matchupId}:`, error.message);
@@ -168,14 +211,24 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<void> {
       },
     });
 
+    console.log(`✅ M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
     console.log(
-      `✅ M${snapshot.matchupId}: Sim ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win% ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)} | Curr ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)}`
+      `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
     );
+    console.log(
+      `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Spread: ${snapshot.spread > 0 ? '+' : ''}${snapshot.spread.toFixed(1)} | O/U: ${snapshot.total.toFixed(1)} | Fresh Data ✅`
+    );
+    console.log('');
   } catch (error) {
     // Fallback logging if database fails
+    console.log(`📊 M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
     console.log(
-      `📊 M${snapshot.matchupId}: Sim ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win% ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)} | Curr ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)}`
+      `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
     );
+    console.log(
+      `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Fresh Data ✅`
+    );
+    console.log('');
   }
 }
 
@@ -196,17 +249,23 @@ async function main() {
 
   for (const leagueId of leagueIds) {
     const leagueName = leagueId.includes('3245') ? 'AFC' : 'NFC';
-    console.log(`\n🏆 ${leagueName} League:`);
+    console.log(`\n🏆 ${leagueName} League (${leagueId}):`);
+    console.log('📋 Fetching team names...');
+
+    const teamNames = await getTeamNames(leagueId);
+    console.log(`✅ Found ${teamNames.size} team names\n`);
 
     for (let matchupId = 1; matchupId <= 6; matchupId++) {
-      const snapshot = await captureIndividualMatchup(leagueId, week, matchupId);
+      const snapshot = await captureIndividualMatchup(leagueId, week, matchupId, teamNames);
 
       if (snapshot) {
         await saveCompleteSnapshot(snapshot);
+      } else {
+        console.log(`❌ Failed to capture M${matchupId}\n`);
       }
 
       // Small delay to avoid API overload
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
 
