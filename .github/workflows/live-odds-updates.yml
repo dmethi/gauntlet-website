@@ -3,28 +3,33 @@ name: Live Odds Snapshots
 on:
   schedule:
     # During NFL season (Sep-Feb): Every 10 minutes during game times
-    # Sunday: 1:00 PM - 11:30 PM ET (18:00 - 04:30 UTC next day)
-    - cron: '*/10 18-23 * 9-12,1-2 0' # Sep-Dec & Jan-Feb, Sunday 6PM-11:59PM UTC
-    - cron: '*/10 0-4 * 9-12,1-2 1' # Sep-Dec & Jan-Feb, Monday 12AM-4:30AM UTC (Sunday night games)
+    # Covers both EDT (UTC-4) and EST (UTC-5) throughout the season
 
-    # Monday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
-    - cron: '*/10 1-4 * 9-12,1-2 2' # Sep-Dec & Jan-Feb, Tuesday 1:15AM-4:30AM UTC (Monday night)
+    # Sunday: 1:00 PM - 11:00 PM ET
+    # EDT: Sunday 17:00 - Monday 03:00 UTC | EST: Sunday 18:00 - Monday 04:00 UTC
+    - cron: "*/10 17-23 * 9-12,1-2 0" # Sunday 5PM-11:59PM UTC
+    - cron: "*/10 0-4 * 9-12,1-2 1" # Monday 12AM-4:59AM UTC (Sunday night games)
 
-    # Thursday: 8:15 PM - 11:30 PM ET (01:15 - 04:30 UTC next day)
-    - cron: '*/10 1-4 * 9-12,1-2 5' # Sep-Dec & Jan-Feb, Friday 1:15AM-4:30AM UTC (Thursday night)
+    # Monday: 8:00 PM - 11:00 PM ET
+    # EDT: Tuesday 00:00-03:00 UTC | EST: Tuesday 01:00-04:00 UTC
+    - cron: "*/10 0-4 * 9-12,1-2 2" # Tuesday 12AM-4:59AM UTC (Monday night)
 
-    # Daily updates: Every day at 6:00 AM ET (11:00 UTC) for pre-game odds
-    - cron: '0 11 * 9-12,1-2 *' # Daily at 11:00 UTC during NFL season
+    # Thursday: 8:00 PM - 11:00 PM ET
+    # EDT: Friday 00:00-03:00 UTC | EST: Friday 01:00-04:00 UTC
+    - cron: "*/10 0-4 * 9-12,1-2 5" # Friday 12AM-4:59AM UTC (Thursday night)
+
+    # Daily pre-game update: 6:00 AM ET (10:00-11:00 UTC depending on DST)
+    - cron: "0 10 * 9-12,1-2 *" # Daily at 10:00 UTC during NFL season
 
   # Manual trigger for testing
   workflow_dispatch:
     inputs:
       week:
-        description: 'NFL Week to update (optional, defaults to current week)'
+        description: "NFL Week to update (optional, defaults to current week)"
         required: false
         type: string
       force_live:
-        description: 'Force live game simulation (ignore game schedule)'
+        description: "Force live game simulation (ignore game schedule)"
         required: false
         type: boolean
         default: false
@@ -47,8 +52,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -73,14 +78,15 @@ jobs:
             TRIGGER_TYPE="manual-live"
           elif [ "$CURRENT_MONTH" -ge 9 ] || [ "$CURRENT_MONTH" -le 2 ]; then
             # Note: date +%u uses 1-7 (Mon-Sun), while cron uses 0-6 (Sun-Sat)
-            if [ "$CURRENT_DAY" = "2" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"  # Tuesday 1-4 AM UTC = Monday 8:15-11:30 PM ET
-            elif [ "$CURRENT_DAY" = "5" ] && [ "$CURRENT_HOUR" -ge 1 ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"  # Friday 1-4 AM UTC = Thursday 8:15-11:30 PM ET  
-            elif [ "$CURRENT_DAY" = "7" ] && [ "$CURRENT_HOUR" -ge 18 ]; then
-              IS_LIVE="true"  # Sunday 6 PM - 11:59 PM UTC
+            # Expanded hours to cover both EDT (UTC-4) and EST (UTC-5)
+            if [ "$CURRENT_DAY" = "2" ] && [ "$CURRENT_HOUR" -ge 0 ] && [ "$CURRENT_HOUR" -le 4 ]; then
+              IS_LIVE="true"  # Tuesday 12-4 AM UTC = Monday 8-11 PM ET (EDT/EST)
+            elif [ "$CURRENT_DAY" = "5" ] && [ "$CURRENT_HOUR" -ge 0 ] && [ "$CURRENT_HOUR" -le 4 ]; then
+              IS_LIVE="true"  # Friday 12-4 AM UTC = Thursday 8-11 PM ET (EDT/EST)
+            elif [ "$CURRENT_DAY" = "7" ] && [ "$CURRENT_HOUR" -ge 17 ]; then
+              IS_LIVE="true"  # Sunday 5 PM - 11:59 PM UTC = Sunday 1-8 PM ET (EDT/EST)
             elif [ "$CURRENT_DAY" = "1" ] && [ "$CURRENT_HOUR" -le 4 ]; then
-              IS_LIVE="true"  # Monday 12-4 AM UTC = Sunday night games
+              IS_LIVE="true"  # Monday 12-4 AM UTC = Sunday 8-11 PM ET night games
             fi
           fi
 
