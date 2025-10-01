@@ -13,7 +13,7 @@ import { TrendsView } from './components/TrendsView';
 import { TeamView } from './components/TeamView';
 
 interface StatsContentProps {
-  dataset: PlainStatsDataset;
+  dataset: PlainStatsDataset & { startSitEfficiency?: any };
   searchParams: {
     team?: string;
     view?: 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit';
@@ -157,7 +157,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
         </TabsContent>
 
         <TabsContent value='start-sit'>
-          <StartSitEfficiencyTab />
+          <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} />
         </TabsContent>
       </Tabs>
     </div>

@@ -15,6 +15,24 @@ interface ReportListItem {
 
 const reports: ReportListItem[] = [
   {
+    title: 'Week 4 Report — 2025',
+    href: '/competition/reports/2025/week-4',
+    date: new Date().toISOString(),
+    tags: ['Week 4', 'AFC', 'NFC', 'Power Rankings'],
+  },
+  {
+    title: 'Week 3 Report — 2025',
+    href: '/competition/reports/2025/week-3',
+    date: new Date().toISOString(),
+    tags: ['Week 3', 'AFC', 'NFC', 'Power Rankings'],
+  },
+  {
+    title: 'Week 2 Report — 2025',
+    href: '/competition/reports/2025/week-2',
+    date: new Date().toISOString(),
+    tags: ['Week 2', 'AFC', 'NFC', 'Power Rankings'],
+  },
+  {
     title: 'Week 1 Report — 2025',
     href: '/competition/reports/2025/week-1',
     date: new Date().toISOString(),

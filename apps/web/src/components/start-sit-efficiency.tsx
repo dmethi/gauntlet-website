@@ -92,15 +92,19 @@ interface StartSitData {
 
 // Helper to get player name from the players data
 const getPlayerName = (playerId: string, players: Record<string, any>) => {
+  if (!playerId) return 'Unknown Player';
+
   const player = players[playerId];
   if (player) {
     return (
       player.full_name ||
       player.fullName ||
-      `${player.firstName || ''} ${player.lastName || ''}`.trim()
+      `${player.firstName || ''} ${player.lastName || ''}`.trim() ||
+      player.name ||
+      `Player ${playerId.slice(0, 8)}`
     );
   }
-  return `Player ${playerId}`;
+  return `Player ${playerId.slice(0, 8)}`;
 };
 
 const PositionBadge = ({ position, weight }: { position: string; weight: number }) => {
@@ -204,45 +208,229 @@ const OverallScores = ({ managers }: { managers: ManagerEfficiency[] }) => (
   </div>
 );
 
-const PositionBreakdown = ({ manager }: { manager: ManagerEfficiency }) => (
-  <div className='space-y-4'>
-    <h3 className='text-lg font-semibold'>Position Analysis - {manager.managerName}</h3>
+const PositionBreakdown = ({
+  managers,
+  selectedManagerId,
+  setSelectedManagerId,
+}: {
+  managers: ManagerEfficiency[];
+  selectedManagerId: string;
+  setSelectedManagerId: (id: string) => void;
+}) => {
+  const [viewMode, setViewMode] = useState<'manager' | 'rankings'>('rankings');
 
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-      {Object.entries(manager.positionBreakdown).map(([position, metrics]) => {
-        const isPositive = metrics.pointsLostVsMedian >= 0;
+  const selectedManager = managers.find(m => m.managerId === selectedManagerId);
 
-        return (
-          <Card key={position} className='p-4'>
-            <div className='flex items-center justify-between mb-3'>
-              <PositionBadge position={position} weight={metrics.weight} />
-              <span className='text-sm text-gray-500'>{metrics.decisionsCount} decisions</span>
-            </div>
+  // Get all unique positions across all managers
+  const allPositions = useMemo(() => {
+    const posSet = new Set<string>();
+    managers.forEach(m => {
+      Object.keys(m.positionBreakdown).forEach(pos => posSet.add(pos));
+    });
+    return Array.from(posSet).sort();
+  }, [managers]);
 
-            <div className='space-y-2'>
-              <div className='flex justify-between'>
-                <span className='text-sm'>Decision Rate</span>
-                <span className='font-semibold'>{(metrics.decisionRate * 100).toFixed(1)}%</span>
-              </div>
+  // For each position, rank managers by their performance
+  const positionRankings = useMemo(() => {
+    const rankings: Record<
+      string,
+      Array<{
+        manager: ManagerEfficiency;
+        metrics: any;
+      }>
+    > = {};
 
-              <Progress value={metrics.decisionRate * 100} className='h-2' />
+    allPositions.forEach(position => {
+      const managerMetrics = managers
+        .filter(m => m.positionBreakdown[position])
+        .map(m => ({
+          manager: m,
+          metrics: m.positionBreakdown[position],
+        }))
+        .sort((a, b) => {
+          // Sort by decision rate first, then by points vs median
+          if (Math.abs(a.metrics.decisionRate - b.metrics.decisionRate) > 0.01) {
+            return b.metrics.decisionRate - a.metrics.decisionRate;
+          }
+          return b.metrics.pointsLostVsMedian - a.metrics.pointsLostVsMedian;
+        });
 
-              <div className='flex justify-between'>
-                <span className='text-sm'>vs Median</span>
-                <span
-                  className={`font-semibold text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}
-                >
-                  {isPositive ? '+' : ''}
-                  {metrics.pointsLostVsMedian.toFixed(1)} pts
-                </span>
-              </div>
-            </div>
-          </Card>
-        );
-      })}
+      rankings[position] = managerMetrics;
+    });
+
+    return rankings;
+  }, [managers, allPositions]);
+
+  return (
+    <div className='space-y-4'>
+      {/* View mode toggle */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-3'>
+          <h3 className='text-lg font-semibold'>Position-by-Position Analysis</h3>
+          <div className='flex gap-2'>
+            <button
+              onClick={() => setViewMode('rankings')}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                viewMode === 'rankings'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              League Rankings
+            </button>
+            <button
+              onClick={() => setViewMode('manager')}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                viewMode === 'manager'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Individual Manager
+            </button>
+          </div>
+        </div>
+
+        {viewMode === 'manager' && (
+          <Select value={selectedManagerId} onValueChange={setSelectedManagerId}>
+            <SelectTrigger className='w-64'>
+              <SelectValue placeholder='Select manager' />
+            </SelectTrigger>
+            <SelectContent>
+              {managers.map(manager => (
+                <SelectItem key={manager.managerId} value={manager.managerId}>
+                  {manager.managerName} ({manager.leagueId.includes('44209') ? 'AFC' : 'NFC'})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      </div>
+
+      {/* Rankings view */}
+      {viewMode === 'rankings' && (
+        <div className='space-y-6'>
+          {allPositions.map(position => {
+            const rankings = positionRankings[position];
+            const topManager = rankings[0];
+
+            return (
+              <Card key={position} className='p-4'>
+                <div className='flex items-center justify-between mb-4'>
+                  <div className='flex items-center gap-3'>
+                    <PositionBadge position={position} weight={topManager.metrics.weight} />
+                    <span className='text-sm text-gray-500'>
+                      {rankings.length} managers •{' '}
+                      {rankings.reduce((sum, r) => sum + r.metrics.decisionsCount, 0)} total
+                      decisions
+                    </span>
+                  </div>
+                </div>
+
+                <div className='space-y-2'>
+                  {rankings.map((ranking, index) => {
+                    const isPositive = ranking.metrics.pointsLostVsMedian >= 0;
+                    const league = ranking.manager.leagueId.includes('44209') ? 'AFC' : 'NFC';
+
+                    return (
+                      <div
+                        key={ranking.manager.managerId}
+                        className='flex items-center justify-between p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors'
+                      >
+                        <div className='flex items-center space-x-3 flex-1'>
+                          <span className='text-sm font-medium text-gray-500 w-6'>
+                            #{index + 1}
+                          </span>
+                          <div className='flex-1'>
+                            <div className='font-medium text-sm'>{ranking.manager.managerName}</div>
+                            <div className='text-xs text-gray-500'>
+                              {league} • {ranking.metrics.decisionsCount} decisions
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className='flex items-center space-x-4'>
+                          <div className='text-right'>
+                            <div className='font-semibold text-sm text-blue-600'>
+                              {(ranking.metrics.decisionRate * 100).toFixed(1)}%
+                            </div>
+                            <div className='text-xs text-gray-500'>Correct</div>
+                          </div>
+
+                          <div className='text-right'>
+                            <div
+                              className={`font-semibold text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                              {isPositive ? '+' : ''}
+                              {ranking.metrics.pointsLostVsMedian.toFixed(1)}
+                            </div>
+                            <div className='text-xs text-gray-500'>vs Median</div>
+                          </div>
+
+                          <Progress
+                            value={ranking.metrics.decisionRate * 100}
+                            className='w-16 h-2'
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Individual manager view */}
+      {viewMode === 'manager' && selectedManager && (
+        <div className='space-y-4'>
+          <h4 className='text-md font-medium text-gray-700'>
+            {selectedManager.managerName} - Position Breakdown
+          </h4>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+            {Object.entries(selectedManager.positionBreakdown).map(([position, metrics]) => {
+              const isPositive = metrics.pointsLostVsMedian >= 0;
+
+              return (
+                <Card key={position} className='p-4'>
+                  <div className='flex items-center justify-between mb-3'>
+                    <PositionBadge position={position} weight={metrics.weight} />
+                    <span className='text-sm text-gray-500'>
+                      {metrics.decisionsCount} decisions
+                    </span>
+                  </div>
+
+                  <div className='space-y-2'>
+                    <div className='flex justify-between'>
+                      <span className='text-sm'>Decision Rate</span>
+                      <span className='font-semibold'>
+                        {(metrics.decisionRate * 100).toFixed(1)}%
+                      </span>
+                    </div>
+
+                    <Progress value={metrics.decisionRate * 100} className='h-2' />
+
+                    <div className='flex justify-between'>
+                      <span className='text-sm'>vs Median</span>
+                      <span
+                        className={`font-semibold text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}
+                      >
+                        {isPositive ? '+' : ''}
+                        {metrics.pointsLostVsMedian.toFixed(1)} pts
+                      </span>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 const WorstDecisions = ({
   decisions,
@@ -250,74 +438,172 @@ const WorstDecisions = ({
 }: {
   decisions: DecisionDetail[];
   players: Record<string, any>;
-}) => (
-  <div className='space-y-4'>
-    <h3 className='text-lg font-semibold'>Worst Decisions (Most Points Left on Table)</h3>
+}) => {
+  const [selectedWeek, setSelectedWeek] = useState<string>('all');
+  const [minPointsThreshold, setMinPointsThreshold] = useState<number>(5);
 
-    <div className='space-y-3'>
-      {decisions.map((decision, index) => {
-        const league = decision.leagueId.includes('44209') ? 'AFC' : 'NFC';
-        const selectedName = getPlayerName(decision.selectedPlayer.playerId, players);
-        const optimalName = getPlayerName(decision.optimalPlayer.playerId, players);
+  // Get unique weeks from decisions
+  const availableWeeks = useMemo(() => {
+    const weeks = new Set(decisions.map(d => d.week));
+    return Array.from(weeks).sort((a, b) => a - b);
+  }, [decisions]);
 
-        return (
-          <Card key={`${decision.managerId}-${decision.week}-${decision.position}`} className='p-4'>
-            <div className='flex items-start justify-between mb-3'>
-              <div>
-                <div className='font-medium'>
-                  {decision.managerName} ({league})
+  // Filter decisions by selected week and point threshold
+  const filteredDecisions = useMemo(() => {
+    let filtered = decisions;
+
+    if (selectedWeek !== 'all') {
+      filtered = filtered.filter(d => d.week === parseInt(selectedWeek));
+    }
+
+    // Apply minimum points threshold
+    filtered = filtered.filter(d => d.pointsLeft >= minPointsThreshold);
+
+    return filtered;
+  }, [decisions, selectedWeek, minPointsThreshold]);
+
+  return (
+    <div className='space-y-4'>
+      <div className='flex items-center justify-between'>
+        <h3 className='text-lg font-semibold'>
+          Worst Decisions (Most Points Left on Table) • {filteredDecisions.length} decisions
+        </h3>
+        <div className='flex gap-2'>
+          <Select
+            value={minPointsThreshold.toString()}
+            onValueChange={v => setMinPointsThreshold(Number(v))}
+          >
+            <SelectTrigger className='w-32'>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='0'>All (≥0 pts)</SelectItem>
+              <SelectItem value='3'>≥3 points</SelectItem>
+              <SelectItem value='5'>≥5 points</SelectItem>
+              <SelectItem value='10'>≥10 points</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedWeek} onValueChange={setSelectedWeek}>
+            <SelectTrigger className='w-32'>
+              <SelectValue placeholder='All Weeks' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Weeks</SelectItem>
+              {availableWeeks.map(week => (
+                <SelectItem key={week} value={week.toString()}>
+                  Week {week}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className='space-y-3'>
+        {filteredDecisions.map((decision, index) => {
+          const league = decision.leagueId.includes('44209') ? 'AFC' : 'NFC';
+          const selectedName = getPlayerName(decision.selectedPlayer.playerId, players);
+          const optimalName = getPlayerName(decision.optimalPlayer.playerId, players);
+
+          return (
+            <Card
+              key={`${decision.managerId}-${decision.week}-${decision.position}`}
+              className='p-4'
+            >
+              <div className='flex items-start justify-between mb-3'>
+                <div>
+                  <div className='font-medium'>
+                    {decision.managerName} ({league})
+                  </div>
+                  <div className='text-sm text-gray-500'>
+                    Week {decision.week} •{' '}
+                    <PositionBadge position={decision.position} weight={decision.weight} />
+                  </div>
                 </div>
-                <div className='text-sm text-gray-500'>
-                  Week {decision.week} •{' '}
-                  <PositionBadge position={decision.position} weight={decision.weight} />
+                <div className='text-right'>
+                  <div className='font-bold text-red-600 text-lg'>
+                    -{decision.pointsLeft.toFixed(1)} pts
+                  </div>
+                  <div className='text-xs text-gray-500'>Points Lost</div>
                 </div>
               </div>
-              <div className='text-right'>
-                <div className='font-bold text-red-600 text-lg'>
-                  -{decision.pointsLeft.toFixed(1)} pts
-                </div>
-                <div className='text-xs text-gray-500'>Points Lost</div>
-              </div>
-            </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
-              <div className='bg-red-50 p-3 rounded'>
-                <div className='font-medium text-red-800'>Started</div>
-                <div>{selectedName}</div>
-                <div className='text-gray-600'>
-                  Proj: {decision.selectedPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
-                  {decision.selectedPlayer.actualPoints.toFixed(1)}
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
+                <div className='bg-red-50 p-3 rounded'>
+                  <div className='font-medium text-red-800'>Started</div>
+                  <div>{selectedName}</div>
+                  <div className='text-gray-600'>
+                    Proj: {decision.selectedPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
+                    {decision.selectedPlayer.actualPoints.toFixed(1)}
+                  </div>
+                </div>
+
+                <div className='bg-green-50 p-3 rounded'>
+                  <div className='font-medium text-green-800'>Should Have Started</div>
+                  <div>{optimalName}</div>
+                  <div className='text-gray-600'>Source: {decision.optimalPlayer.source}</div>
+                  <div className='text-gray-600'>
+                    Proj: {decision.optimalPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
+                    {decision.optimalPlayer.adjustedActualPoints.toFixed(1)}
+                  </div>
                 </div>
               </div>
 
-              <div className='bg-green-50 p-3 rounded'>
-                <div className='font-medium text-green-800'>Should Have Started</div>
-                <div>{optimalName}</div>
-                <div className='text-gray-600'>
-                  Source: {decision.optimalPlayer.source} | Actual:{' '}
-                  {decision.optimalPlayer.adjustedActualPoints.toFixed(1)}
+              {decision.alternatives.length > 1 && (
+                <div className='mt-3 pt-3 border-t'>
+                  <div className='text-xs text-gray-500 mb-2'>Other alternatives:</div>
+                  <div className='space-y-1'>
+                    {decision.alternatives.slice(0, 5).map(alt => {
+                      const altName = getPlayerName(alt.playerId, players);
+                      const isWaiver = alt.source === 'waiver';
+                      return (
+                        <div
+                          key={alt.playerId}
+                          className='flex items-center justify-between text-xs bg-gray-50 p-2 rounded'
+                        >
+                          <div className='flex-1'>
+                            <span className='font-medium'>{altName}</span>
+                            <span className='text-gray-500 ml-2'>({alt.source})</span>
+                          </div>
+                          <div className='text-right flex gap-3 items-center'>
+                            <div className='text-gray-600'>
+                              Proj: {alt.projectedPoints.toFixed(1)}
+                            </div>
+                            <div>
+                              {isWaiver ? (
+                                <div>
+                                  <span className='font-semibold text-gray-900'>
+                                    {alt.adjustedActualPoints.toFixed(1)}*
+                                  </span>
+                                  <span className='text-xs text-gray-500 ml-1'>
+                                    ({alt.actualPoints.toFixed(1)} raw)
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className='font-semibold text-gray-900'>
+                                  {alt.actualPoints.toFixed(1)} actual
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {decision.alternatives.some(alt => alt.source === 'waiver') && (
+                    <div className='text-xs text-gray-500 mt-2'>
+                      * Adjusted with 35% waiver pickup penalty
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-
-            {decision.alternatives.length > 1 && (
-              <div className='mt-3 pt-3 border-t'>
-                <div className='text-xs text-gray-500 mb-2'>Other alternatives:</div>
-                <div className='flex flex-wrap gap-2'>
-                  {decision.alternatives.slice(0, 3).map(alt => (
-                    <Badge key={alt.playerId} variant='outline' className='text-xs'>
-                      {getPlayerName(alt.playerId, players)} ({alt.actualPoints.toFixed(1)})
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-          </Card>
-        );
-      })}
+              )}
+            </Card>
+          );
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const BestRiskyDecisions = ({
   decisions,
@@ -325,63 +611,173 @@ const BestRiskyDecisions = ({
 }: {
   decisions: DecisionDetail[];
   players: Record<string, any>;
-}) => (
-  <div className='space-y-4'>
-    <h3 className='text-lg font-semibold'>Best Risky Decisions (Bold Moves That Paid Off)</h3>
+}) => {
+  const [selectedWeek, setSelectedWeek] = useState<string>('all');
+  const [minPayoffThreshold, setMinPayoffThreshold] = useState<number>(5);
 
-    <div className='space-y-3'>
-      {decisions.map((decision, index) => {
-        const league = decision.leagueId.includes('44209') ? 'AFC' : 'NFC';
-        const selectedName = getPlayerName(decision.selectedPlayer.playerId, players);
+  // Get unique weeks from decisions
+  const availableWeeks = useMemo(() => {
+    const weeks = new Set(decisions.map(d => d.week));
+    return Array.from(weeks).sort((a, b) => a - b);
+  }, [decisions]);
 
-        return (
-          <Card key={`${decision.managerId}-${decision.week}-${decision.position}`} className='p-4'>
-            <div className='flex items-start justify-between mb-3'>
-              <div>
-                <div className='font-medium'>
-                  {decision.managerName} ({league})
+  // Filter decisions by selected week and payoff threshold
+  const filteredDecisions = useMemo(() => {
+    let filtered = decisions;
+
+    if (selectedWeek !== 'all') {
+      filtered = filtered.filter(d => d.week === parseInt(selectedWeek));
+    }
+
+    // Apply minimum payoff threshold
+    filtered = filtered.filter(d => (d.actualOutcome || 0) >= minPayoffThreshold);
+
+    return filtered;
+  }, [decisions, selectedWeek, minPayoffThreshold]);
+
+  return (
+    <div className='space-y-4'>
+      <div className='flex items-center justify-between'>
+        <h3 className='text-lg font-semibold'>
+          Best Risky Decisions (Bold Moves That Paid Off) • {filteredDecisions.length} decisions
+        </h3>
+        <div className='flex gap-2'>
+          <Select
+            value={minPayoffThreshold.toString()}
+            onValueChange={v => setMinPayoffThreshold(Number(v))}
+          >
+            <SelectTrigger className='w-32'>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='0'>All (≥0 pts)</SelectItem>
+              <SelectItem value='3'>≥3 payoff</SelectItem>
+              <SelectItem value='5'>≥5 payoff</SelectItem>
+              <SelectItem value='10'>≥10 payoff</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedWeek} onValueChange={setSelectedWeek}>
+            <SelectTrigger className='w-32'>
+              <SelectValue placeholder='All Weeks' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Weeks</SelectItem>
+              {availableWeeks.map(week => (
+                <SelectItem key={week} value={week.toString()}>
+                  Week {week}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className='space-y-3'>
+        {filteredDecisions.map((decision, index) => {
+          const league = decision.leagueId.includes('44209') ? 'AFC' : 'NFC';
+          const selectedName = getPlayerName(decision.selectedPlayer.playerId, players);
+
+          return (
+            <Card
+              key={`${decision.managerId}-${decision.week}-${decision.position}`}
+              className='p-4'
+            >
+              <div className='flex items-start justify-between mb-3'>
+                <div>
+                  <div className='font-medium'>
+                    {decision.managerName} ({league})
+                  </div>
+                  <div className='text-sm text-gray-500'>
+                    Week {decision.week} •{' '}
+                    <PositionBadge position={decision.position} weight={decision.weight} />
+                  </div>
                 </div>
-                <div className='text-sm text-gray-500'>
-                  Week {decision.week} •{' '}
-                  <PositionBadge position={decision.position} weight={decision.weight} />
+                <div className='text-right'>
+                  <div className='font-bold text-green-600 text-lg'>
+                    +{decision.actualOutcome?.toFixed(1)} pts
+                  </div>
+                  <div className='text-xs text-gray-500'>Risky Payoff</div>
                 </div>
               </div>
-              <div className='text-right'>
-                <div className='font-bold text-green-600 text-lg'>
-                  +{decision.actualOutcome?.toFixed(1)} pts
+
+              <div className='bg-green-50 p-3 rounded'>
+                <div className='font-medium text-green-800'>Risky Pick: {selectedName}</div>
+                <div className='text-sm'>
+                  Projected: {decision.selectedPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
+                  {decision.selectedPlayer.actualPoints.toFixed(1)}
                 </div>
-                <div className='text-xs text-gray-500'>Risky Payoff</div>
               </div>
-            </div>
 
-            <div className='bg-green-50 p-3 rounded'>
-              <div className='font-medium text-green-800'>Risky Pick: {selectedName}</div>
-              <div className='text-sm text-gray-600 mt-1'>
-                Had {decision.projectionDifferential?.toFixed(1)} fewer projected points than
-                alternatives
+              <div className='mt-3 pt-3 border-t'>
+                <div className='text-xs text-gray-500 mb-2'>
+                  Higher projected alternatives they passed on:
+                </div>
+                <div className='space-y-1'>
+                  {decision.alternatives?.slice(0, 5).map(alt => {
+                    const altName = getPlayerName(alt.playerId, players);
+                    const projDiff = alt.projectedPoints - decision.selectedPlayer.projectedPoints;
+                    // Use adjusted actual points for comparison (accounts for waiver penalty)
+                    const actualDiff =
+                      decision.selectedPlayer.actualPoints - alt.adjustedActualPoints;
+                    const isWaiver = alt.source === 'waiver';
+                    return (
+                      <div
+                        key={alt.playerId}
+                        className='flex items-center justify-between text-xs bg-white p-2 rounded'
+                      >
+                        <div className='flex-1'>
+                          <span className='font-medium'>{altName}</span>
+                          <span className='text-gray-500 ml-2'>({alt.source})</span>
+                        </div>
+                        <div className='flex gap-4 text-right items-center'>
+                          <div>
+                            <div className='text-xs text-gray-500'>Proj</div>
+                            <div className='font-medium text-orange-600'>
+                              {alt.projectedPoints.toFixed(1)}
+                              <span className='text-xs text-gray-500 ml-1'>
+                                (+{projDiff.toFixed(1)})
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className='text-xs text-gray-500'>Actual</div>
+                            <div className='font-medium text-gray-900'>
+                              {isWaiver ? (
+                                <span>
+                                  {alt.adjustedActualPoints.toFixed(1)}*
+                                  <span className='text-xs text-gray-400 ml-1'>
+                                    ({alt.actualPoints.toFixed(1)})
+                                  </span>
+                                </span>
+                              ) : (
+                                <span>{alt.actualPoints.toFixed(1)}</span>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <div className='text-xs text-gray-500'>Beat by</div>
+                            <div className='text-green-600 font-medium'>
+                              +{actualDiff.toFixed(1)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {decision.alternatives?.some(alt => alt.source === 'waiver') && (
+                  <div className='text-xs text-gray-500 mt-2'>
+                    * Waiver points adjusted with 35% pickup penalty
+                  </div>
+                )}
               </div>
-              <div className='text-sm'>
-                Projected: {decision.selectedPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
-                {decision.selectedPlayer.actualPoints.toFixed(1)}
-              </div>
-            </div>
-
-            <div className='mt-3 pt-3 border-t'>
-              <div className='text-xs text-gray-500 mb-2'>Safer alternatives they passed on:</div>
-              <div className='flex flex-wrap gap-2'>
-                {decision.alternatives.slice(0, 3).map(alt => (
-                  <Badge key={alt.playerId} variant='outline' className='text-xs'>
-                    {getPlayerName(alt.playerId, players)} (proj: {alt.projectedPoints.toFixed(1)})
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </Card>
-        );
-      })}
+            </Card>
+          );
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const RosterContextView = ({
   rosterContext,
@@ -706,25 +1102,12 @@ export default function StartSitEfficiency({ data }: { data: StartSitData }) {
 
         <TabsContent value='positions' className='space-y-6'>
           <Card>
-            <CardHeader>
-              <CardTitle>Position-by-Position Analysis</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='mb-4'>
-                <Select value={selectedManagerId} onValueChange={setSelectedManagerId}>
-                  <SelectTrigger className='w-full'>
-                    <SelectValue placeholder='Select manager for position breakdown' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {data.managerEfficiencies.map(manager => (
-                      <SelectItem key={manager.managerId} value={manager.managerId}>
-                        {manager.managerName} ({manager.leagueId.includes('44209') ? 'AFC' : 'NFC'})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              {selectedManager && <PositionBreakdown manager={selectedManager} />}
+            <CardContent className='pt-6'>
+              <PositionBreakdown
+                managers={data.managerEfficiencies}
+                selectedManagerId={selectedManagerId}
+                setSelectedManagerId={setSelectedManagerId}
+              />
             </CardContent>
           </Card>
         </TabsContent>

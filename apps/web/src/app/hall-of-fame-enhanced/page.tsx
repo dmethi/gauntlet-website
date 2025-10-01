@@ -264,6 +264,7 @@ export default function EnhancedHallOfFamePage() {
     rollingWindows,
     streaks,
     seasonal,
+    positionalDifferences,
     totalMatchups,
     totalSeasons,
     totalLeagues,
@@ -957,6 +958,106 @@ export default function EnhancedHallOfFamePage() {
                               </div>
                             );
                           })}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Positional Difference Records */}
+            <div>
+              <h3 className='text-lg font-semibold mb-4'>Greatest Positional Differences</h3>
+              <p className='text-sm text-muted-foreground mb-4'>
+                The largest scoring gaps between teams at each position within a single matchup
+              </p>
+              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                {(['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const).map(position => {
+                  const records = positionalDifferences[position];
+                  if (!records || records.length === 0) return null;
+
+                  return (
+                    <Card key={position} className='h-full'>
+                      <CardHeader>
+                        <CardTitle className='text-lg'>{position} Dominance</CardTitle>
+                        <CardDescription>
+                          Biggest single-matchup advantage at {position}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className='space-y-3'>
+                          {records.map((record, index) => (
+                            <div
+                              key={`${record.leagueId}-${record.week}-${record.matchupId}-${index}`}
+                              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                            >
+                              <div className='flex items-start gap-2 flex-1'>
+                                <span className='font-mono text-sm mt-0.5'>
+                                  {getRankEmoji(index + 1)}
+                                </span>
+                                <div className='flex-1 min-w-0'>
+                                  <div className='font-medium text-sm'>
+                                    <Link
+                                      href={`/team/${record.teamId}`}
+                                      className='hover:underline text-green-600 dark:text-green-400'
+                                    >
+                                      {record.teamName}
+                                    </Link>
+                                    <span className='text-muted-foreground mx-1'>vs</span>
+                                    <Link
+                                      href={`/team/${record.opponentId}`}
+                                      className='hover:underline text-red-600 dark:text-red-400'
+                                    >
+                                      {record.opponentName}
+                                    </Link>
+                                  </div>
+                                  <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                    <Badge
+                                      variant='outline'
+                                      className={getLeagueBadgeColor(record.leagueId)}
+                                    >
+                                      {getLeagueShortName(record.leagueId)}
+                                    </Badge>
+                                    <span className='text-xs text-muted-foreground'>
+                                      Week {record.week}
+                                    </span>
+                                    {record.matchupId && (
+                                      <Link
+                                        href={`/matchups/${record.leagueId}/${record.week}/${record.matchupId}`}
+                                        className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                      >
+                                        <svg
+                                          className='h-3 w-3'
+                                          fill='none'
+                                          viewBox='0 0 24 24'
+                                          stroke='currentColor'
+                                        >
+                                          <path
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            strokeWidth={2}
+                                            d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                          />
+                                        </svg>
+                                        View Matchup
+                                      </Link>
+                                    )}
+                                  </div>
+                                  <div className='text-xs text-muted-foreground mt-1'>
+                                    {record.teamScore.toFixed(1)} -{' '}
+                                    {record.opponentScore.toFixed(1)}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='text-right'>
+                                <div className='font-bold text-sm text-green-600 dark:text-green-400'>
+                                  +{record.difference.toFixed(1)}
+                                </div>
+                                <div className='text-xs text-muted-foreground'>diff</div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </CardContent>
                     </Card>

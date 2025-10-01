@@ -22,7 +22,7 @@ interface CachedData {
   timestamp: number;
 }
 
-async function fetchStatsData(): Promise<PlainStatsDataset> {
+async function fetchStatsData(): Promise<PlainStatsDataset & { startSitEfficiency?: any }> {
   // Check cache first
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);

@@ -1,0 +1,1638 @@
+{
+  "afc": [
+    {
+      "title": "2 Dolla Balla$ (2–2) def. lol jerry jones",
+      "teams": {
+        "teamA": "2 Dolla Balla$",
+        "teamAPreRecord": "1–2",
+        "teamAScore": 139.36,
+        "teamB": "lol jerry jones",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 113.94
+      },
+      "winner": {
+        "name": "2 Dolla Balla$",
+        "score": 139.36,
+        "topPerformers": "Kenneth Gainwell (31.4), Josh Allen (25.9), Amon-Ra St. Brown (22.5)",
+        "boxscore": [
+          {
+            "playerId": "4984",
+            "name": "Josh Allen",
+            "position": "QB",
+            "points": 25.86
+          },
+          {
+            "playerId": "7594",
+            "name": "Chuba Hubbard",
+            "position": "RB",
+            "points": 9.9
+          },
+          {
+            "playerId": "4098",
+            "name": "Kareem Hunt",
+            "position": "RB",
+            "points": 7.2
+          },
+          {
+            "playerId": "7547",
+            "name": "Amon-Ra St. Brown",
+            "position": "WR",
+            "points": 22.5
+          },
+          {
+            "playerId": "2133",
+            "name": "Davante Adams",
+            "position": "WR",
+            "points": 13.6
+          },
+          {
+            "playerId": "5022",
+            "name": "Dallas Goedert",
+            "position": "TE",
+            "points": 17.7
+          },
+          {
+            "playerId": "7567",
+            "name": "Kenneth Gainwell",
+            "position": "RB",
+            "points": 31.4
+          },
+          {
+            "playerId": "8126",
+            "name": "Wan'Dale Robinson",
+            "position": "WR",
+            "points": 2.9
+          },
+          {
+            "playerId": "MIA",
+            "name": "Miami Dolphins",
+            "position": "DEF",
+            "points": 8.3
+          }
+        ]
+      },
+      "loser": {
+        "name": "lol jerry jones",
+        "score": 113.94,
+        "topPerformers": "George Pickens (29.4), Justin Fields (28.1), Quinshon Judkins (22.5)",
+        "busts": "Tre Tucker (3.2), A.J. Brown (1.7)",
+        "boxscore": [
+          {
+            "playerId": "7591",
+            "name": "Justin Fields",
+            "position": "QB",
+            "points": 28.14
+          },
+          {
+            "playerId": "6813",
+            "name": "Jonathan Taylor",
+            "position": "RB",
+            "points": 13.6
+          },
+          {
+            "playerId": "12512",
+            "name": "Quinshon Judkins",
+            "position": "RB",
+            "points": 22.5
+          },
+          {
+            "playerId": "12526",
+            "name": "Tetairoa McMillan",
+            "position": "WR",
+            "points": 8.2
+          },
+          {
+            "playerId": "5859",
+            "name": "A.J. Brown",
+            "position": "WR",
+            "points": 1.7
+          },
+          {
+            "playerId": "8130",
+            "name": "Trey McBride",
+            "position": "TE",
+            "points": 8.7
+          },
+          {
+            "playerId": "8137",
+            "name": "George Pickens",
+            "position": "WR",
+            "points": 29.4
+          },
+          {
+            "playerId": "10213",
+            "name": "Tre Tucker",
+            "position": "WR",
+            "points": 3.2
+          },
+          {
+            "playerId": "GB",
+            "name": "Green Bay Packers",
+            "position": "DEF",
+            "points": -1.5
+          }
+        ]
+      },
+      "margin": "25.4",
+      "combined": "253.3"
+    },
+    {
+      "title": "NielGetsCarried (1–3) def. achak7",
+      "teams": {
+        "teamA": "NielGetsCarried",
+        "teamAPreRecord": "0–3",
+        "teamAScore": 139.81,
+        "teamB": "achak7",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 106.56
+      },
+      "winner": {
+        "name": "NielGetsCarried",
+        "score": 139.81,
+        "topPerformers": "Josh Jacobs (31.7), DK Metcalf (21.1), Baker Mayfield (18.4)",
+        "boxscore": [
+          {
+            "playerId": "4892",
+            "name": "Baker Mayfield",
+            "position": "QB",
+            "points": 18.36
+          },
+          {
+            "playerId": "5850",
+            "name": "Josh Jacobs",
+            "position": "RB",
+            "points": 31.7
+          },
+          {
+            "playerId": "4035",
+            "name": "Alvin Kamara",
+            "position": "RB",
+            "points": 11.2
+          },
+          {
+            "playerId": "6794",
+            "name": "Justin Jefferson",
+            "position": "WR",
+            "points": 17.6
+          },
+          {
+            "playerId": "6819",
+            "name": "Michael Pittman",
+            "position": "WR",
+            "points": 12.6
+          },
+          {
+            "playerId": "5012",
+            "name": "Mark Andrews",
+            "position": "TE",
+            "points": 6.5
+          },
+          {
+            "playerId": "5846",
+            "name": "DK Metcalf",
+            "position": "WR",
+            "points": 21.1
+          },
+          {
+            "playerId": "11589",
+            "name": "Trey Benson",
+            "position": "RB",
+            "points": 8.4
+          },
+          {
+            "playerId": "LAC",
+            "name": "Los Angeles Chargers",
+            "position": "DEF",
+            "points": 12.35
+          }
+        ]
+      },
+      "loser": {
+        "name": "achak7",
+        "score": 106.56,
+        "topPerformers": "Dak Prescott (31.0), James Cook (23.5), Rome Odunze (14.9)",
+        "busts": "DeVonta Smith (3.9), Malik Nabers (3.0)",
+        "boxscore": [
+          {
+            "playerId": "3294",
+            "name": "Dak Prescott",
+            "position": "QB",
+            "points": 30.96
+          },
+          {
+            "playerId": "8150",
+            "name": "Kyren Williams",
+            "position": "RB",
+            "points": 11.9
+          },
+          {
+            "playerId": "8138",
+            "name": "James Cook",
+            "position": "RB",
+            "points": 23.5
+          },
+          {
+            "playerId": "11632",
+            "name": "Malik Nabers",
+            "position": "WR",
+            "points": 3
+          },
+          {
+            "playerId": "7525",
+            "name": "DeVonta Smith",
+            "position": "WR",
+            "points": 3.9
+          },
+          {
+            "playerId": "10859",
+            "name": "Sam LaPorta",
+            "position": "TE",
+            "points": 5.4
+          },
+          {
+            "playerId": "11620",
+            "name": "Rome Odunze",
+            "position": "WR",
+            "points": 14.9
+          },
+          {
+            "playerId": "5947",
+            "name": "Jakobi Meyers",
+            "position": "WR",
+            "points": 5
+          },
+          {
+            "playerId": "DEN",
+            "name": "Denver Broncos",
+            "position": "DEF",
+            "points": 8
+          }
+        ]
+      },
+      "margin": "33.3",
+      "combined": "246.4"
+    },
+    {
+      "title": "To Infinity and Bijan (3–1) def. The Golden Age",
+      "teams": {
+        "teamA": "The Golden Age",
+        "teamAPreRecord": "3–0",
+        "teamAScore": 103.73,
+        "teamB": "To Infinity and Bijan",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 135.5
+      },
+      "winner": {
+        "name": "To Infinity and Bijan",
+        "score": 135.5,
+        "topPerformers": "Patrick Mahomes (27.3), Bijan Robinson (27.1), Travis Etienne (21.0)",
+        "boxscore": [
+          {
+            "playerId": "4046",
+            "name": "Patrick Mahomes",
+            "position": "QB",
+            "points": 27.3
+          },
+          {
+            "playerId": "9509",
+            "name": "Bijan Robinson",
+            "position": "RB",
+            "points": 27.1
+          },
+          {
+            "playerId": "7588",
+            "name": "Javonte Williams",
+            "position": "RB",
+            "points": 19.5
+          },
+          {
+            "playerId": "4037",
+            "name": "Chris Godwin",
+            "position": "WR",
+            "points": 4.1
+          },
+          {
+            "playerId": "11628",
+            "name": "Marvin Harrison",
+            "position": "WR",
+            "points": 15.6
+          },
+          {
+            "playerId": "1466",
+            "name": "Travis Kelce",
+            "position": "TE",
+            "points": 7.3
+          },
+          {
+            "playerId": "5892",
+            "name": "David Montgomery",
+            "position": "RB",
+            "points": 1.2
+          },
+          {
+            "playerId": "7543",
+            "name": "Travis Etienne",
+            "position": "RB",
+            "points": 21
+          },
+          {
+            "playerId": "NE",
+            "name": "New England Patriots",
+            "position": "DEF",
+            "points": 12.4
+          }
+        ]
+      },
+      "loser": {
+        "name": "The Golden Age",
+        "score": 103.73,
+        "topPerformers": "Detroit Lions (21.4), Jahmyr Gibbs (18.7), Emeka Egbuka (18.1)",
+        "busts": "Juwan Johnson (4.3)",
+        "boxscore": [
+          {
+            "playerId": "11560",
+            "name": "Caleb Williams",
+            "position": "QB",
+            "points": 10.28
+          },
+          {
+            "playerId": "9221",
+            "name": "Jahmyr Gibbs",
+            "position": "RB",
+            "points": 18.7
+          },
+          {
+            "playerId": "3198",
+            "name": "Derrick Henry",
+            "position": "RB",
+            "points": 7.8
+          },
+          {
+            "playerId": "1479",
+            "name": "Keenan Allen",
+            "position": "WR",
+            "points": 6.2
+          },
+          {
+            "playerId": "12514",
+            "name": "Emeka Egbuka",
+            "position": "WR",
+            "points": 18.1
+          },
+          {
+            "playerId": "7002",
+            "name": "Juwan Johnson",
+            "position": "TE",
+            "points": 4.3
+          },
+          {
+            "playerId": "8188",
+            "name": "Tyquan Thornton",
+            "position": "WR",
+            "points": 7.6
+          },
+          {
+            "playerId": "12501",
+            "name": "Matthew Golden",
+            "position": "WR",
+            "points": 9.3
+          },
+          {
+            "playerId": "DET",
+            "name": "Detroit Lions",
+            "position": "DEF",
+            "points": 21.45
+          }
+        ]
+      },
+      "margin": "31.8",
+      "combined": "239.2"
+    },
+    {
+      "title": "benweinfeld (2–2) def. Quonspiracy Theorists",
+      "teams": {
+        "teamA": "Quonspiracy Theorists",
+        "teamAPreRecord": "1–2",
+        "teamAScore": 116.78,
+        "teamB": "benweinfeld",
+        "teamBPreRecord": "1–2",
+        "teamBScore": 119.47
+      },
+      "winner": {
+        "name": "benweinfeld",
+        "score": 119.47,
+        "topPerformers": "Ashton Jeanty (35.0), Garrett Wilson (17.2), J.K. Dobbins (14.0)",
+        "boxscore": [
+          {
+            "playerId": "6797",
+            "name": "Justin Herbert",
+            "position": "QB",
+            "points": 13.02
+          },
+          {
+            "playerId": "12527",
+            "name": "Ashton Jeanty",
+            "position": "RB",
+            "points": 35
+          },
+          {
+            "playerId": "12529",
+            "name": "TreVeyon Henderson",
+            "position": "RB",
+            "points": 12.6
+          },
+          {
+            "playerId": "8146",
+            "name": "Garrett Wilson",
+            "position": "WR",
+            "points": 17.2
+          },
+          {
+            "playerId": "8148",
+            "name": "Jameson Williams",
+            "position": "WR",
+            "points": 4.7
+          },
+          {
+            "playerId": "3214",
+            "name": "Hunter Henry",
+            "position": "TE",
+            "points": 10.9
+          },
+          {
+            "playerId": "7564",
+            "name": "Ja'Marr Chase",
+            "position": "WR",
+            "points": 4.8
+          },
+          {
+            "playerId": "6806",
+            "name": "J.K. Dobbins",
+            "position": "RB",
+            "points": 14
+          },
+          {
+            "playerId": "MIN",
+            "name": "Minnesota Vikings",
+            "position": "DEF",
+            "points": 7.25
+          }
+        ]
+      },
+      "loser": {
+        "name": "Quonspiracy Theorists",
+        "score": 116.78,
+        "topPerformers": "De'Von Achane (17.1), Deebo Samuel (16.6), Xavier Worthy (15.6)",
+        "busts": "",
+        "boxscore": [
+          {
+            "playerId": "5870",
+            "name": "Daniel Jones",
+            "position": "QB",
+            "points": 9.38
+          },
+          {
+            "playerId": "4866",
+            "name": "Saquon Barkley",
+            "position": "RB",
+            "points": 15.4
+          },
+          {
+            "playerId": "9226",
+            "name": "De'Von Achane",
+            "position": "RB",
+            "points": 17.1
+          },
+          {
+            "playerId": "11631",
+            "name": "Brian Thomas",
+            "position": "WR",
+            "points": 8.6
+          },
+          {
+            "playerId": "5872",
+            "name": "Deebo Samuel",
+            "position": "WR",
+            "points": 16.6
+          },
+          {
+            "playerId": "8110",
+            "name": "Jake Ferguson",
+            "position": "TE",
+            "points": 13.5
+          },
+          {
+            "playerId": "11627",
+            "name": "Troy Franklin",
+            "position": "WR",
+            "points": 7.5
+          },
+          {
+            "playerId": "11624",
+            "name": "Xavier Worthy",
+            "position": "WR",
+            "points": 15.6
+          },
+          {
+            "playerId": "SEA",
+            "name": "Seattle Seahawks",
+            "position": "DEF",
+            "points": 13.1
+          }
+        ]
+      },
+      "margin": "2.7",
+      "combined": "236.3"
+    },
+    {
+      "title": "Nacua Matata (2–2) def. vchak",
+      "teams": {
+        "teamA": "Nacua Matata",
+        "teamAPreRecord": "1–2",
+        "teamAScore": 136.17,
+        "teamB": "vchak",
+        "teamBPreRecord": "1–2",
+        "teamBScore": 108.09
+      },
+      "winner": {
+        "name": "Nacua Matata",
+        "score": 136.17,
+        "topPerformers": "Puka Nacua (29.5), Pittsburgh Steelers (19.9), Tyler Warren (15.8)",
+        "boxscore": [
+          {
+            "playerId": "3163",
+            "name": "Jared Goff",
+            "position": "QB",
+            "points": 12.72
+          },
+          {
+            "playerId": "8155",
+            "name": "Breece Hall",
+            "position": "RB",
+            "points": 15.1
+          },
+          {
+            "playerId": "8151",
+            "name": "Kenneth Walker",
+            "position": "RB",
+            "points": 12.5
+          },
+          {
+            "playerId": "9493",
+            "name": "Puka Nacua",
+            "position": "WR",
+            "points": 29.5
+          },
+          {
+            "playerId": "9997",
+            "name": "Zay Flowers",
+            "position": "WR",
+            "points": 10.9
+          },
+          {
+            "playerId": "12518",
+            "name": "Tyler Warren",
+            "position": "TE",
+            "points": 15.8
+          },
+          {
+            "playerId": "3321",
+            "name": "Tyreek Hill",
+            "position": "WR",
+            "points": 9.7
+          },
+          {
+            "playerId": "5967",
+            "name": "Tony Pollard",
+            "position": "RB",
+            "points": 10.1
+          },
+          {
+            "playerId": "PIT",
+            "name": "Pittsburgh Steelers",
+            "position": "DEF",
+            "points": 19.85
+          }
+        ]
+      },
+      "loser": {
+        "name": "vchak",
+        "score": 108.09,
+        "topPerformers": "Bo Nix (25.7), Christian McCaffrey (22.6), Philadelphia Eagles (16.8)",
+        "busts": "Darnell Mooney (2.0)",
+        "boxscore": [
+          {
+            "playerId": "11563",
+            "name": "Bo Nix",
+            "position": "QB",
+            "points": 25.74
+          },
+          {
+            "playerId": "4034",
+            "name": "Christian McCaffrey",
+            "position": "RB",
+            "points": 22.6
+          },
+          {
+            "playerId": "8205",
+            "name": "Isiah Pacheco",
+            "position": "RB",
+            "points": 12.8
+          },
+          {
+            "playerId": "4983",
+            "name": "DJ Moore",
+            "position": "WR",
+            "points": 5.8
+          },
+          {
+            "playerId": "7090",
+            "name": "Darnell Mooney",
+            "position": "WR",
+            "points": 2
+          },
+          {
+            "playerId": "5844",
+            "name": "T.J. Hockenson",
+            "position": "TE",
+            "points": 5.9
+          },
+          {
+            "playerId": "7569",
+            "name": "Nico Collins",
+            "position": "WR",
+            "points": 9.9
+          },
+          {
+            "playerId": "11638",
+            "name": "Ricky Pearsall",
+            "position": "WR",
+            "points": 6.6
+          },
+          {
+            "playerId": "PHI",
+            "name": "Philadelphia Eagles",
+            "position": "DEF",
+            "points": 16.75
+          }
+        ]
+      },
+      "margin": "28.1",
+      "combined": "244.3"
+    },
+    {
+      "title": "scboom5 (3–1) def. Dr Patel Parikh MD MBA",
+      "teams": {
+        "teamA": "Dr Patel Parikh MD MBA",
+        "teamAPreRecord": "2–1",
+        "teamAScore": 121.73,
+        "teamB": "scboom5",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 135.05
+      },
+      "winner": {
+        "name": "scboom5",
+        "score": 135.05,
+        "topPerformers": "Omarion Hampton (27.0), Bucky Irving (24.0), Jalen Hurts (19.9)",
+        "boxscore": [
+          {
+            "playerId": "6904",
+            "name": "Jalen Hurts",
+            "position": "QB",
+            "points": 19.9
+          },
+          {
+            "playerId": "11584",
+            "name": "Bucky Irving",
+            "position": "RB",
+            "points": 24
+          },
+          {
+            "playerId": "12507",
+            "name": "Omarion Hampton",
+            "position": "RB",
+            "points": 27
+          },
+          {
+            "playerId": "9488",
+            "name": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "points": 11
+          },
+          {
+            "playerId": "8134",
+            "name": "Khalil Shakir",
+            "position": "WR",
+            "points": 15.4
+          },
+          {
+            "playerId": "9484",
+            "name": "Tucker Kraft",
+            "position": "TE",
+            "points": 8.1
+          },
+          {
+            "playerId": "9753",
+            "name": "Zach Charbonnet",
+            "position": "RB",
+            "points": 12.4
+          },
+          {
+            "playerId": "12499",
+            "name": "Elic Ayomanor",
+            "position": "WR",
+            "points": 5.4
+          },
+          {
+            "playerId": "HOU",
+            "name": "Houston Texans",
+            "position": "DEF",
+            "points": 11.85
+          }
+        ]
+      },
+      "loser": {
+        "name": "Dr Patel Parikh MD MBA",
+        "score": 121.73,
+        "topPerformers": "Romeo Doubs (26.8), Drake London (21.0), Courtland Sutton (16.6)",
+        "busts": "",
+        "boxscore": [
+          {
+            "playerId": "4881",
+            "name": "Lamar Jackson",
+            "position": "QB",
+            "points": 12.18
+          },
+          {
+            "playerId": "9224",
+            "name": "Chase Brown",
+            "position": "RB",
+            "points": 9.6
+          },
+          {
+            "playerId": "8408",
+            "name": "Jordan Mason",
+            "position": "RB",
+            "points": 10.2
+          },
+          {
+            "playerId": "8112",
+            "name": "Drake London",
+            "position": "WR",
+            "points": 21
+          },
+          {
+            "playerId": "5045",
+            "name": "Courtland Sutton",
+            "position": "WR",
+            "points": 16.6
+          },
+          {
+            "playerId": "11604",
+            "name": "Brock Bowers",
+            "position": "TE",
+            "points": 7.1
+          },
+          {
+            "playerId": "12533",
+            "name": "Jacory Croskey-Merritt",
+            "position": "RB",
+            "points": 8.7
+          },
+          {
+            "playerId": "8121",
+            "name": "Romeo Doubs",
+            "position": "WR",
+            "points": 26.8
+          },
+          {
+            "playerId": "BUF",
+            "name": "Buffalo Bills",
+            "position": "DEF",
+            "points": 9.55
+          }
+        ]
+      },
+      "margin": "13.3",
+      "combined": "256.8"
+    }
+  ],
+  "nfc": [
+    {
+      "title": "ziyanp22 (3–1) def. C&G^2",
+      "teams": {
+        "teamA": "ziyanp22",
+        "teamAPreRecord": "2–1",
+        "teamAScore": 138.03,
+        "teamB": "C&G^2",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 114.03
+      },
+      "winner": {
+        "name": "ziyanp22",
+        "score": 138.03,
+        "topPerformers": "Ashton Jeanty (35.0), Puka Nacua (29.5), Jordan Love (26.8)",
+        "boxscore": [
+          {
+            "playerId": "6804",
+            "name": "Jordan Love",
+            "position": "QB",
+            "points": 26.78
+          },
+          {
+            "playerId": "12527",
+            "name": "Ashton Jeanty",
+            "position": "RB",
+            "points": 35
+          },
+          {
+            "playerId": "9224",
+            "name": "Chase Brown",
+            "position": "RB",
+            "points": 9.6
+          },
+          {
+            "playerId": "9493",
+            "name": "Puka Nacua",
+            "position": "WR",
+            "points": 29.5
+          },
+          {
+            "playerId": "1479",
+            "name": "Keenan Allen",
+            "position": "WR",
+            "points": 6.2
+          },
+          {
+            "playerId": "1339",
+            "name": "Zach Ertz",
+            "position": "TE",
+            "points": 4.1
+          },
+          {
+            "playerId": "11620",
+            "name": "Rome Odunze",
+            "position": "WR",
+            "points": 14.9
+          },
+          {
+            "playerId": "8148",
+            "name": "Jameson Williams",
+            "position": "WR",
+            "points": 4.7
+          },
+          {
+            "playerId": "MIN",
+            "name": "Minnesota Vikings",
+            "position": "DEF",
+            "points": 7.25
+          }
+        ]
+      },
+      "loser": {
+        "name": "C&G^2",
+        "score": 114.03,
+        "topPerformers": "Quinshon Judkins (22.5), Javonte Williams (19.5), Davante Adams (13.6)",
+        "busts": "",
+        "boxscore": [
+          {
+            "playerId": "4881",
+            "name": "Lamar Jackson",
+            "position": "QB",
+            "points": 12.18
+          },
+          {
+            "playerId": "12512",
+            "name": "Quinshon Judkins",
+            "position": "RB",
+            "points": 22.5
+          },
+          {
+            "playerId": "5967",
+            "name": "Tony Pollard",
+            "position": "RB",
+            "points": 10.1
+          },
+          {
+            "playerId": "9488",
+            "name": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "points": 11
+          },
+          {
+            "playerId": "2133",
+            "name": "Davante Adams",
+            "position": "WR",
+            "points": 13.6
+          },
+          {
+            "playerId": "5844",
+            "name": "T.J. Hockenson",
+            "position": "TE",
+            "points": 5.9
+          },
+          {
+            "playerId": "3321",
+            "name": "Tyreek Hill",
+            "position": "WR",
+            "points": 9.7
+          },
+          {
+            "playerId": "7588",
+            "name": "Javonte Williams",
+            "position": "RB",
+            "points": 19.5
+          },
+          {
+            "playerId": "BUF",
+            "name": "Buffalo Bills",
+            "position": "DEF",
+            "points": 9.55
+          }
+        ]
+      },
+      "margin": "24.0",
+      "combined": "252.1"
+    },
+    {
+      "title": "Mach 10 (3–1) def. DJ Herbussy ",
+      "teams": {
+        "teamA": "Mach 10",
+        "teamAPreRecord": "2–1",
+        "teamAScore": 123.63,
+        "teamB": "DJ Herbussy ",
+        "teamBPreRecord": "3–0",
+        "teamBScore": 111.57
+      },
+      "winner": {
+        "name": "Mach 10",
+        "score": 123.63,
+        "topPerformers": "George Pickens (29.4), Jahmyr Gibbs (18.7), De'Von Achane (17.1)",
+        "boxscore": [
+          {
+            "playerId": "5870",
+            "name": "Daniel Jones",
+            "position": "QB",
+            "points": 9.38
+          },
+          {
+            "playerId": "9221",
+            "name": "Jahmyr Gibbs",
+            "position": "RB",
+            "points": 18.7
+          },
+          {
+            "playerId": "9226",
+            "name": "De'Von Achane",
+            "position": "RB",
+            "points": 17.1
+          },
+          {
+            "playerId": "8137",
+            "name": "George Pickens",
+            "position": "WR",
+            "points": 29.4
+          },
+          {
+            "playerId": "9756",
+            "name": "Jordan Addison",
+            "position": "WR",
+            "points": 13.4
+          },
+          {
+            "playerId": "12506",
+            "name": "Harold Fannin",
+            "position": "TE",
+            "points": 3.5
+          },
+          {
+            "playerId": "7526",
+            "name": "Jaylen Waddle",
+            "position": "WR",
+            "points": 6.3
+          },
+          {
+            "playerId": "6806",
+            "name": "J.K. Dobbins",
+            "position": "RB",
+            "points": 14
+          },
+          {
+            "playerId": "HOU",
+            "name": "Houston Texans",
+            "position": "DEF",
+            "points": 11.85
+          }
+        ]
+      },
+      "loser": {
+        "name": "DJ Herbussy ",
+        "score": 111.57,
+        "topPerformers": "Bucky Irving (24.0), Emeka Egbuka (18.1), Tyler Warren (15.8)",
+        "busts": "David Montgomery (1.2)",
+        "boxscore": [
+          {
+            "playerId": "6797",
+            "name": "Justin Herbert",
+            "position": "QB",
+            "points": 13.02
+          },
+          {
+            "playerId": "6813",
+            "name": "Jonathan Taylor",
+            "position": "RB",
+            "points": 13.6
+          },
+          {
+            "playerId": "11584",
+            "name": "Bucky Irving",
+            "position": "RB",
+            "points": 24
+          },
+          {
+            "playerId": "11628",
+            "name": "Marvin Harrison",
+            "position": "WR",
+            "points": 15.6
+          },
+          {
+            "playerId": "12514",
+            "name": "Emeka Egbuka",
+            "position": "WR",
+            "points": 18.1
+          },
+          {
+            "playerId": "12518",
+            "name": "Tyler Warren",
+            "position": "TE",
+            "points": 15.8
+          },
+          {
+            "playerId": "4983",
+            "name": "DJ Moore",
+            "position": "WR",
+            "points": 5.8
+          },
+          {
+            "playerId": "5892",
+            "name": "David Montgomery",
+            "position": "RB",
+            "points": 1.2
+          },
+          {
+            "playerId": "WAS",
+            "name": "Washington Commanders",
+            "position": "DEF",
+            "points": 4.45
+          }
+        ]
+      },
+      "margin": "12.1",
+      "combined": "235.2"
+    },
+    {
+      "title": "cescott25 (3–1) def. vayyala",
+      "teams": {
+        "teamA": "vayyala",
+        "teamAPreRecord": "0–3",
+        "teamAScore": 86.2,
+        "teamB": "cescott25",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 113.21
+      },
+      "winner": {
+        "name": "cescott25",
+        "score": 113.21,
+        "topPerformers": "Kenneth Gainwell (31.4), Josh Allen (25.9), Los Angeles Chargers (12.3)",
+        "boxscore": [
+          {
+            "playerId": "4984",
+            "name": "Josh Allen",
+            "position": "QB",
+            "points": 25.86
+          },
+          {
+            "playerId": "7567",
+            "name": "Kenneth Gainwell",
+            "position": "RB",
+            "points": 31.4
+          },
+          {
+            "playerId": "4098",
+            "name": "Kareem Hunt",
+            "position": "RB",
+            "points": 7.2
+          },
+          {
+            "playerId": "7569",
+            "name": "Nico Collins",
+            "position": "WR",
+            "points": 9.9
+          },
+          {
+            "playerId": "7525",
+            "name": "DeVonta Smith",
+            "position": "WR",
+            "points": 3.9
+          },
+          {
+            "playerId": "8130",
+            "name": "Trey McBride",
+            "position": "TE",
+            "points": 8.7
+          },
+          {
+            "playerId": "11638",
+            "name": "Ricky Pearsall",
+            "position": "WR",
+            "points": 6.6
+          },
+          {
+            "playerId": "1466",
+            "name": "Travis Kelce",
+            "position": "TE",
+            "points": 7.3
+          },
+          {
+            "playerId": "LAC",
+            "name": "Los Angeles Chargers",
+            "position": "DEF",
+            "points": 12.35
+          }
+        ]
+      },
+      "loser": {
+        "name": "vayyala",
+        "score": 86.2,
+        "topPerformers": "Jalen Hurts (19.9), Kenneth Walker (12.5), Kyren Williams (11.9)",
+        "busts": "Tee Higgins (4.7)",
+        "boxscore": [
+          {
+            "playerId": "6904",
+            "name": "Jalen Hurts",
+            "position": "QB",
+            "points": 19.9
+          },
+          {
+            "playerId": "8150",
+            "name": "Kyren Williams",
+            "position": "RB",
+            "points": 11.9
+          },
+          {
+            "playerId": "8151",
+            "name": "Kenneth Walker",
+            "position": "RB",
+            "points": 12.5
+          },
+          {
+            "playerId": "11631",
+            "name": "Brian Thomas",
+            "position": "WR",
+            "points": 8.6
+          },
+          {
+            "playerId": "6801",
+            "name": "Tee Higgins",
+            "position": "WR",
+            "points": 4.7
+          },
+          {
+            "playerId": "9484",
+            "name": "Tucker Kraft",
+            "position": "TE",
+            "points": 8.1
+          },
+          {
+            "playerId": "8144",
+            "name": "Chris Olave",
+            "position": "WR",
+            "points": 7.5
+          },
+          {
+            "playerId": "5947",
+            "name": "Jakobi Meyers",
+            "position": "WR",
+            "points": 5
+          },
+          {
+            "playerId": "DEN",
+            "name": "Denver Broncos",
+            "position": "DEF",
+            "points": 8
+          }
+        ]
+      },
+      "margin": "27.0",
+      "combined": "199.4"
+    },
+    {
+      "title": "Marginal Returns (4–0) def. Dont go Chasing Saquon",
+      "teams": {
+        "teamA": "Dont go Chasing Saquon",
+        "teamAPreRecord": "0–3",
+        "teamAScore": 103.5,
+        "teamB": "Marginal Returns",
+        "teamBPreRecord": "3–0",
+        "teamBScore": 112.93
+      },
+      "winner": {
+        "name": "Marginal Returns",
+        "score": 112.93,
+        "topPerformers": "Josh Jacobs (31.7), Detroit Lions (21.4), Garrett Wilson (17.2)",
+        "boxscore": [
+          {
+            "playerId": "11560",
+            "name": "Caleb Williams",
+            "position": "QB",
+            "points": 10.28
+          },
+          {
+            "playerId": "5850",
+            "name": "Josh Jacobs",
+            "position": "RB",
+            "points": 31.7
+          },
+          {
+            "playerId": "3198",
+            "name": "Derrick Henry",
+            "position": "RB",
+            "points": 7.8
+          },
+          {
+            "playerId": "5859",
+            "name": "A.J. Brown",
+            "position": "WR",
+            "points": 1.7
+          },
+          {
+            "playerId": "8146",
+            "name": "Garrett Wilson",
+            "position": "WR",
+            "points": 17.2
+          },
+          {
+            "playerId": "8110",
+            "name": "Jake Ferguson",
+            "position": "TE",
+            "points": 13.5
+          },
+          {
+            "playerId": "12526",
+            "name": "Tetairoa McMillan",
+            "position": "WR",
+            "points": 8.2
+          },
+          {
+            "playerId": "10444",
+            "name": "Cedric Tillman",
+            "position": "WR",
+            "points": 1.1
+          },
+          {
+            "playerId": "DET",
+            "name": "Detroit Lions",
+            "position": "DEF",
+            "points": 21.45
+          }
+        ]
+      },
+      "loser": {
+        "name": "Dont go Chasing Saquon",
+        "score": 103.5,
+        "topPerformers": "Bijan Robinson (27.1), Quentin Johnston (19.8), Kyler Murray (16.6)",
+        "busts": "Ja'Marr Chase (4.8), Darnell Mooney (2.0)",
+        "boxscore": [
+          {
+            "playerId": "5849",
+            "name": "Kyler Murray",
+            "position": "QB",
+            "points": 16.6
+          },
+          {
+            "playerId": "4866",
+            "name": "Saquon Barkley",
+            "position": "RB",
+            "points": 15.4
+          },
+          {
+            "playerId": "9509",
+            "name": "Bijan Robinson",
+            "position": "RB",
+            "points": 27.1
+          },
+          {
+            "playerId": "7564",
+            "name": "Ja'Marr Chase",
+            "position": "WR",
+            "points": 4.8
+          },
+          {
+            "playerId": "9754",
+            "name": "Quentin Johnston",
+            "position": "WR",
+            "points": 19.8
+          },
+          {
+            "playerId": "3214",
+            "name": "Hunter Henry",
+            "position": "TE",
+            "points": 10.9
+          },
+          {
+            "playerId": "11589",
+            "name": "Trey Benson",
+            "position": "RB",
+            "points": 8.4
+          },
+          {
+            "playerId": "7090",
+            "name": "Darnell Mooney",
+            "position": "WR",
+            "points": 2
+          },
+          {
+            "playerId": "GB",
+            "name": "Green Bay Packers",
+            "position": "DEF",
+            "points": -1.5
+          }
+        ]
+      },
+      "margin": "9.4",
+      "combined": "216.4"
+    },
+    {
+      "title": "The zoo (1–3) def. Jaxson Dart-Njigba",
+      "teams": {
+        "teamA": "The zoo",
+        "teamAPreRecord": "0–3",
+        "teamAScore": 125.03,
+        "teamB": "Jaxson Dart-Njigba",
+        "teamBPreRecord": "1–2",
+        "teamBScore": 115.92
+      },
+      "winner": {
+        "name": "The zoo",
+        "score": 125.03,
+        "topPerformers": "Drake London (21.0), Travis Etienne (21.0), Pittsburgh Steelers (19.9)",
+        "boxscore": [
+          {
+            "playerId": "4943",
+            "name": "Sam Darnold",
+            "position": "QB",
+            "points": 15.58
+          },
+          {
+            "playerId": "8408",
+            "name": "Jordan Mason",
+            "position": "RB",
+            "points": 10.2
+          },
+          {
+            "playerId": "8155",
+            "name": "Breece Hall",
+            "position": "RB",
+            "points": 15.1
+          },
+          {
+            "playerId": "11632",
+            "name": "Malik Nabers",
+            "position": "WR",
+            "points": 3
+          },
+          {
+            "playerId": "8112",
+            "name": "Drake London",
+            "position": "WR",
+            "points": 21
+          },
+          {
+            "playerId": "5022",
+            "name": "Dallas Goedert",
+            "position": "TE",
+            "points": 17.7
+          },
+          {
+            "playerId": "11635",
+            "name": "Ladd McConkey",
+            "position": "WR",
+            "points": 1.6
+          },
+          {
+            "playerId": "7543",
+            "name": "Travis Etienne",
+            "position": "RB",
+            "points": 21
+          },
+          {
+            "playerId": "PIT",
+            "name": "Pittsburgh Steelers",
+            "position": "DEF",
+            "points": 19.85
+          }
+        ]
+      },
+      "loser": {
+        "name": "Jaxson Dart-Njigba",
+        "score": 115.92,
+        "topPerformers": "DK Metcalf (21.1), Courtland Sutton (16.6), Cam Skattebo (14.0)",
+        "busts": "",
+        "boxscore": [
+          {
+            "playerId": "3163",
+            "name": "Jared Goff",
+            "position": "QB",
+            "points": 12.72
+          },
+          {
+            "playerId": "4035",
+            "name": "Alvin Kamara",
+            "position": "RB",
+            "points": 11.2
+          },
+          {
+            "playerId": "7594",
+            "name": "Chuba Hubbard",
+            "position": "RB",
+            "points": 9.9
+          },
+          {
+            "playerId": "9997",
+            "name": "Zay Flowers",
+            "position": "WR",
+            "points": 10.9
+          },
+          {
+            "playerId": "5846",
+            "name": "DK Metcalf",
+            "position": "WR",
+            "points": 21.1
+          },
+          {
+            "playerId": "11604",
+            "name": "Brock Bowers",
+            "position": "TE",
+            "points": 7.1
+          },
+          {
+            "playerId": "12481",
+            "name": "Cam Skattebo",
+            "position": "RB",
+            "points": 14
+          },
+          {
+            "playerId": "5045",
+            "name": "Courtland Sutton",
+            "position": "WR",
+            "points": 16.6
+          },
+          {
+            "playerId": "NE",
+            "name": "New England Patriots",
+            "position": "DEF",
+            "points": 12.4
+          }
+        ]
+      },
+      "margin": "9.1",
+      "combined": "240.9"
+    },
+    {
+      "title": "Saint Brown Does Mahomes (2–2) def. lukebowsh",
+      "teams": {
+        "teamA": "Saint Brown Does Mahomes",
+        "teamAPreRecord": "1–2",
+        "teamAScore": 135.6,
+        "teamB": "lukebowsh",
+        "teamBPreRecord": "2–1",
+        "teamBScore": 102.41
+      },
+      "winner": {
+        "name": "Saint Brown Does Mahomes",
+        "score": 135.6,
+        "topPerformers": "Patrick Mahomes (27.3), James Cook (23.5), Amon-Ra St. Brown (22.5)",
+        "boxscore": [
+          {
+            "playerId": "4046",
+            "name": "Patrick Mahomes",
+            "position": "QB",
+            "points": 27.3
+          },
+          {
+            "playerId": "8138",
+            "name": "James Cook",
+            "position": "RB",
+            "points": 23.5
+          },
+          {
+            "playerId": "7611",
+            "name": "Rhamondre Stevenson",
+            "position": "RB",
+            "points": 5.1
+          },
+          {
+            "playerId": "6794",
+            "name": "Justin Jefferson",
+            "position": "WR",
+            "points": 17.6
+          },
+          {
+            "playerId": "7547",
+            "name": "Amon-Ra St. Brown",
+            "position": "WR",
+            "points": 22.5
+          },
+          {
+            "playerId": "10859",
+            "name": "Sam LaPorta",
+            "position": "TE",
+            "points": 5.4
+          },
+          {
+            "playerId": "2449",
+            "name": "Stefon Diggs",
+            "position": "WR",
+            "points": 13.1
+          },
+          {
+            "playerId": "8205",
+            "name": "Isiah Pacheco",
+            "position": "RB",
+            "points": 12.8
+          },
+          {
+            "playerId": "MIA",
+            "name": "Miami Dolphins",
+            "position": "DEF",
+            "points": 8.3
+          }
+        ]
+      },
+      "loser": {
+        "name": "lukebowsh",
+        "score": 102.41,
+        "topPerformers": "Omarion Hampton (27.0), Christian McCaffrey (22.6), Baker Mayfield (18.4)",
+        "busts": "Tre Tucker (3.2), Luther Burden (0.6)",
+        "boxscore": [
+          {
+            "playerId": "4892",
+            "name": "Baker Mayfield",
+            "position": "QB",
+            "points": 18.36
+          },
+          {
+            "playerId": "4034",
+            "name": "Christian McCaffrey",
+            "position": "RB",
+            "points": 22.6
+          },
+          {
+            "playerId": "12507",
+            "name": "Omarion Hampton",
+            "position": "RB",
+            "points": 27
+          },
+          {
+            "playerId": "5872",
+            "name": "Deebo Samuel",
+            "position": "WR",
+            "points": 16.6
+          },
+          {
+            "playerId": "12499",
+            "name": "Elic Ayomanor",
+            "position": "WR",
+            "points": 5.4
+          },
+          {
+            "playerId": "5012",
+            "name": "Mark Andrews",
+            "position": "TE",
+            "points": 6.5
+          },
+          {
+            "playerId": "12519",
+            "name": "Luther Burden",
+            "position": "WR",
+            "points": 0.6
+          },
+          {
+            "playerId": "10213",
+            "name": "Tre Tucker",
+            "position": "WR",
+            "points": 3.2
+          },
+          {
+            "playerId": "SF",
+            "name": "San Francisco 49ers",
+            "position": "DEF",
+            "points": 2.15
+          }
+        ]
+      },
+      "margin": "33.2",
+      "combined": "238.0"
+    }
+  ]
+}

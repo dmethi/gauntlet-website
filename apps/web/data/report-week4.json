@@ -1,0 +1,2107 @@
+{
+  "season": "2025",
+  "week": 4,
+  "lastUpdated": "2025-09-30T23:35:14.357Z",
+  "dataSource": "sleeper-api-calculated",
+  "leagues": [
+    {
+      "leagueId": "1263744209295245312",
+      "leagueName": "Gauntlet AFC",
+      "matchups": [
+        {
+          "leagueId": "1263744209295245312",
+          "matchupId": 5,
+          "rosterAId": 1,
+          "rosterBId": 2,
+          "teamAName": "2 Dolla Balla$",
+          "teamBName": "lol jerry jones",
+          "pointsA": 139.36,
+          "pointsB": 113.94,
+          "margin": 25.420000000000016,
+          "combinedPoints": 253.3,
+          "boxscoreA": [
+            {
+              "playerId": "4984",
+              "name": "Josh Allen",
+              "position": "QB",
+              "points": 25.86
+            },
+            {
+              "playerId": "7594",
+              "name": "Chuba Hubbard",
+              "position": "RB",
+              "points": 9.9
+            },
+            {
+              "playerId": "4098",
+              "name": "Kareem Hunt",
+              "position": "RB",
+              "points": 7.2
+            },
+            {
+              "playerId": "7547",
+              "name": "Amon-Ra St. Brown",
+              "position": "WR",
+              "points": 22.5
+            },
+            {
+              "playerId": "2133",
+              "name": "Davante Adams",
+              "position": "WR",
+              "points": 13.6
+            },
+            {
+              "playerId": "5022",
+              "name": "Dallas Goedert",
+              "position": "TE",
+              "points": 17.7
+            },
+            {
+              "playerId": "7567",
+              "name": "Kenneth Gainwell",
+              "position": "RB",
+              "points": 31.4
+            },
+            {
+              "playerId": "8126",
+              "name": "Wan'Dale Robinson",
+              "position": "WR",
+              "points": 2.9
+            },
+            {
+              "playerId": "MIA",
+              "name": "Miami Dolphins",
+              "position": "DEF",
+              "points": 8.3
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "7591",
+              "name": "Justin Fields",
+              "position": "QB",
+              "points": 28.14
+            },
+            {
+              "playerId": "6813",
+              "name": "Jonathan Taylor",
+              "position": "RB",
+              "points": 13.6
+            },
+            {
+              "playerId": "12512",
+              "name": "Quinshon Judkins",
+              "position": "RB",
+              "points": 22.5
+            },
+            {
+              "playerId": "12526",
+              "name": "Tetairoa McMillan",
+              "position": "WR",
+              "points": 8.2
+            },
+            {
+              "playerId": "5859",
+              "name": "A.J. Brown",
+              "position": "WR",
+              "points": 1.7
+            },
+            {
+              "playerId": "8130",
+              "name": "Trey McBride",
+              "position": "TE",
+              "points": 8.7
+            },
+            {
+              "playerId": "8137",
+              "name": "George Pickens",
+              "position": "WR",
+              "points": 29.4
+            },
+            {
+              "playerId": "10213",
+              "name": "Tre Tucker",
+              "position": "WR",
+              "points": 3.2
+            },
+            {
+              "playerId": "GB",
+              "name": "Green Bay Packers",
+              "position": "DEF",
+              "points": -1.5
+            }
+          ]
+        },
+        {
+          "leagueId": "1263744209295245312",
+          "matchupId": 6,
+          "rosterAId": 3,
+          "rosterBId": 9,
+          "teamAName": "NielGetsCarried",
+          "teamBName": "achak7",
+          "pointsA": 139.81,
+          "pointsB": 106.56,
+          "margin": 33.25,
+          "combinedPoints": 246.37,
+          "boxscoreA": [
+            {
+              "playerId": "4892",
+              "name": "Baker Mayfield",
+              "position": "QB",
+              "points": 18.36
+            },
+            {
+              "playerId": "5850",
+              "name": "Josh Jacobs",
+              "position": "RB",
+              "points": 31.7
+            },
+            {
+              "playerId": "4035",
+              "name": "Alvin Kamara",
+              "position": "RB",
+              "points": 11.2
+            },
+            {
+              "playerId": "6794",
+              "name": "Justin Jefferson",
+              "position": "WR",
+              "points": 17.6
+            },
+            {
+              "playerId": "6819",
+              "name": "Michael Pittman",
+              "position": "WR",
+              "points": 12.6
+            },
+            {
+              "playerId": "5012",
+              "name": "Mark Andrews",
+              "position": "TE",
+              "points": 6.5
+            },
+            {
+              "playerId": "5846",
+              "name": "DK Metcalf",
+              "position": "WR",
+              "points": 21.1
+            },
+            {
+              "playerId": "11589",
+              "name": "Trey Benson",
+              "position": "RB",
+              "points": 8.4
+            },
+            {
+              "playerId": "LAC",
+              "name": "Los Angeles Chargers",
+              "position": "DEF",
+              "points": 12.35
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "3294",
+              "name": "Dak Prescott",
+              "position": "QB",
+              "points": 30.96
+            },
+            {
+              "playerId": "8150",
+              "name": "Kyren Williams",
+              "position": "RB",
+              "points": 11.9
+            },
+            {
+              "playerId": "8138",
+              "name": "James Cook",
+              "position": "RB",
+              "points": 23.5
+            },
+            {
+              "playerId": "11632",
+              "name": "Malik Nabers",
+              "position": "WR",
+              "points": 3
+            },
+            {
+              "playerId": "7525",
+              "name": "DeVonta Smith",
+              "position": "WR",
+              "points": 3.9
+            },
+            {
+              "playerId": "10859",
+              "name": "Sam LaPorta",
+              "position": "TE",
+              "points": 5.4
+            },
+            {
+              "playerId": "11620",
+              "name": "Rome Odunze",
+              "position": "WR",
+              "points": 14.9
+            },
+            {
+              "playerId": "5947",
+              "name": "Jakobi Meyers",
+              "position": "WR",
+              "points": 5
+            },
+            {
+              "playerId": "DEN",
+              "name": "Denver Broncos",
+              "position": "DEF",
+              "points": 8
+            }
+          ]
+        },
+        {
+          "leagueId": "1263744209295245312",
+          "matchupId": 1,
+          "rosterAId": 4,
+          "rosterBId": 10,
+          "teamAName": "The Golden Age",
+          "teamBName": "To Infinity and Bijan",
+          "pointsA": 103.73,
+          "pointsB": 135.5,
+          "margin": 31.769999999999996,
+          "combinedPoints": 239.23000000000002,
+          "boxscoreA": [
+            {
+              "playerId": "11560",
+              "name": "Caleb Williams",
+              "position": "QB",
+              "points": 10.28
+            },
+            {
+              "playerId": "9221",
+              "name": "Jahmyr Gibbs",
+              "position": "RB",
+              "points": 18.7
+            },
+            {
+              "playerId": "3198",
+              "name": "Derrick Henry",
+              "position": "RB",
+              "points": 7.8
+            },
+            {
+              "playerId": "1479",
+              "name": "Keenan Allen",
+              "position": "WR",
+              "points": 6.2
+            },
+            {
+              "playerId": "12514",
+              "name": "Emeka Egbuka",
+              "position": "WR",
+              "points": 18.1
+            },
+            {
+              "playerId": "7002",
+              "name": "Juwan Johnson",
+              "position": "TE",
+              "points": 4.3
+            },
+            {
+              "playerId": "8188",
+              "name": "Tyquan Thornton",
+              "position": "WR",
+              "points": 7.6
+            },
+            {
+              "playerId": "12501",
+              "name": "Matthew Golden",
+              "position": "WR",
+              "points": 9.3
+            },
+            {
+              "playerId": "DET",
+              "name": "Detroit Lions",
+              "position": "DEF",
+              "points": 21.45
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "4046",
+              "name": "Patrick Mahomes",
+              "position": "QB",
+              "points": 27.3
+            },
+            {
+              "playerId": "9509",
+              "name": "Bijan Robinson",
+              "position": "RB",
+              "points": 27.1
+            },
+            {
+              "playerId": "7588",
+              "name": "Javonte Williams",
+              "position": "RB",
+              "points": 19.5
+            },
+            {
+              "playerId": "4037",
+              "name": "Chris Godwin",
+              "position": "WR",
+              "points": 4.1
+            },
+            {
+              "playerId": "11628",
+              "name": "Marvin Harrison",
+              "position": "WR",
+              "points": 15.6
+            },
+            {
+              "playerId": "1466",
+              "name": "Travis Kelce",
+              "position": "TE",
+              "points": 7.3
+            },
+            {
+              "playerId": "5892",
+              "name": "David Montgomery",
+              "position": "RB",
+              "points": 1.2
+            },
+            {
+              "playerId": "7543",
+              "name": "Travis Etienne",
+              "position": "RB",
+              "points": 21
+            },
+            {
+              "playerId": "NE",
+              "name": "New England Patriots",
+              "position": "DEF",
+              "points": 12.4
+            }
+          ]
+        },
+        {
+          "leagueId": "1263744209295245312",
+          "matchupId": 3,
+          "rosterAId": 5,
+          "rosterBId": 7,
+          "teamAName": "Quonspiracy Theorists",
+          "teamBName": "benweinfeld",
+          "pointsA": 116.78,
+          "pointsB": 119.47,
+          "margin": 2.6899999999999977,
+          "combinedPoints": 236.25,
+          "boxscoreA": [
+            {
+              "playerId": "5870",
+              "name": "Daniel Jones",
+              "position": "QB",
+              "points": 9.38
+            },
+            {
+              "playerId": "4866",
+              "name": "Saquon Barkley",
+              "position": "RB",
+              "points": 15.4
+            },
+            {
+              "playerId": "9226",
+              "name": "De'Von Achane",
+              "position": "RB",
+              "points": 17.1
+            },
+            {
+              "playerId": "11631",
+              "name": "Brian Thomas",
+              "position": "WR",
+              "points": 8.6
+            },
+            {
+              "playerId": "5872",
+              "name": "Deebo Samuel",
+              "position": "WR",
+              "points": 16.6
+            },
+            {
+              "playerId": "8110",
+              "name": "Jake Ferguson",
+              "position": "TE",
+              "points": 13.5
+            },
+            {
+              "playerId": "11627",
+              "name": "Troy Franklin",
+              "position": "WR",
+              "points": 7.5
+            },
+            {
+              "playerId": "11624",
+              "name": "Xavier Worthy",
+              "position": "WR",
+              "points": 15.6
+            },
+            {
+              "playerId": "SEA",
+              "name": "Seattle Seahawks",
+              "position": "DEF",
+              "points": 13.1
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "6797",
+              "name": "Justin Herbert",
+              "position": "QB",
+              "points": 13.02
+            },
+            {
+              "playerId": "12527",
+              "name": "Ashton Jeanty",
+              "position": "RB",
+              "points": 35
+            },
+            {
+              "playerId": "12529",
+              "name": "TreVeyon Henderson",
+              "position": "RB",
+              "points": 12.6
+            },
+            {
+              "playerId": "8146",
+              "name": "Garrett Wilson",
+              "position": "WR",
+              "points": 17.2
+            },
+            {
+              "playerId": "8148",
+              "name": "Jameson Williams",
+              "position": "WR",
+              "points": 4.7
+            },
+            {
+              "playerId": "3214",
+              "name": "Hunter Henry",
+              "position": "TE",
+              "points": 10.9
+            },
+            {
+              "playerId": "7564",
+              "name": "Ja'Marr Chase",
+              "position": "WR",
+              "points": 4.8
+            },
+            {
+              "playerId": "6806",
+              "name": "J.K. Dobbins",
+              "position": "RB",
+              "points": 14
+            },
+            {
+              "playerId": "MIN",
+              "name": "Minnesota Vikings",
+              "position": "DEF",
+              "points": 7.25
+            }
+          ]
+        },
+        {
+          "leagueId": "1263744209295245312",
+          "matchupId": 2,
+          "rosterAId": 6,
+          "rosterBId": 12,
+          "teamAName": "Nacua Matata",
+          "teamBName": "vchak",
+          "pointsA": 136.17,
+          "pointsB": 108.09,
+          "margin": 28.079999999999984,
+          "combinedPoints": 244.26,
+          "boxscoreA": [
+            {
+              "playerId": "3163",
+              "name": "Jared Goff",
+              "position": "QB",
+              "points": 12.72
+            },
+            {
+              "playerId": "8155",
+              "name": "Breece Hall",
+              "position": "RB",
+              "points": 15.1
+            },
+            {
+              "playerId": "8151",
+              "name": "Kenneth Walker",
+              "position": "RB",
+              "points": 12.5
+            },
+            {
+              "playerId": "9493",
+              "name": "Puka Nacua",
+              "position": "WR",
+              "points": 29.5
+            },
+            {
+              "playerId": "9997",
+              "name": "Zay Flowers",
+              "position": "WR",
+              "points": 10.9
+            },
+            {
+              "playerId": "12518",
+              "name": "Tyler Warren",
+              "position": "TE",
+              "points": 15.8
+            },
+            {
+              "playerId": "3321",
+              "name": "Tyreek Hill",
+              "position": "WR",
+              "points": 9.7
+            },
+            {
+              "playerId": "5967",
+              "name": "Tony Pollard",
+              "position": "RB",
+              "points": 10.1
+            },
+            {
+              "playerId": "PIT",
+              "name": "Pittsburgh Steelers",
+              "position": "DEF",
+              "points": 19.85
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "11563",
+              "name": "Bo Nix",
+              "position": "QB",
+              "points": 25.74
+            },
+            {
+              "playerId": "4034",
+              "name": "Christian McCaffrey",
+              "position": "RB",
+              "points": 22.6
+            },
+            {
+              "playerId": "8205",
+              "name": "Isiah Pacheco",
+              "position": "RB",
+              "points": 12.8
+            },
+            {
+              "playerId": "4983",
+              "name": "DJ Moore",
+              "position": "WR",
+              "points": 5.8
+            },
+            {
+              "playerId": "7090",
+              "name": "Darnell Mooney",
+              "position": "WR",
+              "points": 2
+            },
+            {
+              "playerId": "5844",
+              "name": "T.J. Hockenson",
+              "position": "TE",
+              "points": 5.9
+            },
+            {
+              "playerId": "7569",
+              "name": "Nico Collins",
+              "position": "WR",
+              "points": 9.9
+            },
+            {
+              "playerId": "11638",
+              "name": "Ricky Pearsall",
+              "position": "WR",
+              "points": 6.6
+            },
+            {
+              "playerId": "PHI",
+              "name": "Philadelphia Eagles",
+              "position": "DEF",
+              "points": 16.75
+            }
+          ]
+        },
+        {
+          "leagueId": "1263744209295245312",
+          "matchupId": 4,
+          "rosterAId": 8,
+          "rosterBId": 11,
+          "teamAName": "Dr Patel Parikh MD MBA",
+          "teamBName": "scboom5",
+          "pointsA": 121.73,
+          "pointsB": 135.05,
+          "margin": 13.320000000000007,
+          "combinedPoints": 256.78000000000003,
+          "boxscoreA": [
+            {
+              "playerId": "4881",
+              "name": "Lamar Jackson",
+              "position": "QB",
+              "points": 12.18
+            },
+            {
+              "playerId": "9224",
+              "name": "Chase Brown",
+              "position": "RB",
+              "points": 9.6
+            },
+            {
+              "playerId": "8408",
+              "name": "Jordan Mason",
+              "position": "RB",
+              "points": 10.2
+            },
+            {
+              "playerId": "8112",
+              "name": "Drake London",
+              "position": "WR",
+              "points": 21
+            },
+            {
+              "playerId": "5045",
+              "name": "Courtland Sutton",
+              "position": "WR",
+              "points": 16.6
+            },
+            {
+              "playerId": "11604",
+              "name": "Brock Bowers",
+              "position": "TE",
+              "points": 7.1
+            },
+            {
+              "playerId": "12533",
+              "name": "Jacory Croskey-Merritt",
+              "position": "RB",
+              "points": 8.7
+            },
+            {
+              "playerId": "8121",
+              "name": "Romeo Doubs",
+              "position": "WR",
+              "points": 26.8
+            },
+            {
+              "playerId": "BUF",
+              "name": "Buffalo Bills",
+              "position": "DEF",
+              "points": 9.55
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "6904",
+              "name": "Jalen Hurts",
+              "position": "QB",
+              "points": 19.9
+            },
+            {
+              "playerId": "11584",
+              "name": "Bucky Irving",
+              "position": "RB",
+              "points": 24
+            },
+            {
+              "playerId": "12507",
+              "name": "Omarion Hampton",
+              "position": "RB",
+              "points": 27
+            },
+            {
+              "playerId": "9488",
+              "name": "Jaxon Smith-Njigba",
+              "position": "WR",
+              "points": 11
+            },
+            {
+              "playerId": "8134",
+              "name": "Khalil Shakir",
+              "position": "WR",
+              "points": 15.4
+            },
+            {
+              "playerId": "9484",
+              "name": "Tucker Kraft",
+              "position": "TE",
+              "points": 8.1
+            },
+            {
+              "playerId": "9753",
+              "name": "Zach Charbonnet",
+              "position": "RB",
+              "points": 12.4
+            },
+            {
+              "playerId": "12499",
+              "name": "Elic Ayomanor",
+              "position": "WR",
+              "points": 5.4
+            },
+            {
+              "playerId": "HOU",
+              "name": "Houston Texans",
+              "position": "DEF",
+              "points": 11.85
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "leagueName": "Gauntlet NFC",
+      "matchups": [
+        {
+          "leagueId": "1263740549504962561",
+          "matchupId": 3,
+          "rosterAId": 1,
+          "rosterBId": 8,
+          "teamAName": "ziyanp22",
+          "teamBName": "C&G^2",
+          "pointsA": 138.03,
+          "pointsB": 114.03,
+          "margin": 24,
+          "combinedPoints": 252.06,
+          "boxscoreA": [
+            {
+              "playerId": "6804",
+              "name": "Jordan Love",
+              "position": "QB",
+              "points": 26.78
+            },
+            {
+              "playerId": "12527",
+              "name": "Ashton Jeanty",
+              "position": "RB",
+              "points": 35
+            },
+            {
+              "playerId": "9224",
+              "name": "Chase Brown",
+              "position": "RB",
+              "points": 9.6
+            },
+            {
+              "playerId": "9493",
+              "name": "Puka Nacua",
+              "position": "WR",
+              "points": 29.5
+            },
+            {
+              "playerId": "1479",
+              "name": "Keenan Allen",
+              "position": "WR",
+              "points": 6.2
+            },
+            {
+              "playerId": "1339",
+              "name": "Zach Ertz",
+              "position": "TE",
+              "points": 4.1
+            },
+            {
+              "playerId": "11620",
+              "name": "Rome Odunze",
+              "position": "WR",
+              "points": 14.9
+            },
+            {
+              "playerId": "8148",
+              "name": "Jameson Williams",
+              "position": "WR",
+              "points": 4.7
+            },
+            {
+              "playerId": "MIN",
+              "name": "Minnesota Vikings",
+              "position": "DEF",
+              "points": 7.25
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "4881",
+              "name": "Lamar Jackson",
+              "position": "QB",
+              "points": 12.18
+            },
+            {
+              "playerId": "12512",
+              "name": "Quinshon Judkins",
+              "position": "RB",
+              "points": 22.5
+            },
+            {
+              "playerId": "5967",
+              "name": "Tony Pollard",
+              "position": "RB",
+              "points": 10.1
+            },
+            {
+              "playerId": "9488",
+              "name": "Jaxon Smith-Njigba",
+              "position": "WR",
+              "points": 11
+            },
+            {
+              "playerId": "2133",
+              "name": "Davante Adams",
+              "position": "WR",
+              "points": 13.6
+            },
+            {
+              "playerId": "5844",
+              "name": "T.J. Hockenson",
+              "position": "TE",
+              "points": 5.9
+            },
+            {
+              "playerId": "3321",
+              "name": "Tyreek Hill",
+              "position": "WR",
+              "points": 9.7
+            },
+            {
+              "playerId": "7588",
+              "name": "Javonte Williams",
+              "position": "RB",
+              "points": 19.5
+            },
+            {
+              "playerId": "BUF",
+              "name": "Buffalo Bills",
+              "position": "DEF",
+              "points": 9.55
+            }
+          ]
+        },
+        {
+          "leagueId": "1263740549504962561",
+          "matchupId": 6,
+          "rosterAId": 2,
+          "rosterBId": 4,
+          "teamAName": "Mach 10",
+          "teamBName": "DJ Herbussy ",
+          "pointsA": 123.63,
+          "pointsB": 111.57,
+          "margin": 12.060000000000002,
+          "combinedPoints": 235.2,
+          "boxscoreA": [
+            {
+              "playerId": "5870",
+              "name": "Daniel Jones",
+              "position": "QB",
+              "points": 9.38
+            },
+            {
+              "playerId": "9221",
+              "name": "Jahmyr Gibbs",
+              "position": "RB",
+              "points": 18.7
+            },
+            {
+              "playerId": "9226",
+              "name": "De'Von Achane",
+              "position": "RB",
+              "points": 17.1
+            },
+            {
+              "playerId": "8137",
+              "name": "George Pickens",
+              "position": "WR",
+              "points": 29.4
+            },
+            {
+              "playerId": "9756",
+              "name": "Jordan Addison",
+              "position": "WR",
+              "points": 13.4
+            },
+            {
+              "playerId": "12506",
+              "name": "Harold Fannin",
+              "position": "TE",
+              "points": 3.5
+            },
+            {
+              "playerId": "7526",
+              "name": "Jaylen Waddle",
+              "position": "WR",
+              "points": 6.3
+            },
+            {
+              "playerId": "6806",
+              "name": "J.K. Dobbins",
+              "position": "RB",
+              "points": 14
+            },
+            {
+              "playerId": "HOU",
+              "name": "Houston Texans",
+              "position": "DEF",
+              "points": 11.85
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "6797",
+              "name": "Justin Herbert",
+              "position": "QB",
+              "points": 13.02
+            },
+            {
+              "playerId": "6813",
+              "name": "Jonathan Taylor",
+              "position": "RB",
+              "points": 13.6
+            },
+            {
+              "playerId": "11584",
+              "name": "Bucky Irving",
+              "position": "RB",
+              "points": 24
+            },
+            {
+              "playerId": "11628",
+              "name": "Marvin Harrison",
+              "position": "WR",
+              "points": 15.6
+            },
+            {
+              "playerId": "12514",
+              "name": "Emeka Egbuka",
+              "position": "WR",
+              "points": 18.1
+            },
+            {
+              "playerId": "12518",
+              "name": "Tyler Warren",
+              "position": "TE",
+              "points": 15.8
+            },
+            {
+              "playerId": "4983",
+              "name": "DJ Moore",
+              "position": "WR",
+              "points": 5.8
+            },
+            {
+              "playerId": "5892",
+              "name": "David Montgomery",
+              "position": "RB",
+              "points": 1.2
+            },
+            {
+              "playerId": "WAS",
+              "name": "Washington Commanders",
+              "position": "DEF",
+              "points": 4.45
+            }
+          ]
+        },
+        {
+          "leagueId": "1263740549504962561",
+          "matchupId": 2,
+          "rosterAId": 3,
+          "rosterBId": 12,
+          "teamAName": "vayyala",
+          "teamBName": "cescott25",
+          "pointsA": 86.2,
+          "pointsB": 113.21,
+          "margin": 27.00999999999999,
+          "combinedPoints": 199.41,
+          "boxscoreA": [
+            {
+              "playerId": "6904",
+              "name": "Jalen Hurts",
+              "position": "QB",
+              "points": 19.9
+            },
+            {
+              "playerId": "8150",
+              "name": "Kyren Williams",
+              "position": "RB",
+              "points": 11.9
+            },
+            {
+              "playerId": "8151",
+              "name": "Kenneth Walker",
+              "position": "RB",
+              "points": 12.5
+            },
+            {
+              "playerId": "11631",
+              "name": "Brian Thomas",
+              "position": "WR",
+              "points": 8.6
+            },
+            {
+              "playerId": "6801",
+              "name": "Tee Higgins",
+              "position": "WR",
+              "points": 4.7
+            },
+            {
+              "playerId": "9484",
+              "name": "Tucker Kraft",
+              "position": "TE",
+              "points": 8.1
+            },
+            {
+              "playerId": "8144",
+              "name": "Chris Olave",
+              "position": "WR",
+              "points": 7.5
+            },
+            {
+              "playerId": "5947",
+              "name": "Jakobi Meyers",
+              "position": "WR",
+              "points": 5
+            },
+            {
+              "playerId": "DEN",
+              "name": "Denver Broncos",
+              "position": "DEF",
+              "points": 8
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "4984",
+              "name": "Josh Allen",
+              "position": "QB",
+              "points": 25.86
+            },
+            {
+              "playerId": "7567",
+              "name": "Kenneth Gainwell",
+              "position": "RB",
+              "points": 31.4
+            },
+            {
+              "playerId": "4098",
+              "name": "Kareem Hunt",
+              "position": "RB",
+              "points": 7.2
+            },
+            {
+              "playerId": "7569",
+              "name": "Nico Collins",
+              "position": "WR",
+              "points": 9.9
+            },
+            {
+              "playerId": "7525",
+              "name": "DeVonta Smith",
+              "position": "WR",
+              "points": 3.9
+            },
+            {
+              "playerId": "8130",
+              "name": "Trey McBride",
+              "position": "TE",
+              "points": 8.7
+            },
+            {
+              "playerId": "11638",
+              "name": "Ricky Pearsall",
+              "position": "WR",
+              "points": 6.6
+            },
+            {
+              "playerId": "1466",
+              "name": "Travis Kelce",
+              "position": "TE",
+              "points": 7.3
+            },
+            {
+              "playerId": "LAC",
+              "name": "Los Angeles Chargers",
+              "position": "DEF",
+              "points": 12.35
+            }
+          ]
+        },
+        {
+          "leagueId": "1263740549504962561",
+          "matchupId": 4,
+          "rosterAId": 5,
+          "rosterBId": 9,
+          "teamAName": "Dont go Chasing Saquon",
+          "teamBName": "Marginal Returns",
+          "pointsA": 103.5,
+          "pointsB": 112.93,
+          "margin": 9.430000000000007,
+          "combinedPoints": 216.43,
+          "boxscoreA": [
+            {
+              "playerId": "5849",
+              "name": "Kyler Murray",
+              "position": "QB",
+              "points": 16.6
+            },
+            {
+              "playerId": "4866",
+              "name": "Saquon Barkley",
+              "position": "RB",
+              "points": 15.4
+            },
+            {
+              "playerId": "9509",
+              "name": "Bijan Robinson",
+              "position": "RB",
+              "points": 27.1
+            },
+            {
+              "playerId": "7564",
+              "name": "Ja'Marr Chase",
+              "position": "WR",
+              "points": 4.8
+            },
+            {
+              "playerId": "9754",
+              "name": "Quentin Johnston",
+              "position": "WR",
+              "points": 19.8
+            },
+            {
+              "playerId": "3214",
+              "name": "Hunter Henry",
+              "position": "TE",
+              "points": 10.9
+            },
+            {
+              "playerId": "11589",
+              "name": "Trey Benson",
+              "position": "RB",
+              "points": 8.4
+            },
+            {
+              "playerId": "7090",
+              "name": "Darnell Mooney",
+              "position": "WR",
+              "points": 2
+            },
+            {
+              "playerId": "GB",
+              "name": "Green Bay Packers",
+              "position": "DEF",
+              "points": -1.5
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "11560",
+              "name": "Caleb Williams",
+              "position": "QB",
+              "points": 10.28
+            },
+            {
+              "playerId": "5850",
+              "name": "Josh Jacobs",
+              "position": "RB",
+              "points": 31.7
+            },
+            {
+              "playerId": "3198",
+              "name": "Derrick Henry",
+              "position": "RB",
+              "points": 7.8
+            },
+            {
+              "playerId": "5859",
+              "name": "A.J. Brown",
+              "position": "WR",
+              "points": 1.7
+            },
+            {
+              "playerId": "8146",
+              "name": "Garrett Wilson",
+              "position": "WR",
+              "points": 17.2
+            },
+            {
+              "playerId": "8110",
+              "name": "Jake Ferguson",
+              "position": "TE",
+              "points": 13.5
+            },
+            {
+              "playerId": "12526",
+              "name": "Tetairoa McMillan",
+              "position": "WR",
+              "points": 8.2
+            },
+            {
+              "playerId": "10444",
+              "name": "Cedric Tillman",
+              "position": "WR",
+              "points": 1.1
+            },
+            {
+              "playerId": "DET",
+              "name": "Detroit Lions",
+              "position": "DEF",
+              "points": 21.45
+            }
+          ]
+        },
+        {
+          "leagueId": "1263740549504962561",
+          "matchupId": 1,
+          "rosterAId": 6,
+          "rosterBId": 7,
+          "teamAName": "The zoo",
+          "teamBName": "Jaxson Dart-Njigba",
+          "pointsA": 125.03,
+          "pointsB": 115.92,
+          "margin": 9.11,
+          "combinedPoints": 240.95,
+          "boxscoreA": [
+            {
+              "playerId": "4943",
+              "name": "Sam Darnold",
+              "position": "QB",
+              "points": 15.58
+            },
+            {
+              "playerId": "8408",
+              "name": "Jordan Mason",
+              "position": "RB",
+              "points": 10.2
+            },
+            {
+              "playerId": "8155",
+              "name": "Breece Hall",
+              "position": "RB",
+              "points": 15.1
+            },
+            {
+              "playerId": "11632",
+              "name": "Malik Nabers",
+              "position": "WR",
+              "points": 3
+            },
+            {
+              "playerId": "8112",
+              "name": "Drake London",
+              "position": "WR",
+              "points": 21
+            },
+            {
+              "playerId": "5022",
+              "name": "Dallas Goedert",
+              "position": "TE",
+              "points": 17.7
+            },
+            {
+              "playerId": "11635",
+              "name": "Ladd McConkey",
+              "position": "WR",
+              "points": 1.6
+            },
+            {
+              "playerId": "7543",
+              "name": "Travis Etienne",
+              "position": "RB",
+              "points": 21
+            },
+            {
+              "playerId": "PIT",
+              "name": "Pittsburgh Steelers",
+              "position": "DEF",
+              "points": 19.85
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "3163",
+              "name": "Jared Goff",
+              "position": "QB",
+              "points": 12.72
+            },
+            {
+              "playerId": "4035",
+              "name": "Alvin Kamara",
+              "position": "RB",
+              "points": 11.2
+            },
+            {
+              "playerId": "7594",
+              "name": "Chuba Hubbard",
+              "position": "RB",
+              "points": 9.9
+            },
+            {
+              "playerId": "9997",
+              "name": "Zay Flowers",
+              "position": "WR",
+              "points": 10.9
+            },
+            {
+              "playerId": "5846",
+              "name": "DK Metcalf",
+              "position": "WR",
+              "points": 21.1
+            },
+            {
+              "playerId": "11604",
+              "name": "Brock Bowers",
+              "position": "TE",
+              "points": 7.1
+            },
+            {
+              "playerId": "12481",
+              "name": "Cam Skattebo",
+              "position": "RB",
+              "points": 14
+            },
+            {
+              "playerId": "5045",
+              "name": "Courtland Sutton",
+              "position": "WR",
+              "points": 16.6
+            },
+            {
+              "playerId": "NE",
+              "name": "New England Patriots",
+              "position": "DEF",
+              "points": 12.4
+            }
+          ]
+        },
+        {
+          "leagueId": "1263740549504962561",
+          "matchupId": 5,
+          "rosterAId": 10,
+          "rosterBId": 11,
+          "teamAName": "Saint Brown Does Mahomes",
+          "teamBName": "lukebowsh",
+          "pointsA": 135.6,
+          "pointsB": 102.41,
+          "margin": 33.19,
+          "combinedPoints": 238.01,
+          "boxscoreA": [
+            {
+              "playerId": "4046",
+              "name": "Patrick Mahomes",
+              "position": "QB",
+              "points": 27.3
+            },
+            {
+              "playerId": "8138",
+              "name": "James Cook",
+              "position": "RB",
+              "points": 23.5
+            },
+            {
+              "playerId": "7611",
+              "name": "Rhamondre Stevenson",
+              "position": "RB",
+              "points": 5.1
+            },
+            {
+              "playerId": "6794",
+              "name": "Justin Jefferson",
+              "position": "WR",
+              "points": 17.6
+            },
+            {
+              "playerId": "7547",
+              "name": "Amon-Ra St. Brown",
+              "position": "WR",
+              "points": 22.5
+            },
+            {
+              "playerId": "10859",
+              "name": "Sam LaPorta",
+              "position": "TE",
+              "points": 5.4
+            },
+            {
+              "playerId": "2449",
+              "name": "Stefon Diggs",
+              "position": "WR",
+              "points": 13.1
+            },
+            {
+              "playerId": "8205",
+              "name": "Isiah Pacheco",
+              "position": "RB",
+              "points": 12.8
+            },
+            {
+              "playerId": "MIA",
+              "name": "Miami Dolphins",
+              "position": "DEF",
+              "points": 8.3
+            }
+          ],
+          "boxscoreB": [
+            {
+              "playerId": "4892",
+              "name": "Baker Mayfield",
+              "position": "QB",
+              "points": 18.36
+            },
+            {
+              "playerId": "4034",
+              "name": "Christian McCaffrey",
+              "position": "RB",
+              "points": 22.6
+            },
+            {
+              "playerId": "12507",
+              "name": "Omarion Hampton",
+              "position": "RB",
+              "points": 27
+            },
+            {
+              "playerId": "5872",
+              "name": "Deebo Samuel",
+              "position": "WR",
+              "points": 16.6
+            },
+            {
+              "playerId": "12499",
+              "name": "Elic Ayomanor",
+              "position": "WR",
+              "points": 5.4
+            },
+            {
+              "playerId": "5012",
+              "name": "Mark Andrews",
+              "position": "TE",
+              "points": 6.5
+            },
+            {
+              "playerId": "12519",
+              "name": "Luther Burden",
+              "position": "WR",
+              "points": 0.6
+            },
+            {
+              "playerId": "10213",
+              "name": "Tre Tucker",
+              "position": "WR",
+              "points": 3.2
+            },
+            {
+              "playerId": "SF",
+              "name": "San Francisco 49ers",
+              "position": "DEF",
+              "points": 2.15
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "powerRankings": [
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "1",
+      "name": "ziyanp22",
+      "rank": 1,
+      "normalized": 119.05,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "10",
+      "name": "To Infinity and Bijan",
+      "rank": 2,
+      "normalized": 113.76,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "6",
+      "name": "Nacua Matata",
+      "rank": 3,
+      "normalized": 109.8,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "2",
+      "name": "Mach 10",
+      "rank": 4,
+      "normalized": 109.52,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "4",
+      "name": "The Golden Age",
+      "rank": 5,
+      "normalized": 107.45,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "8",
+      "name": "C&G^2",
+      "rank": 6,
+      "normalized": 107.24,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "9",
+      "name": "achak7",
+      "rank": 7,
+      "normalized": 106.83,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "2",
+      "name": "lol jerry jones",
+      "rank": 8,
+      "normalized": 105.38,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "10",
+      "name": "Saint Brown Does Mahomes",
+      "rank": 9,
+      "normalized": 104.95,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "1",
+      "name": "2 Dolla Balla$",
+      "rank": 10,
+      "normalized": 104.23,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "4",
+      "name": "DJ Herbussy ",
+      "rank": 11,
+      "normalized": 104.17,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "9",
+      "name": "Marginal Returns",
+      "rank": 12,
+      "normalized": 103.67,
+      "wins": 4,
+      "losses": 0
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "11",
+      "name": "scboom5",
+      "rank": 13,
+      "normalized": 103.52,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "7",
+      "name": "Jaxson Dart-Njigba",
+      "rank": 14,
+      "normalized": 101.07,
+      "wins": 1,
+      "losses": 3
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "11",
+      "name": "lukebowsh",
+      "rank": 15,
+      "normalized": 98.13,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "7",
+      "name": "benweinfeld",
+      "rank": 16,
+      "normalized": 97.31,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "12",
+      "name": "cescott25",
+      "rank": 17,
+      "normalized": 93.84,
+      "wins": 3,
+      "losses": 1
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "8",
+      "name": "Dr Patel Parikh MD MBA",
+      "rank": 18,
+      "normalized": 93.58,
+      "wins": 2,
+      "losses": 2
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "5",
+      "name": "Quonspiracy Theorists",
+      "rank": 19,
+      "normalized": 93,
+      "wins": 1,
+      "losses": 3
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "6",
+      "name": "The zoo",
+      "rank": 20,
+      "normalized": 90.52,
+      "wins": 1,
+      "losses": 3
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "3",
+      "name": "vayyala",
+      "rank": 21,
+      "normalized": 87.92,
+      "wins": 0,
+      "losses": 4
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "3",
+      "name": "NielGetsCarried",
+      "rank": 22,
+      "normalized": 84.23,
+      "wins": 1,
+      "losses": 3
+    },
+    {
+      "leagueId": "1263744209295245312",
+      "rosterId": "12",
+      "name": "vchak",
+      "rank": 23,
+      "normalized": 80.91,
+      "wins": 1,
+      "losses": 3
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "rosterId": "5",
+      "name": "Dont go Chasing Saquon",
+      "rank": 24,
+      "normalized": 79.93,
+      "wins": 0,
+      "losses": 4
+    }
+  ],
+  "standings": [
+    {
+      "leagueId": "1263744209295245312",
+      "leagueName": "Gauntlet AFC",
+      "divisions": {
+        "North": [
+          {
+            "teamId": "1263744209295245312-4",
+            "teamName": "The Golden Age",
+            "owner": "hunterzogg",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 467,
+            "rosterId": "4",
+            "division": 1
+          },
+          {
+            "teamId": "1263744209295245312-2",
+            "teamName": "lol jerry jones",
+            "owner": "nkjchamp",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 459,
+            "rosterId": "2",
+            "division": 1
+          },
+          {
+            "teamId": "1263744209295245312-3",
+            "teamName": "NielGetsCarried",
+            "owner": "NielGetsCarried",
+            "wins": 1,
+            "losses": 3,
+            "ties": 0,
+            "points": 395,
+            "rosterId": "3",
+            "division": 1
+          },
+          {
+            "teamId": "1263744209295245312-12",
+            "teamName": "vchak",
+            "owner": "vchak",
+            "wins": 1,
+            "losses": 3,
+            "ties": 0,
+            "points": 379,
+            "rosterId": "12",
+            "division": 1
+          }
+        ],
+        "South": [
+          {
+            "teamId": "1263744209295245312-11",
+            "teamName": "scboom5",
+            "owner": "scboom5",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 448,
+            "rosterId": "11",
+            "division": 2
+          },
+          {
+            "teamId": "1263744209295245312-9",
+            "teamName": "achak7",
+            "owner": "achak7",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 472,
+            "rosterId": "9",
+            "division": 2
+          },
+          {
+            "teamId": "1263744209295245312-1",
+            "teamName": "2 Dolla Balla$",
+            "owner": "no14n",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 455,
+            "rosterId": "1",
+            "division": 2
+          },
+          {
+            "teamId": "1263744209295245312-5",
+            "teamName": "Quonspiracy Theorists",
+            "owner": "anantjindani",
+            "wins": 1,
+            "losses": 3,
+            "ties": 0,
+            "points": 425,
+            "rosterId": "5",
+            "division": 2
+          }
+        ],
+        "East": [
+          {
+            "teamId": "1263744209295245312-10",
+            "teamName": "To Infinity and Bijan",
+            "owner": "kanzelm3",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 482,
+            "rosterId": "10",
+            "division": 3
+          },
+          {
+            "teamId": "1263744209295245312-6",
+            "teamName": "Nacua Matata",
+            "owner": "lazy9669",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 467,
+            "rosterId": "6",
+            "division": 3
+          },
+          {
+            "teamId": "1263744209295245312-7",
+            "teamName": "benweinfeld",
+            "owner": "benweinfeld",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 435,
+            "rosterId": "7",
+            "division": 3
+          },
+          {
+            "teamId": "1263744209295245312-8",
+            "teamName": "Dr Patel Parikh MD MBA",
+            "owner": "dparikh3",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 422,
+            "rosterId": "8",
+            "division": 3
+          }
+        ]
+      }
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "leagueName": "Gauntlet NFC",
+      "divisions": {
+        "North": [
+          {
+            "teamId": "1263740549504962561-9",
+            "teamName": "Marginal Returns",
+            "owner": "Bego60",
+            "wins": 4,
+            "losses": 0,
+            "ties": 0,
+            "points": 455,
+            "rosterId": "9",
+            "division": 1
+          },
+          {
+            "teamId": "1263740549504962561-8",
+            "teamName": "C&G^2",
+            "owner": "jr212121",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 464,
+            "rosterId": "8",
+            "division": 1
+          },
+          {
+            "teamId": "1263740549504962561-7",
+            "teamName": "Jaxson Dart-Njigba",
+            "owner": "lurski",
+            "wins": 1,
+            "losses": 3,
+            "ties": 0,
+            "points": 457,
+            "rosterId": "7",
+            "division": 1
+          },
+          {
+            "teamId": "1263740549504962561-3",
+            "teamName": "vayyala",
+            "owner": "vayyala",
+            "wins": 0,
+            "losses": 4,
+            "ties": 0,
+            "points": 409,
+            "rosterId": "3",
+            "division": 1
+          }
+        ],
+        "South": [
+          {
+            "teamId": "1263740549504962561-4",
+            "teamName": "DJ Herbussy ",
+            "owner": "Akill13",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 464,
+            "rosterId": "4",
+            "division": 2
+          },
+          {
+            "teamId": "1263740549504962561-12",
+            "teamName": "cescott25",
+            "owner": "cescott25",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 429,
+            "rosterId": "12",
+            "division": 2
+          },
+          {
+            "teamId": "1263740549504962561-10",
+            "teamName": "Saint Brown Does Mahomes",
+            "owner": "YouSmellLikeDaal",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 464,
+            "rosterId": "10",
+            "division": 2
+          },
+          {
+            "teamId": "1263740549504962561-6",
+            "teamName": "The zoo",
+            "owner": "RithikP",
+            "wins": 1,
+            "losses": 3,
+            "ties": 0,
+            "points": 419,
+            "rosterId": "6",
+            "division": 2
+          }
+        ],
+        "East": [
+          {
+            "teamId": "1263740549504962561-1",
+            "teamName": "ziyanp22",
+            "owner": "ziyanp22",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 502,
+            "rosterId": "1",
+            "division": 3
+          },
+          {
+            "teamId": "1263740549504962561-2",
+            "teamName": "Mach 10",
+            "owner": "dmethi",
+            "wins": 3,
+            "losses": 1,
+            "ties": 0,
+            "points": 463,
+            "rosterId": "2",
+            "division": 3
+          },
+          {
+            "teamId": "1263740549504962561-11",
+            "teamName": "lukebowsh",
+            "owner": "lukebowsh",
+            "wins": 2,
+            "losses": 2,
+            "ties": 0,
+            "points": 441,
+            "rosterId": "11",
+            "division": 3
+          },
+          {
+            "teamId": "1263740549504962561-5",
+            "teamName": "Dont go Chasing Saquon",
+            "owner": "arnavmehta",
+            "wins": 0,
+            "losses": 4,
+            "ties": 0,
+            "points": 387,
+            "rosterId": "5",
+            "division": 3
+          }
+        ]
+      }
+    }
+  ],
+  "hallOfFame": [],
+  "upcoming": {
+    "1263744209295245312": [
+      {
+        "matchupId": 6,
+        "teamAName": "2 Dolla Balla$",
+        "teamBName": "NielGetsCarried",
+        "teamARecord": "2-2",
+        "teamBRecord": "1-3"
+      },
+      {
+        "matchupId": 5,
+        "teamAName": "lol jerry jones",
+        "teamBName": "achak7",
+        "teamARecord": "2-2",
+        "teamBRecord": "2-2"
+      },
+      {
+        "matchupId": 2,
+        "teamAName": "The Golden Age",
+        "teamBName": "Nacua Matata",
+        "teamARecord": "3-1",
+        "teamBRecord": "2-2"
+      },
+      {
+        "matchupId": 4,
+        "teamAName": "Quonspiracy Theorists",
+        "teamBName": "Dr Patel Parikh MD MBA",
+        "teamARecord": "1-3",
+        "teamBRecord": "2-2"
+      },
+      {
+        "matchupId": 3,
+        "teamAName": "benweinfeld",
+        "teamBName": "scboom5",
+        "teamARecord": "2-2",
+        "teamBRecord": "3-1"
+      },
+      {
+        "matchupId": 1,
+        "teamAName": "To Infinity and Bijan",
+        "teamBName": "vchak",
+        "teamARecord": "3-1",
+        "teamBRecord": "1-3"
+      }
+    ],
+    "1263740549504962561": [
+      {
+        "matchupId": 4,
+        "teamAName": "ziyanp22",
+        "teamBName": "Marginal Returns",
+        "teamARecord": "3-1",
+        "teamBRecord": "4-0"
+      },
+      {
+        "matchupId": 5,
+        "teamAName": "Mach 10",
+        "teamBName": "Saint Brown Does Mahomes",
+        "teamARecord": "3-1",
+        "teamBRecord": "2-2"
+      },
+      {
+        "matchupId": 2,
+        "teamAName": "vayyala",
+        "teamBName": "The zoo",
+        "teamARecord": "0-4",
+        "teamBRecord": "1-3"
+      },
+      {
+        "matchupId": 6,
+        "teamAName": "DJ Herbussy ",
+        "teamBName": "lukebowsh",
+        "teamARecord": "3-1",
+        "teamBRecord": "2-2"
+      },
+      {
+        "matchupId": 3,
+        "teamAName": "Dont go Chasing Saquon",
+        "teamBName": "C&G^2",
+        "teamARecord": "0-4",
+        "teamBRecord": "2-2"
+      },
+      {
+        "matchupId": 1,
+        "teamAName": "Jaxson Dart-Njigba",
+        "teamBName": "cescott25",
+        "teamARecord": "1-3",
+        "teamBRecord": "3-1"
+      }
+    ]
+  }
+}

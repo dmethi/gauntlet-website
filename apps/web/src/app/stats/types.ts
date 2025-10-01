@@ -30,6 +30,8 @@ export type GradeTxn = {
     weeklyPoints: Array<{
       week: number;
       points: number;
+      replacementLevel?: number;
+      vorp?: number;
       started: boolean;
       weight: number;
     }>;

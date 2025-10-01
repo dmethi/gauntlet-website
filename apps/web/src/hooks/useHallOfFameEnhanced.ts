@@ -20,6 +20,148 @@ import {
 import { HallOfFameRecord, calculateHallOfFameRecords } from '@/lib/hall-of-fame-calculations';
 import { getAllCategories } from '@/lib/hall-of-fame-expanded-categories';
 
+export interface PositionalDifferenceRecord {
+  position: string;
+  difference: number;
+  teamName: string;
+  teamId: number;
+  teamScore: number;
+  opponentName: string;
+  opponentId: number;
+  opponentScore: number;
+  leagueId: string;
+  leagueName: string;
+  week: number;
+  season: string;
+  matchupId?: number;
+}
+
+/**
+ * Calculate positional scoring differences for each matchup
+ */
+function calculatePositionalDifferences(matchups: EnhancedMatchup[]): {
+  QB: PositionalDifferenceRecord[];
+  RB: PositionalDifferenceRecord[];
+  WR: PositionalDifferenceRecord[];
+  TE: PositionalDifferenceRecord[];
+  K: PositionalDifferenceRecord[];
+  DEF: PositionalDifferenceRecord[];
+} {
+  const positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const;
+  const recordsByPosition: Record<string, PositionalDifferenceRecord[]> = {
+    QB: [],
+    RB: [],
+    WR: [],
+    TE: [],
+    K: [],
+    DEF: [],
+  };
+
+  // Group matchups by week and matchupId within each league
+  const matchupPairs = new Map<string, EnhancedMatchup[]>();
+
+  matchups.forEach(matchup => {
+    if (!matchup.matchupId) return;
+    const key = `${matchup.leagueId}-${matchup.week}-${matchup.matchupId}`;
+    if (!matchupPairs.has(key)) {
+      matchupPairs.set(key, []);
+    }
+    matchupPairs.get(key)!.push(matchup);
+  });
+
+  // Process each matchup pair
+  matchupPairs.forEach(pair => {
+    if (pair.length !== 2) return; // Must be exactly 2 teams
+
+    const [team1, team2] = pair;
+
+    // Calculate position totals for each team
+    const team1PosTotals = new Map<string, number>();
+    const team2PosTotals = new Map<string, number>();
+
+    positions.forEach(pos => {
+      team1PosTotals.set(pos, 0);
+      team2PosTotals.set(pos, 0);
+    });
+
+    // Calculate team1 position totals
+    if (team1.starters && team1.starters_points && team1.playerData) {
+      team1.starters.forEach((playerId, idx) => {
+        const points = team1.starters_points![idx] || 0;
+        const player = team1.playerData!.get(playerId);
+        if (!player) return;
+
+        const position = player.position as string;
+        if (positions.includes(position as (typeof positions)[number])) {
+          team1PosTotals.set(position, (team1PosTotals.get(position) || 0) + points);
+        }
+      });
+    }
+
+    // Calculate team2 position totals
+    if (team2.starters && team2.starters_points && team2.playerData) {
+      team2.starters.forEach((playerId, idx) => {
+        const points = team2.starters_points![idx] || 0;
+        const player = team2.playerData!.get(playerId);
+        if (!player) return;
+
+        const position = player.position as string;
+        if (positions.includes(position as (typeof positions)[number])) {
+          team2PosTotals.set(position, (team2PosTotals.get(position) || 0) + points);
+        }
+      });
+    }
+
+    // Calculate differences for each position
+    positions.forEach(position => {
+      const team1Score = team1PosTotals.get(position) || 0;
+      const team2Score = team2PosTotals.get(position) || 0;
+      const diff = Math.abs(team1Score - team2Score);
+
+      if (diff === 0) return; // Skip if no difference
+
+      // Determine which team had the higher score
+      const [winningTeam, losingTeam, winningScore, losingScore] =
+        team1Score > team2Score
+          ? [team1, team2, team1Score, team2Score]
+          : [team2, team1, team2Score, team1Score];
+
+      const record: PositionalDifferenceRecord = {
+        position,
+        difference: diff,
+        teamName: winningTeam.teamName,
+        teamId: winningTeam.rosterId,
+        teamScore: winningScore,
+        opponentName: losingTeam.teamName,
+        opponentId: losingTeam.rosterId,
+        opponentScore: losingScore,
+        leagueId: team1.leagueId,
+        leagueName: team1.leagueName,
+        week: team1.week,
+        season: team1.season,
+        matchupId: team1.matchupId,
+      };
+
+      recordsByPosition[position].push(record);
+    });
+  });
+
+  // Sort each position by difference (descending) and take top 5
+  positions.forEach(position => {
+    recordsByPosition[position].sort((a, b) => b.difference - a.difference);
+    recordsByPosition[position] = recordsByPosition[position].slice(0, 5);
+  });
+
+  return recordsByPosition as {
+    QB: PositionalDifferenceRecord[];
+    RB: PositionalDifferenceRecord[];
+    WR: PositionalDifferenceRecord[];
+    TE: PositionalDifferenceRecord[];
+    K: PositionalDifferenceRecord[];
+    DEF: PositionalDifferenceRecord[];
+  };
+}
+
 export interface ComprehensiveHallOfFameData {
   // Weekly records
   weeklyRecords: Map<string, HallOfFameRecord[]>;
@@ -55,6 +197,16 @@ export interface ComprehensiveHallOfFameData {
     longestLosingStreak: SeasonalData[];
     mostBlowouts: SeasonalData[];
     strongestSchedule: SeasonalData[];
+  };
+
+  // Positional difference records
+  positionalDifferences: {
+    QB: PositionalDifferenceRecord[];
+    RB: PositionalDifferenceRecord[];
+    WR: PositionalDifferenceRecord[];
+    TE: PositionalDifferenceRecord[];
+    K: PositionalDifferenceRecord[];
+    DEF: PositionalDifferenceRecord[];
   };
 
   // Metadata
@@ -123,6 +275,9 @@ export function useHallOfFameEnhanced() {
           strongestSchedule: findSeasonalRecords(seasonalData, 'scheduleStrength', 'highest', 5),
         };
 
+        // Calculate positional differences
+        const positionalDifferences = calculatePositionalDifferences(allMatchups);
+
         // Calculate metadata
         const uniqueSeasons = new Set(allMatchups.map(m => m.season));
         const uniqueLeagues = new Set(allMatchups.map(m => m.leagueId));
@@ -132,6 +287,7 @@ export function useHallOfFameEnhanced() {
           rollingWindows,
           streaks,
           seasonal,
+          positionalDifferences,
           totalMatchups: allMatchups.length,
           totalSeasons: uniqueSeasons.size,
           totalLeagues: uniqueLeagues.size,
@@ -140,6 +296,7 @@ export function useHallOfFameEnhanced() {
 
         return data;
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('🚨 ENHANCED HOOK ERROR:', error);
         throw error;
       }
@@ -153,9 +310,6 @@ export function useHallOfFameEnhanced() {
  * Hook for team-specific Hall of Fame records
  */
 export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
-  // First get the main data
-  const mainDataQuery = useHallOfFameEnhanced();
-
   return useQuery({
     queryKey: ['hall-of-fame-enhanced', 'team', leagueId, rosterId],
     queryFn: async () => {

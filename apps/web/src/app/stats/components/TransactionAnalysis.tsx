@@ -38,7 +38,7 @@ export function TransactionAnalysis() {
   const [loadingStep, setLoadingStep] = useState('Initializing...');
   const [selectedTxn, setSelectedTxn] = useState<GradeTxn | null>(null);
   const [teamsMap, setTeamsMap] = useState<Map<string, TeamInfo>>(new Map());
-  const [currentNflWeek, setCurrentNflWeek] = useState(3);
+  const [currentNflWeek, setCurrentNflWeek] = useState(4); // Will be updated dynamically
 
   // Additional loading states for better UX
   const [teamsLoaded, setTeamsLoaded] = useState(false);
@@ -120,11 +120,12 @@ export function TransactionAnalysis() {
           const nflRes = await fetch('/api/nfl-state');
           if (nflRes.ok) {
             const nflState = await nflRes.json();
-            const currentWeek = nflState.week || 3;
+            const currentWeek = nflState.week || nflState.display_week || 4;
+            console.log(`[Transaction Analysis] Current NFL Week: ${currentWeek}`);
             setCurrentNflWeek(currentWeek);
           }
-        } catch {
-          console.log('NFL state error, using default week 3');
+        } catch (error) {
+          console.log('NFL state error, using default week 4', error);
         }
 
         // Load team information
@@ -177,11 +178,10 @@ export function TransactionAnalysis() {
             const txnData = await txnRes.json();
             const transactions = txnData.data || [];
 
-            // Build facts
-            const facts = await buildFacts(
-              league.id,
-              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
-            );
+            // Build facts - dynamically use weeks 1 through current week
+            const weeksToAnalyze = Array.from({ length: currentNflWeek }, (_, i) => i + 1);
+            console.log(`[Transaction Analysis] Analyzing weeks: ${weeksToAnalyze.join(', ')}`);
+            const facts = await buildFacts(league.id, weeksToAnalyze);
 
             // Grade transactions using the full working implementation
             const gradedTransactions = await computeTransactionGradesForStatsHub(
@@ -811,22 +811,34 @@ export function TransactionAnalysis() {
                       <div className='flex gap-2 overflow-x-auto'>
                         {player.weeklyPoints
                           .filter(w => w.week <= currentNflWeek)
-                          .map(week => (
-                            <div
-                              key={week.week}
-                              className={`min-w-16 text-center p-2 rounded text-sm ${
-                                week.started
-                                  ? player.role === 'add'
-                                    ? 'bg-green-500 text-white'
-                                    : 'bg-red-500 text-white'
-                                  : 'bg-gray-200 text-gray-600'
-                              }`}
-                            >
-                              <div className='font-semibold'>W{week.week}</div>
-                              <div className='font-bold'>{week.points.toFixed(1)}</div>
-                              {week.started && <div className='text-xs'>✓</div>}
-                            </div>
-                          ))}
+                          .map(week => {
+                            const displayValue = week.vorp !== undefined ? week.vorp : week.points;
+                            const showVORP =
+                              week.vorp !== undefined && week.replacementLevel !== undefined;
+
+                            return (
+                              <div
+                                key={week.week}
+                                className={`min-w-16 text-center p-2 rounded text-sm ${
+                                  week.started
+                                    ? player.role === 'add'
+                                      ? 'bg-green-500 text-white'
+                                      : 'bg-red-500 text-white'
+                                    : 'bg-gray-200 text-gray-600'
+                                }`}
+                                title={
+                                  showVORP
+                                    ? `Raw: ${week.points.toFixed(1)} pts\nReplacement: ${week.replacementLevel!.toFixed(1)}\nVORP: ${week.vorp!.toFixed(1)}`
+                                    : `${week.points.toFixed(1)} pts`
+                                }
+                              >
+                                <div className='font-semibold'>W{week.week}</div>
+                                <div className='font-bold'>{displayValue.toFixed(1)}</div>
+                                {showVORP && <div className='text-xs opacity-75'>VORP</div>}
+                                {week.started && <div className='text-xs'>✓</div>}
+                              </div>
+                            );
+                          })}
                       </div>
                     </div>
                   </div>

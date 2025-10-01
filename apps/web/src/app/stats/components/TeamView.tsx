@@ -105,34 +105,32 @@ export function TeamView({
 
     // Calculate team totals
     const teamTotal = t.teamScores
-      .filter(d => d.week >= fromWeek && d.week <= toWeek && d.value > 0)
+      .filter(d => d.week >= fromWeek && d.week <= toWeek)
       .reduce((a, d) => a + d.value, 0);
     const oppTotal = t.opponentScores
-      .filter(d => d.week >= fromWeek && d.week <= toWeek && d.value > 0)
+      .filter(d => d.week >= fromWeek && d.week <= toWeek)
       .reduce((a, d) => a + d.value, 0);
 
-    const gamesPlayed = t.teamScores.filter(
-      d => d.week >= fromWeek && d.week <= toWeek && d.value > 0
-    ).length;
+    const gamesPlayed = t.teamScores.filter(d => d.week >= fromWeek && d.week <= toWeek).length;
 
     // Calculate league stats
     const leagueTotals = allTeamEntries.map(([, tt]) =>
       tt.teamScores
-        .filter(d => d.week >= fromWeek && d.week <= toWeek && d.value > 0)
+        .filter(d => d.week >= fromWeek && d.week <= toWeek)
         .reduce((a, d) => a + d.value, 0)
     );
 
     const leagueAvgByWeek = weeks.map(week => {
       const weeklyScores = allTeamEntries
-        .map(([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0)
-        .filter(score => score > 0);
+        .map(([, tt]) => tt.teamScores.find(d => d.week === week)?.value)
+        .filter((score): score is number => score !== undefined);
       return mean(weeklyScores);
     });
 
     const leagueMedByWeek = weeks.map(week => {
       const weeklyScores = allTeamEntries
-        .map(([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0)
-        .filter(score => score > 0);
+        .map(([, tt]) => tt.teamScores.find(d => d.week === week)?.value)
+        .filter((score): score is number => score !== undefined);
       return median(weeklyScores);
     });
 
@@ -143,7 +141,7 @@ export function TeamView({
     const leagueTeams = allTeamEntries.filter(([, tt]) => tt.teamInfo.leagueId === leagueId);
     const leagueTotalsOnly = leagueTeams.map(([, tt]) =>
       tt.teamScores
-        .filter(d => d.week >= fromWeek && d.week <= toWeek && d.value > 0)
+        .filter(d => d.week >= fromWeek && d.week <= toWeek)
         .reduce((a, d) => a + d.value, 0)
     );
     const ranksLeague = rank(leagueTotalsOnly);
@@ -568,7 +566,7 @@ export function TeamView({
                   .filter((d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek)
                   .reduce((a: number, d: PlayerScore) => a + d.value, 0);
                 const posValidWeeks = teamPosData.scores.filter(
-                  (d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek && d.value > 0
+                  (d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek
                 );
                 const posGamesPlayed = posValidWeeks.length;
 
@@ -634,32 +632,53 @@ export function TeamView({
                   0
                 );
 
-                // Calculate opponent positional ranks
-                const oppPosRank24 = myWeeklyOpponentData[0]?.opponentKey
-                  ? posRanks24[
-                      allPosTeams.findIndex(pt => {
-                        const oppKey = myWeeklyOpponentData[0].opponentKey;
-                        return (
-                          oppKey &&
-                          pt.teamInfo.leagueId === oppKey.split('-')[0] &&
-                          pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
-                        );
-                      })
-                    ] || 0
-                  : 0;
+                // Calculate opponent positional ranks by averaging ranks across all opponents faced
+                const oppRanks24: number[] = [];
+                const oppRanksLeague: number[] = [];
 
-                const oppPosRankLeague = myWeeklyOpponentData[0]?.opponentKey
-                  ? posRanksLeague[
-                      leaguePosTeams.findIndex(pt => {
-                        const oppKey = myWeeklyOpponentData[0].opponentKey;
-                        return (
-                          oppKey &&
-                          pt.teamInfo.leagueId === oppKey.split('-')[0] &&
-                          pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
-                        );
-                      })
-                    ] || 0
-                  : 0;
+                for (const weekOppData of myWeeklyOpponentData) {
+                  if (weekOppData.opponentKey) {
+                    // Find this opponent's rank in the 24-team rankings
+                    const oppRank24 =
+                      posRanks24[
+                        allPosTeams.findIndex(pt => {
+                          const oppKey = weekOppData.opponentKey;
+                          return (
+                            oppKey &&
+                            pt.teamInfo.leagueId === oppKey.split('-')[0] &&
+                            pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
+                          );
+                        })
+                      ];
+                    if (oppRank24) oppRanks24.push(oppRank24);
+
+                    // Find this opponent's rank in the league rankings
+                    const oppRankLeague =
+                      posRanksLeague[
+                        leaguePosTeams.findIndex(pt => {
+                          const oppKey = weekOppData.opponentKey;
+                          return (
+                            oppKey &&
+                            pt.teamInfo.leagueId === oppKey.split('-')[0] &&
+                            pt.teamInfo.rosterId === parseInt(oppKey.split('-')[1])
+                          );
+                        })
+                      ];
+                    if (oppRankLeague) oppRanksLeague.push(oppRankLeague);
+                  }
+                }
+
+                // Average the opponent ranks across all weeks
+                const oppPosRank24 =
+                  oppRanks24.length > 0
+                    ? Math.round(oppRanks24.reduce((sum, r) => sum + r, 0) / oppRanks24.length)
+                    : 0;
+                const oppPosRankLeague =
+                  oppRanksLeague.length > 0
+                    ? Math.round(
+                        oppRanksLeague.reduce((sum, r) => sum + r, 0) / oppRanksLeague.length
+                      )
+                    : 0;
 
                 return (
                   <div key={position} className='rounded-md border'>
@@ -844,7 +863,9 @@ export function TeamView({
                                 teamPosData.scores.find((d: PlayerScore) => d.week === week)
                                   ?.value || 0;
 
-                              if (myPosPoints === 0) return [];
+                              // Check if team actually played this week (has team score data)
+                              const hasMatchupThisWeek = t.teamScores.some(d => d.week === week);
+                              if (!hasMatchupThisWeek) return [];
 
                               const rowKey = `${position}-${week}`;
                               const isExpanded = expandedRows.has(rowKey);

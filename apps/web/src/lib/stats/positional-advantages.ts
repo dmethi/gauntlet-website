@@ -65,7 +65,7 @@ export function calculatePositionalMedians(
 
     for (const [, teamPosData] of posTeamsMap.entries()) {
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to && d.value > 0
+        d => d.week >= weekRange.from && d.week <= weekRange.to
       );
 
       if (validScores.length > 0) {
@@ -104,7 +104,7 @@ export function calculateAllPositionalAdvantages(
       if (!teamInfo) continue;
 
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to && d.value > 0
+        d => d.week >= weekRange.from && d.week <= weekRange.to
       );
 
       if (validScores.length > 0) {
@@ -157,7 +157,7 @@ export function getTeamPositionalSummary(
 
     if (teamPosData) {
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to && d.value > 0
+        d => d.week >= weekRange.from && d.week <= weekRange.to
       );
 
       if (validScores.length > 0) {
@@ -228,7 +228,7 @@ export function getPositionSummaries(
       if (!teamInfo) continue;
 
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to && d.value > 0
+        d => d.week >= weekRange.from && d.week <= weekRange.to
       );
 
       if (validScores.length > 0) {

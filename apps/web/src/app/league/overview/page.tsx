@@ -304,13 +304,16 @@ export default function LeagueOverview() {
 function RecentTransactionsWidget({ league }: { league: any }) {
   const [items, setItems] = useState<any[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_DISPLAY_COUNT = 10; // Show more transactions by default
+
   useMemo(() => {
     let cancelled = false;
     (async () => {
       try {
         const res = await fetch(`/api/league/${String(league.id)}/transactions`);
         const json = (await res.json()) as { ok: boolean; data?: any[] };
-        if (!cancelled && json.ok) setItems((json.data || []).slice(0, 5));
+        if (!cancelled && json.ok) setItems(json.data || []);
       } catch {
         if (!cancelled) setItems([]);
       } finally {
@@ -429,5 +432,29 @@ function RecentTransactionsWidget({ league }: { league: any }) {
       waiverBid: t.settings?.waiver_bid ?? null,
     };
   });
-  return <TransactionList items={adapted} />;
+
+  const displayedItems = showAll ? adapted : adapted.slice(0, INITIAL_DISPLAY_COUNT);
+  const hasMore = adapted.length > INITIAL_DISPLAY_COUNT;
+
+  return (
+    <div>
+      <TransactionList items={displayedItems} />
+      {hasMore && !showAll && (
+        <button
+          onClick={() => setShowAll(true)}
+          className='w-full mt-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors'
+        >
+          Show all {adapted.length} transactions
+        </button>
+      )}
+      {showAll && (
+        <button
+          onClick={() => setShowAll(false)}
+          className='w-full mt-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors'
+        >
+          Show less
+        </button>
+      )}
+    </div>
+  );
 }

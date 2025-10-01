@@ -27,7 +27,7 @@ import {
 const PROJECTION_THRESHOLD = 0.15; // 15% threshold for "reasonable alternatives"
 const WAIVER_DISCOUNT = 0.35; // 35% penalty for waiver wire pickups (realistic cost)
 const CURRENT_SEASON = '2025';
-const WEEKS_TO_ANALYZE = [1, 2, 3]; // Completed weeks only
+const WEEKS_TO_ANALYZE = [1, 2, 3, 4]; // Completed weeks only
 // Position weights for skill-based scoring (higher = more skill required)
 const POSITION_WEIGHTS = {
   FLEX: 1.0, // Hardest decision - RB/WR/TE choice with most alternatives
@@ -392,6 +392,88 @@ function analyzePositionDecision(
 }
 
 /**
+ * Deduplicate alternatives that appear in multiple positions for the same manager-week
+ * A player can only fill one position, so we assign them to where they provide max benefit
+ */
+function deduplicateManagerDecisions(managerDecisions: PositionDecision[]): PositionDecision[] {
+  if (managerDecisions.length === 0) return managerDecisions;
+
+  // Find players that appear as optimal in multiple positions
+  const playerPositions = new Map<string, PositionDecision[]>();
+
+  for (const decision of managerDecisions) {
+    if (!decision.decisionCorrect && decision.pointsLeft > 0) {
+      const playerId = decision.optimalPlayer.playerId;
+      if (!playerPositions.has(playerId)) {
+        playerPositions.set(playerId, []);
+      }
+      playerPositions.get(playerId)!.push(decision);
+    }
+  }
+
+  // For players appearing in multiple positions, keep them only in the position with max benefit
+  const adjustedDecisions = [...managerDecisions];
+
+  for (const [playerId, decisionsWithPlayer] of playerPositions) {
+    if (decisionsWithPlayer.length <= 1) continue; // No duplication
+
+    // Sort by points benefit (descending) and keep player in the position with highest benefit
+    decisionsWithPlayer.sort((a, b) => b.pointsLeft - a.pointsLeft);
+    const bestPosition = decisionsWithPlayer[0];
+
+    // For other positions, find the next best alternative (excluding this player)
+    for (let i = 1; i < decisionsWithPlayer.length; i++) {
+      const decision = decisionsWithPlayer[i];
+      const decisionIndex = adjustedDecisions.indexOf(decision);
+
+      // Find next best alternative excluding the duplicated player
+      const otherAlternatives = decision.alternatives.filter(alt => alt.playerId !== playerId);
+
+      if (otherAlternatives.length === 0) {
+        // No other alternatives, mark as correct decision (no better option available)
+        adjustedDecisions[decisionIndex] = {
+          ...decision,
+          decisionCorrect: true,
+          pointsLeft: 0,
+          efficiencyRate: 1.0,
+          optimalPlayer: {
+            ...decision.selectedPlayer,
+            source: 'selected' as const,
+            adjustedActualPoints: decision.selectedPlayer.actualPoints,
+          },
+        };
+      } else {
+        // Use next best alternative
+        const nextBestAlternative = otherAlternatives.reduce((best, current) =>
+          current.adjustedActualPoints > best.adjustedActualPoints ? current : best
+        );
+
+        const newPointsLeft =
+          nextBestAlternative.adjustedActualPoints - decision.selectedPlayer.actualPoints;
+        const newDecisionCorrect =
+          nextBestAlternative.playerId === decision.selectedPlayer.playerId;
+        const newEfficiencyRate =
+          nextBestAlternative.adjustedActualPoints > 0
+            ? decision.selectedPlayer.actualPoints / nextBestAlternative.adjustedActualPoints
+            : decision.selectedPlayer.actualPoints >= 0
+              ? 1
+              : 0;
+
+        adjustedDecisions[decisionIndex] = {
+          ...decision,
+          optimalPlayer: nextBestAlternative,
+          pointsLeft: newPointsLeft,
+          decisionCorrect: newDecisionCorrect,
+          efficiencyRate: Math.min(newEfficiencyRate, 1),
+        };
+      }
+    }
+  }
+
+  return adjustedDecisions;
+}
+
+/**
  * Analyze start/sit efficiency for a single week and league
  */
 async function analyzeWeek(leagueId: string, week: number): Promise<PositionDecision[]> {
@@ -454,6 +536,8 @@ async function analyzeWeek(leagueId: string, week: number): Promise<PositionDeci
     const starters = matchup.starters || [];
     const roster = matchup.players || [];
 
+    const managerDecisions: PositionDecision[] = [];
+
     // Analyze each starter
     for (let i = 0; i < starters.length; i++) {
       const playerId = starters[i];
@@ -489,8 +573,12 @@ async function analyzeWeek(leagueId: string, week: number): Promise<PositionDeci
         alternatives
       );
 
-      decisions.push(decision);
+      managerDecisions.push(decision);
     }
+
+    // Deduplicate alternatives that appear in multiple positions
+    const deduplicatedDecisions = deduplicateManagerDecisions(managerDecisions);
+    decisions.push(...deduplicatedDecisions);
   }
 
   console.log(`   ✅ Analyzed ${decisions.length} position decisions`);
@@ -512,18 +600,34 @@ function calculateManagerEfficiency(decisions: PositionDecision[]): ManagerEffic
     managerDecisions.get(key)!.push(decision);
   }
 
-  // Calculate league medians for points impact scoring (points lost per decision)
-  const positionPointsLost = new Map<string, number[]>();
+  // Calculate league medians for points impact scoring (manager total points lost per position)
+  // First, group decisions by manager and position to get manager-level totals
+  const managerPositionTotals = new Map<string, Map<string, number>>();
   for (const decision of decisions) {
-    if (!positionPointsLost.has(decision.position)) {
-      positionPointsLost.set(decision.position, []);
+    const managerKey = `${decision.leagueId}-${decision.managerId}`;
+    if (!managerPositionTotals.has(managerKey)) {
+      managerPositionTotals.set(managerKey, new Map());
     }
-    positionPointsLost.get(decision.position)!.push(Math.max(0, decision.pointsLeft));
+    const managerPositions = managerPositionTotals.get(managerKey)!;
+    const currentTotal = managerPositions.get(decision.position) || 0;
+    managerPositions.set(decision.position, currentTotal + Math.max(0, decision.pointsLeft));
   }
 
+  // Now calculate medians based on manager totals, not individual decisions
   const positionMedians = new Map<string, number>();
-  for (const [position, pointsArray] of positionPointsLost) {
-    const sorted = pointsArray.sort((a, b) => a - b);
+  const positionManagerTotals = new Map<string, number[]>();
+
+  for (const [managerKey, positions] of managerPositionTotals) {
+    for (const [position, total] of positions) {
+      if (!positionManagerTotals.has(position)) {
+        positionManagerTotals.set(position, []);
+      }
+      positionManagerTotals.get(position)!.push(total);
+    }
+  }
+
+  for (const [position, totals] of positionManagerTotals) {
+    const sorted = totals.sort((a, b) => a - b);
     const median = sorted[Math.floor(sorted.length / 2)];
     positionMedians.set(position, median);
   }
@@ -565,10 +669,10 @@ function calculateManagerEfficiency(decisions: PositionDecision[]): ManagerEffic
       const correct = posDecisions.filter(d => d.decisionCorrect).length;
       const efficiency = posDecisions.reduce((sum, d) => sum + d.efficiencyRate, 0);
       const pointsLost = posDecisions.reduce((sum, d) => sum + Math.max(0, d.pointsLeft), 0);
-      const avgPointsLostPerDecision = pointsLost / posDecisions.length;
       const positionMedian = positionMedians.get(position) || 0;
       // Positive means manager performed better than median (lost fewer points)
-      const pointsLostVsMedian = (positionMedian - avgPointsLostPerDecision) * posDecisions.length;
+      // Now comparing manager's total to median total (both are totals, not per-decision)
+      const pointsLostVsMedian = positionMedian - pointsLost;
 
       const weight = POSITION_WEIGHTS[position as keyof typeof POSITION_WEIGHTS] || 0.5;
 
@@ -805,9 +909,9 @@ async function analyzeStartSitEfficiency() {
     );
   }
 
-  // Generate insights for UI
-  const worstDecisions = getWorstDecisions(allDecisions, 15);
-  const bestRiskyDecisions = getBestRiskyDecisions(allDecisions, 15);
+  // Generate insights for UI - get all decisions (UI will filter)
+  const worstDecisions = getWorstDecisions(allDecisions, 999);
+  const bestRiskyDecisions = getBestRiskyDecisions(allDecisions, 999);
 
   const rosterContext = getManagerRosterContext(allDecisions);
 

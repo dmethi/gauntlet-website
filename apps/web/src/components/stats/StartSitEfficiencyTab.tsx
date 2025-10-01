@@ -81,9 +81,13 @@ const LoadingContent = () => (
   </div>
 );
 
-export default function StartSitEfficiencyTab() {
-  const [data, setData] = useState<StartSitData | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function StartSitEfficiencyTab({
+  prefetchedData,
+}: {
+  prefetchedData?: StartSitData | null;
+}) {
+  const [data, setData] = useState<StartSitData | null>(prefetchedData || null);
+  const [loading, setLoading] = useState(!prefetchedData);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -139,8 +143,11 @@ export default function StartSitEfficiencyTab() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    // Only fetch if we don't have prefetched data
+    if (!prefetchedData) {
+      fetchData();
+    }
+  }, [prefetchedData]);
 
   if (loading) {
     return <LoadingContent />;
@@ -173,6 +180,11 @@ export default function StartSitEfficiencyTab() {
           <p className='text-sm text-gray-600 mt-1'>
             Skill-weighted decision making analysis across {data.leagueStats.totalDecisions}{' '}
             decisions
+            {data.timestamp && (
+              <span className='text-xs text-gray-500 ml-2'>
+                • Updated {new Date(data.timestamp).toLocaleString()}
+              </span>
+            )}
           </p>
         </div>
 

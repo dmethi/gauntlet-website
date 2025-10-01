@@ -32,77 +32,77 @@ export async function computeTransactionGradesForStatsHub(
     });
   });
 
-  // Week-specific replacement levels (calculated earlier)
-  const REPLACEMENT_LEVELS = {
-    1: { QB: 20.1, RB: 7.4, WR: 9.1, TE: 9.1, DEF: 9.8 },
-    2: { QB: 19.9, RB: 8.6, WR: 11.4, TE: 7.3, DEF: 10.6 },
-    3: { QB: 14.6, RB: 7.5, WR: 10.7, TE: 8.1, DEF: 13.3 },
-  } as const;
-
   // FAAB Cost Configuration (Based on sensitivity analysis)
   const FAAB_COST_COEFFICIENT = 0.25; // Optimal: 4% of budget = 1 VORP penalty (Moderate weighting)
   const LEAGUE_FAAB_BUDGET = 200; // Standard FAAB budget for this league
 
+  // Use dynamic weeks from facts instead of hardcoding
+  const completedWeeks = facts.weeks.filter(w => w <= currentNflWeek);
+  console.log(
+    `[Transaction Grading] Processing weeks: ${completedWeeks.join(', ')} (current NFL week: ${currentNflWeek})`
+  );
+
+  // Calculate dynamic replacement levels from facts data
+  // We use median of ALL starters as a universal replacement level (not position-specific)
   const replacementLevels = new Map<string, number>();
-  [1, 2, 3].forEach(week => {
-    const levels = REPLACEMENT_LEVELS[week as keyof typeof REPLACEMENT_LEVELS];
-    Object.entries(levels).forEach(([position, level]) => {
-      replacementLevels.set(`${week}:${position}`, level);
-      if (position === 'DEF') {
-        replacementLevels.set(`${week}:DST`, level); // Handle DST alias
-      }
-    });
-    // Add FLEX as average of RB+WR
-    const flexLevel = (levels.RB + levels.WR) / 2;
-    replacementLevels.set(`${week}:FLEX`, flexLevel);
-  });
+
+  if (facts.replacementByWeekPos && facts.replacementByWeekPos.size > 0) {
+    // Copy replacement levels from facts (stored as ${week}:ALL_STARTERS)
+    for (const [key, value] of facts.replacementByWeekPos.entries()) {
+      replacementLevels.set(key, value);
+      console.log(
+        `[Replacement Levels] Week ${key.split(':')[0]}: ${value.toFixed(2)} pts (median of all starters)`
+      );
+    }
+  }
+
+  console.log(
+    `[Replacement Levels] Loaded ${replacementLevels.size} week-level replacement values`
+  );
 
   // Date to NFL week mapping (2025 season)
+  // Returns the FIRST WEEK where an added player can contribute points
+  // Rule: Transactions ON/AFTER Tuesday exclude that week (games already finished Monday)
   const getTransactionWeek = (iso: string): number => {
-    const date = new Date(iso);
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+    const transactionDate = new Date(iso);
 
-    // For 2025 season (current season)
-    // Precise NFL week boundaries for accurate transaction timing
-    if (year === 2025) {
-      if (month <= 8) return 0; // Preseason (Jan-Aug 2025)
+    // 2025 NFL Season: Week 1 starts Thursday Sept 5, 2025
+    // Tuesday boundaries: When previous week's games are complete
+    const SEASON_START = new Date('2025-09-05T00:00:00-04:00');
+    const TUESDAY_SEPT_9 = new Date('2025-09-09T00:00:00-04:00'); // Week 2 starts
 
-      if (month === 9) {
-        // September 2025 - be precise about week boundaries
-        if (date.getDate() <= 5) return 0; // Before Week 1 (preseason)
-        if (date.getDate() <= 9) return 1; // Week 1 (Sept 5-9)
-        if (date.getDate() <= 16) return 2; // Week 2 (Sept 12-16)
-        if (date.getDate() <= 23) return 3; // Week 3 (Sept 19-23)
-        return 4; // Week 4 (Sept 26-30)
-      }
-
-      if (month === 10) return 6; // October 2025 = Week 5-8
-      if (month === 11) return 10; // November 2025 = Week 9-13
-      if (month === 12) return 15; // December 2025 = Week 14-18
-      return 1; // Default to early season
+    if (transactionDate < SEASON_START) {
+      return 0; // Preseason
     }
 
-    // For 2024 (preseason transactions)
-    if (year === 2024) {
-      return 0; // All 2024 dates are preseason for 2025 season
+    if (transactionDate < TUESDAY_SEPT_9) {
+      return 1; // Before Sept 9 Tuesday → include Week 1
     }
 
-    // Default fallback
-    return 0;
+    // Calculate weeks from first Tuesday boundary
+    // Each week period = 7 days (Tuesday to Tuesday)
+    const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+    const msSinceFirstTuesday = transactionDate.getTime() - TUESDAY_SEPT_9.getTime();
+    const weeksSinceFirstBoundary = Math.floor(msSinceFirstTuesday / MS_PER_WEEK);
+
+    // Transaction on/after Tuesday → start counting from NEXT week
+    // Sept 9-15: Week 2 (skip Week 1, which ended Sept 8)
+    // Sept 16-22: Week 3 (skip Week 2, which ended Sept 15)
+    // Sept 23-29: Week 4 (skip Week 3, which ended Sept 22)
+    const week = 2 + weeksSinceFirstBoundary;
+
+    // Cap at 18 (regular season end)
+    return Math.min(18, week);
   };
 
   // Helper to calculate VORP for a player in a specific week
   const calculateVORP = (playerId: string, week: number): number => {
-    const playerInfo = idToPlayer.get(playerId);
-    const position = playerInfo?.position?.toUpperCase() || 'FLEX';
     const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
-    const replacementLevel = replacementLevels.get(`${week}:${position}`) || 0;
-    return points - replacementLevel;
+    // Use the ALL_STARTERS median as replacement level (same for all positions)
+    const replacementLevel = replacementLevels.get(`${week}:ALL_STARTERS`) || 0;
+    const vorp = points - replacementLevel;
+    return vorp;
   };
-
-  // Only count completed weeks (1-3 currently)
-  const completedWeeks = [1, 2, 3].filter(w => w <= currentNflWeek);
 
   // Helper function to process each roster's perspective in a trade
   async function processTransactionForRoster(
@@ -149,6 +149,8 @@ export async function computeTransactionGradesForStatsHub(
       const weeklyPoints: Array<{
         week: number;
         points: number;
+        replacementLevel?: number;
+        vorp?: number;
         started: boolean;
         weight: number;
       }> = [];
@@ -164,8 +166,10 @@ export async function computeTransactionGradesForStatsHub(
           `[Add Debug] ${playerInfo?.name} W${week}: ${points}pts, started=${started} by roster ${rId}`
         );
 
+        const vorp = calculateVORP(playerId, week);
+        const replacementLevel = replacementLevels.get(`${week}:ALL_STARTERS`) || 0;
+
         if (started) {
-          const vorp = calculateVORP(playerId, week);
           playerVORP += playoffWeight(week) * vorp;
           starts++;
           totalPoints += points;
@@ -174,6 +178,8 @@ export async function computeTransactionGradesForStatsHub(
         weeklyPoints.push({
           week,
           points,
+          replacementLevel,
+          vorp,
           started,
           weight: playoffWeight(week),
         });
@@ -205,6 +211,8 @@ export async function computeTransactionGradesForStatsHub(
       const weeklyPoints: Array<{
         week: number;
         points: number;
+        replacementLevel?: number;
+        vorp?: number;
         started: boolean;
         weight: number;
       }> = [];
@@ -230,8 +238,10 @@ export async function computeTransactionGradesForStatsHub(
           }
         }
 
+        const vorp = calculateVORP(playerId, week);
+        const replacementLevel = replacementLevels.get(`${week}:ALL_STARTERS`) || 0;
+
         if (started) {
-          const vorp = calculateVORP(playerId, week);
           console.log(
             `[Drop Debug] ${playerInfo?.name} W${week}: ${points}pts, VORP=${vorp.toFixed(1)}, started by roster ${starterRosterId}, transaction week was ${startWeek}`
           );
@@ -245,6 +255,8 @@ export async function computeTransactionGradesForStatsHub(
         weeklyPoints.push({
           week,
           points,
+          replacementLevel,
+          vorp,
           started,
           weight: playoffWeight(week),
         });
@@ -306,6 +318,13 @@ export async function computeTransactionGradesForStatsHub(
   // Process each completed transaction
   const validTransactions = transactions.filter(t => t.status === 'complete');
 
+  console.log(
+    `[Transaction Processing] Starting to process ${validTransactions.length} completed transactions`
+  );
+  console.log(
+    `[Transaction Processing] League: ${leagueName}, Weeks available: ${completedWeeks.join(', ')}`
+  );
+
   for (const t of validTransactions) {
     // Parse transaction date - API now returns proper Sleeper dates
     const createdAt =
@@ -315,8 +334,20 @@ export async function computeTransactionGradesForStatsHub(
     // Extract FAAB cost from transaction settings
     const faabCost = t.settings?.waiver_bid || 0; // Default to 0 for free agents/trades
 
-    console.log(`[Date Debug] Transaction ${t.id}: ${createdAt} (Week ${transactionWeek})`);
-    console.log(`[FAAB Debug] Transaction ${t.id}: FAAB cost = $${faabCost}, Type = ${t.type}`);
+    // Debug transaction details
+    const addPlayers = t.adds?.flatMap(a => a.players?.map(p => p.fullName || p.id) || []) || [];
+    const dropPlayers = t.drops?.flatMap(d => d.players?.map(p => p.fullName || p.id) || []) || [];
+    const rosterIds = t.rosterIds || [];
+
+    console.log(
+      `[Transaction ${t.id}] Type: ${t.type}, Week: ${transactionWeek}, Date: ${createdAt}`
+    );
+    console.log(
+      `  └─ Rosters: ${rosterIds.join(', ')}, Adds: ${addPlayers.length}, Drops: ${dropPlayers.length}`
+    );
+    if (addPlayers.length > 0) console.log(`  └─ Added: ${addPlayers.join(', ')}`);
+    if (dropPlayers.length > 0) console.log(`  └─ Dropped: ${dropPlayers.join(', ')}`);
+    console.log(`  └─ FAAB: $${faabCost}`);
 
     // Start counting from Week 1 for preseason transactions, otherwise from transaction week
     const startWeek = Math.max(transactionWeek, 1);
