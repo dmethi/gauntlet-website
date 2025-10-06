@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { saveSnapshotIfChanged, hasSignificantChange } from '../snapshot-validator';
-import type { CompleteSnapshot, PreviousSnapshot } from '@gauntlet/types';
+import {
+  saveSnapshotIfChanged,
+  hasSignificantChange,
+  type CompleteSnapshot,
+  type PreviousSnapshot,
+} from '../index';
 import * as historicalData from '../historical-data';
 
 // Mock the historical data module

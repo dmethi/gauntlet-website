@@ -8,10 +8,13 @@
  * Writes to: LiveWinProbSample (historical time-series data)
  */
 
-import { createChildLogger, createMetrics } from '../../lib/index.js';
-import { disconnect } from '../../lib/historical-data.js';
-import { createGauntletAPIClient } from '../../lib/gauntlet-api-client.js';
-import { saveSnapshotIfChanged } from '../../lib/snapshot-validator.js';
+import {
+  createChildLogger,
+  createMetrics,
+  disconnect,
+  createGauntletAPIClient,
+  saveSnapshotIfChanged,
+} from '../../lib/index.js';
 import type { CompleteSnapshot } from '@gauntlet/types';
 
 /**

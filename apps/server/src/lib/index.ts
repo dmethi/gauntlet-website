@@ -1,25 +1,35 @@
 /**
- * Barrel exports for apps/server lib utilities
+ * Server Library Exports
+ *
+ * Barrel export file for all server utilities.
+ * Enables clean imports: import { gauntletAPI, disconnect } from '@/lib';
  */
 
 // API Client
 export { createGauntletAPIClient, gauntletAPI } from './gauntlet-api-client.js';
 
-// Historical Data Operations
+// Historical Data (Database Operations)
 export {
+  // Write operations
   saveLiveWinProbSample,
+  saveMatchupOddsHistory,
+  saveLeagueOddsHistory,
+
+  // Read operations
   getLastWinProbSample,
   getMatchupWinProbTimeSeries,
   getWeekWinProbSamples,
   getMatchupExcitementMetrics,
-  saveLeagueOddsHistory,
+  getMatchupOddsHistory,
   getLeagueOddsHistory,
   getLatestLeagueOdds,
+
+  // Lifecycle
   disconnect,
 } from './historical-data.js';
 
 // Snapshot Validation
-export { saveSnapshotIfChanged, hasSignificantChange } from './snapshot-validator.js';
+export { hasSignificantChange, saveSnapshotIfChanged } from './snapshot-validator.js';
 
 // Logger
 export { logger, createChildLogger } from './logger.js';
@@ -29,4 +39,6 @@ export { createMetrics, measureDuration } from './metrics.js';
 
 // Retry logic
 export { fetchWithRetry, retryAsync } from './retry.js';
-export type { RetryOptions } from './retry.js';
+
+// Types
+export type * from './types.js';

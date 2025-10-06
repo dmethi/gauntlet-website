@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchWithRetry, retryAsync } from '../retry';
+import { fetchWithRetry, retryAsync } from '../index';
 
 global.fetch = vi.fn();
 
