@@ -10,8 +10,8 @@ import type {
   LeagueOddsResponse,
   MatchupSimulationResponse,
   NFLState,
-  SleeperUser,
   SleeperRoster,
+  SleeperUser,
 } from '@gauntlet/types';
 
 /**

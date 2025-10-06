@@ -5,8 +5,8 @@
  * Prevents saving duplicate data when scores and projections haven't changed.
  */
 
-import { saveLiveWinProbSample, getLastWinProbSample } from './historical-data.js';
-import type { CompleteSnapshot, ValidationResult, PreviousSnapshot } from '@gauntlet/types';
+import { getLastWinProbSample, saveLiveWinProbSample } from './historical-data.js';
+import type { CompleteSnapshot, PreviousSnapshot, ValidationResult } from '@gauntlet/types';
 
 /**
  * Check if snapshot data has changed significantly since the last snapshot
