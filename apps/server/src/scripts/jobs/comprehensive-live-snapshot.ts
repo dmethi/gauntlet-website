@@ -8,12 +8,9 @@
  * Writes to: LiveWinProbSample (historical time-series data)
  */
 
-import {
-  saveLiveWinProbSample,
-  getLastWinProbSample,
-  disconnect,
-} from '../../lib/historical-data.js';
+import { disconnect } from '../../lib/historical-data.js';
 import { gauntletAPI } from '../../lib/gauntlet-api-client.js';
+import { saveSnapshotIfChanged } from '../../lib/snapshot-validator.js';
 import type { CompleteSnapshot } from '@gauntlet/types';
 
 /**
@@ -134,128 +131,6 @@ async function captureIndividualMatchup(
   }
 }
 
-async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<boolean> {
-  try {
-    // Check if data has changed since last snapshot (deduplication)
-    const lastSnapshot = await getLastWinProbSample(
-      snapshot.leagueId,
-      snapshot.week,
-      snapshot.matchupId
-    );
-
-    if (lastSnapshot) {
-      // Compare scores and key metrics (with small tolerance for floating point)
-      const tolerance = 0.01;
-      const scoresMatch =
-        Math.abs(lastSnapshot.currentScoreA - snapshot.team1.currentScore) < tolerance &&
-        Math.abs(lastSnapshot.currentScoreB - snapshot.team2.currentScore) < tolerance;
-
-      const projectionsMatch =
-        Math.abs(lastSnapshot.projectedFinalA - snapshot.team1.simulatedMean) < tolerance &&
-        Math.abs(lastSnapshot.projectedFinalB - snapshot.team2.simulatedMean) < tolerance;
-
-      const oddsMatch =
-        Math.abs(lastSnapshot.spread - snapshot.spread) < tolerance &&
-        Math.abs(lastSnapshot.total - snapshot.total) < tolerance;
-
-      if (scoresMatch && projectionsMatch && oddsMatch) {
-        console.log(
-          `⏭️  M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name} - No change, skipping`
-        );
-        return false; // Data unchanged, skipped
-      }
-    }
-
-    // Data has changed or is new, save it
-    await saveLiveWinProbSample({
-      leagueId: snapshot.leagueId,
-      week: snapshot.week,
-      matchupId: snapshot.matchupId,
-      rosterAId: snapshot.team1.rosterId,
-      rosterBId: snapshot.team2.rosterId,
-      gameProgress: 0, // Using simulation data
-      winProbA: snapshot.team1.winProbability,
-      winProbB: snapshot.team2.winProbability,
-      projectedFinalA: snapshot.team1.simulatedMean, // Use simulated mean (matches screenshot)
-      projectedFinalB: snapshot.team2.simulatedMean, // Use simulated mean (matches screenshot)
-      currentScoreA: snapshot.team1.currentScore,
-      currentScoreB: snapshot.team2.currentScore,
-      spread: snapshot.spread,
-      total: snapshot.total,
-    });
-
-    console.log(`✅ M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
-    console.log(
-      `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
-    );
-    console.log(
-      `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Spread: ${snapshot.spread > 0 ? '+' : ''}${snapshot.spread.toFixed(1)} | O/U: ${snapshot.total.toFixed(1)} | Fresh Data ✅`
-    );
-
-    // Enhanced per-player debugging tables
-    const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Players']) => {
-      if (!players || players.length === 0) return;
-      console.log(`   ── ${label}`);
-      const header = ['Player', 'Pos', 'NFL', 'Curr', 'Remain', 'Full', 'State', 'Clock', 'MinRem'];
-      const rows = players.map(p => [
-        p.name,
-        p.position,
-        p.nflTeam || '-',
-        p.currentScore.toFixed(1),
-        p.remainingProjection.toFixed(1),
-        p.fullProjection.toFixed(1),
-        p.gameState?.state || '-',
-        p.gameState?.desc || '-',
-        p.gameState?.minutesRemaining != null
-          ? String(Math.round(p.gameState.minutesRemaining))
-          : '-',
-      ]);
-      const widths = header.map((h, i) =>
-        Math.min(Math.max(h.length, ...rows.map(r => String(r[i]).length)), i === 0 ? 26 : 12)
-      );
-      const fmt = (v: string, i: number) => v.padEnd(widths[i], ' ');
-      console.log('     ' + header.map(fmt).join('  '));
-      console.log('     ' + widths.map(w => ''.padEnd(w, '─')).join('  '));
-      for (const r of rows) {
-        console.log('     ' + r.map((v, i) => fmt(String(v), i)).join('  '));
-      }
-      const totals = players.reduce(
-        (acc, p) => {
-          acc.curr += p.currentScore;
-          acc.rem += p.remainingProjection;
-          acc.full += p.fullProjection;
-          return acc;
-        },
-        { curr: 0, rem: 0, full: 0 }
-      );
-      console.log(
-        `     Totals → Curr: ${totals.curr.toFixed(1)} | Remain: ${totals.rem.toFixed(1)} | Full: ${totals.full.toFixed(1)}`
-      );
-    };
-
-    printPlayerTable(`${snapshot.team1Name}`, snapshot.team1Players);
-    printPlayerTable(`${snapshot.team2Name}`, snapshot.team2Players);
-    console.log('');
-
-    return true; // Data saved
-  } catch (error) {
-    // Fallback logging if database fails
-    console.error(
-      `❌ Failed to save M${snapshot.matchupId}:`,
-      error instanceof Error ? error.message : String(error)
-    );
-    console.log(`📊 M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
-    console.log(
-      `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
-    );
-    console.log(
-      `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Fresh Data ✅`
-    );
-    console.log('');
-    return false; // Failed to save
-  }
-}
-
 async function main() {
   const week = await gauntletAPI.getCurrentWeek();
   const leagueIds = ['1263744209295245312', '1263740549504962561'];
@@ -287,8 +162,8 @@ async function main() {
       const snapshot = await captureIndividualMatchup(leagueId, week, matchupId, teamNames);
 
       if (snapshot) {
-        const saved = await saveCompleteSnapshot(snapshot);
-        if (saved) {
+        const result = await saveSnapshotIfChanged(snapshot);
+        if (result.saved) {
           savedCount++;
         } else {
           skippedCount++;

@@ -161,3 +161,35 @@ export interface ModelStats {
   latestRecord?: Date | null;
   oldestRecord?: Date | null;
 }
+
+// ============================================================================
+// Snapshot Validation Types
+// ============================================================================
+
+/**
+ * Result of snapshot validation and save operation
+ */
+export interface ValidationResult {
+  /**
+   * Whether the snapshot was saved to the database
+   */
+  saved: boolean;
+  /**
+   * Reason for the result (e.g., 'unchanged', 'saved', 'error')
+   */
+  reason?: string;
+}
+
+/**
+ * Previous snapshot data used for comparison during validation
+ */
+export interface PreviousSnapshot {
+  currentScoreA: number;
+  currentScoreB: number;
+  projectedFinalA: number;
+  projectedFinalB: number;
+  winProbA: number;
+  winProbB: number;
+  spread: number;
+  total: number;
+}
