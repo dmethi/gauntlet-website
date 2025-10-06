@@ -1,214 +1,171 @@
-# Gauntlet Server - Background Jobs & Data Ingestion
+# @gauntlet/server - Background Jobs
 
-⚠️ **This is NOT an HTTP server in production!**
+⚠️ **This is NOT an HTTP server** - it's a background jobs package.
 
 ## Purpose
 
-This package contains **background job scripts** and **data ingestion
-pipelines** that are executed by GitHub Actions workflows. The HTTP server
-routes (`src/routes/*`) are **UNUSED** - the web app uses Next.js API routes
-instead.
+Captures live matchup odds snapshots during NFL games for historical analysis and time-series visualization.
 
-## Active Components
+## What's Here
 
-### ✅ Scripts (Called by GitHub Actions)
+### Active Files (3 TypeScript Files)
 
-#### Data Ingestion (`src/scripts/data-ingestion/`)
+1. **`src/lib/historical-data.ts`** - Prisma client wrapper for time-series data
+2. **`src/scripts/audit-database.ts`** - Database audit utility to analyze usage patterns
+3. **`src/scripts/jobs/comprehensive-live-snapshot.ts`** - Live odds capture job with Monte Carlo simulations
 
-- Ingests league, roster, matchup, and player data from Sleeper API
-- Writes to PostgreSQL database via Prisma
-- **Triggered by:** `.github/workflows/daily-ingestion.yml` (daily at 8am ET)
+### Database (3 Models)
 
-#### Live Jobs (`src/scripts/jobs/`)
+Schema: `prisma/schema-historical.prisma`
 
-- `comprehensive-live-snapshot.ts` - Captures live matchup data with win
-  probabilities
-- Runs Monte Carlo simulations for current matchups
-- Stores historical odds snapshots
-- **Triggered by:** `.github/workflows/live-odds-updates.yml` (every 10 min
-  during NFL games)
+1. **`LiveWinProbSample`** - Win probability samples captured during games (every 10 minutes)
+   - Time-series data for charts showing how win probability changed during games
+   - Used by: Weekly recap reports, matchup excitement metrics
 
-#### Maintenance (`src/scripts/maintenance/`)
+2. **`MatchupOddsHistory`** - Matchup odds over time
+   - Tracks how individual matchup odds changed over time
+   - Used by: Matchup history charts, odds movement analysis
 
-- `sync-team-names.ts` - Syncs team metadata from Sleeper
-- `refresh-lineups.ts` - Updates matchup lineups before simulation
-- **Triggered by:** `.github/workflows/live-odds-updates.yml` (before each
-  snapshot)
+3. **`LeagueOddsHistory`** - League-wide predictions
+   - Stores league-wide odds snapshots (highest scorer, closest matchup, etc.)
+   - Used by: Weekly recap reports, league-wide trends
 
-### ✅ Database (Prisma)
+### GitHub Actions (1 Workflow)
 
-- Schema: `prisma/schema.prisma` (26 models)
-- Used by: Background jobs only
-- Stores: Historical matchup data, simulations, player stats, live odds
+**`.github/workflows/live-sims.yml`**
 
-### ❌ UNUSED: HTTP Server Routes
-
-The following are **NOT used in production**:
-
-- `src/index.ts` - Express server (never started)
-- `src/routes/*` - API routes (replaced by Next.js API routes in web app)
-- `src/services/*` - Service layer (if unused by scripts)
+- **Schedule**: Runs every 10 minutes during NFL game windows (Thu-Mon)
+- **Command**: `pnpm --filter @gauntlet/server live-snapshot`
+- **Purpose**: Captures current matchup states, runs simulations, stores historical data
+- **Timeout**: 10 minutes per execution
 
 ## Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│  Web App (apps/web)                                          │
-│  - Next.js frontend + API routes                            │
-│  - Calls Sleeper API directly (no database connection)      │
-└──────────────────────────────────────────────────────────────┘
-                            ↓
-                   (NO CONNECTION)
-                            ↓
-┌──────────────────────────────────────────────────────────────┐
-│  Background Jobs (apps/server)                               │
-│  - GitHub Actions (cron) trigger scripts                     │
-│  - Scripts fetch from Sleeper API                            │
-│  - Scripts write to PostgreSQL via Prisma                    │
-│  - Stores historical data for analytics                      │
-└──────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  GitHub Actions Scheduler (Cron)                    │
+│  • Every 10 minutes during NFL games                │
+│  • Thursday Night → Monday Night Football           │
+└──────────────────┬──────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────┐
+│  comprehensive-live-snapshot.ts                     │
+│  1. Fetches current matchup data from Sleeper API   │
+│  2. Runs Monte Carlo simulations (10K iterations)   │
+│  3. Calculates win probabilities and odds           │
+│  4. Writes snapshots to PostgreSQL                  │
+└──────────────────┬──────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────┐
+│  PostgreSQL Database                                │
+│  • LiveWinProbSample (time-series data)            │
+│  • MatchupOddsHistory (matchup odds tracking)      │
+│  • LeagueOddsHistory (league-wide predictions)     │
+└─────────────────────────────────────────────────────┘
 ```
-
-### Key Insight
-
-- **Web app:** Database-free, API-first (Sleeper API → Next.js API routes →
-  Frontend)
-- **Background jobs:** Database-driven (Sleeper API → Scripts → PostgreSQL)
-- **They don't communicate:** Web app and background jobs are independent
-
-## GitHub Actions Workflows
-
-### 1. Live Odds Updates
-
-**File:** `.github/workflows/live-odds-updates.yml` **Schedule:** Every 10
-minutes during NFL game windows **Commands:**
-
-```bash
-pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/sync-team-names.ts
-pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/refresh-lineups.ts
-pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
-```
-
-### 2. Live Simulations
-
-**File:** `.github/workflows/live-sims.yml` **Schedule:** Every 10 minutes
-during NFL game windows **Commands:**
-
-```bash
-pnpm --filter @gauntlet/server live-sims $LEAGUE_ID
-```
-
-### 3. Daily Data Ingestion
-
-**File:** `.github/workflows/daily-ingestion.yml` **Schedule:** Daily at 8am ET
-during NFL season **Commands:**
-
-```bash
-pnpm --filter @gauntlet/server ingest:current
-```
-
-## Database Models (Prisma Schema)
-
-### Actively Used Models (by scripts)
-
-- ✅ `League`, `Roster`, `User`, `Matchup` - Core Sleeper data
-- ✅ `Transaction`, `TradedPick` - Transaction tracking
-- ✅ `Draft`, `DraftPick` - Draft data
-- ✅ `Player`, `PlayerStats` - Player information
-- ✅ `MatchupSimulation`, `PlayerSimulation` - Live sim results
-- ✅ `MatchupOddsHistory`, `LiveWinProbSample` - Historical tracking
-
-### Potentially Unused Models (needs audit)
-
-- ❓ `WeeklyMetrics` - May be computed on-the-fly now
-- ❓ `PositionVariance`, `PlayerVariance`, `ProjectionError` - Variance data
-- ❓ `MatchupSummary`, `RosterWeekAggregate`, `LeagueWeekSummary` - Aggregates
-- ❓ `SeasonSuperlatives` - Season-end awards
-- ❓ `HallOfFameCategory`, `HallOfFameRecord` - Hall of Fame tracking
-- ❓ `LeagueOddsHistory` - League-wide odds
 
 ## Development
 
-### Running Scripts Locally
+### Scripts
 
 ```bash
 # Install dependencies
 pnpm install
 
 # Generate Prisma client
-pnpm exec prisma generate
+pnpm prisma:generate
 
-# Run data ingestion
-pnpm ingest:current
+# Compile TypeScript
+pnpm build
 
-# Run live snapshot
-pnpm exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
+# Capture current live odds snapshot (requires DATABASE_URL)
+pnpm live-snapshot
 
-# Database operations
-pnpm exec prisma studio    # View database
-pnpm exec prisma migrate dev  # Run migrations
+# Audit database usage patterns (requires DATABASE_URL)
+pnpm audit:db
+
+# Run database migrations
+pnpm prisma:migrate
 ```
 
 ### Environment Variables
 
-Required for scripts:
-
 ```bash
-DATABASE_URL=postgresql://...  # PostgreSQL connection string
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
 ```
 
-## Cleanup Recommendations
+## Why "server"?
 
-### Immediate (Safe):
+**Legacy naming.** This package was originally an Express HTTP server but has been simplified to background jobs only. The name stuck around.
 
-1. ✅ Add this README
-2. ✅ Document architecture in PRISMA_CLEANUP_ANALYSIS.md
+**Current reality:**
+- ❌ No HTTP server running
+- ❌ No Express routes
+- ❌ No API endpoints
+- ✅ Just scheduled background jobs
 
-### Medium-Term (Low Risk):
+## How It Works
 
-1. Remove unused HTTP server files:
-   - `src/index.ts` (Express server)
-   - `src/routes/*` (API routes)
-   - `src/services/*` (if not used by scripts)
-2. Audit Prisma schema for unused models
-3. Remove web app Prisma generation (not needed)
+### Live Snapshot Flow
 
-### Long-Term (Requires Analysis):
+1. **Trigger**: GitHub Actions cron runs every 10 minutes during NFL games
+2. **Fetch**: Script fetches current matchup data from Sleeper API
+3. **Simulate**: Runs 10,000 Monte Carlo simulations per matchup
+4. **Calculate**: Computes win probabilities, spreads, totals, and money lines
+5. **Store**: Writes snapshot to PostgreSQL with timestamp
+6. **Repeat**: Process repeats throughout the game (18+ snapshots per 3-hour game)
 
-1. Audit which models are actively written by scripts
-2. Consider exposing historical data to web app
-3. Evaluate if database is still needed or if can migrate to:
-   - Vercel KV for caching
-   - Static files for historical data
-   - Real-time API calls only
+### Data Usage
+
+The web app (`apps/web`) **does NOT** use this database. It calls the Sleeper API directly.
+
+This database is for:
+- **Historical analysis**: "How did win probability change during the game?"
+- **Trends over time**: "How accurate were our pre-game predictions?"
+- **Excitement metrics**: "Which games had the most volatility?"
+- **Narrative generation**: "What were the most dramatic moments?"
 
 ## Common Questions
 
-### Q: Why do we have a database if the web app doesn't use it?
+### Q: Why doesn't the web app use this database?
 
-**A:** Historical data storage for analytics and trends. Background jobs store
-simulation results, live odds history, and player stats over time.
+**A:** Design decision to keep the web app database-free and API-first. The web app fetches everything from Sleeper API in real-time. This database is purely for historical analytics that Sleeper doesn't provide (like win probability over time).
 
-### Q: Can I remove the Express server routes?
+### Q: How much data does this generate?
 
-**A:** Yes! They're not being used. The web app uses Next.js API routes instead.
+**A:** Approximately:
+- **18 snapshots per game** (10-minute intervals × 3-hour game)
+- **12 matchups per week** (6 per league × 2 leagues)
+- **216 records per week** (18 × 12) in `LiveWinProbSample`
+- **Plus** additional records in `MatchupOddsHistory` and `LeagueOddsHistory`
 
-### Q: How do I know which Prisma models are actually used?
+### Q: Can I run this locally?
 
-**A:** Run this command to search for Prisma writes in scripts:
+**A:** Yes, but you need:
+1. A PostgreSQL database
+2. `DATABASE_URL` environment variable set
+3. Run `pnpm live-snapshot` when games are active
 
-```bash
-grep -r "prisma\." apps/server/src/scripts/ | grep -E "(create|update|upsert|delete)"
-```
+**Note:** It won't do anything useful outside of NFL game windows since there's no live data to capture.
 
-### Q: Why does the web app generate Prisma client on build?
+### Q: What happened to the other 23 Prisma models?
 
-**A:** Legacy artifact. It's not needed anymore and can be removed from
-`apps/web/package.json`.
+**A:** They were removed as part of a database cleanup. The old README mentioned "26 models" but only these 3 are actively used. See commit history for details.
 
 ## Related Documentation
 
-- [PRISMA_CLEANUP_ANALYSIS.md](../../PRISMA_CLEANUP_ANALYSIS.md) - Detailed
-  analysis of database usage
 - [DEPLOYMENT_GUIDE.md](../../DEPLOYMENT_GUIDE.md) - Deployment architecture
 - [.cursorrules](../../.cursorrules) - Development conventions
+- [TASK_SYSTEM.md](../../TASK_SYSTEM.md) - Task management system
+
+## Notes
+
+This package is intentionally minimal:
+- **3 TypeScript files** - Only what's needed for live snapshots
+- **3 Prisma models** - Only time-series data Sleeper doesn't provide
+- **1 GitHub workflow** - Runs during NFL games only
+- **No HTTP server** - Despite the misleading name
+
+If you need to add more background jobs, this is the right place. If you need API endpoints for the web app, use Next.js API routes in `apps/web/src/app/api/` instead.
