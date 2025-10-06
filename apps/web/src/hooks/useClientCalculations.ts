@@ -11,52 +11,13 @@ import {
   PositionalScoring,
 } from '@/lib/client-calculations';
 import { CACHE_DURATIONS, LEAGUE_IDS, CURRENT_SEASON } from '@/lib/constants';
-
-interface SleeperLeague {
-  league_id: string;
-  name: string;
-  season: string;
-  settings: any;
-  scoring_settings: any;
-  roster_positions: string[];
-  playoff_week_start: number;
-}
-
-interface SleeperRoster {
-  roster_id: number;
-  owner_id: string;
-  players: string[];
-  starters: string[];
-  settings: any;
-}
-
-interface SleeperUser {
-  user_id: string;
-  username: string;
-  display_name: string;
-  avatar: string;
-  metadata: {
-    team_name?: string;
-  };
-}
-
-interface SleeperMatchup {
-  roster_id: number;
-  matchup_id: number;
-  points: number;
-  starters: string[];
-  starters_points: number[];
-  players: string[];
-  players_points: Record<string, number>;
-}
-
-interface SleeperPlayer {
-  player_id: string;
-  first_name: string;
-  last_name: string;
-  position: string;
-  team: string;
-}
+import type {
+  SleeperLeague,
+  SleeperRoster,
+  SleeperUser,
+  SleeperMatchup,
+  SleeperPlayer,
+} from '@gauntlet/types';
 
 /**
  * Fetch data directly from Sleeper API

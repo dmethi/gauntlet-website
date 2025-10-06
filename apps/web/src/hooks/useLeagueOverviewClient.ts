@@ -6,45 +6,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
 import { useClientTeamStats, useClientWeeklyAverages } from './useClientCalculations';
-
-interface SleeperLeague {
-  league_id: string;
-  name: string;
-  season: string;
-  settings: any;
-  scoring_settings: any;
-  roster_positions: string[];
-  playoff_week_start: number;
-  status: string;
-  sport: string;
-  total_rosters: number;
-}
-
-interface SleeperRoster {
-  roster_id: number;
-  owner_id: string;
-  players: string[];
-  starters: string[];
-  settings: {
-    wins: number;
-    losses: number;
-    ties: number;
-    total_points?: number;
-    fpts?: number;
-    fpts_against?: number;
-    division?: number;
-  };
-}
-
-interface SleeperUser {
-  user_id: string;
-  username: string;
-  display_name: string;
-  avatar: string;
-  metadata: {
-    team_name?: string;
-  };
-}
+import type { SleeperLeague, SleeperRoster, SleeperUser } from '@gauntlet/types';
 
 interface LeagueOverviewData {
   league: {
@@ -208,7 +170,7 @@ export function useLeagueOverviewClient(leagueId?: string): LeagueOverviewData {
         id: league.league_id,
         name: league.name,
         season: league.season,
-        playoff_week_start: league.playoff_week_start,
+        playoff_week_start: league.settings?.playoff_week_start || 15,
         settings: league.settings,
         rosters: transformedRosters,
       };
@@ -221,7 +183,7 @@ export function useLeagueOverviewClient(leagueId?: string): LeagueOverviewData {
   const formattedTeamStats =
     teamStats?.map(team => {
       const roster = leagueData?.rosters.find(r => r.id === team.rosterId);
-      const division = roster?.settings?.division;
+      const division = (roster?.settings as any)?.division;
 
       return {
         id: team.rosterId,

@@ -339,8 +339,8 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
       let total = 0;
       matchup.starters.forEach(playerId => {
         const stats = matchup.playerStats?.get(playerId);
-        if (stats?.def_sack) {
-          total += stats.def_sack;
+        if (stats?.def_st_sack) {
+          total += stats.def_st_sack;
         }
       });
       return total > 0 ? total : null;
@@ -361,8 +361,8 @@ export const WEEKLY_PLAYER_CATEGORIES: HallOfFameCategory[] = [
       let total = 0;
       matchup.starters.forEach(playerId => {
         const stats = matchup.playerStats?.get(playerId);
-        if (stats?.def_int) {
-          total += stats.def_int;
+        if (stats?.def_st_int) {
+          total += stats.def_st_int;
         }
       });
       return total > 0 ? total : null;

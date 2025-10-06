@@ -10,42 +10,15 @@
 /* eslint-disable no-console */
 
 import { createDraftClient } from './sleeper/unified-client';
-import type { SleeperLeague, SleeperRoster, SleeperUser } from './sleeper/types';
+import type {
+  SleeperLeague,
+  SleeperRoster,
+  SleeperUser,
+  SleeperPlayer,
+  SleeperDraft,
+  SleeperDraftPick,
+} from '@gauntlet/types';
 import type { DraftPick, MockDraft, Player, TeamRoster } from './mock-draft-data';
-
-// Sleeper API interfaces
-interface SleeperPlayer {
-  player_id: string;
-  full_name: string;
-  first_name: string;
-  last_name: string;
-  position: string;
-  team: string | null;
-  fantasy_positions: string[];
-  years_exp?: number;
-}
-
-interface SleeperDraft {
-  draft_id: string;
-  type: string; // 'auction' | 'snake' | etc.
-  status: string;
-  season: string;
-  settings: Record<string, any>;
-  league_id: string;
-  metadata: Record<string, any> | null;
-  slot_to_roster_id: number[];
-}
-
-interface SleeperDraftPick {
-  pick_no: number;
-  round: number;
-  roster_id: number;
-  player_id: string;
-  picked_by: string;
-  draft_id: string;
-  metadata: Record<string, any> | null;
-  is_keeper: boolean;
-}
 
 class DraftDataFetcher {
   private transformPlayer(sleeperPlayer: SleeperPlayer, rank: number, aav: number = 0): Player {

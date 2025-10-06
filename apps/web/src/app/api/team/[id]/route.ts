@@ -1,41 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
-
-interface SleeperUser {
-  user_id: string;
-  username: string;
-  display_name: string;
-  avatar?: string;
-  metadata?: {
-    team_name?: string;
-    [key: string]: any;
-  };
-}
-
-interface SleeperRoster {
-  roster_id: number;
-  owner_id: string;
-  settings?: {
-    division?: number;
-    [key: string]: any;
-  };
-}
-
-interface SleeperLeague {
-  league_id: string;
-  name: string;
-  season: string;
-  playoff_week_start?: number;
-  settings?: any;
-  scoring_settings?: any;
-}
-
-interface SleeperMatchup {
-  matchup_id: number;
-  roster_id: number;
-  points: number;
-  starters_points?: number[];
-}
+import type {
+  SleeperUser,
+  SleeperRoster,
+  SleeperLeague,
+  SleeperMatchup,
+} from '@gauntlet/types';
 
 async function fetchSleeperData<T>(endpoint: string): Promise<T> {
   const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
@@ -178,7 +148,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
         season: parseInt(league.season, 10),
         currentWeek: nflState.week,
         status: 'active' as const,
-        playoff_week_start: league.playoff_week_start || 15,
+        playoff_week_start: league.settings?.playoff_week_start || 15,
       },
       settings: roster.settings,
       owner: {

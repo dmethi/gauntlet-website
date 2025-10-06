@@ -17,103 +17,18 @@
 import type {
   NFLState,
   PlayerIndex,
+  PlayerStats,
   SleeperLeague,
   SleeperMatchup,
   SleeperRoster,
   SleeperUser,
-} from './types';
+} from '@gauntlet/types';
 
-// Export PlayerStats interface (moved from sleeper-stats-service.ts)
-export interface PlayerStats {
-  // Fantasy points
-  pts_ppr?: number;
-  pts_half_ppr?: number;
-  pts_std?: number;
+// Re-export PlayerStats for backwards compatibility
+export type { PlayerStats };
 
-  // Passing stats
-  pass_att?: number;
-  pass_cmp?: number;
-  pass_yd?: number;
-  pass_td?: number;
-  pass_int?: number;
-  pass_sack?: number;
-  pass_2pt?: number;
-  pass_fd?: number;
-  pass_cmp_40p?: number;
-  pass_td_40p?: number;
-  pass_td_50p?: number;
-  pass_yd_300p?: number;
-  pass_yd_400p?: number;
-  pass_rtg?: number;
-
-  // Rushing stats
-  rush_att?: number;
-  rush_yd?: number;
-  rush_td?: number;
-  rush_2pt?: number;
-  rush_fd?: number;
-  rush_40p?: number;
-  rush_td_40p?: number;
-  rush_td_50p?: number;
-  rush_yd_100p?: number;
-  rush_yd_200p?: number;
-
-  // Receiving stats
-  rec?: number;
-  rec_tgt?: number;
-  rec_yd?: number;
-  rec_td?: number;
-  rec_2pt?: number;
-  rec_fd?: number;
-  rec_40p?: number;
-  rec_td_40p?: number;
-  rec_td_50p?: number;
-  rec_yd_100p?: number;
-  rec_yd_200p?: number;
-
-  // Defensive stats
-  def_st_td?: number;
-  def_st_fum_rec?: number;
-  def_st_td_ret?: number;
-  def_int?: number;
-  def_int_td?: number;
-  def_sack?: number;
-  def_forced_fumble?: number;
-  idp_tkl?: number;
-  idp_tkl_solo?: number;
-  idp_tkl_ast?: number;
-  idp_tkl_loss?: number;
-
-  // Kicking stats
-  fgm?: number;
-  fga?: number;
-  fgm_0_19?: number;
-  fgm_20_29?: number;
-  fgm_30_39?: number;
-  fgm_40_49?: number;
-  fgm_50p?: number;
-  fgmiss?: number;
-  xpm?: number;
-  xpmiss?: number;
-
-  // Special teams
-  st_td?: number;
-  st_ff?: number;
-  st_tkl_solo?: number;
-  pr_td?: number;
-  kr_td?: number;
-
-  // Misc
-  fum?: number;
-  fum_lost?: number;
-  fum_rec_td?: number;
-  penalty?: number;
-  penalty_yd?: number;
-  snp?: number;
-  gms_active?: number;
-  gs?: number;
-  gp?: number;
-}
+// Note: PlayerStats definition moved to @gauntlet/types/sleeper.ts
+// Original interface had 100+ fields covering all NFL stat categories
 
 // Base API configuration
 const SLEEPER_API_BASE = 'https://api.sleeper.app/v1';

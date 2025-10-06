@@ -2,6 +2,53 @@
 
 This is a Next.js fantasy football platform for "The Gauntlet" league system with unique multi-league architecture. These rules encode all learned patterns, strategies, and domain knowledge for efficient development.
 
+## 🎯 Type System Standards
+
+### Central Type Definitions (MANDATORY)
+**ALWAYS import domain types from `@gauntlet/types`:**
+
+```typescript
+// ✅ CORRECT: Import from central package
+import type { 
+  SleeperLeague, 
+  SleeperRoster, 
+  SleeperMatchup,
+  SleeperUser,
+  SleeperPlayer,
+  PlayerStats,
+  NFLState,
+} from '@gauntlet/types';
+
+// ❌ WRONG: Redefining types locally
+interface SleeperLeague { ... }
+interface SleeperRoster { ... }
+```
+
+**Central Types Available:**
+- **Sleeper API Types** (`@gauntlet/types`):
+  - Core: `SleeperLeague`, `SleeperRoster`, `SleeperUser`, `SleeperMatchup`, `SleeperPlayer`
+  - Stats: `PlayerStats` (100+ stat fields), `NFLState`
+  - Draft: `SleeperDraft`, `SleeperDraftPick`, `SleeperTradedPick`
+  - Transactions: `SleeperTransaction`, `SleeperPlayoffMatchup`
+  - Multi-league keys: `TeamKey`, `MatchupKey`, `PlayerWeekKey`
+  - Type literals: `LeagueStatus`, `TransactionType`, `NFLPosition`, `RosterPosition`
+
+**When to Define Local Types:**
+- ✅ Component-specific props (e.g., `ButtonProps`, `ModalProps`)
+- ✅ Route-specific request/response shapes (API transformations)
+- ✅ UI-only state management types (view-specific state)
+- ✅ Temporary transformation types (internal to a single function/file)
+
+**When to Use Central Types:**
+- ✅ Sleeper API responses (all endpoints)
+- ✅ Cross-app domain models (shared between web/server/sim-engine)
+- ✅ Analytics data structures (used in multiple features)
+
+**Migration Complete:**
+- ❌ `apps/web/src/lib/sleeper/types.ts` - **DELETED** (use `@gauntlet/types`)
+- ✅ All apps now use centralized Sleeper types
+- ✅ 25+ duplicate definitions eliminated
+
 ## 🏗️ Critical Architecture Patterns
 
 ### Multi-League System Foundation

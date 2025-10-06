@@ -13,37 +13,7 @@ import {
 } from '@/lib/hall-of-fame-calculations';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
 import { calculationCache } from '@/lib/client-calculations';
-
-interface SleeperMatchup {
-  roster_id: number;
-  matchup_id: number;
-  points: number;
-  starters: string[];
-  starters_points?: number[];
-  players?: string[];
-  players_points?: Record<string, number>;
-  custom_points?: number;
-}
-
-interface SleeperRoster {
-  roster_id: number;
-  owner_id: string;
-}
-
-interface SleeperUser {
-  user_id: string;
-  username: string;
-  display_name: string;
-  metadata: {
-    team_name?: string;
-  };
-}
-
-interface SleeperLeague {
-  league_id: string;
-  name: string;
-  season: string;
-}
+import type { SleeperMatchup, SleeperRoster, SleeperUser, SleeperLeague } from '@gauntlet/types';
 
 /**
  * Fetch data from Sleeper API

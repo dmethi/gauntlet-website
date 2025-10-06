@@ -1,8 +1,6 @@
 #!/usr/bin/env tsx
 import prisma from '../../lib/prisma.js';
-
-type SleeperUser = { user_id: string; display_name: string; username?: string; metadata?: any };
-type SleeperRoster = { roster_id: number; owner_id?: string; metadata?: any };
+import type { SleeperUser, SleeperRoster } from '@gauntlet/types';
 
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url, {
