@@ -2,7 +2,7 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup  
-**Overall Progress**: 5.0% (3/60 tasks)
+**Overall Progress**: 6.7% (4/60 tasks)
 
 ---
 
@@ -10,11 +10,12 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (3)
+#### ✅ Completed (4)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
 - [x] **CLEAN-603**: Remove Unused Dependencies ⏱️ 15 min
+- [x] **CLEAN-604**: Fix package.json ⏱️ 15 min
 
 #### 🔄 In Progress (0)
 
@@ -46,8 +47,8 @@ _Ready to begin_
 | **HOOK**    | 8      | 0         | 0           | 8         |
 | **COMP**    | 10     | 0         | 0           | 10        |
 | **TEST**    | 6      | 0         | 0           | 6         |
-| **CLEAN**   | 6      | 3         | 0           | 3         |
-| **Total**   | **60** | **3**     | **0**       | **57**    |
+| **CLEAN**   | 6      | 4         | 0           | 2         |
+| **Total**   | **60** | **4**     | **0**       | **56**    |
 
 ---
 
@@ -129,6 +130,13 @@ background jobs package.
   - Updated package.json: only 4 runtime dependencies remaining
   - Cleaned lockfile: removed 737 packages
   - Build verified: TypeScript compilation passes with 0 errors
+
+- ✅ **CLEAN-604**: Fix package.json for Background Jobs
+  - Removed `"main": "dist/index.js"` field (HTTP server no longer exists)
+  - Added accurate description: "Background jobs for Gauntlet - live odds capture, database audit"
+  - Verified all scripts are properly defined (build, live-snapshot, audit:db, prisma:*)
+  - Confirmed script file paths exist and are correct
+  - TypeScript compilation passes with 0 errors
 
 ---
 

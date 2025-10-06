@@ -1,9 +1,9 @@
 {
   "name": "@gauntlet/server",
   "version": "0.1.0",
+  "description": "Background jobs for Gauntlet - live odds capture, database audit",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "postinstall": "prisma generate --schema=prisma/schema-historical.prisma",
