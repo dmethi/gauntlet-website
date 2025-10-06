@@ -173,8 +173,14 @@ async function captureIndividualMatchup(
     const team2Players = toDebugPlayers(sim.teams?.[1]?.players || []);
 
     // Extract the EXACT data your screenshot shows
-    const team1RawProj = sim.teams[0].players.reduce((sum, p) => sum + p.projection, 0);
-    const team2RawProj = sim.teams[1].players.reduce((sum, p) => sum + p.projection, 0);
+    const team1RawProj = sim.teams[0].players.reduce(
+      (sum: number, p: any) => sum + p.projection,
+      0
+    );
+    const team2RawProj = sim.teams[1].players.reduce(
+      (sum: number, p: any) => sum + p.projection,
+      0
+    );
 
     // Use FRESH current scores from direct Sleeper API instead of cached simulation data
     const team1CurrentScore =
@@ -195,7 +201,7 @@ async function captureIndividualMatchup(
     const team2Name = teamNames.get(sim.teams[1].rosterId) || `Roster ${sim.teams[1].rosterId}`;
 
     // Calculate money lines
-    const calculateMoneyLine = prob => {
+    const calculateMoneyLine = (prob: number) => {
       if (prob >= 0.5) {
         return -Math.round((prob / (1 - prob)) * 100);
       } else {
@@ -233,7 +239,10 @@ async function captureIndividualMatchup(
       team2Players,
     };
   } catch (error) {
-    console.error(`❌ Failed to capture matchup ${matchupId}:`, error.message);
+    console.error(
+      `❌ Failed to capture matchup ${matchupId}:`,
+      error instanceof Error ? error.message : String(error)
+    );
     return null;
   }
 }
@@ -344,7 +353,10 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<boolean
     return true; // Data saved
   } catch (error) {
     // Fallback logging if database fails
-    console.error(`❌ Failed to save M${snapshot.matchupId}:`, error.message);
+    console.error(
+      `❌ Failed to save M${snapshot.matchupId}:`,
+      error instanceof Error ? error.message : String(error)
+    );
     console.log(`📊 M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
     console.log(
       `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
