@@ -8,9 +8,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*",
-    "src/**/*.json"
-  ],
+  "include": ["src/**/*", "src/**/*.json"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

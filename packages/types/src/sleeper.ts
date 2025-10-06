@@ -1,9 +1,9 @@
 /**
  * Sleeper API Type Definitions
- * 
+ *
  * Comprehensive type definitions for the Sleeper API.
  * @see https://docs.sleeper.com/
- * 
+ *
  * These types represent the canonical structure of Sleeper API responses
  * and should be used consistently across all apps (web, server, sim-engine).
  */
@@ -136,7 +136,7 @@ export interface SleeperPlayer {
   injury_start_date?: string | null;
   fantasy_positions?: string[];
   active?: boolean;
-  
+
   // Additional fields from Sleeper API
   number?: number; // Jersey number
   college?: string;
@@ -147,7 +147,7 @@ export interface SleeperPlayer {
   search_rank?: number;
   birth_country?: string;
   hashtag?: string;
-  
+
   // External IDs
   espn_id?: string | number;
   yahoo_id?: string | number;
@@ -156,7 +156,7 @@ export interface SleeperPlayer {
   rotoworld_id?: number;
   sportradar_id?: string;
   stats_id?: string | number;
-  
+
   // Search fields
   search_first_name?: string;
   search_last_name?: string;
@@ -301,7 +301,7 @@ export interface SleeperPlayoffMatchup {
 /**
  * Player Stats - Comprehensive stats from Sleeper
  * @see https://docs.sleeper.com/ (stats endpoint)
- * 
+ *
  * Note: Sleeper provides weekly stats and projections for players.
  * Not all fields are present for all players (position-dependent).
  */
@@ -400,7 +400,7 @@ export interface PlayerStats {
   def_st_blk_kick?: number; // Blocked kick
   def_st_safety?: number; // Safety
   def_st_td_ret?: number; // Return TD
-  
+
   // Points allowed (DEF only)
   pts_allow?: number;
   pts_allow_0?: number;
@@ -410,7 +410,7 @@ export interface PlayerStats {
   pts_allow_21_27?: number;
   pts_allow_28_34?: number;
   pts_allow_35p?: number;
-  
+
   // Yards allowed (DEF only)
   yds_allow?: number;
 
@@ -442,12 +442,12 @@ export interface PlayerStats {
   off_snp?: number; // Offensive snaps
   def_snp?: number; // Defensive snaps
   st_snp?: number; // Special teams snaps
-  
+
   // Ownership/roster metadata
   pos_rank?: number; // Position rank for the week
   pos_rank_ppr?: number;
   pos_rank_half_ppr?: number;
-  
+
   // Additional metadata
   date?: string; // Date of stats
   week?: number; // Week number
@@ -514,7 +514,7 @@ export type NFLPosition = 'QB' | 'RB' | 'WR' | 'TE' | 'K' | 'DEF';
 /**
  * Roster positions (including FLEX, SUPER_FLEX, etc.)
  */
-export type RosterPosition = 
+export type RosterPosition =
   | NFLPosition
   | 'FLEX' // RB/WR/TE
   | 'SUPER_FLEX' // QB/RB/WR/TE
@@ -528,4 +528,3 @@ export type RosterPosition =
  * Season type
  */
 export type SeasonType = 'regular' | 'pre' | 'post';
-

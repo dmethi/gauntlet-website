@@ -1,6 +1,8 @@
 # Refactoring Example: manager-analysis.tsx
 
-This document shows a concrete before/after example of refactoring the `manager-analysis.tsx` component (1,625 lines) into an enterprise-ready structure.
+This document shows a concrete before/after example of refactoring the
+`manager-analysis.tsx` component (1,625 lines) into an enterprise-ready
+structure.
 
 ---
 
@@ -42,7 +44,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
     }
     return sorted;
   }, [filteredProfiles, sortConfig]);
-  
+
   // ... 15+ more useMemo hooks
 
   // 🔴 100+ lines of inline helper functions
@@ -65,7 +67,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
   const getClusterBadgeColor = (label: string) => {
     // ... color logic
   };
-  
+
   // ... 10+ more helper functions
 
   // 🔴 1000+ lines of JSX
@@ -111,6 +113,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 ```
 
 **Problems**:
+
 1. ❌ 1,625 lines in one file
 2. ❌ 50+ state variables
 3. ❌ 15+ useMemo hooks
@@ -173,7 +176,7 @@ apps/web/src/features/manager-analysis/
 
 ### 2. Main Component (120 lines)
 
-```typescript
+````typescript
 // apps/web/src/features/manager-analysis/components/ManagerAnalysis/ManagerAnalysis.tsx
 'use client';
 
@@ -187,13 +190,13 @@ import { useManagerSorting } from '../../hooks/useManagerSorting';
 
 /**
  * Displays comprehensive manager behavior analysis across draft leagues.
- * 
+ *
  * Includes cluster visualization, filtering, and detailed manager profiles
  * with sortable metrics.
- * 
+ *
  * @param props - Component props
  * @param props.analytics - Pre-computed manager analytics from draft engine
- * 
+ *
  * @example
  * ```tsx
  * <ManagerAnalysis analytics={draftAnalytics} />
@@ -201,16 +204,16 @@ import { useManagerSorting } from '../../hooks/useManagerSorting';
  */
 const ManagerAnalysis = (props: ManagerAnalysisProps) => {
   const { analytics } = props;
-  
+
   // State management
   const [selectedCluster, setSelectedCluster] = useState<string>('all');
-  
+
   // Custom hooks for business logic
   const { filteredProfiles, filterConfig, updateFilter } = useManagerFiltering({
     profiles: analytics.profiles,
     selectedCluster,
   });
-  
+
   const { sortedProfiles, sortConfig, handleSort } = useManagerSorting({
     profiles: filteredProfiles,
   });
@@ -218,7 +221,7 @@ const ManagerAnalysis = (props: ManagerAnalysisProps) => {
   return (
     <div className="space-y-6">
       {/* Cluster visualization */}
-      <ClusterVisualization 
+      <ClusterVisualization
         clusters={analytics.clusters}
         profiles={analytics.profiles}
         selectedCluster={selectedCluster}
@@ -226,7 +229,7 @@ const ManagerAnalysis = (props: ManagerAnalysisProps) => {
       />
 
       {/* Filters and table */}
-      <ManagerFilters 
+      <ManagerFilters
         selectedCluster={selectedCluster}
         onClusterChange={setSelectedCluster}
         filterConfig={filterConfig}
@@ -245,7 +248,7 @@ const ManagerAnalysis = (props: ManagerAnalysisProps) => {
 // Export memoized version with transparency
 const ManagerAnalysisMemo = memo(ManagerAnalysis);
 export { ManagerAnalysisMemo as ManagerAnalysis };
-```
+````
 
 ### 3. Custom Hook: useManagerSorting
 
@@ -268,27 +271,36 @@ interface UseManagerSortingReturn {
 
 /**
  * Handles sorting logic for manager profiles.
- * 
+ *
  * Provides sortable profiles with configurable sort direction toggling.
- * 
+ *
  * @param props - Hook props
  * @param props.profiles - Manager profiles to sort
  * @returns Sorted profiles, sort config, and sort handler
  */
-export const useManagerSorting = (props: UseManagerSortingProps): UseManagerSortingReturn => {
+export const useManagerSorting = (
+  props: UseManagerSortingProps
+): UseManagerSortingReturn => {
   const { profiles } = props;
-  
+
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
-  const handleSort = useCallback((key: SortKey) => {
-    let direction: 'asc' | 'desc' = 'desc';
-    
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'desc') {
-      direction = 'asc';
-    }
-    
-    setSortConfig({ key, direction });
-  }, [sortConfig]);
+  const handleSort = useCallback(
+    (key: SortKey) => {
+      let direction: 'asc' | 'desc' = 'desc';
+
+      if (
+        sortConfig &&
+        sortConfig.key === key &&
+        sortConfig.direction === 'desc'
+      ) {
+        direction = 'asc';
+      }
+
+      setSortConfig({ key, direction });
+    },
+    [sortConfig]
+  );
 
   const sortedProfiles = useMemo(() => {
     if (!sortConfig) return profiles;
@@ -368,7 +380,7 @@ import {
 
 /**
  * Table component displaying manager profiles with sortable columns.
- * 
+ *
  * @param props - Component props
  */
 const ManagerTable = (props: ManagerTableProps) => {
@@ -418,15 +430,15 @@ export { ManagerTableMemo as ManagerTable };
 
 ### 5. Utility Functions
 
-```typescript
+````typescript
 // apps/web/src/features/manager-analysis/utils/formatting.ts
 
 /**
  * Formats a number as USD currency without cents.
- * 
+ *
  * @param value - Numeric value to format
  * @returns Formatted currency string (e.g., "$100")
- * 
+ *
  * @example
  * ```typescript
  * formatCurrency(100.5) // "$100"
@@ -444,7 +456,7 @@ export const formatCurrency = (value: number): string => {
 
 /**
  * Formats a decimal as a percentage.
- * 
+ *
  * @param value - Decimal value (0-1)
  * @param decimals - Number of decimal places (default: 1)
  * @returns Formatted percentage string (e.g., "45.2%")
@@ -452,7 +464,7 @@ export const formatCurrency = (value: number): string => {
 export const formatPercentage = (value: number, decimals = 1): string => {
   return `${(value * 100).toFixed(decimals)}%`;
 };
-```
+````
 
 ```typescript
 // apps/web/src/features/manager-analysis/utils/formatting.test.ts
@@ -518,7 +530,7 @@ export interface SortConfig {
 /**
  * Valid sort keys for manager profiles
  */
-export type SortKey = 
+export type SortKey =
   | 'manager'
   | 'league'
   | 'gini'
@@ -582,8 +594,14 @@ export { ClusterVisualization } from './ClusterVisualization';
 // apps/web/src/features/manager-analysis/hooks/index.ts
 export { useManagerSorting } from './useManagerSorting';
 export { useManagerFiltering } from './useManagerFiltering';
-export type { UseManagerSortingProps, UseManagerSortingReturn } from './useManagerSorting';
-export type { UseManagerFilteringProps, UseManagerFilteringReturn } from './useManagerFiltering';
+export type {
+  UseManagerSortingProps,
+  UseManagerSortingReturn,
+} from './useManagerSorting';
+export type {
+  UseManagerFilteringProps,
+  UseManagerFilteringReturn,
+} from './useManagerFiltering';
 ```
 
 ### 8. Test Factory
@@ -638,7 +656,7 @@ const DEFAULT_PROFILE: ManagerProfile = {
 export const ManagerProfileFactory = {
   /**
    * Creates a manager profile with optional overrides
-   * 
+   *
    * @param overrides - Partial manager profile to merge with defaults
    * @returns Complete ManagerProfile object
    */
@@ -649,7 +667,10 @@ export const ManagerProfileFactory = {
   /**
    * Creates multiple manager profiles
    */
-  createMany: (count: number, overrides: Partial<ManagerProfile> = []): ManagerProfile[] => {
+  createMany: (
+    count: number,
+    overrides: Partial<ManagerProfile> = []
+  ): ManagerProfile[] => {
     return Array.from({ length: count }, (_, i) =>
       ManagerProfileFactory.create({
         manager: `Manager ${i + 1}`,
@@ -683,44 +704,49 @@ export const ManagerProfileFactory = {
 
 ## Results: Metrics Comparison
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Total Lines** | 1,625 | ~1,200 | 🟢 -26% (spread across 15+ files) |
-| **Largest File** | 1,625 lines | 200 lines | 🟢 -88% |
-| **Files** | 1 | 17 | 🟢 Better organization |
-| **Components** | 1 monolith | 7 focused | 🟢 Single Responsibility |
-| **Custom Hooks** | 0 | 2 | 🟢 Reusable logic |
-| **Utility Functions** | Inline | 6 functions | 🟢 Testable |
-| **Test Coverage** | 0% | 80%+ | 🟢 +80% |
-| **Type Files** | 0 | 3 | 🟢 Clear interfaces |
-| **JSDoc Comments** | 0 | 15+ | 🟢 Self-documenting |
-| **Memoization** | None | All components | 🟢 Performance |
+| Metric                | Before      | After          | Improvement                       |
+| --------------------- | ----------- | -------------- | --------------------------------- |
+| **Total Lines**       | 1,625       | ~1,200         | 🟢 -26% (spread across 15+ files) |
+| **Largest File**      | 1,625 lines | 200 lines      | 🟢 -88%                           |
+| **Files**             | 1           | 17             | 🟢 Better organization            |
+| **Components**        | 1 monolith  | 7 focused      | 🟢 Single Responsibility          |
+| **Custom Hooks**      | 0           | 2              | 🟢 Reusable logic                 |
+| **Utility Functions** | Inline      | 6 functions    | 🟢 Testable                       |
+| **Test Coverage**     | 0%          | 80%+           | 🟢 +80%                           |
+| **Type Files**        | 0           | 3              | 🟢 Clear interfaces               |
+| **JSDoc Comments**    | 0           | 15+            | 🟢 Self-documenting               |
+| **Memoization**       | None        | All components | 🟢 Performance                    |
 
 ---
 
 ## Benefits Achieved
 
 ### 1. Maintainability ✅
+
 - **Single Responsibility**: Each file has one clear purpose
 - **Easy Navigation**: Feature-based folders make code easy to find
 - **Clear Dependencies**: Import paths show relationships
 
 ### 2. Testability ✅
+
 - **Isolated Logic**: Hooks and utils are independently testable
 - **Test Factories**: Consistent test data generation
 - **Full Coverage**: Every function has tests
 
 ### 3. Reusability ✅
+
 - **Custom Hooks**: `useManagerSorting` can be used elsewhere
 - **Utility Functions**: `formatCurrency` is shared across features
 - **Sub-components**: `ClusterBadge` can be used independently
 
 ### 4. Performance ✅
+
 - **Memoization**: All components memoized to prevent re-renders
 - **Computed Values**: Moved to custom hooks with proper dependencies
 - **Code Splitting**: Smaller components = better tree-shaking
 
 ### 5. Developer Experience ✅
+
 - **Type Safety**: Explicit types for all props and returns
 - **JSDoc**: Inline documentation with examples
 - **Storybook**: Visual component development
@@ -731,40 +757,47 @@ export const ManagerProfileFactory = {
 ## Migration Strategy
 
 ### Step 1: Create Folder Structure
+
 ```bash
 mkdir -p apps/web/src/features/manager-analysis/{components,hooks,utils,__tests__/factories}
 mkdir -p apps/web/src/features/manager-analysis/components/{ManagerAnalysis,ManagerTable,ManagerFilters,ClusterVisualization}
 ```
 
 ### Step 2: Extract Types First
+
 - Move all interfaces to `types.ts`
 - Update imports in original file
 - Verify no TypeScript errors
 
 ### Step 3: Extract Utils & Test
+
 - Move helper functions to `utils/`
 - Write tests for each utility
 - Update imports
 
 ### Step 4: Extract Hooks & Test
+
 - Extract sorting logic to `useManagerSorting`
 - Extract filtering logic to `useManagerFiltering`
 - Write hook tests
 - Update main component
 
 ### Step 5: Extract Sub-components
+
 - Create `ManagerTable` component
 - Create `ManagerFilters` component
 - Create `ClusterVisualization` component
 - Update main component to use sub-components
 
 ### Step 6: Memoize & Polish
+
 - Add `memo()` to all components
 - Add JSDoc comments
 - Create Storybook stories
 - Final testing pass
 
 ### Step 7: Update Imports
+
 - Update route files to use new path
 - Remove old file
 - Run full test suite
@@ -782,8 +815,8 @@ mkdir -p apps/web/src/features/manager-analysis/components/{ManagerAnalysis,Mana
 7. **Memoize components** - Prevent unnecessary re-renders
 
 This pattern can be applied to:
+
 - ✅ `manager-analytics.ts` (1,347 lines) → 15+ files
 - ✅ `draft-analytics.ts` (650 lines) → 10+ files
 - ✅ `hooks.ts` (726 lines) → 15+ hooks
 - ✅ All large components in the codebase
-

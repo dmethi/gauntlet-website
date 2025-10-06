@@ -24,10 +24,7 @@
           "width": 500,
           "height": 500,
           "alt": "",
-          "rel": [
-            "full",
-            "default"
-          ],
+          "rel": ["full", "default"],
           "lastUpdated": "2018-06-05T12:07Z"
         },
         {
@@ -35,10 +32,7 @@
           "width": 500,
           "height": 500,
           "alt": "",
-          "rel": [
-            "full",
-            "dark"
-          ],
+          "rel": ["full", "dark"],
           "lastUpdated": "2024-07-22T16:53Z"
         }
       ],
@@ -324,11 +318,7 @@
         "isActive": true,
         "links": [
           {
-            "rel": [
-              "clubhouse",
-              "desktop",
-              "team"
-            ],
+            "rel": ["clubhouse", "desktop", "team"],
             "href": "https://www.espn.com/nfl/team/_/name/atl/atlanta-falcons",
             "text": "Clubhouse",
             "isExternal": false,
@@ -348,11 +338,7 @@
         "isActive": true,
         "links": [
           {
-            "rel": [
-              "clubhouse",
-              "desktop",
-              "team"
-            ],
+            "rel": ["clubhouse", "desktop", "team"],
             "href": "https://www.espn.com/nfl/team/_/name/chi/chicago-bears",
             "text": "Clubhouse",
             "isExternal": false,
@@ -372,11 +358,7 @@
         "isActive": true,
         "links": [
           {
-            "rel": [
-              "clubhouse",
-              "desktop",
-              "team"
-            ],
+            "rel": ["clubhouse", "desktop", "team"],
             "href": "https://www.espn.com/nfl/team/_/name/gb/green-bay-packers",
             "text": "Clubhouse",
             "isExternal": false,
@@ -396,11 +378,7 @@
         "isActive": true,
         "links": [
           {
-            "rel": [
-              "clubhouse",
-              "desktop",
-              "team"
-            ],
+            "rel": ["clubhouse", "desktop", "team"],
             "href": "https://www.espn.com/nfl/team/_/name/pit/pittsburgh-steelers",
             "text": "Clubhouse",
             "isExternal": false,
@@ -474,44 +452,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/jax/jacksonville-jaguars",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/jax/jacksonville-jaguars",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/jax/jacksonville-jaguars",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/jax",
                     "text": "Schedule",
                     "isExternal": false,
@@ -557,11 +519,7 @@
                         "shortName": "T. Lawrence",
                         "links": [
                           {
-                            "rel": [
-                              "playercard",
-                              "desktop",
-                              "athlete"
-                            ],
+                            "rel": ["playercard", "desktop", "athlete"],
                             "href": "https://www.espn.com/nfl/player/_/id/4360310/trevor-lawrence"
                           }
                         ],
@@ -597,11 +555,7 @@
                         "shortName": "T. Etienne Jr.",
                         "links": [
                           {
-                            "rel": [
-                              "playercard",
-                              "desktop",
-                              "athlete"
-                            ],
+                            "rel": ["playercard", "desktop", "athlete"],
                             "href": "https://www.espn.com/nfl/player/_/id/4239996/travis-etienne-jr"
                           }
                         ],
@@ -637,11 +591,7 @@
                         "shortName": "B. Strange",
                         "links": [
                           {
-                            "rel": [
-                              "playercard",
-                              "desktop",
-                              "athlete"
-                            ],
+                            "rel": ["playercard", "desktop", "athlete"],
                             "href": "https://www.espn.com/nfl/player/_/id/4430539/brenton-strange"
                           }
                         ],
@@ -685,44 +635,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/kc/kansas-city-chiefs",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/kc/kansas-city-chiefs",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/kc/kansas-city-chiefs",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/kc",
                     "text": "Schedule",
                     "isExternal": false,
@@ -768,11 +702,7 @@
                         "shortName": "P. Mahomes",
                         "links": [
                           {
-                            "rel": [
-                              "playercard",
-                              "desktop",
-                              "athlete"
-                            ],
+                            "rel": ["playercard", "desktop", "athlete"],
                             "href": "https://www.espn.com/nfl/player/_/id/3139477/patrick-mahomes"
                           }
                         ],
@@ -808,11 +738,7 @@
                         "shortName": "P. Mahomes",
                         "links": [
                           {
-                            "rel": [
-                              "playercard",
-                              "desktop",
-                              "athlete"
-                            ],
+                            "rel": ["playercard", "desktop", "athlete"],
                             "href": "https://www.espn.com/nfl/player/_/id/3139477/patrick-mahomes"
                           }
                         ],
@@ -848,11 +774,7 @@
                         "shortName": "H. Brown",
                         "links": [
                           {
-                            "rel": [
-                              "playercard",
-                              "desktop",
-                              "athlete"
-                            ],
+                            "rel": ["playercard", "desktop", "athlete"],
                             "href": "https://www.espn.com/nfl/player/_/id/4241372/hollywood-brown"
                           }
                         ],
@@ -894,10 +816,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "ABC",
-                "ESPN"
-              ]
+              "names": ["ABC", "ESPN"]
             }
           ],
           "leaders": [
@@ -917,11 +836,7 @@
                     "shortName": "P. Mahomes",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3139477/patrick-mahomes"
                       }
                     ],
@@ -957,11 +872,7 @@
                     "shortName": "T. Etienne Jr.",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4239996/travis-etienne-jr"
                       }
                     ],
@@ -997,11 +908,7 @@
                     "shortName": "H. Brown",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4241372/hollywood-brown"
                       }
                     ],
@@ -1088,15 +995,11 @@
                 "logos": [
                   {
                     "href": "https://a.espncdn.com/i/espnbet/ESPN_Bet_Sportsbook_Light.svg",
-                    "rel": [
-                      "light"
-                    ]
+                    "rel": ["light"]
                   },
                   {
                     "href": "https://a.espncdn.com/i/espnbet/ESPN_Bet_Sportsbook_Dark.svg",
-                    "rel": [
-                      "dark"
-                    ]
+                    "rel": ["dark"]
                   }
                 ]
               },
@@ -1132,12 +1035,7 @@
               "links": [
                 {
                   "language": "en-US",
-                  "rel": [
-                    "home",
-                    "desktop",
-                    "bets",
-                    "espn-bet"
-                  ],
+                  "rel": ["home", "desktop", "bets", "espn-bet"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=06a72f9c-bf93-4915-8329-b409d03f5a52&odds_numerator[0]=53&odds_denominator[0]=20",
                   "text": "Home Bet",
                   "shortText": "Home Bet",
@@ -1156,12 +1054,7 @@
                 },
                 {
                   "language": "en-US",
-                  "rel": [
-                    "away",
-                    "desktop",
-                    "bets",
-                    "espn-bet"
-                  ],
+                  "rel": ["away", "desktop", "bets", "espn-bet"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=0682ac49-f53c-42e4-b914-a4db96e03cec&odds_numerator[0]=59&odds_denominator[0]=39",
                   "text": "Away Bet",
                   "shortText": "Away Bet",
@@ -1180,11 +1073,7 @@
                 },
                 {
                   "language": "en-US",
-                  "rel": [
-                    "homeSpread",
-                    "desktop",
-                    "bets"
-                  ],
+                  "rel": ["homeSpread", "desktop", "bets"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=c42db1e5-523e-4cfa-a2d5-e5ec384dbc27&odds_numerator[0]=21&odds_denominator[0]=11",
                   "text": "Home Point Spread",
                   "shortText": "Home Point Spread",
@@ -1204,11 +1093,7 @@
                 },
                 {
                   "language": "en-US",
-                  "rel": [
-                    "awaySpread",
-                    "desktop",
-                    "bets"
-                  ],
+                  "rel": ["awaySpread", "desktop", "bets"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=7afa9284-79f3-4a23-a8e3-88b2fbbc1a13&odds_numerator[0]=21&odds_denominator[0]=11",
                   "text": "Away Point Spread",
                   "shortText": "Away Point Spread",
@@ -1228,11 +1113,7 @@
                 },
                 {
                   "language": "en-US",
-                  "rel": [
-                    "over",
-                    "desktop",
-                    "bets"
-                  ],
+                  "rel": ["over", "desktop", "bets"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=e36b6a0e-420a-40b8-88b2-89bc3ed264ed&odds_numerator[0]=21&odds_denominator[0]=11",
                   "text": "Over Odds",
                   "shortText": "Over Odds",
@@ -1252,11 +1133,7 @@
                 },
                 {
                   "language": "en-US",
-                  "rel": [
-                    "under",
-                    "desktop",
-                    "bets"
-                  ],
+                  "rel": ["under", "desktop", "bets"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=2d348389-407e-4ac2-90bd-2cb77ede5af0&odds_numerator[0]=21&odds_denominator[0]=11",
                   "text": "Under Odds",
                   "shortText": "Under Odds",
@@ -1276,11 +1153,7 @@
                 },
                 {
                   "language": "en-US",
-                  "rel": [
-                    "game",
-                    "desktop",
-                    "bets"
-                  ],
+                  "rel": ["game", "desktop", "bets"],
                   "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6",
                   "text": "See More on ESPN BET Sportsbook",
                   "shortText": "Game",
@@ -3253,10 +3126,7 @@
                   "startTime": "2025-10-07T00:15Z",
                   "payoutText": "$10.00 pays $62.02",
                   "displayOrder": 16,
-                  "locations": [
-                    "FEATURED_BET_LOCATION_HOME",
-                    "FEATURED_BET_LOCATION-PARLAY_LOUNGE"
-                  ],
+                  "locations": ["FEATURED_BET_LOCATION_HOME", "FEATURED_BET_LOCATION-PARLAY_LOUNGE"],
                   "legCount": 3,
                   "legs": [
                     {
@@ -3431,12 +3301,7 @@
                     "odds": "+165",
                     "link": {
                       "language": "en-US",
-                      "rel": [
-                        "home",
-                        "desktop",
-                        "bets",
-                        "espn-bet"
-                      ],
+                      "rel": ["home", "desktop", "bets", "espn-bet"],
                       "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=06a72f9c-bf93-4915-8329-b409d03f5a52&odds_numerator[0]=53&odds_denominator[0]=20",
                       "text": "Home Bet",
                       "shortText": "Home Bet",
@@ -3463,12 +3328,7 @@
                     "odds": "-195",
                     "link": {
                       "language": "en-US",
-                      "rel": [
-                        "away",
-                        "desktop",
-                        "bets",
-                        "espn-bet"
-                      ],
+                      "rel": ["away", "desktop", "bets", "espn-bet"],
                       "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=0682ac49-f53c-42e4-b914-a4db96e03cec&odds_numerator[0]=59&odds_denominator[0]=39",
                       "text": "Away Bet",
                       "shortText": "Away Bet",
@@ -3500,11 +3360,7 @@
                     "odds": "-110",
                     "link": {
                       "language": "en-US",
-                      "rel": [
-                        "homeSpread",
-                        "desktop",
-                        "bets"
-                      ],
+                      "rel": ["homeSpread", "desktop", "bets"],
                       "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=c42db1e5-523e-4cfa-a2d5-e5ec384dbc27&odds_numerator[0]=21&odds_denominator[0]=11",
                       "text": "Home Point Spread",
                       "shortText": "Home Point Spread",
@@ -3534,11 +3390,7 @@
                     "odds": "-110",
                     "link": {
                       "language": "en-US",
-                      "rel": [
-                        "awaySpread",
-                        "desktop",
-                        "bets"
-                      ],
+                      "rel": ["awaySpread", "desktop", "bets"],
                       "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=7afa9284-79f3-4a23-a8e3-88b2fbbc1a13&odds_numerator[0]=21&odds_denominator[0]=11",
                       "text": "Away Point Spread",
                       "shortText": "Away Point Spread",
@@ -3572,11 +3424,7 @@
                     "odds": "-110",
                     "link": {
                       "language": "en-US",
-                      "rel": [
-                        "over",
-                        "desktop",
-                        "bets"
-                      ],
+                      "rel": ["over", "desktop", "bets"],
                       "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=e36b6a0e-420a-40b8-88b2-89bc3ed264ed&odds_numerator[0]=21&odds_denominator[0]=11",
                       "text": "Over Odds",
                       "shortText": "Over Odds",
@@ -3606,11 +3454,7 @@
                     "odds": "-110",
                     "link": {
                       "language": "en-US",
-                      "rel": [
-                        "under",
-                        "desktop",
-                        "bets"
-                      ],
+                      "rel": ["under", "desktop", "bets"],
                       "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6&market_selection_id[0]=2d348389-407e-4ac2-90bd-2cb77ede5af0&odds_numerator[0]=21&odds_denominator[0]=11",
                       "text": "Under Odds",
                       "shortText": "Under Odds",
@@ -3637,11 +3481,7 @@
               },
               "link": {
                 "language": "en-US",
-                "rel": [
-                  "game",
-                  "desktop",
-                  "bets"
-                ],
+                "rel": ["game", "desktop", "bets"],
                 "href": "https://espnbet.app.link/integrations?%243p=a_espn&clr=espnbettingintegration&$canonical_url=/sport/football/organization/united-states/competition/nfl/event/f311840d-fb02-4d4c-aaa4-d5710f4af8d6",
                 "text": "See More on ESPN BET Sportsbook",
                 "shortText": "Game",
@@ -3675,11 +3515,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772814/chiefs-jaguars",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -3694,9 +3530,7 @@
         "conditionId": "7",
         "link": {
           "language": "en-US",
-          "rel": [
-            "32202"
-          ],
+          "rel": ["32202"],
           "href": "http://www.accuweather.com/en/us/everbank-stadium-fl/32202/hourly-weather-forecast/53553_poi?day=1&hbhhour=20&lang=en-us",
           "text": "Weather",
           "shortText": "Weather",
@@ -3782,44 +3616,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/lar/los-angeles-rams",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/lar/los-angeles-rams",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/lar/los-angeles-rams",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/lar",
                     "text": "Schedule",
                     "isExternal": false,
@@ -3899,44 +3717,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/sf/san-francisco-49ers",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/sf/san-francisco-49ers",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/sf/san-francisco-49ers",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/sf",
                     "text": "Schedule",
                     "isExternal": false,
@@ -4014,9 +3816,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "Prime Video"
-              ]
+              "names": ["Prime Video"]
             }
           ],
           "leaders": [
@@ -4036,11 +3836,7 @@
                     "shortName": "M. Stafford",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/12483/matthew-stafford"
                       }
                     ],
@@ -4076,11 +3872,7 @@
                     "shortName": "K. Williams",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4430737/kyren-williams"
                       }
                     ],
@@ -4116,11 +3908,7 @@
                     "shortName": "K. Bourne",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3045523/kendrick-bourne"
                       }
                     ],
@@ -4178,11 +3966,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772939/49ers-rams",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -4191,11 +3975,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772939",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -4204,11 +3984,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772939",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -4217,11 +3993,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772939",
           "text": "Recap",
           "shortText": "Recap",
@@ -4307,44 +4079,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/cle/cleveland-browns",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/cle/cleveland-browns",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/cle/cleveland-browns",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/cle",
                     "text": "Schedule",
                     "isExternal": false,
@@ -4419,44 +4175,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/min/minnesota-vikings",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/min/minnesota-vikings",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/min/minnesota-vikings",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/min",
                     "text": "Schedule",
                     "isExternal": false,
@@ -4533,10 +4273,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "NFL Net",
-                "NFL+"
-              ]
+              "names": ["NFL Net", "NFL+"]
             }
           ],
           "leaders": [
@@ -4556,11 +4293,7 @@
                     "shortName": "C. Wentz",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/2573079/carson-wentz"
                       }
                     ],
@@ -4596,11 +4329,7 @@
                     "shortName": "Q. Judkins",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins"
                       }
                     ],
@@ -4636,11 +4365,7 @@
                     "shortName": "J. Jefferson",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4262921/justin-jefferson"
                       }
                     ],
@@ -4716,13 +4441,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/b256d49e04ec4c2e962dcd9de9980ef6768/b256d49e04ec4c2e962dcd9de9980ef6768.jpg",
               "links": {
@@ -4824,13 +4543,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/b752493b-6394-4795-9074-1a106196a24e/b752493b-6394-4795-9074-1a106196a24e.jpg",
               "links": {
@@ -4926,11 +4639,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772633/vikings-browns",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -4939,11 +4648,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772633",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -4952,10 +4657,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772633",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -4964,11 +4666,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772633",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -5054,44 +4752,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/ind/indianapolis-colts",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/ind/indianapolis-colts",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/ind/indianapolis-colts",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/ind",
                     "text": "Schedule",
                     "isExternal": false,
@@ -5166,44 +4848,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/lv/las-vegas-raiders",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/lv/las-vegas-raiders",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/lv/las-vegas-raiders",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/lv",
                     "text": "Schedule",
                     "isExternal": false,
@@ -5275,9 +4941,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "FOX"
-              ]
+              "names": ["FOX"]
             }
           ],
           "leaders": [
@@ -5297,11 +4961,7 @@
                     "shortName": "G. Smith",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/15864/geno-smith"
                       }
                     ],
@@ -5337,11 +4997,7 @@
                     "shortName": "A. Jeanty",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4890973/ashton-jeanty"
                       }
                     ],
@@ -5377,11 +5033,7 @@
                     "shortName": "T. Tucker",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4428718/tre-tucker"
                       }
                     ],
@@ -5442,13 +5094,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/a2af2b1a-6a78-4052-895d-24cc720cf69d/a2af2b1a-6a78-4052-895d-24cc720cf69d.jpg",
               "links": {
@@ -5557,13 +5203,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -5646,11 +5286,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772851/raiders-colts",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -5659,11 +5295,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772851",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -5672,10 +5304,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772851",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -5684,11 +5313,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772851",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -5697,11 +5322,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772851",
           "text": "Recap",
           "shortText": "Recap",
@@ -5787,44 +5408,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/no/new-orleans-saints",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/no/new-orleans-saints",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/no/new-orleans-saints",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/no",
                     "text": "Schedule",
                     "isExternal": false,
@@ -5899,44 +5504,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/nyg/new-york-giants",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/nyg/new-york-giants",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/nyg/new-york-giants",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/nyg",
                     "text": "Schedule",
                     "isExternal": false,
@@ -6008,9 +5597,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "CBS"
-              ]
+              "names": ["CBS"]
             }
           ],
           "leaders": [
@@ -6030,11 +5617,7 @@
                     "shortName": "S. Rattler",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4426339/spencer-rattler"
                       }
                     ],
@@ -6070,11 +5653,7 @@
                     "shortName": "C. Skattebo",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4696981/cam-skattebo"
                       }
                     ],
@@ -6110,11 +5689,7 @@
                     "shortName": "R. Shaheed",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4032473/rashid-shaheed"
                       }
                     ],
@@ -6175,13 +5750,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/3a3128ab82fb4d728ecb4ba38736b60e963/3a3128ab82fb4d728ecb4ba38736b60e963.jpg",
               "links": {
@@ -6286,13 +5855,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/e48c9bdd-81d6-4527-b56b-df813bf6e32f/e48c9bdd-81d6-4527-b56b-df813bf6e32f.jpg",
               "links": {
@@ -6401,13 +5964,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -6490,11 +6047,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772744/giants-saints",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -6503,11 +6056,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772744",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -6516,10 +6065,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772744",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -6528,11 +6074,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772744",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -6541,11 +6083,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772744",
           "text": "Recap",
           "shortText": "Recap",
@@ -6631,44 +6169,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/nyj/new-york-jets",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/nyj/new-york-jets",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/nyj/new-york-jets",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/nyj",
                     "text": "Schedule",
                     "isExternal": false,
@@ -6743,44 +6265,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/dal/dallas-cowboys",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/dal/dallas-cowboys",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/dal/dallas-cowboys",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/dal",
                     "text": "Schedule",
                     "isExternal": false,
@@ -6852,9 +6358,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "FOX"
-              ]
+              "names": ["FOX"]
             }
           ],
           "leaders": [
@@ -6874,11 +6378,7 @@
                     "shortName": "J. Fields",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4362887/justin-fields"
                       }
                     ],
@@ -6914,11 +6414,7 @@
                     "shortName": "J. Williams",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4361579/javonte-williams"
                       }
                     ],
@@ -6954,11 +6450,7 @@
                     "shortName": "R. Flournoy",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/5083754/ryan-flournoy"
                       }
                     ],
@@ -7019,13 +6511,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/a8156e55-2353-4636-b3d1-72fd7253faaf/a8156e55-2353-4636-b3d1-72fd7253faaf.jpg",
               "links": {
@@ -7134,13 +6620,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -7223,11 +6703,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772850/cowboys-jets",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -7236,11 +6712,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772850",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -7249,10 +6721,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772850",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -7261,11 +6730,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772850",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -7274,11 +6739,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772850",
           "text": "Recap",
           "shortText": "Recap",
@@ -7364,44 +6825,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/phi/philadelphia-eagles",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/phi/philadelphia-eagles",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/phi/philadelphia-eagles",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/phi",
                     "text": "Schedule",
                     "isExternal": false,
@@ -7476,44 +6921,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/den/denver-broncos",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/den/denver-broncos",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/den/denver-broncos",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/den",
                     "text": "Schedule",
                     "isExternal": false,
@@ -7585,9 +7014,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "CBS"
-              ]
+              "names": ["CBS"]
             }
           ],
           "leaders": [
@@ -7607,11 +7034,7 @@
                     "shortName": "J. Hurts",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4040715/jalen-hurts"
                       }
                     ],
@@ -7647,11 +7070,7 @@
                     "shortName": "J.K. Dobbins",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4241985/jk-dobbins"
                       }
                     ],
@@ -7687,11 +7106,7 @@
                     "shortName": "D. Smith",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4241478/devonta-smith"
                       }
                     ],
@@ -7752,13 +7167,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/8e3fa1a4-08bf-4314-8c8e-4d01ac62f8ab/8e3fa1a4-08bf-4314-8c8e-4d01ac62f8ab.jpg",
               "links": {
@@ -7863,13 +7272,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/d542f19e8f5e4083b7cb1a187a3d9ff21019/d542f19e8f5e4083b7cb1a187a3d9ff21019.jpg",
               "links": {
@@ -7974,13 +7377,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/57cfba95-18ec-4cbc-a135-2ee9b4a4db4b/57cfba95-18ec-4cbc-a135-2ee9b4a4db4b.jpg",
               "links": {
@@ -8089,13 +7486,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -8178,11 +7569,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772745/broncos-eagles",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -8191,11 +7578,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772745",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -8204,10 +7587,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772745",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -8216,11 +7596,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772745",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -8229,11 +7605,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772745",
           "text": "Recap",
           "shortText": "Recap",
@@ -8319,44 +7691,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/car/carolina-panthers",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/car/carolina-panthers",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/car/carolina-panthers",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/car",
                     "text": "Schedule",
                     "isExternal": false,
@@ -8431,44 +7787,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/mia/miami-dolphins",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/mia/miami-dolphins",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/mia/miami-dolphins",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/mia",
                     "text": "Schedule",
                     "isExternal": false,
@@ -8540,9 +7880,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "FOX"
-              ]
+              "names": ["FOX"]
             }
           ],
           "leaders": [
@@ -8562,11 +7900,7 @@
                     "shortName": "T. Tagovailoa",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4241479/tua-tagovailoa"
                       }
                     ],
@@ -8602,11 +7936,7 @@
                     "shortName": "R. Dowdle",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4038815/rico-dowdle"
                       }
                     ],
@@ -8642,11 +7972,7 @@
                     "shortName": "J. Waddle",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4372016/jaylen-waddle"
                       }
                     ],
@@ -8707,13 +8033,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/f82762a2-8076-497d-90e6-a603043e1aa5/f82762a2-8076-497d-90e6-a603043e1aa5.jpg",
               "links": {
@@ -8822,13 +8142,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -8911,11 +8225,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772852/dolphins-panthers",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -8924,11 +8234,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772852",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -8937,10 +8243,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772852",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -8949,11 +8252,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772852",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -8962,11 +8261,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772852",
           "text": "Recap",
           "shortText": "Recap",
@@ -9052,44 +8347,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/bal/baltimore-ravens",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/bal/baltimore-ravens",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/bal/baltimore-ravens",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/bal",
                     "text": "Schedule",
                     "isExternal": false,
@@ -9164,44 +8443,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/hou/houston-texans",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/hou/houston-texans",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/hou/houston-texans",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/hou",
                     "text": "Schedule",
                     "isExternal": false,
@@ -9273,9 +8536,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "CBS"
-              ]
+              "names": ["CBS"]
             }
           ],
           "leaders": [
@@ -9295,11 +8556,7 @@
                     "shortName": "C.J. Stroud",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4432577/cj-stroud"
                       }
                     ],
@@ -9335,11 +8592,7 @@
                     "shortName": "N. Chubb",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3128720/nick-chubb"
                       }
                     ],
@@ -9375,11 +8628,7 @@
                     "shortName": "Z. Flowers",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4429615/zay-flowers"
                       }
                     ],
@@ -9440,13 +8689,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/1e0a4ebea1b9479380c35c007605e664990/1e0a4ebea1b9479380c35c007605e664990.jpg",
               "links": {
@@ -9551,13 +8794,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/58342deb-3fed-498a-b997-27df7f5b73c3/58342deb-3fed-498a-b997-27df7f5b73c3.jpg",
               "links": {
@@ -9666,13 +8903,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -9755,11 +8986,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772743/texans-ravens",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -9768,11 +8995,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772743",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -9781,10 +9004,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772743",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -9793,11 +9013,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772743",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -9806,11 +9022,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772743",
           "text": "Recap",
           "shortText": "Recap",
@@ -9896,44 +9108,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/ari/arizona-cardinals",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/ari/arizona-cardinals",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/ari/arizona-cardinals",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/ari",
                     "text": "Schedule",
                     "isExternal": false,
@@ -10008,44 +9204,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/ten/tennessee-titans",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/ten/tennessee-titans",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/ten/tennessee-titans",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/ten",
                     "text": "Schedule",
                     "isExternal": false,
@@ -10117,9 +9297,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "CBS"
-              ]
+              "names": ["CBS"]
             }
           ],
           "leaders": [
@@ -10139,11 +9317,7 @@
                     "shortName": "C. Ward",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4688380/cam-ward"
                       }
                     ],
@@ -10179,11 +9353,7 @@
                     "shortName": "E. Demercado",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4362478/emari-demercado"
                       }
                     ],
@@ -10219,11 +9389,7 @@
                     "shortName": "C. Ridley",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3925357/calvin-ridley"
                       }
                     ],
@@ -10284,13 +9450,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/fc0130d5d9b54b24b6aa33a21ec6cdf71189/fc0130d5d9b54b24b6aa33a21ec6cdf71189.jpg",
               "links": {
@@ -10395,13 +9555,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/ee31990b-6ac5-435e-a09a-697d63d3f924/ee31990b-6ac5-435e-a09a-697d63d3f924.jpg",
               "links": {
@@ -10506,13 +9660,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1006/b0d1d4e3-8c41-435a-b064-cdd3efcebfcc/b0d1d4e3-8c41-435a-b064-cdd3efcebfcc.jpg",
               "links": {
@@ -10621,13 +9769,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -10710,11 +9852,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772747/titans-cardinals",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -10723,11 +9861,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772747",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -10736,10 +9870,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772747",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -10748,11 +9879,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772747",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -10761,11 +9888,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772747",
           "text": "Recap",
           "shortText": "Recap",
@@ -10851,44 +9974,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/sea/seattle-seahawks",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/sea/seattle-seahawks",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/sea/seattle-seahawks",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/sea",
                     "text": "Schedule",
                     "isExternal": false,
@@ -10963,44 +10070,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/tb/tampa-bay-buccaneers",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/tb/tampa-bay-buccaneers",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/tb/tampa-bay-buccaneers",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/tb",
                     "text": "Schedule",
                     "isExternal": false,
@@ -11072,9 +10163,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "CBS"
-              ]
+              "names": ["CBS"]
             }
           ],
           "leaders": [
@@ -11094,11 +10183,7 @@
                     "shortName": "B. Mayfield",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3052587/baker-mayfield"
                       }
                     ],
@@ -11134,11 +10219,7 @@
                     "shortName": "K. Walker III",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4567048/kenneth-walker-iii"
                       }
                     ],
@@ -11174,11 +10255,7 @@
                     "shortName": "E. Egbuka",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4567750/emeka-egbuka"
                       }
                     ],
@@ -11239,13 +10316,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/5da156d4-bf45-43dc-865e-e85621b00f3e/5da156d4-bf45-43dc-865e-e85621b00f3e.jpg",
               "links": {
@@ -11350,13 +10421,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/735f51b1-18df-4a12-bc32-4d36cb2c11d8/735f51b1-18df-4a12-bc32-4d36cb2c11d8.jpg",
               "links": {
@@ -11465,13 +10530,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -11554,11 +10613,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772746/buccaneers-seahawks",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -11567,11 +10622,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772746",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -11580,10 +10631,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772746",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -11592,11 +10640,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772746",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -11605,11 +10649,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772746",
           "text": "Recap",
           "shortText": "Recap",
@@ -11695,44 +10735,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/cin/cincinnati-bengals",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/cin/cincinnati-bengals",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/cin/cincinnati-bengals",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/cin",
                     "text": "Schedule",
                     "isExternal": false,
@@ -11807,44 +10831,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/det/detroit-lions",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/det/detroit-lions",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/det/detroit-lions",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/det",
                     "text": "Schedule",
                     "isExternal": false,
@@ -11916,9 +10924,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "FOX"
-              ]
+              "names": ["FOX"]
             }
           ],
           "leaders": [
@@ -11938,11 +10944,7 @@
                     "shortName": "J. Goff",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3046779/jared-goff"
                       }
                     ],
@@ -11978,11 +10980,7 @@
                     "shortName": "D. Montgomery",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery"
                       }
                     ],
@@ -12018,11 +11016,7 @@
                     "shortName": "J. Chase",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4362628/jamarr-chase"
                       }
                     ],
@@ -12083,13 +11077,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/c5c17f78-3433-4bb7-a08e-8bd1dd425020/c5c17f78-3433-4bb7-a08e-8bd1dd425020.jpg",
               "links": {
@@ -12191,13 +11179,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/f81495a8-f5d2-4233-9b7c-aeb9b106aa5d/f81495a8-f5d2-4233-9b7c-aeb9b106aa5d.jpg",
               "links": {
@@ -12306,13 +11288,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -12395,11 +11371,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772854/lions-bengals",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -12408,11 +11380,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772854",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -12421,10 +11389,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772854",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -12433,11 +11398,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772854",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -12446,11 +11407,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772854",
           "text": "Recap",
           "shortText": "Recap",
@@ -12536,44 +11493,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/lac/los-angeles-chargers",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/lac/los-angeles-chargers",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/lac/los-angeles-chargers",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/lac",
                     "text": "Schedule",
                     "isExternal": false,
@@ -12648,44 +11589,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/wsh/washington-commanders",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/wsh/washington-commanders",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/wsh/washington-commanders",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/wsh",
                     "text": "Schedule",
                     "isExternal": false,
@@ -12757,9 +11682,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "FOX"
-              ]
+              "names": ["FOX"]
             }
           ],
           "leaders": [
@@ -12779,11 +11702,7 @@
                     "shortName": "J. Daniels",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4426348/jayden-daniels"
                       }
                     ],
@@ -12819,11 +11738,7 @@
                     "shortName": "J. Croskey-Merritt",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4575131/jacory-croskey-merritt"
                       }
                     ],
@@ -12859,11 +11774,7 @@
                     "shortName": "D. Samuel",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3126486/deebo-samuel"
                       }
                     ],
@@ -12924,13 +11835,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/9d9caf91-4727-4b5e-b3f4-c03e4342cb36/9d9caf91-4727-4b5e-b3f4-c03e4342cb36.jpg",
               "links": {
@@ -13035,13 +11940,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/wsc/2025/1005/5fbee15f-5996-4ddf-a778-f7e04774c579/5fbee15f-5996-4ddf-a778-f7e04774c579.jpg",
               "links": {
@@ -13150,13 +12049,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -13239,11 +12132,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772853/commanders-chargers",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -13252,11 +12141,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772853",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -13265,10 +12150,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772853",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -13277,11 +12159,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772853",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -13290,11 +12168,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772853",
           "text": "Recap",
           "shortText": "Recap",
@@ -13380,44 +12254,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/buf/buffalo-bills",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/buf/buffalo-bills",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/buf/buffalo-bills",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/buf",
                     "text": "Schedule",
                     "isExternal": false,
@@ -13492,44 +12350,28 @@
                 },
                 "links": [
                   {
-                    "rel": [
-                      "clubhouse",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["clubhouse", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/_/name/ne/new-england-patriots",
                     "text": "Clubhouse",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "roster",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["roster", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/roster/_/name/ne/new-england-patriots",
                     "text": "Roster",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "stats",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["stats", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/stats/_/name/ne/new-england-patriots",
                     "text": "Statistics",
                     "isExternal": false,
                     "isPremium": false
                   },
                   {
-                    "rel": [
-                      "schedule",
-                      "desktop",
-                      "team"
-                    ],
+                    "rel": ["schedule", "desktop", "team"],
                     "href": "https://www.espn.com/nfl/team/schedule/_/name/ne",
                     "text": "Schedule",
                     "isExternal": false,
@@ -13601,9 +12443,7 @@
           "broadcasts": [
             {
               "market": "national",
-              "names": [
-                "NBC"
-              ]
+              "names": ["NBC"]
             }
           ],
           "leaders": [
@@ -13623,11 +12463,7 @@
                     "shortName": "D. Maye",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/4431452/drake-maye"
                       }
                     ],
@@ -13663,11 +12499,7 @@
                     "shortName": "J. Allen",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/3918298/josh-allen"
                       }
                     ],
@@ -13703,11 +12535,7 @@
                     "shortName": "S. Diggs",
                     "links": [
                       {
-                        "rel": [
-                          "playercard",
-                          "desktop",
-                          "athlete"
-                        ],
+                        "rel": ["playercard", "desktop", "athlete"],
                         "href": "https://www.espn.com/nfl/player/_/id/2976212/stefon-diggs"
                       }
                     ],
@@ -13768,13 +12596,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/67f4ddbbe9de4819bfec55fe2a48c3221429/67f4ddbbe9de4819bfec55fe2a48c3221429.jpg",
               "links": {
@@ -13879,13 +12701,7 @@
               },
               "deviceRestrictions": {
                 "type": "whitelist",
-                "devices": [
-                  "desktop",
-                  "ipad",
-                  "settop",
-                  "handset",
-                  "tablet"
-                ]
+                "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
               },
               "thumbnail": "https://a.espncdn.com/media/motion/2025/1005/af14e8b99dab4e90b6ae5d92d1dad7071435/af14e8b99dab4e90b6ae5d92d1dad7071435.jpg",
               "links": {
@@ -13997,13 +12813,7 @@
                   },
                   "deviceRestrictions": {
                     "type": "whitelist",
-                    "devices": [
-                      "desktop",
-                      "ipad",
-                      "settop",
-                      "handset",
-                      "tablet"
-                    ]
+                    "devices": ["desktop", "ipad", "settop", "handset", "tablet"]
                   },
                   "links": {
                     "web": {
@@ -14089,11 +12899,7 @@
       "links": [
         {
           "language": "en-US",
-          "rel": [
-            "summary",
-            "desktop",
-            "event"
-          ],
+          "rel": ["summary", "desktop", "event"],
           "href": "https://www.espn.com/nfl/game/_/gameId/401772922/patriots-bills",
           "text": "Gamecast",
           "shortText": "Gamecast",
@@ -14102,11 +12908,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "boxscore",
-            "desktop",
-            "event"
-          ],
+          "rel": ["boxscore", "desktop", "event"],
           "href": "https://www.espn.com/nfl/boxscore/_/gameId/401772922",
           "text": "Box Score",
           "shortText": "Box Score",
@@ -14115,10 +12917,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "highlights",
-            "desktop"
-          ],
+          "rel": ["highlights", "desktop"],
           "href": "https://www.espn.com/nfl/video?gameId=401772922",
           "text": "Highlights",
           "shortText": "Highlights",
@@ -14127,11 +12926,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "pbp",
-            "desktop",
-            "event"
-          ],
+          "rel": ["pbp", "desktop", "event"],
           "href": "https://www.espn.com/nfl/playbyplay/_/gameId/401772922",
           "text": "Play-by-Play",
           "shortText": "Play-by-Play",
@@ -14140,11 +12935,7 @@
         },
         {
           "language": "en-US",
-          "rel": [
-            "recap",
-            "desktop",
-            "event"
-          ],
+          "rel": ["recap", "desktop", "event"],
           "href": "https://www.espn.com/nfl/recap?gameId=401772922",
           "text": "Recap",
           "shortText": "Recap",

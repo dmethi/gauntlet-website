@@ -1,27 +1,34 @@
 # Refactoring Tasks Directory
 
-This directory contains **atomic, context-efficient tasks** for incrementally refactoring the Gauntlet codebase to enterprise standards.
+This directory contains **atomic, context-efficient tasks** for incrementally
+refactoring the Gauntlet codebase to enterprise standards.
 
 ---
 
 ## 📋 Quick Start
 
 ### 1. Read the System
+
 ```bash
 cat TASK_SYSTEM.md
 ```
+
 Understand how tasks are structured and how to work with them.
 
 ### 2. Check Progress
+
 ```bash
 cat tasks/PROGRESS.md
 ```
+
 See what's done, what's next, and current metrics.
 
 ### 3. Start First Task
+
 ```bash
 cat tasks/SETUP-001-testing-infrastructure.md
 ```
+
 Follow the steps exactly.
 
 ---
@@ -29,9 +36,11 @@ Follow the steps exactly.
 ## 🗂️ Task Categories
 
 ### SETUP-XXX: Infrastructure (Do First)
+
 Foundation work that enables all other tasks.
 
 **Files**:
+
 - `SETUP-001-testing-infrastructure.md` - Vitest + React Testing Library
 - `SETUP-002-test-utilities.md` - Custom render, factories, helpers
 
@@ -40,9 +49,11 @@ Foundation work that enables all other tasks.
 ---
 
 ### EXTRACT-XXX: Type Extraction (Quick Wins)
+
 Moving types from implementation to dedicated files.
 
 **Files**:
+
 - `EXTRACT-001-manager-analysis-types.md` - Manager analysis component types
 
 **Priority**: ⚠️ **HIGH** - Clarifies interfaces, enables other work  
@@ -52,10 +63,13 @@ Moving types from implementation to dedicated files.
 ---
 
 ### UTIL-XXX: Utility Extraction (Build Foundation)
+
 Creating testable utility functions from inline code.
 
 **Files**:
-- `UTIL-001-manager-analysis-formatting.md` - Currency, percentage, number formatting
+
+- `UTIL-001-manager-analysis-formatting.md` - Currency, percentage, number
+  formatting
 
 **Priority**: 🟡 **MEDIUM** - Enables component splitting  
 **Time**: 30-40 min each  
@@ -64,6 +78,7 @@ Creating testable utility functions from inline code.
 ---
 
 ### HOOK-XXX: Hook Extraction (Complex Logic)
+
 Extracting stateful logic into custom hooks.
 
 **Priority**: 🟡 **MEDIUM**  
@@ -73,6 +88,7 @@ Extracting stateful logic into custom hooks.
 ---
 
 ### COMP-XXX: Component Splitting (Big Impact)
+
 Breaking large components into focused sub-components.
 
 **Priority**: 🟢 **NORMAL** (do after utils/hooks)  
@@ -82,6 +98,7 @@ Breaking large components into focused sub-components.
 ---
 
 ### TEST-XXX: Test Writing (Validation)
+
 Adding tests to refactored code.
 
 **Priority**: ⚠️ **HIGH** (do alongside refactoring)  
@@ -93,6 +110,7 @@ Adding tests to refactored code.
 ## 🎯 Recommended Order
 
 ### Week 1: Foundation
+
 ```
 1. SETUP-001  (30-45 min)  ⚠️ REQUIRED FIRST
 2. SETUP-002  (45-60 min)  ⚠️ REQUIRED
@@ -101,6 +119,7 @@ Adding tests to refactored code.
 ```
 
 ### Week 2: Build Steam
+
 ```
 5. EXTRACT-002 through EXTRACT-005
 6. UTIL-002 through UTIL-004
@@ -108,6 +127,7 @@ Adding tests to refactored code.
 ```
 
 ### Week 3+: Component Work
+
 ```
 8. HOOK-001, HOOK-002
 9. COMP-001 (big one!)
@@ -119,6 +139,7 @@ Adding tests to refactored code.
 ## 🔧 Working with Tasks
 
 ### Opening a Task
+
 ```bash
 # Read the task
 cat tasks/SETUP-001-testing-infrastructure.md
@@ -128,6 +149,7 @@ code tasks/SETUP-001-testing-infrastructure.md
 ```
 
 ### Cursor Prompt Template
+
 ```
 I'm working on [TASK-ID]. Please:
 
@@ -139,6 +161,7 @@ Follow the task steps exactly.
 ```
 
 ### Completing a Task
+
 ```bash
 # 1. Verify acceptance criteria
 # 2. Run tests
@@ -163,16 +186,19 @@ git commit -m "feat([TASK-ID]): [description]"
 Every task file contains:
 
 ### Header
+
 - **Task ID**: Unique identifier
 - **Overview**: What this accomplishes
 - **Context Needed**: Exactly what files/lines to read
 
 ### Body
+
 - **Objective**: Measurable goal
 - **Steps**: Explicit instructions (follow exactly)
 - **Acceptance Criteria**: Checklist for completion
 
 ### Footer
+
 - **Estimated Context Usage**: How much to read/process
 - **Related Tasks**: Dependencies and blockers
 - **Cursor Prompt**: Copy-paste ready prompt
@@ -183,21 +209,27 @@ Every task file contains:
 ## 🎯 Task Selection Guide
 
 ### I have 30 minutes
+
 → Pick an **EXTRACT** task (15-20 min) or quick **UTIL** task
 
 ### I have 1 hour
+
 → Pick a **UTIL** or **HOOK** task
 
 ### I have 2 hours
+
 → Pick a **COMP** task or do 3-4 small tasks
 
 ### I'm just starting
+
 → Start with **SETUP-001** (required foundation)
 
 ### I want a quick win
+
 → Do **EXTRACT-001** (easy, safe, valuable)
 
 ### I want to make big impact
+
 → Do **COMP-001** (but do UTIL/HOOK tasks first!)
 
 ---
@@ -205,6 +237,7 @@ Every task file contains:
 ## ⚠️ Important Rules
 
 ### DO:
+
 - ✅ Read task file completely before starting
 - ✅ Use specific line ranges in Cursor prompts
 - ✅ Follow steps exactly as written
@@ -214,6 +247,7 @@ Every task file contains:
 - ✅ Update PROGRESS.md after completion
 
 ### DON'T:
+
 - ❌ Skip task steps or improvise
 - ❌ Ask Cursor to "read entire file" if >500 lines
 - ❌ Try multiple tasks in one session
@@ -226,6 +260,7 @@ Every task file contains:
 ## 📈 Success Metrics
 
 ### Per Task
+
 - ⏱️ **Completion time**: <60 minutes
 - 📄 **Files read**: <3
 - 📏 **Lines processed**: <500
@@ -234,7 +269,9 @@ Every task file contains:
 - 🚫 **Breaking changes**: 0
 
 ### Overall
+
 Track in `PROGRESS.md`:
+
 - Tasks completed per week
 - Largest file size (decreasing)
 - Test coverage (increasing)
@@ -245,25 +282,34 @@ Track in `PROGRESS.md`:
 ## 🆘 Help & Troubleshooting
 
 ### Task is too large
+
 **Solution**: Break it down further
+
 - Create TASK-XXXa, TASK-XXXb, etc.
 - Each should be <60 min
 
 ### Context window filling up
+
 **Solution**: You're reading too much
+
 - Use specific line ranges
 - Close unrelated files
 - Start fresh Cursor session
 
 ### Tests failing after change
+
 **Solution**: Revert and try again
+
 ```bash
 git reset --hard HEAD
 ```
+
 Re-read task, follow steps more carefully
 
 ### Can't find a task file
+
 **Solution**: Create it!
+
 - Copy template from TASK_SYSTEM.md
 - Follow same structure
 - Keep it atomic (<60 min)
@@ -273,13 +319,16 @@ Re-read task, follow steps more carefully
 ## 🎓 Learning Resources
 
 ### Related Docs
+
 - `TASK_SYSTEM.md` - Complete task system guide
 - `GAP_ANALYSIS.md` - What needs to be done (high level)
 - `REFACTORING_EXAMPLE.md` - Detailed before/after example
 - `REFACTORING_ACTION_PLAN.md` - 8-week roadmap
 
 ### Patterns
-As you complete tasks, document patterns in `PROGRESS.md` under "Learnings & Patterns"
+
+As you complete tasks, document patterns in `PROGRESS.md` under "Learnings &
+Patterns"
 
 ---
 
@@ -289,7 +338,7 @@ As you complete tasks, document patterns in `PROGRESS.md` under "Learnings & Pat
 # 1. Read the system
 cat TASK_SYSTEM.md
 
-# 2. Check your status  
+# 2. Check your status
 cat tasks/PROGRESS.md
 
 # 3. Start first task
@@ -312,4 +361,3 @@ Need a task that doesn't exist yet?
 ---
 
 **Remember**: Small, focused, tested, committed. Repeat until done! 🎯
-

@@ -46493,18 +46493,8 @@
       "teamName": "2 Dolla Balla$",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          4,
-          12,
-          22,
-          2
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [4, 12, 22, 2],
+        "outcomes": ["W", "L", "L", "W"],
         "topScoringWeeks": 2,
         "lowScoringWeeks": 1,
         "winsInTopScoring": 2,
@@ -46519,12 +46509,7 @@
           "ppw": 25.2,
           "advantageVsLeague": 5.8,
           "percentageEdge": 29.7,
-          "weeklyRanks": [
-            1,
-            18,
-            7,
-            6
-          ],
+          "weeklyRanks": [1, 18, 7, 6],
           "avgRank": 8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46548,12 +46533,7 @@
           "ppw": 35,
           "advantageVsLeague": -3.2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            10,
-            15,
-            22,
-            9
-          ],
+          "weeklyRanks": [10, 15, 22, 9],
           "avgRank": 14,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46577,12 +46557,7 @@
           "ppw": 39.3,
           "advantageVsLeague": 4.9,
           "percentageEdge": 14.4,
-          "weeklyRanks": [
-            20,
-            3,
-            9,
-            12
-          ],
+          "weeklyRanks": [20, 3, 9, 12],
           "avgRank": 11,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46606,12 +46581,7 @@
           "ppw": 9.8,
           "advantageVsLeague": 0.8,
           "percentageEdge": 9.3,
-          "weeklyRanks": [
-            9,
-            24,
-            8,
-            1
-          ],
+          "weeklyRanks": [9, 24, 8, 1],
           "avgRank": 10.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46635,11 +46605,7 @@
           "ppw": 6.2,
           "advantageVsLeague": -4.4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            16,
-            21,
-            15
-          ],
+          "weeklyRanks": [16, 21, 15],
           "avgRank": 17.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46668,12 +46634,7 @@
               "ppw": 25.2,
               "advantageVsLeague": 5.8,
               "percentageEdge": 29.7,
-              "weeklyRanks": [
-                1,
-                18,
-                7,
-                6
-              ],
+              "weeklyRanks": [1, 18, 7, 6],
               "avgRank": 8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -46700,12 +46661,7 @@
               "ppw": 39.3,
               "advantageVsLeague": 4.9,
               "percentageEdge": 14.4,
-              "weeklyRanks": [
-                20,
-                3,
-                9,
-                12
-              ],
+              "weeklyRanks": [20, 3, 9, 12],
               "avgRank": 11,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -46734,11 +46690,7 @@
               "ppw": 6.2,
               "advantageVsLeague": -4.4,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                16,
-                21,
-                15
-              ],
+              "weeklyRanks": [16, 21, 15],
               "avgRank": 17.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -46765,12 +46717,7 @@
               "ppw": 35,
               "advantageVsLeague": -3.2,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                10,
-                15,
-                22,
-                9
-              ],
+              "weeklyRanks": [10, 15, 22, 9],
               "avgRank": 14,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -46795,12 +46742,7 @@
         "netAdvantage": 3.9
       },
       "trajectory": {
-        "weeklyScores": [
-          115.81,
-          109.92,
-          90.22,
-          139.36
-        ],
+        "weeklyScores": [115.81, 109.92, 90.22, 139.36],
         "slopePPW": 5.1,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -46830,12 +46772,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -8.5,
-          0.8,
-          2.9,
-          4.8
-        ],
+        "weeklyResiduals": [-8.5, 0.8, 2.9, 4.8],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -46882,18 +46819,8 @@
       "teamName": "achak7",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          12,
-          1,
-          18,
-          20
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [12, 1, 18, 20],
+        "outcomes": ["L", "W", "W", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -46908,12 +46835,7 @@
           "ppw": 18.1,
           "advantageVsLeague": -1.3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            23,
-            7,
-            20,
-            1
-          ],
+          "weeklyRanks": [23, 7, 20, 1],
           "avgRank": 12.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46937,12 +46859,7 @@
           "ppw": 37.6,
           "advantageVsLeague": -0.6,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            12,
-            13,
-            9,
-            19
-          ],
+          "weeklyRanks": [12, 13, 9, 19],
           "avgRank": 13.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46966,12 +46883,7 @@
           "ppw": 43.9,
           "advantageVsLeague": 9.6,
           "percentageEdge": 27.9,
-          "weeklyRanks": [
-            8,
-            1,
-            6,
-            16
-          ],
+          "weeklyRanks": [8, 1, 6, 16],
           "avgRank": 7.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -46995,12 +46907,7 @@
           "ppw": 6.4,
           "advantageVsLeague": -2.5,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            7,
-            17,
-            13,
-            20
-          ],
+          "weeklyRanks": [7, 17, 13, 20],
           "avgRank": 14.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47024,11 +46931,7 @@
           "ppw": 16.1,
           "advantageVsLeague": 5.4,
           "percentageEdge": 50.9,
-          "weeklyRanks": [
-            1,
-            1,
-            17
-          ],
+          "weeklyRanks": [1, 1, 17],
           "avgRank": 6.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47057,12 +46960,7 @@
               "ppw": 43.9,
               "advantageVsLeague": 9.6,
               "percentageEdge": 27.9,
-              "weeklyRanks": [
-                8,
-                1,
-                6,
-                16
-              ],
+              "weeklyRanks": [8, 1, 6, 16],
               "avgRank": 7.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -47089,11 +46987,7 @@
               "ppw": 16.1,
               "advantageVsLeague": 5.4,
               "percentageEdge": 50.9,
-              "weeklyRanks": [
-                1,
-                1,
-                17
-              ],
+              "weeklyRanks": [1, 1, 17],
               "avgRank": 6.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -47119,12 +47013,7 @@
         "netAdvantage": 10.6
       },
       "trajectory": {
-        "weeklyScores": [
-          103.97,
-          161.34,
-          100.14,
-          106.56
-        ],
+        "weeklyScores": [103.97, 161.34, 100.14, 106.56],
         "slopePPW": -5.3,
         "trend": "strongly_declining",
         "isSignificant": true,
@@ -47154,12 +47043,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          3.9,
-          -22.1,
-          -17.8,
-          35.9
-        ],
+        "weeklyResiduals": [3.9, -22.1, -17.8, 35.9],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -47206,18 +47090,8 @@
       "teamName": "lol jerry jones",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          19,
-          14,
-          1,
-          15
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [19, 14, 1, 15],
+        "outcomes": ["W", "L", "W", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 3,
         "winsInTopScoring": 1,
@@ -47232,12 +47106,7 @@
           "ppw": 21,
           "advantageVsLeague": 1.5,
           "percentageEdge": 7.8,
-          "weeklyRanks": [
-            5,
-            24,
-            9,
-            2
-          ],
+          "weeklyRanks": [5, 24, 9, 2],
           "avgRank": 10,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47261,12 +47130,7 @@
           "ppw": 35.5,
           "advantageVsLeague": -2.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            23,
-            9,
-            3,
-            17
-          ],
+          "weeklyRanks": [23, 9, 3, 17],
           "avgRank": 13,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47290,12 +47154,7 @@
           "ppw": 39.9,
           "advantageVsLeague": 5.6,
           "percentageEdge": 16.3,
-          "weeklyRanks": [
-            20,
-            11,
-            1,
-            9
-          ],
+          "weeklyRanks": [20, 11, 1, 9],
           "avgRank": 10.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47319,12 +47178,7 @@
           "ppw": 10.4,
           "advantageVsLeague": 1.4,
           "percentageEdge": 16.1,
-          "weeklyRanks": [
-            12,
-            8,
-            7,
-            10
-          ],
+          "weeklyRanks": [12, 8, 7, 10],
           "avgRank": 9.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47348,11 +47202,7 @@
           "ppw": 11.5,
           "advantageVsLeague": 0.2,
           "percentageEdge": 1.6,
-          "weeklyRanks": [
-            3,
-            13,
-            12
-          ],
+          "weeklyRanks": [3, 13, 12],
           "avgRank": 9.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47381,12 +47231,7 @@
               "ppw": 39.9,
               "advantageVsLeague": 5.6,
               "percentageEdge": 16.3,
-              "weeklyRanks": [
-                20,
-                11,
-                1,
-                9
-              ],
+              "weeklyRanks": [20, 11, 1, 9],
               "avgRank": 10.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -47412,12 +47257,7 @@
         "netAdvantage": 6
       },
       "trajectory": {
-        "weeklyScores": [
-          91.27,
-          107.83,
-          146.88,
-          113.94
-        ],
+        "weeklyScores": [91.27, 107.83, 146.88, 113.94],
         "slopePPW": 10.7,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -47447,12 +47287,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -37.6,
-          25.5,
-          -16.7,
-          28.9
-        ],
+        "weeklyResiduals": [-37.6, 25.5, -16.7, 28.9],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -47499,18 +47334,8 @@
       "teamName": "NielGetsCarried",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          20,
-          22,
-          24,
-          1
-        ],
-        "outcomes": [
-          "L",
-          "L",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [20, 22, 24, 1],
+        "outcomes": ["L", "L", "L", "W"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 3,
         "winsInTopScoring": 1,
@@ -47525,12 +47350,7 @@
           "ppw": 20.1,
           "advantageVsLeague": 0.7,
           "percentageEdge": 3.5,
-          "weeklyRanks": [
-            12,
-            10,
-            10,
-            11
-          ],
+          "weeklyRanks": [12, 10, 10, 11],
           "avgRank": 10.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47554,12 +47374,7 @@
           "ppw": 40.4,
           "advantageVsLeague": 2.2,
           "percentageEdge": 5.8,
-          "weeklyRanks": [
-            11,
-            7,
-            19,
-            5
-          ],
+          "weeklyRanks": [11, 7, 19, 5],
           "avgRank": 10.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47583,12 +47398,7 @@
           "ppw": 32.3,
           "advantageVsLeague": -2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            13,
-            18,
-            19,
-            4
-          ],
+          "weeklyRanks": [13, 18, 19, 4],
           "avgRank": 13.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47612,12 +47422,7 @@
           "ppw": 3.2,
           "advantageVsLeague": -5.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            23,
-            21,
-            22,
-            16
-          ],
+          "weeklyRanks": [23, 21, 22, 16],
           "avgRank": 20.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47641,10 +47446,7 @@
           "ppw": 7.3,
           "advantageVsLeague": -5.4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            21,
-            9
-          ],
+          "weeklyRanks": [21, 9],
           "avgRank": 15,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47674,12 +47476,7 @@
               "ppw": 3.2,
               "advantageVsLeague": -5.7,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                23,
-                21,
-                22,
-                16
-              ],
+              "weeklyRanks": [23, 21, 22, 16],
               "avgRank": 20.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -47706,10 +47503,7 @@
               "ppw": 7.3,
               "advantageVsLeague": -5.4,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                21,
-                9
-              ],
+              "weeklyRanks": [21, 9],
               "avgRank": 15,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -47734,12 +47528,7 @@
         "netAdvantage": -10.2
       },
       "trajectory": {
-        "weeklyScores": [
-          89.48,
-          89.4,
-          76.67,
-          139.81
-        ],
+        "weeklyScores": [89.48, 89.4, 76.67, 139.81],
         "slopePPW": 13.8,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -47769,12 +47558,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -14.3,
-          -4.4,
-          12.5,
-          6.1
-        ],
+        "weeklyResiduals": [-14.3, -4.4, 12.5, 6.1],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -47821,18 +47605,8 @@
       "teamName": "The Golden Age",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          5,
-          4,
-          12,
-          21
-        ],
-        "outcomes": [
-          "W",
-          "W",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [5, 4, 12, 21],
+        "outcomes": ["W", "W", "W", "L"],
         "topScoringWeeks": 2,
         "lowScoringWeeks": 1,
         "winsInTopScoring": 2,
@@ -47847,12 +47621,7 @@
           "ppw": 23.2,
           "advantageVsLeague": 3.8,
           "percentageEdge": 19.4,
-          "weeklyRanks": [
-            11,
-            1,
-            3,
-            21
-          ],
+          "weeklyRanks": [11, 1, 3, 21],
           "avgRank": 9,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47876,12 +47645,7 @@
           "ppw": 33.3,
           "advantageVsLeague": -4.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            4,
-            20,
-            15,
-            23
-          ],
+          "weeklyRanks": [4, 20, 15, 23],
           "avgRank": 15.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47905,12 +47669,7 @@
           "ppw": 39.4,
           "advantageVsLeague": 5.1,
           "percentageEdge": 14.8,
-          "weeklyRanks": [
-            22,
-            4,
-            10,
-            10
-          ],
+          "weeklyRanks": [22, 4, 10, 10],
           "avgRank": 11.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47934,12 +47693,7 @@
           "ppw": 8.6,
           "advantageVsLeague": -0.3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            14,
-            5,
-            9,
-            22
-          ],
+          "weeklyRanks": [14, 5, 9, 22],
           "avgRank": 12.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47963,12 +47717,7 @@
           "ppw": 12.4,
           "advantageVsLeague": 1,
           "percentageEdge": 8.9,
-          "weeklyRanks": [
-            5,
-            9,
-            17,
-            1
-          ],
+          "weeklyRanks": [5, 9, 17, 1],
           "avgRank": 8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -47997,12 +47746,7 @@
               "ppw": 39.4,
               "advantageVsLeague": 5.1,
               "percentageEdge": 14.8,
-              "weeklyRanks": [
-                22,
-                4,
-                10,
-                10
-              ],
+              "weeklyRanks": [22, 4, 10, 10],
               "avgRank": 11.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48029,12 +47773,7 @@
               "ppw": 23.2,
               "advantageVsLeague": 3.8,
               "percentageEdge": 19.4,
-              "weeklyRanks": [
-                11,
-                1,
-                3,
-                21
-              ],
+              "weeklyRanks": [11, 1, 3, 21],
               "avgRank": 9,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48063,12 +47802,7 @@
               "ppw": 33.3,
               "advantageVsLeague": -4.9,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                4,
-                20,
-                15,
-                23
-              ],
+              "weeklyRanks": [4, 20, 15, 23],
               "avgRank": 15.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48093,12 +47827,7 @@
         "netAdvantage": 4.7
       },
       "trajectory": {
-        "weeklyScores": [
-          115.75,
-          136.8,
-          111.37,
-          103.73
-        ],
+        "weeklyScores": [115.75, 136.8, 111.37, 103.73],
         "slopePPW": -6.1,
         "trend": "strongly_declining",
         "isSignificant": true,
@@ -48128,12 +47857,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -39.3,
-          14.7,
-          -26.9,
-          51.6
-        ],
+        "weeklyResiduals": [-39.3, 14.7, -26.9, 51.6],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -48180,18 +47904,8 @@
       "teamName": "vchak",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          24,
-          17,
-          15,
-          19
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "L",
-          "L"
-        ],
+        "scoringRanks": [24, 17, 15, 19],
+        "outcomes": ["L", "W", "L", "L"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 4,
         "winsInTopScoring": 0,
@@ -48206,12 +47920,7 @@
           "ppw": 16.9,
           "advantageVsLeague": -2.5,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            22,
-            9,
-            17,
-            8
-          ],
+          "weeklyRanks": [22, 9, 17, 8],
           "avgRank": 14,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48235,12 +47944,7 @@
           "ppw": 28.5,
           "advantageVsLeague": -9.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            18,
-            18,
-            20,
-            18
-          ],
+          "weeklyRanks": [18, 18, 20, 18],
           "avgRank": 18.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48264,12 +47968,7 @@
           "ppw": 35.1,
           "advantageVsLeague": 0.8,
           "percentageEdge": 2.4,
-          "weeklyRanks": [
-            11,
-            12,
-            4,
-            22
-          ],
+          "weeklyRanks": [11, 12, 4, 22],
           "avgRank": 12.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48293,12 +47992,7 @@
           "ppw": 4,
           "advantageVsLeague": -4.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            19,
-            13,
-            18
-          ],
+          "weeklyRanks": [20, 19, 13, 18],
           "avgRank": 17.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48322,12 +48016,7 @@
           "ppw": 10.3,
           "advantageVsLeague": -1.1,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            13,
-            11,
-            5
-          ],
+          "weeklyRanks": [20, 13, 11, 5],
           "avgRank": 12.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48357,12 +48046,7 @@
               "ppw": 28.5,
               "advantageVsLeague": -9.7,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                18,
-                18,
-                20,
-                18
-              ],
+              "weeklyRanks": [18, 18, 20, 18],
               "avgRank": 18.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48389,12 +48073,7 @@
               "ppw": 4,
               "advantageVsLeague": -4.9,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                20,
-                19,
-                13,
-                18
-              ],
+              "weeklyRanks": [20, 19, 13, 18],
               "avgRank": 17.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48419,12 +48098,7 @@
         "netAdvantage": -17.4
       },
       "trajectory": {
-        "weeklyScores": [
-          67.34,
-          98.69,
-          105.17,
-          108.09
-        ],
+        "weeklyScores": [67.34, 98.69, 105.17, 108.09],
         "slopePPW": 12.9,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -48454,12 +48128,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -8.4,
-          -43.5,
-          33.1,
-          18.8
-        ],
+        "weeklyResiduals": [-8.4, -43.5, 33.1, 18.8],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -48506,18 +48175,8 @@
       "teamName": "Quonspiracy Theorists",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          17,
-          11,
-          19,
-          12
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "L",
-          "L"
-        ],
+        "scoringRanks": [17, 11, 19, 12],
+        "outcomes": ["L", "W", "L", "L"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 0,
@@ -48532,12 +48191,7 @@
           "ppw": 10.5,
           "advantageVsLeague": -8.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            22,
-            12,
-            23
-          ],
+          "weeklyRanks": [20, 22, 12, 23],
           "avgRank": 19.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48561,12 +48215,7 @@
           "ppw": 43.1,
           "advantageVsLeague": 4.9,
           "percentageEdge": 12.9,
-          "weeklyRanks": [
-            5,
-            4,
-            16,
-            21
-          ],
+          "weeklyRanks": [5, 4, 16, 21],
           "avgRank": 11.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48590,12 +48239,7 @@
           "ppw": 27.9,
           "advantageVsLeague": -6.4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            14,
-            20,
-            23,
-            8
-          ],
+          "weeklyRanks": [14, 20, 23, 8],
           "avgRank": 16.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48619,12 +48263,7 @@
           "ppw": 11.3,
           "advantageVsLeague": 2.4,
           "percentageEdge": 27,
-          "weeklyRanks": [
-            17,
-            7,
-            5,
-            6
-          ],
+          "weeklyRanks": [17, 7, 5, 6],
           "avgRank": 8.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48648,12 +48287,7 @@
           "ppw": 13.5,
           "advantageVsLeague": 2.1,
           "percentageEdge": 18.8,
-          "weeklyRanks": [
-            8,
-            11,
-            4,
-            6
-          ],
+          "weeklyRanks": [8, 11, 4, 6],
           "avgRank": 7.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48682,12 +48316,7 @@
               "ppw": 43.1,
               "advantageVsLeague": 4.9,
               "percentageEdge": 12.9,
-              "weeklyRanks": [
-                5,
-                4,
-                16,
-                21
-              ],
+              "weeklyRanks": [5, 4, 16, 21],
               "avgRank": 11.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48716,12 +48345,7 @@
               "ppw": 10.5,
               "advantageVsLeague": -8.9,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                20,
-                22,
-                12,
-                23
-              ],
+              "weeklyRanks": [20, 22, 12, 23],
               "avgRank": 19.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48748,12 +48372,7 @@
               "ppw": 27.9,
               "advantageVsLeague": -6.4,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                14,
-                20,
-                23,
-                8
-              ],
+              "weeklyRanks": [14, 20, 23, 8],
               "avgRank": 16.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -48778,12 +48397,7 @@
         "netAdvantage": -5.9
       },
       "trajectory": {
-        "weeklyScores": [
-          98.32,
-          110.99,
-          99.52,
-          116.78
-        ],
+        "weeklyScores": [98.32, 110.99, 99.52, 116.78],
         "slopePPW": 4.4,
         "trend": "improving",
         "isSignificant": true,
@@ -48813,12 +48427,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -4.9,
-          1.7,
-          -11.3,
-          14.5
-        ],
+        "weeklyResiduals": [-4.9, 1.7, -11.3, 14.5],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -48865,18 +48474,8 @@
       "teamName": "scboom5",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          10,
-          18,
-          11,
-          7
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "W",
-          "W"
-        ],
+        "scoringRanks": [10, 18, 11, 7],
+        "outcomes": ["W", "L", "W", "W"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 1,
         "winsInTopScoring": 0,
@@ -48891,12 +48490,7 @@
           "ppw": 22.6,
           "advantageVsLeague": 3.1,
           "percentageEdge": 16,
-          "weeklyRanks": [
-            9,
-            20,
-            1,
-            9
-          ],
+          "weeklyRanks": [9, 20, 1, 9],
           "avgRank": 9.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48920,12 +48514,7 @@
           "ppw": 36.6,
           "advantageVsLeague": -1.6,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            21,
-            21,
-            14,
-            2
-          ],
+          "weeklyRanks": [21, 21, 14, 2],
           "avgRank": 14.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48949,12 +48538,7 @@
           "ppw": 32.8,
           "advantageVsLeague": -1.5,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            4,
-            15,
-            13,
-            14
-          ],
+          "weeklyRanks": [4, 15, 13, 14],
           "avgRank": 11.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -48978,12 +48562,7 @@
           "ppw": 10.7,
           "advantageVsLeague": 1.8,
           "percentageEdge": 20,
-          "weeklyRanks": [
-            13,
-            1,
-            20,
-            11
-          ],
+          "weeklyRanks": [13, 1, 20, 11],
           "avgRank": 11.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49007,12 +48586,7 @@
           "ppw": 9.5,
           "advantageVsLeague": -1.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            12,
-            16,
-            14,
-            11
-          ],
+          "weeklyRanks": [12, 16, 14, 11],
           "avgRank": 13.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49041,12 +48615,7 @@
               "ppw": 22.6,
               "advantageVsLeague": 3.1,
               "percentageEdge": 16,
-              "weeklyRanks": [
-                9,
-                20,
-                1,
-                9
-              ],
+              "weeklyRanks": [9, 20, 1, 9],
               "avgRank": 9.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -49072,12 +48641,7 @@
         "netAdvantage": -0.1
       },
       "trajectory": {
-        "weeklyScores": [
-          104.98,
-          96.29,
-          112.54,
-          135.05
-        ],
+        "weeklyScores": [104.98, 96.29, 112.54, 135.05],
         "slopePPW": 10.6,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -49107,12 +48671,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -26.1,
-          57.9,
-          -36.9,
-          5.1
-        ],
+        "weeklyResiduals": [-26.1, 57.9, -36.9, 5.1],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -49159,18 +48718,8 @@
       "teamName": "Nacua Matata",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          13,
-          8,
-          16,
-          4
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [13, 8, 16, 4],
+        "outcomes": ["L", "W", "L", "W"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -49185,12 +48734,7 @@
           "ppw": 16.6,
           "advantageVsLeague": -2.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            14,
-            12,
-            18,
-            17
-          ],
+          "weeklyRanks": [14, 12, 18, 17],
           "avgRank": 15.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49214,12 +48758,7 @@
           "ppw": 40.8,
           "advantageVsLeague": 2.7,
           "percentageEdge": 6.9,
-          "weeklyRanks": [
-            8,
-            11,
-            4,
-            16
-          ],
+          "weeklyRanks": [8, 11, 4, 16],
           "avgRank": 9.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49243,12 +48782,7 @@
           "ppw": 35.7,
           "advantageVsLeague": 1.4,
           "percentageEdge": 4,
-          "weeklyRanks": [
-            18,
-            7,
-            21,
-            5
-          ],
+          "weeklyRanks": [18, 7, 21, 5],
           "avgRank": 12.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49272,12 +48806,7 @@
           "ppw": 10.7,
           "advantageVsLeague": 1.8,
           "percentageEdge": 20.3,
-          "weeklyRanks": [
-            4,
-            9,
-            13,
-            4
-          ],
+          "weeklyRanks": [4, 9, 13, 4],
           "avgRank": 7.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49301,12 +48830,7 @@
           "ppw": 13.1,
           "advantageVsLeague": 1.7,
           "percentageEdge": 15.2,
-          "weeklyRanks": [
-            14,
-            17,
-            7,
-            3
-          ],
+          "weeklyRanks": [14, 17, 7, 3],
           "avgRank": 10.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49333,12 +48857,7 @@
         "netAdvantage": 4.7
       },
       "trajectory": {
-        "weeklyScores": [
-          102.27,
-          126.35,
-          102.93,
-          136.17
-        ],
+        "weeklyScores": [102.27, 126.35, 102.93, 136.17],
         "slopePPW": 7.8,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -49368,12 +48887,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          14.7,
-          -53,
-          40,
-          -1.8
-        ],
+        "weeklyResiduals": [14.7, -53, 40, -1.8],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -49420,18 +48934,8 @@
       "teamName": "To Infinity and Bijan",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          2,
-          9,
-          17,
-          6
-        ],
-        "outcomes": [
-          "W",
-          "W",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [2, 9, 17, 6],
+        "outcomes": ["W", "W", "L", "W"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 1,
         "winsInTopScoring": 1,
@@ -49446,12 +48950,7 @@
           "ppw": 22.6,
           "advantageVsLeague": 3.2,
           "percentageEdge": 16.4,
-          "weeklyRanks": [
-            7,
-            5,
-            23,
-            3
-          ],
+          "weeklyRanks": [7, 5, 23, 3],
           "avgRank": 9.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49475,12 +48974,7 @@
           "ppw": 64,
           "advantageVsLeague": 25.8,
           "percentageEdge": 67.5,
-          "weeklyRanks": [
-            3,
-            1,
-            1,
-            1
-          ],
+          "weeklyRanks": [3, 1, 1, 1],
           "avgRank": 1.5,
           "consistency": {
             "neverOutsideTop3": true,
@@ -49504,12 +48998,7 @@
           "ppw": 17.6,
           "advantageVsLeague": -16.8,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            15,
-            23,
-            24,
-            24
-          ],
+          "weeklyRanks": [15, 23, 24, 24],
           "avgRank": 21.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49533,12 +49022,7 @@
           "ppw": 7.9,
           "advantageVsLeague": -1,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            6,
-            11,
-            19,
-            13
-          ],
+          "weeklyRanks": [6, 11, 19, 13],
           "avgRank": 12.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49562,11 +49046,7 @@
           "ppw": 11.4,
           "advantageVsLeague": -0.8,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            5,
-            16,
-            7
-          ],
+          "weeklyRanks": [5, 16, 7],
           "avgRank": 9.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49595,12 +49075,7 @@
               "ppw": 64,
               "advantageVsLeague": 25.8,
               "percentageEdge": 67.5,
-              "weeklyRanks": [
-                3,
-                1,
-                1,
-                1
-              ],
+              "weeklyRanks": [3, 1, 1, 1],
               "avgRank": 1.5,
               "consistency": {
                 "neverOutsideTop3": true,
@@ -49627,12 +49102,7 @@
               "ppw": 22.6,
               "advantageVsLeague": 3.2,
               "percentageEdge": 16.4,
-              "weeklyRanks": [
-                7,
-                5,
-                23,
-                3
-              ],
+              "weeklyRanks": [7, 5, 23, 3],
               "avgRank": 9.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -49661,12 +49131,7 @@
               "ppw": 17.6,
               "advantageVsLeague": -16.8,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                15,
-                23,
-                24,
-                24
-              ],
+              "weeklyRanks": [15, 23, 24, 24],
               "avgRank": 21.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -49691,12 +49156,7 @@
         "netAdvantage": 10.4
       },
       "trajectory": {
-        "weeklyScores": [
-          120.42,
-          125.28,
-          101.51,
-          135.5
-        ],
+        "weeklyScores": [120.42, 125.28, 101.51, 135.5],
         "slopePPW": 2.1,
         "trend": "improving",
         "isSignificant": true,
@@ -49726,12 +49186,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          0.2,
-          -14.3,
-          11.9,
-          2.2
-        ],
+        "weeklyResiduals": [0.2, -14.3, 11.9, 2.2],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -49778,18 +49233,8 @@
       "teamName": "benweinfeld",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          21,
-          21,
-          2,
-          11
-        ],
-        "outcomes": [
-          "L",
-          "L",
-          "W",
-          "W"
-        ],
+        "scoringRanks": [21, 21, 2, 11],
+        "outcomes": ["L", "L", "W", "W"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -49804,12 +49249,7 @@
           "ppw": 15.3,
           "advantageVsLeague": -4.2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            19,
-            14,
-            14,
-            15
-          ],
+          "weeklyRanks": [19, 14, 14, 15],
           "avgRank": 15.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49833,12 +49273,7 @@
           "ppw": 37.4,
           "advantageVsLeague": -0.8,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            13,
-            17,
-            18,
-            3
-          ],
+          "weeklyRanks": [13, 17, 18, 3],
           "avgRank": 12.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49862,12 +49297,7 @@
           "ppw": 28.6,
           "advantageVsLeague": -5.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            9,
-            19,
-            8,
-            17
-          ],
+          "weeklyRanks": [9, 19, 8, 17],
           "avgRank": 13.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49891,12 +49321,7 @@
           "ppw": 11.8,
           "advantageVsLeague": 2.9,
           "percentageEdge": 32.1,
-          "weeklyRanks": [
-            15,
-            15,
-            1,
-            8
-          ],
+          "weeklyRanks": [15, 15, 1, 8],
           "avgRank": 9.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49920,12 +49345,7 @@
           "ppw": 15.8,
           "advantageVsLeague": 4.4,
           "percentageEdge": 38.8,
-          "weeklyRanks": [
-            18,
-            3,
-            1,
-            19
-          ],
+          "weeklyRanks": [18, 3, 1, 19],
           "avgRank": 10.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -49954,12 +49374,7 @@
               "ppw": 15.8,
               "advantageVsLeague": 4.4,
               "percentageEdge": 38.8,
-              "weeklyRanks": [
-                18,
-                3,
-                1,
-                19
-              ],
+              "weeklyRanks": [18, 3, 1, 19],
               "avgRank": 10.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -49988,12 +49403,7 @@
               "ppw": 28.6,
               "advantageVsLeague": -5.7,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                9,
-                19,
-                8,
-                17
-              ],
+              "weeklyRanks": [9, 19, 8, 17],
               "avgRank": 13.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50020,12 +49430,7 @@
               "ppw": 15.3,
               "advantageVsLeague": -4.2,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                19,
-                14,
-                14,
-                15
-              ],
+              "weeklyRanks": [19, 14, 14, 15],
               "avgRank": 15.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50050,12 +49455,7 @@
         "netAdvantage": -3.4
       },
       "trajectory": {
-        "weeklyScores": [
-          85.18,
-          91.38,
-          139.45,
-          119.47
-        ],
+        "weeklyScores": [85.18, 91.38, 139.45, 119.47],
         "slopePPW": 15.1,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -50085,12 +49485,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          4.8,
-          12.1,
-          -17.7,
-          0.8
-        ],
+        "weeklyResiduals": [4.8, 12.1, -17.7, 0.8],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -50137,18 +49532,8 @@
       "teamName": "Dr Patel Parikh MD MBA",
       "leagueName": "Gauntlet AFC",
       "winLossPattern": {
-        "scoringRanks": [
-          3,
-          24,
-          13,
-          10
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [3, 24, 13, 10],
+        "outcomes": ["W", "L", "W", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -50163,12 +49548,7 @@
           "ppw": 24.2,
           "advantageVsLeague": 4.8,
           "percentageEdge": 24.5,
-          "weeklyRanks": [
-            3,
-            3,
-            5,
-            19
-          ],
+          "weeklyRanks": [3, 3, 5, 19],
           "avgRank": 7.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50192,12 +49572,7 @@
           "ppw": 30.9,
           "advantageVsLeague": -7.3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            9,
-            22,
-            13,
-            22
-          ],
+          "weeklyRanks": [9, 22, 13, 22],
           "avgRank": 16.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50221,12 +49596,7 @@
           "ppw": 33.7,
           "advantageVsLeague": -0.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            7,
-            24,
-            11,
-            1
-          ],
+          "weeklyRanks": [7, 24, 11, 1],
           "avgRank": 10.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50250,12 +49620,7 @@
           "ppw": 8.5,
           "advantageVsLeague": -0.4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            2,
-            13,
-            10,
-            14
-          ],
+          "weeklyRanks": [2, 13, 10, 14],
           "avgRank": 9.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50279,12 +49644,7 @@
           "ppw": 8.3,
           "advantageVsLeague": -3.1,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            17,
-            7,
-            19,
-            13
-          ],
+          "weeklyRanks": [17, 7, 19, 13],
           "avgRank": 14,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50313,12 +49673,7 @@
               "ppw": 24.2,
               "advantageVsLeague": 4.8,
               "percentageEdge": 24.5,
-              "weeklyRanks": [
-                3,
-                3,
-                5,
-                19
-              ],
+              "weeklyRanks": [3, 3, 5, 19],
               "avgRank": 7.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50347,12 +49702,7 @@
               "ppw": 30.9,
               "advantageVsLeague": -7.3,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                9,
-                22,
-                13,
-                22
-              ],
+              "weeklyRanks": [9, 22, 13, 22],
               "avgRank": 16.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50379,12 +49729,7 @@
               "ppw": 8.3,
               "advantageVsLeague": -3.1,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                17,
-                7,
-                19,
-                13
-              ],
+              "weeklyRanks": [17, 7, 19, 13],
               "avgRank": 14,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50409,12 +49754,7 @@
         "netAdvantage": -6.7
       },
       "trajectory": {
-        "weeklyScores": [
-          119.81,
-          69.7,
-          111.02,
-          121.73
-        ],
+        "weeklyScores": [119.81, 69.7, 111.02, 121.73],
         "slopePPW": 4.7,
         "trend": "improving",
         "isSignificant": true,
@@ -50444,12 +49784,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -35.8,
-          19.1,
-          -14,
-          30.7
-        ],
+        "weeklyResiduals": [-35.8, 19.1, -14, 30.7],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -50496,18 +49831,8 @@
       "teamName": "ziyanp22",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          7,
-          5,
-          9,
-          3
-        ],
-        "outcomes": [
-          "W",
-          "W",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [7, 5, 9, 3],
+        "outcomes": ["W", "W", "L", "W"],
         "topScoringWeeks": 2,
         "lowScoringWeeks": 0,
         "winsInTopScoring": 2,
@@ -50522,12 +49847,7 @@
           "ppw": 19,
           "advantageVsLeague": -0.4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            18,
-            8,
-            22,
-            5
-          ],
+          "weeklyRanks": [18, 8, 22, 5],
           "avgRank": 13.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50551,12 +49871,7 @@
           "ppw": 24.2,
           "advantageVsLeague": -14,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            23,
-            24,
-            11
-          ],
+          "weeklyRanks": [20, 23, 24, 11],
           "avgRank": 19.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50580,12 +49895,7 @@
           "ppw": 58.9,
           "advantageVsLeague": 24.6,
           "percentageEdge": 71.7,
-          "weeklyRanks": [
-            1,
-            2,
-            2,
-            2
-          ],
+          "weeklyRanks": [1, 2, 2, 2],
           "avgRank": 1.8,
           "consistency": {
             "neverOutsideTop3": true,
@@ -50609,12 +49919,7 @@
           "ppw": 8.8,
           "advantageVsLeague": -0.1,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            9,
-            4,
-            13,
-            23
-          ],
+          "weeklyRanks": [9, 4, 13, 23],
           "avgRank": 12.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50638,12 +49943,7 @@
           "ppw": 14.7,
           "advantageVsLeague": 3.3,
           "percentageEdge": 29.1,
-          "weeklyRanks": [
-            13,
-            19,
-            1,
-            19
-          ],
+          "weeklyRanks": [13, 19, 1, 19],
           "avgRank": 13,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50672,12 +49972,7 @@
               "ppw": 58.9,
               "advantageVsLeague": 24.6,
               "percentageEdge": 71.7,
-              "weeklyRanks": [
-                1,
-                2,
-                2,
-                2
-              ],
+              "weeklyRanks": [1, 2, 2, 2],
               "avgRank": 1.8,
               "consistency": {
                 "neverOutsideTop3": true,
@@ -50704,12 +49999,7 @@
               "ppw": 14.7,
               "advantageVsLeague": 3.3,
               "percentageEdge": 29.1,
-              "weeklyRanks": [
-                13,
-                19,
-                1,
-                19
-              ],
+              "weeklyRanks": [13, 19, 1, 19],
               "avgRank": 13,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50738,12 +50028,7 @@
               "ppw": 24.2,
               "advantageVsLeague": -14,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                20,
-                23,
-                24,
-                11
-              ],
+              "weeklyRanks": [20, 23, 24, 11],
               "avgRank": 19.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -50768,12 +50053,7 @@
         "netAdvantage": 13.4
       },
       "trajectory": {
-        "weeklyScores": [
-          111.77,
-          136.68,
-          116.47,
-          138.03
-        ],
+        "weeklyScores": [111.77, 136.68, 116.47, 138.03],
         "slopePPW": 5.9,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -50803,12 +50083,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -14.6,
-          -4.9,
-          17.8,
-          1.7
-        ],
+        "weeklyResiduals": [-14.6, -4.9, 17.8, 1.7],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -50855,18 +50130,8 @@
       "teamName": "Dont go Chasing Saquon",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          14,
-          16,
-          23,
-          22
-        ],
-        "outcomes": [
-          "L",
-          "L",
-          "L",
-          "L"
-        ],
+        "scoringRanks": [14, 16, 23, 22],
+        "outcomes": ["L", "L", "L", "L"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 4,
         "winsInTopScoring": 0,
@@ -50881,12 +50146,7 @@
           "ppw": 16.5,
           "advantageVsLeague": -3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            16,
-            17,
-            16,
-            13
-          ],
+          "weeklyRanks": [16, 17, 16, 13],
           "avgRank": 15.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50910,12 +50170,7 @@
           "ppw": 37.4,
           "advantageVsLeague": -0.8,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            14,
-            10,
-            21,
-            6
-          ],
+          "weeklyRanks": [14, 10, 21, 6],
           "avgRank": 12.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50939,12 +50194,7 @@
           "ppw": 31.3,
           "advantageVsLeague": -3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            6,
-            13,
-            16,
-            18
-          ],
+          "weeklyRanks": [6, 13, 16, 18],
           "avgRank": 13.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50968,11 +50218,7 @@
           "ppw": 4.8,
           "advantageVsLeague": -3.8,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            22,
-            21,
-            8
-          ],
+          "weeklyRanks": [22, 21, 8],
           "avgRank": 17,
           "consistency": {
             "neverOutsideTop3": false,
@@ -50996,11 +50242,7 @@
           "ppw": 11.5,
           "advantageVsLeague": 0.2,
           "percentageEdge": 1.6,
-          "weeklyRanks": [
-            3,
-            13,
-            12
-          ],
+          "weeklyRanks": [3, 13, 12],
           "avgRank": 9.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51030,11 +50272,7 @@
               "ppw": 4.8,
               "advantageVsLeague": -3.8,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                22,
-                21,
-                8
-              ],
+              "weeklyRanks": [22, 21, 8],
               "avgRank": 17,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -51059,12 +50297,7 @@
         "netAdvantage": -10.4
       },
       "trajectory": {
-        "weeklyScores": [
-          101.77,
-          104.65,
-          78.06,
-          103.5
-        ],
+        "weeklyScores": [101.77, 104.65, 78.06, 103.5],
         "slopePPW": -2.1,
         "trend": "declining",
         "isSignificant": true,
@@ -51094,12 +50327,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -11.7,
-          26.7,
-          -4.9,
-          -10.1
-        ],
+        "weeklyResiduals": [-11.7, 26.7, -4.9, -10.1],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -51146,18 +50374,8 @@
       "teamName": "Mach 10",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          23,
-          2,
-          4,
-          9
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "W",
-          "W"
-        ],
+        "scoringRanks": [23, 2, 4, 9],
+        "outcomes": ["L", "W", "W", "W"],
         "topScoringWeeks": 2,
         "lowScoringWeeks": 1,
         "winsInTopScoring": 2,
@@ -51172,12 +50390,7 @@
           "ppw": 16.9,
           "advantageVsLeague": -2.6,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            14,
-            12,
-            12,
-            23
-          ],
+          "weeklyRanks": [14, 12, 12, 23],
           "avgRank": 15.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51201,12 +50414,7 @@
           "ppw": 47.6,
           "advantageVsLeague": 9.4,
           "percentageEdge": 24.5,
-          "weeklyRanks": [
-            17,
-            3,
-            2,
-            7
-          ],
+          "weeklyRanks": [17, 3, 2, 7],
           "avgRank": 7.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51230,12 +50438,7 @@
           "ppw": 33.8,
           "advantageVsLeague": -0.5,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            23,
-            14,
-            14,
-            6
-          ],
+          "weeklyRanks": [23, 14, 14, 6],
           "avgRank": 14.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51259,12 +50462,7 @@
           "ppw": 4.6,
           "advantageVsLeague": -4.3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            19,
-            12,
-            22,
-            24
-          ],
+          "weeklyRanks": [19, 12, 22, 24],
           "avgRank": 19.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51288,12 +50486,7 @@
           "ppw": 13,
           "advantageVsLeague": 1.6,
           "percentageEdge": 14.2,
-          "weeklyRanks": [
-            18,
-            3,
-            4,
-            11
-          ],
+          "weeklyRanks": [18, 3, 4, 11],
           "avgRank": 9,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51322,12 +50515,7 @@
               "ppw": 47.6,
               "advantageVsLeague": 9.4,
               "percentageEdge": 24.5,
-              "weeklyRanks": [
-                17,
-                3,
-                2,
-                7
-              ],
+              "weeklyRanks": [17, 3, 2, 7],
               "avgRank": 7.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -51356,12 +50544,7 @@
               "ppw": 4.6,
               "advantageVsLeague": -4.3,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                19,
-                12,
-                22,
-                24
-              ],
+              "weeklyRanks": [19, 12, 22, 24],
               "avgRank": 19.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -51386,12 +50569,7 @@
         "netAdvantage": 3.6
       },
       "trajectory": {
-        "weeklyScores": [
-          73.12,
-          140.6,
-          126.12,
-          123.63
-        ],
+        "weeklyScores": [73.12, 140.6, 126.12, 123.63],
         "slopePPW": 13.7,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -51421,12 +50599,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          2.3,
-          -9.1,
-          6.7,
-          0.1
-        ],
+        "weeklyResiduals": [2.3, -9.1, 6.7, 0.1],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -51473,18 +50646,8 @@
       "teamName": "lukebowsh",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          6,
-          13,
-          8,
-          23
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [6, 13, 8, 23],
+        "outcomes": ["W", "L", "W", "L"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 0,
@@ -51499,12 +50662,7 @@
           "ppw": 20.1,
           "advantageVsLeague": 0.7,
           "percentageEdge": 3.5,
-          "weeklyRanks": [
-            12,
-            10,
-            10,
-            11
-          ],
+          "weeklyRanks": [12, 10, 10, 11],
           "avgRank": 10.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51528,12 +50686,7 @@
           "ppw": 37.3,
           "advantageVsLeague": -0.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            16,
-            16,
-            10,
-            8
-          ],
+          "weeklyRanks": [16, 16, 10, 8],
           "avgRank": 12.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51557,12 +50710,7 @@
           "ppw": 37.8,
           "advantageVsLeague": 3.5,
           "percentageEdge": 10.2,
-          "weeklyRanks": [
-            2,
-            5,
-            15,
-            19
-          ],
+          "weeklyRanks": [2, 5, 15, 19],
           "avgRank": 10.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51586,12 +50734,7 @@
           "ppw": 8.3,
           "advantageVsLeague": -0.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            23,
-            21,
-            2,
-            16
-          ],
+          "weeklyRanks": [23, 21, 2, 16],
           "avgRank": 15.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51615,12 +50758,7 @@
           "ppw": 6.9,
           "advantageVsLeague": -4.5,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            8,
-            11,
-            17,
-            22
-          ],
+          "weeklyRanks": [8, 11, 17, 22],
           "avgRank": 14.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51649,12 +50787,7 @@
               "ppw": 37.8,
               "advantageVsLeague": 3.5,
               "percentageEdge": 10.2,
-              "weeklyRanks": [
-                2,
-                5,
-                15,
-                19
-              ],
+              "weeklyRanks": [2, 5, 15, 19],
               "avgRank": 10.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -51683,12 +50816,7 @@
               "ppw": 6.9,
               "advantageVsLeague": -4.5,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                8,
-                11,
-                17,
-                22
-              ],
+              "weeklyRanks": [8, 11, 17, 22],
               "avgRank": 14.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -51713,12 +50841,7 @@
         "netAdvantage": -1.9
       },
       "trajectory": {
-        "weeklyScores": [
-          113.18,
-          109.05,
-          116.87,
-          102.41
-        ],
+        "weeklyScores": [113.18, 109.05, 116.87, 102.41],
         "slopePPW": -2.4,
         "trend": "declining",
         "isSignificant": true,
@@ -51748,12 +50871,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -43.7,
-          41.1,
-          -37.1,
-          39.6
-        ],
+        "weeklyResiduals": [-43.7, 41.1, -37.1, 39.6],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -51800,18 +50918,8 @@
       "teamName": "vayyala",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          18,
-          15,
-          5,
-          24
-        ],
-        "outcomes": [
-          "L",
-          "L",
-          "L",
-          "L"
-        ],
+        "scoringRanks": [18, 15, 5, 24],
+        "outcomes": ["L", "L", "L", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 3,
         "winsInTopScoring": 0,
@@ -51826,12 +50934,7 @@
           "ppw": 22.6,
           "advantageVsLeague": 3.1,
           "percentageEdge": 16,
-          "weeklyRanks": [
-            9,
-            20,
-            1,
-            9
-          ],
+          "weeklyRanks": [9, 20, 1, 9],
           "avgRank": 9.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51855,12 +50958,7 @@
           "ppw": 36.5,
           "advantageVsLeague": -1.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            15,
-            6,
-            6,
-            24
-          ],
+          "weeklyRanks": [15, 6, 6, 24],
           "avgRank": 12.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51884,12 +50982,7 @@
           "ppw": 22,
           "advantageVsLeague": -12.3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            24,
-            16,
-            20,
-            19
-          ],
+          "weeklyRanks": [24, 16, 20, 19],
           "avgRank": 19.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51913,12 +51006,7 @@
           "ppw": 9.8,
           "advantageVsLeague": 0.9,
           "percentageEdge": 9.6,
-          "weeklyRanks": [
-            15,
-            1,
-            20,
-            11
-          ],
+          "weeklyRanks": [15, 1, 20, 11],
           "avgRank": 11.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51942,12 +51030,7 @@
           "ppw": 11.5,
           "advantageVsLeague": 0.1,
           "percentageEdge": 0.5,
-          "weeklyRanks": [
-            1,
-            23,
-            9,
-            17
-          ],
+          "weeklyRanks": [1, 23, 9, 17],
           "avgRank": 12.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -51976,12 +51059,7 @@
               "ppw": 22.6,
               "advantageVsLeague": 3.1,
               "percentageEdge": 16,
-              "weeklyRanks": [
-                9,
-                20,
-                1,
-                9
-              ],
+              "weeklyRanks": [9, 20, 1, 9],
               "avgRank": 9.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52010,12 +51088,7 @@
               "ppw": 22,
               "advantageVsLeague": -12.3,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                24,
-                16,
-                20,
-                19
-              ],
+              "weeklyRanks": [24, 16, 20, 19],
               "avgRank": 19.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52040,12 +51113,7 @@
         "netAdvantage": -9.9
       },
       "trajectory": {
-        "weeklyScores": [
-          95.53,
-          106.89,
-          120.44,
-          86.2
-        ],
+        "weeklyScores": [95.53, 106.89, 120.44, 86.2],
         "slopePPW": -1.4,
         "trend": "stable",
         "isSignificant": false,
@@ -52075,12 +51143,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          14.9,
-          -16,
-          15,
-          -13.8
-        ],
+        "weeklyResiduals": [14.9, -16, 15, -13.8],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -52127,18 +51190,8 @@
       "teamName": "Jaxson Dart-Njigba",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          1,
-          20,
-          10,
-          13
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "L",
-          "L"
-        ],
+        "scoringRanks": [1, 20, 10, 13],
+        "outcomes": ["W", "L", "L", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -52153,12 +51206,7 @@
           "ppw": 15.1,
           "advantageVsLeague": -4.3,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            17,
-            15,
-            18,
-            17
-          ],
+          "weeklyRanks": [17, 15, 18, 17],
           "avgRank": 16.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52182,12 +51230,7 @@
           "ppw": 42.1,
           "advantageVsLeague": 3.9,
           "percentageEdge": 10.3,
-          "weeklyRanks": [
-            2,
-            12,
-            11,
-            20
-          ],
+          "weeklyRanks": [2, 12, 11, 20],
           "avgRank": 11.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52211,12 +51254,7 @@
           "ppw": 36,
           "advantageVsLeague": 1.7,
           "percentageEdge": 5,
-          "weeklyRanks": [
-            3,
-            21,
-            7,
-            7
-          ],
+          "weeklyRanks": [3, 21, 7, 7],
           "avgRank": 9.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52240,12 +51278,7 @@
           "ppw": 8.5,
           "advantageVsLeague": -0.4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            2,
-            13,
-            10,
-            14
-          ],
+          "weeklyRanks": [2, 13, 10, 14],
           "avgRank": 9.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52269,12 +51302,7 @@
           "ppw": 12.6,
           "advantageVsLeague": 1.2,
           "percentageEdge": 10.6,
-          "weeklyRanks": [
-            5,
-            20,
-            3,
-            7
-          ],
+          "weeklyRanks": [5, 20, 3, 7],
           "avgRank": 8.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52303,12 +51331,7 @@
               "ppw": 42.1,
               "advantageVsLeague": 3.9,
               "percentageEdge": 10.3,
-              "weeklyRanks": [
-                2,
-                12,
-                11,
-                20
-              ],
+              "weeklyRanks": [2, 12, 11, 20],
               "avgRank": 11.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52337,12 +51360,7 @@
               "ppw": 15.1,
               "advantageVsLeague": -4.3,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                17,
-                15,
-                18,
-                17
-              ],
+              "weeklyRanks": [17, 15, 18, 17],
               "avgRank": 16.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52367,12 +51385,7 @@
         "netAdvantage": 2.1
       },
       "trajectory": {
-        "weeklyScores": [
-          134.73,
-          91.89,
-          114.88,
-          115.92
-        ],
+        "weeklyScores": [134.73, 91.89, 114.88, 115.92],
         "slopePPW": -3.3,
         "trend": "declining",
         "isSignificant": true,
@@ -52402,12 +51415,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -30.6,
-          20.3,
-          1.7,
-          8.7
-        ],
+        "weeklyResiduals": [-30.6, 20.3, 1.7, 8.7],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -52454,18 +51462,8 @@
       "teamName": "DJ Herbussy ",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          11,
-          3,
-          14,
-          18
-        ],
-        "outcomes": [
-          "W",
-          "W",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [11, 3, 14, 18],
+        "outcomes": ["W", "W", "W", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -52480,12 +51478,7 @@
           "ppw": 21.1,
           "advantageVsLeague": 1.6,
           "percentageEdge": 8.4,
-          "weeklyRanks": [
-            6,
-            1,
-            14,
-            15
-          ],
+          "weeklyRanks": [6, 1, 14, 15],
           "avgRank": 9,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52509,12 +51502,7 @@
           "ppw": 46.5,
           "advantageVsLeague": 8.3,
           "percentageEdge": 21.8,
-          "weeklyRanks": [
-            7,
-            2,
-            7,
-            14
-          ],
+          "weeklyRanks": [7, 2, 7, 14],
           "avgRank": 7.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52538,12 +51526,7 @@
           "ppw": 27.2,
           "advantageVsLeague": -7.1,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            19,
-            22,
-            18,
-            11
-          ],
+          "weeklyRanks": [19, 22, 18, 11],
           "avgRank": 17.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52567,12 +51550,7 @@
           "ppw": 10.7,
           "advantageVsLeague": 1.8,
           "percentageEdge": 20.3,
-          "weeklyRanks": [
-            4,
-            9,
-            13,
-            4
-          ],
+          "weeklyRanks": [4, 9, 13, 4],
           "avgRank": 7.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52596,11 +51574,7 @@
           "ppw": 14.3,
           "advantageVsLeague": 2,
           "percentageEdge": 16.4,
-          "weeklyRanks": [
-            1,
-            6,
-            21
-          ],
+          "weeklyRanks": [1, 6, 21],
           "avgRank": 9.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52629,12 +51603,7 @@
               "ppw": 46.5,
               "advantageVsLeague": 8.3,
               "percentageEdge": 21.8,
-              "weeklyRanks": [
-                7,
-                2,
-                7,
-                14
-              ],
+              "weeklyRanks": [7, 2, 7, 14],
               "avgRank": 7.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52663,12 +51632,7 @@
               "ppw": 27.2,
               "advantageVsLeague": -7.1,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                19,
-                22,
-                18,
-                11
-              ],
+              "weeklyRanks": [19, 22, 18, 11],
               "avgRank": 17.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52693,12 +51657,7 @@
         "netAdvantage": 6.6
       },
       "trajectory": {
-        "weeklyScores": [
-          104.67,
-          138.9,
-          109.25,
-          111.57
-        ],
+        "weeklyScores": [104.67, 138.9, 109.25, 111.57],
         "slopePPW": -0.9,
         "trend": "stable",
         "isSignificant": false,
@@ -52728,12 +51687,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -1.1,
-          -21.1,
-          -5.9,
-          28.1
-        ],
+        "weeklyResiduals": [-1.1, -21.1, -5.9, 28.1],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -52780,18 +51734,8 @@
       "teamName": "Saint Brown Does Mahomes",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          15,
-          6,
-          21,
-          5
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [15, 6, 21, 5],
+        "outcomes": ["L", "W", "L", "W"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -52806,12 +51750,7 @@
           "ppw": 22.6,
           "advantageVsLeague": 3.2,
           "percentageEdge": 16.4,
-          "weeklyRanks": [
-            7,
-            5,
-            23,
-            3
-          ],
+          "weeklyRanks": [7, 5, 23, 3],
           "avgRank": 9.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52835,12 +51774,7 @@
           "ppw": 37.3,
           "advantageVsLeague": -0.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            19,
-            5,
-            17,
-            12
-          ],
+          "weeklyRanks": [19, 5, 17, 12],
           "avgRank": 13.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52864,12 +51798,7 @@
           "ppw": 40.5,
           "advantageVsLeague": 6.1,
           "percentageEdge": 17.9,
-          "weeklyRanks": [
-            12,
-            6,
-            12,
-            3
-          ],
+          "weeklyRanks": [12, 6, 12, 3],
           "avgRank": 8.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52893,12 +51822,7 @@
           "ppw": 6.4,
           "advantageVsLeague": -2.5,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            7,
-            17,
-            13,
-            20
-          ],
+          "weeklyRanks": [7, 17, 13, 20],
           "avgRank": 14.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52922,12 +51846,7 @@
           "ppw": 9.4,
           "advantageVsLeague": -2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            10,
-            21,
-            10,
-            15
-          ],
+          "weeklyRanks": [10, 21, 10, 15],
           "avgRank": 14,
           "consistency": {
             "neverOutsideTop3": false,
@@ -52956,12 +51875,7 @@
               "ppw": 40.5,
               "advantageVsLeague": 6.1,
               "percentageEdge": 17.9,
-              "weeklyRanks": [
-                12,
-                6,
-                12,
-                3
-              ],
+              "weeklyRanks": [12, 6, 12, 3],
               "avgRank": 8.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -52988,12 +51902,7 @@
               "ppw": 22.6,
               "advantageVsLeague": 3.2,
               "percentageEdge": 16.4,
-              "weeklyRanks": [
-                7,
-                5,
-                23,
-                3
-              ],
+              "weeklyRanks": [7, 5, 23, 3],
               "avgRank": 9.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53019,12 +51928,7 @@
         "netAdvantage": 3.9
       },
       "trajectory": {
-        "weeklyScores": [
-          101.72,
-          134.18,
-          93.26,
-          135.6
-        ],
+        "weeklyScores": [101.72, 134.18, 93.26, 135.6],
         "slopePPW": 6.1,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -53054,12 +51958,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -0.8,
-          -12.7,
-          17.3,
-          -3.8
-        ],
+        "weeklyResiduals": [-0.8, -12.7, 17.3, -3.8],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -53106,18 +52005,8 @@
       "teamName": "The zoo",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          16,
-          19,
-          20,
-          8
-        ],
-        "outcomes": [
-          "L",
-          "L",
-          "L",
-          "W"
-        ],
+        "scoringRanks": [16, 19, 20, 8],
+        "outcomes": ["L", "L", "L", "W"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 3,
         "winsInTopScoring": 0,
@@ -53132,12 +52021,7 @@
           "ppw": 10.8,
           "advantageVsLeague": -8.7,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            22,
-            21,
-            14
-          ],
+          "weeklyRanks": [20, 22, 21, 14],
           "avgRank": 19.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53161,12 +52045,7 @@
           "ppw": 42.1,
           "advantageVsLeague": 3.9,
           "percentageEdge": 10.1,
-          "weeklyRanks": [
-            6,
-            14,
-            5,
-            10
-          ],
+          "weeklyRanks": [6, 14, 5, 10],
           "avgRank": 8.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53190,12 +52069,7 @@
           "ppw": 29.1,
           "advantageVsLeague": -5.2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            10,
-            9,
-            22,
-            21
-          ],
+          "weeklyRanks": [10, 9, 22, 21],
           "avgRank": 15.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53219,12 +52093,7 @@
           "ppw": 9.7,
           "advantageVsLeague": 0.8,
           "percentageEdge": 8.5,
-          "weeklyRanks": [
-            11,
-            16,
-            12,
-            1
-          ],
+          "weeklyRanks": [11, 16, 12, 1],
           "avgRank": 10,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53248,12 +52117,7 @@
           "ppw": 13.1,
           "advantageVsLeague": 1.7,
           "percentageEdge": 15.2,
-          "weeklyRanks": [
-            14,
-            17,
-            7,
-            3
-          ],
+          "weeklyRanks": [14, 17, 7, 3],
           "avgRank": 10.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53282,12 +52146,7 @@
               "ppw": 42.1,
               "advantageVsLeague": 3.9,
               "percentageEdge": 10.1,
-              "weeklyRanks": [
-                6,
-                14,
-                5,
-                10
-              ],
+              "weeklyRanks": [6, 14, 5, 10],
               "avgRank": 8.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53316,12 +52175,7 @@
               "ppw": 10.8,
               "advantageVsLeague": -8.7,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                20,
-                22,
-                21,
-                14
-              ],
+              "weeklyRanks": [20, 22, 21, 14],
               "avgRank": 19.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53348,12 +52202,7 @@
               "ppw": 29.1,
               "advantageVsLeague": -5.2,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                10,
-                9,
-                22,
-                21
-              ],
+              "weeklyRanks": [10, 9, 22, 21],
               "avgRank": 15.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53378,12 +52227,7 @@
         "netAdvantage": -7.5
       },
       "trajectory": {
-        "weeklyScores": [
-          100.17,
-          95.69,
-          98.11,
-          125.03
-        ],
+        "weeklyScores": [100.17, 95.69, 98.11, 125.03],
         "slopePPW": 7.7,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -53413,12 +52257,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -8.4,
-          22,
-          -11.2,
-          -2.3
-        ],
+        "weeklyResiduals": [-8.4, 22, -11.2, -2.3],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -53465,18 +52304,8 @@
       "teamName": "cescott25",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          9,
-          23,
-          7,
-          16
-        ],
-        "outcomes": [
-          "W",
-          "L",
-          "W",
-          "W"
-        ],
+        "scoringRanks": [9, 23, 7, 16],
+        "outcomes": ["W", "L", "W", "W"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 0,
@@ -53491,12 +52320,7 @@
           "ppw": 25.2,
           "advantageVsLeague": 5.8,
           "percentageEdge": 29.7,
-          "weeklyRanks": [
-            1,
-            18,
-            7,
-            6
-          ],
+          "weeklyRanks": [1, 18, 7, 6],
           "avgRank": 8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53520,12 +52344,7 @@
           "ppw": 22.6,
           "advantageVsLeague": -15.6,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            22,
-            24,
-            23,
-            15
-          ],
+          "weeklyRanks": [22, 24, 23, 15],
           "avgRank": 21,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53549,12 +52368,7 @@
           "ppw": 30.8,
           "advantageVsLeague": -3.6,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            16,
-            17,
-            3,
-            23
-          ],
+          "weeklyRanks": [16, 17, 3, 23],
           "avgRank": 14.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53578,12 +52392,7 @@
           "ppw": 18.3,
           "advantageVsLeague": 9.4,
           "percentageEdge": 105,
-          "weeklyRanks": [
-            1,
-            3,
-            4,
-            3
-          ],
+          "weeklyRanks": [1, 3, 4, 3],
           "avgRank": 2.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53607,12 +52416,7 @@
           "ppw": 10.6,
           "advantageVsLeague": -0.8,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            7,
-            9,
-            15,
-            9
-          ],
+          "weeklyRanks": [7, 9, 15, 9],
           "avgRank": 10,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53641,12 +52445,7 @@
               "ppw": 18.3,
               "advantageVsLeague": 9.4,
               "percentageEdge": 105,
-              "weeklyRanks": [
-                1,
-                3,
-                4,
-                3
-              ],
+              "weeklyRanks": [1, 3, 4, 3],
               "avgRank": 2.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53673,12 +52472,7 @@
               "ppw": 25.2,
               "advantageVsLeague": 5.8,
               "percentageEdge": 29.7,
-              "weeklyRanks": [
-                1,
-                18,
-                7,
-                6
-              ],
+              "weeklyRanks": [1, 18, 7, 6],
               "avgRank": 8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53707,12 +52501,7 @@
               "ppw": 22.6,
               "advantageVsLeague": -15.6,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                22,
-                24,
-                23,
-                15
-              ],
+              "weeklyRanks": [22, 24, 23, 15],
               "avgRank": 21,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53739,12 +52528,7 @@
               "ppw": 30.8,
               "advantageVsLeague": -3.6,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                16,
-                17,
-                3,
-                23
-              ],
+              "weeklyRanks": [16, 17, 3, 23],
               "avgRank": 14.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -53769,12 +52553,7 @@
         "netAdvantage": -4.8
       },
       "trajectory": {
-        "weeklyScores": [
-          111.36,
-          86.72,
-          118.22,
-          113.21
-        ],
+        "weeklyScores": [111.36, 86.72, 118.22, 113.21],
         "slopePPW": 3.7,
         "trend": "improving",
         "isSignificant": true,
@@ -53804,12 +52583,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -6,
-          45.7,
-          -15.2,
-          -24.6
-        ],
+        "weeklyResiduals": [-6, 45.7, -15.2, -24.6],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -53856,18 +52630,8 @@
       "teamName": "C&G^2",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          22,
-          7,
-          3,
-          14
-        ],
-        "outcomes": [
-          "L",
-          "W",
-          "W",
-          "L"
-        ],
+        "scoringRanks": [22, 7, 3, 14],
+        "outcomes": ["L", "W", "W", "L"],
         "topScoringWeeks": 1,
         "lowScoringWeeks": 2,
         "winsInTopScoring": 1,
@@ -53882,12 +52646,7 @@
           "ppw": 24.2,
           "advantageVsLeague": 4.8,
           "percentageEdge": 24.5,
-          "weeklyRanks": [
-            3,
-            3,
-            5,
-            19
-          ],
+          "weeklyRanks": [3, 3, 5, 19],
           "avgRank": 7.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53911,12 +52670,7 @@
           "ppw": 38.6,
           "advantageVsLeague": 0.4,
           "percentageEdge": 1,
-          "weeklyRanks": [
-            24,
-            8,
-            8,
-            4
-          ],
+          "weeklyRanks": [24, 8, 8, 4],
           "avgRank": 11,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53940,12 +52694,7 @@
           "ppw": 40,
           "advantageVsLeague": 5.7,
           "percentageEdge": 16.6,
-          "weeklyRanks": [
-            5,
-            8,
-            5,
-            13
-          ],
+          "weeklyRanks": [5, 8, 5, 13],
           "avgRank": 7.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53969,12 +52718,7 @@
           "ppw": 6,
           "advantageVsLeague": -2.9,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            19,
-            6,
-            18
-          ],
+          "weeklyRanks": [20, 19, 6, 18],
           "avgRank": 15.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -53998,12 +52742,7 @@
           "ppw": 7.4,
           "advantageVsLeague": -4,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            20,
-            7,
-            19,
-            13
-          ],
+          "weeklyRanks": [20, 7, 19, 13],
           "avgRank": 14.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -54032,12 +52771,7 @@
               "ppw": 40,
               "advantageVsLeague": 5.7,
               "percentageEdge": 16.6,
-              "weeklyRanks": [
-                5,
-                8,
-                5,
-                13
-              ],
+              "weeklyRanks": [5, 8, 5, 13],
               "avgRank": 7.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54064,12 +52798,7 @@
               "ppw": 24.2,
               "advantageVsLeague": 4.8,
               "percentageEdge": 24.5,
-              "weeklyRanks": [
-                3,
-                3,
-                5,
-                19
-              ],
+              "weeklyRanks": [3, 3, 5, 19],
               "avgRank": 7.5,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54098,12 +52827,7 @@
               "ppw": 7.4,
               "advantageVsLeague": -4,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                20,
-                7,
-                19,
-                13
-              ],
+              "weeklyRanks": [20, 7, 19, 13],
               "avgRank": 14.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54128,12 +52852,7 @@
         "netAdvantage": 4
       },
       "trajectory": {
-        "weeklyScores": [
-          82.36,
-          133.7,
-          134.82,
-          114.03
-        ],
+        "weeklyScores": [82.36, 133.7, 134.82, 114.03],
         "slopePPW": 9.6,
         "trend": "strongly_improving",
         "isSignificant": true,
@@ -54163,12 +52882,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -5.4,
-          -31.4,
-          6.7,
-          30.1
-        ],
+        "weeklyResiduals": [-5.4, -31.4, 6.7, 30.1],
         "sampleSize": 4
       },
       "counterfactualGames": {
@@ -54215,18 +52929,8 @@
       "teamName": "Marginal Returns",
       "leagueName": "Gauntlet NFC",
       "winLossPattern": {
-        "scoringRanks": [
-          8,
-          10,
-          6,
-          17
-        ],
-        "outcomes": [
-          "W",
-          "W",
-          "W",
-          "W"
-        ],
+        "scoringRanks": [8, 10, 6, 17],
+        "outcomes": ["W", "W", "W", "W"],
         "topScoringWeeks": 0,
         "lowScoringWeeks": 1,
         "winsInTopScoring": 0,
@@ -54241,12 +52945,7 @@
           "ppw": 16.3,
           "advantageVsLeague": -3.2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            23,
-            16,
-            3,
-            21
-          ],
+          "weeklyRanks": [23, 16, 3, 21],
           "avgRank": 15.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -54270,12 +52969,7 @@
           "ppw": 41.6,
           "advantageVsLeague": 3.4,
           "percentageEdge": 9,
-          "weeklyRanks": [
-            1,
-            19,
-            12,
-            13
-          ],
+          "weeklyRanks": [1, 19, 12, 13],
           "avgRank": 11.3,
           "consistency": {
             "neverOutsideTop3": false,
@@ -54299,12 +52993,7 @@
           "ppw": 30.1,
           "advantageVsLeague": -4.2,
           "percentageEdge": 0,
-          "weeklyRanks": [
-            17,
-            10,
-            17,
-            15
-          ],
+          "weeklyRanks": [17, 10, 17, 15],
           "avgRank": 14.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -54328,12 +53017,7 @@
           "ppw": 13.6,
           "advantageVsLeague": 4.7,
           "percentageEdge": 52.8,
-          "weeklyRanks": [
-            17,
-            5,
-            3,
-            6
-          ],
+          "weeklyRanks": [17, 5, 3, 6],
           "avgRank": 7.8,
           "consistency": {
             "neverOutsideTop3": false,
@@ -54357,12 +53041,7 @@
           "ppw": 12.2,
           "advantageVsLeague": 0.8,
           "percentageEdge": 7.4,
-          "weeklyRanks": [
-            11,
-            5,
-            21,
-            1
-          ],
+          "weeklyRanks": [11, 5, 21, 1],
           "avgRank": 9.5,
           "consistency": {
             "neverOutsideTop3": false,
@@ -54391,12 +53070,7 @@
               "ppw": 13.6,
               "advantageVsLeague": 4.7,
               "percentageEdge": 52.8,
-              "weeklyRanks": [
-                17,
-                5,
-                3,
-                6
-              ],
+              "weeklyRanks": [17, 5, 3, 6],
               "avgRank": 7.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54423,12 +53097,7 @@
               "ppw": 41.6,
               "advantageVsLeague": 3.4,
               "percentageEdge": 9,
-              "weeklyRanks": [
-                1,
-                19,
-                12,
-                13
-              ],
+              "weeklyRanks": [1, 19, 12, 13],
               "avgRank": 11.3,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54457,12 +53126,7 @@
               "ppw": 30.1,
               "advantageVsLeague": -4.2,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                17,
-                10,
-                17,
-                15
-              ],
+              "weeklyRanks": [17, 10, 17, 15],
               "avgRank": 14.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54489,12 +53153,7 @@
               "ppw": 16.3,
               "advantageVsLeague": -3.2,
               "percentageEdge": 0,
-              "weeklyRanks": [
-                23,
-                16,
-                3,
-                21
-              ],
+              "weeklyRanks": [23, 16, 3, 21],
               "avgRank": 15.8,
               "consistency": {
                 "neverOutsideTop3": false,
@@ -54519,12 +53178,7 @@
         "netAdvantage": 1.5
       },
       "trajectory": {
-        "weeklyScores": [
-          111.37,
-          111.58,
-          119.77,
-          112.93
-        ],
+        "weeklyScores": [111.37, 111.58, 119.77, 112.93],
         "slopePPW": 1.3,
         "trend": "stable",
         "isSignificant": false,
@@ -54554,12 +53208,7 @@
         "interpretation": "neutral",
         "isSignificant": false,
         "strength": "weak",
-        "weeklyResiduals": [
-          -26.1,
-          6.6,
-          17.3,
-          2.1
-        ],
+        "weeklyResiduals": [-26.1, 6.6, 17.3, 2.1],
         "sampleSize": 4
       },
       "counterfactualGames": {

@@ -1,16 +1,16 @@
 /**
  * Narrative Generation Functions
- * 
+ *
  * Converts raw stats into contextual stories for weekly recaps
  */
 
-import { 
-  POSITIONAL_THRESHOLDS, 
-  LUCK_THRESHOLDS, 
+import {
+  POSITIONAL_THRESHOLDS,
+  LUCK_THRESHOLDS,
   SCATTER_THRESHOLDS,
   TRANSACTION_THRESHOLDS,
   START_SIT_THRESHOLDS,
-  type NarrativeSeverity 
+  type NarrativeSeverity,
 } from '../config/narrative-thresholds.js';
 
 // ============================================================================
@@ -124,13 +124,14 @@ function calculateVariance(values: number[]): number {
 export function generatePositionalTrendNarrative(data: PositionalTrendData): Narrative | null {
   const rankChange = data.previousWeeks.avgRank - data.currentWeek.rank;
   const pointsChange = data.currentWeek.points - data.previousWeeks.avgPoints;
-  const pointsChangePct = data.previousWeeks.avgPoints > 0 
-    ? pointsChange / data.previousWeeks.avgPoints 
-    : 0;
-  
+  const pointsChangePct =
+    data.previousWeeks.avgPoints > 0 ? pointsChange / data.previousWeeks.avgPoints : 0;
+
   // THRESHOLD 1: Massive Breakout
-  if (rankChange >= POSITIONAL_THRESHOLDS.breakout.minRankJump && 
-      pointsChangePct >= POSITIONAL_THRESHOLDS.breakout.minPointsPct) {
+  if (
+    rankChange >= POSITIONAL_THRESHOLDS.breakout.minRankJump &&
+    pointsChangePct >= POSITIONAL_THRESHOLDS.breakout.minPointsPct
+  ) {
     return {
       severity: 'critical',
       type: 'breakout',
@@ -138,10 +139,12 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
       data,
     };
   }
-  
+
   // THRESHOLD 2: Notable Improvement
-  if (rankChange >= POSITIONAL_THRESHOLDS.improvement.minRankJump && 
-      pointsChangePct >= POSITIONAL_THRESHOLDS.improvement.minPointsPct) {
+  if (
+    rankChange >= POSITIONAL_THRESHOLDS.improvement.minRankJump &&
+    pointsChangePct >= POSITIONAL_THRESHOLDS.improvement.minPointsPct
+  ) {
     return {
       severity: 'moderate',
       type: 'improvement',
@@ -149,10 +152,12 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
       data,
     };
   }
-  
+
   // THRESHOLD 3: Collapse
-  if (rankChange <= -POSITIONAL_THRESHOLDS.collapse.minRankDrop && 
-      pointsChangePct <= POSITIONAL_THRESHOLDS.collapse.maxPointsPct) {
+  if (
+    rankChange <= -POSITIONAL_THRESHOLDS.collapse.minRankDrop &&
+    pointsChangePct <= POSITIONAL_THRESHOLDS.collapse.maxPointsPct
+  ) {
     return {
       severity: 'critical',
       type: 'collapse',
@@ -160,10 +165,12 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
       data,
     };
   }
-  
+
   // THRESHOLD 4: Continued Dominance (Top 3)
-  if (data.currentWeek.rank <= POSITIONAL_THRESHOLDS.dominance.topRankThreshold && 
-      data.previousWeeks.avgRank <= POSITIONAL_THRESHOLDS.dominance.topRankThreshold) {
+  if (
+    data.currentWeek.rank <= POSITIONAL_THRESHOLDS.dominance.topRankThreshold &&
+    data.previousWeeks.avgRank <= POSITIONAL_THRESHOLDS.dominance.topRankThreshold
+  ) {
     const advantage = data.currentWeek.points - data.currentWeek.leagueMedian;
     return {
       severity: 'moderate',
@@ -172,10 +179,12 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
       data,
     };
   }
-  
+
   // THRESHOLD 5: Continued Struggle (Bottom 3)
-  if (data.currentWeek.rank >= POSITIONAL_THRESHOLDS.struggle.bottomRankThreshold && 
-      data.previousWeeks.avgRank >= POSITIONAL_THRESHOLDS.struggle.bottomRankThreshold) {
+  if (
+    data.currentWeek.rank >= POSITIONAL_THRESHOLDS.struggle.bottomRankThreshold &&
+    data.previousWeeks.avgRank >= POSITIONAL_THRESHOLDS.struggle.bottomRankThreshold
+  ) {
     const deficit = data.currentWeek.leagueMedian - data.currentWeek.points;
     return {
       severity: 'moderate',
@@ -184,7 +193,7 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
       data,
     };
   }
-  
+
   // THRESHOLD 6: Inconsistent
   const rankVariance = calculateVariance(data.previousWeeks.weekByWeek.map(w => w.rank));
   if (rankVariance > POSITIONAL_THRESHOLDS.volatility.minRankVariance) {
@@ -196,7 +205,7 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
       data,
     };
   }
-  
+
   return null;
 }
 
@@ -207,13 +216,13 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
 export function generateLuckNarrative(data: LuckData): Narrative | null {
   const luckRating = data.record.wins - data.record.expectedWins;
   const scheduleEase = 25 - data.schedule.difficultyRank; // Higher = easier
-  const totalTeams = data.counterfactual.teamsWithSameRecord + 
-                     data.counterfactual.teamsWithBetter + 
-                     data.counterfactual.teamsWithWorse;
-  const percentile = totalTeams > 0 
-    ? ((data.counterfactual.teamsWithWorse / totalTeams) * 100).toFixed(0)
-    : 50;
-  
+  const totalTeams =
+    data.counterfactual.teamsWithSameRecord +
+    data.counterfactual.teamsWithBetter +
+    data.counterfactual.teamsWithWorse;
+  const percentile =
+    totalTeams > 0 ? ((data.counterfactual.teamsWithWorse / totalTeams) * 100).toFixed(0) : 50;
+
   // SCENARIO 1: Lucky + Easy Schedule = Inflated Record
   if (luckRating > LUCK_THRESHOLDS.lucky && scheduleEase >= 18) {
     return {
@@ -223,7 +232,7 @@ export function generateLuckNarrative(data: LuckData): Narrative | null {
       data,
     };
   }
-  
+
   // SCENARIO 2: Unlucky + Hard Schedule = Underrated
   if (luckRating < LUCK_THRESHOLDS.unlucky && scheduleEase <= 6) {
     return {
@@ -233,7 +242,7 @@ export function generateLuckNarrative(data: LuckData): Narrative | null {
       data,
     };
   }
-  
+
   // SCENARIO 3: Lucky Despite Hard Schedule = Legitimately Good
   if (luckRating > LUCK_THRESHOLDS.lucky && scheduleEase <= 8) {
     return {
@@ -243,7 +252,7 @@ export function generateLuckNarrative(data: LuckData): Narrative | null {
       data,
     };
   }
-  
+
   // SCENARIO 4: Unlucky + Easy Schedule = Genuinely Bad
   if (luckRating < LUCK_THRESHOLDS.unlucky && scheduleEase >= 18) {
     return {
@@ -253,7 +262,7 @@ export function generateLuckNarrative(data: LuckData): Narrative | null {
       data,
     };
   }
-  
+
   // Only highlight extreme cases
   return null;
 }
@@ -263,14 +272,15 @@ export function generateLuckNarrative(data: LuckData): Narrative | null {
 // ============================================================================
 
 export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narrative | null {
-  const isOutlier = Math.abs(data.zX) > SCATTER_THRESHOLDS.outlierZScore || 
-                    Math.abs(data.zY) > SCATTER_THRESHOLDS.outlierZScore;
-  
+  const isOutlier =
+    Math.abs(data.zX) > SCATTER_THRESHOLDS.outlierZScore ||
+    Math.abs(data.zY) > SCATTER_THRESHOLDS.outlierZScore;
+
   if (!isOutlier) return null;
-  
+
   const isCritical = SCATTER_THRESHOLDS.severityRules.critical(data.zX, data.zY);
   const isModerate = SCATTER_THRESHOLDS.severityRules.moderate(data.zX, data.zY);
-  
+
   // UPPER-LEFT: Dominant (high scoring, low opponent scoring)
   if (data.quadrant === 'upper-left') {
     if (isCritical) {
@@ -289,7 +299,7 @@ export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narra
       };
     }
   }
-  
+
   // LOWER-RIGHT: Struggling (low scoring, high opponent scoring)
   if (data.quadrant === 'lower-right') {
     if (isCritical) {
@@ -308,7 +318,7 @@ export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narra
       };
     }
   }
-  
+
   // UPPER-RIGHT: High variance (high scoring, high opponent scoring)
   if (data.quadrant === 'upper-right' && isModerate) {
     return {
@@ -318,7 +328,7 @@ export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narra
       data,
     };
   }
-  
+
   // LOWER-LEFT: Low variance (low scoring, low opponent scoring)
   if (data.quadrant === 'lower-left' && isModerate) {
     return {
@@ -328,7 +338,7 @@ export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narra
       data,
     };
   }
-  
+
   return null;
 }
 
@@ -339,14 +349,14 @@ export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narra
 export function generateTransactionNarrative(txn: TransactionData): Narrative | null {
   const addedPlayer = txn.players.find(p => p.role === 'add');
   const droppedPlayer = txn.players.find(p => p.role === 'drop');
-  
+
   if (!addedPlayer) return null;
-  
+
   // Only highlight transactions above threshold
   if (Math.abs(txn.score) < TRANSACTION_THRESHOLDS.notable.minScoreForHighlight) {
     return null;
   }
-  
+
   // TRADE NARRATIVES
   if (txn.type === 'trade') {
     // CATASTROPHIC TRADE (F grade, large negative VORP)
@@ -358,7 +368,7 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
         data: txn,
       };
     }
-    
+
     // EXCELLENT TRADE (A+ grade, large positive VORP)
     if ((txn.grade === 'A+' || txn.grade === 'A') && txn.score > 15) {
       return {
@@ -369,7 +379,7 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
       };
     }
   }
-  
+
   // WAIVER/FREE AGENT NARRATIVES
   if (txn.type === 'waiver' || txn.type === 'free_agent') {
     // GENIUS PICKUP (A+ grade, high VORP)
@@ -381,10 +391,13 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
         data: txn,
       };
     }
-    
+
     // TERRIBLE DROP (F grade, player thriving elsewhere)
-    if (txn.grade === 'F' && droppedPlayer && 
-        (droppedPlayer.afterDrop?.oppHarm || 0) > TRANSACTION_THRESHOLDS.notable.minOpponentHarm) {
+    if (
+      txn.grade === 'F' &&
+      droppedPlayer &&
+      (droppedPlayer.afterDrop?.oppHarm || 0) > TRANSACTION_THRESHOLDS.notable.minOpponentHarm
+    ) {
       return {
         severity: 'critical',
         type: 'bad-drop',
@@ -392,7 +405,7 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
         data: txn,
       };
     }
-    
+
     // FAAB OVERPAY
     if (txn.faabCost > TRANSACTION_THRESHOLDS.notable.highFaabThreshold && txn.score < 5) {
       return {
@@ -402,9 +415,13 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
         data: txn,
       };
     }
-    
+
     // FAAB BARGAIN
-    if (txn.faabCost > 0 && txn.faabCost < TRANSACTION_THRESHOLDS.notable.bargainFaabThreshold && txn.score > 15) {
+    if (
+      txn.faabCost > 0 &&
+      txn.faabCost < TRANSACTION_THRESHOLDS.notable.bargainFaabThreshold &&
+      txn.score > 15
+    ) {
       return {
         severity: 'moderate',
         type: 'faab-bargain',
@@ -413,7 +430,7 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
       };
     }
   }
-  
+
   return null;
 }
 
@@ -423,7 +440,7 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
 
 export function generateStartSitNarrative(decision: StartSitData): Narrative | null {
   const pointsLost = Math.abs(decision.pointDifferential);
-  
+
   // BAD START (started wrong player)
   if (decision.decision === 'start' && decision.pointDifferential < 0) {
     // CATASTROPHIC MISTAKE
@@ -435,7 +452,7 @@ export function generateStartSitNarrative(decision: StartSitData): Narrative | n
         data: decision,
       };
     }
-    
+
     // SIGNIFICANT MISTAKE
     else if (pointsLost > START_SIT_THRESHOLDS.badStart.significant) {
       return {
@@ -446,9 +463,12 @@ export function generateStartSitNarrative(decision: StartSitData): Narrative | n
       };
     }
   }
-  
+
   // GOOD START (nailed it)
-  if (decision.decision === 'start' && decision.pointDifferential > START_SIT_THRESHOLDS.goodStart.good) {
+  if (
+    decision.decision === 'start' &&
+    decision.pointDifferential > START_SIT_THRESHOLDS.goodStart.good
+  ) {
     if (decision.pointDifferential > START_SIT_THRESHOLDS.goodStart.excellent) {
       return {
         severity: 'moderate',
@@ -458,7 +478,6 @@ export function generateStartSitNarrative(decision: StartSitData): Narrative | n
       };
     }
   }
-  
+
   return null;
 }
-

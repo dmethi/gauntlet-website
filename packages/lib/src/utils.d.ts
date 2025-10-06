@@ -50,16 +50,16 @@ export declare function calculateStdDev(values: number[]): number;
  * NFL state structure from Sleeper API
  */
 export interface NFLState {
-    week: number;
-    leg: number;
-    season: string;
-    season_type: 'pre' | 'regular' | 'post';
-    league_season: string;
-    previous_season: string;
-    season_start_date: string;
-    display_week: number;
-    league_create_season: string;
-    season_has_scores: boolean;
+  week: number;
+  leg: number;
+  season: string;
+  season_type: 'pre' | 'regular' | 'post';
+  league_season: string;
+  previous_season: string;
+  season_start_date: string;
+  display_week: number;
+  league_create_season: string;
+  season_has_scores: boolean;
 }
 /**
  * Fetch current NFL state from Sleeper API

@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
-import type {
-  SleeperUser,
-  SleeperRoster,
-  SleeperLeague,
-  SleeperMatchup,
-} from '@gauntlet/types';
+import type { SleeperUser, SleeperRoster, SleeperLeague, SleeperMatchup } from '@gauntlet/types';
 
 async function fetchSleeperData<T>(endpoint: string): Promise<T> {
   const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);

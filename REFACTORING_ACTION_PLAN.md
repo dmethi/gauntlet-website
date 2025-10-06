@@ -11,6 +11,7 @@
 ### Week 1: Testing Infrastructure
 
 #### Task 1.1: Set up Testing Framework ⏱️ 4 hours
+
 ```bash
 # Install dependencies
 cd apps/web
@@ -45,11 +46,13 @@ export default defineConfig({
 ```
 
 **Acceptance Criteria**:
+
 - ✅ Tests run with `pnpm test`
 - ✅ Coverage reports generated
 - ✅ Can import components with `@/` alias
 
 #### Task 1.2: Create Test Infrastructure ⏱️ 3 hours
+
 ```bash
 mkdir -p apps/web/src/test/{factories,utils}
 touch apps/web/src/test/setup.ts
@@ -67,16 +70,19 @@ afterEach(() => {
 ```
 
 **Files to Create**:
+
 1. `src/test/factories/index.ts` - Factory exports
 2. `src/test/utils/render.tsx` - Custom render with providers
 3. `src/test/utils/mockData.ts` - Common test data
 
 **Acceptance Criteria**:
+
 - ✅ Custom render function with providers
 - ✅ Factory pattern documented
 - ✅ Example test passes
 
 #### Task 1.3: Write First Tests ⏱️ 4 hours
+
 **Target**: Test 3 utility functions as proof of concept
 
 ```typescript
@@ -90,12 +96,13 @@ describe('utils', () => {
       expect(cn('foo', 'bar')).toBe('foo bar');
     });
   });
-  
+
   // Add more tests...
 });
 ```
 
 **Acceptance Criteria**:
+
 - ✅ 3+ utility functions tested
 - ✅ 100% coverage on tested functions
 - ✅ Tests pass in CI
@@ -105,6 +112,7 @@ describe('utils', () => {
 ### Week 2: ESLint Rules & Folder Structure
 
 #### Task 2.1: Configure ESLint Rules ⏱️ 3 hours
+
 ```bash
 pnpm add -D eslint-plugin-import
 ```
@@ -116,63 +124,74 @@ module.exports = {
   plugins: ['import'],
   rules: {
     // Import ordering
-    'import/order': ['error', {
-      'groups': [
-        'builtin',
-        'external',
-        'internal',
-        ['parent', 'sibling'],
-        'index',
-      ],
-      'pathGroups': [
-        {
-          pattern: 'react',
-          group: 'external',
-          position: 'before',
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'index',
+        ],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+          {
+            pattern: '@gauntlet/**',
+            group: 'internal',
+            position: 'before',
+          },
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
         },
-        {
-          pattern: '@gauntlet/**',
-          group: 'internal',
-          position: 'before',
-        },
-        {
-          pattern: '@/**',
-          group: 'internal',
-          position: 'after',
-        },
-      ],
-      'pathGroupsExcludedImportTypes': ['react'],
-      'newlines-between': 'always',
-      'alphabetize': {
-        order: 'asc',
-        caseInsensitive: true,
       },
-    }],
-    
+    ],
+
     // Type imports
-    '@typescript-eslint/consistent-type-imports': ['error', {
-      prefer: 'type-imports',
-      disallowTypeAnnotations: false,
-    }],
-    
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        prefer: 'type-imports',
+        disallowTypeAnnotations: false,
+      },
+    ],
+
     // Prevent relative imports beyond parent
     'import/no-relative-parent-imports': 'off', // Will enable after refactoring
-    
+
     // No unused vars
-    '@typescript-eslint/no-unused-vars': ['error', {
-      argsIgnorePattern: '^_',
-      varsIgnorePattern: '^_',
-    }],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
   },
 };
 ```
 
 **Acceptance Criteria**:
+
 - ✅ Import ordering enforced
 - ✅ Type imports required
 - ✅ No eslint-disable without explanation
 
 #### Task 2.2: Create Feature Folder Structure ⏱️ 2 hours
+
 ```bash
 cd apps/web/src
 mkdir -p features/{draft-analysis,matchups,stats,hall-of-fame,transactions}/components
@@ -188,24 +207,14 @@ mkdir -p shared/{components,hooks,utils,types}
 Each feature follows a consistent structure:
 
 ```
-feature-name/
-├── components/        # UI components
-│   ├── FeatureMain/
-│   │   ├── FeatureMain.tsx
-│   │   ├── FeatureMain.test.tsx
-│   │   ├── types.ts
-│   │   └── index.ts
-│   └── index.ts
-├── hooks/            # Custom hooks
-│   ├── useFeatureHook.ts
-│   ├── useFeatureHook.test.ts
-│   └── index.ts
-├── utils/            # Utility functions
-│   ├── calculations.ts
-│   ├── calculations.test.ts
-│   └── index.ts
-├── types.ts          # Feature-level types
-└── index.ts          # ONLY exports screens/layouts
+
+feature-name/ ├── components/ # UI components │ ├── FeatureMain/ │ │ ├──
+FeatureMain.tsx │ │ ├── FeatureMain.test.tsx │ │ ├── types.ts │ │ └── index.ts │
+└── index.ts ├── hooks/ # Custom hooks │ ├── useFeatureHook.ts │ ├──
+useFeatureHook.test.ts │ └── index.ts ├── utils/ # Utility functions │ ├──
+calculations.ts │ ├── calculations.test.ts │ └── index.ts ├── types.ts #
+Feature-level types └── index.ts # ONLY exports screens/layouts
+
 ```
 
 ## Import Rules
@@ -217,11 +226,13 @@ feature-name/
 ```
 
 **Acceptance Criteria**:
+
 - ✅ All feature folders created
 - ✅ README documents structure
 - ✅ Example index.ts files in place
 
 #### Task 2.3: Update tsconfig Paths ⏱️ 1 hour
+
 ```json
 // apps/web/tsconfig.json
 {
@@ -238,6 +249,7 @@ feature-name/
 ```
 
 **Acceptance Criteria**:
+
 - ✅ Path aliases work
 - ✅ IDE autocomplete works
 - ✅ No TypeScript errors
@@ -249,6 +261,7 @@ feature-name/
 ### Week 3: Refactor manager-analysis.tsx
 
 #### Task 3.1: Extract Types ⏱️ 2 hours
+
 **File**: Split `manager-analysis.tsx` types
 
 ```bash
@@ -258,23 +271,28 @@ touch apps/web/src/features/manager-analysis/components/ManagerAnalysis/types.ts
 ```
 
 **Process**:
+
 1. Copy all interfaces to `types.ts`
 2. Update imports in original file
 3. Run TypeScript check
 4. Commit: `git commit -m "feat: extract manager-analysis types"`
 
 **Acceptance Criteria**:
+
 - ✅ No TypeScript errors
 - ✅ Types in separate file
 - ✅ Clean git diff
 
 #### Task 3.2: Extract Utility Functions ⏱️ 3 hours
+
 **Files**:
+
 - `utils/formatting.ts` (formatCurrency, formatPercentage)
 - `utils/colors.ts` (getClusterBadgeColor, getClusterColor)
 - `utils/sorting.ts` (sortProfiles)
 
 **Process**:
+
 1. Create utility files with functions
 2. Write tests for each utility
 3. Update imports in component
@@ -282,16 +300,20 @@ touch apps/web/src/features/manager-analysis/components/ManagerAnalysis/types.ts
 5. Commit: `git commit -m "feat: extract manager-analysis utils"`
 
 **Acceptance Criteria**:
+
 - ✅ All utilities tested (100% coverage)
 - ✅ Utilities work in component
 - ✅ Tests pass
 
 #### Task 3.3: Extract Custom Hooks ⏱️ 4 hours
+
 **Files**:
+
 - `hooks/useManagerSorting.ts`
 - `hooks/useManagerFiltering.ts`
 
 **Process**:
+
 1. Extract sorting logic to hook
 2. Write hook tests
 3. Extract filtering logic to hook
@@ -300,12 +322,15 @@ touch apps/web/src/features/manager-analysis/components/ManagerAnalysis/types.ts
 6. Commit: `git commit -m "feat: extract manager-analysis hooks"`
 
 **Acceptance Criteria**:
+
 - ✅ Hooks tested with renderHook
 - ✅ Component logic simplified
 - ✅ Tests pass
 
 #### Task 3.4: Extract Sub-components ⏱️ 8 hours
+
 **Components to Create**:
+
 1. `ClusterVisualization.tsx` (200 lines)
 2. `ManagerFilters.tsx` (100 lines)
 3. `ManagerTable.tsx` (200 lines)
@@ -313,6 +338,7 @@ touch apps/web/src/features/manager-analysis/components/ManagerAnalysis/types.ts
 5. `ClusterBadge.tsx` (40 lines)
 
 **Process (per component)**:
+
 1. Create component file
 2. Create types.ts
 3. Move JSX from main component
@@ -321,19 +347,23 @@ touch apps/web/src/features/manager-analysis/components/ManagerAnalysis/types.ts
 6. Commit
 
 **Acceptance Criteria**:
+
 - ✅ Main component < 150 lines
 - ✅ Each sub-component tested
 - ✅ All tests pass
 - ✅ No visual regressions
 
 #### Task 3.5: Add Memoization & JSDoc ⏱️ 2 hours
+
 **Process**:
+
 1. Wrap all components in `memo()`
 2. Add JSDoc to components
 3. Add JSDoc to hooks
 4. Add JSDoc to utilities
 
 **Acceptance Criteria**:
+
 - ✅ All components memoized
 - ✅ JSDoc on all exports
 - ✅ Examples in JSDoc
@@ -343,9 +373,11 @@ touch apps/web/src/features/manager-analysis/components/ManagerAnalysis/types.ts
 ### Week 4: Refactor Additional Components
 
 #### Task 4.1: Refactor start-sit-efficiency.tsx ⏱️ 6 hours
+
 **Target**: 200+ line component
 
 Apply same pattern:
+
 1. Extract types
 2. Extract utils
 3. Extract hooks
@@ -353,14 +385,17 @@ Apply same pattern:
 5. Add tests
 
 **Acceptance Criteria**:
+
 - ✅ Main component < 150 lines
 - ✅ 80% test coverage
 - ✅ Types separated
 
 #### Task 4.2: Refactor matchup-simulation.tsx ⏱️ 6 hours
+
 Apply same pattern as above.
 
 #### Task 4.3: Refactor team-charts.tsx ⏱️ 4 hours
+
 Apply same pattern as above.
 
 ---
@@ -370,9 +405,11 @@ Apply same pattern as above.
 ### Week 5: Split hooks.ts (726 lines)
 
 #### Task 5.1: Create Feature-Specific Hooks ⏱️ 8 hours
+
 **Target**: Break into 15+ hook files
 
 **Process**:
+
 1. Identify feature groupings:
    - League hooks → `features/league/hooks/`
    - Matchup hooks → `features/matchups/hooks/`
@@ -387,6 +424,7 @@ Apply same pattern as above.
    - Update imports
 
 **Files to Create**:
+
 ```
 features/league/hooks/
 ├── useLeagueData.ts
@@ -419,6 +457,7 @@ shared/hooks/
 ```
 
 **Acceptance Criteria**:
+
 - ✅ Original hooks.ts deleted
 - ✅ All hooks tested
 - ✅ All imports updated
@@ -429,9 +468,11 @@ shared/hooks/
 ### Week 6: Refactor Mega Logic Files
 
 #### Task 6.1: Refactor manager-analytics.ts (1,347 lines) ⏱️ 12 hours
+
 **Target**: Break into 15+ files
 
 **New Structure**:
+
 ```
 lib/manager-analytics/
 ├── types.ts                    # All interfaces (200 lines)
@@ -459,6 +500,7 @@ lib/manager-analytics/
 ```
 
 **Process**:
+
 1. Extract types first
 2. Group related functions
 3. Create files per group
@@ -466,15 +508,18 @@ lib/manager-analytics/
 5. Update imports
 
 **Acceptance Criteria**:
+
 - ✅ Original file deleted
 - ✅ 80%+ test coverage
 - ✅ All imports updated
 - ✅ No breaking changes
 
 #### Task 6.2: Refactor draft-analytics.ts (650 lines) ⏱️ 8 hours
+
 **Target**: Break into 10+ files
 
 **New Structure**:
+
 ```
 lib/draft-analytics/
 ├── types.ts
@@ -496,6 +541,7 @@ lib/draft-analytics/
 ```
 
 **Acceptance Criteria**:
+
 - ✅ Original file deleted
 - ✅ 80%+ test coverage
 - ✅ All imports updated
@@ -507,9 +553,11 @@ lib/draft-analytics/
 ### Week 7: Comprehensive Testing
 
 #### Task 7.1: Test Critical Business Logic ⏱️ 12 hours
+
 **Target**: 80% coverage on critical paths
 
 **Priority Areas**:
+
 1. Matchup calculations
 2. Win probability simulations
 3. Draft analytics
@@ -517,6 +565,7 @@ lib/draft-analytics/
 5. Stats calculations
 
 **Process**:
+
 1. Identify untested functions
 2. Write test factories
 3. Write unit tests
@@ -524,14 +573,17 @@ lib/draft-analytics/
 5. Achieve coverage targets
 
 **Acceptance Criteria**:
+
 - ✅ 80% coverage on critical paths
 - ✅ All calculations tested
 - ✅ Edge cases covered
 
 #### Task 7.2: Add Integration Tests ⏱️ 8 hours
+
 **Target**: API routes and data flows
 
 **Files to Test**:
+
 ```
 src/app/api/__tests__/
 ├── matchups.test.ts
@@ -541,6 +593,7 @@ src/app/api/__tests__/
 ```
 
 **Acceptance Criteria**:
+
 - ✅ API routes tested
 - ✅ Error cases handled
 - ✅ Mock data consistent
@@ -550,20 +603,24 @@ src/app/api/__tests__/
 ### Week 8: Documentation & Polish
 
 #### Task 8.1: Add JSDoc to All Public APIs ⏱️ 6 hours
+
 **Target**: Every exported function/component
 
 **Process**:
+
 1. Add JSDoc to hooks
 2. Add JSDoc to utilities
 3. Add JSDoc to components
 4. Add examples
 
 **Acceptance Criteria**:
+
 - ✅ All exports documented
 - ✅ Examples included
 - ✅ IDE tooltips work
 
 #### Task 8.2: Create Storybook Stories ⏱️ 8 hours
+
 **Target**: Key components
 
 ```bash
@@ -572,6 +629,7 @@ npx storybook@latest init
 ```
 
 **Components to Document**:
+
 1. ManagerAnalysis
 2. MatchupSimulation
 3. StartSitEfficiency
@@ -579,12 +637,15 @@ npx storybook@latest init
 5. UI components
 
 **Acceptance Criteria**:
+
 - ✅ Storybook runs locally
 - ✅ 10+ stories created
 - ✅ Components interactive
 
 #### Task 8.3: Final Cleanup ⏱️ 4 hours
+
 **Tasks**:
+
 1. Remove empty directories
 2. Remove unused files
 3. Remove all eslint-disable
@@ -592,6 +653,7 @@ npx storybook@latest init
 5. Run full test suite
 
 **Acceptance Criteria**:
+
 - ✅ No empty directories
 - ✅ No eslint violations
 - ✅ All tests pass
@@ -602,6 +664,7 @@ npx storybook@latest init
 ## Tracking Progress
 
 ### Daily Checklist
+
 - [ ] Run tests before commits
 - [ ] Keep PRs small (<500 lines)
 - [ ] Update documentation
@@ -609,6 +672,7 @@ npx storybook@latest init
 - [ ] Run full test suite
 
 ### Weekly Goals
+
 **Week 1**: Testing infrastructure complete  
 **Week 2**: Folder structure established  
 **Week 3**: manager-analysis.tsx refactored  
@@ -616,35 +680,42 @@ npx storybook@latest init
 **Week 5**: hooks.ts split complete  
 **Week 6**: Logic files refactored  
 **Week 7**: 80% test coverage  
-**Week 8**: Documentation complete  
+**Week 8**: Documentation complete
 
 ### Success Metrics
-| Metric | Start | Week 4 | Week 8 | Target |
-|--------|-------|--------|--------|--------|
-| Largest file | 1,625 lines | 500 lines | 300 lines | <300 lines |
-| Test coverage | 0% | 40% | 80% | >80% |
-| Feature folders | 0 | 5 | 5 | 5 |
-| eslint-disable | 50+ | 25 | 0 | <5 |
-| Component avg | 400 lines | 250 lines | 150 lines | <200 lines |
+
+| Metric          | Start       | Week 4    | Week 8    | Target     |
+| --------------- | ----------- | --------- | --------- | ---------- |
+| Largest file    | 1,625 lines | 500 lines | 300 lines | <300 lines |
+| Test coverage   | 0%          | 40%       | 80%       | >80%       |
+| Feature folders | 0           | 5         | 5         | 5          |
+| eslint-disable  | 50+         | 25        | 0         | <5         |
+| Component avg   | 400 lines   | 250 lines | 150 lines | <200 lines |
 
 ---
 
 ## Risk Mitigation
 
 ### Risk 1: Breaking Changes
-**Mitigation**: 
+
+**Mitigation**:
+
 - Write tests BEFORE refactoring
 - Test in staging environment
 - Keep original files until validated
 
 ### Risk 2: Time Overruns
+
 **Mitigation**:
+
 - Start with most critical paths
 - Pair program on complex refactors
 - Use AI assistance for boilerplate
 
 ### Risk 3: Scope Creep
+
 **Mitigation**:
+
 - Stick to action plan
 - No new features during refactoring
 - Document tech debt for later
@@ -660,4 +731,3 @@ npx storybook@latest init
 5. **Begin Phase 1** testing infrastructure
 
 **Ready to start? Begin with Phase 1, Task 1.1! 🚀**
-

@@ -136,13 +136,16 @@ export async function fetchNFLState(): Promise<NFLState> {
     return await response.json();
   } catch (error) {
     console.error('Error fetching NFL state from Sleeper API:', error);
-    
+
     // Fallback to manual calculation if API fails
     const now = new Date();
     const seasonStart = new Date('2025-09-04'); // 2025 season start
     const weekMs = 7 * 24 * 60 * 60 * 1000;
-    const calculatedWeek = Math.max(1, Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1));
-    
+    const calculatedWeek = Math.max(
+      1,
+      Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1)
+    );
+
     return {
       week: calculatedWeek,
       leg: 0,
@@ -174,7 +177,10 @@ export function getCurrentWeekSync(): number {
   const now = new Date();
   const seasonStart = new Date('2025-09-04'); // 2025 season start
   const weekMs = 7 * 24 * 60 * 60 * 1000;
-  return Math.max(1, Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1));
+  return Math.max(
+    1,
+    Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1)
+  );
 }
 
 /**

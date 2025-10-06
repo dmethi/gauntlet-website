@@ -1,46 +1,56 @@
 # Task: EXTRACT-601-api-client
 
 ## Overview
-Extract API fetching logic from `comprehensive-live-snapshot.ts` to a dedicated Gauntlet API client.
+
+Extract API fetching logic from `comprehensive-live-snapshot.ts` to a dedicated
+Gauntlet API client.
 
 ## Context Needed
-- File: `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts` (lines 74-239) - API functions
+
+- File: `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts` (lines
+  74-239) - API functions
 - Reference: `apps/web/src/lib/sleeper/unified-client.ts` - Client pattern
 
 ## Objective
-Create reusable API client in `apps/server/src/lib/gauntlet-api-client.ts` for fetching from Gauntlet web app endpoints.
+
+Create reusable API client in `apps/server/src/lib/gauntlet-api-client.ts` for
+fetching from Gauntlet web app endpoints.
 
 **Functions to Extract** (lines 74-239):
+
 - `getCurrentWeek()` - Fetches current NFL week
 - `captureLeagueOdds()` - Fetches league-wide odds
 - `captureIndividualMatchup()` - Fetches single matchup simulation
 
 ## Steps
+
 1. Create `apps/server/src/lib/gauntlet-api-client.ts`
 2. Define types at top:
+
    ```typescript
    interface GauntletAPIOptions {
      baseUrl?: string;
      timeout?: number;
    }
-   
+
    interface LeagueOddsResponse {
      // From actual API response
    }
-   
+
    interface MatchupSimulationResponse {
      // From actual API response
    }
    ```
+
 3. Create client class:
    ```typescript
    export class GauntletAPIClient {
      private baseUrl: string;
-     
+
      constructor(options: GauntletAPIOptions = {}) {
        this.baseUrl = options.baseUrl || 'https://gauntlet-website.vercel.app';
      }
-     
+
      async getCurrentWeek(): Promise<number> { ... }
      async fetchLeagueOdds(week: number): Promise<LeagueOddsResponse> { ... }
      async fetchMatchupSimulation(leagueId: string, week: number, matchupId: number): Promise<MatchupSimulationResponse> { ... }
@@ -60,6 +70,7 @@ Create reusable API client in `apps/server/src/lib/gauntlet-api-client.ts` for f
 9. Test with `pnpm live-snapshot` (if DATABASE_URL available)
 
 ## Acceptance Criteria
+
 - [ ] New file `src/lib/gauntlet-api-client.ts` created
 - [ ] All 3 API functions extracted to client
 - [ ] Types defined for API responses
@@ -71,16 +82,19 @@ Create reusable API client in `apps/server/src/lib/gauntlet-api-client.ts` for f
 - [ ] No TypeScript errors
 
 ## Estimated Context Usage
+
 - Files to read: 1 (just lines 74-239 of comprehensive-live-snapshot.ts)
 - Lines to process: ~165
 - New files: 1
 - Risk: **Low** (pure extraction, no logic changes)
 
 ## Related Tasks
+
 - **Depends on**: CLEAN-602 (working TypeScript config)
 - **Related**: EXTRACT-602 (validation logic)
 
 ## Cursor Prompt
+
 ```
 I'm working on EXTRACT-601. Please:
 1. Read tasks/EXTRACT-601-api-client.md
@@ -92,6 +106,7 @@ I'm working on EXTRACT-601. Please:
 ```
 
 ## Commit Message
+
 ```
 feat(EXTRACT-601): extract Gauntlet API client
 
@@ -104,9 +119,11 @@ feat(EXTRACT-601): extract Gauntlet API client
 ```
 
 ## Estimated Time
+
 ⏱️ **60 minutes**
 
 ## Verification
+
 ```bash
 cd apps/server
 pnpm build                    # Should compile
@@ -115,8 +132,8 @@ pnpm tsc --noEmit            # Should have no errors
 ```
 
 ## Notes
+
 - This extraction makes the API logic reusable
 - Follows same pattern as apps/web unified-client
 - No behavior changes - pure refactor
 - Main script will go from 435 → ~270 lines
-

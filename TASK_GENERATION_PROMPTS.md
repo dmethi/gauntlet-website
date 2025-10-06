@@ -1,6 +1,7 @@
 # Task Generation Prompts
 
-**Purpose**: Copy-paste ready prompts for analyzing codebase areas and generating tasks  
+**Purpose**: Copy-paste ready prompts for analyzing codebase areas and
+generating tasks  
 **Use**: Open fresh Cursor session, copy prompt, paste, follow workflow
 
 ---
@@ -17,6 +18,7 @@ Session 1: Inventory → Session 2: Analyze → Session 3: Generate → Session 
 ## 📋 Session 1: Inventory Analysis
 
 ### Prompt: Analyze Directory
+
 ```
 I'm analyzing [DIRECTORY_PATH] to generate refactoring tasks.
 
@@ -35,6 +37,7 @@ Use the directory analysis format from TASK_GENERATOR_GUIDE.md.
 ```
 
 ### Example: Analyze lib/ directory
+
 ```
 I'm analyzing apps/web/src/lib/ to generate refactoring tasks.
 
@@ -57,6 +60,7 @@ Use the directory analysis format from TASK_GENERATOR_GUIDE.md.
 ## 📄 Session 2: Analyze Specific File
 
 ### Prompt: Analyze Large File
+
 ```
 I'm analyzing [FILE_PATH] ([N] lines) to break it into manageable tasks.
 
@@ -77,6 +81,7 @@ Provide task breakdown with time estimates.
 ```
 
 ### Example: Analyze manager-analytics.ts
+
 ```
 I'm analyzing apps/web/src/lib/manager-analytics.ts (1,347 lines) to break it into manageable tasks.
 
@@ -96,6 +101,7 @@ Provide task breakdown with time estimates.
 ```
 
 ### Prompt: Analyze Component
+
 ```
 I'm analyzing [COMPONENT_PATH] to identify refactoring opportunities.
 
@@ -117,6 +123,7 @@ Suggest task breakdown following the example in REFACTORING_EXAMPLE.md.
 ```
 
 ### Example: Analyze start-sit-efficiency.tsx
+
 ```
 I'm analyzing apps/web/src/components/start-sit-efficiency.tsx to identify refactoring opportunities.
 
@@ -142,6 +149,7 @@ Suggest task breakdown following the example in REFACTORING_EXAMPLE.md.
 ## 📝 Session 3: Generate Task Files
 
 ### Prompt: Generate Tasks from Analysis
+
 ```
 Based on the analysis of [FILE/DIRECTORY], create task files.
 
@@ -163,6 +171,7 @@ Start with the first task file.
 ```
 
 ### Prompt: Generate Single Task
+
 ```
 Create task file: [TASK-ID]-[name].md
 
@@ -186,6 +195,7 @@ Save as: tasks/[TASK-ID]-[name].md
 ## 📊 Session 4: Update Progress
 
 ### Prompt: Update Progress Tracker
+
 ```
 Update tasks/PROGRESS.md with new tasks.
 
@@ -209,6 +219,7 @@ Maintain the existing format.
 ### Analyzing `apps/web/src/lib/stats/` Directory
 
 #### Step 1: Inventory (Fresh Session)
+
 ```
 I'm analyzing apps/web/src/lib/stats/ to generate refactoring tasks.
 
@@ -227,6 +238,7 @@ Use the directory analysis format from TASK_GENERATOR_GUIDE.md.
 ```
 
 #### Step 2: Analyze First File (Fresh Session)
+
 ```
 I'm analyzing apps/web/src/lib/stats/positions.ts to break it into manageable tasks.
 
@@ -244,6 +256,7 @@ Provide task breakdown with time estimates.
 ```
 
 #### Step 3: Generate Tasks (Fresh Session)
+
 ```
 Based on the analysis of lib/stats/positions.ts, create task files.
 
@@ -263,6 +276,7 @@ Start with EXTRACT-030.
 ```
 
 #### Step 4: Update Tracker (Fresh Session)
+
 ```
 Update tasks/PROGRESS.md with new stats tasks.
 
@@ -284,6 +298,7 @@ Maintain existing format.
 ## 🔍 Specialized Analysis Prompts
 
 ### Identify Unused Files
+
 ```
 Help me identify unused files in [DIRECTORY].
 
@@ -297,6 +312,7 @@ Use grep or file search to find imports.
 ```
 
 ### Find Files Without Tests
+
 ```
 Help me find files without tests in [DIRECTORY].
 
@@ -311,6 +327,7 @@ Use the Test Writing template from TASK_GENERATOR_GUIDE.md.
 ```
 
 ### Find Large Files Needing Refactoring
+
 ```
 Help me find large files needing refactoring in [DIRECTORY].
 
@@ -324,6 +341,7 @@ Use "For Large Files" checklist from TASK_GENERATOR_GUIDE.md.
 ```
 
 ### Find eslint-disable Issues
+
 ```
 Help me find and fix eslint-disable comments in [DIRECTORY].
 
@@ -341,21 +359,25 @@ One task per file or group of related files.
 ## 📋 Quick Reference
 
 ### Session Types
-| Session | Time | Output |
-|---------|------|--------|
+
+| Session   | Time   | Output             |
+| --------- | ------ | ------------------ |
 | Inventory | 15 min | Directory analysis |
-| Analyze | 30 min | File breakdown |
-| Generate | 30 min | Task files |
-| Update | 10 min | Progress tracker |
+| Analyze   | 30 min | File breakdown     |
+| Generate  | 30 min | Task files         |
+| Update    | 10 min | Progress tracker   |
 
 ### When to Use Fresh Session
+
 - ✅ **Always** for inventory
 - ✅ **Always** for analyzing new file
 - ✅ **Always** for generating tasks
 - ⚠️ **Maybe** for updating progress (quick, can continue)
 
 ### Context Budget Check
+
 Before each prompt ask:
+
 - Am I reading <3 files? ✅
 - Are my line ranges specific? ✅
 - Is my objective clear? ✅
@@ -366,6 +388,7 @@ Before each prompt ask:
 ## 🎓 Tips for Success
 
 ### DO:
+
 - ✅ Copy prompts exactly (they're optimized)
 - ✅ Use fresh session for each phase
 - ✅ Reference TASK_GENERATOR_GUIDE.md
@@ -373,6 +396,7 @@ Before each prompt ask:
 - ✅ Follow up with specific sections
 
 ### DON'T:
+
 - ❌ Try to analyze everything at once
 - ❌ Ask to "read entire file" if >500 lines
 - ❌ Generate tasks without analysis first
@@ -384,6 +408,7 @@ Before each prompt ask:
 ## 🚀 Getting Started Right Now
 
 ### Your Next Command
+
 ```bash
 # 1. Pick an area to analyze (e.g., lib/, components/, etc.)
 # 2. Copy the "Inventory" prompt above
@@ -393,6 +418,7 @@ Before each prompt ask:
 ```
 
 ### Example First Area: `lib/` Directory
+
 ```
 I'm analyzing apps/web/src/lib/ to generate refactoring tasks.
 
@@ -411,4 +437,3 @@ Use the directory analysis format from TASK_GENERATOR_GUIDE.md.
 ```
 
 **That's it! Start generating tasks across the codebase!** 🎯
-

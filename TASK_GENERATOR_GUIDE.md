@@ -1,6 +1,7 @@
 # Task Generator Guide
 
-**Purpose**: Systematically analyze parts of the codebase and generate context-efficient tasks  
+**Purpose**: Systematically analyze parts of the codebase and generate
+context-efficient tasks  
 **Use**: Open fresh Cursor session, reference this guide + target code  
 **Output**: New task files following established standards
 
@@ -24,27 +25,31 @@
 When generating tasks, reference these standards:
 
 ### Enterprise Patterns
+
 - **CODING_CONVENTIONS.MD** - PrizePicks enterprise standards
   - Arrow functions, props destructuring, memoization
   - Component structure, barrel exports
   - Import conventions, type patterns
 
 ### Gauntlet Standards
+
 - **.cursorrules** - Gauntlet-specific patterns
   - Multi-league architecture
   - Sleeper API usage
   - Type system (@gauntlet/types)
 
 ### Task Standards
+
 - **TASK_SYSTEM.md** - How tasks should be structured
   - Context budgets (<300 lines = small, <600 = medium)
   - Acceptance criteria patterns
   - Related tasks format
 
 ### Examples
+
 - **REFACTORING_EXAMPLE.md** - Concrete before/after
-- **tasks/SETUP-001-*.md** - Example task structure
-- **tasks/UTIL-001-*.md** - Example utility task
+- **tasks/SETUP-001-\*.md** - Example task structure
+- **tasks/UTIL-001-\*.md** - Example utility task
 
 ---
 
@@ -53,6 +58,7 @@ When generating tasks, reference these standards:
 ### Step 1: Inventory Analysis
 
 **Cursor Prompt Template**:
+
 ```
 I'm analyzing [DIRECTORY/FILE] to generate refactoring tasks.
 
@@ -69,6 +75,7 @@ Then tell me:
 ```
 
 **Example**:
+
 ```
 I'm analyzing apps/web/src/lib/ to generate refactoring tasks.
 
@@ -82,6 +89,7 @@ Then tell me what we're working with.
 ### Step 2: Detailed Analysis (One File at a Time)
 
 **Cursor Prompt Template**:
+
 ```
 Now let's analyze [SPECIFIC_FILE]:
 
@@ -101,6 +109,7 @@ Based on this, suggest task breakdown.
 ### Step 3: Task Generation
 
 **Cursor Prompt Template**:
+
 ```
 Based on the analysis, create tasks for [FILE/DIRECTORY]:
 
@@ -121,15 +130,19 @@ Generate task files following the format.
 # Task: EXTRACT-[NUMBER]-[feature]-types
 
 ## Overview
+
 Extract type definitions from [file] to separate types.ts file.
 
 ## Context Needed
+
 - File: [path] (lines [X-Y]) - Type definitions only
 
 ## Objective
+
 Move all interfaces and types to [new-path]/types.ts
 
 ## Steps
+
 1. Create [new-path]/types.ts
 2. Copy interfaces from [file] lines [X-Y]
 3. Add JSDoc comments
@@ -138,6 +151,7 @@ Move all interfaces and types to [new-path]/types.ts
 6. Run TypeScript check: `pnpm tsc --noEmit`
 
 ## Acceptance Criteria
+
 - [ ] All types in separate file
 - [ ] JSDoc comments added
 - [ ] Original file imports from types.ts
@@ -145,36 +159,38 @@ Move all interfaces and types to [new-path]/types.ts
 - [ ] File compiles
 
 ## Estimated Context Usage
+
 - Files to read: 1 (just type section)
 - Lines to process: ~100-200
 - New files: 1
 - Risk: **Low** (TypeScript validates)
 
 ## Related Tasks
+
 - **Depends on**: [if any]
 - **Blocks**: [if any]
 
 ## Cursor Prompt
-\`\`\`
-I'm working on EXTRACT-[NUMBER]. Please:
+
+\`\`\` I'm working on EXTRACT-[NUMBER]. Please:
+
 1. Read tasks/EXTRACT-[NUMBER]-[name].md
 2. Read [file] lines [X-Y] only (types section)
 3. Create types.ts as specified
 4. Update imports in original file
-5. Verify no TypeScript errors
-\`\`\`
+5. Verify no TypeScript errors \`\`\`
 
 ## Commit Message
-\`\`\`
-feat(EXTRACT-[NUMBER]): extract [feature] types
+
+\`\`\` feat(EXTRACT-[NUMBER]): extract [feature] types
 
 - Create [path]/types.ts
 - Move [N] interfaces to types file
 - Add JSDoc comments
-- Update imports
-\`\`\`
+- Update imports \`\`\`
 
 ## Estimated Time
+
 ⏱️ **15-20 minutes**
 ```
 
@@ -184,16 +200,20 @@ feat(EXTRACT-[NUMBER]): extract [feature] types
 # Task: UTIL-[NUMBER]-[feature]-[utility-name]
 
 ## Overview
+
 Extract [function names] from [file] to utils/[name].ts
 
 ## Context Needed
+
 - File: [path] (lines [X-Y]) - Function definitions
 - (Optional) Reference: [path] - Usage examples
 
 ## Objective
+
 Create testable utility function(s) in dedicated file
 
 ## Steps
+
 1. Create utils/[name].ts
 2. Move function(s) from [file] lines [X-Y]
 3. Add JSDoc comments with examples
@@ -204,6 +224,7 @@ Create testable utility function(s) in dedicated file
 8. Run tests: `pnpm test [path]`
 
 ## Acceptance Criteria
+
 - [ ] Function(s) in separate file
 - [ ] JSDoc added with examples
 - [ ] Tests written (100% coverage)
@@ -212,37 +233,39 @@ Create testable utility function(s) in dedicated file
 - [ ] No breaking changes
 
 ## Estimated Context Usage
+
 - Files to read: 1-2
 - Lines to process: ~50-150
 - New files: 2 (util + test)
 - Risk: **Low** (pure functions)
 
 ## Related Tasks
+
 - **Depends on**: EXTRACT-[X] (types)
 - **Related**: Other UTIL tasks
 
 ## Cursor Prompt
-\`\`\`
-I'm working on UTIL-[NUMBER]. Please:
+
+\`\`\` I'm working on UTIL-[NUMBER]. Please:
+
 1. Read tasks/UTIL-[NUMBER]-[name].md
 2. Read [file] lines [X-Y] (just the function)
 3. Create utils/[name].ts with the function
 4. Create utils/[name].test.ts with comprehensive tests
 5. Update imports in original file
-6. Run tests to verify
-\`\`\`
+6. Run tests to verify \`\`\`
 
 ## Commit Message
-\`\`\`
-feat(UTIL-[NUMBER]): extract [utility-name] utility
+
+\`\`\` feat(UTIL-[NUMBER]): extract [utility-name] utility
 
 - Create utils/[name].ts with [function]
 - Add comprehensive tests (100% coverage)
 - Add JSDoc with examples
-- Update [N] usages in original file
-\`\`\`
+- Update [N] usages in original file \`\`\`
 
 ## Estimated Time
+
 ⏱️ **30-40 minutes**
 ```
 
@@ -252,16 +275,20 @@ feat(UTIL-[NUMBER]): extract [utility-name] utility
 # Task: HOOK-[NUMBER]-[feature]-[hook-name]
 
 ## Overview
+
 Extract hook logic from [component] to custom hook
 
 ## Context Needed
+
 - File: [component-path] (lines [X-Y]) - Hook logic section
 - Reference: React hooks best practices
 
 ## Objective
+
 Create reusable custom hook: use[Name]
 
 ## Steps
+
 1. Create hooks/use[Name].ts
 2. Extract state and logic from component lines [X-Y]
 3. Define clear props and return types in separate types.ts
@@ -273,6 +300,7 @@ Create reusable custom hook: use[Name]
 9. Run tests: `pnpm test [path]`
 
 ## Acceptance Criteria
+
 - [ ] Hook in separate file
 - [ ] Props and return types explicit
 - [ ] JSDoc with usage example
@@ -282,38 +310,40 @@ Create reusable custom hook: use[Name]
 - [ ] No UI regressions
 
 ## Estimated Context Usage
+
 - Files to read: 1 (component section)
 - Lines to process: ~100-200
 - New files: 2 (hook + test)
 - Risk: **Medium** (React-specific)
 
 ## Related Tasks
+
 - **Depends on**: EXTRACT-[X] (types), UTIL-[Y] (utils)
 - **Blocks**: COMP-[Z] (component split)
 
 ## Cursor Prompt
-\`\`\`
-I'm working on HOOK-[NUMBER]. Please:
+
+\`\`\` I'm working on HOOK-[NUMBER]. Please:
+
 1. Read tasks/HOOK-[NUMBER]-[name].md
 2. Read [component] lines [X-Y] (just the hook logic)
 3. Create hooks/use[Name].ts
 4. Create hooks/use[Name].test.ts with renderHook tests
 5. Update component to use the hook
-6. Verify tests pass
-\`\`\`
+6. Verify tests pass \`\`\`
 
 ## Commit Message
-\`\`\`
-feat(HOOK-[NUMBER]): extract use[Name] hook
+
+\`\`\` feat(HOOK-[NUMBER]): extract use[Name] hook
 
 - Create hooks/use[Name].ts
 - Add comprehensive tests with renderHook
 - Add JSDoc with usage example
 - Update component to use hook
-- Simplify component logic
-\`\`\`
+- Simplify component logic \`\`\`
 
 ## Estimated Time
+
 ⏱️ **45-60 minutes**
 ```
 
@@ -323,16 +353,20 @@ feat(HOOK-[NUMBER]): extract use[Name] hook
 # Task: COMP-[NUMBER]-split-[component-name]
 
 ## Overview
+
 Break [component] into focused sub-components
 
 ## Context Needed
+
 - File: [component-path] - Full component
 - Reference: REFACTORING_EXAMPLE.md (component splitting pattern)
 
 ## Objective
+
 Split [N]-line component into [M] focused components
 
 ## Steps
+
 1. Identify logical sections in component
 2. Create folder structure: components/[ComponentName]/
 3. Create sub-component files:
@@ -348,6 +382,7 @@ Split [N]-line component into [M] focused components
 10. Run tests: `pnpm test`
 
 ## Acceptance Criteria
+
 - [ ] Main component <200 lines
 - [ ] Each sub-component <150 lines
 - [ ] All components have types.ts
@@ -357,41 +392,44 @@ Split [N]-line component into [M] focused components
 - [ ] All tests pass
 
 ## Estimated Context Usage
+
 - Files to read: 1 (component - analyze structure first)
 - Lines to process: Varies (do in phases)
 - New files: [M+2] (M components + types + index)
 - Risk: **Medium-High** (UI changes)
 
 ## Related Tasks
+
 - **Depends on**: UTIL-[X], HOOK-[Y] (extract logic first!)
 - **Blocks**: None
 
 ## Cursor Prompt
-\`\`\`
-I'm working on COMP-[NUMBER]. Please:
+
+\`\`\` I'm working on COMP-[NUMBER]. Please:
+
 1. Read tasks/COMP-[NUMBER]-[name].md
 2. Read [component] and identify logical sections
 3. Create first sub-component: [SubComponent1]
 4. Then we'll iterate on others
 
-Let's do this incrementally, one sub-component at a time.
-\`\`\`
+Let's do this incrementally, one sub-component at a time. \`\`\`
 
 ## Commit Message
-\`\`\`
-feat(COMP-[NUMBER]): split [component-name] into sub-components
+
+\`\`\` feat(COMP-[NUMBER]): split [component-name] into sub-components
 
 - Create [M] focused sub-components
 - Add types.ts for component types
 - Add memo() to all components
 - Add tests for all components
-- Main component: [OLD] → [NEW] lines
-\`\`\`
+- Main component: [OLD] → [NEW] lines \`\`\`
 
 ## Estimated Time
+
 ⏱️ **1-2 hours** (do incrementally!)
 
 ## Notes
+
 - Extract utils/hooks FIRST before splitting component
 - Do one sub-component at a time
 - Test after each sub-component
@@ -404,16 +442,21 @@ feat(COMP-[NUMBER]): split [component-name] into sub-components
 # Task: CLEAN-[NUMBER]-[description]
 
 ## Overview
+
 Clean up [description] in [directory/file]
 
 ## Context Needed
+
 - File/Directory: [path]
 
 ## Objective
+
 [Specific cleanup goal]
 
 ## Steps
+
 [Specific to cleanup type:
+
 - Remove unused files
 - Remove eslint-disable comments
 - Add JSDoc to exports
@@ -422,30 +465,32 @@ Clean up [description] in [directory/file]
 - etc.]
 
 ## Acceptance Criteria
+
 - [ ] [Specific to cleanup]
 - [ ] Tests still pass
 - [ ] No breaking changes
 
 ## Estimated Context Usage
+
 - Files to read: [N]
 - Lines to process: [~X]
 - Risk: **Low**
 
 ## Cursor Prompt
-\`\`\`
-I'm working on CLEAN-[NUMBER]. Please:
+
+\`\`\` I'm working on CLEAN-[NUMBER]. Please:
+
 1. Read tasks/CLEAN-[NUMBER]-[name].md
-2. [Specific action]
-\`\`\`
+2. [Specific action] \`\`\`
 
 ## Commit Message
-\`\`\`
-chore(CLEAN-[NUMBER]): [description]
 
-- [List changes]
-\`\`\`
+\`\`\` chore(CLEAN-[NUMBER]): [description]
+
+- [List changes] \`\`\`
 
 ## Estimated Time
+
 ⏱️ **15-30 minutes**
 ```
 
@@ -461,28 +506,24 @@ Use this checklist to break down a large file:
 ## File: [name] ([N] lines)
 
 ### Analysis
-- [ ] Types defined: [list or "none"]
-  → Extract to: EXTRACT-[N]-[feature]-types
 
-- [ ] Pure functions: [list or "none"]
-  → Extract to: UTIL-[N]-[feature]-[util-name]
+- [ ] Types defined: [list or "none"] → Extract to: EXTRACT-[N]-[feature]-types
 
-- [ ] Hook logic: [list or "none"]
-  → Extract to: HOOK-[N]-[feature]-[hook-name]
+- [ ] Pure functions: [list or "none"] → Extract to:
+      UTIL-[N]-[feature]-[util-name]
 
-- [ ] Sub-components: [list or "none"]
-  → Extract to: COMP-[N]-split-[component]
+- [ ] Hook logic: [list or "none"] → Extract to: HOOK-[N]-[feature]-[hook-name]
 
-- [ ] Tests exist: [yes/no]
-  → Create: TEST-[N]-[feature]-[test-name]
+- [ ] Sub-components: [list or "none"] → Extract to: COMP-[N]-split-[component]
 
-- [ ] eslint-disable: [count]
-  → Fix: CLEAN-[N]-remove-eslint-disable
+- [ ] Tests exist: [yes/no] → Create: TEST-[N]-[feature]-[test-name]
 
-- [ ] Relative imports: [count]
-  → Fix: CLEAN-[N]-fix-imports
+- [ ] eslint-disable: [count] → Fix: CLEAN-[N]-remove-eslint-disable
+
+- [ ] Relative imports: [count] → Fix: CLEAN-[N]-fix-imports
 
 ### Proposed Tasks (in order)
+
 1. EXTRACT-[N] - Types (15 min)
 2. UTIL-[N] - Utils (30 min each)
 3. HOOK-[N] - Hooks (45 min each)
@@ -499,6 +540,7 @@ Use this checklist to break down a large file:
 ## Directory: [path]
 
 ### Inventory
+
 - Total files: [N]
 - Large files (>500 lines): [list]
 - Empty files: [list]
@@ -506,6 +548,7 @@ Use this checklist to break down a large file:
 - Test coverage: [%]
 
 ### Prioritization
+
 1. **Setup** (if needed): Testing infrastructure
 2. **Quick wins**: Type extraction, unused file removal
 3. **Foundation**: Utility extraction
@@ -513,6 +556,7 @@ Use this checklist to break down a large file:
 5. **Polish**: Tests, documentation, cleanup
 
 ### Task List
+
 [Generated from analysis above]
 
 ### Estimated Total Time: [X weeks]
@@ -525,6 +569,7 @@ Use this checklist to break down a large file:
 ### Example: Analyzing `apps/web/src/components/`
 
 #### Session 1: Inventory (Fresh Cursor)
+
 ```
 I'm analyzing apps/web/src/components/ to generate tasks.
 
@@ -538,6 +583,7 @@ Create an inventory following the "For Directories" checklist.
 ```
 
 #### Session 2: Analyze First Large File (Fresh Cursor)
+
 ```
 I'm analyzing components/start-sit-efficiency.tsx (1,163 lines).
 
@@ -551,6 +597,7 @@ Follow the analysis checklist in TASK_GENERATOR_GUIDE.md.
 ```
 
 #### Session 3: Generate Tasks (Fresh Cursor)
+
 ```
 Based on analysis of start-sit-efficiency.tsx, create task files:
 
@@ -564,6 +611,7 @@ Follow the templates exactly.
 ```
 
 #### Session 4: Update Progress (Fresh Cursor)
+
 ```
 Update tasks/PROGRESS.md:
 
@@ -580,6 +628,7 @@ Update totals and categories.
 ## 📊 Task Numbering Convention
 
 ### By Category Ranges
+
 ```
 SETUP:   001-009   (Foundation)
 EXTRACT: 010-099   (Type extraction)
@@ -591,11 +640,14 @@ CLEAN:   500-599   (Cleanup)
 ```
 
 ### Tracking
+
 Keep a task registry in `tasks/PROGRESS.md`:
+
 ```markdown
 ## Task Registry
 
 ### Manager Analysis (001-050)
+
 - EXTRACT-001: Manager analysis types
 - UTIL-001: Formatting utils
 - UTIL-002: Color utils
@@ -603,6 +655,7 @@ Keep a task registry in `tasks/PROGRESS.md`:
 - COMP-001: Split main component
 
 ### Start-Sit Efficiency (051-100)
+
 - EXTRACT-010: Start-sit types
 - UTIL-010: Calculation utils
 - etc.
@@ -613,10 +666,12 @@ Keep a task registry in `tasks/PROGRESS.md`:
 ## 🎓 Example: Full Analysis of `lib/` Directory
 
 ### Step 1: Inventory (Cursor Session 1)
+
 ```markdown
 ## Directory: apps/web/src/lib/
 
 ### Files Found
+
 1. draft-analytics.ts (650 lines) 🔴
 2. manager-analytics.ts (1,347 lines) 🔴🔴
 3. hall-of-fame-data-service.ts (438 lines) 🟡
@@ -626,6 +681,7 @@ Keep a task registry in `tasks/PROGRESS.md`:
 7. [etc.]
 
 ### Issues Identified
+
 - 🔴🔴 Critical: manager-analytics.ts (1,347 lines!)
 - 🔴 Critical: hooks.ts (726 lines, should be split)
 - 🔴 Critical: draft-analytics.ts (650 lines)
@@ -633,12 +689,14 @@ Keep a task registry in `tasks/PROGRESS.md`:
 ```
 
 ### Step 2: Analyze First File (Cursor Session 2)
+
 ```markdown
 ## File: lib/manager-analytics.ts (1,347 lines)
 
 ### Contains
+
 - Types: 15 interfaces (lines 1-120)
-- Utilities: 
+- Utilities:
   - Concentration calculations (lines 200-280)
   - Pacing calculations (lines 300-380)
   - Clustering logic (lines 400-550)
@@ -647,6 +705,7 @@ Keep a task registry in `tasks/PROGRESS.md`:
 - Tests: ❌ None
 
 ### Proposed Task Breakdown
+
 1. EXTRACT-020: Types (20 min)
 2. UTIL-020: Concentration utils (40 min)
 3. UTIL-021: Pacing utils (40 min)
@@ -658,6 +717,7 @@ Total: ~5 hours → Results in 8+ files with tests
 ```
 
 ### Step 3: Generate Tasks (Cursor Session 3)
+
 ```
 Create these task files following templates from TASK_GENERATOR_GUIDE.md:
 
@@ -677,6 +737,7 @@ Use the Type Extraction template for EXTRACT tasks.
 ## 💡 Tips for Effective Task Generation
 
 ### DO:
+
 - ✅ **Start with inventory** - Know what you're dealing with
 - ✅ **Analyze one file at a time** - Avoid context overload
 - ✅ **Use fresh Cursor sessions** - Clean slate for each analysis
@@ -685,6 +746,7 @@ Use the Type Extraction template for EXTRACT tasks.
 - ✅ **Include context budgets** - Help future you
 
 ### DON'T:
+
 - ❌ Try to analyze entire codebase at once
 - ❌ Generate tasks without understanding the code
 - ❌ Skip the checklist process
@@ -696,6 +758,7 @@ Use the Type Extraction template for EXTRACT tasks.
 ## 🚀 Quick Reference
 
 ### Generate Tasks for New Area
+
 ```bash
 # 1. Fresh Cursor session
 # 2. Prompt:
@@ -722,6 +785,7 @@ Please:
 ## 📋 Task Generation Checklist
 
 Before creating tasks for an area:
+
 - [ ] Inventoried all files
 - [ ] Identified large files (>500 lines)
 - [ ] Checked for tests
@@ -739,12 +803,14 @@ Before creating tasks for an area:
 ## 🎯 Success Metrics
 
 ### Per Analysis Session
+
 - **Files analyzed**: 1-3
 - **Tasks generated**: 3-8
 - **Time spent**: <60 min
 - **Context efficiency**: Used fresh sessions
 
 ### Per Area Completed
+
 - **Tasks created**: All following standards
 - **Estimates included**: Time, context, risk
 - **Dependencies mapped**: Know what blocks what
@@ -772,5 +838,5 @@ Tracking:
 
 ---
 
-**Remember**: This guide helps you scale the refactoring system across the entire codebase while maintaining context efficiency! 🚀
-
+**Remember**: This guide helps you scale the refactoring system across the
+entire codebase while maintaining context efficiency! 🚀

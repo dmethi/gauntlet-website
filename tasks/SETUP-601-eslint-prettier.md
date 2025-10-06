@@ -1,19 +1,24 @@
 # Task: SETUP-601-eslint-prettier
 
 ## Overview
+
 Add ESLint and Prettier to `apps/server` for code quality and consistency.
 
 ## Context Needed
+
 - Directory: `apps/server/` - Target for linting
 - Reference: `apps/web/` - May have existing ESLint config to copy
 - File: Root `.eslintrc` or `eslint.config.js` - Workspace config
 
 ## Objective
-Set up ESLint and Prettier for the server package to enforce TypeScript and Node.js best practices.
+
+Set up ESLint and Prettier for the server package to enforce TypeScript and
+Node.js best practices.
 
 ## Steps
 
 ### 1. Install Dependencies
+
 ```bash
 cd apps/server
 pnpm add -D \
@@ -26,6 +31,7 @@ pnpm add -D \
 ```
 
 ### 2. Create `.eslintrc.json`
+
 ```json
 {
   "extends": [
@@ -41,7 +47,10 @@ pnpm add -D \
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
     "@typescript-eslint/no-explicit-any": "warn",
     "no-console": "off"
   },
@@ -54,6 +63,7 @@ pnpm add -D \
 ```
 
 ### 3. Create `.prettierrc`
+
 ```json
 {
   "semi": true,
@@ -66,6 +76,7 @@ pnpm add -D \
 ```
 
 ### 4. Create `.prettierignore`
+
 ```
 dist/
 node_modules/
@@ -75,6 +86,7 @@ pnpm-lock.yaml
 ```
 
 ### 5. Add Scripts to `package.json`
+
 ```json
 "scripts": {
   "build": "tsc",
@@ -87,16 +99,19 @@ pnpm-lock.yaml
 ```
 
 ### 6. Run Formatter on Existing Files
+
 ```bash
 pnpm format
 ```
 
 ### 7. Fix Any Linting Issues
+
 ```bash
 pnpm lint:fix
 ```
 
 ### 8. Verify Clean State
+
 ```bash
 pnpm lint
 pnpm format:check
@@ -104,6 +119,7 @@ pnpm build
 ```
 
 ## Acceptance Criteria
+
 - [ ] ESLint installed and configured
 - [ ] Prettier installed and configured
 - [ ] `.eslintrc.json` created with TypeScript rules
@@ -116,15 +132,18 @@ pnpm build
 - [ ] No `@typescript-eslint/no-explicit-any` errors (warnings OK)
 
 ## Estimated Context Usage
+
 - Files to read: 0 (config from scratch)
 - Lines to process: ~100 (config files)
 - New files: 3 (.eslintrc.json, .prettierrc, .prettierignore)
 - Risk: **Low** (tooling only)
 
 ## Related Tasks
+
 - **Blocks**: TEST-601 (good to have linting before tests)
 
 ## Cursor Prompt
+
 ```
 I'm working on SETUP-601. Please:
 1. Read tasks/SETUP-601-eslint-prettier.md
@@ -137,6 +156,7 @@ I'm working on SETUP-601. Please:
 ```
 
 ## Commit Message
+
 ```
 feat(SETUP-601): add ESLint and Prettier to apps/server
 
@@ -150,9 +170,11 @@ feat(SETUP-601): add ESLint and Prettier to apps/server
 ```
 
 ## Estimated Time
+
 ⏱️ **30 minutes**
 
 ## Verification
+
 ```bash
 cd apps/server
 pnpm lint           # Should pass
@@ -161,8 +183,8 @@ pnpm build          # Should work
 ```
 
 ## Notes
+
 - This sets up code quality foundation
 - Makes code reviews easier
 - Catches common bugs automatically
 - Can add pre-commit hooks later (husky)
-

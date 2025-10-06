@@ -1,17 +1,22 @@
 # Task: CLEAN-602-fix-tsconfig
 
 ## Overview
+
 Fix TypeScript configuration to match actual source directory structure.
 
 ## Context Needed
+
 - File: `apps/server/tsconfig.json` - Current broken config
 - Directory: `apps/server/src/` - Actual source structure
 - Reference: `tsconfig.base.json` - Base configuration
 
 ## Objective
-Update `tsconfig.json` to compile the actual source files instead of referencing non-existent paths.
+
+Update `tsconfig.json` to compile the actual source files instead of referencing
+non-existent paths.
 
 **Current (WRONG)**:
+
 ```json
 "include": [
   "src/index.ts",       // ❌ Doesn't exist
@@ -23,6 +28,7 @@ Update `tsconfig.json` to compile the actual source files instead of referencing
 ```
 
 **Target (CORRECT)**:
+
 ```json
 "include": [
   "src/lib/**/*.ts",
@@ -32,6 +38,7 @@ Update `tsconfig.json` to compile the actual source files instead of referencing
 ```
 
 ## Steps
+
 1. Read current `apps/server/tsconfig.json`
 2. Remove references to non-existent files:
    - Remove `src/index.ts`
@@ -44,6 +51,7 @@ Update `tsconfig.json` to compile the actual source files instead of referencing
 7. Run `pnpm --filter @gauntlet/server build` to test compilation
 
 ## Acceptance Criteria
+
 - [ ] `tsconfig.json` includes only existing paths
 - [ ] `src/scripts/**` is in `include` array
 - [ ] No references to deleted files
@@ -52,16 +60,19 @@ Update `tsconfig.json` to compile the actual source files instead of referencing
 - [ ] All 3 source files compile to dist/
 
 ## Estimated Context Usage
+
 - Files to read: 1 (tsconfig.json)
 - Lines to process: ~20
 - New files: 0 (modify existing)
 - Risk: **Low** (TypeScript validates)
 
 ## Related Tasks
+
 - **Depends on**: CLEAN-601 (clean dist/ first)
 - **Blocks**: EXTRACT-601, EXTRACT-602 (need working build)
 
 ## Cursor Prompt
+
 ```
 I'm working on CLEAN-602. Please:
 1. Read tasks/CLEAN-602-fix-tsconfig.md
@@ -72,6 +83,7 @@ I'm working on CLEAN-602. Please:
 ```
 
 ## Commit Message
+
 ```
 fix(CLEAN-602): update tsconfig to match actual source structure
 
@@ -82,12 +94,13 @@ fix(CLEAN-602): update tsconfig to match actual source structure
 ```
 
 ## Estimated Time
+
 ⏱️ **15 minutes**
 
 ## Verification
+
 ```bash
 cd apps/server
 pnpm tsc --noEmit    # Should pass with 0 errors
 pnpm build           # Should compile 3 files successfully
 ```
-

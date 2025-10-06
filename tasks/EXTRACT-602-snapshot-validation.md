@@ -1,21 +1,31 @@
 # Task: EXTRACT-602-snapshot-validation
 
 ## Overview
-Extract snapshot validation and deduplication logic from `comprehensive-live-snapshot.ts` to dedicated utility.
+
+Extract snapshot validation and deduplication logic from
+`comprehensive-live-snapshot.ts` to dedicated utility.
 
 ## Context Needed
-- File: `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts` (lines 241-358) - Validation function
+
+- File: `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts` (lines
+  241-358) - Validation function
 - File: `apps/server/src/lib/historical-data.ts` - Database functions used
 
 ## Objective
-Create reusable validation utility in `apps/server/src/lib/snapshot-validator.ts` to handle snapshot deduplication and saving logic.
+
+Create reusable validation utility in
+`apps/server/src/lib/snapshot-validator.ts` to handle snapshot deduplication and
+saving logic.
 
 **Function to Extract** (lines 241-358):
+
 - `saveCompleteSnapshot()` - Validates, deduplicates, and saves snapshots
 
 ## Steps
+
 1. Create `apps/server/src/lib/snapshot-validator.ts`
 2. Define types for snapshot data:
+
    ```typescript
    interface SnapshotData {
      week: number;
@@ -39,12 +49,13 @@ Create reusable validation utility in `apps/server/src/lib/snapshot-validator.ts
      moneyLineB: number;
      capturedAt: string;
    }
-   
+
    interface ValidationResult {
      saved: boolean;
      reason?: string;
    }
    ```
+
 3. Extract validation logic:
    ```typescript
    export async function saveSnapshotIfChanged(
@@ -79,6 +90,7 @@ Create reusable validation utility in `apps/server/src/lib/snapshot-validator.ts
 9. Test with `pnpm live-snapshot` (if DATABASE_URL available)
 
 ## Acceptance Criteria
+
 - [ ] New file `src/lib/snapshot-validator.ts` created
 - [ ] Types defined for snapshot data
 - [ ] Validation logic extracted with tests
@@ -90,16 +102,19 @@ Create reusable validation utility in `apps/server/src/lib/snapshot-validator.ts
 - [ ] No TypeScript errors
 
 ## Estimated Context Usage
+
 - Files to read: 2 (lines 241-358 of main script + historical-data.ts)
 - Lines to process: ~180
 - New files: 1
 - Risk: **Low** (pure extraction)
 
 ## Related Tasks
+
 - **Depends on**: EXTRACT-601 (API client first)
 - **Blocks**: TEST-601 (will test validation logic)
 
 ## Cursor Prompt
+
 ```
 I'm working on EXTRACT-602. Please:
 1. Read tasks/EXTRACT-602-snapshot-validation.md
@@ -112,6 +127,7 @@ I'm working on EXTRACT-602. Please:
 ```
 
 ## Commit Message
+
 ```
 feat(EXTRACT-602): extract snapshot validation logic
 
@@ -124,9 +140,11 @@ feat(EXTRACT-602): extract snapshot validation logic
 ```
 
 ## Estimated Time
+
 ⏱️ **45 minutes**
 
 ## Verification
+
 ```bash
 cd apps/server
 pnpm build                    # Should compile
@@ -135,9 +153,9 @@ pnpm tsc --noEmit            # Should have no errors
 ```
 
 ## Notes
+
 - After both EXTRACT-601 and EXTRACT-602:
   - Main script: 435 → ~152 lines (65% reduction!)
 - Makes validation logic testable
 - Preserves deduplication behavior
 - No functional changes
-

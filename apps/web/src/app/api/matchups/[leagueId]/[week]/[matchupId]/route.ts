@@ -90,8 +90,8 @@ export async function GET(
     const projectionOf = (playerId: string): number => leagueProjections[playerId]?.points || 0;
 
     // Create lookup maps
-    const usersById = new Map<string, SleeperUser>(users.map((u) => [u.user_id, u]));
-    const rostersById = new Map<number, SleeperRoster>(rosters.map((r) => [r.roster_id, r]));
+    const usersById = new Map<string, SleeperUser>(users.map(u => [u.user_id, u]));
+    const rostersById = new Map<number, SleeperRoster>(rosters.map(r => [r.roster_id, r]));
 
     // Build team data
     const teams: MatchupTeam[] = targetMatchups.map(matchup => {

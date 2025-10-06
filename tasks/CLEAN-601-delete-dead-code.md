@@ -1,17 +1,25 @@
 # Task: CLEAN-601-delete-dead-code
 
 ## Overview
-Delete the entire `apps/server/dist/` directory and remove dead code artifacts that no longer have source files.
+
+Delete the entire `apps/server/dist/` directory and remove dead code artifacts
+that no longer have source files.
 
 ## Context Needed
-- Directory: `apps/server/dist/` - Compiled JavaScript (no matching TypeScript sources)
+
+- Directory: `apps/server/dist/` - Compiled JavaScript (no matching TypeScript
+  sources)
 - File: `apps/server/.gitignore` - Verify dist/ is ignored
 - File: `apps/server/package.json` - Check build scripts
 
 ## Objective
-Clean up build artifacts and ensure only source-controlled TypeScript files remain. The `dist/` folder contains old Express server routes and services that no longer have corresponding source files.
+
+Clean up build artifacts and ensure only source-controlled TypeScript files
+remain. The `dist/` folder contains old Express server routes and services that
+no longer have corresponding source files.
 
 ## Steps
+
 1. Verify `dist/` is in `.gitignore` (add if missing)
 2. Delete entire `apps/server/dist/` directory
 3. Run `pnpm --filter @gauntlet/server build` to regenerate from source
@@ -22,6 +30,7 @@ Clean up build artifacts and ensure only source-controlled TypeScript files rema
 5. Confirm new `dist/` structure matches `src/` structure
 
 ## Acceptance Criteria
+
 - [ ] Old `dist/` directory deleted
 - [ ] `dist/` added to `.gitignore` if missing
 - [ ] New `dist/` regenerated from `pnpm build`
@@ -32,15 +41,18 @@ Clean up build artifacts and ensure only source-controlled TypeScript files rema
 - [ ] Git status shows no changes to `dist/` (properly ignored)
 
 ## Estimated Context Usage
+
 - Files to read: 2 (package.json, .gitignore)
 - Lines to process: ~50
 - Directories to delete: 1
 - Risk: **Low** (can regenerate, old code unused)
 
 ## Related Tasks
+
 - **Blocks**: CLEAN-602 (need clean state for tsconfig fix)
 
 ## Cursor Prompt
+
 ```
 I'm working on CLEAN-601. Please:
 1. Read tasks/CLEAN-601-delete-dead-code.md
@@ -51,6 +63,7 @@ I'm working on CLEAN-601. Please:
 ```
 
 ## Commit Message
+
 ```
 chore(CLEAN-601): delete dead code from apps/server
 
@@ -61,10 +74,11 @@ chore(CLEAN-601): delete dead code from apps/server
 ```
 
 ## Estimated Time
+
 ⏱️ **15 minutes**
 
 ## Notes
+
 - The `dist/` folder contains compiled JavaScript from a deleted Express server
 - Only 3 active TypeScript files should exist in source
 - This cleanup is safe - all old code is unused in production
-

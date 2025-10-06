@@ -1,25 +1,33 @@
 # Task: CLEAN-604-fix-package-json
 
 ## Overview
-Fix `apps/server/package.json` to reflect that this is a background jobs package, not an HTTP server.
+
+Fix `apps/server/package.json` to reflect that this is a background jobs
+package, not an HTTP server.
 
 ## Context Needed
+
 - File: `apps/server/package.json` - Current configuration
 - File: `apps/server/README.md` - Package purpose
 
 ## Objective
-Update package.json metadata and scripts to match actual usage as a background jobs runner.
+
+Update package.json metadata and scripts to match actual usage as a background
+jobs runner.
 
 **Issues to Fix**:
+
 1. `"main": "dist/index.js"` - This file doesn't exist (HTTP server deleted)
 2. Missing script definitions that GitHub Actions calls
 3. Misleading package description
 
 ## Steps
+
 1. Read current `apps/server/package.json`
 2. **Update/Remove `main` field**:
    - Option A: Remove it entirely (not a library)
-   - Option B: Change to `"main": "dist/lib/historical-data.js"` (if used as import)
+   - Option B: Change to `"main": "dist/lib/historical-data.js"` (if used as
+     import)
 3. **Add missing scripts** referenced in GitHub Actions:
    ```json
    "scripts": {
@@ -42,6 +50,7 @@ Update package.json metadata and scripts to match actual usage as a background j
    ```
 
 ## Acceptance Criteria
+
 - [ ] `main` field removed or updated correctly
 - [ ] All scripts referenced in GitHub Actions are defined
 - [ ] Package description is accurate
@@ -51,16 +60,19 @@ Update package.json metadata and scripts to match actual usage as a background j
 - [ ] No script errors in package.json
 
 ## Estimated Context Usage
+
 - Files to read: 1 (package.json)
 - Lines to process: ~40
 - New files: 0
 - Risk: **Low** (simple metadata fix)
 
 ## Related Tasks
+
 - **Depends on**: CLEAN-603 (dependencies cleaned up)
 - **Related**: CLEAN-605 (README should document these scripts)
 
 ## Cursor Prompt
+
 ```
 I'm working on CLEAN-604. Please:
 1. Read tasks/CLEAN-604-fix-package-json.md
@@ -72,6 +84,7 @@ I'm working on CLEAN-604. Please:
 ```
 
 ## Commit Message
+
 ```
 fix(CLEAN-604): update package.json for background jobs usage
 
@@ -82,9 +95,11 @@ fix(CLEAN-604): update package.json for background jobs usage
 ```
 
 ## Estimated Time
+
 ⏱️ **15 minutes**
 
 ## Verification
+
 ```bash
 cd apps/server
 pnpm build           # Should work
@@ -93,7 +108,7 @@ pnpm live-snapshot   # Should work (needs DATABASE_URL)
 ```
 
 ## Notes
+
 - This package is NOT an HTTP server despite the old "main" field
 - GitHub Actions calls these scripts directly via pnpm commands
 - The package is used as a monorepo workspace, not a published npm package
-
