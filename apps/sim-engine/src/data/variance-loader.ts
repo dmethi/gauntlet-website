@@ -10,6 +10,7 @@ import type {
   ProjectionErrorRecord,
   VarianceData,
 } from './variance-data.types';
+import { logger } from '../lib/logger';
 
 // Type assertion for imported JSON
 const data = varianceData as VarianceData;
@@ -36,9 +37,15 @@ const initializeCaches = (): void => {
     playerVarianceCache.set(key, record);
   }
 
-  console.log(`✅ Loaded ${data.positionVariance.length} position variance records`);
-  console.log(`✅ Loaded ${data.playerVariance.length} player variance records`);
-  console.log(`✅ Loaded ${data.projectionErrors.length} projection error records`);
+  logger.info(
+    {
+      event: 'variance_cache_initialized',
+      positionVarianceCount: data.positionVariance.length,
+      playerVarianceCount: data.playerVariance.length,
+      projectionErrorCount: data.projectionErrors.length,
+    },
+    'Variance data loaded and cached'
+  );
 };
 
 // Initialize on module load
@@ -87,7 +94,14 @@ export const getPositionDistribution = async (
   }
 
   // Fallback to default variance if no data found
-  console.warn(`No position variance data found for ${position}, using defaults`);
+  logger.warn(
+    {
+      event: 'position_distribution_fallback',
+      position,
+      seasonsAttempted: seasons,
+    },
+    `No variance data found for ${position}, using default distribution`
+  );
   return getDefaultPositionVariance(position);
 };
 
@@ -164,7 +178,14 @@ export const getPlayerOutcomes = async (
 
     return result;
   } catch (error) {
-    console.error('Error getting player outcomes:', error);
+    logger.error(
+      {
+        event: 'player_outcomes_error',
+        playerId: playerId.slice(0, 8),
+        error: error instanceof Error ? error.message : String(error),
+      },
+      'Failed to get player outcomes'
+    );
     return { outcomes: [], sampleSize: 0 };
   }
 };

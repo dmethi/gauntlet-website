@@ -3,6 +3,7 @@ import {
   getPlayerOutcomes as getPlayerOutcomesStatic,
   getPositionDistribution as getPositionDistributionStatic,
 } from '../data/variance-loader';
+import { logger } from '../lib/logger';
 
 /**
  * Position-specific standard deviation values based on fantasy football research
@@ -75,7 +76,14 @@ const getPositionDistribution = async (
 
     return result;
   } catch (error) {
-    console.error(`Error getting ${position} distribution:`, error);
+    logger.error(
+      {
+        event: 'position_distribution_error',
+        position,
+        error: error instanceof Error ? error.message : String(error),
+      },
+      `Failed to get ${position} distribution, using defaults`
+    );
     // Return position-specific distribution with realistic variance
     const positionStdDev = getPositionStdDev(position);
     const outcomes = [];
@@ -124,7 +132,14 @@ const getPlayerOutcomes = async (
 
     return result;
   } catch (error) {
-    console.error('Error getting player outcomes:', error);
+    logger.error(
+      {
+        event: 'player_outcomes_error',
+        playerId: playerId.slice(0, 8), // Truncate for log brevity
+        error: error instanceof Error ? error.message : String(error),
+      },
+      'Failed to get player outcomes, returning empty'
+    );
     return { outcomes: [], sampleSize: 0 };
   }
 };

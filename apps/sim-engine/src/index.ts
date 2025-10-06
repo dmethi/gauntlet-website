@@ -27,6 +27,12 @@ export { runSeasonSimulation } from './simulations/season-sim';
 export { getPositionDistribution, getPlayerOutcomes, getDataInfo } from './data/variance-loader';
 
 // ============================================
+// LOGGING
+// ============================================
+
+export { logger, createChildLogger } from './lib/logger';
+
+// ============================================
 // TYPE EXPORTS
 // ============================================
 
