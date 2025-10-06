@@ -39,6 +39,10 @@ interface SleeperRoster { ... }
   - Variance: `PositionVarianceRecord`, `PlayerVarianceRecord`, `ProjectionErrorRecord`, `VarianceData`
   - Sampling: `SamplingContext`
 
+- **Analytics & Stats Types** (`@gauntlet/types`):
+  - Position Tracking: `TrackedPosition`, `PositionPoints`
+  - Note: Most analytics types remain as local implementations due to domain-specific requirements
+
 **When to Define Local Types:**
 - ✅ Component-specific props (e.g., `ButtonProps`, `ModalProps`)
 - ✅ Route-specific request/response shapes (API transformations)
@@ -54,7 +58,8 @@ interface SleeperRoster { ... }
 - ❌ `apps/web/src/lib/sleeper/types.ts` - **DELETED** (use `@gauntlet/types`)
 - ✅ All apps (web, server, sim-engine) now use centralized types
 - ✅ **Phase 1**: 25+ Sleeper API type duplicates eliminated
-- ✅ **Phase 2**: 11 simulation/variance type duplicates eliminated
+- ✅ **Phase 2**: 11 simulation/variance type duplicates eliminated  
+- ✅ **Phase 3**: 2 position tracking types centralized (most analytics types remain local)
 - ✅ Types re-exported from sim-engine for backwards compatibility
 
 ## 🏗️ Critical Architecture Patterns

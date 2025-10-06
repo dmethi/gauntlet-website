@@ -18,18 +18,7 @@ export const CURRENT_LEAGUES = [
   },
 ];
 
-export const ARCHIVED_LEAGUES = [
-  // 2024 Season
-  { id: '997670420490801152', name: 'Gauntlet AFC', season: 2024, conference: 'AFC' },
-  { id: '997670420490801153', name: 'Gauntlet NFC', season: 2024, conference: 'NFC' },
-
-  // Add more historical leagues as needed
-  // 2023 Season
-  // { id: 'xxx', name: 'Gauntlet AFC', season: 2023, conference: 'AFC' },
-  // { id: 'xxx', name: 'Gauntlet NFC', season: 2023, conference: 'NFC' },
-];
-
-export const ALL_LEAGUES = [...CURRENT_LEAGUES, ...ARCHIVED_LEAGUES];
+export const ALL_LEAGUES = [...CURRENT_LEAGUES];
 
 /**
  * Get league by ID without database

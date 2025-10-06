@@ -4,9 +4,15 @@
  * Combines BOTH APIs to capture complete data:
  * - League Odds API: Overall rankings & team projections (128+ pts)
  * - Individual Matchup APIs: Current scores & live data
+ *
+ * Writes to: LiveWinProbSample (historical time-series data)
  */
 
-import prisma from '../../lib/prisma.js';
+import {
+  saveLiveWinProbSample,
+  getLastWinProbSample,
+  disconnect,
+} from '../../lib/historical-data.js';
 
 interface CompleteSnapshot {
   week: number;
@@ -232,25 +238,54 @@ async function captureIndividualMatchup(
   }
 }
 
-async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<void> {
+async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<boolean> {
   try {
-    await (prisma as any).liveWinProbSample.create({
-      data: {
-        leagueId: snapshot.leagueId,
-        week: snapshot.week,
-        matchupId: snapshot.matchupId,
-        rosterAId: snapshot.team1.rosterId,
-        rosterBId: snapshot.team2.rosterId,
-        gameProgress: 0, // Using simulation data
-        winProbA: snapshot.team1.winProbability,
-        winProbB: snapshot.team2.winProbability,
-        projectedFinalA: snapshot.team1.simulatedMean, // Use simulated mean (matches screenshot)
-        projectedFinalB: snapshot.team2.simulatedMean, // Use simulated mean (matches screenshot)
-        currentScoreA: snapshot.team1.currentScore,
-        currentScoreB: snapshot.team2.currentScore,
-        spread: snapshot.spread,
-        total: snapshot.total,
-      },
+    // Check if data has changed since last snapshot (deduplication)
+    const lastSnapshot = await getLastWinProbSample(
+      snapshot.leagueId,
+      snapshot.week,
+      snapshot.matchupId
+    );
+
+    if (lastSnapshot) {
+      // Compare scores and key metrics (with small tolerance for floating point)
+      const tolerance = 0.01;
+      const scoresMatch =
+        Math.abs(lastSnapshot.currentScoreA - snapshot.team1.currentScore) < tolerance &&
+        Math.abs(lastSnapshot.currentScoreB - snapshot.team2.currentScore) < tolerance;
+
+      const projectionsMatch =
+        Math.abs(lastSnapshot.projectedFinalA - snapshot.team1.simulatedMean) < tolerance &&
+        Math.abs(lastSnapshot.projectedFinalB - snapshot.team2.simulatedMean) < tolerance;
+
+      const oddsMatch =
+        Math.abs(lastSnapshot.spread - snapshot.spread) < tolerance &&
+        Math.abs(lastSnapshot.total - snapshot.total) < tolerance;
+
+      if (scoresMatch && projectionsMatch && oddsMatch) {
+        console.log(
+          `⏭️  M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name} - No change, skipping`
+        );
+        return false; // Data unchanged, skipped
+      }
+    }
+
+    // Data has changed or is new, save it
+    await saveLiveWinProbSample({
+      leagueId: snapshot.leagueId,
+      week: snapshot.week,
+      matchupId: snapshot.matchupId,
+      rosterAId: snapshot.team1.rosterId,
+      rosterBId: snapshot.team2.rosterId,
+      gameProgress: 0, // Using simulation data
+      winProbA: snapshot.team1.winProbability,
+      winProbB: snapshot.team2.winProbability,
+      projectedFinalA: snapshot.team1.simulatedMean, // Use simulated mean (matches screenshot)
+      projectedFinalB: snapshot.team2.simulatedMean, // Use simulated mean (matches screenshot)
+      currentScoreA: snapshot.team1.currentScore,
+      currentScoreB: snapshot.team2.currentScore,
+      spread: snapshot.spread,
+      total: snapshot.total,
     });
 
     console.log(`✅ M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
@@ -260,6 +295,7 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<void> {
     console.log(
       `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Spread: ${snapshot.spread > 0 ? '+' : ''}${snapshot.spread.toFixed(1)} | O/U: ${snapshot.total.toFixed(1)} | Fresh Data ✅`
     );
+
     // Enhanced per-player debugging tables
     const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Players']) => {
       if (!players || players.length === 0) return;
@@ -304,8 +340,11 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<void> {
     printPlayerTable(`${snapshot.team1Name}`, snapshot.team1Players);
     printPlayerTable(`${snapshot.team2Name}`, snapshot.team2Players);
     console.log('');
+
+    return true; // Data saved
   } catch (error) {
     // Fallback logging if database fails
+    console.error(`❌ Failed to save M${snapshot.matchupId}:`, error.message);
     console.log(`📊 M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
     console.log(
       `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
@@ -314,6 +353,7 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<void> {
       `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Fresh Data ✅`
     );
     console.log('');
+    return false; // Failed to save
   }
 }
 
@@ -332,6 +372,10 @@ async function main() {
   // 2. Capture individual matchups for detailed data
   console.log('📊 Capturing individual matchup details...');
 
+  let savedCount = 0;
+  let skippedCount = 0;
+  let failedCount = 0;
+
   for (const leagueId of leagueIds) {
     const leagueName = leagueId.includes('3245') ? 'AFC' : 'NFC';
     console.log(`\n🏆 ${leagueName} League (${leagueId}):`);
@@ -344,9 +388,15 @@ async function main() {
       const snapshot = await captureIndividualMatchup(leagueId, week, matchupId, teamNames);
 
       if (snapshot) {
-        await saveCompleteSnapshot(snapshot);
+        const saved = await saveCompleteSnapshot(snapshot);
+        if (saved) {
+          savedCount++;
+        } else {
+          skippedCount++;
+        }
       } else {
         console.log(`❌ Failed to capture M${matchupId}\n`);
+        failedCount++;
       }
 
       // Small delay to avoid API overload
@@ -354,13 +404,24 @@ async function main() {
     }
   }
 
-  console.log('\n✅ Complete snapshot finished!');
-  console.log('📊 Captured ALL required data:');
+  console.log('\n' + '='.repeat(60));
+  console.log('✅ Complete snapshot finished!');
+  console.log('='.repeat(60));
+  console.log(`📊 Results Summary:`);
+  console.log(`   ✅ Saved: ${savedCount} matchups (data changed)`);
+  console.log(`   ⏭️  Skipped: ${skippedCount} matchups (no change since last run)`);
+  if (failedCount > 0) {
+    console.log(`   ❌ Failed: ${failedCount} matchups`);
+  }
+  console.log(`   📈 Total processed: ${savedCount + skippedCount + failedCount} matchups`);
+  console.log('');
+  console.log('📊 Captured data includes:');
   console.log('   ✅ League odds & team rankings (128+ pt projections)');
   console.log('   ✅ Win probabilities (translated from odds)');
   console.log('   ✅ Live matchup scores (current player scores)');
   console.log('   ✅ Simulated means (matches your screenshot "Proj:" values)');
   console.log('\n📈 Perfect data for score-over-time and win-probability-over-time charts!');
+  console.log("💡 Deduplication: Skips saving when scores/projections haven't changed");
 }
 
 main()
@@ -369,5 +430,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await disconnect();
   });

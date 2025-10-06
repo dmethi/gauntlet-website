@@ -3,23 +3,39 @@ name: Live Odds Snapshots
 on:
   schedule:
     # During NFL season (Sep-Feb): Every 10 minutes during game times
-    # Covers both EDT (UTC-4) and EST (UTC-5) throughout the season
+    # Covers EDT (UTC-4) and EST (UTC-5) throughout the season
 
-    # Sunday: 1:00 PM - 11:00 PM ET
-    # EDT: Sunday 17:00 - Monday 03:00 UTC | EST: Sunday 18:00 - Monday 04:00 UTC
-    - cron: "*/10 17-23 * 9-12,1-2 0" # Sunday 5PM-11:59PM UTC
-    - cron: "*/10 0-4 * 9-12,1-2 1" # Monday 12AM-4:59AM UTC (Sunday night games)
-
-    # Monday: 8:00 PM - 11:00 PM ET
-    # EDT: Tuesday 00:00-03:00 UTC | EST: Tuesday 01:00-04:00 UTC
-    - cron: "*/10 0-4 * 9-12,1-2 2" # Tuesday 12AM-4:59AM UTC (Monday night)
-
-    # Thursday: 8:00 PM - 11:00 PM ET
-    # EDT: Friday 00:00-03:00 UTC | EST: Friday 01:00-04:00 UTC
-    - cron: "*/10 0-4 * 9-12,1-2 5" # Friday 12AM-4:59AM UTC (Thursday night)
-
-    # Daily pre-game update: 6:00 AM ET (10:00-11:00 UTC depending on DST)
+    # Daily pre-game update: 6:00 AM ET
     - cron: "0 10 * 9-12,1-2 *" # Daily at 10:00 UTC during NFL season
+
+    # Thursday Night Football: 8:00 PM - 11:30 PM ET
+    # Runs Friday 00:00-05:59 UTC
+    - cron: "*/10 0-5 * 9-12,1-2 5"
+
+    # Friday Night Specials: International/holiday games
+    # Runs Saturday 00:00-05:59 UTC
+    - cron: "*/10 0-5 * 9-12,1-2 6"
+
+    # Saturday Games: Late-season windows (Weeks 15-18)
+    # Runs Saturday 17:00-23:59 UTC + Sunday 00:00-05:59 UTC
+    - cron: "*/10 17-23 * 12,1 6" # Dec-Jan Saturdays
+    - cron: "*/10 0-5 * 12,1 0" # Dec-Jan early Sunday (Saturday night carryover)
+
+    # Sunday Early Window: 1:00 PM ET
+    # Runs Sunday 17:00-21:59 UTC
+    - cron: "*/10 17-21 * 9-12,1-2 0"
+
+    # Sunday Late Window: 4:05/4:25 PM ET
+    # Runs Sunday 20:00-23:59 UTC (overlaps with early, but that's fine)
+    - cron: "*/10 20-23 * 9-12,1-2 0"
+
+    # Sunday Night Football: 8:20 PM ET
+    # Runs Monday 00:00-05:59 UTC
+    - cron: "*/10 0-4 * 9-12,1-2 1"
+
+    # Monday Night Football: 8:15 PM ET
+    # Runs Tuesday 00:00-05:59 UTC
+    - cron: "*/10 0-4 * 9-12,1-2 2"
 
   # Manual trigger for testing
   workflow_dispatch:
@@ -59,7 +75,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @gauntlet/server exec prisma generate
+        run: pnpm --filter @gauntlet/server exec prisma generate --schema=prisma/schema-historical.prisma
 
       - name: Determine update type and week
         id: determine-context
@@ -109,12 +125,6 @@ jobs:
           IS_LIVE="${{ steps.determine-context.outputs.is_live }}"
           TRIGGER_TYPE="${{ steps.determine-context.outputs.trigger_type }}"
 
-          echo "🔄 Syncing team names from Sleeper metadata..."
-          pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/sync-team-names.ts
-
-          echo "🔄 Refreshing matchups and starters from Sleeper..."
-          pnpm --filter @gauntlet/server exec tsx src/scripts/maintenance/refresh-lineups.ts ${WEEK:+$WEEK}
-
           echo "🚀 Starting live odds snapshot..."
           echo "  Week: $WEEK"
           echo "  Live Mode: $IS_LIVE"
@@ -123,10 +133,10 @@ jobs:
 
           if [ "$IS_LIVE" = "true" ]; then
             echo "⚡ Capturing LIVE snapshot with current scores..."
-            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
+            pnpm --filter @gauntlet/server live-snapshot
           else
             echo "📅 Capturing pre-game snapshot..."
-            pnpm --filter @gauntlet/server exec tsx src/scripts/jobs/comprehensive-live-snapshot.ts
+            pnpm --filter @gauntlet/server live-snapshot
           fi
 
       - name: Report completion

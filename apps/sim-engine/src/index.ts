@@ -1,6 +1,5 @@
 export * from './models/matchup';
 export * from './models/variance';
-export * from './simulations/matchup-sim';
 export * from './simulations/season-sim';
 
 // Explicit exports for tree-shaking-friendly named imports

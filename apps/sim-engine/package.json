@@ -12,8 +12,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@gauntlet/lib": "workspace:*",
-    "@prisma/client": "^5.0.0"
+    "@gauntlet/lib": "workspace:*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

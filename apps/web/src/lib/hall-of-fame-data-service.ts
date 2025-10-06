@@ -14,11 +14,6 @@ export const ALL_GAUNTLET_LEAGUES = {
     AFC: LEAGUE_IDS.AFC,
     NFC: LEAGUE_IDS.NFC,
   },
-  '2024': {
-    // Add 2024 league IDs when available
-    AFC: '',
-    NFC: '',
-  },
   // Add more seasons as needed
 };
 

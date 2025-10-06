@@ -2,18 +2,12 @@
  * Position-based stats aggregation utilities
  */
 
-import type { SleeperMatchup, PlayerIndex } from '@gauntlet/types';
+import type { SleeperMatchup, PlayerIndex, TrackedPosition, PositionPoints } from '@gauntlet/types';
 
 export const TRACKED_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'DEF'] as const;
-export type TrackedPosition = (typeof TRACKED_POSITIONS)[number];
 
-export interface PositionPoints {
-  QB: number;
-  RB: number;
-  WR: number;
-  TE: number;
-  DEF: number;
-}
+// Re-export types for backwards compatibility
+export type { TrackedPosition, PositionPoints };
 
 /**
  * Calculate position points for each roster in each week
