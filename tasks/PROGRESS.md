@@ -2,8 +2,8 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 15.7% (11/70 tasks)  
-**Apps/Server Progress**: 61.1% (11/18 server tasks complete)
+**Overall Progress**: 17.1% (12/70 tasks)  
+**Apps/Server Progress**: 66.7% (12/18 server tasks complete)
 
 ---
 
@@ -11,7 +11,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (11)
+#### ✅ Completed (12)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -24,6 +24,7 @@
 - [x] **SETUP-602**: Add ESLint and Prettier Configuration ⏱️ 30 min
 - [x] **REFACTOR-601**: Convert to Arrow Functions ⏱️ 45 min
 - [x] **OBSERVABILITY-601**: Add Structured Logging with Pino ⏱️ 45 min
+- [x] **OBSERVABILITY-602**: Add Metrics Collection ⏱️ 40 min
 
 #### 🔄 In Progress (0)
 
@@ -57,10 +58,10 @@ _Ready to begin_
 | **TEST**            | 6      | 1         | 0           | 5         |
 | **CLEAN**           | 6      | 5         | 0           | 1         |
 | **REFACTOR**        | 3      | 1         | 0           | 2         |
-| **OBSERVABILITY**   | 2      | 1         | 0           | 1         |
+| **OBSERVABILITY**   | 2      | 2         | 0           | 0         |
 | **RESILIENCE**      | 3      | 0         | 0           | 3         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **70** | **10**    | **0**       | **60**    |
+| **Total**           | **70** | **12**    | **0**       | **58**    |
 
 ---
 
@@ -95,10 +96,10 @@ _Ready to begin_
 - [ ] **REFACTOR-602**: Add Barrel Exports ⏱️ 20 min [MEDIUM] (ready to start)
 - [ ] **REFACTOR-603**: Add Path Aliases ⏱️ 15 min [MEDIUM] (blocked by REFACTOR-602)
 
-#### Phase 2: Observability (1.5 hours)
+#### Phase 2: Observability (1.5 hours) ✅ COMPLETE
 
 - [x] **OBSERVABILITY-601**: Structured Logging ⏱️ 45 min [HIGH] ✅
-- [ ] **OBSERVABILITY-602**: Metrics Collection ⏱️ 40 min [MEDIUM] (ready to start)
+- [x] **OBSERVABILITY-602**: Metrics Collection ⏱️ 40 min [MEDIUM] ✅
 
 #### Phase 3: Resilience (2 hours)
 
@@ -137,6 +138,30 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **OBSERVABILITY-602**: Add Metrics Collection
+  - Created `apps/server/src/lib/metrics.ts` with factory function pattern (arrow functions)
+  - Moved `MetricsSummary` and `Metrics` interface to `@gauntlet/types` central package
+  - Instrumented API client with duration tracking for all 4 methods:
+    - `getCurrentWeek()`: tracks `api.sleeper.current_week` duration and errors
+    - `fetchLeagueOdds()`: tracks `api.gauntlet.league_odds` duration and errors
+    - `fetchMatchupSimulation()`: tracks `api.gauntlet.matchup_simulation` duration and errors
+    - `getTeamNames()`: tracks `api.sleeper.team_names` duration and errors
+  - Instrumented snapshot validator with outcome counters:
+    - `snapshot.saved`: successful saves
+    - `snapshot.skipped`: unchanged data
+    - `snapshot.error`: failed saves
+    - Duration tracking for `snapshot.validation` and `snapshot.save`
+  - Updated `comprehensive-live-snapshot.ts` to:
+    - Create metrics instance with `createMetrics()`
+    - Pass metrics to API client via `createGauntletAPIClient({}, metrics)`
+    - Pass metrics to `saveSnapshotIfChanged(snapshot, metrics)`
+    - Track `matchup.capture_failed` counter
+    - Report full metrics summary at job completion with timers (count, total, avg, min, max)
+  - All 50 tests passing with 0 failures
+  - TypeScript compilation successful across all packages
+  - **Outcome**: Production-ready metrics collection enabling performance monitoring and alerting
+  - **Compliance**: 100% arrow functions (factory pattern), central type definitions in `@gauntlet/types`
 
 - ✅ **OBSERVABILITY-601**: Add Structured Logging with Pino
   - Installed Pino 9.7.0 and pino-pretty 13.0.0

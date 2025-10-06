@@ -7,7 +7,12 @@
 
 import { logger } from './logger.js';
 import { getLastWinProbSample, saveLiveWinProbSample } from './historical-data.js';
-import type { CompleteSnapshot, PreviousSnapshot, ValidationResult } from '@gauntlet/types';
+import type {
+  CompleteSnapshot,
+  Metrics,
+  PreviousSnapshot,
+  ValidationResult,
+} from '@gauntlet/types';
 
 /**
  * Check if snapshot data has changed significantly since the last snapshot
@@ -115,12 +120,14 @@ const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Player
  * 5. Logs detailed information about the snapshot
  *
  * @param snapshot - Complete snapshot data to validate and save
+ * @param metrics - Optional Metrics instance for tracking outcomes
  * @returns Promise resolving to validation result indicating if data was saved
  *
  * @example
  * ```typescript
+ * const metrics = new Metrics();
  * const snapshot = await captureMatchup(leagueId, week, matchupId);
- * const result = await saveSnapshotIfChanged(snapshot);
+ * const result = await saveSnapshotIfChanged(snapshot, metrics);
  *
  * if (result.saved) {
  *   console.log('Snapshot saved successfully');
@@ -130,8 +137,10 @@ const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Player
  * ```
  */
 export const saveSnapshotIfChanged = async (
-  snapshot: CompleteSnapshot
+  snapshot: CompleteSnapshot,
+  metrics?: Metrics
 ): Promise<ValidationResult> => {
+  const start = Date.now();
   try {
     // 1. Get last snapshot from database
     const lastSnapshot = await getLastWinProbSample(
@@ -145,12 +154,17 @@ export const saveSnapshotIfChanged = async (
       const hasChanged = hasSignificantChange(lastSnapshot, snapshot);
 
       if (!hasChanged) {
+        const duration = Date.now() - start;
+        metrics?.increment('snapshot.skipped');
+        metrics?.recordDuration('snapshot.validation', duration);
+
         logger.debug({
           event: 'snapshot_skipped',
           matchupId: snapshot.matchupId,
           week: snapshot.week,
           team1Name: snapshot.team1Name,
           team2Name: snapshot.team2Name,
+          duration,
           reason: 'unchanged',
         });
         return { saved: false, reason: 'unchanged' };
@@ -175,6 +189,10 @@ export const saveSnapshotIfChanged = async (
       total: snapshot.total,
     });
 
+    const duration = Date.now() - start;
+    metrics?.increment('snapshot.saved');
+    metrics?.recordDuration('snapshot.save', duration);
+
     // 4. Log success with detailed information
     logger.info({
       event: 'snapshot_saved',
@@ -190,6 +208,7 @@ export const saveSnapshotIfChanged = async (
       team2CurrentScore: snapshot.team2.currentScore,
       spread: snapshot.spread,
       total: snapshot.total,
+      duration,
     });
 
     // 5. Enhanced per-player debugging tables
@@ -198,6 +217,10 @@ export const saveSnapshotIfChanged = async (
 
     return { saved: true, reason: 'saved' };
   } catch (error) {
+    const duration = Date.now() - start;
+    metrics?.increment('snapshot.error');
+    metrics?.recordDuration('snapshot.save', duration);
+
     // Fallback logging if database fails
     logger.error({
       event: 'snapshot_save_failed',
@@ -211,6 +234,7 @@ export const saveSnapshotIfChanged = async (
       team2SimMean: snapshot.team2.simulatedMean,
       team1CurrentScore: snapshot.team1.currentScore,
       team2CurrentScore: snapshot.team2.currentScore,
+      duration,
     });
     return { saved: false, reason: 'error' };
   }

@@ -45,4 +45,3 @@ export const logger = pino({
 export const createChildLogger = (bindings: Record<string, unknown>) => {
   return logger.child(bindings);
 };
-

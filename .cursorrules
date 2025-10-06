@@ -43,6 +43,12 @@ interface SleeperRoster { ... }
   - Position Tracking: `TrackedPosition`, `PositionPoints`
   - Note: Most analytics types remain as local implementations due to domain-specific requirements
 
+- **Server & Metrics Types** (`@gauntlet/types`):
+  - API Client: `GauntletAPIOptions`, `LeagueOddsResponse`, `MatchupSimulationResponse`
+  - Snapshot: `CompleteSnapshot`, `PreviousSnapshot`, `ValidationResult`
+  - Metrics: `Metrics`, `MetricsSummary`
+  - Database: `ModelStats`
+
 **When to Define Local Types:**
 - ✅ Component-specific props (e.g., `ButtonProps`, `ModalProps`)
 - ✅ Route-specific request/response shapes (API transformations)
@@ -61,6 +67,137 @@ interface SleeperRoster { ... }
 - ✅ **Phase 2**: 11 simulation/variance type duplicates eliminated  
 - ✅ **Phase 3**: 2 position tracking types centralized (most analytics types remain local)
 - ✅ Types re-exported from sim-engine for backwards compatibility
+
+## ⚡ Function Patterns & Coding Standards
+
+### MANDATORY: Arrow Functions Over Classes
+**ALWAYS use arrow functions and factory patterns. NEVER use classes or regular function declarations:**
+
+```typescript
+// ✅ CORRECT: Arrow function factory pattern
+export const createMetrics = (): Metrics => {
+  const counters = new Map<string, number>();
+  const timers = new Map<string, number[]>();
+
+  return {
+    increment: (metric: string, value = 1): void => {
+      const current = counters.get(metric) || 0;
+      counters.set(metric, current + value);
+    },
+    getSummary: (): MetricsSummary => {
+      return { counters: Object.fromEntries(counters), timers: {...} };
+    }
+  };
+};
+
+// ✅ CORRECT: Standalone arrow functions
+export const calculateScore = (player: Player): number => {
+  return player.stats.reduce((sum, stat) => sum + stat.points, 0);
+};
+
+// ✅ CORRECT: Arrow function API client factory
+export const createAPIClient = (options: ClientOptions = {}): APIClient => {
+  const baseUrl = options.baseUrl || 'https://api.example.com';
+  
+  return {
+    fetchData: async (id: string): Promise<Data> => {
+      const response = await fetch(`${baseUrl}/data/${id}`);
+      return response.json();
+    }
+  };
+};
+
+// ❌ WRONG: Class-based approach
+export class Metrics {
+  private counters = new Map();
+  increment(metric: string): void { ... }
+}
+
+// ❌ WRONG: Regular function declaration
+export function calculateScore(player: Player): number {
+  return player.stats.reduce((sum, stat) => sum + stat.points, 0);
+}
+
+// ❌ WRONG: Traditional function expression
+export const calculateScore = function(player: Player): number {
+  return player.stats.reduce((sum, stat) => sum + stat.points, 0);
+};
+```
+
+### Why Arrow Functions & Factory Pattern?
+
+**Benefits:**
+- ✅ **Consistent code style** across entire codebase
+- ✅ **Lexical `this` binding** eliminates context bugs
+- ✅ **Closure-based state** more functional and composable
+- ✅ **Better tree-shaking** for unused exports
+- ✅ **TypeScript inference** works better with arrow functions
+- ✅ **Testability** factory pattern enables easy mocking
+
+**Factory Pattern for Stateful Objects:**
+```typescript
+// ✅ Use factory pattern when you need instance state
+export const createLogger = (context: string) => {
+  const startTime = Date.now();
+  
+  return {
+    log: (message: string): void => {
+      console.log(`[${context}] ${message} (${Date.now() - startTime}ms)`);
+    },
+    reset: (): void => {
+      startTime = Date.now();
+    }
+  };
+};
+
+const logger = createLogger('API');
+logger.log('Fetching data'); // [API] Fetching data (123ms)
+```
+
+### Function Naming Conventions
+- **Factory functions**: `create*` prefix (e.g., `createMetrics`, `createAPIClient`)
+- **Utility functions**: Descriptive verbs (e.g., `calculateScore`, `formatDate`, `validateInput`)
+- **Predicates**: `is*` or `has*` prefix (e.g., `isValidEmail`, `hasPermission`)
+- **Async functions**: No special prefix, type return as `Promise<T>`
+
+### Converting Classes to Factory Pattern
+
+**Before (Class):**
+```typescript
+export class APIClient {
+  private baseUrl: string;
+  
+  constructor(options: Options) {
+    this.baseUrl = options.baseUrl || 'default';
+  }
+  
+  async fetch(id: string): Promise<Data> {
+    return await fetch(`${this.baseUrl}/${id}`).then(r => r.json());
+  }
+}
+
+const client = new APIClient({ baseUrl: 'https://api.com' });
+```
+
+**After (Factory):**
+```typescript
+export const createAPIClient = (options: Options = {}): APIClient => {
+  const baseUrl = options.baseUrl || 'default';
+  
+  return {
+    fetch: async (id: string): Promise<Data> => {
+      return await fetch(`${baseUrl}/${id}`).then(r => r.json());
+    }
+  };
+};
+
+const client = createAPIClient({ baseUrl: 'https://api.com' });
+```
+
+### Migration Status
+- ✅ **apps/server**: 100% arrow functions (all 11 functions converted)
+- ✅ **Metrics utility**: Factory pattern with closure-based state
+- ⏳ **apps/web**: Migration in progress (see REFACTOR-601)
 
 ## 🏗️ Critical Architecture Patterns
 
@@ -526,10 +663,13 @@ return NextResponse.json({
 ## 🔧 TypeScript Standards
 
 ### Strict Type Safety
-- **No `any` types** - Use proper Sleeper API types from `/lib/sleeper/types.ts`
+- **No `any` types** - Use proper types from `@gauntlet/types` central package
+- **Arrow functions only** - No classes or regular function declarations (see Function Patterns section)
+- **Central type definitions** - Import from `@gauntlet/types`, never redefine locally
 - **Interface segregation** for large data structures
 - **Discriminated unions** for API response states
 - **Composite key types** for multi-league scenarios
+- **Explicit return types** on all exported functions
 
 ### Domain-Specific Types
 ```typescript
@@ -638,5 +778,61 @@ When migrating to unified patterns:
 3. **Non-critical pages** (draft analysis, stats)
 4. **High-traffic pages** (matchups, league overview)
 5. **Core infrastructure** (after full validation)
+
+---
+
+## 📋 Quick Reference: Mandatory Standards
+
+### Code Style (NON-NEGOTIABLE)
+1. ✅ **Arrow functions only** - No classes, no regular function declarations
+2. ✅ **Factory pattern** - Use `createX()` for stateful objects with closure-based state
+3. ✅ **Central types** - Always import from `@gauntlet/types`, never redefine locally
+4. ✅ **No `any` types** - Use proper type definitions from central package
+5. ✅ **Explicit return types** - All exported functions must have return type annotations
+
+### Type Import Pattern
+```typescript
+// ✅ ALWAYS: Import types from @gauntlet/types
+import type { 
+  SleeperLeague, 
+  Metrics, 
+  CompleteSnapshot 
+} from '@gauntlet/types';
+
+// ❌ NEVER: Redefine types locally
+interface SleeperLeague { ... }
+interface Metrics { ... }
+```
+
+### Function Pattern
+```typescript
+// ✅ ALWAYS: Arrow function factory
+export const createService = (config: Config): Service => {
+  const state = new Map();
+  return {
+    method: (arg: string): ReturnType => { ... }
+  };
+};
+
+// ❌ NEVER: Classes
+export class Service { ... }
+
+// ❌ NEVER: Regular functions
+export function createService() { ... }
+```
+
+### Multi-League Safety
+```typescript
+// ✅ ALWAYS: Process leagues separately, then combine
+const afcResults = processLeague(afcData);
+const nfcResults = processLeague(nfcData);
+const combined = [...afcResults, ...nfcResults];
+
+// ❌ NEVER: Combine first, then process
+const allData = [...afcData, ...nfcData];
+const results = processLeague(allData); // Creates bugs!
+```
+
+---
 
 This rule set encodes years of domain-specific learning and should be followed religiously to maintain system reliability, performance, and correctness. When in doubt, always process leagues separately then combine results.

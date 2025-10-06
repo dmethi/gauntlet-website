@@ -8,9 +8,9 @@
  * Writes to: LiveWinProbSample (historical time-series data)
  */
 
-import { createChildLogger } from '../../lib/index.js';
+import { createChildLogger, createMetrics } from '../../lib/index.js';
 import { disconnect } from '../../lib/historical-data.js';
-import { gauntletAPI } from '../../lib/gauntlet-api-client.js';
+import { createGauntletAPIClient } from '../../lib/gauntlet-api-client.js';
 import { saveSnapshotIfChanged } from '../../lib/snapshot-validator.js';
 import type { CompleteSnapshot } from '@gauntlet/types';
 
@@ -21,7 +21,8 @@ const captureIndividualMatchup = async (
   leagueId: string,
   week: number,
   matchupId: number,
-  teamNames: Map<number, string>
+  teamNames: Map<number, string>,
+  apiClient: ReturnType<typeof createGauntletAPIClient>
 ): Promise<CompleteSnapshot | null> => {
   try {
     // Get fresh current scores directly from Sleeper API
@@ -34,7 +35,7 @@ const captureIndividualMatchup = async (
     if (matchupPair.length !== 2) return null;
 
     // Fetch simulation from Gauntlet API
-    const data = await gauntletAPI.fetchMatchupSimulation(leagueId, week, matchupId);
+    const data = await apiClient.fetchMatchupSimulation(leagueId, week, matchupId);
     const sim = data.simulation;
 
     const toDebugPlayers = (
@@ -143,7 +144,12 @@ const captureIndividualMatchup = async (
 };
 
 const main = async (): Promise<void> => {
-  const week = await gauntletAPI.getCurrentWeek();
+  // Create metrics and API client
+  const metrics = createMetrics();
+  const apiClient = createGauntletAPIClient({}, metrics);
+  const jobStartTime = Date.now();
+
+  const week = await apiClient.getCurrentWeek();
   const leagueIds = ['1263744209295245312', '1263740549504962561'];
 
   // Create job-specific logger
@@ -156,7 +162,7 @@ const main = async (): Promise<void> => {
 
   // 1. Capture league odds for team rankings
   jobLogger.debug({ event: 'fetching_league_odds', week });
-  const leagueOdds = await gauntletAPI.fetchLeagueOdds(week);
+  const leagueOdds = await apiClient.fetchLeagueOdds(week);
   jobLogger.debug({
     event: 'league_odds_captured',
     teamsRanked: leagueOdds.highestScorer?.length || 0,
@@ -174,20 +180,27 @@ const main = async (): Promise<void> => {
     jobLogger.debug({ event: 'processing_league', leagueId, leagueName });
 
     jobLogger.debug({ event: 'fetching_team_names', leagueId });
-    const teamNames = await gauntletAPI.getTeamNames(leagueId);
+    const teamNames = await apiClient.getTeamNames(leagueId);
     jobLogger.debug({ event: 'team_names_fetched', count: teamNames.size, leagueId });
 
     for (let matchupId = 1; matchupId <= 6; matchupId++) {
-      const snapshot = await captureIndividualMatchup(leagueId, week, matchupId, teamNames);
+      const snapshot = await captureIndividualMatchup(
+        leagueId,
+        week,
+        matchupId,
+        teamNames,
+        apiClient
+      );
 
       if (snapshot) {
-        const result = await saveSnapshotIfChanged(snapshot);
+        const result = await saveSnapshotIfChanged(snapshot, metrics);
         if (result.saved) {
           savedCount++;
         } else {
           skippedCount++;
         }
       } else {
+        metrics.increment('matchup.capture_failed');
         jobLogger.warn({
           event: 'matchup_capture_failed',
           matchupId,
@@ -201,12 +214,18 @@ const main = async (): Promise<void> => {
     }
   }
 
+  // Report metrics
+  const jobDuration = Date.now() - jobStartTime;
+  const summary = metrics.getSummary();
+
   jobLogger.info({
     event: 'job_completed',
+    duration: jobDuration,
     savedCount,
     skippedCount,
     failedCount,
     totalProcessed: savedCount + skippedCount + failedCount,
+    metrics: summary,
     message: 'Comprehensive live odds snapshot finished',
   });
 };

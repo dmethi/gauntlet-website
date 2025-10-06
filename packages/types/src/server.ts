@@ -193,3 +193,57 @@ export interface PreviousSnapshot {
   spread: number;
   total: number;
 }
+
+// ============================================================================
+// Metrics Collection Types
+// ============================================================================
+
+/**
+ * Summary of all collected metrics including counters and timers
+ */
+export interface MetricsSummary {
+  /**
+   * Counter metrics (e.g., snapshot.saved, snapshot.skipped)
+   */
+  counters: Record<string, number>;
+  /**
+   * Timer metrics with statistical aggregations
+   */
+  timers: Record<
+    string,
+    {
+      /** Number of measurements */
+      count: number;
+      /** Total time across all measurements (ms) */
+      total: number;
+      /** Average time per measurement (ms) */
+      avg: number;
+      /** Minimum time recorded (ms) */
+      min: number;
+      /** Maximum time recorded (ms) */
+      max: number;
+    }
+  >;
+}
+
+/**
+ * Metrics collection instance for tracking job performance
+ */
+export interface Metrics {
+  /**
+   * Increment a counter metric
+   */
+  increment: (metric: string, value?: number) => void;
+  /**
+   * Record a duration metric in milliseconds
+   */
+  recordDuration: (metric: string, durationMs: number) => void;
+  /**
+   * Get summary of all metrics
+   */
+  getSummary: () => MetricsSummary;
+  /**
+   * Reset all metrics
+   */
+  reset: () => void;
+}

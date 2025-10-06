@@ -10,6 +10,7 @@ import type {
   GauntletAPIOptions,
   LeagueOddsResponse,
   MatchupSimulationResponse,
+  Metrics,
   NFLState,
   SleeperRoster,
   SleeperUser,
@@ -19,18 +20,21 @@ import type {
  * Create a Gauntlet API client for interacting with web app API endpoints
  *
  * @param options - Optional configuration for base URL and timeout
+ * @param metrics - Optional Metrics instance for tracking API call durations
  * @returns Client object with methods for fetching data from Gauntlet API
  *
  * @example
  * ```typescript
- * const client = createGauntletAPIClient();
+ * const metrics = new Metrics();
+ * const client = createGauntletAPIClient({}, metrics);
  * const week = await client.getCurrentWeek();
  * const odds = await client.fetchLeagueOdds(week);
  * const simulation = await client.fetchMatchupSimulation('1263744209295245312', week, 1);
  * ```
  */
 export const createGauntletAPIClient = (
-  options: GauntletAPIOptions = {}
+  options: GauntletAPIOptions = {},
+  metrics?: Metrics
 ): {
   getCurrentWeek: () => Promise<number>;
   fetchLeagueOdds: (week: number) => Promise<LeagueOddsResponse>;
@@ -57,12 +61,17 @@ export const createGauntletAPIClient = (
      * ```
      */
     getCurrentWeek: async (): Promise<number> => {
+      const start = Date.now();
       try {
         const response = await fetch('https://api.sleeper.app/v1/state/nfl');
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.sleeper.current_week', duration);
+
         if (!response.ok) {
           logger.warn({
             event: 'nfl_state_fetch_failed',
             status: response.status,
+            duration,
             message: 'Failed to fetch NFL state, using default week 4',
           });
           return 4; // Default fallback
@@ -70,9 +79,13 @@ export const createGauntletAPIClient = (
         const data: NFLState = await response.json();
         return data?.week || 4;
       } catch (error) {
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.sleeper.current_week', duration);
+        metrics?.increment('api.sleeper.current_week.error');
         logger.warn({
           event: 'current_week_error',
           error: error instanceof Error ? error.message : String(error),
+          duration,
           message: 'Error fetching current week, using default week 4',
         });
         return 4; // Default fallback
@@ -93,6 +106,7 @@ export const createGauntletAPIClient = (
      * ```
      */
     fetchLeagueOdds: async (week: number): Promise<LeagueOddsResponse> => {
+      const start = Date.now();
       const cacheBuster = Date.now();
       const url = `${baseUrl}/api/matchups/league-odds/${week}?t=${cacheBuster}`;
 
@@ -105,13 +119,20 @@ export const createGauntletAPIClient = (
           signal: AbortSignal.timeout(timeout),
         });
 
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.gauntlet.league_odds', duration);
+
         if (!response.ok) {
+          metrics?.increment('api.gauntlet.league_odds.error');
           throw new Error(`League odds API failed: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         return data;
       } catch (error) {
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.gauntlet.league_odds', duration);
+        metrics?.increment('api.gauntlet.league_odds.error');
         if (error instanceof Error) {
           throw new Error(`Failed to fetch league odds for week ${week}: ${error.message}`);
         }
@@ -141,6 +162,7 @@ export const createGauntletAPIClient = (
       week: number,
       matchupId: number
     ): Promise<MatchupSimulationResponse> => {
+      const start = Date.now();
       const url = `${baseUrl}/api/matchups/${leagueId}/${week}/${matchupId}/simulate`;
 
       try {
@@ -148,7 +170,11 @@ export const createGauntletAPIClient = (
           signal: AbortSignal.timeout(timeout),
         });
 
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.gauntlet.matchup_simulation', duration);
+
         if (!response.ok) {
+          metrics?.increment('api.gauntlet.matchup_simulation.error');
           throw new Error(
             `Matchup simulation API failed: ${response.status} ${response.statusText}`
           );
@@ -157,11 +183,15 @@ export const createGauntletAPIClient = (
         const data: MatchupSimulationResponse = await response.json();
 
         if (!data.success) {
+          metrics?.increment('api.gauntlet.matchup_simulation.error');
           throw new Error('Matchup simulation returned unsuccessful response');
         }
 
         return data;
       } catch (error) {
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.gauntlet.matchup_simulation', duration);
+        metrics?.increment('api.gauntlet.matchup_simulation.error');
         if (error instanceof Error) {
           throw new Error(
             `Failed to fetch matchup simulation for league ${leagueId}, week ${week}, matchup ${matchupId}: ${error.message}`
@@ -184,6 +214,7 @@ export const createGauntletAPIClient = (
      * ```
      */
     getTeamNames: async (leagueId: string): Promise<Map<number, string>> => {
+      const start = Date.now();
       try {
         const [usersResponse, rostersResponse] = await Promise.all([
           fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`, {
@@ -194,7 +225,11 @@ export const createGauntletAPIClient = (
           }),
         ]);
 
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.sleeper.team_names', duration);
+
         if (!usersResponse.ok || !rostersResponse.ok) {
+          metrics?.increment('api.sleeper.team_names.error');
           throw new Error(
             `Failed to fetch team data: users ${usersResponse.status}, rosters ${rostersResponse.status}`
           );
@@ -214,10 +249,14 @@ export const createGauntletAPIClient = (
 
         return teamNames;
       } catch (error) {
+        const duration = Date.now() - start;
+        metrics?.recordDuration('api.sleeper.team_names', duration);
+        metrics?.increment('api.sleeper.team_names.error');
         logger.error({
           event: 'team_names_fetch_failed',
           leagueId,
           error: error instanceof Error ? error.message : String(error),
+          duration,
           message: 'Failed to fetch team names',
         });
         return new Map(); // Return empty map on error

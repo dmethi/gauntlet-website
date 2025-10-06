@@ -524,7 +524,27 @@ With metrics, you can alert on:
 
 ---
 
-**Status:** ⏭️ Ready (blocked by OBSERVABILITY-601)  
-**Assignee:** _Unassigned_  
-**Completed:** _Not Started_
+**Status:** ✅ COMPLETED  
+**Assignee:** AI Assistant  
+**Completed:** October 6, 2025
+
+---
+
+## ✅ Completion Notes
+
+All acceptance criteria met:
+
+- ✅ `src/lib/metrics.ts` created with factory function pattern (arrow functions)
+- ✅ Metrics types exported from `@gauntlet/types` central package
+- ✅ API client instrumented with duration tracking for all methods
+- ✅ Snapshot validator instrumented with outcome tracking
+- ✅ Main script creates and uses metrics instance
+- ✅ Metrics summary logged at job completion
+- ✅ All 50 tests pass
+- ✅ Metrics don't break existing functionality
+
+**Additional Improvements:**
+- Used arrow functions and factory pattern (`createMetrics()`) instead of class
+- Moved `MetricsSummary` and `Metrics` interface to `@gauntlet/types` for central type management
+- Full compliance with repo conventions (arrow functions, central types)
 

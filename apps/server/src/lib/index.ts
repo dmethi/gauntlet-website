@@ -24,3 +24,5 @@ export { saveSnapshotIfChanged, hasSignificantChange } from './snapshot-validato
 // Logger
 export { logger, createChildLogger } from './logger.js';
 
+// Metrics
+export { createMetrics, measureDuration } from './metrics.js';
