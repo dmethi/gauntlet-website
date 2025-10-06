@@ -5,6 +5,8 @@ import {
 } from '../data/variance-loader';
 import { logger } from '../lib/logger';
 import type { Metrics } from '@gauntlet/types';
+import { Result, err, ok } from '../lib/result';
+import { SimulationError } from './matchup';
 
 /**
  * Position-specific standard deviation values based on fantasy football research
@@ -528,4 +530,36 @@ export const samplePlayerScoreFromContext = (
   }
 
   return projection * relativeOutcome;
+};
+
+/**
+ * Safe version of buildSamplingContext.
+ * Returns Result instead of throwing exceptions.
+ *
+ * @param playerIds - Array of Sleeper player IDs to fetch variance data for
+ * @param positions - Array of NFL positions (QB, RB, WR, TE, K, DEF)
+ * @param metrics - Optional Metrics instance for tracking cache performance
+ *
+ * @returns Promise<Result<SamplingContext, SimulationError>>
+ *
+ * @example
+ * const result = await buildSamplingContextSafe(['4866'], ['QB']);
+ * if (result.ok) {
+ *   const ctx = result.value;
+ *   // Use ctx for sampling
+ * } else {
+ *   console.error('Context build failed:', result.error.message);
+ * }
+ */
+export const buildSamplingContextSafe = async (
+  playerIds: string[],
+  positions: string[],
+  metrics?: Metrics
+): Promise<Result<SamplingContext, SimulationError>> => {
+  try {
+    const context = await buildSamplingContext(playerIds, positions, metrics);
+    return ok(context);
+  } catch (error) {
+    return err(new SimulationError('Failed to build sampling context', error));
+  }
 };

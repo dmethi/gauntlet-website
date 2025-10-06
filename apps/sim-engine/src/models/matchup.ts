@@ -10,9 +10,23 @@ import type {
   MatchupSimulationResult,
   Metrics,
 } from '@gauntlet/types';
+import { Result, err, ok } from '../lib/result';
 
 // Re-export for backwards compatibility
 export type { LineupPlayer, Lineup, MatchupResult, MatchupSimulationResult };
+
+/**
+ * Type-safe error for simulation failures.
+ */
+export class SimulationError extends Error {
+  constructor(
+    message: string,
+    public override readonly cause?: unknown
+  ) {
+    super(message);
+    this.name = 'SimulationError';
+  }
+}
 
 /**
  * Simulate a single matchup between two lineups
@@ -148,6 +162,9 @@ const calculateBettingLines = (
  * - Live game: Combines actual scores + simulated remaining projections
  * - Post-game: Uses actual scores + minimal remaining projection
  *
+ * ⚠️ This function throws exceptions on error.
+ * For type-safe error handling, use {@link simulateMatchupProbabilitySafe}
+ *
  * @param team1Players - Array of LineupPlayer objects for team 1 (typically 8-9 players)
  * @param team2Players - Array of LineupPlayer objects for team 2 (typically 8-9 players)
  * @param iterations - Number of Monte Carlo iterations to run (default: 10000, min 100 for testing)
@@ -160,6 +177,10 @@ const calculateBettingLines = (
  *   - medianMargin: Expected point differential
  *   - team1Scores/team2Scores: Score distributions (mean, median, p10, p90)
  *   - impliedOdds: Betting lines (spread, total, moneyline)
+ *
+ * @throws {Error} If validation fails or simulation errors occur
+ *
+ * @see simulateMatchupProbabilitySafe for Result-based error handling
  *
  * @example
  * // Pre-game simulation
@@ -406,4 +427,48 @@ export const simulateMatchupProbability = async (
     iterations,
     gameProgress
   );
+};
+
+/**
+ * Safe version of simulateMatchupProbabilityFromPlayers.
+ * Returns Result instead of throwing exceptions.
+ *
+ * @param team1Players - Array of LineupPlayer objects for team 1 (typically 8-9 players)
+ * @param team2Players - Array of LineupPlayer objects for team 2 (typically 8-9 players)
+ * @param iterations - Number of Monte Carlo iterations to run (default: 10000, min 100 for testing)
+ * @param gameProgress - Game completion percentage from 0 (start) to 1 (end)
+ * @param liveNflTeams - Optional Set of NFL team codes currently playing live games
+ * @param metrics - Optional Metrics instance for tracking performance
+ *
+ * @returns Promise<Result<MatchupSimulationResult, SimulationError>>
+ *
+ * @example
+ * const result = await simulateMatchupProbabilitySafe(...);
+ * if (result.ok) {
+ *   console.log('Win%:', result.value.team1WinPct);
+ * } else {
+ *   console.error('Simulation failed:', result.error.message);
+ * }
+ */
+export const simulateMatchupProbabilitySafe = async (
+  team1Players: LineupPlayer[],
+  team2Players: LineupPlayer[],
+  iterations: number = 10000,
+  gameProgress: number = 0,
+  liveNflTeams?: Set<string>,
+  metrics?: Metrics
+): Promise<Result<MatchupSimulationResult, SimulationError>> => {
+  try {
+    const result = await simulateMatchupProbabilityFromPlayers(
+      team1Players,
+      team2Players,
+      iterations,
+      gameProgress,
+      liveNflTeams,
+      metrics
+    );
+    return ok(result);
+  } catch (error) {
+    return err(new SimulationError('Matchup simulation failed', error));
+  }
 };

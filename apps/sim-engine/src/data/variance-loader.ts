@@ -11,6 +11,8 @@ import type {
   VarianceData,
 } from './variance-data.types';
 import { logger } from '../lib/logger';
+import { Result, err, ok } from '../lib/result';
+import { SimulationError } from '../models/matchup';
 
 // Type assertion for imported JSON
 const data = varianceData as VarianceData;
@@ -263,4 +265,58 @@ export const getDataInfo = (): {
     playerVarianceCount: data.playerVariance.length,
     projectionErrorCount: data.projectionErrors.length,
   };
+};
+
+/**
+ * Safe version of getPositionDistribution.
+ * Returns Result instead of throwing exceptions.
+ *
+ * @param position - NFL position code (QB, RB, WR, TE, K, DEF)
+ *
+ * @returns Promise<Result<{ outcomes: number[], sampleSize: number }, SimulationError>>
+ *
+ * @example
+ * const result = await getPositionDistributionSafe('QB');
+ * if (result.ok) {
+ *   console.log(`QB variance: ${result.value.sampleSize} games`);
+ * } else {
+ *   console.error('Failed to load distribution:', result.error.message);
+ * }
+ */
+export const getPositionDistributionSafe = async (
+  position: string
+): Promise<Result<{ outcomes: number[]; sampleSize: number }, SimulationError>> => {
+  try {
+    const distribution = await getPositionDistribution(position);
+    return ok(distribution);
+  } catch (error) {
+    return err(new SimulationError(`Failed to get position distribution for ${position}`, error));
+  }
+};
+
+/**
+ * Safe version of getPlayerOutcomes.
+ * Returns Result instead of throwing exceptions.
+ *
+ * @param playerId - Sleeper player ID
+ *
+ * @returns Promise<Result<{ outcomes: number[], sampleSize: number }, SimulationError>>
+ *
+ * @example
+ * const result = await getPlayerOutcomesSafe('4866');
+ * if (result.ok) {
+ *   console.log(`Player outcomes: ${result.value.sampleSize} games`);
+ * } else {
+ *   console.error('Failed to load outcomes:', result.error.message);
+ * }
+ */
+export const getPlayerOutcomesSafe = async (
+  playerId: string
+): Promise<Result<{ outcomes: number[]; sampleSize: number }, SimulationError>> => {
+  try {
+    const outcomes = await getPlayerOutcomes(playerId);
+    return ok(outcomes);
+  } catch (error) {
+    return err(new SimulationError(`Failed to get player outcomes for ${playerId}`, error));
+  }
 };

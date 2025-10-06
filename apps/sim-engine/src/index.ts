@@ -6,6 +6,7 @@
 export {
   simulateMatchupProbabilityFromPlayers,
   simulateMatchupProbability,
+  simulateMatchupProbabilitySafe,
 } from './models/matchup';
 
 // Player variance simulations
@@ -15,6 +16,7 @@ export {
   getVarianceModel,
   buildSamplingContext,
   samplePlayerScoreFromContext,
+  buildSamplingContextSafe,
 } from './models/variance';
 
 // Season simulations (experimental)
@@ -24,7 +26,24 @@ export { runSeasonSimulation } from './simulations/season-sim';
 // DATA FUNCTIONS
 // ============================================
 
-export { getPositionDistribution, getPlayerOutcomes, getDataInfo } from './data/variance-loader';
+export {
+  getPositionDistribution,
+  getPlayerOutcomes,
+  getDataInfo,
+  getPositionDistributionSafe,
+  getPlayerOutcomesSafe,
+} from './data/variance-loader';
+
+// ============================================
+// ERROR HANDLING
+// ============================================
+
+// Result type and utilities
+export type { Result } from './lib/result';
+export { ok, err, isOk, isErr, unwrap, unwrapOr } from './lib/result';
+
+// Error classes
+export { SimulationError } from './models/matchup';
 
 // ============================================
 // LOGGING

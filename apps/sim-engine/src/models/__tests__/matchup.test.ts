@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { simulateMatchupProbabilityFromPlayers, simulateMatchupProbability } from '../matchup';
+import {
+  simulateMatchupProbabilityFromPlayers,
+  simulateMatchupProbability,
+  simulateMatchupProbabilitySafe,
+} from '../matchup';
 import { createMetrics } from '../../lib/metrics';
+import { isOk, isErr } from '../../lib/result';
 import type { LineupPlayer, Lineup } from '@gauntlet/types';
 
 describe('simulateMatchupProbabilityFromPlayers', () => {
@@ -305,5 +310,83 @@ describe('simulateMatchupProbability', () => {
     const result = await simulateMatchupProbability(team1, team2, 50);
     expect(result.team1WinPct).toBeDefined();
     expect(result.team2WinPct).toBeDefined();
+  });
+});
+
+describe('simulateMatchupProbabilitySafe', () => {
+  const mockTeam1Players: LineupPlayer[] = [
+    { id: '1', position: 'QB', projection: 24.5 },
+    { id: '2', position: 'RB', projection: 15.2 },
+    { id: '3', position: 'RB', projection: 12.8 },
+    { id: '4', position: 'WR', projection: 14.3 },
+    { id: '5', position: 'WR', projection: 11.7 },
+    { id: '6', position: 'WR', projection: 9.2 },
+    { id: '7', position: 'TE', projection: 8.5 },
+    { id: '8', position: 'K', projection: 7.8 },
+  ];
+
+  const mockTeam2Players: LineupPlayer[] = [
+    { id: '11', position: 'QB', projection: 22.3 },
+    { id: '12', position: 'RB', projection: 14.1 },
+    { id: '13', position: 'RB', projection: 11.9 },
+    { id: '14', position: 'WR', projection: 13.5 },
+    { id: '15', position: 'WR', projection: 10.8 },
+    { id: '16', position: 'WR', projection: 8.9 },
+    { id: '17', position: 'TE', projection: 7.2 },
+    { id: '18', position: 'K', projection: 7.5 },
+  ];
+
+  it('should return Ok result on success', async () => {
+    const result = await simulateMatchupProbabilitySafe(mockTeam1Players, mockTeam2Players, 100);
+
+    expect(isOk(result)).toBe(true);
+    if (result.ok) {
+      expect(result.value.team1WinPct).toBeDefined();
+      expect(result.value.team2WinPct).toBeDefined();
+      expect(result.value.team1WinPct + result.value.team2WinPct).toBeCloseTo(1.0, 2);
+    }
+  });
+
+  it('should return Ok even with edge cases (demonstrating safety)', async () => {
+    // Even with edge cases like empty arrays, the function handles it gracefully
+    const result = await simulateMatchupProbabilitySafe([], [], 10);
+
+    // The function should succeed, demonstrating the safe wrapper
+    // catches and handles any issues gracefully
+    expect(isOk(result)).toBe(true);
+    if (result.ok) {
+      // With empty lineups, simulation still completes
+      expect(result.value.team1WinPct).toBeDefined();
+    }
+  });
+
+  it('should allow functional composition', async () => {
+    const result = await simulateMatchupProbabilitySafe(mockTeam1Players, mockTeam2Players, 100);
+
+    // Functional style error handling
+    const winPct = result.ok ? result.value.team1WinPct : 0.5;
+    expect(winPct).toBeGreaterThanOrEqual(0);
+    expect(winPct).toBeLessThanOrEqual(1);
+  });
+
+  it('should handle live game simulation safely', async () => {
+    const liveTeam1 = mockTeam1Players.map(p => ({
+      ...p,
+      currentScore: p.projection * 0.65,
+      nflTeam: 'KC',
+    }));
+
+    const result = await simulateMatchupProbabilitySafe(
+      liveTeam1,
+      mockTeam2Players,
+      100,
+      0.65,
+      new Set(['KC'])
+    );
+
+    expect(isOk(result)).toBe(true);
+    if (result.ok) {
+      expect(result.value.team1WinPct).toBeGreaterThan(0.5);
+    }
   });
 });
