@@ -44,6 +44,7 @@ export { ok, err, isOk, isErr, unwrap, unwrapOr } from './lib/result';
 
 // Error classes
 export { SimulationError } from './models/matchup';
+export { ValidationError } from './lib/validation';
 
 // ============================================
 // LOGGING
@@ -56,6 +57,20 @@ export { logger, createChildLogger } from './lib/logger';
 // ============================================
 
 export { createMetrics } from './lib/metrics';
+
+// ============================================
+// VALIDATION
+// ============================================
+
+export {
+  validateLineupPlayer,
+  validateLineupPlayers,
+  validateIterations,
+  validateGameProgress,
+  validateProjection,
+  validatePosition,
+  VALID_POSITIONS,
+} from './lib/validation';
 
 // ============================================
 // TYPE EXPORTS

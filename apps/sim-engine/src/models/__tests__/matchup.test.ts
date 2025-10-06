@@ -6,6 +6,7 @@ import {
 } from '../matchup';
 import { createMetrics } from '../../lib/metrics';
 import { isOk, isErr } from '../../lib/result';
+import { ValidationError } from '../../lib/validation';
 import type { LineupPlayer, Lineup } from '@gauntlet/types';
 
 describe('simulateMatchupProbabilityFromPlayers', () => {
@@ -185,13 +186,13 @@ describe('simulateMatchupProbabilityFromPlayers', () => {
   it('should handle very high projections', async () => {
     const highTeam: LineupPlayer[] = mockTeam1Players.map(p => ({
       ...p,
-      projection: p.projection * 10, // 10x projections
+      projection: p.projection * 3, // 3x projections (stays under 150)
     }));
 
     const result = await simulateMatchupProbabilityFromPlayers(highTeam, mockTeam2Players, 50);
 
     expect(result.team1WinPct).toBeGreaterThan(0.95); // Should almost always win
-    expect(result.team1Scores.mean).toBeGreaterThan(500); // Very high expected score
+    expect(result.team1Scores.mean).toBeGreaterThan(200); // Very high expected score
   });
 
   it('should calculate median margin accurately', async () => {
@@ -347,16 +348,15 @@ describe('simulateMatchupProbabilitySafe', () => {
     }
   });
 
-  it('should return Ok even with edge cases (demonstrating safety)', async () => {
-    // Even with edge cases like empty arrays, the function handles it gracefully
+  it('should return Err for invalid inputs (demonstrating safety)', async () => {
+    // With invalid inputs like empty arrays, the function catches validation errors
     const result = await simulateMatchupProbabilitySafe([], [], 10);
 
-    // The function should succeed, demonstrating the safe wrapper
-    // catches and handles any issues gracefully
-    expect(isOk(result)).toBe(true);
-    if (result.ok) {
-      // With empty lineups, simulation still completes
-      expect(result.value.team1WinPct).toBeDefined();
+    // The safe wrapper catches ValidationError and returns Err
+    expect(isErr(result)).toBe(true);
+    if (!result.ok) {
+      expect(result.error).toBeInstanceOf(Error);
+      expect(result.error.message).toContain('failed');
     }
   });
 
@@ -388,5 +388,68 @@ describe('simulateMatchupProbabilitySafe', () => {
     if (result.ok) {
       expect(result.value.team1WinPct).toBeGreaterThan(0.5);
     }
+  });
+});
+
+describe('simulateMatchupProbabilityFromPlayers validation', () => {
+  const mockTeam1Players: LineupPlayer[] = [
+    { id: '1', position: 'QB', projection: 24.5 },
+    { id: '2', position: 'RB', projection: 15.2 },
+  ];
+
+  const mockTeam2Players: LineupPlayer[] = [
+    { id: '11', position: 'QB', projection: 22.3 },
+    { id: '12', position: 'RB', projection: 14.1 },
+  ];
+
+  it('should throw ValidationError for invalid team1', async () => {
+    const invalidTeam: LineupPlayer[] = [{ id: '1', position: 'INVALID' as any, projection: 24 }];
+
+    await expect(
+      simulateMatchupProbabilityFromPlayers(invalidTeam, mockTeam2Players, 100)
+    ).rejects.toThrow(ValidationError);
+  });
+
+  it('should throw ValidationError for duplicate players', async () => {
+    const duplicates: LineupPlayer[] = [
+      { id: '1', position: 'QB', projection: 24 },
+      { id: '1', position: 'RB', projection: 15 }, // Same ID!
+    ];
+
+    await expect(
+      simulateMatchupProbabilityFromPlayers(duplicates, mockTeam2Players, 100)
+    ).rejects.toThrow(ValidationError);
+    await expect(
+      simulateMatchupProbabilityFromPlayers(duplicates, mockTeam2Players, 100)
+    ).rejects.toThrow('duplicate');
+  });
+
+  it('should throw ValidationError for invalid iterations', async () => {
+    await expect(
+      simulateMatchupProbabilityFromPlayers(mockTeam1Players, mockTeam2Players, -1)
+    ).rejects.toThrow(ValidationError);
+  });
+
+  it('should throw ValidationError for invalid gameProgress', async () => {
+    await expect(
+      simulateMatchupProbabilityFromPlayers(mockTeam1Players, mockTeam2Players, 100, 1.5)
+    ).rejects.toThrow(ValidationError);
+    await expect(
+      simulateMatchupProbabilityFromPlayers(mockTeam1Players, mockTeam2Players, 100, -0.1)
+    ).rejects.toThrow(ValidationError);
+  });
+
+  it('should throw ValidationError for empty team array', async () => {
+    await expect(simulateMatchupProbabilityFromPlayers([], mockTeam2Players, 100)).rejects.toThrow(
+      ValidationError
+    );
+  });
+
+  it('should throw ValidationError for negative projection', async () => {
+    const invalidTeam: LineupPlayer[] = [{ id: '1', position: 'QB', projection: -10 }];
+
+    await expect(
+      simulateMatchupProbabilityFromPlayers(invalidTeam, mockTeam2Players, 100)
+    ).rejects.toThrow(ValidationError);
   });
 });

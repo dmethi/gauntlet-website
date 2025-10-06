@@ -82,13 +82,13 @@ describe('samplePlayerScoreFromContext', () => {
 
   it('should throw error for negative projection', async () => {
     const ctx = await buildSamplingContext(['4866'], ['QB']);
-    expect(() => samplePlayerScoreFromContext(ctx, '4866', 'QB', -5)).toThrow('Invalid projection');
+    expect(() => samplePlayerScoreFromContext(ctx, '4866', 'QB', -5)).toThrow('must be ≥ 0');
   });
 
   it('should throw error for invalid gameProgress', async () => {
     const ctx = await buildSamplingContext(['4866'], ['QB']);
     expect(() => samplePlayerScoreFromContext(ctx, '4866', 'QB', 20, 1.5)).toThrow(
-      'Invalid game progress'
+      'must be between 0'
     );
   });
 
@@ -249,13 +249,15 @@ describe('buildSamplingContextSafe', () => {
   });
 
   it('should return Err result on failure', async () => {
-    // This test is theoretical since the current implementation catches most errors
-    // But demonstrates the API pattern
+    // With invalid inputs like empty arrays, validation catches the error
     const result = await buildSamplingContextSafe([], []);
 
-    // Even with empty arrays, the function should succeed
-    // but return an empty context
-    expect(isOk(result)).toBe(true);
+    // The safe wrapper catches ValidationError and returns Err
+    expect(isErr(result)).toBe(true);
+    if (!result.ok) {
+      expect(result.error).toBeInstanceOf(Error);
+      expect(result.error.message).toContain('sampling context');
+    }
   });
 
   it('should allow functional composition with Result', async () => {

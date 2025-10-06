@@ -11,6 +11,8 @@ import type {
   Metrics,
 } from '@gauntlet/types';
 import { Result, err, ok } from '../lib/result';
+import { logger } from '../lib/logger';
+import { validateGameProgress, validateIterations, validateLineupPlayers } from '../lib/validation';
 
 // Re-export for backwards compatibility
 export type { LineupPlayer, Lineup, MatchupResult, MatchupSimulationResult };
@@ -229,6 +231,24 @@ export const simulateMatchupProbabilityFromPlayers = async (
   liveNflTeams?: Set<string>,
   metrics?: Metrics
 ): Promise<MatchupSimulationResult> => {
+  // Validate inputs before expensive operations
+  validateLineupPlayers(team1Players, 'team1Players');
+  validateLineupPlayers(team2Players, 'team2Players');
+  validateIterations(iterations);
+  validateGameProgress(gameProgress);
+
+  // Log validation success
+  logger.debug(
+    {
+      event: 'simulation_validation_passed',
+      team1Count: team1Players.length,
+      team2Count: team2Players.length,
+      iterations,
+      gameProgress,
+    },
+    'Input validation passed'
+  );
+
   const startTime = Date.now();
 
   // Track if this is a live game simulation

@@ -2,9 +2,9 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 28.6% (24/84 tasks)  
+**Overall Progress**: 29.8% (25/84 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
-**Apps/Sim-Engine Progress**: 60.0% (9/15 sim-engine tasks complete)
+**Apps/Sim-Engine Progress**: 66.7% (10/15 sim-engine tasks complete)
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (24)
+#### ✅ Completed (25)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -38,6 +38,7 @@
 - [x] **SIM-607**: Add Structured Logging with Pino (sim-engine) ⏱️ 45 min
 - [x] **SIM-608**: Add Metrics Collection (sim-engine) ⏱️ 45 min
 - [x] **SIM-609**: Add Result Types for Error Handling (sim-engine) ⏱️ 30 min
+- [x] **SIM-610**: Add Input Validation (sim-engine) ⏱️ 30 min
 
 #### 🔄 In Progress (0)
 
@@ -194,10 +195,10 @@ _Ready to begin_
 - [x] **SIM-607**: Add Structured Logging with Pino ⏱️ 45 min [HIGH] ✅
 - [x] **SIM-608**: Add Metrics Collection ⏱️ 45 min [MEDIUM] ✅
 
-#### Phase 4: Resilience & Error Handling (1 hour)
+#### Phase 4: Resilience & Error Handling (1 hour) ✅ COMPLETE
 
 - [x] **SIM-609**: Add Result Types for Error Handling ⏱️ 30 min [MEDIUM] ✅
-- [ ] **SIM-610**: Add Input Validation ⏱️ 30 min [MEDIUM]
+- [x] **SIM-610**: Add Input Validation ⏱️ 30 min [MEDIUM] ✅
 
 #### Phase 5: Data Management (2 hours)
 
@@ -215,6 +216,39 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **SIM-610**: Add Input Validation (sim-engine)
+  - Created `src/lib/validation.ts` with 7 validation functions (221 lines)
+  - Implemented `ValidationError` custom error class with field and value parameters
+  - Added `validateLineupPlayer()` function checking id, position, projection, currentScore, nflTeam
+  - Added `validateLineupPlayers()` function checking arrays, empty arrays, duplicate player IDs
+  - Added `validateIterations()` function checking integer, ≥10, warns if >100K
+  - Added `validateGameProgress()` function checking 0-1 range
+  - Added `validateProjection()` function checking ≥0, warns if >150
+  - Added `validatePosition()` function checking against VALID_POSITIONS constant
+  - Added early validation to `simulateMatchupProbabilityFromPlayers` before expensive Monte Carlo operations
+  - Enhanced validation in `samplePlayerScoreFromContext` using centralized validation functions
+  - Added validation to `buildSamplingContext` for empty arrays and invalid positions
+  - Exported validation utilities from barrel file (`src/index.ts`)
+  - Created comprehensive test suite with 30 new validation tests:
+    - 7 tests for `validateLineupPlayer` (valid player, invalid position, negative projection, excessive projection, missing id, optional fields, negative currentScore)
+    - 6 tests for `validateIterations` (valid, minimum, non-integer, too few, negative, high iterations warning)
+    - 3 tests for `validateGameProgress` (valid progress, out of range, non-number)
+    - 6 tests for `validateLineupPlayers` (valid lineup, non-array, empty array, duplicates, invalid players, custom team label)
+    - 4 tests for `validateProjection` (valid, negative, non-number, high projection warning, player ID in error)
+    - 4 tests for `validatePosition` (all valid positions, invalid, lowercase)
+  - Added 6 integration tests to `matchup.test.ts` for validation in simulation flow:
+    - Invalid team position, duplicate players, invalid iterations, invalid gameProgress, empty team array, negative projection
+  - Updated 5 existing tests to match new validation error messages
+  - All 112 tests passing (30 new validation tests + 6 new integration tests + 76 existing tests)
+  - TypeScript compilation passes with 0 errors
+  - ESLint passes with 0 errors after auto-fix
+  - Validation provides descriptive error messages with field names and values
+  - Structured logging for validation failures with event names
+  - Early validation prevents wasted Monte Carlo iterations on invalid inputs
+  - **Phase 4 Complete**: Resilience & Error Handling phase (SIM-609 + SIM-610) finished!
+  - **Outcome**: Enterprise-ready input validation enables clear error messages and prevents invalid simulations
+  - **Compliance**: 100% arrow functions, follows CODING_CONVENTIONS.MD patterns
 
 - ✅ **SIM-609**: Add Result Types for Error Handling (sim-engine)
   - Created `src/lib/result.ts` with Result<T, E> type and utility functions (57 lines)

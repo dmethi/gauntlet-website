@@ -7,6 +7,12 @@ import { logger } from '../lib/logger';
 import type { Metrics } from '@gauntlet/types';
 import { Result, err, ok } from '../lib/result';
 import { SimulationError } from './matchup';
+import {
+  ValidationError,
+  validateGameProgress,
+  validatePosition,
+  validateProjection,
+} from '../lib/validation';
 
 /**
  * Position-specific standard deviation values based on fantasy football research
@@ -420,6 +426,18 @@ export const buildSamplingContext = async (
   positions: string[],
   metrics?: Metrics
 ): Promise<SamplingContext> => {
+  // Validate inputs
+  if (!Array.isArray(playerIds) || playerIds.length === 0) {
+    throw new ValidationError('playerIds must be non-empty array', 'playerIds', playerIds);
+  }
+
+  if (!Array.isArray(positions) || positions.length === 0) {
+    throw new ValidationError('positions must be non-empty array', 'positions', positions);
+  }
+
+  // Validate all positions
+  positions.forEach(pos => validatePosition(pos));
+
   const startTime = Date.now();
 
   const uniquePlayerIds = Array.from(new Set(playerIds));
@@ -496,12 +514,10 @@ export const samplePlayerScoreFromContext = (
   projection: number,
   gameProgress: number = 0
 ): number => {
-  if (projection < 0) {
-    throw new Error(`Invalid projection: ${projection}`);
-  }
-  if (gameProgress < 0 || gameProgress > 1) {
-    throw new Error(`Invalid game progress: ${gameProgress}`);
-  }
+  // Use centralized validation
+  validateProjection(projection, playerId);
+  validateGameProgress(gameProgress);
+  validatePosition(position);
 
   const positionOutcomes = ctx.positionToOutcomes.get(position) || [];
   const playerOutcomes = ctx.playerToOutcomes.get(playerId) || [];
