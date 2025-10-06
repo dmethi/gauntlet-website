@@ -5,7 +5,7 @@ import {
   getMatchupWinProbTimeSeries,
   getWeekWinProbSamples,
   disconnect,
-} from '../index';
+} from '@/lib';
 
 // Mock the Prisma client
 vi.mock('../../generated/prisma-historical', () => {

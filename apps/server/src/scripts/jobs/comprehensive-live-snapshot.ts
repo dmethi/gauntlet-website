@@ -14,7 +14,7 @@ import {
   disconnect,
   createGauntletAPIClient,
   saveSnapshotIfChanged,
-} from '../../lib/index.js';
+} from '@/lib';
 import type { CompleteSnapshot } from '@gauntlet/types';
 
 /**

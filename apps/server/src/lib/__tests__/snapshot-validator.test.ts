@@ -4,11 +4,11 @@ import {
   hasSignificantChange,
   type CompleteSnapshot,
   type PreviousSnapshot,
-} from '../index';
-import * as historicalData from '../historical-data';
+} from '@/lib';
+import * as historicalData from '@/lib/historical-data';
 
 // Mock the historical data module
-vi.mock('../historical-data', () => ({
+vi.mock('@/lib/historical-data', () => ({
   saveLiveWinProbSample: vi.fn(),
   getLastWinProbSample: vi.fn(),
 }));

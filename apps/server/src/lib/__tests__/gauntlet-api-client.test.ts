@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createGauntletAPIClient, gauntletAPI } from '../index';
+import { createGauntletAPIClient, gauntletAPI } from '@/lib';
 
 // Mock global fetch
 global.fetch = vi.fn();

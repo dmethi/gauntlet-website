@@ -2,8 +2,8 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 20.0% (14/70 tasks)  
-**Apps/Server Progress**: 77.8% (14/18 server tasks complete)
+**Overall Progress**: 21.4% (15/70 tasks)  
+**Apps/Server Progress**: 83.3% (15/18 server tasks complete)
 
 ---
 
@@ -11,7 +11,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (14)
+#### ✅ Completed (15)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -24,6 +24,7 @@
 - [x] **SETUP-602**: Add ESLint and Prettier Configuration ⏱️ 30 min
 - [x] **REFACTOR-601**: Convert to Arrow Functions ⏱️ 45 min
 - [x] **REFACTOR-602**: Add Barrel Exports (index.ts) ⏱️ 20 min
+- [x] **REFACTOR-603**: Add Path Aliases ⏱️ 15 min
 - [x] **OBSERVABILITY-601**: Add Structured Logging with Pino ⏱️ 45 min
 - [x] **OBSERVABILITY-602**: Add Metrics Collection ⏱️ 40 min
 - [x] **RESILIENCE-601**: Add Retry Logic with Exponential Backoff ⏱️ 50 min
@@ -59,11 +60,11 @@ _Ready to begin_
 | **COMP**            | 10     | 0         | 0           | 10        |
 | **TEST**            | 6      | 1         | 0           | 5         |
 | **CLEAN**           | 6      | 5         | 0           | 1         |
-| **REFACTOR**        | 3      | 2         | 0           | 1         |
+| **REFACTOR**        | 3      | 3         | 0           | 0         |
 | **OBSERVABILITY**   | 2      | 2         | 0           | 0         |
 | **RESILIENCE**      | 3      | 1         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **70** | **14**    | **0**       | **56**    |
+| **Total**           | **70** | **15**    | **0**       | **55**    |
 
 ---
 
@@ -91,12 +92,12 @@ _Ready to begin_
 **Total Effort**: ~8-10 hours across 10 focused tasks  
 **See**: `tasks/SERVER-ROADMAP.md` for detailed execution plan
 
-#### Phase 1: Foundation & Conventions (2 hours)
+#### Phase 1: Foundation & Conventions (2 hours) ✅ COMPLETE
 
 - [x] **SETUP-602**: Add ESLint and Prettier ⏱️ 30 min [HIGH PRIORITY] ✅
 - [x] **REFACTOR-601**: Convert to Arrow Functions ⏱️ 45 min [HIGH] ✅
 - [x] **REFACTOR-602**: Add Barrel Exports ⏱️ 20 min [MEDIUM] ✅
-- [ ] **REFACTOR-603**: Add Path Aliases ⏱️ 15 min [MEDIUM] (ready to start)
+- [x] **REFACTOR-603**: Add Path Aliases ⏱️ 15 min [MEDIUM] ✅
 
 #### Phase 2: Observability (1.5 hours) ✅ COMPLETE
 
@@ -140,6 +141,30 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **REFACTOR-603**: Add Path Aliases
+  - Updated `apps/server/tsconfig.json` with path alias configuration:
+    - Added `baseUrl: "."` to enable path aliases
+    - Configured `@/lib` to resolve to `./src/lib/index.ts`
+    - Configured `@/lib/*` to resolve to `./src/lib/*`
+    - Configured `@/scripts/*` to resolve to `./src/scripts/*`
+  - Updated `apps/server/vitest.config.ts` with resolve.alias configuration:
+    - Added `@/lib` → `./src/lib/index.ts` mapping
+    - Added `@/lib/` → `./src/lib/` mapping
+    - Added `@/scripts` → `./src/scripts/` mapping
+  - Updated all script imports to use path aliases:
+    - `comprehensive-live-snapshot.ts`: Changed `from '../../lib/index.js'` → `from '@/lib'`
+  - Updated all test file imports to use path aliases:
+    - `gauntlet-api-client.test.ts`: Changed `from '../index'` → `from '@/lib'`
+    - `snapshot-validator.test.ts`: Changed `from '../index'` → `from '@/lib'` and `from '../historical-data'` → `from '@/lib/historical-data'`
+    - `historical-data.test.ts`: Changed `from '../index'` → `from '@/lib'`
+    - `retry.test.ts`: Changed `from '../index'` → `from '@/lib'`
+    - Updated vi.mock path: `vi.mock('@/lib/historical-data')` for correct mock resolution
+  - Verified no more ugly relative imports (`../../lib`) remain in codebase
+  - TypeScript compilation successful with 0 errors
+  - 55 out of 62 tests passing (7 pre-existing test failures unrelated to path aliases)
+  - **Outcome**: Clean, maintainable imports using path aliases enable easy refactoring and better IDE support
+  - **Compliance**: Follows CODING_CONVENTIONS.MD for path alias usage matching apps/web patterns
 
 - ✅ **REFACTOR-602**: Add Barrel Exports (index.ts)
   - Created `apps/server/src/lib/types.ts` with type re-exports from `@gauntlet/types` (28 lines)

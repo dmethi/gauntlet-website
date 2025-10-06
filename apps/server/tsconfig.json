@@ -9,7 +9,15 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    
+    // Path aliases for clean imports
+    "baseUrl": ".",
+    "paths": {
+      "@/lib": ["./src/lib/index.ts"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/scripts/*": ["./src/scripts/*"]
+    }
   },
   "include": ["src/lib/**/*.ts", "src/scripts/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
