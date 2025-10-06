@@ -16,12 +16,12 @@ import type { CompleteSnapshot } from '@gauntlet/types';
 /**
  * Helper to capture individual matchup data combining API and Sleeper data
  */
-async function captureIndividualMatchup(
+const captureIndividualMatchup = async (
   leagueId: string,
   week: number,
   matchupId: number,
   teamNames: Map<number, string>
-): Promise<CompleteSnapshot | null> {
+): Promise<CompleteSnapshot | null> => {
   try {
     // Get fresh current scores directly from Sleeper API
     const sleeperResponse = await fetch(
@@ -36,7 +36,17 @@ async function captureIndividualMatchup(
     const data = await gauntletAPI.fetchMatchupSimulation(leagueId, week, matchupId);
     const sim = data.simulation;
 
-    const toDebugPlayers = (players: any[]) =>
+    const toDebugPlayers = (
+      players: any[]
+    ): Array<{
+      name: string;
+      position: string;
+      nflTeam: string;
+      currentScore: number;
+      remainingProjection: number;
+      fullProjection: number;
+      gameState?: { state: string; desc: string; minutesRemaining: number };
+    }> =>
       players.map(p => ({
         name: p.name || p.playerName || p.id,
         position: p.position || 'FLEX',
@@ -85,7 +95,7 @@ async function captureIndividualMatchup(
     const team2Name = teamNames.get(sim.teams[1].rosterId) || `Roster ${sim.teams[1].rosterId}`;
 
     // Calculate money lines
-    const calculateMoneyLine = (prob: number) => {
+    const calculateMoneyLine = (prob: number): number => {
       if (prob >= 0.5) {
         return -Math.round((prob / (1 - prob)) * 100);
       } else {
@@ -129,9 +139,9 @@ async function captureIndividualMatchup(
     );
     return null;
   }
-}
+};
 
-async function main() {
+const main = async (): Promise<void> => {
   const week = await gauntletAPI.getCurrentWeek();
   const leagueIds = ['1263744209295245312', '1263740549504962561'];
 
@@ -196,7 +206,7 @@ async function main() {
   console.log('   ✅ Simulated means (matches your screenshot "Proj:" values)');
   console.log('\n📈 Perfect data for score-over-time and win-probability-over-time charts!');
   console.log("💡 Deduplication: Skips saving when scores/projections haven't changed");
-}
+};
 
 main()
   .catch(e => {

@@ -11,7 +11,12 @@
  */
 
 // Import from the historical-only generated client
-import { PrismaClient } from '../generated/prisma-historical';
+import {
+  type LeagueOddsHistory,
+  type LiveWinProbSample,
+  type MatchupOddsHistory,
+  PrismaClient,
+} from '../generated/prisma-historical';
 
 const prisma = new PrismaClient();
 
@@ -62,7 +67,7 @@ const prisma = new PrismaClient();
  * });
  * ```
  */
-export async function saveLiveWinProbSample(data: {
+export const saveLiveWinProbSample = async (data: {
   leagueId: string;
   week: number;
   matchupId: number;
@@ -78,14 +83,14 @@ export async function saveLiveWinProbSample(data: {
   currentScoreB: number;
   spread: number;
   total: number;
-}) {
+}): Promise<LiveWinProbSample> => {
   return prisma.liveWinProbSample.create({
     data: {
       ...data,
       timestamp: data.timestamp || new Date(),
     },
   });
-}
+};
 
 /**
  * Save matchup odds history snapshot to the database
@@ -131,7 +136,7 @@ export async function saveLiveWinProbSample(data: {
  * });
  * ```
  */
-export async function saveMatchupOddsHistory(data: {
+export const saveMatchupOddsHistory = async (data: {
   leagueId: string;
   week: number;
   matchupId: number;
@@ -147,14 +152,14 @@ export async function saveMatchupOddsHistory(data: {
   computeTimeMs?: number;
   team1Score?: number;
   team2Score?: number;
-}) {
+}): Promise<MatchupOddsHistory> => {
   return prisma.matchupOddsHistory.create({
     data: {
       ...data,
       isLive: data.isLive ?? false,
     },
   });
-}
+};
 
 /**
  * Save league-wide odds snapshot to the database
@@ -190,7 +195,7 @@ export async function saveMatchupOddsHistory(data: {
  * });
  * ```
  */
-export async function saveLeagueOddsHistory(data: {
+export const saveLeagueOddsHistory = async (data: {
   week: number;
   highestScorerOdds: any;
   lowestScorerOdds: any;
@@ -201,7 +206,7 @@ export async function saveLeagueOddsHistory(data: {
   isLive?: boolean;
   triggeredBy: string;
   computeTimeMs?: number;
-}) {
+}): Promise<LeagueOddsHistory> => {
   return prisma.leagueOddsHistory.create({
     data: {
       ...data,
@@ -210,7 +215,7 @@ export async function saveLeagueOddsHistory(data: {
       isLive: data.isLive ?? false,
     },
   });
-}
+};
 
 // ============================================================================
 // READ OPERATIONS (used by web app for reports and charts)
@@ -235,7 +240,20 @@ export async function saveLeagueOddsHistory(data: {
  * }
  * ```
  */
-export async function getLastWinProbSample(leagueId: string, week: number, matchupId: number) {
+export const getLastWinProbSample = async (
+  leagueId: string,
+  week: number,
+  matchupId: number
+): Promise<{
+  currentScoreA: number;
+  currentScoreB: number;
+  projectedFinalA: number;
+  projectedFinalB: number;
+  winProbA: number;
+  winProbB: number;
+  spread: number;
+  total: number;
+} | null> => {
   return prisma.liveWinProbSample.findFirst({
     where: { leagueId, week, matchupId },
     orderBy: { timestamp: 'desc' },
@@ -250,7 +268,7 @@ export async function getLastWinProbSample(leagueId: string, week: number, match
       total: true,
     },
   });
-}
+};
 
 /**
  * Get win probability time-series for a specific matchup
@@ -270,11 +288,23 @@ export async function getLastWinProbSample(leagueId: string, week: number, match
  * });
  * ```
  */
-export async function getMatchupWinProbTimeSeries(
+export const getMatchupWinProbTimeSeries = async (
   leagueId: string,
   week: number,
   matchupId: number
-) {
+): Promise<
+  Array<{
+    timestamp: Date;
+    winProbA: number;
+    winProbB: number;
+    currentScoreA: number;
+    currentScoreB: number;
+    projectedFinalA: number;
+    projectedFinalB: number;
+    spread: number;
+    gameProgress: number;
+  }>
+> => {
   return prisma.liveWinProbSample.findMany({
     where: { leagueId, week, matchupId },
     orderBy: { timestamp: 'asc' },
@@ -290,7 +320,7 @@ export async function getMatchupWinProbTimeSeries(
       gameProgress: true,
     },
   });
-}
+};
 
 /**
  * Get all win probability samples for a week across all matchups
@@ -314,12 +344,15 @@ export async function getMatchupWinProbTimeSeries(
  * }, {});
  * ```
  */
-export async function getWeekWinProbSamples(leagueId: string, week: number) {
+export const getWeekWinProbSamples = async (
+  leagueId: string,
+  week: number
+): Promise<LiveWinProbSample[]> => {
   return prisma.liveWinProbSample.findMany({
     where: { leagueId, week },
     orderBy: [{ matchupId: 'asc' }, { timestamp: 'asc' }],
   });
-}
+};
 
 /**
  * Get excitement metrics for a matchup based on win probability volatility
@@ -348,11 +381,17 @@ export async function getWeekWinProbSamples(leagueId: string, week: number) {
  * }
  * ```
  */
-export async function getMatchupExcitementMetrics(
+export const getMatchupExcitementMetrics = async (
   leagueId: string,
   week: number,
   matchupId: number
-) {
+): Promise<{
+  volatilityScore: number;
+  maxSwing: number;
+  leadChanges: number;
+  sampleCount: number;
+  dataQuality: string;
+} | null> => {
   const samples = await getMatchupWinProbTimeSeries(leagueId, week, matchupId);
 
   if (samples.length < 2) return null;
@@ -378,7 +417,7 @@ export async function getMatchupExcitementMetrics(
     sampleCount: samples.length,
     dataQuality: samples.length >= 10 ? 'good' : 'limited',
   };
-}
+};
 
 /**
  * Get matchup odds history for analysis and visualization
@@ -398,12 +437,16 @@ export async function getMatchupExcitementMetrics(
  * });
  * ```
  */
-export async function getMatchupOddsHistory(leagueId: string, week: number, matchupId: number) {
+export const getMatchupOddsHistory = async (
+  leagueId: string,
+  week: number,
+  matchupId: number
+): Promise<MatchupOddsHistory[]> => {
   return prisma.matchupOddsHistory.findMany({
     where: { leagueId, week, matchupId },
     orderBy: { createdAt: 'asc' },
   });
-}
+};
 
 /**
  * Get league odds history for a week
@@ -424,12 +467,12 @@ export async function getMatchupOddsHistory(leagueId: string, week: number, matc
  * });
  * ```
  */
-export async function getLeagueOddsHistory(week: number) {
+export const getLeagueOddsHistory = async (week: number): Promise<LeagueOddsHistory[]> => {
   return prisma.leagueOddsHistory.findMany({
     where: { week },
     orderBy: { createdAt: 'asc' },
   });
-}
+};
 
 /**
  * Get the most recent league odds snapshot for a week
@@ -449,12 +492,12 @@ export async function getLeagueOddsHistory(week: number) {
  * }
  * ```
  */
-export async function getLatestLeagueOdds(week: number) {
+export const getLatestLeagueOdds = async (week: number): Promise<LeagueOddsHistory | null> => {
   return prisma.leagueOddsHistory.findFirst({
     where: { week },
     orderBy: { createdAt: 'desc' },
   });
-}
+};
 
 /**
  * Disconnect from the Prisma database client
@@ -476,9 +519,9 @@ export async function getLatestLeagueOdds(week: number) {
  * }
  * ```
  */
-export async function disconnect() {
+export const disconnect = async (): Promise<void> => {
   await prisma.$disconnect();
-}
+};
 
 // Export types for external use
 export type {

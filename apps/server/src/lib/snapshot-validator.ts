@@ -24,11 +24,11 @@ import type { CompleteSnapshot, PreviousSnapshot, ValidationResult } from '@gaun
  * }
  * ```
  */
-export function hasSignificantChange(
+export const hasSignificantChange = (
   previous: PreviousSnapshot,
   current: CompleteSnapshot,
   threshold = 0.01
-): boolean {
+): boolean => {
   // Compare scores
   const scoresMatch =
     Math.abs(previous.currentScoreA - current.team1.currentScore) < threshold &&
@@ -46,7 +46,7 @@ export function hasSignificantChange(
 
   // Return true if ANY have changed
   return !scoresMatch || !projectionsMatch || !oddsMatch;
-}
+};
 
 /**
  * Print a formatted player table for debugging
@@ -59,7 +59,7 @@ export function hasSignificantChange(
  * printPlayerTable('Team Alpha', snapshot.team1Players);
  * ```
  */
-function printPlayerTable(label: string, players?: CompleteSnapshot['team1Players']): void {
+const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Players']): void => {
   if (!players || players.length === 0) return;
 
   console.log(`   ── ${label}`);
@@ -79,7 +79,7 @@ function printPlayerTable(label: string, players?: CompleteSnapshot['team1Player
   const widths = header.map((h, i) =>
     Math.min(Math.max(h.length, ...rows.map(r => String(r[i]).length)), i === 0 ? 26 : 12)
   );
-  const fmt = (v: string, i: number) => v.padEnd(widths[i], ' ');
+  const fmt = (v: string, i: number): string => v.padEnd(widths[i], ' ');
 
   console.log('     ' + header.map(fmt).join('  '));
   console.log('     ' + widths.map(w => ''.padEnd(w, '─')).join('  '));
@@ -101,7 +101,7 @@ function printPlayerTable(label: string, players?: CompleteSnapshot['team1Player
   console.log(
     `     Totals → Curr: ${totals.curr.toFixed(1)} | Remain: ${totals.rem.toFixed(1)} | Full: ${totals.full.toFixed(1)}`
   );
-}
+};
 
 /**
  * Validate, deduplicate, and save a complete snapshot to the database
@@ -128,7 +128,9 @@ function printPlayerTable(label: string, players?: CompleteSnapshot['team1Player
  * }
  * ```
  */
-export async function saveSnapshotIfChanged(snapshot: CompleteSnapshot): Promise<ValidationResult> {
+export const saveSnapshotIfChanged = async (
+  snapshot: CompleteSnapshot
+): Promise<ValidationResult> => {
   try {
     // 1. Get last snapshot from database
     const lastSnapshot = await getLastWinProbSample(
@@ -198,4 +200,4 @@ export async function saveSnapshotIfChanged(snapshot: CompleteSnapshot): Promise
     console.log('');
     return { saved: false, reason: 'error' };
   }
-}
+};

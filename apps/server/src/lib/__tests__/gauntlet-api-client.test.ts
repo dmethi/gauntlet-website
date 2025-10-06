@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { GauntletAPIClient, gauntletAPI } from '../gauntlet-api-client';
+import { createGauntletAPIClient, gauntletAPI } from '../gauntlet-api-client';
 
 // Mock global fetch
 global.fetch = vi.fn();
 
 describe('GauntletAPIClient', () => {
-  let client: GauntletAPIClient;
+  let client: ReturnType<typeof createGauntletAPIClient>;
 
   beforeEach(() => {
-    client = new GauntletAPIClient();
+    client = createGauntletAPIClient();
     vi.clearAllMocks();
   });
 
@@ -18,12 +18,12 @@ describe('GauntletAPIClient', () => {
 
   describe('constructor', () => {
     it('should use default options', () => {
-      const client = new GauntletAPIClient();
+      const client = createGauntletAPIClient();
       expect(client).toBeDefined();
     });
 
     it('should accept custom options', () => {
-      const client = new GauntletAPIClient({
+      const client = createGauntletAPIClient({
         baseUrl: 'https://custom.example.com',
         timeout: 60000,
       });
@@ -116,7 +116,7 @@ describe('GauntletAPIClient', () => {
     });
 
     it('should respect custom baseUrl', async () => {
-      const customClient = new GauntletAPIClient({
+      const customClient = createGauntletAPIClient({
         baseUrl: 'https://custom.example.com',
       });
 
@@ -214,7 +214,7 @@ describe('GauntletAPIClient', () => {
     });
 
     it('should respect custom timeout', async () => {
-      const customClient = new GauntletAPIClient({ timeout: 5000 });
+      const customClient = createGauntletAPIClient({ timeout: 5000 });
 
       (global.fetch as any).mockResolvedValueOnce({
         ok: true,
@@ -329,7 +329,11 @@ describe('GauntletAPIClient', () => {
 
   describe('gauntletAPI singleton', () => {
     it('should export a default client instance', () => {
-      expect(gauntletAPI).toBeInstanceOf(GauntletAPIClient);
+      expect(gauntletAPI).toBeDefined();
+      expect(gauntletAPI.getCurrentWeek).toBeTypeOf('function');
+      expect(gauntletAPI.fetchLeagueOdds).toBeTypeOf('function');
+      expect(gauntletAPI.fetchMatchupSimulation).toBeTypeOf('function');
+      expect(gauntletAPI.getTeamNames).toBeTypeOf('function');
     });
   });
 });
