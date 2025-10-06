@@ -6,6 +6,7 @@
  */
 
 import { logger } from './logger.js';
+import { fetchWithRetry } from './retry.js';
 import type {
   GauntletAPIOptions,
   LeagueOddsResponse,
@@ -63,7 +64,16 @@ export const createGauntletAPIClient = (
     getCurrentWeek: async (): Promise<number> => {
       const start = Date.now();
       try {
-        const response = await fetch('https://api.sleeper.app/v1/state/nfl');
+        const response = await fetchWithRetry(
+          'https://api.sleeper.app/v1/state/nfl',
+          {
+            maxRetries: 2, // Quick retries for critical path
+            initialDelayMs: 500,
+            timeout,
+          },
+          metrics
+        );
+
         const duration = Date.now() - start;
         metrics?.recordDuration('api.sleeper.current_week', duration);
 
@@ -111,13 +121,18 @@ export const createGauntletAPIClient = (
       const url = `${baseUrl}/api/matchups/league-odds/${week}?t=${cacheBuster}`;
 
       try {
-        const response = await fetch(url, {
-          headers: {
-            'Cache-Control': 'no-cache',
-            Pragma: 'no-cache',
+        const response = await fetchWithRetry(
+          url,
+          {
+            headers: {
+              'Cache-Control': 'no-cache',
+              Pragma: 'no-cache',
+            },
+            maxRetries: 3,
+            timeout,
           },
-          signal: AbortSignal.timeout(timeout),
-        });
+          metrics
+        );
 
         const duration = Date.now() - start;
         metrics?.recordDuration('api.gauntlet.league_odds', duration);
@@ -166,9 +181,14 @@ export const createGauntletAPIClient = (
       const url = `${baseUrl}/api/matchups/${leagueId}/${week}/${matchupId}/simulate`;
 
       try {
-        const response = await fetch(url, {
-          signal: AbortSignal.timeout(timeout),
-        });
+        const response = await fetchWithRetry(
+          url,
+          {
+            maxRetries: 3,
+            timeout,
+          },
+          metrics
+        );
 
         const duration = Date.now() - start;
         metrics?.recordDuration('api.gauntlet.matchup_simulation', duration);
@@ -217,12 +237,16 @@ export const createGauntletAPIClient = (
       const start = Date.now();
       try {
         const [usersResponse, rostersResponse] = await Promise.all([
-          fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`, {
-            signal: AbortSignal.timeout(timeout),
-          }),
-          fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`, {
-            signal: AbortSignal.timeout(timeout),
-          }),
+          fetchWithRetry(
+            `https://api.sleeper.app/v1/league/${leagueId}/users`,
+            { maxRetries: 2, timeout },
+            metrics
+          ),
+          fetchWithRetry(
+            `https://api.sleeper.app/v1/league/${leagueId}/rosters`,
+            { maxRetries: 2, timeout },
+            metrics
+          ),
         ]);
 
         const duration = Date.now() - start;

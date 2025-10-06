@@ -2,8 +2,8 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 17.1% (12/70 tasks)  
-**Apps/Server Progress**: 66.7% (12/18 server tasks complete)
+**Overall Progress**: 18.6% (13/70 tasks)  
+**Apps/Server Progress**: 72.2% (13/18 server tasks complete)
 
 ---
 
@@ -11,7 +11,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (12)
+#### ✅ Completed (13)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -25,6 +25,7 @@
 - [x] **REFACTOR-601**: Convert to Arrow Functions ⏱️ 45 min
 - [x] **OBSERVABILITY-601**: Add Structured Logging with Pino ⏱️ 45 min
 - [x] **OBSERVABILITY-602**: Add Metrics Collection ⏱️ 40 min
+- [x] **RESILIENCE-601**: Add Retry Logic with Exponential Backoff ⏱️ 50 min
 
 #### 🔄 In Progress (0)
 
@@ -59,9 +60,9 @@ _Ready to begin_
 | **CLEAN**           | 6      | 5         | 0           | 1         |
 | **REFACTOR**        | 3      | 1         | 0           | 2         |
 | **OBSERVABILITY**   | 2      | 2         | 0           | 0         |
-| **RESILIENCE**      | 3      | 0         | 0           | 3         |
+| **RESILIENCE**      | 3      | 1         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **70** | **12**    | **0**       | **58**    |
+| **Total**           | **70** | **13**    | **0**       | **57**    |
 
 ---
 
@@ -103,8 +104,8 @@ _Ready to begin_
 
 #### Phase 3: Resilience (2 hours)
 
-- [ ] **RESILIENCE-601**: Retry Logic ⏱️ 50 min [HIGH] (blocked by OBS-601, OBS-602)
-- [ ] **RESILIENCE-602**: Result Types ⏱️ 35 min [MEDIUM]
+- [x] **RESILIENCE-601**: Retry Logic ⏱️ 50 min [HIGH] ✅
+- [ ] **RESILIENCE-602**: Result Types ⏱️ 35 min [MEDIUM] (ready to start)
 - [ ] **RESILIENCE-603**: Input Validation ⏱️ 40 min [MEDIUM]
 
 #### Phase 4: Security (30 min)
@@ -138,6 +139,50 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **RESILIENCE-601**: Add Retry Logic with Exponential Backoff
+  - Created `apps/server/src/lib/retry.ts` with arrow function pattern (271 lines)
+  - Implemented `fetchWithRetry()` with configurable retry options:
+    - Exponential backoff: 1s, 2s, 4s, 8s (capped at 10s max delay)
+    - Retryable status codes: 408, 429, 500, 502, 503, 504
+    - Non-retryable 4xx errors (don't retry client errors)
+    - Timeout handling with AbortController
+  - Implemented `retryAsync()` for generic async function retry logic
+  - Structured logging for all retry attempts with event names:
+    - `retry_succeeded`: Successful retry after previous failure
+    - `fetch_retry_attempt`: Retrying on retryable status code
+    - `fetch_retry_network_error`: Retrying on network error
+    - `fetch_retries_exhausted`: All retries exhausted
+    - `fetch_timeout`: Request timeout exceeded
+    - `fetch_failed_non_retryable`: Non-retryable error (4xx)
+  - Metrics tracking for retry behavior:
+    - `fetch.retry.success`: Successful recovery
+    - `fetch.retry.attempt`: Individual retry attempts
+    - `fetch.retry.network_error`: Network error retries
+    - `fetch.retry.exhausted`: Failed after all retries
+    - `fetch.timeout`: Timeout occurrences
+    - `retry.async.attempt`, `retry.async.exhausted`: Generic async retries
+  - Updated `gauntletAPI` client to use `fetchWithRetry()` for all 4 API methods:
+    - `getCurrentWeek()`: 2 retries, 500ms initial delay (fast path)
+    - `fetchLeagueOdds()`: 3 retries, 1s initial delay
+    - `fetchMatchupSimulation()`: 3 retries, 1s initial delay
+    - `getTeamNames()`: 2 retries, 1s initial delay (parallel calls)
+  - Added comprehensive test suite with 12 tests (all passing):
+    - Success on first attempt
+    - Retry on 500, 502, 503 errors
+    - No retry on 404 errors
+    - Exhaust retries and return/throw
+    - Network error handling
+    - Generic async function retries
+  - Updated 4 existing API client tests to account for retry behavior:
+    - Fixed fetch call assertions (now includes signal parameter)
+    - Added mocks for all retry attempts (prevents timeouts)
+    - Increased test timeout to 10s for retry delay tests
+  - All 62 tests passing (50 original + 12 new retry tests)
+  - TypeScript compilation successful with 0 errors
+  - Exported from barrel file: `fetchWithRetry`, `retryAsync`, `RetryOptions`
+  - **Outcome**: Production-ready retry logic with exponential backoff enables automatic recovery from transient failures
+  - **Compliance**: 100% arrow functions, central type imports from `@gauntlet/types`
 
 - ✅ **OBSERVABILITY-602**: Add Metrics Collection
   - Created `apps/server/src/lib/metrics.ts` with factory function pattern (arrow functions)

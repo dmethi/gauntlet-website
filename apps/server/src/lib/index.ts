@@ -26,3 +26,7 @@ export { logger, createChildLogger } from './logger.js';
 
 // Metrics
 export { createMetrics, measureDuration } from './metrics.js';
+
+// Retry logic
+export { fetchWithRetry, retryAsync } from './retry.js';
+export type { RetryOptions } from './retry.js';

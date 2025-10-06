@@ -40,7 +40,10 @@ describe('GauntletAPIClient', () => {
 
       const week = await client.getCurrentWeek();
       expect(week).toBe(5);
-      expect(global.fetch).toHaveBeenCalledWith('https://api.sleeper.app/v1/state/nfl');
+      // Verify fetch was called with URL (fetchWithRetry adds signal option)
+      const fetchCall = (global.fetch as any).mock.calls[0];
+      expect(fetchCall[0]).toBe('https://api.sleeper.app/v1/state/nfl');
+      expect(fetchCall[1]).toHaveProperty('signal');
     });
 
     it('should default to week 4 when API returns non-ok response', async () => {
@@ -108,12 +111,17 @@ describe('GauntletAPIClient', () => {
     });
 
     it('should throw error on network failure', async () => {
-      (global.fetch as any).mockRejectedValueOnce(new Error('Network timeout'));
+      // Mock all retry attempts (initial + 3 retries = 4 total)
+      (global.fetch as any)
+        .mockRejectedValueOnce(new Error('Network timeout'))
+        .mockRejectedValueOnce(new Error('Network timeout'))
+        .mockRejectedValueOnce(new Error('Network timeout'))
+        .mockRejectedValueOnce(new Error('Network timeout'));
 
       await expect(client.fetchLeagueOdds(5)).rejects.toThrow(
         'Failed to fetch league odds for week 5'
       );
-    });
+    }, 10000); // Increase timeout for retry delays
 
     it('should respect custom baseUrl', async () => {
       const customClient = createGauntletAPIClient({
@@ -183,16 +191,17 @@ describe('GauntletAPIClient', () => {
     });
 
     it('should throw error when API returns non-ok response', async () => {
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText: 'Internal Server Error',
-      });
+      // Mock all retry attempts (initial + 3 retries = 4 total) for 500 error
+      (global.fetch as any)
+        .mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Internal Server Error' })
+        .mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Internal Server Error' })
+        .mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Internal Server Error' })
+        .mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Internal Server Error' });
 
       await expect(client.fetchMatchupSimulation('1263744209295245312', 5, 1)).rejects.toThrow(
         'Failed to fetch matchup simulation'
       );
-    });
+    }, 10000); // Increase timeout for retry delays
 
     it('should throw error when simulation returns unsuccessful response', async () => {
       (global.fetch as any).mockResolvedValueOnce({
@@ -206,12 +215,17 @@ describe('GauntletAPIClient', () => {
     });
 
     it('should throw error on network failure', async () => {
-      (global.fetch as any).mockRejectedValueOnce(new Error('Timeout'));
+      // Mock all retry attempts (initial + 3 retries = 4 total)
+      (global.fetch as any)
+        .mockRejectedValueOnce(new Error('Timeout'))
+        .mockRejectedValueOnce(new Error('Timeout'))
+        .mockRejectedValueOnce(new Error('Timeout'))
+        .mockRejectedValueOnce(new Error('Timeout'));
 
       await expect(client.fetchMatchupSimulation('1263744209295245312', 5, 1)).rejects.toThrow(
         'Failed to fetch matchup simulation'
       );
-    });
+    }, 10000); // Increase timeout for retry delays
 
     it('should respect custom timeout', async () => {
       const customClient = createGauntletAPIClient({ timeout: 5000 });
