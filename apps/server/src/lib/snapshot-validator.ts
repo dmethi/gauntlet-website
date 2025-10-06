@@ -5,6 +5,7 @@
  * Prevents saving duplicate data when scores and projections haven't changed.
  */
 
+import { logger } from './logger.js';
 import { getLastWinProbSample, saveLiveWinProbSample } from './historical-data.js';
 import type { CompleteSnapshot, PreviousSnapshot, ValidationResult } from '@gauntlet/types';
 
@@ -62,7 +63,7 @@ export const hasSignificantChange = (
 const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Players']): void => {
   if (!players || players.length === 0) return;
 
-  console.log(`   ── ${label}`);
+  logger.debug(`   ── ${label}`);
   const header = ['Player', 'Pos', 'NFL', 'Curr', 'Remain', 'Full', 'State', 'Clock', 'MinRem'];
   const rows = players.map(p => [
     p.name,
@@ -81,11 +82,11 @@ const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Player
   );
   const fmt = (v: string, i: number): string => v.padEnd(widths[i], ' ');
 
-  console.log('     ' + header.map(fmt).join('  '));
-  console.log('     ' + widths.map(w => ''.padEnd(w, '─')).join('  '));
+  logger.debug('     ' + header.map(fmt).join('  '));
+  logger.debug('     ' + widths.map(w => ''.padEnd(w, '─')).join('  '));
 
   for (const r of rows) {
-    console.log('     ' + r.map((v, i) => fmt(String(v), i)).join('  '));
+    logger.debug('     ' + r.map((v, i) => fmt(String(v), i)).join('  '));
   }
 
   const totals = players.reduce(
@@ -98,7 +99,7 @@ const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Player
     { curr: 0, rem: 0, full: 0 }
   );
 
-  console.log(
+  logger.debug(
     `     Totals → Curr: ${totals.curr.toFixed(1)} | Remain: ${totals.rem.toFixed(1)} | Full: ${totals.full.toFixed(1)}`
   );
 };
@@ -144,9 +145,14 @@ export const saveSnapshotIfChanged = async (
       const hasChanged = hasSignificantChange(lastSnapshot, snapshot);
 
       if (!hasChanged) {
-        console.log(
-          `⏭️  M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name} - No change, skipping`
-        );
+        logger.debug({
+          event: 'snapshot_skipped',
+          matchupId: snapshot.matchupId,
+          week: snapshot.week,
+          team1Name: snapshot.team1Name,
+          team2Name: snapshot.team2Name,
+          reason: 'unchanged',
+        });
         return { saved: false, reason: 'unchanged' };
       }
     }
@@ -170,34 +176,42 @@ export const saveSnapshotIfChanged = async (
     });
 
     // 4. Log success with detailed information
-    console.log(`✅ M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
-    console.log(
-      `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
-    );
-    console.log(
-      `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Spread: ${snapshot.spread > 0 ? '+' : ''}${snapshot.spread.toFixed(1)} | O/U: ${snapshot.total.toFixed(1)} | Fresh Data ✅`
-    );
+    logger.info({
+      event: 'snapshot_saved',
+      matchupId: snapshot.matchupId,
+      week: snapshot.week,
+      team1Name: snapshot.team1Name,
+      team2Name: snapshot.team2Name,
+      team1SimMean: snapshot.team1.simulatedMean,
+      team2SimMean: snapshot.team2.simulatedMean,
+      team1WinProb: snapshot.team1.winProbability,
+      team2WinProb: snapshot.team2.winProbability,
+      team1CurrentScore: snapshot.team1.currentScore,
+      team2CurrentScore: snapshot.team2.currentScore,
+      spread: snapshot.spread,
+      total: snapshot.total,
+    });
 
     // 5. Enhanced per-player debugging tables
     printPlayerTable(`${snapshot.team1Name}`, snapshot.team1Players);
     printPlayerTable(`${snapshot.team2Name}`, snapshot.team2Players);
-    console.log('');
 
     return { saved: true, reason: 'saved' };
   } catch (error) {
     // Fallback logging if database fails
-    console.error(
-      `❌ Failed to save M${snapshot.matchupId}:`,
-      error instanceof Error ? error.message : String(error)
-    );
-    console.log(`📊 M${snapshot.matchupId}: ${snapshot.team1Name} vs ${snapshot.team2Name}`);
-    console.log(
-      `   📊 Sim: ${snapshot.team1.simulatedMean.toFixed(1)} vs ${snapshot.team2.simulatedMean.toFixed(1)} | Win%: ${(snapshot.team1.winProbability * 100).toFixed(1)} vs ${(snapshot.team2.winProbability * 100).toFixed(1)}`
-    );
-    console.log(
-      `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Fresh Data ✅`
-    );
-    console.log('');
+    logger.error({
+      event: 'snapshot_save_failed',
+      matchupId: snapshot.matchupId,
+      week: snapshot.week,
+      team1Name: snapshot.team1Name,
+      team2Name: snapshot.team2Name,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      team1SimMean: snapshot.team1.simulatedMean,
+      team2SimMean: snapshot.team2.simulatedMean,
+      team1CurrentScore: snapshot.team1.currentScore,
+      team2CurrentScore: snapshot.team2.currentScore,
+    });
     return { saved: false, reason: 'error' };
   }
 };

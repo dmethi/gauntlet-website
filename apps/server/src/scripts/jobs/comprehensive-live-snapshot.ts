@@ -8,6 +8,7 @@
  * Writes to: LiveWinProbSample (historical time-series data)
  */
 
+import { createChildLogger } from '../../lib/index.js';
 import { disconnect } from '../../lib/historical-data.js';
 import { gauntletAPI } from '../../lib/gauntlet-api-client.js';
 import { saveSnapshotIfChanged } from '../../lib/snapshot-validator.js';
@@ -145,16 +146,24 @@ const main = async (): Promise<void> => {
   const week = await gauntletAPI.getCurrentWeek();
   const leagueIds = ['1263744209295245312', '1263740549504962561'];
 
-  console.log(`🚀 Comprehensive live odds snapshot for week ${week}`);
-  console.log(`📸 Combining League Odds + Individual Matchup APIs for complete data\n`);
+  // Create job-specific logger
+  const jobLogger = createChildLogger({ job: 'live-snapshot', week });
+
+  jobLogger.info({
+    event: 'job_started',
+    message: `Starting comprehensive live odds snapshot for week ${week}`,
+  });
 
   // 1. Capture league odds for team rankings
-  console.log('📊 Capturing league-wide odds...');
+  jobLogger.debug({ event: 'fetching_league_odds', week });
   const leagueOdds = await gauntletAPI.fetchLeagueOdds(week);
-  console.log(`✅ League odds captured: ${leagueOdds.highestScorer?.length || 0} teams ranked\n`);
+  jobLogger.debug({
+    event: 'league_odds_captured',
+    teamsRanked: leagueOdds.highestScorer?.length || 0,
+  });
 
   // 2. Capture individual matchups for detailed data
-  console.log('📊 Capturing individual matchup details...');
+  jobLogger.debug({ event: 'fetching_matchup_details' });
 
   let savedCount = 0;
   let skippedCount = 0;
@@ -162,11 +171,11 @@ const main = async (): Promise<void> => {
 
   for (const leagueId of leagueIds) {
     const leagueName = leagueId.includes('3245') ? 'AFC' : 'NFC';
-    console.log(`\n🏆 ${leagueName} League (${leagueId}):`);
-    console.log('📋 Fetching team names...');
+    jobLogger.debug({ event: 'processing_league', leagueId, leagueName });
 
+    jobLogger.debug({ event: 'fetching_team_names', leagueId });
     const teamNames = await gauntletAPI.getTeamNames(leagueId);
-    console.log(`✅ Found ${teamNames.size} team names\n`);
+    jobLogger.debug({ event: 'team_names_fetched', count: teamNames.size, leagueId });
 
     for (let matchupId = 1; matchupId <= 6; matchupId++) {
       const snapshot = await captureIndividualMatchup(leagueId, week, matchupId, teamNames);
@@ -179,7 +188,11 @@ const main = async (): Promise<void> => {
           skippedCount++;
         }
       } else {
-        console.log(`❌ Failed to capture M${matchupId}\n`);
+        jobLogger.warn({
+          event: 'matchup_capture_failed',
+          matchupId,
+          leagueId,
+        });
         failedCount++;
       }
 
@@ -188,28 +201,19 @@ const main = async (): Promise<void> => {
     }
   }
 
-  console.log('\n' + '='.repeat(60));
-  console.log('✅ Complete snapshot finished!');
-  console.log('='.repeat(60));
-  console.log(`📊 Results Summary:`);
-  console.log(`   ✅ Saved: ${savedCount} matchups (data changed)`);
-  console.log(`   ⏭️  Skipped: ${skippedCount} matchups (no change since last run)`);
-  if (failedCount > 0) {
-    console.log(`   ❌ Failed: ${failedCount} matchups`);
-  }
-  console.log(`   📈 Total processed: ${savedCount + skippedCount + failedCount} matchups`);
-  console.log('');
-  console.log('📊 Captured data includes:');
-  console.log('   ✅ League odds & team rankings (128+ pt projections)');
-  console.log('   ✅ Win probabilities (translated from odds)');
-  console.log('   ✅ Live matchup scores (current player scores)');
-  console.log('   ✅ Simulated means (matches your screenshot "Proj:" values)');
-  console.log('\n📈 Perfect data for score-over-time and win-probability-over-time charts!');
-  console.log("💡 Deduplication: Skips saving when scores/projections haven't changed");
+  jobLogger.info({
+    event: 'job_completed',
+    savedCount,
+    skippedCount,
+    failedCount,
+    totalProcessed: savedCount + skippedCount + failedCount,
+    message: 'Comprehensive live odds snapshot finished',
+  });
 };
 
 main()
   .catch(e => {
+    // Use console.error for fatal errors to ensure visibility
     console.error('❌ Fatal error:', e);
     process.exit(1);
   })

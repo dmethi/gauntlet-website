@@ -5,6 +5,7 @@
  * Used by background jobs to capture live odds, matchup simulations, and team data.
  */
 
+import { logger } from './logger.js';
 import type {
   GauntletAPIOptions,
   LeagueOddsResponse,
@@ -59,13 +60,21 @@ export const createGauntletAPIClient = (
       try {
         const response = await fetch('https://api.sleeper.app/v1/state/nfl');
         if (!response.ok) {
-          console.warn(`Failed to fetch NFL state: ${response.status}`);
+          logger.warn({
+            event: 'nfl_state_fetch_failed',
+            status: response.status,
+            message: 'Failed to fetch NFL state, using default week 4',
+          });
           return 4; // Default fallback
         }
         const data: NFLState = await response.json();
         return data?.week || 4;
       } catch (error) {
-        console.warn('Error fetching current week, using default:', error);
+        logger.warn({
+          event: 'current_week_error',
+          error: error instanceof Error ? error.message : String(error),
+          message: 'Error fetching current week, using default week 4',
+        });
         return 4; // Default fallback
       }
     },
@@ -205,7 +214,12 @@ export const createGauntletAPIClient = (
 
         return teamNames;
       } catch (error) {
-        console.error(`Failed to fetch team names for league ${leagueId}:`, error);
+        logger.error({
+          event: 'team_names_fetch_failed',
+          leagueId,
+          error: error instanceof Error ? error.message : String(error),
+          message: 'Failed to fetch team names',
+        });
         return new Map(); // Return empty map on error
       }
     },
