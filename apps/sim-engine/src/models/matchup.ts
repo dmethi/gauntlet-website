@@ -132,7 +132,48 @@ const calculateBettingLines = (
 };
 
 /**
- * Simulate from arbitrary arrays of players (dynamic roster sizes, incl. SUPER_FLEX)
+ * Simulate a matchup between two teams using Monte Carlo sampling.
+ *
+ * Performs 10,000+ iterations sampling from historical player and position variance
+ * distributions to generate win probabilities, score distributions, and implied betting odds.
+ *
+ * Supports three game states:
+ * - Pre-game: Uses full projections with variance
+ * - Live game: Combines actual scores + simulated remaining projections
+ * - Post-game: Uses actual scores + minimal remaining projection
+ *
+ * @param team1Players - Array of LineupPlayer objects for team 1 (typically 8-9 players)
+ * @param team2Players - Array of LineupPlayer objects for team 2 (typically 8-9 players)
+ * @param iterations - Number of Monte Carlo iterations to run (default: 10000, min 100 for testing)
+ * @param gameProgress - Game completion percentage from 0 (start) to 1 (end)
+ * @param liveNflTeams - Optional Set of NFL team codes currently playing live games
+ *
+ * @returns Promise<MatchupSimulationResult> containing:
+ *   - team1WinPct/team2WinPct: Win probabilities (sum to 1.0)
+ *   - medianMargin: Expected point differential
+ *   - team1Scores/team2Scores: Score distributions (mean, median, p10, p90)
+ *   - impliedOdds: Betting lines (spread, total, moneyline)
+ *
+ * @example
+ * // Pre-game simulation
+ * const result = await simulateMatchupProbabilityFromPlayers(
+ *   [{ id: '1', position: 'QB', projection: 24.5 }, ...],
+ *   [{ id: '2', position: 'QB', projection: 22.3 }, ...],
+ *   10000,
+ *   0
+ * );
+ * console.log(`Team 1 Win%: ${(result.team1WinPct * 100).toFixed(1)}%`);
+ *
+ * @example
+ * // Live game simulation with actual scores
+ * const result = await simulateMatchupProbabilityFromPlayers(
+ *   [{ id: '1', position: 'QB', projection: 24.5, currentScore: 18.2, nflTeam: 'KC' }, ...],
+ *   [{ id: '2', position: 'QB', projection: 22.3, currentScore: 12.4, nflTeam: 'BUF' }, ...],
+ *   10000,
+ *   0.65, // 65% game complete
+ *   new Set(['KC', 'BUF'])
+ * );
+ * console.log(`Updated Win%: ${(result.team1WinPct * 100).toFixed(1)}%`);
  */
 export const simulateMatchupProbabilityFromPlayers = async (
   team1Players: LineupPlayer[],
@@ -282,7 +323,33 @@ export const simulateMatchupProbabilityFromPlayers = async (
 };
 
 /**
- * Simulate many matchups to get win probabilities and betting lines
+ * Simulate a matchup using Lineup objects or LineupPlayer arrays.
+ *
+ * Convenience wrapper around simulateMatchupProbabilityFromPlayers that accepts
+ * either Lineup objects (with named positions) or LineupPlayer arrays.
+ *
+ * @param team1 - Lineup object or array of LineupPlayer for team 1
+ * @param team2 - Lineup object or array of LineupPlayer for team 2
+ * @param iterations - Number of Monte Carlo iterations (default: 10000)
+ * @param gameProgress - Game completion percentage 0-1 (default: 0)
+ *
+ * @returns Promise<MatchupSimulationResult> with win probabilities and score distributions
+ *
+ * @example
+ * // Using Lineup objects
+ * const result = await simulateMatchupProbability(
+ *   { qb: {...}, rb1: {...}, rb2: {...}, ... },
+ *   { qb: {...}, rb1: {...}, rb2: {...}, ... },
+ *   10000
+ * );
+ *
+ * @example
+ * // Using LineupPlayer arrays
+ * const result = await simulateMatchupProbability(
+ *   [qbPlayer, rb1Player, rb2Player, ...],
+ *   [qbPlayer, rb1Player, rb2Player, ...],
+ *   10000
+ * );
  */
 export const simulateMatchupProbability = async (
   team1: Lineup | LineupPlayer[],

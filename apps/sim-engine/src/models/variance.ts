@@ -137,7 +137,30 @@ const randomSample = <T>(arr: T[]): T => {
 };
 
 /**
- * Simulate a single score for a player using Monte Carlo sampling
+ * Simulate a single score for a player using Monte Carlo sampling.
+ *
+ * Samples from historical variance distributions (position-level only, player-specific
+ * data temporarily disabled due to outliers). Uses async operations to fetch
+ * distributions on each call.
+ *
+ * @param playerId - Sleeper player ID to sample for
+ * @param position - NFL position (QB, RB, WR, TE, K, DEF)
+ * @param projection - Fantasy point projection for the player
+ * @param gameProgress - Game completion 0-1, reduces variance for live games (default: 0)
+ *
+ * @returns Promise<number> - Simulated fantasy score for this player
+ *
+ * @throws Error if projection < 0 or gameProgress not in [0, 1]
+ *
+ * @example
+ * // Pre-game simulation
+ * const score = await simulatePlayerScore('4866', 'QB', 24.5, 0);
+ * console.log(`Simulated QB score: ${score.toFixed(1)}`);
+ *
+ * @example
+ * // Live game simulation (75% complete)
+ * const score = await simulatePlayerScore('4866', 'QB', 24.5, 0.75);
+ * console.log(`Updated score with reduced variance: ${score.toFixed(1)}`);
  */
 export const simulatePlayerScore = async (
   playerId: string,
@@ -187,7 +210,26 @@ export const simulatePlayerScore = async (
 };
 
 /**
- * Simulate multiple scores for a player
+ * Simulate multiple scores for a player to generate outcome distribution.
+ *
+ * Runs 1,000 Monte Carlo iterations to produce percentile-based score ranges.
+ * Useful for displaying player projections with uncertainty bounds.
+ *
+ * @param playerId - Sleeper player ID to simulate
+ * @param position - NFL position (QB, RB, WR, TE, K, DEF)
+ * @param projection - Fantasy point projection for the player
+ * @param iterations - Number of simulations to run (default: 1000)
+ *
+ * @returns Promise containing score distribution:
+ *   - p10, p25, median, p75, p90: Percentile values
+ *   - mean: Average simulated score
+ *   - positionDist: Sample size of position-level data
+ *   - playerOutcomes: Sample size of player-specific data
+ *
+ * @example
+ * const distribution = await simulatePlayerRange('4866', 'QB', 24.5);
+ * console.log(`Projection: ${distribution.median.toFixed(1)} pts`);
+ * console.log(`Range: ${distribution.p10.toFixed(1)} - ${distribution.p90.toFixed(1)} pts`);
  */
 export const simulatePlayerRange = async (
   playerId: string,
@@ -230,6 +272,29 @@ export const simulatePlayerRange = async (
   };
 };
 
+/**
+ * Get variance model for a player using optimized synchronous sampling.
+ *
+ * Similar to simulatePlayerRange but uses buildSamplingContext for much faster
+ * performance (no repeated async calls). Recommended for API endpoints and
+ * batch operations.
+ *
+ * @param playerId - Sleeper player ID to simulate
+ * @param position - NFL position (QB, RB, WR, TE, K, DEF)
+ * @param projection - Fantasy point projection for the player
+ *
+ * @returns Promise containing score distribution:
+ *   - p10, p25, median, p75, p90: Percentile values
+ *   - mean: Average simulated score
+ *   - positionDist: Sample size of position-level data
+ *   - playerOutcomes: Sample size of player-specific data
+ *
+ * @example
+ * const variance = await getVarianceModel('4866', 'QB', 24.5);
+ * console.log(`QB Mahomes variance model:`);
+ * console.log(`  Median: ${variance.median.toFixed(1)} pts`);
+ * console.log(`  10th-90th: ${variance.p10.toFixed(1)} - ${variance.p90.toFixed(1)} pts`);
+ */
 export const getVarianceModel = async (
   playerId: string,
   position: string,
@@ -290,8 +355,30 @@ import type { SamplingContext } from '@gauntlet/types';
 export type { SamplingContext };
 
 /**
- * Build a sampling context for a set of players and positions.
- * Fetches and prepares distributions once to enable synchronous sampling.
+ * Build a sampling context for fast synchronous Monte Carlo simulations.
+ *
+ * Pre-fetches historical variance distributions for all players and positions,
+ * enabling 10,000+ iterations without repeated database/data lookups. This is
+ * a critical performance optimization for real-time simulations.
+ *
+ * @param playerIds - Array of Sleeper player IDs to fetch variance data for
+ * @param positions - Array of NFL positions (QB, RB, WR, TE, K, DEF)
+ *
+ * @returns Promise<SamplingContext> containing Maps of variance distributions:
+ *   - positionToOutcomes: Position-level variance distributions
+ *   - playerToOutcomes: Player-specific variance distributions
+ *   - playerSampleCounts: Number of historical games per player
+ *   - positionSampleCounts: Number of historical games per position
+ *
+ * @example
+ * const playerIds = ['4866', '7564', '8110']; // Mahomes, McCaffrey, Jefferson
+ * const positions = ['QB', 'RB', 'WR'];
+ * const ctx = await buildSamplingContext(playerIds, positions);
+ *
+ * // Now use ctx for 10,000 fast synchronous samples
+ * for (let i = 0; i < 10000; i++) {
+ *   const score = samplePlayerScoreFromContext(ctx, '4866', 'QB', 24.5);
+ * }
  */
 export const buildSamplingContext = async (
   playerIds: string[],
@@ -332,8 +419,30 @@ export const buildSamplingContext = async (
 };
 
 /**
- * Fast synchronous sampling using a prefetched context.
- * Falls back to position outcomes when player data is sparse.
+ * Fast synchronous player score sampling using pre-fetched variance context.
+ *
+ * Samples from historical variance distributions without async operations,
+ * enabling high-performance Monte Carlo loops. Uses 70% player-specific
+ * variance when available (≥8 games), otherwise falls back to position variance.
+ *
+ * @param ctx - Pre-built SamplingContext from buildSamplingContext()
+ * @param playerId - Sleeper player ID to sample for
+ * @param position - NFL position (QB, RB, WR, TE, K, DEF)
+ * @param projection - Fantasy point projection for the player
+ * @param gameProgress - Game completion 0-1, reduces variance for live games (default: 0)
+ *
+ * @returns number - Simulated fantasy score for this iteration
+ *
+ * @throws Error if projection < 0 or gameProgress not in [0, 1]
+ *
+ * @example
+ * const ctx = await buildSamplingContext(['4866'], ['QB']);
+ *
+ * // Pre-game simulation (full variance)
+ * const score1 = samplePlayerScoreFromContext(ctx, '4866', 'QB', 24.5, 0);
+ *
+ * // Live game simulation (65% complete, reduced variance)
+ * const score2 = samplePlayerScoreFromContext(ctx, '4866', 'QB', 24.5, 0.65);
  */
 export const samplePlayerScoreFromContext = (
   ctx: SamplingContext,

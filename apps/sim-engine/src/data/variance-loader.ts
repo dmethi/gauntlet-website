@@ -45,8 +45,22 @@ const initializeCaches = (): void => {
 initializeCaches();
 
 /**
- * Get position distribution from static data
- * Replaces: prisma.positionVariance.findUnique()
+ * Get historical variance distribution for an NFL position.
+ *
+ * Loads position-level variance from static JSON data with season fallback
+ * (tries 2025 → 2024 → 2023). Returns synthetic normal distribution based on
+ * historical mean error and standard deviation.
+ *
+ * @param position - NFL position code (QB, RB, WR, TE, K, DEF)
+ *
+ * @returns Promise<{ outcomes: number[], sampleSize: number }> where:
+ *   - outcomes: Array of relative outcome multipliers (actual/projected)
+ *   - sampleSize: Number of historical games this distribution is based on
+ *
+ * @example
+ * const qbVariance = await getPositionDistribution('QB');
+ * console.log(`QB variance based on ${qbVariance.sampleSize} games`);
+ * console.log(`Sample outcome: ${qbVariance.outcomes[0]}`); // e.g., 0.85 (15% under)
  */
 export const getPositionDistribution = async (
   position: string
@@ -78,8 +92,24 @@ export const getPositionDistribution = async (
 };
 
 /**
- * Get player outcomes from static projection error data
- * Replaces: prisma.projectionError.findMany()
+ * Get historical outcome distribution for a specific player.
+ *
+ * Loads player-specific variance from last 16 weeks of projection error data.
+ * Normalizes outcomes around median to preserve variance while removing mean bias.
+ * Returns empty if fewer than 4 games available.
+ *
+ * @param playerId - Sleeper player ID
+ *
+ * @returns Promise<{ outcomes: number[], sampleSize: number }> where:
+ *   - outcomes: Array of normalized relative outcome multipliers
+ *   - sampleSize: Number of recent games in distribution (0 if insufficient data)
+ *
+ * @example
+ * const mahomesData = await getPlayerOutcomes('4866');
+ * if (mahomesData.sampleSize >= 8) {
+ *   console.log(`Mahomes has ${mahomesData.sampleSize} games of history`);
+ *   console.log(`Sample outcomes: ${mahomesData.outcomes.slice(0, 3)}`);
+ * }
  */
 export const getPlayerOutcomes = async (
   playerId: string
@@ -182,7 +212,23 @@ const getDefaultPositionVariance = (
 };
 
 /**
- * Get data export info
+ * Get metadata about the loaded variance data.
+ *
+ * Returns information about when the variance data was exported and how many
+ * records are available for each data type.
+ *
+ * @returns Object containing:
+ *   - exportedAt: ISO timestamp of when data was last exported
+ *   - positionVarianceCount: Number of position variance records loaded
+ *   - playerVarianceCount: Number of player variance records loaded
+ *   - projectionErrorCount: Number of projection error records loaded
+ *
+ * @example
+ * const info = getDataInfo();
+ * console.log(`Variance data exported: ${info.exportedAt}`);
+ * console.log(`Positions: ${info.positionVarianceCount}`);
+ * console.log(`Players: ${info.playerVarianceCount}`);
+ * console.log(`Projection errors: ${info.projectionErrorCount}`);
  */
 export const getDataInfo = (): {
   exportedAt: string;
