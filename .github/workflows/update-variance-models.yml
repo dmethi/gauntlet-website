@@ -1,0 +1,71 @@
+name: Update Variance Models
+
+on:
+    schedule:
+        # Runs every Tuesday at 3:00 AM EST (8:00 AM UTC during DST, 7:00 AM UTC otherwise)
+        # Using 7:00 AM UTC to cover both EST and EDT
+        - cron: "0 7 * * 2"
+    workflow_dispatch: # Allows manual triggering from GitHub UI
+
+jobs:
+    update-variance:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write # Needed to commit changes back to repo
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 9
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build packages
+              run: pnpm build
+
+            - name: Run variance update job
+              run: pnpm --filter @gauntlet/server run update-variance
+              env:
+                  NODE_ENV: production
+
+            - name: Check for changes
+              id: git-check
+              run: |
+                  git diff --exit-code apps/sim-engine/src/data/variance-data.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+            - name: Commit and push changes
+              if: steps.git-check.outputs.changed == 'true'
+              run: |
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git add apps/sim-engine/src/data/variance-data.json
+                  git add apps/sim-engine/src/data/players-cache.json
+                  git commit -m "chore: update variance models (week $(date +%U) - $(date +%Y))"
+                  git push
+
+            - name: Create summary
+              if: always()
+              run: |
+                  echo "## Variance Model Update Summary" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "**Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+                  echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  if [ "${{ steps.git-check.outputs.changed }}" == "true" ]; then
+                    echo "✅ Variance models updated and committed" >> $GITHUB_STEP_SUMMARY
+                  else
+                    echo "ℹ️ No changes to variance models" >> $GITHUB_STEP_SUMMARY
+                  fi

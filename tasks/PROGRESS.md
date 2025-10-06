@@ -2,9 +2,9 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 29.8% (25/84 tasks)  
+**Overall Progress**: 31.0% (26/84 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
-**Apps/Sim-Engine Progress**: 66.7% (10/15 sim-engine tasks complete)
+**Apps/Sim-Engine Progress**: 73.3% (11/15 sim-engine tasks complete)
 
 ---
 
@@ -39,6 +39,7 @@
 - [x] **SIM-608**: Add Metrics Collection (sim-engine) ⏱️ 45 min
 - [x] **SIM-609**: Add Result Types for Error Handling (sim-engine) ⏱️ 30 min
 - [x] **SIM-610**: Add Input Validation (sim-engine) ⏱️ 30 min
+- [x] **SIM-611**: Create Weekly Variance Update Job ⏱️ 1 hour
 
 #### 🔄 In Progress (0)
 
@@ -202,7 +203,7 @@ _Ready to begin_
 
 #### Phase 5: Data Management (2 hours)
 
-- [ ] **SIM-611**: Create Weekly Variance Update Job ⏱️ 1 hour [HIGH] 🔥 **KEY FEATURE**
+- [x] **SIM-611**: Create Weekly Variance Update Job ⏱️ 1 hour [HIGH] 🔥 **KEY FEATURE** ✅
 - [ ] **SIM-612**: Add Variance Data Versioning ⏱️ 30 min [MEDIUM]
 - [ ] **SIM-613**: Optimize Variance Data Loading ⏱️ 30 min [MEDIUM]
 
@@ -216,6 +217,41 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **SIM-611**: Create Weekly Variance Update Job
+  - Created `apps/sim-engine/src/data/player-metadata.ts` with caching utility (81 lines)
+  - Created `apps/sim-engine/src/data/variance-updater.ts` with 5 update functions (338 lines)
+  - Created `apps/sim-engine/src/data/variance-validator.ts` with validation logic (131 lines)
+  - Created `apps/server/src/scripts/jobs/update-variance-models.ts` main job script (223 lines)
+  - Created `.github/workflows/update-variance-models.yml` GitHub Action (59 lines)
+  - Implemented player metadata caching (yearly refresh from Sleeper API, 11K+ players)
+  - Implemented progressive seasonal weighting: 2025(1.0), 2024(0.75), 2023(0.5), 2022(0.25)
+  - Implemented 16-week rolling window per player for projection errors
+  - Implemented 3σ outlier removal to filter statistical anomalies
+  - Implemented 20% variance change validation with warnings and capping
+  - Added `getPlayerMetadata()` function fetching/caching all NFL players
+  - Added `updateProjectionErrors()` calculating actual vs projected with outlier filtering
+  - Added `updatePositionVariance()` with weighted mean and std dev calculations
+  - Added `updatePlayerVariance()` for players with ≥4 games of history
+  - Added `validateVarianceChanges()` detecting dramatic variance shifts
+  - Added `capVarianceChanges()` preventing >20% weekly changes
+  - Updated `apps/sim-engine/src/data/index.ts` barrel exports with 9 new functions
+  - Added `update-variance` npm script to `apps/server/package.json`
+  - GitHub Action runs every Tuesday at 3 AM EST (7 AM UTC)
+  - Action automatically commits updated variance-data.json back to repo
+  - Manual trigger available via workflow_dispatch in GitHub UI
+  - Structured logging for all variance update events
+  - Metrics tracking for API calls, new errors, outliers removed, players/positions updated
+  - Updates `variance-data.json` with new models for sim-engine consumption
+  - All 832 lines of new code follow arrow function patterns
+  - TypeScript compilation passes with 0 errors across both packages
+  - ESLint passes with 0 errors/warnings after auto-fix
+  - Proper type safety with SleeperPlayer and PlayerMetadata interfaces
+  - Fixed type compatibility with index signatures for Sleeper API responses
+  - Run manually: `pnpm --filter @gauntlet/server run update-variance`
+  - **Phase 5 Started**: Data Management phase (SIM-611 complete, 2 tasks remaining)
+  - **Outcome**: Automated weekly variance updates with GitHub Actions enable continuous model improvement
+  - **Compliance**: 100% arrow functions, central type imports from `@gauntlet/types`
 
 - ✅ **SIM-610**: Add Input Validation (sim-engine)
   - Created `src/lib/validation.ts` with 7 validation functions (221 lines)
