@@ -5,7 +5,6 @@ import {
   calculateLeagueProjections,
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
-import axios from 'axios';
 
 interface NFLGameState {
   team: string;
@@ -19,7 +18,14 @@ interface NFLGameState {
 async function fetchEspnScoreboard() {
   try {
     const url = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
-    const { data } = await axios.get(url, { timeout: 10000 });
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(10000),
+      cache: 'no-store',
+    });
+    if (!response.ok) {
+      throw new Error(`ESPN API returned ${response.status}`);
+    }
+    const data = await response.json();
     return data;
   } catch (error) {
     console.warn('Failed to fetch ESPN scoreboard:', error);

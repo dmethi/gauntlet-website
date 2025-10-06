@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import axios from 'axios';
 import reportData from '@/data/report-week2';
 
 const GAUNTLET_LEAGUES = [
@@ -126,7 +125,14 @@ function resolveTeamName(roster: any, owner: any): string {
 // Fetch ESPN scoreboard for NFL games
 async function fetchEspnScoreboard(): Promise<EspnScoreboard> {
   const url = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
-  const { data } = await axios.get(url, { timeout: 10000 });
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(10000),
+    cache: 'no-store',
+  });
+  if (!response.ok) {
+    throw new Error(`ESPN API returned ${response.status}`);
+  }
+  const data = await response.json();
   return data as EspnScoreboard;
 }
 

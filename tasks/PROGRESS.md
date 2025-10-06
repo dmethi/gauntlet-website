@@ -2,8 +2,9 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 21.4% (15/70 tasks)  
-**Apps/Server Progress**: 83.3% (15/18 server tasks complete)
+**Overall Progress**: 22.9% (16/70 tasks)  
+**Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
+**Apps/Sim-Engine Progress**: 6.7% (1/15 sim-engine tasks complete)
 
 ---
 
@@ -11,7 +12,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (15)
+#### ✅ Completed (16)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -28,6 +29,7 @@
 - [x] **OBSERVABILITY-601**: Add Structured Logging with Pino ⏱️ 45 min
 - [x] **OBSERVABILITY-602**: Add Metrics Collection ⏱️ 40 min
 - [x] **RESILIENCE-601**: Add Retry Logic with Exponential Backoff ⏱️ 50 min
+- [x] **SIM-601**: Add ESLint and Prettier Configuration (sim-engine) ⏱️ 30 min
 
 #### 🔄 In Progress (0)
 
@@ -53,18 +55,20 @@ _Ready to begin_
 
 | Category            | Total  | Completed | In Progress | Remaining |
 | ------------------- | ------ | --------- | ----------- | --------- |
-| **SETUP**           | 7      | 1         | 0           | 6         |
+| **SETUP**           | 9      | 2         | 0           | 7         |
 | **EXTRACT**         | 12     | 2         | 0           | 10        |
 | **UTIL**            | 12     | 0         | 0           | 12        |
 | **HOOK**            | 8      | 0         | 0           | 8         |
 | **COMP**            | 10     | 0         | 0           | 10        |
-| **TEST**            | 6      | 1         | 0           | 5         |
-| **CLEAN**           | 6      | 5         | 0           | 1         |
-| **REFACTOR**        | 3      | 3         | 0           | 0         |
-| **OBSERVABILITY**   | 2      | 2         | 0           | 0         |
-| **RESILIENCE**      | 3      | 1         | 0           | 2         |
+| **TEST**            | 7      | 1         | 0           | 6         |
+| **CLEAN**           | 7      | 5         | 0           | 2         |
+| **REFACTOR**        | 4      | 3         | 0           | 1         |
+| **OBSERVABILITY**   | 4      | 2         | 0           | 2         |
+| **RESILIENCE**      | 5      | 1         | 0           | 4         |
+| **DATA_MANAGEMENT** | 3      | 0         | 0           | 3         |
+| **DOCUMENTATION**   | 2      | 0         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **70** | **15**    | **0**       | **55**    |
+| **Total**           | **84** | **16**    | **0**       | **68**    |
 
 ---
 
@@ -136,11 +140,87 @@ _Ready to begin_
 - [ ] **HOOK-002**: Manager Analysis Filtering Hook
 - [ ] **COMP-001**: Split Manager Analysis Component
 
+### Apps/Sim-Engine: Enterprise Readiness (SIM-601 to SIM-615)
+
+**Goal**: Transform sim-engine from functional to enterprise-ready simulation package.
+
+**Current State**:
+- ✅ Core simulation logic functional (10K+ iterations working)
+- ✅ Central type usage from `@gauntlet/types`
+- ✅ Minimal dependencies (only `@gauntlet/lib`)
+- ❌ Zero tests (0% coverage)
+- ❌ No code quality automation (no ESLint/Prettier)
+- ❌ Console.* logging only (no structured logging)
+- ❌ No metrics collection
+- ❌ No input validation
+- ❌ Static variance data (no update mechanism)
+- 📊 **Enterprise Score: 4.5/10**
+
+**Target State**:
+- ✅ 80%+ test coverage with comprehensive test suite
+- ✅ 100% convention compliance (arrow functions, barrel exports)
+- ✅ Structured logging with Pino
+- ✅ Metrics collection and reporting
+- ✅ Input validation with descriptive errors
+- ✅ Weekly variance update job with progressive weighting
+- ✅ Comprehensive documentation (README, JSDoc)
+- 📊 **Enterprise Score: 9.5/10**
+
+**Total Effort**: ~11 hours across 15 focused tasks  
+**See**: Task files `SIM-601` through `SIM-615` for detailed execution plans
+
+#### Phase 1: Foundation & Conventions (2.5 hours)
+
+- [x] **SIM-601**: Add ESLint and Prettier Configuration ⏱️ 30 min [HIGH PRIORITY] ✅
+- [ ] **SIM-602**: Convert All Functions to Arrow Functions ⏱️ 45 min [HIGH]
+- [ ] **SIM-603**: Add Barrel Exports (index.ts) ⏱️ 20 min [MEDIUM]
+- [ ] **SIM-604**: Add JSDoc to All Exported Functions ⏱️ 45 min [HIGH]
+
+#### Phase 2: Testing Infrastructure (3 hours)
+
+- [ ] **SIM-605**: Add Comprehensive Test Suite ⏱️ 2 hours [CRITICAL]
+- [ ] **SIM-606**: Migrate from Jest to Vitest ⏱️ 30 min [MEDIUM]
+
+#### Phase 3: Observability (1.5 hours)
+
+- [ ] **SIM-607**: Add Structured Logging with Pino ⏱️ 45 min [HIGH]
+- [ ] **SIM-608**: Add Metrics Collection ⏱️ 45 min [MEDIUM]
+
+#### Phase 4: Resilience & Error Handling (1 hour)
+
+- [ ] **SIM-609**: Add Result Types for Error Handling ⏱️ 30 min [MEDIUM]
+- [ ] **SIM-610**: Add Input Validation ⏱️ 30 min [MEDIUM]
+
+#### Phase 5: Data Management (2 hours)
+
+- [ ] **SIM-611**: Create Weekly Variance Update Job ⏱️ 1 hour [HIGH] 🔥 **KEY FEATURE**
+- [ ] **SIM-612**: Add Variance Data Versioning ⏱️ 30 min [MEDIUM]
+- [ ] **SIM-613**: Optimize Variance Data Loading ⏱️ 30 min [MEDIUM]
+
+#### Phase 6: Documentation & Polish (1 hour)
+
+- [ ] **SIM-614**: Create Comprehensive README ⏱️ 45 min [HIGH]
+- [ ] **SIM-615**: Add Package Quality Badges ⏱️ 15 min [LOW]
+
 ---
 
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **SIM-601**: Add ESLint and Prettier Configuration (sim-engine)
+  - Installed ESLint 8.57.1 with TypeScript support (@typescript-eslint v8.38.0)
+  - Installed Prettier 3.6.2 with ESLint integration (eslint-config-prettier, eslint-plugin-prettier)
+  - Created `eslint.config.mjs` with flat config format adapted from apps/server
+  - Configured rules: arrow functions enforcement, explicit return types, no-any, import sorting
+  - Added Node.js and Web API globals (fetch, console, process, setTimeout, etc.)
+  - Created `.prettierrc` with project style guide (single quotes, 100 char width, trailing commas)
+  - Created `.prettierignore` and `.eslintignore` to exclude generated files
+  - Added 4 npm scripts: `lint`, `lint:fix`, `format`, `format:check`
+  - All files already Prettier-compliant (no formatting changes needed)
+  - Verified linting: 30 violations identified (expected - to be fixed in SIM-602)
+  - **Outcome**: Foundation for code quality automation complete, enables SIM-602
+  - **Compliance**: Matches apps/server ESLint/Prettier configuration for consistency
 
 - ✅ **REFACTOR-603**: Add Path Aliases
   - Updated `apps/server/tsconfig.json` with path alias configuration:
