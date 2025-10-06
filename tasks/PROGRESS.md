@@ -2,7 +2,7 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup  
-**Overall Progress**: 11.7% (7/60 tasks)
+**Overall Progress**: 13.3% (8/60 tasks)
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (7)
+#### ✅ Completed (8)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -19,6 +19,7 @@
 - [x] **CLEAN-606**: Add JSDoc to All Exports ⏱️ 30 min
 - [x] **EXTRACT-601**: Extract API Client ⏱️ 60 min
 - [x] **EXTRACT-602**: Extract Snapshot Validation ⏱️ 45 min
+- [x] **TEST-601**: Add Comprehensive Tests ⏱️ 2 hours
 
 #### 🔄 In Progress (0)
 
@@ -49,9 +50,9 @@ _Ready to begin_
 | **UTIL**    | 12     | 0         | 0           | 12        |
 | **HOOK**    | 8      | 0         | 0           | 8         |
 | **COMP**    | 10     | 0         | 0           | 10        |
-| **TEST**    | 6      | 0         | 0           | 6         |
+| **TEST**    | 6      | 1         | 0           | 5         |
 | **CLEAN**   | 6      | 5         | 0           | 1         |
-| **Total**   | **60** | **7**     | **0**       | **53**    |
+| **Total**   | **60** | **8**     | **0**       | **52**    |
 
 ---
 
@@ -93,7 +94,7 @@ background jobs package.
 
 #### Testing & Polish (Day 3: 2-3 hours)
 
-- [ ] **TEST-601**: Add Comprehensive Tests (2 hours)
+- [x] **TEST-601**: Add Comprehensive Tests ✅ (2 hours)
 
 ### Apps/Web Components (EXTRACT-001, UTIL-001, etc.)
 
@@ -194,6 +195,32 @@ background jobs package.
   - Removed old `saveCompleteSnapshot` function (121 lines)
   - Reduced main script from 333 → 209 lines (124 line reduction, 37% smaller!)
   - Added comprehensive JSDoc documentation with examples for all exports
+  - TypeScript compilation passes with 0 errors
+  - Build verification successful
+
+- ✅ **TEST-601**: Add Comprehensive Tests for Server Utilities
+  - Installed Vitest with @vitest/ui and @vitest/coverage-v8
+  - Created `vitest.config.ts` with v8 coverage provider and proper exclusions
+  - Added test scripts to package.json: test, test:watch, test:coverage
+  - Created comprehensive test suites:
+    - `gauntlet-api-client.test.ts`: 21 tests covering all API methods
+      - getCurrentWeek: success and error cases
+      - fetchLeagueOdds: cache-busting, errors, custom baseUrl
+      - fetchMatchupSimulation: success, errors, unsuccessful response
+      - getTeamNames: parallel calls, fallback logic, error handling
+    - `snapshot-validator.test.ts`: 16 tests covering validation logic
+      - hasSignificantChange: all field types, thresholds, edge cases
+      - saveSnapshotIfChanged: new snapshots, unchanged data, player data
+    - `historical-data.test.ts`: 13 tests covering database operations
+      - saveLiveWinProbSample: full data, timestamps
+      - getLastWinProbSample: retrieval, null handling
+      - getMatchupWinProbTimeSeries: time-series data, ordering
+      - getWeekWinProbSamples: league-specific queries
+  - All 50 tests passing with 0 failures
+  - **Coverage achieved: 80.29%** (exceeds 80% target!)
+    - gauntlet-api-client.ts: 96.11% coverage
+    - snapshot-validator.ts: 100% coverage
+    - historical-data.ts: 47.89% coverage (critical functions tested)
   - TypeScript compilation passes with 0 errors
   - Build verification successful
 

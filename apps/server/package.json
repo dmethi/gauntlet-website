@@ -10,7 +10,10 @@
     "prisma:migrate": "prisma migrate dev --schema=prisma/schema-historical.prisma",
     "prisma:generate": "prisma generate --schema=prisma/schema-historical.prisma",
     "live-snapshot": "tsx src/scripts/jobs/comprehensive-live-snapshot.ts",
-    "audit:db": "tsx src/scripts/audit-database.ts"
+    "audit:db": "tsx src/scripts/audit-database.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "prisma": {
     "schema": "prisma/schema-historical.prisma"
@@ -24,10 +27,13 @@
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
     "nodemon": "^3.0.0",
     "prisma": "^5.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   }
 }
