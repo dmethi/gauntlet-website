@@ -5,10 +5,10 @@
 
 import varianceData from './variance-data.json';
 import type {
-  VarianceData,
-  PositionVarianceRecord,
   PlayerVarianceRecord,
+  PositionVarianceRecord,
   ProjectionErrorRecord,
+  VarianceData,
 } from './variance-data.types';
 
 // Type assertion for imported JSON
@@ -23,7 +23,7 @@ const playerOutcomeCache = new Map<
 >();
 
 // Initialize caches
-function initializeCaches() {
+const initializeCaches = (): void => {
   // Index position variance by position-season key
   for (const record of data.positionVariance) {
     const key = `${record.position}-${record.season}`;
@@ -39,7 +39,7 @@ function initializeCaches() {
   console.log(`✅ Loaded ${data.positionVariance.length} position variance records`);
   console.log(`✅ Loaded ${data.playerVariance.length} player variance records`);
   console.log(`✅ Loaded ${data.projectionErrors.length} projection error records`);
-}
+};
 
 // Initialize on module load
 initializeCaches();
@@ -48,10 +48,12 @@ initializeCaches();
  * Get position distribution from static data
  * Replaces: prisma.positionVariance.findUnique()
  */
-export async function getPositionDistribution(position: string): Promise<{
+export const getPositionDistribution = async (
+  position: string
+): Promise<{
   outcomes: number[];
   sampleSize: number;
-}> {
+}> => {
   // Try current season first, fallback to most recent
   const seasons = ['2025', '2024', '2023'];
 
@@ -73,16 +75,18 @@ export async function getPositionDistribution(position: string): Promise<{
   // Fallback to default variance if no data found
   console.warn(`No position variance data found for ${position}, using defaults`);
   return getDefaultPositionVariance(position);
-}
+};
 
 /**
  * Get player outcomes from static projection error data
  * Replaces: prisma.projectionError.findMany()
  */
-export async function getPlayerOutcomes(playerId: string): Promise<{
+export const getPlayerOutcomes = async (
+  playerId: string
+): Promise<{
   outcomes: number[];
   sampleSize: number;
-}> {
+}> => {
   // Check cache first (expire after 1 hour)
   const cached = playerOutcomeCache.get(playerId);
   if (cached && Date.now() - cached.lastUpdated.getTime() < 60 * 60 * 1000) {
@@ -133,12 +137,12 @@ export async function getPlayerOutcomes(playerId: string): Promise<{
     console.error('Error getting player outcomes:', error);
     return { outcomes: [], sampleSize: 0 };
   }
-}
+};
 
 /**
  * Generate synthetic normal distribution outcomes
  */
-function generateNormalDistribution(mean: number, stdDev: number, sampleSize: number): number[] {
+const generateNormalDistribution = (mean: number, stdDev: number, sampleSize: number): number[] => {
   const outcomes: number[] = [];
   const targetSize = Math.min(sampleSize, 100); // Cap at 100 for performance
 
@@ -154,12 +158,14 @@ function generateNormalDistribution(mean: number, stdDev: number, sampleSize: nu
   }
 
   return outcomes.sort((a, b) => a - b);
-}
+};
 
 /**
  * Default position variance for fallback
  */
-function getDefaultPositionVariance(position: string): { outcomes: number[]; sampleSize: number } {
+const getDefaultPositionVariance = (
+  position: string
+): { outcomes: number[]; sampleSize: number } => {
   const defaults: Record<string, { mean: number; stdDev: number; sampleSize: number }> = {
     QB: { mean: 0.05, stdDev: 0.25, sampleSize: 50 },
     RB: { mean: 0.0, stdDev: 0.35, sampleSize: 50 },
@@ -173,16 +179,21 @@ function getDefaultPositionVariance(position: string): { outcomes: number[]; sam
   const outcomes = generateNormalDistribution(config.mean, config.stdDev, config.sampleSize);
 
   return { outcomes, sampleSize: config.sampleSize };
-}
+};
 
 /**
  * Get data export info
  */
-export function getDataInfo() {
+export const getDataInfo = (): {
+  exportedAt: string;
+  positionVarianceCount: number;
+  playerVarianceCount: number;
+  projectionErrorCount: number;
+} => {
   return {
     exportedAt: data.exportedAt,
     positionVarianceCount: data.positionVariance.length,
     playerVarianceCount: data.playerVariance.length,
     projectionErrorCount: data.projectionErrors.length,
   };
-}
+};

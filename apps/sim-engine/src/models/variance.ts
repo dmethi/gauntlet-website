@@ -1,7 +1,7 @@
 // Import static variance data loader instead of Prisma
 import {
-  getPositionDistribution as getPositionDistributionStatic,
   getPlayerOutcomes as getPlayerOutcomesStatic,
+  getPositionDistribution as getPositionDistributionStatic,
 } from '../data/variance-loader';
 
 /**
@@ -13,7 +13,7 @@ import {
  * K: Moderate variance, weather/game script dependent
  * DST: High variance due to turnover and TD randomness
  */
-function getPositionStdDev(position: string): number {
+const getPositionStdDev = (position: string): number => {
   const positionVariance: Record<string, number> = {
     QB: 0.28, // Most consistent - high volume, predictable usage
     RB: 0.48, // Highest variance - game script, injury, TD dependent
@@ -25,7 +25,7 @@ function getPositionStdDev(position: string): number {
   };
 
   return positionVariance[position] || 0.4; // Default fallback
-}
+};
 
 // Cache historical distributions to avoid repeated DB hits
 const positionDistributionCache = new Map<
@@ -50,10 +50,12 @@ const playerOutcomeCache = new Map<
 /**
  * Get historical distribution of outcomes for a position
  */
-async function getPositionDistribution(position: string): Promise<{
+const getPositionDistribution = async (
+  position: string
+): Promise<{
   outcomes: number[]; // Relative outcomes (actual/projected)
   sampleSize: number;
-}> {
+}> => {
   // Check cache first (expire after 1 hour)
   const cached = positionDistributionCache.get(position);
   if (cached && Date.now() - cached.lastUpdated.getTime() < 60 * 60 * 1000) {
@@ -92,15 +94,17 @@ async function getPositionDistribution(position: string): Promise<{
       sampleSize: 0,
     };
   }
-}
+};
 
 /**
  * Get historical outcomes for a specific player
  */
-async function getPlayerOutcomes(playerId: string): Promise<{
+const getPlayerOutcomes = async (
+  playerId: string
+): Promise<{
   outcomes: number[]; // Relative outcomes (actual/projected)
   sampleSize: number;
-}> {
+}> => {
   // Check cache first (expire after 1 hour)
   const cached = playerOutcomeCache.get(playerId);
   if (cached && Date.now() - cached.lastUpdated.getTime() < 60 * 60 * 1000) {
@@ -123,24 +127,24 @@ async function getPlayerOutcomes(playerId: string): Promise<{
     console.error('Error getting player outcomes:', error);
     return { outcomes: [], sampleSize: 0 };
   }
-}
+};
 
 /**
  * Sample randomly from an array of values
  */
-function randomSample<T>(arr: T[]): T {
+const randomSample = <T>(arr: T[]): T => {
   return arr[Math.floor(Math.random() * arr.length)];
-}
+};
 
 /**
  * Simulate a single score for a player using Monte Carlo sampling
  */
-export async function simulatePlayerScore(
+export const simulatePlayerScore = async (
   playerId: string,
   position: string,
   projection: number,
   gameProgress: number = 0
-): Promise<number> {
+): Promise<number> => {
   // Validate inputs
   if (projection < 0) {
     throw new Error(`Invalid projection: ${projection}`);
@@ -180,12 +184,12 @@ export async function simulatePlayerScore(
 
   // Apply the sampled relative outcome to the projection
   return projection * relativeOutcome;
-}
+};
 
 /**
  * Simulate multiple scores for a player
  */
-export async function simulatePlayerRange(
+export const simulatePlayerRange = async (
   playerId: string,
   position: string,
   projection: number,
@@ -199,7 +203,7 @@ export async function simulatePlayerRange(
   mean: number;
   positionDist: { sampleSize: number };
   playerOutcomes: { sampleSize: number };
-}> {
+}> => {
   const scores: number[] = [];
 
   // Get distributions for reporting
@@ -224,9 +228,9 @@ export async function simulatePlayerRange(
     positionDist: { sampleSize: positionDist.sampleSize },
     playerOutcomes: { sampleSize: playerOutcomes.sampleSize },
   };
-}
+};
 
-export async function getVarianceModel(
+export const getVarianceModel = async (
   playerId: string,
   position: string,
   projection: number
@@ -239,7 +243,7 @@ export async function getVarianceModel(
   mean: number;
   positionDist: { sampleSize: number };
   playerOutcomes: { sampleSize: number };
-}> {
+}> => {
   const scores: number[] = [];
 
   // Get distributions for reporting
@@ -268,7 +272,7 @@ export async function getVarianceModel(
     positionDist: { sampleSize: positionDist.sampleSize },
     playerOutcomes: { sampleSize: playerOutcomes.sampleSize },
   };
-}
+};
 
 // Clean up caches periodically
 setInterval(
@@ -289,10 +293,10 @@ export type { SamplingContext };
  * Build a sampling context for a set of players and positions.
  * Fetches and prepares distributions once to enable synchronous sampling.
  */
-export async function buildSamplingContext(
+export const buildSamplingContext = async (
   playerIds: string[],
   positions: string[]
-): Promise<SamplingContext> {
+): Promise<SamplingContext> => {
   const uniquePlayerIds = Array.from(new Set(playerIds));
   const uniquePositions = Array.from(new Set(positions));
 
@@ -325,19 +329,19 @@ export async function buildSamplingContext(
     playerSampleCounts,
     positionSampleCounts,
   };
-}
+};
 
 /**
  * Fast synchronous sampling using a prefetched context.
  * Falls back to position outcomes when player data is sparse.
  */
-export function samplePlayerScoreFromContext(
+export const samplePlayerScoreFromContext = (
   ctx: SamplingContext,
   playerId: string,
   position: string,
   projection: number,
   gameProgress: number = 0
-): number {
+): number => {
   if (projection < 0) {
     throw new Error(`Invalid projection: ${projection}`);
   }
@@ -347,10 +351,10 @@ export function samplePlayerScoreFromContext(
 
   const positionOutcomes = ctx.positionToOutcomes.get(position) || [];
   const playerOutcomes = ctx.playerToOutcomes.get(playerId) || [];
-  const playerN = ctx.playerSampleCounts.get(playerId) || 0;
+  const _playerN = ctx.playerSampleCounts.get(playerId) || 0;
 
   // TEMPORARY FIX: Disable player-specific data since it contains outliers
-  const usePlayerData = false; // was: playerN >= 8 && playerOutcomes.length > 0;
+  const usePlayerData = false; // was: _playerN >= 8 && playerOutcomes.length > 0;
 
   // Sample a relative outcome
   let relativeOutcome: number;
@@ -372,4 +376,4 @@ export function samplePlayerScoreFromContext(
   }
 
   return projection * relativeOutcome;
-}
+};

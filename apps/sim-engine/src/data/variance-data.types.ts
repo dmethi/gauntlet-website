@@ -1,8 +1,8 @@
 // Auto-generated variance data interfaces
 // Now imported from central types package
 import type {
-  PositionVarianceRecord,
   PlayerVarianceRecord,
+  PositionVarianceRecord,
   ProjectionErrorRecord,
   VarianceData,
 } from '@gauntlet/types';

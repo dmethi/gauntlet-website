@@ -3,19 +3,20 @@ import {
   samplePlayerScoreFromContext,
   simulatePlayerScore,
 } from './variance';
-import type { LineupPlayer, Lineup, MatchupResult, MatchupSimulationResult } from '@gauntlet/types';
+import type { Lineup, LineupPlayer, MatchupResult, MatchupSimulationResult } from '@gauntlet/types';
 
 // Re-export for backwards compatibility
 export type { LineupPlayer, Lineup, MatchupResult, MatchupSimulationResult };
 
 /**
  * Simulate a single matchup between two lineups
+ * @internal Reserved for future use
  */
-async function simulateMatchup(
+const _simulateMatchup = async (
   team1: Lineup,
   team2: Lineup,
   gameProgress: number = 0
-): Promise<MatchupResult> {
+): Promise<MatchupResult> => {
   // Validate no duplicate players
   const team1Players = new Set([
     team1.qb.id,
@@ -75,23 +76,23 @@ async function simulateMatchup(
     winner: team1Total > team2Total ? 1 : 2,
     margin: Math.abs(team1Total - team2Total),
   };
-}
+};
 
 /**
  * Convert win probability to American odds
  */
-function probToMoneyLine(probability: number): number {
+const probToMoneyLine = (probability: number): number => {
   if (probability > 0.5) {
     return -Math.round((probability / (1 - probability)) * 100);
   } else {
     return Math.round(((1 - probability) / probability) * 100);
   }
-}
+};
 
 /**
  * Calculate betting lines from simulation results
  */
-function calculateBettingLines(
+const calculateBettingLines = (
   results: MatchupResult[],
   team1Scores: number[],
   team2Scores: number[]
@@ -100,7 +101,7 @@ function calculateBettingLines(
   total: number;
   team1MoneyLine: number;
   team2MoneyLine: number;
-} {
+} => {
   // Sort margins for median
   const margins = results.map(r => (r.winner === 1 ? r.margin : -r.margin)).sort((a, b) => a - b);
 
@@ -128,18 +129,18 @@ function calculateBettingLines(
     team1MoneyLine: probToMoneyLine(team1WinPct),
     team2MoneyLine: probToMoneyLine(1 - team1WinPct),
   };
-}
+};
 
 /**
  * Simulate from arbitrary arrays of players (dynamic roster sizes, incl. SUPER_FLEX)
  */
-export async function simulateMatchupProbabilityFromPlayers(
+export const simulateMatchupProbabilityFromPlayers = async (
   team1Players: LineupPlayer[],
   team2Players: LineupPlayer[],
   iterations: number = 10000,
   gameProgress: number = 0,
   liveNflTeams?: Set<string>
-): Promise<MatchupSimulationResult> {
+): Promise<MatchupSimulationResult> => {
   const results: MatchupResult[] = [];
   const team1Scores: number[] = [];
   const team2Scores: number[] = [];
@@ -278,17 +279,17 @@ export async function simulateMatchupProbabilityFromPlayers(
     },
     impliedOdds,
   };
-}
+};
 
 /**
  * Simulate many matchups to get win probabilities and betting lines
  */
-export async function simulateMatchupProbability(
+export const simulateMatchupProbability = async (
   team1: Lineup | LineupPlayer[],
   team2: Lineup | LineupPlayer[],
   iterations: number = 10000,
   gameProgress: number = 0
-): Promise<MatchupSimulationResult> {
+): Promise<MatchupSimulationResult> => {
   const team1Players: LineupPlayer[] = Array.isArray(team1) ? team1 : Object.values(team1);
   const team2Players: LineupPlayer[] = Array.isArray(team2) ? team2 : Object.values(team2);
   return simulateMatchupProbabilityFromPlayers(
@@ -297,4 +298,4 @@ export async function simulateMatchupProbability(
     iterations,
     gameProgress
   );
-}
+};
