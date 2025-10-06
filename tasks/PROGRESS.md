@@ -2,9 +2,9 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 27.1% (19/70 tasks)  
+**Overall Progress**: 25.0% (21/84 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
-**Apps/Sim-Engine Progress**: 26.7% (4/15 sim-engine tasks complete)
+**Apps/Sim-Engine Progress**: 40.0% (6/15 sim-engine tasks complete)
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (19)
+#### ✅ Completed (21)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -33,6 +33,8 @@
 - [x] **SIM-602**: Convert All Functions to Arrow Functions (sim-engine) ⏱️ 45 min
 - [x] **SIM-603**: Add Barrel Exports (index.ts) (sim-engine) ⏱️ 20 min
 - [x] **SIM-604**: Add JSDoc to All Exported Functions (sim-engine) ⏱️ 45 min
+- [x] **SIM-605**: Add Comprehensive Test Suite (sim-engine) ⏱️ 2 hours
+- [x] **SIM-606**: Migrate from Jest to Vitest (sim-engine) ⏱️ 30 min
 
 #### 🔄 In Progress (0)
 
@@ -58,12 +60,12 @@ _Ready to begin_
 
 | Category            | Total  | Completed | In Progress | Remaining |
 | ------------------- | ------ | --------- | ----------- | --------- |
-| **SETUP**           | 9      | 2         | 0           | 7         |
+| **SETUP**           | 9      | 3         | 0           | 6         |
 | **EXTRACT**         | 12     | 2         | 0           | 10        |
 | **UTIL**            | 12     | 0         | 0           | 12        |
 | **HOOK**            | 8      | 0         | 0           | 8         |
 | **COMP**            | 10     | 0         | 0           | 10        |
-| **TEST**            | 7      | 1         | 0           | 6         |
+| **TEST**            | 7      | 3         | 0           | 4         |
 | **CLEAN**           | 7      | 5         | 0           | 2         |
 | **REFACTOR**        | 4      | 3         | 0           | 1         |
 | **OBSERVABILITY**   | 4      | 2         | 0           | 2         |
@@ -71,7 +73,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3      | 0         | 0           | 3         |
 | **DOCUMENTATION**   | 2      | 0         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **84** | **16**    | **0**       | **68**    |
+| **Total**           | **84** | **21**    | **0**       | **63**    |
 
 ---
 
@@ -179,10 +181,10 @@ _Ready to begin_
 - [x] **SIM-603**: Add Barrel Exports (index.ts) ⏱️ 20 min [MEDIUM] ✅
 - [x] **SIM-604**: Add JSDoc to All Exported Functions ⏱️ 45 min [HIGH] ✅
 
-#### Phase 2: Testing Infrastructure (3 hours)
+#### Phase 2: Testing Infrastructure (3 hours) ✅ COMPLETE
 
-- [ ] **SIM-605**: Add Comprehensive Test Suite ⏱️ 2 hours [CRITICAL]
-- [ ] **SIM-606**: Migrate from Jest to Vitest ⏱️ 30 min [MEDIUM]
+- [x] **SIM-605**: Add Comprehensive Test Suite ⏱️ 2 hours [CRITICAL] ✅
+- [x] **SIM-606**: Migrate from Jest to Vitest ⏱️ 30 min [MEDIUM] ✅
 
 #### Phase 3: Observability (1.5 hours)
 
@@ -210,6 +212,52 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **SIM-606**: Migrate from Jest to Vitest (sim-engine)
+  - Removed Jest dependencies (jest, @types/jest, ts-jest)
+  - Installed Vitest 3.2.4 with @vitest/ui and @vitest/coverage-v8
+  - Created `vitest.config.ts` with 80% coverage thresholds (lines, functions, statements)
+  - Updated test scripts: `test`, `test:watch`, `test:coverage`, `test:ui`
+  - Updated `tsconfig.json` to exclude test files and `__tests__` directories
+  - Configured coverage exclusions for barrel exports and configuration files
+  - Verified Vitest runs successfully (exits with code 1 for no tests, expected behavior)
+  - TypeScript compilation passes with 0 errors
+  - **Outcome**: Testing infrastructure ready for comprehensive test suite
+  - **Compliance**: Matches apps/server Vitest setup for consistency
+
+- ✅ **SIM-605**: Add Comprehensive Test Suite (sim-engine)
+  - Created 3 test files with 53 total tests (exceeded 45 target)
+  - **matchup.test.ts**: 17 tests for simulation logic
+    - Win probability calculations and distributions
+    - Live game scenarios with currentScore
+    - Variance reduction with game progress
+    - Betting odds calculations (spread, moneyline, total)
+    - Edge cases (zero projections, high projections, minimum iterations)
+    - Performance test: 1000 iterations in <5 seconds
+  - **variance.test.ts**: 23 tests for variance calculations
+    - Sampling context building and caching
+    - Player score sampling with game progress
+    - Variance reduction validation
+    - Input validation (negative projections, invalid game progress)
+    - Edge cases (zero projection, unknown players, large/small projections)
+    - Performance test: 10,000 samples in <200ms
+  - **variance-loader.test.ts**: 13 tests for data loading
+    - Position distribution loading for all positions (QB, RB, WR, TE, K, DEF)
+    - Player outcome loading and normalization
+    - Caching behavior validation
+    - Fallback to defaults for unknown positions
+    - Data info metadata validation
+  - All 53 tests passing with 0 failures
+  - **Coverage achieved: 81.01%** (exceeds 80% target!)
+    - Statements: 81.01%
+    - Branches: 92.24%
+    - Functions: 90.47%
+    - Lines: 81.01%
+  - Test execution: 351ms (well under 30 second target)
+  - Used small iteration counts (10-200) for Monte Carlo tests to maintain speed
+  - Fixed flaky variance test by properly testing live game scenarios
+  - **Outcome**: Enterprise-ready test coverage validates Monte Carlo accuracy, variance reduction, and edge cases
+  - **Compliance**: Follows apps/server testing patterns with Vitest
 
 - ✅ **SIM-604**: Add JSDoc to All Exported Functions (sim-engine)
   - Added comprehensive JSDoc to all 11 exported functions across 4 files
