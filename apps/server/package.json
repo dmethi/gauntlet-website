@@ -1,7 +1,7 @@
 {
   "name": "@gauntlet/server",
   "version": "0.1.0",
-  "description": "Background jobs for Gauntlet - live odds capture, database audit",
+  "description": "Background jobs for Gauntlet - live odds capture and historical tracking",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,6 @@
     "prisma:migrate": "prisma migrate dev --schema=prisma/schema-historical.prisma",
     "prisma:generate": "prisma generate --schema=prisma/schema-historical.prisma",
     "live-snapshot": "tsx src/scripts/jobs/comprehensive-live-snapshot.ts",
-    "audit:db": "tsx src/scripts/audit-database.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

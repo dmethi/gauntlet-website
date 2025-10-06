@@ -42,6 +42,8 @@ export const logger = pino({
  * const jobLogger = createChildLogger({ job: 'live-snapshot', week: 4 });
  * jobLogger.info('Starting job');
  */
-export const createChildLogger = (bindings: Record<string, unknown>) => {
+export const createChildLogger = (
+  bindings: Record<string, unknown>
+): ReturnType<typeof logger.child> => {
   return logger.child(bindings);
 };

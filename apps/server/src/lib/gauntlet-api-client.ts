@@ -38,13 +38,13 @@ export const createGauntletAPIClient = (
   metrics?: Metrics
 ): {
   getCurrentWeek: () => Promise<number>;
-  fetchLeagueOdds: (week: number) => Promise<LeagueOddsResponse>;
+  fetchLeagueOdds: (_week: number) => Promise<LeagueOddsResponse>;
   fetchMatchupSimulation: (
-    leagueId: string,
-    week: number,
-    matchupId: number
+    _leagueId: string,
+    _week: number,
+    _matchupId: number
   ) => Promise<MatchupSimulationResponse>;
-  getTeamNames: (leagueId: string) => Promise<Map<number, string>>;
+  getTeamNames: (_leagueId: string) => Promise<Map<number, string>>;
 } => {
   const baseUrl = options.baseUrl || 'https://gauntlet-website.vercel.app';
   const timeout = options.timeout || 30000;

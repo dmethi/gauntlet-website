@@ -34,9 +34,14 @@ export default [
         Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
-        // Web globals
+        // Web globals (Node 18+)
         fetch: 'readonly',
+        Request: 'readonly',
+        Response: 'readonly',
+        Headers: 'readonly',
+        RequestInit: 'readonly',
         AbortSignal: 'readonly',
+        AbortController: 'readonly',
         setTimeout: 'readonly',
         setInterval: 'readonly',
         clearTimeout: 'readonly',
@@ -51,12 +56,22 @@ export default [
       // Code conventions enforcement
       'prefer-arrow-callback': 'error',
       'func-style': ['error', 'expression'],
-      'no-console': 'warn',
+      // Disable no-console - we use structured logging (logger)
+      // Only console statements remaining are in JSDoc examples
+      'no-console': 'off',
+      // Disable base rule - TypeScript version handles this
+      'no-unused-vars': 'off',
 
       // TypeScript rules
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_|^e$' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
 
       // Import rules
       'sort-imports': [

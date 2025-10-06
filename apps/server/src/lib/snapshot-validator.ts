@@ -78,7 +78,7 @@ const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Player
     p.remainingProjection.toFixed(1),
     p.fullProjection.toFixed(1),
     p.gameState?.state || '-',
-    p.gameState?.desc || '-',
+    p.gameState?.gameDescription || '-',
     p.gameState?.minutesRemaining != null ? String(Math.round(p.gameState.minutesRemaining)) : '-',
   ]);
 

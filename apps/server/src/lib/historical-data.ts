@@ -15,6 +15,7 @@ import {
   type LeagueOddsHistory,
   type LiveWinProbSample,
   type MatchupOddsHistory,
+  type Prisma,
   PrismaClient,
 } from '../generated/prisma-historical';
 
@@ -197,22 +198,28 @@ export const saveMatchupOddsHistory = async (data: {
  */
 export const saveLeagueOddsHistory = async (data: {
   week: number;
-  highestScorerOdds: any;
-  lowestScorerOdds: any;
-  closestMatchup: any;
-  biggestBlowout: any;
-  highestScoringMatchup?: any;
-  lowestScoringMatchup?: any;
+  highestScorerOdds: Prisma.InputJsonValue;
+  lowestScorerOdds: Prisma.InputJsonValue;
+  closestMatchup: Prisma.InputJsonValue;
+  biggestBlowout: Prisma.InputJsonValue;
+  highestScoringMatchup?: Prisma.InputJsonValue;
+  lowestScoringMatchup?: Prisma.InputJsonValue;
   isLive?: boolean;
   triggeredBy: string;
   computeTimeMs?: number;
 }): Promise<LeagueOddsHistory> => {
   return prisma.leagueOddsHistory.create({
     data: {
-      ...data,
+      week: data.week,
+      highestScorerOdds: data.highestScorerOdds,
+      lowestScorerOdds: data.lowestScorerOdds,
+      closestMatchup: data.closestMatchup,
+      biggestBlowout: data.biggestBlowout,
       highestScoringMatchup: data.highestScoringMatchup || [],
       lowestScoringMatchup: data.lowestScoringMatchup || [],
       isLive: data.isLive ?? false,
+      triggeredBy: data.triggeredBy,
+      computeTimeMs: data.computeTimeMs,
     },
   });
 };

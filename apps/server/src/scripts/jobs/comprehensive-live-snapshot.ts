@@ -10,12 +10,18 @@
 
 import {
   createChildLogger,
+  createGauntletAPIClient,
   createMetrics,
   disconnect,
-  createGauntletAPIClient,
+  logger,
   saveSnapshotIfChanged,
 } from '@/lib';
-import type { CompleteSnapshot } from '@gauntlet/types';
+import type {
+  CompleteSnapshot,
+  DebugPlayer,
+  SimulationPlayer,
+  SleeperMatchup,
+} from '@gauntlet/types';
 
 /**
  * Helper to capture individual matchup data combining API and Sleeper data
@@ -32,8 +38,8 @@ const captureIndividualMatchup = async (
     const sleeperResponse = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`
     );
-    const matchups = await sleeperResponse.json();
-    const matchupPair = matchups.filter((m: any) => m.matchup_id === matchupId);
+    const matchups = (await sleeperResponse.json()) as SleeperMatchup[];
+    const matchupPair = matchups.filter(m => m.matchup_id === matchupId);
 
     if (matchupPair.length !== 2) return null;
 
@@ -41,51 +47,29 @@ const captureIndividualMatchup = async (
     const data = await apiClient.fetchMatchupSimulation(leagueId, week, matchupId);
     const sim = data.simulation;
 
-    const toDebugPlayers = (
-      players: any[]
-    ): Array<{
-      name: string;
-      position: string;
-      nflTeam: string;
-      currentScore: number;
-      remainingProjection: number;
-      fullProjection: number;
-      gameState?: { state: string; desc: string; minutesRemaining: number };
-    }> =>
+    const toDebugPlayers = (players: SimulationPlayer[]): DebugPlayer[] =>
       players.map(p => ({
         name: p.name || p.playerName || p.id,
         position: p.position || 'FLEX',
-        nflTeam: p.nflTeam,
-        currentScore: Number(p.currentScore || 0),
-        remainingProjection: Number(p.projection || 0),
-        fullProjection: Number(p.fullProjection || p.projection || 0),
-        gameState: p.gameState
-          ? {
-              state: String(p.gameState.state),
-              desc: String(p.gameState.gameDescription || ''),
-              minutesRemaining: Number(p.gameState.minutesRemaining ?? 0),
-            }
-          : undefined,
+        nflTeam: p.nflTeam || '',
+        currentScore: p.currentScore,
+        remainingProjection: p.projection,
+        fullProjection: p.fullProjection || p.projection,
+        gameState: p.gameState,
       }));
 
     const team1Players = toDebugPlayers(sim.teams?.[0]?.players || []);
     const team2Players = toDebugPlayers(sim.teams?.[1]?.players || []);
 
     // Extract the EXACT data your screenshot shows
-    const team1RawProj = sim.teams[0].players.reduce(
-      (sum: number, p: any) => sum + p.projection,
-      0
-    );
-    const team2RawProj = sim.teams[1].players.reduce(
-      (sum: number, p: any) => sum + p.projection,
-      0
-    );
+    const team1RawProj = sim.teams[0].players.reduce((sum, p) => sum + p.projection, 0);
+    const team2RawProj = sim.teams[1].players.reduce((sum, p) => sum + p.projection, 0);
 
     // Use FRESH current scores from direct Sleeper API instead of cached simulation data
     const team1CurrentScore =
-      matchupPair.find((m: any) => m.roster_id === sim.teams[0].rosterId)?.points || 0;
+      matchupPair.find(m => m.roster_id === sim.teams[0].rosterId)?.points || 0;
     const team2CurrentScore =
-      matchupPair.find((m: any) => m.roster_id === sim.teams[1].rosterId)?.points || 0;
+      matchupPair.find(m => m.roster_id === sim.teams[1].rosterId)?.points || 0;
 
     // The simulated means are what show as "Proj:" in your screenshot
     const team1SimMean = sim.team1Scores.mean;
@@ -138,10 +122,14 @@ const captureIndividualMatchup = async (
       team2Players,
     };
   } catch (error) {
-    console.error(
-      `❌ Failed to capture matchup ${matchupId}:`,
-      error instanceof Error ? error.message : String(error)
-    );
+    logger.error({
+      event: 'matchup_capture_failed',
+      matchupId,
+      leagueId,
+      week,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return null;
   }
 };
@@ -235,8 +223,12 @@ const main = async (): Promise<void> => {
 
 main()
   .catch(e => {
-    // Use console.error for fatal errors to ensure visibility
-    console.error('❌ Fatal error:', e);
+    logger.error({
+      event: 'fatal_error',
+      error: e instanceof Error ? e.message : String(e),
+      stack: e instanceof Error ? e.stack : undefined,
+      message: 'Fatal error in live snapshot job',
+    });
     process.exit(1);
   })
   .finally(async () => {

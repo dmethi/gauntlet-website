@@ -4,9 +4,59 @@
  * Types used by the server package (background jobs, API clients, database operations)
  */
 
+import type { ImpliedOdds, ScoreDistribution } from './simulation';
+
 // ============================================================================
 // Gauntlet API Client Types
 // ============================================================================
+
+/**
+ * Game state information for a player
+ */
+export interface GameState {
+  state: string;
+  gameDescription?: string;
+  minutesRemaining?: number;
+}
+
+/**
+ * Team snapshot data for matchup tracking
+ */
+export interface TeamSnapshot {
+  rosterId: number;
+  rawProjectionTotal: number;
+  simulatedMean: number;
+  currentScore: number;
+  winProbability: number;
+}
+
+/**
+ * Debug player information for detailed tracking
+ */
+export interface DebugPlayer {
+  name: string;
+  position: string;
+  nflTeam?: string;
+  currentScore: number;
+  remainingProjection: number;
+  fullProjection: number;
+  gameState?: GameState;
+}
+
+/**
+ * Player data from simulation API responses
+ */
+export interface SimulationPlayer {
+  id: string;
+  name?: string;
+  playerName?: string;
+  position?: string;
+  nflTeam?: string;
+  currentScore: number;
+  projection: number;
+  fullProjection?: number;
+  gameState?: GameState;
+}
 
 /**
  * Configuration options for GauntletAPIClient
@@ -45,40 +95,13 @@ export interface MatchupSimulationResponse {
   simulation: {
     team1WinPct: number;
     team2WinPct: number;
-    team1Scores: {
-      mean: number;
-      median: number;
-      p25: number;
-      p75: number;
-    };
-    team2Scores: {
-      mean: number;
-      median: number;
-      p25: number;
-      p75: number;
-    };
+    team1Scores: ScoreDistribution;
+    team2Scores: ScoreDistribution;
     teams: Array<{
       rosterId: number;
-      players: Array<{
-        id: string;
-        name?: string;
-        playerName?: string;
-        position?: string;
-        nflTeam?: string;
-        currentScore: number;
-        projection: number;
-        fullProjection?: number;
-        gameState?: {
-          state: string;
-          gameDescription?: string;
-          minutesRemaining?: number;
-        };
-      }>;
+      players: SimulationPlayer[];
     }>;
-    impliedOdds: {
-      spread: number;
-      total: number;
-    };
+    impliedOdds: ImpliedOdds;
   };
 }
 
@@ -96,20 +119,8 @@ export interface CompleteSnapshot {
   matchupId: number;
 
   // From Individual Matchup API (detailed data)
-  team1: {
-    rosterId: number;
-    rawProjectionTotal: number;
-    simulatedMean: number; // This is what shows in your screenshot as "Proj:"
-    currentScore: number;
-    winProbability: number;
-  };
-  team2: {
-    rosterId: number;
-    rawProjectionTotal: number;
-    simulatedMean: number; // This is what shows in your screenshot as "Proj:"
-    currentScore: number;
-    winProbability: number;
-  };
+  team1: TeamSnapshot;
+  team2: TeamSnapshot;
 
   // From League Odds API (team rankings)
   team1LeagueRank?: number;
@@ -127,24 +138,8 @@ export interface CompleteSnapshot {
   team2Name?: string;
 
   // Enhanced debug fields (not persisted): per-player breakdowns
-  team1Players?: Array<{
-    name: string;
-    position: string;
-    nflTeam?: string;
-    currentScore: number;
-    remainingProjection: number;
-    fullProjection: number;
-    gameState?: { state: string; desc?: string; minutesRemaining?: number };
-  }>;
-  team2Players?: Array<{
-    name: string;
-    position: string;
-    nflTeam?: string;
-    currentScore: number;
-    remainingProjection: number;
-    fullProjection: number;
-    gameState?: { state: string; desc?: string; minutesRemaining?: number };
-  }>;
+  team1Players?: DebugPlayer[];
+  team2Players?: DebugPlayer[];
 }
 
 // ============================================================================
@@ -199,6 +194,22 @@ export interface PreviousSnapshot {
 // ============================================================================
 
 /**
+ * Timer statistics for a metric
+ */
+export interface TimerStats {
+  /** Number of measurements */
+  count: number;
+  /** Total time across all measurements (ms) */
+  total: number;
+  /** Average time per measurement (ms) */
+  avg: number;
+  /** Minimum time recorded (ms) */
+  min: number;
+  /** Maximum time recorded (ms) */
+  max: number;
+}
+
+/**
  * Summary of all collected metrics including counters and timers
  */
 export interface MetricsSummary {
@@ -209,21 +220,7 @@ export interface MetricsSummary {
   /**
    * Timer metrics with statistical aggregations
    */
-  timers: Record<
-    string,
-    {
-      /** Number of measurements */
-      count: number;
-      /** Total time across all measurements (ms) */
-      total: number;
-      /** Average time per measurement (ms) */
-      avg: number;
-      /** Minimum time recorded (ms) */
-      min: number;
-      /** Maximum time recorded (ms) */
-      max: number;
-    }
-  >;
+  timers: Record<string, TimerStats>;
 }
 
 /**
