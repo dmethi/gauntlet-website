@@ -1,10 +1,55 @@
-export * from './models/matchup';
-export * from './models/variance';
-export * from './simulations/season-sim';
+// ============================================
+// SIMULATION FUNCTIONS
+// ============================================
 
-// Explicit exports for tree-shaking-friendly named imports
-export { simulateMatchupProbabilityFromPlayers } from './models/matchup';
+// Matchup simulations (primary API)
+export {
+  simulateMatchupProbabilityFromPlayers,
+  simulateMatchupProbability,
+} from './models/matchup';
 
-// Import types from central package and re-export
-import type { MatchupResult, MatchupSimulationResult } from '@gauntlet/types';
-export type { MatchupResult, MatchupSimulationResult };
+// Player variance simulations
+export {
+  simulatePlayerScore,
+  simulatePlayerRange,
+  getVarianceModel,
+  buildSamplingContext,
+  samplePlayerScoreFromContext,
+} from './models/variance';
+
+// Season simulations (experimental)
+export { runSeasonSimulation } from './simulations/season-sim';
+
+// ============================================
+// DATA FUNCTIONS
+// ============================================
+
+export { getPositionDistribution, getPlayerOutcomes, getDataInfo } from './data/variance-loader';
+
+// ============================================
+// TYPE EXPORTS
+// ============================================
+
+export type {
+  LineupPlayer,
+  Lineup,
+  MatchupResult,
+  MatchupSimulationResult,
+  SamplingContext,
+  ScoreDistribution,
+  ImpliedOdds,
+} from '@gauntlet/types';
+
+export type {
+  PositionVarianceRecord,
+  PlayerVarianceRecord,
+  ProjectionErrorRecord,
+  VarianceData,
+} from '@gauntlet/types';
+
+// ============================================
+// BARREL EXPORTS (for sub-module imports)
+// ============================================
+
+export * as models from './models';
+export * as data from './data';

@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayerById } from '@/data/players-loader';
-import {
-  getPlayerOutcomes,
-  getPositionDistribution,
-} from '@gauntlet/sim-engine/src/data/variance-loader';
+import { getPlayerOutcomes, getPositionDistribution } from '@gauntlet/sim-engine/data';
 
 export async function GET(_request: NextRequest, { params }: { params: { playerId: string } }) {
   try {

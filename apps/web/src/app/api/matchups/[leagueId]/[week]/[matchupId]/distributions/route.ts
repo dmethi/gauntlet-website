@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/src/models/matchup';
+import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/models';
 
 export async function GET(
   request: NextRequest,

@@ -2,9 +2,9 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 24.3% (17/70 tasks)  
+**Overall Progress**: 25.7% (18/70 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
-**Apps/Sim-Engine Progress**: 13.3% (2/15 sim-engine tasks complete)
+**Apps/Sim-Engine Progress**: 20.0% (3/15 sim-engine tasks complete)
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (17)
+#### ✅ Completed (18)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -31,6 +31,7 @@
 - [x] **RESILIENCE-601**: Add Retry Logic with Exponential Backoff ⏱️ 50 min
 - [x] **SIM-601**: Add ESLint and Prettier Configuration (sim-engine) ⏱️ 30 min
 - [x] **SIM-602**: Convert All Functions to Arrow Functions (sim-engine) ⏱️ 45 min
+- [x] **SIM-603**: Add Barrel Exports (index.ts) (sim-engine) ⏱️ 20 min
 
 #### 🔄 In Progress (0)
 
@@ -174,7 +175,7 @@ _Ready to begin_
 
 - [x] **SIM-601**: Add ESLint and Prettier Configuration ⏱️ 30 min [HIGH PRIORITY] ✅
 - [x] **SIM-602**: Convert All Functions to Arrow Functions ⏱️ 45 min [HIGH] ✅
-- [ ] **SIM-603**: Add Barrel Exports (index.ts) ⏱️ 20 min [MEDIUM]
+- [x] **SIM-603**: Add Barrel Exports (index.ts) ⏱️ 20 min [MEDIUM] ✅
 - [ ] **SIM-604**: Add JSDoc to All Exported Functions ⏱️ 45 min [HIGH]
 
 #### Phase 2: Testing Infrastructure (3 hours)
@@ -208,6 +209,24 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **SIM-603**: Add Barrel Exports (index.ts) (sim-engine)
+  - Created `src/models/index.ts` barrel export for matchup and variance functions
+  - Created `src/data/index.ts` barrel export for variance data loader functions
+  - Updated `src/index.ts` with organized categories: Simulation Functions, Data Functions, Type Exports, Barrel Exports
+  - Added `exports` field to `package.json` for sub-module imports:
+    - `.` → `dist/src/index.js` (main entry)
+    - `./models` → `dist/src/models/index.js` (models sub-module)
+    - `./data` → `dist/src/data/index.js` (data sub-module)
+  - Updated 2 web app files to use new barrel exports:
+    - `apps/web/.../player/[playerId]/distribution/route.ts`: `@gauntlet/sim-engine/src/data/variance-loader` → `@gauntlet/sim-engine/data`
+    - `apps/web/.../matchups/[leagueId]/[week]/[matchupId]/distributions/route.ts`: `@gauntlet/sim-engine/src/models/matchup` → `@gauntlet/sim-engine/models`
+  - Fixed prettier formatting issues with `pnpm lint:fix`
+  - TypeScript compilation passes with 0 errors
+  - ESLint passes with 0 errors/warnings
+  - Full monorepo build successful (web app now uses clean barrel exports)
+  - **Outcome**: Clean import paths enable `@gauntlet/sim-engine`, `@gauntlet/sim-engine/models`, `@gauntlet/sim-engine/data` imports; improves tree-shaking and code organization
+  - **Compliance**: 100% compliance with CODING_CONVENTIONS.MD for barrel exports and type consolidation
 
 - ✅ **SIM-602**: Convert All Functions to Arrow Functions (sim-engine)
   - Converted all 18 functions across 4 files from regular/async function declarations to arrow functions
