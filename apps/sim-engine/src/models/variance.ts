@@ -282,12 +282,8 @@ setInterval(
 /**
  * Prefetched sampling context for fast synchronous Monte Carlo loops
  */
-export interface SamplingContext {
-  positionToOutcomes: Map<string, number[]>;
-  playerToOutcomes: Map<string, number[]>;
-  playerSampleCounts: Map<string, number>;
-  positionSampleCounts: Map<string, number>;
-}
+import type { SamplingContext } from '@gauntlet/types';
+export type { SamplingContext };
 
 /**
  * Build a sampling context for a set of players and positions.

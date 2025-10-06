@@ -2,7 +2,7 @@
  * Position-based stats aggregation utilities
  */
 
-import type { SleeperMatchup, PlayerIndex } from '@/lib/sleeper/types';
+import type { SleeperMatchup, PlayerIndex } from '@gauntlet/types';
 
 export const TRACKED_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'DEF'] as const;
 export type TrackedPosition = (typeof TRACKED_POSITIONS)[number];

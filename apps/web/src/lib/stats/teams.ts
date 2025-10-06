@@ -2,7 +2,7 @@
  * Team-based stats aggregation utilities
  */
 
-import type { SleeperMatchup } from '@/lib/sleeper/types';
+import type { SleeperMatchup } from '@gauntlet/types';
 
 export interface TeamWeekData {
   rosterId: number;

@@ -2,7 +2,7 @@
  * Data joining utilities for roster/user/team mapping
  */
 
-import type { SleeperRoster, SleeperUser } from '@/lib/sleeper/types';
+import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
 
 export interface TeamInfo {
   leagueId: string;

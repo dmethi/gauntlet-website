@@ -33,6 +33,12 @@ interface SleeperRoster { ... }
   - Multi-league keys: `TeamKey`, `MatchupKey`, `PlayerWeekKey`
   - Type literals: `LeagueStatus`, `TransactionType`, `NFLPosition`, `RosterPosition`
 
+- **Simulation & Variance Types** (`@gauntlet/types`):
+  - Lineup: `LineupPlayer`, `Lineup`
+  - Results: `MatchupResult`, `MatchupSimulationResult`, `ScoreDistribution`, `ImpliedOdds`
+  - Variance: `PositionVarianceRecord`, `PlayerVarianceRecord`, `ProjectionErrorRecord`, `VarianceData`
+  - Sampling: `SamplingContext`
+
 **When to Define Local Types:**
 - ✅ Component-specific props (e.g., `ButtonProps`, `ModalProps`)
 - ✅ Route-specific request/response shapes (API transformations)
@@ -46,8 +52,10 @@ interface SleeperRoster { ... }
 
 **Migration Complete:**
 - ❌ `apps/web/src/lib/sleeper/types.ts` - **DELETED** (use `@gauntlet/types`)
-- ✅ All apps now use centralized Sleeper types
-- ✅ 25+ duplicate definitions eliminated
+- ✅ All apps (web, server, sim-engine) now use centralized types
+- ✅ **Phase 1**: 25+ Sleeper API type duplicates eliminated
+- ✅ **Phase 2**: 11 simulation/variance type duplicates eliminated
+- ✅ Types re-exported from sim-engine for backwards compatibility
 
 ## 🏗️ Critical Architecture Patterns
 

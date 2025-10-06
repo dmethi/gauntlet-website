@@ -8,7 +8,7 @@ import { getTeamAndOpponentPoints, aggregateTeamPoints } from './teams';
 import { rank, rankWithinLeagues } from './ranks';
 import { median, mean } from './medians';
 import { buildTeamInfoMap, buildRosterLeagueMap } from './join';
-import type { SleeperMatchup, SleeperRoster, SleeperUser } from '@/lib/sleeper/types';
+import type { SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
 import type { TrackedPosition, PositionPoints } from './positions';
 import type { TeamWeekData } from './teams';
 import type { TeamInfo } from './join';
