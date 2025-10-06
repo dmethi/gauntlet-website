@@ -34,7 +34,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Build packages
-              run: pnpm build
+              run: pnpm build --filter @gauntlet/sim-engine --filter @gauntlet/server
 
             - name: Run variance update job
               run: pnpm --filter @gauntlet/server run update-variance
