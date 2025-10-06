@@ -4,6 +4,7 @@ import {
   getPositionDistribution as getPositionDistributionStatic,
 } from '../data/variance-loader';
 import { logger } from '../lib/logger';
+import type { Metrics } from '@gauntlet/types';
 
 /**
  * Position-specific standard deviation values based on fantasy football research
@@ -52,7 +53,8 @@ const playerOutcomeCache = new Map<
  * Get historical distribution of outcomes for a position
  */
 const getPositionDistribution = async (
-  position: string
+  position: string,
+  metrics?: Metrics
 ): Promise<{
   outcomes: number[]; // Relative outcomes (actual/projected)
   sampleSize: number;
@@ -60,7 +62,14 @@ const getPositionDistribution = async (
   // Check cache first (expire after 1 hour)
   const cached = positionDistributionCache.get(position);
   if (cached && Date.now() - cached.lastUpdated.getTime() < 60 * 60 * 1000) {
+    if (metrics) {
+      metrics.increment('variance.position_distribution.cache_hit');
+    }
     return cached;
+  }
+
+  if (metrics) {
+    metrics.increment('variance.position_distribution.cache_miss');
   }
 
   try {
@@ -108,7 +117,8 @@ const getPositionDistribution = async (
  * Get historical outcomes for a specific player
  */
 const getPlayerOutcomes = async (
-  playerId: string
+  playerId: string,
+  metrics?: Metrics
 ): Promise<{
   outcomes: number[]; // Relative outcomes (actual/projected)
   sampleSize: number;
@@ -116,7 +126,14 @@ const getPlayerOutcomes = async (
   // Check cache first (expire after 1 hour)
   const cached = playerOutcomeCache.get(playerId);
   if (cached && Date.now() - cached.lastUpdated.getTime() < 60 * 60 * 1000) {
+    if (metrics) {
+      metrics.increment('variance.player_outcomes.cache_hit');
+    }
     return cached;
+  }
+
+  if (metrics) {
+    metrics.increment('variance.player_outcomes.cache_miss');
   }
 
   try {
@@ -378,6 +395,7 @@ export type { SamplingContext };
  *
  * @param playerIds - Array of Sleeper player IDs to fetch variance data for
  * @param positions - Array of NFL positions (QB, RB, WR, TE, K, DEF)
+ * @param metrics - Optional Metrics instance for tracking cache performance
  *
  * @returns Promise<SamplingContext> containing Maps of variance distributions:
  *   - positionToOutcomes: Position-level variance distributions
@@ -397,8 +415,11 @@ export type { SamplingContext };
  */
 export const buildSamplingContext = async (
   playerIds: string[],
-  positions: string[]
+  positions: string[],
+  metrics?: Metrics
 ): Promise<SamplingContext> => {
+  const startTime = Date.now();
+
   const uniquePlayerIds = Array.from(new Set(playerIds));
   const uniquePositions = Array.from(new Set(positions));
 
@@ -407,23 +428,30 @@ export const buildSamplingContext = async (
   const playerSampleCounts = new Map<string, number>();
   const positionSampleCounts = new Map<string, number>();
 
-  // Fetch position distributions
+  // Fetch position distributions with metrics
   await Promise.all(
     uniquePositions.map(async pos => {
-      const dist = await getPositionDistribution(pos);
+      const dist = await getPositionDistribution(pos, metrics);
       positionToOutcomes.set(pos, dist.outcomes);
       positionSampleCounts.set(pos, dist.sampleSize);
     })
   );
 
-  // Fetch player outcomes (recent games)
+  // Fetch player outcomes with metrics
   await Promise.all(
     uniquePlayerIds.map(async id => {
-      const out = await getPlayerOutcomes(id);
+      const out = await getPlayerOutcomes(id, metrics);
       playerToOutcomes.set(id, out.outcomes);
       playerSampleCounts.set(id, out.sampleSize);
     })
   );
+
+  // Track context build completion
+  if (metrics) {
+    metrics.recordDuration('sampling.context.build_duration', Date.now() - startTime);
+    metrics.increment('sampling.context.players_fetched', uniquePlayerIds.length);
+    metrics.increment('sampling.context.positions_fetched', uniquePositions.length);
+  }
 
   return {
     positionToOutcomes,

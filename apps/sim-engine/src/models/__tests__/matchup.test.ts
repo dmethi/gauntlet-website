@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { simulateMatchupProbabilityFromPlayers, simulateMatchupProbability } from '../matchup';
+import { createMetrics } from '../../lib/metrics';
 import type { LineupPlayer, Lineup } from '@gauntlet/types';
 
 describe('simulateMatchupProbabilityFromPlayers', () => {

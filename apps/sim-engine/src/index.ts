@@ -33,6 +33,12 @@ export { getPositionDistribution, getPlayerOutcomes, getDataInfo } from './data/
 export { logger, createChildLogger } from './lib/logger';
 
 // ============================================
+// METRICS
+// ============================================
+
+export { createMetrics } from './lib/metrics';
+
+// ============================================
 // TYPE EXPORTS
 // ============================================
 
@@ -44,6 +50,8 @@ export type {
   SamplingContext,
   ScoreDistribution,
   ImpliedOdds,
+  Metrics,
+  MetricsSummary,
 } from '@gauntlet/types';
 
 export type {

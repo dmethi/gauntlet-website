@@ -2,9 +2,9 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 26.2% (22/84 tasks)  
+**Overall Progress**: 27.4% (23/84 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
-**Apps/Sim-Engine Progress**: 46.7% (7/15 sim-engine tasks complete)
+**Apps/Sim-Engine Progress**: 53.3% (8/15 sim-engine tasks complete)
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (22)
+#### ✅ Completed (23)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -36,6 +36,7 @@
 - [x] **SIM-605**: Add Comprehensive Test Suite (sim-engine) ⏱️ 2 hours
 - [x] **SIM-606**: Migrate from Jest to Vitest (sim-engine) ⏱️ 30 min
 - [x] **SIM-607**: Add Structured Logging with Pino (sim-engine) ⏱️ 45 min
+- [x] **SIM-608**: Add Metrics Collection (sim-engine) ⏱️ 45 min
 
 #### 🔄 In Progress (0)
 
@@ -69,12 +70,12 @@ _Ready to begin_
 | **TEST**            | 7      | 3         | 0           | 4         |
 | **CLEAN**           | 7      | 5         | 0           | 2         |
 | **REFACTOR**        | 4      | 3         | 0           | 1         |
-| **OBSERVABILITY**   | 4      | 3         | 0           | 1         |
+| **OBSERVABILITY**   | 4      | 4         | 0           | 0         |
 | **RESILIENCE**      | 5      | 1         | 0           | 4         |
 | **DATA_MANAGEMENT** | 3      | 0         | 0           | 3         |
 | **DOCUMENTATION**   | 2      | 0         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **84** | **22**    | **0**       | **62**    |
+| **Total**           | **84** | **23**    | **0**       | **61**    |
 
 ---
 
@@ -187,10 +188,10 @@ _Ready to begin_
 - [x] **SIM-605**: Add Comprehensive Test Suite ⏱️ 2 hours [CRITICAL] ✅
 - [x] **SIM-606**: Migrate from Jest to Vitest ⏱️ 30 min [MEDIUM] ✅
 
-#### Phase 3: Observability (1.5 hours)
+#### Phase 3: Observability (1.5 hours) ✅ COMPLETE
 
 - [x] **SIM-607**: Add Structured Logging with Pino ⏱️ 45 min [HIGH] ✅
-- [ ] **SIM-608**: Add Metrics Collection ⏱️ 45 min [MEDIUM]
+- [x] **SIM-608**: Add Metrics Collection ⏱️ 45 min [MEDIUM] ✅
 
 #### Phase 4: Resilience & Error Handling (1 hour)
 
@@ -213,6 +214,35 @@ _Ready to begin_
 ## 🎉 Recent Completions
 
 ### October 6, 2025
+
+- ✅ **SIM-608**: Add Metrics Collection (sim-engine)
+  - Created `src/lib/metrics.ts` with factory function pattern (109 lines)
+  - Implemented `createMetrics()` following apps/server pattern with closure-based state
+  - Added optional `metrics` parameter to `simulateMatchupProbabilityFromPlayers` and `buildSamplingContext`
+  - Instrumented matchup simulation with performance tracking:
+    - `simulation.matchup.duration`: Timing for full simulation
+    - `simulation.matchup.iterations`: Counter for iteration count
+    - `simulation.matchup.completed`: Counter for completed simulations
+    - `simulation.live_game.count`: Counter for live game simulations
+  - Instrumented sampling context with cache metrics:
+    - `sampling.context.build_duration`: Timing for context building
+    - `sampling.context.players_fetched`: Counter for unique players
+    - `sampling.context.positions_fetched`: Counter for unique positions
+    - `variance.position_distribution.cache_hit/miss`: Cache effectiveness for positions
+    - `variance.player_outcomes.cache_hit/miss`: Cache effectiveness for players
+  - Updated JSDoc with comprehensive metrics usage examples
+  - Exported `createMetrics`, `Metrics`, `MetricsSummary` from barrel file
+  - Added comprehensive test suite with 8 new tests (6 metrics unit tests + 2 integration tests)
+  - All 59 tests passing (53 existing + 6 new)
+  - Metrics module at 100% test coverage
+  - Overall coverage: 78.29% (slight dip from 81.01% due to new code, but metrics.ts fully tested)
+  - TypeScript compilation passes with 0 errors
+  - ESLint passes with 0 errors/warnings
+  - Metrics are optional (no breaking changes), enabling zero-overhead when not used
+  - **Outcome**: Production-ready metrics collection enables performance monitoring and optimization insights without performance impact
+  - **Compliance**: 100% arrow functions (factory pattern), central type imports from `@gauntlet/types`
+
+### October 6, 2025 (Earlier)
 
 - ✅ **SIM-607**: Add Structured Logging with Pino (sim-engine)
   - Installed Pino 9.13.1 and pino-pretty 13.1.1

@@ -3,7 +3,13 @@ import {
   samplePlayerScoreFromContext,
   simulatePlayerScore,
 } from './variance';
-import type { Lineup, LineupPlayer, MatchupResult, MatchupSimulationResult } from '@gauntlet/types';
+import type {
+  Lineup,
+  LineupPlayer,
+  MatchupResult,
+  MatchupSimulationResult,
+  Metrics,
+} from '@gauntlet/types';
 
 // Re-export for backwards compatibility
 export type { LineupPlayer, Lineup, MatchupResult, MatchupSimulationResult };
@@ -147,6 +153,7 @@ const calculateBettingLines = (
  * @param iterations - Number of Monte Carlo iterations to run (default: 10000, min 100 for testing)
  * @param gameProgress - Game completion percentage from 0 (start) to 1 (end)
  * @param liveNflTeams - Optional Set of NFL team codes currently playing live games
+ * @param metrics - Optional Metrics instance for tracking performance
  *
  * @returns Promise<MatchupSimulationResult> containing:
  *   - team1WinPct/team2WinPct: Win probabilities (sum to 1.0)
@@ -174,14 +181,41 @@ const calculateBettingLines = (
  *   new Set(['KC', 'BUF'])
  * );
  * console.log(`Updated Win%: ${(result.team1WinPct * 100).toFixed(1)}%`);
+ *
+ * @example
+ * // With metrics collection
+ * import { simulateMatchupProbabilityFromPlayers, createMetrics } from '@gauntlet/sim-engine';
+ *
+ * const metrics = createMetrics();
+ * const result = await simulateMatchupProbabilityFromPlayers(
+ *   team1Players,
+ *   team2Players,
+ *   10000,
+ *   0,
+ *   undefined,
+ *   metrics
+ * );
+ *
+ * const summary = metrics.getSummary();
+ * console.log('Simulation took:', summary.timers['simulation.matchup.duration']);
+ * console.log('Cache hit rate:', summary.counters['variance.position_distribution.cache_hit']);
  */
 export const simulateMatchupProbabilityFromPlayers = async (
   team1Players: LineupPlayer[],
   team2Players: LineupPlayer[],
   iterations: number = 10000,
   gameProgress: number = 0,
-  liveNflTeams?: Set<string>
+  liveNflTeams?: Set<string>,
+  metrics?: Metrics
 ): Promise<MatchupSimulationResult> => {
+  const startTime = Date.now();
+
+  // Track if this is a live game simulation
+  const isLiveSimulation = liveNflTeams && liveNflTeams.size > 0;
+  if (isLiveSimulation && metrics) {
+    metrics.increment('simulation.live_game.count');
+  }
+
   const results: MatchupResult[] = [];
   const team1Scores: number[] = [];
   const team2Scores: number[] = [];
@@ -189,7 +223,7 @@ export const simulateMatchupProbabilityFromPlayers = async (
   const playerIds = [...team1Players.map(p => p.id), ...team2Players.map(p => p.id)];
   const positions = [...team1Players.map(p => p.position), ...team2Players.map(p => p.position)];
 
-  const ctx = await buildSamplingContext(playerIds, positions);
+  const ctx = await buildSamplingContext(playerIds, positions, metrics);
 
   for (let i = 0; i < iterations; i++) {
     let team1Total = 0;
@@ -301,6 +335,13 @@ export const simulateMatchupProbabilityFromPlayers = async (
 
   // Calculate betting lines
   const impliedOdds = calculateBettingLines(results, team1Scores, team2Scores);
+
+  // Track simulation completion
+  if (metrics) {
+    metrics.recordDuration('simulation.matchup.duration', Date.now() - startTime);
+    metrics.increment('simulation.matchup.iterations', iterations);
+    metrics.increment('simulation.matchup.completed');
+  }
 
   return {
     team1WinPct,
