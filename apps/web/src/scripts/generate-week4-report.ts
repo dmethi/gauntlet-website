@@ -368,11 +368,11 @@ async function calculateUpcomingMatchups(currentWeek: number): Promise<Record<st
         if (group.length !== 2) continue;
 
         const [m1, m2] = group;
-        const roster1 = rostersMap.get(m1.roster_id);
-        const roster2 = rostersMap.get(m2.roster_id);
+        const roster1 = rostersMap.get(m1.roster_id) as any;
+        const roster2 = rostersMap.get(m2.roster_id) as any;
 
-        const owner1 = usersMap.get(roster1?.owner_id);
-        const owner2 = usersMap.get(roster2?.owner_id);
+        const owner1 = usersMap.get(roster1?.owner_id) as any;
+        const owner2 = usersMap.get(roster2?.owner_id) as any;
 
         leagueMatchups.push({
           matchupId,
@@ -434,11 +434,11 @@ async function generateWeek4Report() {
         if (group.length !== 2) continue;
 
         const [m1, m2] = group;
-        const roster1 = rostersMap.get(m1.roster_id);
-        const roster2 = rostersMap.get(m2.roster_id);
+        const roster1 = rostersMap.get(m1.roster_id) as any;
+        const roster2 = rostersMap.get(m2.roster_id) as any;
 
-        const owner1 = usersMap.get(roster1?.owner_id);
-        const owner2 = usersMap.get(roster2?.owner_id);
+        const owner1 = usersMap.get(roster1?.owner_id) as any;
+        const owner2 = usersMap.get(roster2?.owner_id) as any;
 
         // Create box scores with actual player names
         const boxscoreA: BoxRow[] = (m1.starters || []).map((playerId: string, idx: number) => {

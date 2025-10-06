@@ -38,8 +38,8 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
   const leagueAvgByPosWeek = new Map<string, number>();
 
   for (const position of ['QB', 'RB', 'WR', 'TE', 'DEF']) {
-    const posData = positionsMap.get(position);
-    if (!posData) continue;
+    const posData = positionsMap.get(position) as any;
+    if (!posData || !posData.teams) continue;
 
     const posTeamsMap = new Map(posData.teams);
 
@@ -59,7 +59,7 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
   }
 
   // Process each team
-  for (const [teamKey, teamData] of teamsMap.entries()) {
+  for (const [teamKey, teamData] of teamsMap.entries() as any) {
     const teamScores = teamData.teamScores.filter((s: any) => s.value > 0);
     const opponentScores = teamData.opponentScores.filter((s: any) => s.value > 0);
 
@@ -70,8 +70,8 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
     const outcomes: ('W' | 'L')[] = [];
 
     for (let week = 1; week <= currentWeek; week++) {
-      const weekScore = teamScores.find(s => s.week === week);
-      const oppScore = opponentScores.find(s => s.week === week);
+      const weekScore = teamScores.find((s: any) => s.week === week);
+      const oppScore = opponentScores.find((s: any) => s.week === week);
 
       if (weekScore && oppScore) {
         // Calculate rank for this week
@@ -95,11 +95,11 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
     const positionalAnalysis: any = {};
 
     for (const position of ['QB', 'RB', 'WR', 'TE', 'DEF']) {
-      const posData = positionsMap.get(position);
-      if (!posData) continue;
+      const posData = positionsMap.get(position) as any;
+      if (!posData || !posData.teams) continue;
 
       const posTeamsMap = new Map(posData.teams);
-      const teamPosData = posTeamsMap.get(teamKey);
+      const teamPosData = posTeamsMap.get(teamKey) as any;
 
       if (!teamPosData) continue;
 
@@ -236,17 +236,17 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
     }> = [];
 
     for (let week = 1; week <= currentWeek; week++) {
-      const myWeekScore = teamScores.find(s => s.week === week);
-      const oppWeekScore = opponentScores.find(s => s.week === week);
+      const myWeekScore = teamScores.find((s: any) => s.week === week);
+      const oppWeekScore = opponentScores.find((s: any) => s.week === week);
 
       if (myWeekScore && oppWeekScore) {
         // Calculate opponent's baseline (average of other weeks)
         const oppOtherWeeks = opponentScores
-          .filter(s => s.week !== week && s.value > 0)
-          .map(s => s.value);
+          .filter((s: any) => s.week !== week && s.value > 0)
+          .map((s: any) => s.value);
         const oppBaseline =
           oppOtherWeeks.length > 0
-            ? oppOtherWeeks.reduce((sum, v) => sum + v, 0) / oppOtherWeeks.length
+            ? oppOtherWeeks.reduce((sum: number, v: number) => sum + v, 0) / oppOtherWeeks.length
             : oppWeekScore.value;
 
         const oppTimingResidual = oppWeekScore.value - oppBaseline;
@@ -294,7 +294,8 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
     // Pattern 21: Counterfactual Win Odds (simplified without full projections)
     const counterfactualGames = teamWeeklyScores.map(game => {
       const myAdvantageVsAvg =
-        game.myScore - teamScores.reduce((sum, s) => sum + s.value, 0) / teamScores.length;
+        game.myScore -
+        teamScores.reduce((sum: number, s: any) => sum + s.value, 0) / teamScores.length;
       const oppAdvantageVsBaseline = game.oppScore - game.oppBaseline;
 
       // If opponent played to baseline instead of actual
@@ -347,13 +348,13 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
     };
 
     // Pattern 10: Trajectory (improving/declining)
-    const weeklyScoreValues = teamScores.map(s => s.value);
+    const weeklyScoreValues = teamScores.map((s: any) => s.value);
     let trajectorySlope = 0;
     if (weeklyScoreValues.length >= 3) {
       // Simple linear regression
       const n = weeklyScoreValues.length;
       const xMean = (n - 1) / 2;
-      const yMean = weeklyScoreValues.reduce((sum, v) => sum + v, 0) / n;
+      const yMean = weeklyScoreValues.reduce((sum: number, v: number) => sum + v, 0) / n;
 
       let numerator = 0;
       let denominator = 0;

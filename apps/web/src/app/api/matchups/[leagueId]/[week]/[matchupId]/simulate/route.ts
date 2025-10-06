@@ -29,8 +29,42 @@ async function fetchEspnScoreboard() {
 
 function normalizeNflTeamAbbreviation(abbreviation?: string): string | undefined {
   if (!abbreviation) return abbreviation;
-  const mapping: Record<string, string> = { WSH: 'WAS', JAC: 'JAX' };
+  // Normalize various provider codes to a consistent set (prefer ESPN/Sleeper modern codes)
+  const mapping: Record<string, string> = {
+    // Washington / Jacksonville
+    WSH: 'WAS',
+    JAC: 'JAX',
+    // Legacy franchises
+    SD: 'LAC',
+    STL: 'LAR',
+    OAK: 'LV',
+    // Occasionally-seen alternates
+    LVR: 'LV',
+    GBP: 'GB',
+    KCC: 'KC',
+    SFO: 'SF',
+    TAM: 'TB',
+    NOR: 'NO',
+    NWE: 'NE',
+    // Ambiguous LA fallback (rare in data but safe)
+    LA: 'LAR',
+  };
   return mapping[abbreviation] || abbreviation;
+}
+
+function parseClockSeconds(clock: unknown): number {
+  // ESPN generally provides numeric seconds, but be robust to strings like "MM:SS"
+  if (typeof clock === 'number') return Math.max(0, clock);
+  if (typeof clock === 'string') {
+    const trimmed = clock.trim();
+    if (/^\d{1,2}:\d{2}$/.test(trimmed)) {
+      const [mm, ss] = trimmed.split(':').map(Number);
+      if (Number.isFinite(mm) && Number.isFinite(ss)) return Math.max(0, mm * 60 + ss);
+    }
+    const asNum = Number(trimmed);
+    if (Number.isFinite(asNum)) return Math.max(0, asNum);
+  }
+  return 0;
 }
 
 /**
@@ -44,27 +78,33 @@ function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
 
   for (const event of espnData.events) {
     const competition = event?.competitions?.[0];
-    const status = competition?.status?.type;
+    // ESPN nests state under status.type, while period/clock live under status
+    const statusRoot = competition?.status || {};
+    const statusType = statusRoot?.type || {};
 
-    if (!competition?.competitors || !status) continue;
+    if (!competition?.competitors || !statusType) continue;
 
     // Calculate actual game progress based on minutes
     let gameProgress = 0;
     let minutesElapsed = 0;
     let minutesRemaining = 60; // NFL game is 60 minutes
-    let gameDescription = status.description || 'Unknown';
+    let gameDescription = statusType.description || statusRoot?.type?.description || 'Unknown';
 
-    if (status.state === 'pre') {
+    const state: 'pre' | 'in' | 'post' = (statusType.state as any) || 'pre';
+
+    if (state === 'pre') {
       gameProgress = 0;
       minutesElapsed = 0;
       minutesRemaining = 60;
-    } else if (status.state === 'post') {
+    } else if (state === 'post') {
       gameProgress = 1;
       minutesElapsed = 60;
       minutesRemaining = 0; // Game is over, no time remaining
-    } else if (status.state === 'in') {
-      const period = status.period || 1;
-      const clock = status.clock || 0; // seconds remaining in period
+    } else if (state === 'in') {
+      const period = (statusRoot?.period as number) || (statusType?.period as number) || 1;
+      const clock = parseClockSeconds(
+        statusRoot?.clock ?? statusType?.clock ?? statusRoot?.displayClock
+      );
 
       // NFL: 4 quarters, 15 minutes (900 seconds) each
       const totalGameSeconds = 4 * 15 * 60; // 3600 seconds
@@ -76,7 +116,7 @@ function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
 
       // Enhanced description for live games
       const clockMinutes = Math.floor(clock / 60);
-      const clockSeconds = clock % 60;
+      const clockSeconds = Math.floor(clock % 60);
       gameDescription = `Q${period} ${clockMinutes}:${clockSeconds.toString().padStart(2, '0')}`;
     }
 
@@ -86,7 +126,7 @@ function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
       if (abbr) {
         gameStates.set(abbr, {
           team: abbr,
-          state: status.state as 'pre' | 'in' | 'post',
+          state,
           gameProgress,
           minutesElapsed,
           minutesRemaining,
@@ -97,6 +137,14 @@ function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
   }
 
   return gameStates;
+}
+
+function buildLiveNflTeamsSet(gameStates: Map<string, NFLGameState>): Set<string> {
+  const set = new Set<string>();
+  for (const [team, state] of gameStates.entries()) {
+    if (state.state === 'in') set.add(team);
+  }
+  return set;
 }
 
 function toLineupPlayersWithMinutes(
@@ -178,6 +226,20 @@ export async function GET(
 
     // Build NFL game state map for minutes-based projections
     const nflGameStates = buildNflGameStateMap(espnScoreboard);
+    let liveNflTeams = buildLiveNflTeamsSet(nflGameStates);
+    // Fallback: if ESPN failed or no live games detected, approximate live teams by
+    // detecting players who have non-zero currentScore in the first 30 minutes of the window.
+    if (liveNflTeams.size === 0) {
+      const approxLive = new Set<string>();
+      const collectApproxLive = (ids: string[], playersMap: Record<string, any>) => {
+        for (const id of ids) {
+          const team = normalizeNflTeamAbbreviation(playersMap?.[id]?.team);
+          if (team) approxLive.add(team);
+        }
+      };
+      // We only have starters with scores per team; we will collect once we know them below
+      // liveNflTeams will be replaced after team1/team2 players are built
+    }
 
     // Convert projections to array while preserving player_id
     const rawProjectionsArray: any[] = Array.isArray(rawProjections)
@@ -216,12 +278,22 @@ export async function GET(
       nflGameStates
     );
 
+    // If we had no ESPN-derived live teams, approximate using any players who currently have scores
+    if (liveNflTeams.size === 0) {
+      const approxLive = new Set<string>();
+      [...team1Players, ...team2Players].forEach(p => {
+        if ((p.currentScore || 0) > 0 && p.nflTeam) approxLive.add(p.nflTeam);
+      });
+      liveNflTeams = approxLive;
+    }
+
     // Minutes-based simulation with gameProgress=0 since we've adjusted projections
     const sim = await simulateMatchupProbabilityFromPlayers(
       team1Players as any,
       team2Players as any,
       20000, // Doubled from 10k to 20k iterations
-      0 // gameProgress=0 since projections are already adjusted based on actual NFL time
+      0, // gameProgress=0 since projections are already adjusted based on actual NFL time
+      liveNflTeams
     );
 
     // Calculate aggregate matchup game state for transparency

@@ -166,12 +166,15 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
         const team1Players = buildPlayers(a);
         const team2Players = buildPlayers(b);
 
-        // Run sim-engine once per matchup pair to get distributions
+        // Run sim-engine once per matchup pair to get distributions. We don't have per-player NFL team live set here,
+        // so pass undefined; sim-engine will treat players without currentScore as pre-game and with currentScore as finished.
+        // This matches league-wide, pre-snapshot use where we don't adjust by minutes.
         const sim = await simulateMatchupProbabilityFromPlayers(
           team1Players as any,
           team2Players as any,
-          10000, // Doubled from 5k to 10k iterations
-          0
+          10000,
+          0,
+          undefined
         );
 
         // Sim-engine now properly receives current scores from completed games

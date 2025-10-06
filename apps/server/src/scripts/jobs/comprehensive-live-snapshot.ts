@@ -43,6 +43,26 @@ interface CompleteSnapshot {
   // Optional team names for better logging
   team1Name?: string;
   team2Name?: string;
+
+  // Enhanced debug fields (not persisted): per-player breakdowns
+  team1Players?: Array<{
+    name: string;
+    position: string;
+    nflTeam?: string;
+    currentScore: number;
+    remainingProjection: number;
+    fullProjection: number;
+    gameState?: { state: string; desc?: string; minutesRemaining?: number };
+  }>;
+  team2Players?: Array<{
+    name: string;
+    position: string;
+    nflTeam?: string;
+    currentScore: number;
+    remainingProjection: number;
+    fullProjection: number;
+    gameState?: { state: string; desc?: string; minutesRemaining?: number };
+  }>;
 }
 
 async function getCurrentWeek(): Promise<number> {
@@ -126,6 +146,26 @@ async function captureIndividualMatchup(
 
     const sim = data.simulation;
 
+    const toDebugPlayers = (players: any[]) =>
+      players.map(p => ({
+        name: p.name || p.playerName || p.id,
+        position: p.position || 'FLEX',
+        nflTeam: p.nflTeam,
+        currentScore: Number(p.currentScore || 0),
+        remainingProjection: Number(p.projection || 0),
+        fullProjection: Number(p.fullProjection || p.projection || 0),
+        gameState: p.gameState
+          ? {
+              state: String(p.gameState.state),
+              desc: String(p.gameState.gameDescription || ''),
+              minutesRemaining: Number(p.gameState.minutesRemaining ?? 0),
+            }
+          : undefined,
+      }));
+
+    const team1Players = toDebugPlayers(sim.teams?.[0]?.players || []);
+    const team2Players = toDebugPlayers(sim.teams?.[1]?.players || []);
+
     // Extract the EXACT data your screenshot shows
     const team1RawProj = sim.teams[0].players.reduce((sum, p) => sum + p.projection, 0);
     const team2RawProj = sim.teams[1].players.reduce((sum, p) => sum + p.projection, 0);
@@ -183,6 +223,8 @@ async function captureIndividualMatchup(
       // Add team names for better logging
       team1Name,
       team2Name,
+      team1Players,
+      team2Players,
     };
   } catch (error) {
     console.error(`❌ Failed to capture matchup ${matchupId}:`, error.message);
@@ -218,6 +260,49 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<void> {
     console.log(
       `   🔴 Live: ${snapshot.team1.currentScore.toFixed(1)} vs ${snapshot.team2.currentScore.toFixed(1)} | Spread: ${snapshot.spread > 0 ? '+' : ''}${snapshot.spread.toFixed(1)} | O/U: ${snapshot.total.toFixed(1)} | Fresh Data ✅`
     );
+    // Enhanced per-player debugging tables
+    const printPlayerTable = (label: string, players?: CompleteSnapshot['team1Players']) => {
+      if (!players || players.length === 0) return;
+      console.log(`   ── ${label}`);
+      const header = ['Player', 'Pos', 'NFL', 'Curr', 'Remain', 'Full', 'State', 'Clock', 'MinRem'];
+      const rows = players.map(p => [
+        p.name,
+        p.position,
+        p.nflTeam || '-',
+        p.currentScore.toFixed(1),
+        p.remainingProjection.toFixed(1),
+        p.fullProjection.toFixed(1),
+        p.gameState?.state || '-',
+        p.gameState?.desc || '-',
+        p.gameState?.minutesRemaining != null
+          ? String(Math.round(p.gameState.minutesRemaining))
+          : '-',
+      ]);
+      const widths = header.map((h, i) =>
+        Math.min(Math.max(h.length, ...rows.map(r => String(r[i]).length)), i === 0 ? 26 : 12)
+      );
+      const fmt = (v: string, i: number) => v.padEnd(widths[i], ' ');
+      console.log('     ' + header.map(fmt).join('  '));
+      console.log('     ' + widths.map(w => ''.padEnd(w, '─')).join('  '));
+      for (const r of rows) {
+        console.log('     ' + r.map((v, i) => fmt(String(v), i)).join('  '));
+      }
+      const totals = players.reduce(
+        (acc, p) => {
+          acc.curr += p.currentScore;
+          acc.rem += p.remainingProjection;
+          acc.full += p.fullProjection;
+          return acc;
+        },
+        { curr: 0, rem: 0, full: 0 }
+      );
+      console.log(
+        `     Totals → Curr: ${totals.curr.toFixed(1)} | Remain: ${totals.rem.toFixed(1)} | Full: ${totals.full.toFixed(1)}`
+      );
+    };
+
+    printPlayerTable(`${snapshot.team1Name}`, snapshot.team1Players);
+    printPlayerTable(`${snapshot.team2Name}`, snapshot.team2Players);
     console.log('');
   } catch (error) {
     // Fallback logging if database fails
