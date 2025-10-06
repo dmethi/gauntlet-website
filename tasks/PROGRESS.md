@@ -2,7 +2,7 @@
 
 **Last Updated**: October 6, 2025  
 **Phase**: Foundation Setup  
-**Overall Progress**: 8.3% (5/60 tasks)
+**Overall Progress**: 10.0% (6/60 tasks)
 
 ---
 
@@ -10,20 +10,22 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (5)
+#### ✅ Completed (6)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
 - [x] **CLEAN-603**: Remove Unused Dependencies ⏱️ 15 min
 - [x] **CLEAN-604**: Fix package.json ⏱️ 15 min
 - [x] **CLEAN-606**: Add JSDoc to All Exports ⏱️ 30 min
+- [x] **EXTRACT-601**: Extract API Client ⏱️ 60 min
 
 #### 🔄 In Progress (0)
 
 _Ready to begin_
 
-#### ⏭️ Up Next (3)
+#### ⏭️ Up Next (4)
 
+- [ ] **EXTRACT-602**: Extract Snapshot Validation [QUICK WIN]
 - [ ] **SETUP-001**: Testing Infrastructure [HIGH PRIORITY]
 - [ ] **SETUP-002**: Test Utilities [HIGH PRIORITY]
 - [ ] **EXTRACT-001**: Manager Analysis Types [QUICK WIN]
@@ -43,13 +45,13 @@ _Ready to begin_
 | Category    | Total  | Completed | In Progress | Remaining |
 | ----------- | ------ | --------- | ----------- | --------- |
 | **SETUP**   | 6      | 0         | 0           | 6         |
-| **EXTRACT** | 12     | 0         | 0           | 12        |
+| **EXTRACT** | 12     | 1         | 0           | 11        |
 | **UTIL**    | 12     | 0         | 0           | 12        |
 | **HOOK**    | 8      | 0         | 0           | 8         |
 | **COMP**    | 10     | 0         | 0           | 10        |
 | **TEST**    | 6      | 0         | 0           | 6         |
 | **CLEAN**   | 6      | 5         | 0           | 1         |
-| **Total**   | **60** | **5**     | **0**       | **55**    |
+| **Total**   | **60** | **6**     | **0**       | **54**    |
 
 ---
 
@@ -85,7 +87,7 @@ background jobs package.
 #### Code Quality (Day 2: 3-4 hours)
 
 - [ ] **SETUP-601**: Add ESLint and Prettier (30 min)
-- [ ] **EXTRACT-601**: Extract API Client (60 min)
+- [x] **EXTRACT-601**: Extract API Client ✅ (60 min)
 - [ ] **EXTRACT-602**: Extract Snapshot Validation (45 min)
 - [x] **CLEAN-606**: Add JSDoc to All Exports ✅ (30 min)
 
@@ -147,6 +149,38 @@ background jobs package.
   - TypeScript compilation passes with 0 errors
   - IDE tooltips now show full documentation on hover
   - Note: gauntlet-api-client.ts and snapshot-validator.ts don't exist yet (blocked by EXTRACT-601, EXTRACT-602)
+
+- ✅ **EXTRACT-601**: Extract API Client from Comprehensive Live Snapshot
+  - Created new `src/lib/gauntlet-api-client.ts` with 309 lines
+  - Extracted 4 API functions: `getCurrentWeek()`, `fetchLeagueOdds()`, `fetchMatchupSimulation()`, `getTeamNames()`
+  - Added comprehensive types for all API responses (LeagueOddsResponse, MatchupSimulationResponse)
+  - Implemented proper error handling with descriptive messages
+  - Added cache-busting query params for league odds
+  - Added request timeouts (30s default) with AbortSignal
+  - Updated `comprehensive-live-snapshot.ts` to use new `gauntletAPI` client
+  - Reduced main script from 447 → 389 lines (58 line reduction)
+  - All JSDoc documentation included with examples
+  - TypeScript compilation passes with 0 errors
+  - Build verification successful: `npm run build` passes
+  - **Follow-up**: Consolidated all server types to `@gauntlet/types` package
+
+- ✅ **Type Consolidation**: Centralized All Server Types to @gauntlet/types
+  - Created new `packages/types/src/server.ts` with 164 lines for server-specific types
+  - Moved 6 types from `apps/server`:
+    - `GauntletAPIOptions`, `LeagueOddsResponse`, `MatchupSimulationResponse` (from gauntlet-api-client.ts)
+    - `CompleteSnapshot` (from comprehensive-live-snapshot.ts)
+    - `ModelStats` (from audit-database.ts)
+  - Removed duplicate Sleeper types (`SleeperUser`, `SleeperRoster`, `NFLState`) - using existing types from `@gauntlet/types`
+  - Updated `packages/types/src/index.ts` to export server types
+  - Updated 3 files to import from `@gauntlet/types`:
+    - `apps/server/src/lib/gauntlet-api-client.ts` (reduced from 309 → 213 lines, 96 lines saved)
+    - `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts` (reduced from 389 → 333 lines, 56 lines saved)
+    - `apps/server/src/scripts/audit-database.ts` (imported ModelStats)
+  - Added `@gauntlet/types` to `apps/server/package.json` dependencies
+  - Updated `apps/server/tsconfig.json` to reference types package
+  - Total consolidation: 152 lines of duplicate types removed from server package
+  - TypeScript compilation passes with 0 errors across all packages
+  - All workspace dependencies properly linked via pnpm
 
 ---
 

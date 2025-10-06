@@ -13,117 +13,12 @@ import {
   getLastWinProbSample,
   disconnect,
 } from '../../lib/historical-data.js';
+import { gauntletAPI } from '../../lib/gauntlet-api-client.js';
+import type { CompleteSnapshot } from '@gauntlet/types';
 
-interface CompleteSnapshot {
-  week: number;
-  leagueId: string;
-  matchupId: number;
-
-  // From Individual Matchup API (detailed data)
-  team1: {
-    rosterId: number;
-    rawProjectionTotal: number;
-    simulatedMean: number; // This is what shows in your screenshot as "Proj:"
-    currentScore: number;
-    winProbability: number;
-  };
-  team2: {
-    rosterId: number;
-    rawProjectionTotal: number;
-    simulatedMean: number; // This is what shows in your screenshot as "Proj:"
-    currentScore: number;
-    winProbability: number;
-  };
-
-  // From League Odds API (team rankings)
-  team1LeagueRank?: number;
-  team2LeagueRank?: number;
-
-  // Betting data
-  spread: number;
-  total: number;
-  moneyLineA: number;
-  moneyLineB: number;
-
-  capturedAt: string;
-  // Optional team names for better logging
-  team1Name?: string;
-  team2Name?: string;
-
-  // Enhanced debug fields (not persisted): per-player breakdowns
-  team1Players?: Array<{
-    name: string;
-    position: string;
-    nflTeam?: string;
-    currentScore: number;
-    remainingProjection: number;
-    fullProjection: number;
-    gameState?: { state: string; desc?: string; minutesRemaining?: number };
-  }>;
-  team2Players?: Array<{
-    name: string;
-    position: string;
-    nflTeam?: string;
-    currentScore: number;
-    remainingProjection: number;
-    fullProjection: number;
-    gameState?: { state: string; desc?: string; minutesRemaining?: number };
-  }>;
-}
-
-async function getCurrentWeek(): Promise<number> {
-  try {
-    const response = await fetch('https://api.sleeper.app/v1/state/nfl');
-    const data = await response.json();
-    return data?.week || 4;
-  } catch {
-    return 4;
-  }
-}
-
-async function captureLeagueOdds(week: number): Promise<any> {
-  const cacheBuster = Date.now();
-
-  const response = await fetch(
-    `https://gauntlet-website.vercel.app/api/matchups/league-odds/${week}?t=${cacheBuster}`,
-    {
-      headers: {
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-      },
-    }
-  );
-
-  if (!response.ok) throw new Error(`League odds failed: ${response.status}`);
-  return response.json();
-}
-
-async function getTeamNames(leagueId: string): Promise<Map<number, string>> {
-  try {
-    const [usersResponse, rostersResponse] = await Promise.all([
-      fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`),
-      fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`),
-    ]);
-
-    const users = await usersResponse.json();
-    const rosters = await rostersResponse.json();
-
-    const teamNames = new Map<number, string>();
-
-    for (const roster of rosters) {
-      const owner = users.find((u: any) => u.user_id === roster.owner_id);
-      const teamName =
-        owner?.metadata?.team_name || owner?.display_name || `Team ${roster.roster_id}`;
-      teamNames.set(roster.roster_id, teamName);
-    }
-
-    return teamNames;
-  } catch (error) {
-    console.error(`Failed to fetch team names for league ${leagueId}:`, error);
-    return new Map();
-  }
-}
-
+/**
+ * Helper to capture individual matchup data combining API and Sleeper data
+ */
 async function captureIndividualMatchup(
   leagueId: string,
   week: number,
@@ -140,16 +35,8 @@ async function captureIndividualMatchup(
 
     if (matchupPair.length !== 2) return null;
 
-    const response = await fetch(
-      `https://gauntlet-website.vercel.app/api/matchups/${leagueId}/${week}/${matchupId}/simulate`
-    );
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-
-    if (!data.success) return null;
-
+    // Fetch simulation from Gauntlet API
+    const data = await gauntletAPI.fetchMatchupSimulation(leagueId, week, matchupId);
     const sim = data.simulation;
 
     const toDebugPlayers = (players: any[]) =>
@@ -370,7 +257,7 @@ async function saveCompleteSnapshot(snapshot: CompleteSnapshot): Promise<boolean
 }
 
 async function main() {
-  const week = await getCurrentWeek();
+  const week = await gauntletAPI.getCurrentWeek();
   const leagueIds = ['1263744209295245312', '1263740549504962561'];
 
   console.log(`🚀 Comprehensive live odds snapshot for week ${week}`);
@@ -378,7 +265,7 @@ async function main() {
 
   // 1. Capture league odds for team rankings
   console.log('📊 Capturing league-wide odds...');
-  const leagueOdds = await captureLeagueOdds(week);
+  const leagueOdds = await gauntletAPI.fetchLeagueOdds(week);
   console.log(`✅ League odds captured: ${leagueOdds.highestScorer?.length || 0} teams ranked\n`);
 
   // 2. Capture individual matchups for detailed data
@@ -393,7 +280,7 @@ async function main() {
     console.log(`\n🏆 ${leagueName} League (${leagueId}):`);
     console.log('📋 Fetching team names...');
 
-    const teamNames = await getTeamNames(leagueId);
+    const teamNames = await gauntletAPI.getTeamNames(leagueId);
     console.log(`✅ Found ${teamNames.size} team names\n`);
 
     for (let matchupId = 1; matchupId <= 6; matchupId++) {

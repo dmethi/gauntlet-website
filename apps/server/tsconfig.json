@@ -13,5 +13,8 @@
   },
   "include": ["src/lib/**/*.ts", "src/scripts/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
-  "references": [{ "path": "../sim-engine" }]
+  "references": [
+    { "path": "../../packages/types" },
+    { "path": "../sim-engine" }
+  ]
 }

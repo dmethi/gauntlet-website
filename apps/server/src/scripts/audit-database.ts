@@ -13,15 +13,9 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env') });
 
 import { PrismaClient } from '../generated/prisma-historical/index.js';
-const prisma = new PrismaClient();
+import type { ModelStats } from '@gauntlet/types';
 
-interface ModelStats {
-  name: string;
-  count: number;
-  hasData: boolean;
-  latestRecord?: Date | null;
-  oldestRecord?: Date | null;
-}
+const prisma = new PrismaClient();
 
 async function auditModel(
   modelName: string,
