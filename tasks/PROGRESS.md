@@ -2,10 +2,10 @@
 
 **Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 26.9% (32/119 tasks)  
+**Overall Progress**: 27.7% (33/119 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 5.7% (2/35 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 8.6% (3/35 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (31)
+#### ✅ Completed (32)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -47,6 +47,7 @@
 - [x] **SIM-615**: Add Package Quality Badges ⏱️ 15 min
 - [x] **WEB-SETUP-001**: Testing Infrastructure Setup ⏱️ 1 hour
 - [x] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) ⏱️ 45 min
+- [x] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour
 
 #### 🔄 In Progress (0)
 
@@ -54,7 +55,7 @@ _Ready to begin_
 
 #### ⏭️ Up Next (1)
 
-- [ ] **WEB-SETUP-003**: Test Utilities and Factories [HIGH PRIORITY]
+- [ ] **WEB-SETUP-004**: Create Feature Folder Structure [HIGH PRIORITY]
 
 #### 📋 Queued (5)
 
@@ -70,7 +71,7 @@ _Ready to begin_
 
 | Category            | Total  | Completed | In Progress | Remaining |
 | ------------------- | ------ | --------- | ----------- | --------- |
-| **SETUP**           | 13     | 5         | 0           | 8         |
+| **SETUP**           | 13     | 6         | 0           | 7         |
 | **EXTRACT**         | 16     | 2         | 0           | 14        |
 | **UTIL**            | 16     | 0         | 0           | 16        |
 | **HOOK**            | 11     | 0         | 0           | 11        |
@@ -84,7 +85,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3      | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4      | 2         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **119** | **32**   | **0**       | **87**    |
+| **Total**           | **119** | **33**   | **0**       | **86**    |
 
 ---
 
@@ -184,7 +185,7 @@ background jobs package.
 
 - [x] **WEB-SETUP-001**: Testing Infrastructure Setup ⏱️ 1 hour [CRITICAL] ✅
 - [x] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) ⏱️ 45 min [CRITICAL] ✅
-- [ ] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour [CRITICAL]
+- [x] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour [CRITICAL] ✅
 - [ ] **WEB-SETUP-004**: Create Feature Folder Structure ⏱️ 30 min [HIGH]
 
 #### Phase 2: Type Extraction (Week 1-2) ⚠️ QUICK WINS
@@ -308,6 +309,25 @@ package.
 ## 🎉 Recent Completions
 
 ### October 7, 2025 (Latest)
+
+- ✅ **WEB-SETUP-003**: Test Utilities and Factories
+  - Created test directory structure (`src/test/factories/`, `src/test/utils/`)
+  - Created React Query test wrapper (`test-wrapper.tsx`) with `createWrapper()` and `renderWithProviders()` functions
+  - Created TeamFactory with `generateTeam()` and `generateMultiple()` using `SleeperRoster` type from `@gauntlet/types`
+  - Created MatchupFactory with `generateMatchup()` and `generateMatchupPair()` with explicit `TestMatchup` interface
+  - Created ManagerFactory with `generateProfile()` and `generateMultiple()` using `ManagerProfile` from manager-analytics
+  - Created mock API client utilities: `createMockAPIClient()` and `mockFetch()` with proper `RequestInfo | URL` typing
+  - Created barrel export (`test/index.ts`) exporting all factories and utilities
+  - Created example test (`team.test.ts`) with 3 passing tests validating factory functionality
+  - Fixed TypeScript errors: Used `SleeperRoster` instead of `FantasyTeam`, added required settings fields (waiver_position, waiver_budget_used, total_moves)
+  - Fixed fetch mock typing: Properly handles `RequestInfo | URL` parameter types
+  - All 6 tests passing (3 new factory tests + 3 existing utils tests)
+  - TypeScript compilation passes with 0 errors
+  - ESLint passes with 0 errors
+  - Code formatted with Prettier
+  - **Phase 1 Progress**: Infrastructure 3/4 complete (75%)
+  - **Outcome**: Test utilities enable efficient, consistent test writing across all components and utilities
+  - **Next Steps**: WEB-SETUP-004 (Feature Folder Structure), then type extraction tasks
 
 - ✅ **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier)
   - Installed ESLint 8.57.1 with TypeScript support (@typescript-eslint/parser@8.38.0, @typescript-eslint/eslint-plugin@8.38.0)
