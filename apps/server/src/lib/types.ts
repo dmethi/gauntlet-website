@@ -22,7 +22,7 @@ export type {
   LiveWinProbSample,
   MatchupOddsHistory,
   LeagueOddsHistory,
-} from '../generated/prisma-historical';
+} from '../../generated/prisma-historical';
 
 // Re-export local types
 export type { RetryOptions } from './retry.js';

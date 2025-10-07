@@ -28,10 +28,9 @@ export async function GET(request: NextRequest) {
     const { runLiveSnapshot } = await import('./snapshot-runner');
 
     const result = await runLiveSnapshot();
-    const duration = Date.now() - startTime;
 
     console.log('✅ [CRON] Live odds snapshot completed:', {
-      duration: `${duration}ms`,
+      duration: `${result.duration}ms`,
       saved: result.savedCount,
       skipped: result.skippedCount,
       failed: result.failedCount,
@@ -40,7 +39,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      duration,
       ...result,
       triggeredAt: new Date().toISOString(),
     });

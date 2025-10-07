@@ -30,7 +30,9 @@ import {
   createMetrics,
   disconnect,
   saveSnapshotIfChanged,
-} from '@gauntlet/server/src/lib';
+} from '@gauntlet/server';
+
+import type { MetricsSummary } from '@gauntlet/types';
 
 interface SnapshotResult {
   savedCount: number;
@@ -39,7 +41,7 @@ interface SnapshotResult {
   totalProcessed: number;
   week: number;
   duration: number;
-  metrics: Record<string, unknown>;
+  metrics: MetricsSummary;
 }
 
 /**

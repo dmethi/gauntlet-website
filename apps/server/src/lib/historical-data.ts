@@ -17,7 +17,7 @@ import {
   type MatchupOddsHistory,
   type Prisma,
   PrismaClient,
-} from '../generated/prisma-historical';
+} from '../../generated/prisma-historical';
 
 const prisma = new PrismaClient();
 
@@ -535,4 +535,4 @@ export type {
   LiveWinProbSample,
   MatchupOddsHistory,
   LeagueOddsHistory,
-} from '../generated/prisma-historical';
+} from '../../generated/prisma-historical';

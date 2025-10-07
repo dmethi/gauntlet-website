@@ -7,13 +7,13 @@
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
   "exports": {
-    "./src/lib": {
-      "types": "./src/lib/index.ts",
-      "default": "./src/lib/index.ts"
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "default": "./dist/lib/index.js"
     },
-    "./src/lib/*": {
-      "types": "./src/lib/*.ts",
-      "default": "./src/lib/*.ts"
+    "./lib": {
+      "types": "./dist/lib/index.d.ts",
+      "default": "./dist/lib/index.js"
     }
   },
   "scripts": {
