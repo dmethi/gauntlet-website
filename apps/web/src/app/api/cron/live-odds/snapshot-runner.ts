@@ -58,7 +58,7 @@ const captureIndividualMatchup = async (
       `https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`,
     );
     const matchups = (await sleeperResponse.json()) as SleeperMatchup[];
-    const matchupPair = matchups.filter((m) => m.matchup_id === matchupId);
+    const matchupPair = matchups.filter(m => m.matchup_id === matchupId);
 
     if (matchupPair.length !== 2) return null;
 
@@ -67,7 +67,7 @@ const captureIndividualMatchup = async (
     const sim = data.simulation;
 
     const toDebugPlayers = (players: SimulationPlayer[]): DebugPlayer[] =>
-      players.map((p) => ({
+      players.map(p => ({
         name: p.name || p.playerName || p.id,
         position: p.position || 'FLEX',
         nflTeam: p.nflTeam || '',
@@ -86,9 +86,9 @@ const captureIndividualMatchup = async (
 
     // Use FRESH current scores from direct Sleeper API
     const team1CurrentScore =
-      matchupPair.find((m) => m.roster_id === sim.teams[0].rosterId)?.points || 0;
+      matchupPair.find(m => m.roster_id === sim.teams[0].rosterId)?.points || 0;
     const team2CurrentScore =
-      matchupPair.find((m) => m.roster_id === sim.teams[1].rosterId)?.points || 0;
+      matchupPair.find(m => m.roster_id === sim.teams[1].rosterId)?.points || 0;
 
     // Simulated means
     const team1SimMean = sim.team1Scores.mean;
@@ -210,7 +210,7 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
         }
 
         // Small delay to avoid API overload
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
 

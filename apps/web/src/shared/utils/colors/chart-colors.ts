@@ -2,15 +2,15 @@
 
 import { useTheme } from 'next-themes';
 import { useMemo } from 'react';
-import { colors } from './colors';
-import teamColorData from '../../../../brand/team-colors.json';
+import { colors } from '@/lib/colors';
+import teamColorData from '../../../../../../brand/team-colors.json';
 
 /**
  * Enhanced theme-aware chart colors hook
  * Provides consistent, accessible colors that adapt to light/dark mode
  * Integrates brand colors and optimized for fantasy football contexts
  */
-export function useChartColors() {
+export const useChartColors = () => {
   const { theme } = useTheme();
 
   return useMemo(() => {
@@ -139,7 +139,7 @@ export function useChartColors() {
       surface: isDark ? 'rgba(15, 23, 42, 0.5)' : 'rgba(248, 250, 252, 0.8)',
     };
   }, [theme]);
-}
+};
 
 /**
  * Static chart colors for cases where hooks can't be used
@@ -172,18 +172,18 @@ export const staticChartColors = {
 /**
  * Chart color getter for non-React contexts
  */
-export function getChartColor(colorKey: keyof typeof staticChartColors): string {
+export const getChartColor = (colorKey: keyof typeof staticChartColors): string => {
   return staticChartColors[colorKey];
-}
+};
 
 /**
  * Generate performance color based on value and context
  */
-export function getPerformanceColor(
+export const getPerformanceColor = (
   value: number,
   context: 'points' | 'luck' | 'percentage' = 'points',
   theme: 'light' | 'dark' = 'light',
-): string {
+): string => {
   const isDark = theme === 'dark';
 
   switch (context) {
@@ -209,12 +209,12 @@ export function getPerformanceColor(
     default:
       return isDark ? '#6b7280' : '#9ca3af';
   }
-}
+};
 
 /**
  * Get position-specific color for fantasy football positions
  */
-export function getPositionColor(position: string, theme: 'light' | 'dark' = 'light'): string {
+export const getPositionColor = (position: string, theme: 'light' | 'dark' = 'light'): string => {
   const isDark = theme === 'dark';
   const pos = position.toLowerCase();
 
@@ -235,12 +235,12 @@ export function getPositionColor(position: string, theme: 'light' | 'dark' = 'li
     default:
       return isDark ? '#6b7280' : '#9ca3af'; // Default gray
   }
-}
+};
 
 /**
  * Team color assignment system - uses explicit JSON mapping for guaranteed unique colors
  */
-export function assignTeamColor(teamId: string): number {
+export const assignTeamColor = (teamId: string): number => {
   // Try to get from explicit mapping first
   const assignedColor =
     teamColorData.teamColorAssignments[teamId as keyof typeof teamColorData.teamColorAssignments];
@@ -257,29 +257,29 @@ export function assignTeamColor(teamId: string): number {
     hash = hash & hash;
   }
   return Math.abs(hash) % 14;
-}
+};
 
-export function getTeamColor(teamId: string, theme: 'light' | 'dark' = 'light'): string {
+export const getTeamColor = (teamId: string, theme: 'light' | 'dark' = 'light'): string => {
   const isDark = theme === 'dark';
   const colorIndex = assignTeamColor(teamId);
 
   // Use colors from the JSON data for consistency
   const colorData = teamColorData.colorPalette.colors[colorIndex];
   return isDark ? colorData.dark : colorData.light;
-}
+};
 
 // Team colors are now managed via static JSON mapping, no clearing needed
 
 /**
  * Generate team comparison palette (optimized for high contrast differentiation)
  */
-export function getTeamComparisonPalette(theme: 'light' | 'dark' = 'light'): string[] {
+export const getTeamComparisonPalette = (theme: 'light' | 'dark' = 'light'): string[] => {
   // Use the same 14 colors from JSON data for consistency
   return Array.from({ length: 14 }, (_, i) => {
     const colorData = teamColorData.colorPalette.colors[i];
     return theme === 'dark' ? colorData.dark : colorData.light;
   });
-}
+};
 
 /**
  * Chart color documentation and usage guidelines

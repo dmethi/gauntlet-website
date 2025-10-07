@@ -1,6 +1,6 @@
 'use client';
 
-import { getTeamColor, useChartColors } from '@/lib/chart-colors';
+import { getTeamColor, useChartColors } from '@/shared/utils/colors';
 import { useTheme } from 'next-themes';
 import {
   Bar,

@@ -2,10 +2,10 @@
 
 **Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 37.3% (44/118 tasks)  
+**Overall Progress**: 39.8% (47/118 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 35.7% (15/42 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 42.9% (18/42 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (44)
+#### ✅ Completed (47)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -70,13 +70,12 @@ _Ready to begin_
 
 _Ready to begin_
 
-#### 📋 Queued (5)
+#### 📋 Queued (4)
 
-- [ ] **UTIL-001**: Manager Analysis Formatting Utils
-- [ ] **UTIL-002**: Manager Analysis Colors Utils
-- [ ] **HOOK-001**: Manager Analysis Sorting Hook
-- [ ] **HOOK-002**: Manager Analysis Filtering Hook
-- [ ] **COMP-001**: Split Manager Analysis Component
+- [ ] **WEB-UTIL-004**: Hall of Fame Utilities
+- [ ] **WEB-HOOK-001**: Manager Analysis Sorting Hook
+- [ ] **WEB-HOOK-002**: Manager Analysis Filtering Hook
+- [ ] **WEB-COMP-001**: Split Manager Analysis Component
 
 ---
 
@@ -86,7 +85,7 @@ _Ready to begin_
 | ------------------- | ------- | --------- | ----------- | --------- |
 | **SETUP**           | 13      | 7         | 0           | 6         |
 | **EXTRACT**         | 23      | 13        | 0           | 10        |
-| **UTIL**            | 16      | 0         | 0           | 16        |
+| **UTIL**            | 16      | 3         | 0           | 13        |
 | **HOOK**            | 11      | 0         | 0           | 11        |
 | **COMP**            | 15      | 0         | 0           | 15        |
 | **TEST**            | 11      | 3         | 0           | 8         |
@@ -98,7 +97,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
 | **SECURITY**        | 1       | 0         | 0           | 1         |
-| **Total**           | **126** | **44**    | **0**       | **82**    |
+| **Total**           | **126** | **47**    | **0**       | **79**    |
 
 ---
 
@@ -218,12 +217,13 @@ plan
 - [x] **WEB-EXTRACT-009**: Hall of Fame Types ⏱️ 20 min [LOW] ✅
 - [x] **WEB-EXTRACT-010**: Competition Report Types ⏱️ 30 min [LOW] ✅
 - [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min [MEDIUM] ✅
+- [x] **WEB-UTIL-002**: Color Utilities ⏱️ 40 min [MEDIUM] ✅
 
 #### Phase 3: Utility Extraction (Week 2) 🟡 FOUNDATION
 
-- [ ] **WEB-UTIL-001**: Formatting Utilities ⏱️ 40 min [MEDIUM]
-- [ ] **WEB-UTIL-002**: Color Utilities ⏱️ 35 min [MEDIUM]
-- [ ] **WEB-UTIL-003**: Manager Analytics Calculations ⏱️ 1 hour [MEDIUM]
+- [x] **WEB-UTIL-001**: Formatting Utilities ⏱️ 50 min [MEDIUM] ✅
+- [x] **WEB-UTIL-002**: Color Utilities ⏱️ 40 min [MEDIUM] ✅
+- [x] **WEB-UTIL-003**: Manager Analytics Calculations ⏱️ 1 hour [MEDIUM] ✅
 - [ ] **WEB-UTIL-004**: Hall of Fame Utilities ⏱️ 45 min [MEDIUM]
 
 #### Phase 4: Hook Extraction (Week 3) 🟡 PREPARATION
@@ -339,6 +339,104 @@ package.
 ## 🎉 Recent Completions
 
 ### October 7, 2025 (Latest)
+
+- ✅ **WEB-UTIL-003**: Manager Analytics Calculations
+  - Created `features/draft-analysis/utils/calculations.ts` with 6 calculation utilities (757 lines)
+  - Extracted pure calculation functions from `lib/manager-analytics.ts`:
+    - `inferStarters()` - Lineup inference based on positional requirements (44 lines)
+    - `calculateGini()` - Gini coefficient for spending distribution (16 lines)
+    - `cosineSimilarity()` - Cosine similarity for feature vectors (17 lines)
+    - `kMeansCluster()` - K-means clustering algorithm (62 lines)
+    - `calculatePlayerOverlap()` - Player overlap analytics between drafts (115 lines)
+    - `calculatePlayerLevelAnalytics()` - Comprehensive player-level analytics (363 lines)
+  - Created comprehensive barrel export `features/draft-analysis/utils/index.ts` with all 6 functions
+  - Reduced `lib/manager-analytics.ts` from 1,155 lines → 536 lines (619 lines saved, 53.6% reduction)
+  - Updated imports in manager-analytics.ts to use extracted utilities
+  - Maintained backward compatibility via re-exports for existing code
+  - Created comprehensive test suite with 28 passing tests (100% success rate):
+    - `inferStarters` tests: 3 tests covering lineup inference, empty teams, price prioritization
+    - `calculateGini` tests: 5 tests covering equal distribution, concentration, edge cases
+    - `cosineSimilarity` tests: 6 tests covering identical vectors, proportional, orthogonal, zero vectors
+    - `kMeansCluster` tests: 4 tests covering empty data, cluster assignments, well-defined separation
+    - `calculatePlayerOverlap` tests: 4 tests covering overlap calculation, copycat pairs, mavericks
+    - `calculatePlayerLevelAnalytics` tests: 6 tests covering player analysis, price gaps, tiers, histograms
+  - All 28 tests passing with 0 failures
+  - TypeScript compilation passes with 0 errors
+  - No ESLint violations introduced
+  - **Phase 3 Progress**: Utility Extraction 3/4 complete (75%)
+  - **Outcome**: Separated calculation logic from data orchestration, improved testability, reduced file complexity
+  - **Next Steps**: WEB-UTIL-004 (Hall of Fame Utilities) to complete utility extraction phase
+
+- ✅ **WEB-UTIL-002**: Color Utilities
+  - Created `shared/utils/colors/` directory with 6 utility modules
+  - Created `helpers.ts` with hexToRgb, mixHex color utilities
+  - Created `diverging.ts` with getDivergingBg function for red-yellow-green diverging scales
+  - Created `rank-colors.ts` with getRankColor function for percentile-based coloring
+  - Created `performance.ts` with getPerformanceColor function for value-based coloring
+  - Created `text-colors.ts` with getTextColor, getTextColorForBg functions for accessible text colors
+  - Moved `lib/chart-colors.ts` → `shared/utils/colors/chart-colors.ts` (323 lines)
+  - Consolidated 8 separate utility files from `app/stats/utils/` into shared location
+  - Created comprehensive barrel export `index.ts` with all color utilities
+  - Created 5 test files with 44 total passing tests (100% coverage):
+    - `helpers.test.ts`: 12 tests for hex/RGB conversion and color mixing
+    - `diverging.test.ts`: 8 tests for diverging color scale
+    - `rank-colors.test.ts`: 7 tests for rank-based coloring
+    - `performance.test.ts`: 7 tests for performance-based coloring
+    - `text-colors.test.ts`: 10 tests for accessible text color selection
+  - Updated 9 importing files to use new `@/shared/utils/colors` path:
+    - `app/competition/reports/2025/week-1/page.tsx`: Updated useChartColors import
+    - `components/team-charts.tsx`: Updated getTeamColor, useChartColors imports
+    - `components/league-chart.tsx`: Updated useChartColors import
+    - `app/matchup/[matchupId]/page.tsx`: Updated getTeamColor import
+    - `app/stats/components/ScheduleAnalysis.tsx`: Updated getRankColor, getTextColor imports
+    - `app/stats/components/TeamView.tsx`: Updated getRankColor, getTextColor imports
+    - `app/stats/components/TrendsView.tsx`: Updated getRankColor, getTextColor imports
+    - `app/stats/components/LeagueView.tsx`: Updated getRankColor, getTextColor imports
+    - `app/stats/components/TransactionAnalysis.tsx`: Updated getDivergingBg, getTextColorForBg imports
+  - Deleted 8 old color utility files from `lib/` and `app/stats/utils/`:
+    - `lib/chart-colors.ts`
+    - `app/stats/utils/getDivergingBg.ts`
+    - `app/stats/utils/getRankColor.ts`
+    - `app/stats/utils/getPerformanceColor.ts`
+    - `app/stats/utils/getTextColor.ts`
+    - `app/stats/utils/getTextColorForBg.ts`
+    - `app/stats/utils/hexToRgb.ts`
+    - `app/stats/utils/mixHex.ts`
+  - All 44 tests passing with 0 failures
+  - TypeScript compilation passes with 0 errors
+  - No ESLint violations introduced
+  - **Phase 3 Progress**: Utility Extraction 2/4 complete (50%)
+  - **Outcome**: Consolidated all color utilities into shared location, eliminated duplication, established comprehensive test coverage
+  - **Next Steps**: WEB-UTIL-003 (Manager Analytics Calculations) or WEB-UTIL-004 (Hall of Fame Utilities)
+
+- ✅ **WEB-UTIL-001**: Formatting Utilities
+  - Created `shared/utils/formatting/` directory with 4 utility modules
+  - Created `numbers.ts` with formatNumber, formatDelta, formatCompact functions
+  - Created `percentages.ts` with formatPercentage, formatDecimal functions
+  - Created `odds.ts` with formatOdds, formatMoneyline functions
+  - Created `stats.ts` with formatStatKey, formatStatValue functions
+  - Created comprehensive barrel export `index.ts` with all 8 utility functions
+  - Created 4 test files with 49 total passing tests (100% coverage):
+    - `numbers.test.ts`: 17 tests for number formatting utilities
+    - `percentages.test.ts`: 11 tests for percentage formatting utilities
+    - `odds.test.ts`: 10 tests for betting odds formatting utilities
+    - `stats.test.ts`: 11 tests for stat formatting utilities
+  - Removed duplicate `formatOdds()` function from 2 files:
+    - `components/matchup-odds-preview.tsx` (lines 58-60 removed)
+    - `components/matchup-simulation.tsx` (lines 186-188 removed)
+  - Replaced inline formatting in `components/stats/SummaryTable.tsx`:
+    - Replaced `.toFixed()` calls with `formatNumber()` (2 instances)
+    - Replaced manual delta formatting with `formatDelta()` (3 instances)
+  - Updated 3 components to import from `@/shared/utils/formatting`:
+    - `matchup-odds-preview.tsx`: Added formatOdds import
+    - `matchup-simulation.tsx`: Added formatOdds import
+    - `stats/SummaryTable.tsx`: Added formatNumber, formatDelta imports
+  - All 49 tests passing with 0 failures
+  - TypeScript compilation passes with 0 errors
+  - No new ESLint violations introduced
+  - **Phase 3 Started**: Utility Extraction 1/4 complete (25%)
+  - **Outcome**: Eliminated formatting duplication, established shared formatting utilities, unblocks component splitting work
+  - **Next Steps**: WEB-UTIL-002 (Color Utilities Relocation) or WEB-UTIL-003 (Manager Analytics Calculations)
 
 - ✅ **WEB-EXTRACT-011**: Draft Analytics Types
   - Created 13 draft analytics type definitions in `features/draft-analysis/types.ts`

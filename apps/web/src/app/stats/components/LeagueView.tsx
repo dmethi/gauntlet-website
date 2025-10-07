@@ -13,8 +13,7 @@ import { TrackedPosition } from '@/lib/stats/positions';
 import { colors } from '../../../../../../brand/colors';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { rank } from '@/lib/stats/ranks';
-import { getRankColor } from '../utils/getRankColor';
-import { getTextColor } from '../utils/getTextColor';
+import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import {
   getPositionSummaries,
   getTopPositionalAdvantages,

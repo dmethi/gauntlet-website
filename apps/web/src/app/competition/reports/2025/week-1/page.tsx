@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { DerbyBadge } from '@/components/MatchupTags';
 import { Callout } from '@/components/Callout';
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { useChartColors } from '@/lib/chart-colors';
+import { useChartColors } from '@/shared/utils/colors';
 import { colors as brandColors } from '@/lib/colors';
 
 // Helper to derive conference abbreviation (AFC/NFC) from league name

@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { getTeamColor } from '@/lib/chart-colors';
+import { getTeamColor } from '@/shared/utils/colors';
 import { ChartContainer, ChartLegend, Container, PageHeader } from '@gauntlet/ui';
 import {
   type PlayerInfo,

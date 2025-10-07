@@ -12,8 +12,7 @@ import {
 import { TrackedPosition } from '@/lib/stats/positions';
 import { colors } from '../../../../../../brand/colors';
 import { rank } from '@/lib/stats/ranks';
-import { getRankColor } from '../utils/getRankColor';
-import { getTextColor } from '../utils/getTextColor';
+import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { getTeamPositionalSummary } from '@/lib/stats/positional-advantages';
 import { PlayerBreakdownRow } from '@/components/stats/PlayerBreakdown';
 import type { PlainStatsDataset } from '@/lib/stats/compose';

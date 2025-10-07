@@ -17,8 +17,7 @@ import { TrackedPosition } from '@/lib/stats/positions';
 import { rank } from '@/lib/stats/ranks';
 import { median } from '@/lib/stats/medians';
 import { colors } from '../../../../../../brand/colors';
-import { getRankColor } from '../utils/getRankColor';
-import { getTextColor } from '../utils/getTextColor';
+import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { RidgePlot } from './RidgePlot';
 import type { PlainStatsDataset } from '@/lib/stats/compose';
 import type {

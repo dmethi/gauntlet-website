@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, Zap } from 'lucide-react';
 import type { MatchupOddsData, MatchupOddsPreviewProps } from '@/features/matchups/types';
+import { formatOdds } from '@/shared/utils/formatting';
 
 export function MatchupOddsPreview({
   leagueId,
@@ -54,10 +55,6 @@ export function MatchupOddsPreview({
 
     fetchOdds();
   }, [leagueId, week, matchupId]);
-
-  const formatOdds = (odds: number): string => {
-    return odds > 0 ? `+${odds}` : `${odds}`;
-  };
 
   const getWinProbColor = (prob: number): string => {
     if (prob > 0.65) return 'text-green-600 dark:text-green-400';

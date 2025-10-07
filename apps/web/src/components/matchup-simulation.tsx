@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { ScoreBoxPlotProps, SimulationData } from '@/features/matchups/types';
+import { formatOdds } from '@/shared/utils/formatting';
 
 // Inline Score Box Plot Component
 
@@ -182,10 +183,6 @@ export function MatchupSimulation({
   useEffect(() => {
     fetchSimulation();
   }, [leagueId, week, matchupId]);
-
-  const formatOdds = (odds: number): string => {
-    return odds > 0 ? `+${odds}` : `${odds}`;
-  };
 
   const calculateWinProbFromSpread = (spread: number): { team1: number; team2: number } => {
     if (!simulationData) return { team1: 0.5, team2: 0.5 };

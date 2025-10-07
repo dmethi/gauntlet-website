@@ -2,7 +2,7 @@
 
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartLegend } from '@gauntlet/ui';
-import { useChartColors } from '@/lib/chart-colors';
+import { useChartColors } from '@/shared/utils/colors';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 
 interface WeeklyAverage {

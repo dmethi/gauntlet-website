@@ -18,8 +18,7 @@ import { GradeTxn } from '@/app/stats/types';
 import { CURRENT_LEAGUES } from '@/config/leagues';
 import { buildFacts } from '@/lib/transactions-facts';
 import { computeTransactionGradesForStatsHub } from '../utils/computeTransactionGradesForStatsHub';
-import { getDivergingBg } from '../utils/getDivergingBg';
-import { getTextColorForBg } from '../utils/getTextColorForBg';
+import { getDivergingBg, getTextColorForBg } from '@/shared/utils/colors';
 import {
   Select,
   SelectContent,

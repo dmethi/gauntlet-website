@@ -20,8 +20,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { getRankColor } from '../utils/getRankColor';
-import { getTextColor } from '../utils/getTextColor';
+import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import type { PlainStatsDataset } from '@/lib/stats/compose';
 import type { TeamInfo, TeamScore, TeamData, ScheduleAnalysisProps } from '@/features/stats';
 

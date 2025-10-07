@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { formatNumber, formatDelta } from '@/shared/utils/formatting';
 
 export interface SummaryTableRow {
   teamName: string;
@@ -51,8 +52,10 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
           {sortedData.map((row, index) => (
             <TableRow key={row.teamName}>
               <TableCell className="font-medium">{row.teamName}</TableCell>
-              <TableCell className="text-right font-mono">{row.windowTotal.toFixed(1)}</TableCell>
-              <TableCell className="text-right font-mono">{row.oppTotal.toFixed(1)}</TableCell>
+              <TableCell className="text-right font-mono">
+                {formatNumber(row.windowTotal)}
+              </TableCell>
+              <TableCell className="text-right font-mono">{formatNumber(row.oppTotal)}</TableCell>
               <TableCell
                 className={cn(
                   'text-right font-mono',
@@ -61,8 +64,7 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
                     : 'text-red-600 dark:text-red-400',
                 )}
               >
-                {row.diff > 0 ? '+' : ''}
-                {row.diff.toFixed(1)}
+                {formatDelta(row.diff)}
               </TableCell>
               <TableCell
                 className={cn(
@@ -72,8 +74,7 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
                     : 'text-red-600 dark:text-red-400',
                 )}
               >
-                {row.avgDelta > 0 ? '+' : ''}
-                {row.avgDelta.toFixed(1)}
+                {formatDelta(row.avgDelta)}
               </TableCell>
               <TableCell
                 className={cn(
@@ -83,8 +84,7 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
                     : 'text-red-600 dark:text-red-400',
                 )}
               >
-                {row.medianDelta > 0 ? '+' : ''}
-                {row.medianDelta.toFixed(1)}
+                {formatDelta(row.medianDelta)}
               </TableCell>
               <TableCell className="text-center">
                 <Badge
