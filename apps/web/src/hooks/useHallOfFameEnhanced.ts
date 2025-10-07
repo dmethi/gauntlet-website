@@ -5,20 +5,21 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS } from '@/lib/constants';
-import { EnhancedMatchup, hallOfFameDataService } from '@/lib/hall-of-fame-data-service';
+import { hallOfFameDataService } from '@/features/hall-of-fame/hooks/useHallOfFameData';
 import {
-  RollingWindowData,
-  SeasonalData,
-  StreakData,
+  type RollingWindowData,
+  type SeasonalData,
+  type StreakData,
+  type EnhancedMatchup,
   calculateRollingWindows,
   calculateSeasonalData,
   calculateStreaks,
   findBestRollingWindows,
   findLongestStreaks,
   findSeasonalRecords,
-} from '@/lib/hall-of-fame-aggregations';
-import { HallOfFameRecord, calculateHallOfFameRecords } from '@/lib/hall-of-fame-calculations';
-import { getAllCategories } from '@/lib/hall-of-fame-expanded-categories';
+} from '@/features/hall-of-fame/utils';
+import { type HallOfFameRecord, calculateHallOfFameRecords } from '@/features/hall-of-fame/utils';
+import { getAllCategories } from '@/features/hall-of-fame/utils';
 
 export interface PositionalDifferenceRecord {
   position: string;

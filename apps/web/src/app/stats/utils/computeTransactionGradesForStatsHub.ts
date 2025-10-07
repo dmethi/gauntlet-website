@@ -1,4 +1,4 @@
-import { Facts, playoffWeight } from '@/lib/transactions-facts';
+import { Facts, playoffWeight } from '@/features/transactions/utils';
 import { TeamInfo } from '../types';
 import { GradeTxn } from '../types';
 import { RawTxn } from '../types';

@@ -14,7 +14,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { getPreGeneratedDrafts } from '../lib/draft-generator';
-import { generateMockAnalytics } from '../lib/draft-analytics';
+import { generateMockAnalytics } from '../features/draft-analysis/utils/analytics';
 import { generateManagerAnalytics } from '../lib/manager-analytics';
 
 interface PrecomputedData {

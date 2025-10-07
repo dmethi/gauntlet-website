@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useHallOfFameEnhanced } from '@/hooks/useHallOfFameEnhanced';
-import { formatRecord, getCategoryInfo, getRankEmoji } from '@/lib/hall-of-fame-calculations';
+import { formatRecord, getCategoryInfo, getRankEmoji } from '@/features/hall-of-fame/utils';
 import { Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

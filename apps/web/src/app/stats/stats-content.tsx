@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import type { PlainStatsDataset } from '@/lib/stats/compose';
+import type { PlainStatsDataset } from '@/shared/utils/stats';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StartSitEfficiencyTab from '@/components/stats/StartSitEfficiencyTab';

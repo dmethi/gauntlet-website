@@ -13,7 +13,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { PositionInflation } from '@/lib/draft-analytics';
+import { PositionInflation } from '@/features/draft-analysis/utils';
 import { colors, semanticColors } from '../../../../../brand/colors';
 
 interface PositionInflationChartProps {

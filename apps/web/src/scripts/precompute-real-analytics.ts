@@ -12,7 +12,7 @@
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { getRealDrafts } from '../lib/draft-data-fetcher';
-import { generateMockAnalytics } from '../lib/draft-analytics';
+import { generateMockAnalytics } from '../features/draft-analysis/utils/analytics';
 import { generateManagerAnalytics } from '../lib/manager-analytics';
 
 const OUTPUT_DIR = join(process.cwd(), 'src', 'data', 'precomputed');

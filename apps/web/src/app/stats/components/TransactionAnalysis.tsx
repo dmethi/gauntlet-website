@@ -16,7 +16,7 @@ import {
 import { TeamInfo } from '../types';
 import { GradeTxn } from '@/app/stats/types';
 import { CURRENT_LEAGUES } from '@/config/leagues';
-import { buildFacts } from '@/lib/transactions-facts';
+import { buildFacts } from '@/features/transactions/utils';
 import { computeTransactionGradesForStatsHub } from '../utils/computeTransactionGradesForStatsHub';
 import { getDivergingBg, getTextColorForBg } from '@/shared/utils/colors';
 import {

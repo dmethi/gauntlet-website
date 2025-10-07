@@ -66,18 +66,18 @@
 
 ### 📄 Phase 3-8: Remaining Tasks (27 tasks) - PLACEHOLDER FORMAT
 
-#### Phase 3: Utility Extraction (4 tasks)
+#### Phase 3: Utility Extraction (4 tasks) - ✅ DETAILED
 
-- **WEB-UTIL-001.md**: Formatting Utilities ⏱️ 40 min
-- **WEB-UTIL-002.md**: Color Utilities ⏱️ 35 min
-- **WEB-UTIL-003.md**: Manager Analytics Calculations ⏱️ 1 hour
-- **WEB-UTIL-004.md**: Hall of Fame Utilities ⏱️ 45 min
+- ✅ **WEB-UTIL-001.md**: Formatting Utilities ⏱️ 40 min (completed)
+- ✅ **WEB-UTIL-002.md**: Color Utilities ⏱️ 35 min (completed)
+- ✅ **WEB-UTIL-003.md**: Manager Analytics Calculations ⏱️ 1 hour (completed)
+- ✅ **WEB-UTIL-004.md**: Hall of Fame Utilities - Cleanup & Testing ⏱️ 45 min (migration complete, testing remaining)
 
-#### Phase 4: Hook Extraction (3 tasks)
+#### Phase 4: Hook Extraction (3 tasks) - ✅ DETAILED
 
-- **WEB-HOOK-001.md**: Manager Sorting and Filtering ⏱️ 1 hour
-- **WEB-HOOK-002.md**: Draft Analytics Data Hook ⏱️ 45 min
-- **WEB-HOOK-003.md**: Stats Hub Hooks ⏱️ 1 hour
+- ✅ **WEB-HOOK-001.md**: Manager Sorting and Filtering Hooks ⏱️ 1 hour
+- ✅ **WEB-HOOK-002.md**: Draft Analytics Data Hook ⏱️ 45 min
+- ✅ **WEB-HOOK-003.md**: Stats Hub Hooks ⏱️ 1 hour
 
 #### Phase 5: Component Splitting (5 tasks)
 
@@ -114,8 +114,8 @@
 | Status         | Count  | Description                                       |
 | -------------- | ------ | ------------------------------------------------- |
 | ✅ Completed   | 4      | Phase 2 EXTRACT tasks (finished)                  |
-| ✅ Detailed    | 11     | Phase 1 SETUP + Phase 2 additional EXTRACT tasks  |
-| 📄 Placeholder | 27     | Phase 3-8 tasks with basic structure              |
+| ✅ Detailed    | 15     | Phase 1 SETUP + Phase 2 EXTRACT + Phase 3 UTIL + Phase 4 HOOK |
+| 📄 Placeholder | 23     | Phase 5-8 tasks with basic structure             |
 | **Total**      | **42** | All task files created (38 planned + 4 completed) |
 
 ---
@@ -128,7 +128,7 @@ These tasks have been **successfully completed**:
 
 - ✅ **WEB-EXTRACT-001** through **WEB-EXTRACT-004**
 
-### Detailed Tasks (10 files)
+### Detailed Tasks (14 files)
 
 These tasks have **complete, step-by-step instructions** including:
 
@@ -142,10 +142,12 @@ These tasks have **complete, step-by-step instructions** including:
 
 **Files**:
 
-- `WEB-SETUP-001` through `WEB-SETUP-004` (Phase 1)
-- `WEB-EXTRACT-005` through `WEB-EXTRACT-011` (Phase 2 additional)
+- `WEB-SETUP-001` through `WEB-SETUP-004` (Phase 1 - Infrastructure)
+- `WEB-EXTRACT-005` through `WEB-EXTRACT-011` (Phase 2 - Type Extraction)
+- `WEB-UTIL-004` (Phase 3 - Utility Extraction - cleanup task)
+- `WEB-HOOK-001` through `WEB-HOOK-003` (Phase 4 - Hook Extraction)
 
-### Placeholder Tasks (27 files)
+### Placeholder Tasks (24 files)
 
 These tasks have **basic structure** with:
 
@@ -161,6 +163,13 @@ These tasks have **basic structure** with:
   - Cursor prompts
 
 **Status**: Ready to be filled in with detailed instructions as needed
+
+**Remaining Placeholders**:
+- Phase 5: WEB-COMP-001 through WEB-COMP-005 (Component Splitting) - 5 tasks
+- Phase 6: WEB-PAGE-001 through WEB-PAGE-003 (Page Migration) - 3 tasks
+- Phase 7: WEB-TEST-001 through WEB-TEST-004 (Testing) - 4 tasks
+- Phase 8: WEB-CLEAN-001, WEB-CLEAN-002, WEB-DOC-001, WEB-DOC-002 (Cleanup/Polish) - 4 tasks
+- WEB-MISC: Miscellaneous tasks - 1 file (exact number of tasks TBD)
 
 ---
 
@@ -247,11 +256,15 @@ test -f WEB-EXTRACT-001.md && echo "✅ Placeholder tasks exist"
 
 ## 🎯 Next Steps
 
-1. ✅ **COMPLETE**: All 31 task files created
-2. 🔄 **IN PROGRESS**: Review and begin execution
-3. ⏭️ **NEXT**: Start with `WEB-SETUP-001-testing-infrastructure.md`
-4. 📋 **ONGOING**: Fill in placeholder tasks as needed before execution
-5. 📊 **TRACK**: Update `tasks/PROGRESS.md` after each completed task
+1. ✅ **COMPLETE**: All task files created (14 detailed + 24 placeholders)
+2. ✅ **COMPLETE**: Phase 1 (Infrastructure) - 4 tasks
+3. ✅ **COMPLETE**: Phase 2 (Type Extraction) - 11 tasks
+4. ✅ **COMPLETE**: Phase 3 (Utility Extraction) - 4/4 tasks ✅ (migration complete, testing pending)
+5. 🔄 **READY**: Phase 4 (Hook Extraction) - All 3 task files detailed and ready
+6. ⏭️ **RECOMMENDED NEXT**: Execute WEB-UTIL-004 (Hall of Fame testing) OR begin WEB-HOOK-001
+7. ⏭️ **THEN**: Execute WEB-HOOK-001, WEB-HOOK-002, WEB-HOOK-003 in sequence
+8. 📋 **ONGOING**: Fill in placeholder tasks as needed before execution
+9. 📊 **TRACK**: Update `tasks/PROGRESS.md` after each completed task
 
 ---
 
@@ -259,10 +272,10 @@ test -f WEB-EXTRACT-001.md && echo "✅ Placeholder tasks exist"
 
 | Phase             | Tasks  | Total Time      | Status                       |
 | ----------------- | ------ | --------------- | ---------------------------- |
-| Phase 1 (SETUP)   | 4      | 3.25 hours      | ✅ Complete                  |
-| Phase 2 (EXTRACT) | 11     | 3.95 hours      | ✅ 4 complete, 7 ready       |
-| Phase 3 (UTIL)    | 4      | 3 hours         | 📄 Placeholders ready        |
-| Phase 4 (HOOK)    | 3      | 2.75 hours      | 📄 Placeholders ready        |
+| Phase 1 (SETUP)   | 4      | 3.25 hours      | ✅ Complete (4/4)            |
+| Phase 2 (EXTRACT) | 11     | 3.95 hours      | ✅ Complete (11/11)          |
+| Phase 3 (UTIL)    | 4      | 3 hours         | ✅ Complete (4/4, testing pending) |
+| Phase 4 (HOOK)    | 3      | 2.75 hours      | ✅ Task files detailed & ready |
 | Phase 5 (COMP)    | 5      | 9 hours         | 📄 Placeholders ready        |
 | Phase 6 (PAGE)    | 3      | 2.75 hours      | 📄 Placeholders ready        |
 | Phase 7 (TEST)    | 4      | 9 hours         | 📄 Placeholders ready        |

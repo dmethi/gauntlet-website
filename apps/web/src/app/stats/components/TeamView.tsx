@@ -9,21 +9,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { TrackedPosition } from '@/lib/stats/positions';
+import {
+  getTeamPositionalSummary,
+  mean,
+  median,
+  rank,
+  TrackedPosition,
+} from '@/shared/utils/stats';
 import { colors } from '../../../../../../brand/colors';
-import { rank } from '@/lib/stats/ranks';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import { getTeamPositionalSummary } from '@/lib/stats/positional-advantages';
 import { PlayerBreakdownRow } from '@/components/stats/PlayerBreakdown';
-import type { PlainStatsDataset } from '@/lib/stats/compose';
-import { mean, median } from '@/lib/stats/medians';
+import type { PlainStatsDataset } from '@/shared/utils/stats';
 import type {
-  TeamInfo,
-  TeamScore,
-  TeamData,
   PlayerScore,
   PositionalTeamData,
   PositionData,
+  TeamData,
+  TeamInfo,
+  TeamScore,
   TeamViewProps,
 } from '@/features/stats';
 

@@ -6,13 +6,13 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   calculateHallOfFameRecords,
-  ProcessedMatchup,
-  HallOfFameRecord,
   HALL_OF_FAME_CATEGORIES,
   getCategoriesByGroup,
-} from '@/lib/hall-of-fame-calculations';
+  type ProcessedMatchup,
+  type HallOfFameRecord,
+} from '@/features/hall-of-fame/utils';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
-import { calculationCache } from '@/lib/client-calculations';
+import { calculationCache } from '@/shared/utils/calculations';
 import type { SleeperMatchup, SleeperRoster, SleeperUser, SleeperLeague } from '@gauntlet/types';
 
 /**

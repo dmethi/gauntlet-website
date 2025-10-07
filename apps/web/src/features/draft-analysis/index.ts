@@ -1,9 +1,10 @@
 /**
  * Draft Analysis Feature
  *
- * Exports all types for draft analysis components and logic.
+ * Exports all types, hooks, and utilities for draft analysis components and logic.
  */
 
+// Type exports
 export type {
   // Component Props
   ManagerAnalysisProps,
@@ -42,3 +43,14 @@ export type {
   NominationOrderAnalysis,
   DraftAnalytics,
 } from './types';
+
+// Hook exports
+export { useManagerFiltering, useManagerSorting } from './hooks';
+
+export type {
+  ManagerFilterOptions,
+  ManagerFilteringResult,
+  SortDirection,
+  SortConfig,
+  ManagerSortingResult,
+} from './hooks';

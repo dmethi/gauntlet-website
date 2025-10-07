@@ -28,6 +28,7 @@ import { InfoTooltip } from '@/components/ui/info-tooltip';
 import { ManagerAnalytics, ManagerProfile, PlayerOverlap } from '@/lib/manager-analytics';
 import { colors, dataVizColors } from '../../../../brand/colors';
 import { ManagerAnalysisProps } from '@/features/draft-analysis';
+import { useManagerFiltering, useManagerSorting } from '@/features/draft-analysis/hooks';
 
 // TODO: When implementing real draft data, make manager names clickable links
 // that navigate to individual manager analysis pages showing their full draft history,
@@ -45,104 +46,15 @@ import {
 } from 'lucide-react';
 
 export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) => {
-  const [selectedCluster, setSelectedCluster] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('concentration');
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
-    null,
+  // Use custom hooks for filtering and sorting
+  const { selectedCluster, setSelectedCluster, filteredProfiles } = useManagerFiltering(
+    analytics.profiles,
   );
 
-  // Handle sorting
-  const handleSort = (key: string) => {
-    let direction: 'asc' | 'desc' = 'desc';
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'desc') {
-      direction = 'asc';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  // Filter profiles by cluster
-  const filteredProfiles = useMemo(() => {
-    if (selectedCluster === 'all') return analytics.profiles;
-    return analytics.profiles.filter(p => p.cluster.cluster_label === selectedCluster);
-  }, [analytics.profiles, selectedCluster]);
-
-  // Sort profiles
-  const sortedProfiles = useMemo(() => {
-    const sorted = [...filteredProfiles];
-
-    if (sortConfig) {
-      sorted.sort((a, b) => {
-        let aValue: any;
-        let bValue: any;
-
-        switch (sortConfig.key) {
-          case 'manager':
-            aValue = a.manager || 'Unknown Manager';
-            bValue = b.manager || 'Unknown Manager';
-            break;
-          case 'league':
-            aValue = a.league || '';
-            bValue = b.league || '';
-            break;
-          case 'gini':
-            aValue = a.concentration.giniSpend;
-            bValue = b.concentration.giniSpend;
-            break;
-          case 'top1':
-            aValue = a.concentration.top1_share;
-            bValue = b.concentration.top1_share;
-            break;
-          case 'top2':
-            aValue = a.concentration.top2_share;
-            bValue = b.concentration.top2_share;
-            break;
-          case 'top3':
-            aValue = a.concentration.top3_share;
-            bValue = b.concentration.top3_share;
-            break;
-          case 'top4':
-            aValue = a.concentration.top4_share;
-            bValue = b.concentration.top4_share;
-            break;
-          case 'top5':
-            aValue = a.concentration.top5_share;
-            bValue = b.concentration.top5_share;
-            break;
-          case 'player_name':
-            aValue = (a as any).player_name || '';
-            bValue = (b as any).player_name || '';
-            break;
-          case 'afc_price':
-            aValue = (a as any).afc_price || 0;
-            bValue = (b as any).afc_price || 0;
-            break;
-          case 'nfc_price':
-            aValue = (a as any).nfc_price || 0;
-            bValue = (b as any).nfc_price || 0;
-            break;
-          case 'price_diff':
-            aValue = (a as any).price_diff || 0;
-            bValue = (b as any).price_diff || 0;
-            break;
-          default:
-            return 0;
-        }
-
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          return sortConfig.direction === 'asc'
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-        } else {
-          return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-        }
-      });
-    } else {
-      // Default sort by concentration (Gini) descending
-      sorted.sort((a, b) => b.concentration.giniSpend - a.concentration.giniSpend);
-    }
-
-    return sorted;
-  }, [filteredProfiles, sortConfig]);
+  const { sortConfig, sortBy, setSortBy, handleSort, sortedProfiles } = useManagerSorting(
+    filteredProfiles,
+    'concentration',
+  );
 
   // Color scale for heatmap values using brand colors
   const getHeatmapColor = (value: number, max: number, min: number) => {

@@ -21,8 +21,8 @@ import {
   YAxis,
 } from 'recharts';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import type { PlainStatsDataset } from '@/lib/stats/compose';
-import type { TeamInfo, TeamScore, TeamData, ScheduleAnalysisProps } from '@/features/stats';
+import type { PlainStatsDataset } from '@/shared/utils/stats';
+import type { ScheduleAnalysisProps, TeamData, TeamInfo, TeamScore } from '@/features/stats';
 
 // Utility function for mean calculation
 function mean(values: number[]): number {

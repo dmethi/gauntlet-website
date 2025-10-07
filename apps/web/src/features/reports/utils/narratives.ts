@@ -11,7 +11,7 @@ import {
   TRANSACTION_THRESHOLDS,
   START_SIT_THRESHOLDS,
   type NarrativeSeverity,
-} from '../config/narrative-thresholds.js';
+} from '@/config/narrative-thresholds';
 
 // ============================================================================
 // TYPES

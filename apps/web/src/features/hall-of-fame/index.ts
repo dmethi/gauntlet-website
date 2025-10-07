@@ -33,11 +33,51 @@ export type {
   HallOfFameOptions,
 } from './types';
 
+// ============================================================================
+// Utility Exports
+// ============================================================================
+
+export {
+  // Calculations
+  calculateHallOfFameRecords,
+  getCategoryInfo,
+  getCategoriesByGroup,
+  formatRecord,
+  getRankEmoji,
+  HALL_OF_FAME_CATEGORIES,
+  // Aggregations
+  calculateRollingWindows,
+  calculateSeasonalData,
+  calculateStreaks,
+  findBestRollingWindows,
+  findLongestStreaks,
+  findSeasonalRecords,
+  // Categories
+  ALL_HALL_OF_FAME_CATEGORIES,
+  WEEKLY_TEAM_CATEGORIES,
+  WEEKLY_MATCHUP_CATEGORIES,
+  getCategoriesGrouped,
+  // Expanded categories
+  ALL_EXPANDED_CATEGORIES,
+  WEEKLY_PLAYER_CATEGORIES,
+  WIN_PROBABILITY_CATEGORIES,
+  ROLLING_WINDOW_CATEGORIES,
+  SEASONAL_CATEGORIES,
+  PLAYOFF_CATEGORIES,
+  getAllCategories,
+  getExpandedCategoriesGrouped,
+  // Aggregation types
+  type RollingWindowData,
+  type SeasonalData,
+  type StreakData,
+  type EnhancedMatchup,
+} from './utils';
+
+// ============================================================================
+// Hook Exports
+// ============================================================================
+
+export { hallOfFameDataService, createHallOfFameDataService } from './hooks/useHallOfFameData';
+
 // TODO: Add component exports when components are migrated
 // export * from './components';
-
-// TODO: Add hook exports when hooks are migrated
-// export * from './hooks';
-
-// TODO: Add utility exports when utilities are migrated
-// export * from './utils';

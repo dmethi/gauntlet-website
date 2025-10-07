@@ -1,7 +1,6 @@
 'use client';
 
-import type { PlayerBreakdown } from '@/lib/stats/compose';
-import type { TrackedPosition } from '@/lib/stats/positions';
+import type { PlayerBreakdown, TrackedPosition } from '@/shared/utils/stats';
 import { colors } from '../../../../../brand/colors';
 
 interface PlayerBreakdownProps {

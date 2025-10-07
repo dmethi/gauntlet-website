@@ -3,7 +3,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, no-console */
 
-import { MockDraft } from './draft-generator';
+import { MockDraft } from '@/lib/draft-generator';
 import type {
   PositionInflation,
   PositionQuartile,

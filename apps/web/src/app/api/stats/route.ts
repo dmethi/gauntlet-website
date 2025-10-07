@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { buildStatsDataset, serializeStatsDataset } from '@/lib/stats/compose';
+import { buildStatsDataset, serializeStatsDataset } from '@/shared/utils/stats';
 import { CURRENT_LEAGUES } from '@/config/leagues';
 import { readFileSync } from 'fs';
 import { join } from 'path';

@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import { Button } from '@/components/ui/button';
 // import { Badge } from '@/components/ui/badge';
-import { DraftAnalytics } from '@/lib/draft-analytics';
+import { DraftAnalytics } from '@/features/draft-analysis/utils';
 import { colors } from '../../../../../brand/colors';
 import { MockDraft } from '@/lib/draft-generator';
 

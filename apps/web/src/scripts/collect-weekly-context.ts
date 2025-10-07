@@ -41,7 +41,9 @@ async function fetchStatsData() {
   console.log('📥 Fetching stats hub data...');
 
   try {
-    const { buildStatsDataset, serializeStatsDataset } = await import('../lib/stats/compose.js');
+    const { buildStatsDataset, serializeStatsDataset } = await import(
+      '../shared/utils/stats/compose.js'
+    );
     const { CURRENT_LEAGUES } = await import('../config/leagues.js');
 
     const leagueIds = CURRENT_LEAGUES.map(l => l.id);

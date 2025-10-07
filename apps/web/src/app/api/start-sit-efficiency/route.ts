@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { analyzeStartSitEfficiency } from '@/lib/start-sit/analysis';
+import { analyzeStartSitEfficiency } from '@/features/start-sit/utils';
 
 export async function GET() {
   try {

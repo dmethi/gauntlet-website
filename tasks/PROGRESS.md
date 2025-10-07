@@ -2,10 +2,10 @@
 
 **Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 39.8% (47/118 tasks)  
+**Overall Progress**: 41.5% (49/118 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 42.9% (18/42 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 47.6% (20/42 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -61,20 +61,19 @@
 - [x] **WEB-EXTRACT-009**: Hall of Fame Types ⏱️ 20 min
 - [x] **WEB-EXTRACT-010**: Competition Report Types ⏱️ 30 min
 - [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min
+- [x] **WEB-HOOK-001**: Manager Sorting and Filtering Hooks ⏱️ 1 hour
 
 #### 🔄 In Progress (0)
 
 _Ready to begin_
 
-#### ⏭️ Up Next (0)
+#### ⏭️ Up Next (2)
 
-_Ready to begin_
+- [ ] **WEB-HOOK-002**: Draft Analytics Data Hook
+- [ ] **WEB-HOOK-003**: Stats Hub Hooks
 
-#### 📋 Queued (4)
+#### 📋 Queued (1)
 
-- [ ] **WEB-UTIL-004**: Hall of Fame Utilities
-- [ ] **WEB-HOOK-001**: Manager Analysis Sorting Hook
-- [ ] **WEB-HOOK-002**: Manager Analysis Filtering Hook
 - [ ] **WEB-COMP-001**: Split Manager Analysis Component
 
 ---
@@ -86,7 +85,7 @@ _Ready to begin_
 | **SETUP**           | 13      | 7         | 0           | 6         |
 | **EXTRACT**         | 23      | 13        | 0           | 10        |
 | **UTIL**            | 16      | 3         | 0           | 13        |
-| **HOOK**            | 11      | 0         | 0           | 11        |
+| **HOOK**            | 11      | 1         | 0           | 10        |
 | **COMP**            | 15      | 0         | 0           | 15        |
 | **TEST**            | 11      | 3         | 0           | 8         |
 | **PAGE**            | 3       | 0         | 0           | 3         |
@@ -97,7 +96,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
 | **SECURITY**        | 1       | 0         | 0           | 1         |
-| **Total**           | **126** | **47**    | **0**       | **79**    |
+| **Total**           | **126** | **48**    | **0**       | **78**    |
 
 ---
 
@@ -220,12 +219,13 @@ plan
 - [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min [MEDIUM] ✅
 - [x] **WEB-UTIL-002**: Color Utilities ⏱️ 40 min [MEDIUM] ✅
 
-#### Phase 3: Utility Extraction (Week 2) 🟡 FOUNDATION
+#### Phase 3: Utility Extraction (Week 2) ✅ COMPLETE
 
 - [x] **WEB-UTIL-001**: Formatting Utilities ⏱️ 50 min [MEDIUM] ✅
 - [x] **WEB-UTIL-002**: Color Utilities ⏱️ 40 min [MEDIUM] ✅
 - [x] **WEB-UTIL-003**: Manager Analytics Calculations ⏱️ 1 hour [MEDIUM] ✅
-- [ ] **WEB-UTIL-004**: Hall of Fame Utilities ⏱️ 45 min [MEDIUM]
+- [x] **WEB-UTIL-004**: Hall of Fame Utilities - Cleanup & Testing ⏱️ 45 min
+      [MEDIUM] ✅
 
 #### Phase 4: Hook Extraction (Week 3) 🟡 PREPARATION
 
@@ -340,6 +340,65 @@ package.
 ## 🎉 Recent Completions
 
 ### October 7, 2025 (Latest)
+
+- ✅ **WEB-HOOK-001**: Manager Sorting and Filtering Hooks
+  - Created `features/draft-analysis/hooks/useManagerFiltering.ts` with filtering logic (45 lines)
+  - Created `features/draft-analysis/hooks/useManagerSorting.ts` with sorting logic (121 lines)
+  - Created barrel export `features/draft-analysis/hooks/index.ts` with all hook exports
+  - Updated `components/manager-analysis.tsx` to use new hooks
+  - File size reduced: 1,624 lines → 1,535 lines (89 lines saved, 5.5% reduction)
+  - Removed 98 lines of state management/sorting/filtering logic (lines 48-145)
+  - Replaced with 9 lines of hook usage
+  - Created comprehensive test suite with 20 passing tests (100% success rate):
+    - `useManagerFiltering.test.ts`: 7 tests covering all/specific cluster filtering, empty arrays, cluster switching
+    - `useManagerSorting.test.ts`: 13 tests covering default sorting, direction toggle, all sort keys (manager, league, gini, top1-5), empty arrays, sort persistence
+  - Updated feature barrel export `features/draft-analysis/index.ts` with 6 hook-related exports
+  - All 20 tests passing with 0 failures
+  - TypeScript compilation passes with 0 errors for hook files
+  - No ESLint violations introduced in hook files
+  - Component functionality unchanged (hooks encapsulate existing logic)
+  - Hooks are fully reusable and testable in isolation
+  - **Phase 4 Started**: Hook Extraction 1/3 complete (33%)
+  - **Outcome**: Separated state management logic from UI, improved testability, enabled hook reusability
+  - **Next Steps**: WEB-HOOK-002 (Draft Analytics Data Hook) to continue hook extraction
+
+- ✅ **WEB-UTIL-004**: Hall of Fame Utilities - Cleanup & Testing
+  - Verified hall-of-fame utility migration from `lib/` to
+    `features/hall-of-fame/utils/` is complete
+  - Updated 4 files to import from new centralized location:
+    - `app/hall-of-fame-enhanced/page.tsx`: Updated formatRecord, getCategoryInfo,
+      getRankEmoji imports
+    - `app/hall-of-fame/page.tsx`: Updated formatRecord, getRankEmoji,
+      getCategoryInfo imports
+    - `hooks/useHallOfFame.ts`: Updated calculation and type imports
+    - `hooks/useHallOfFameEnhanced.ts`: Updated aggregation, calculation, category
+      imports
+  - Updated feature-level barrel export `features/hall-of-fame/index.ts` with 30+
+    utility exports
+  - Created comprehensive test suite with 86 passing tests:
+    - `calculations.test.ts`: 31 tests covering calculateHallOfFameRecords,
+      getCategoryInfo, formatRecord, getRankEmoji, getCategoriesByGroup
+    - `aggregations.test.ts`: 31 tests covering calculateRollingWindows,
+      calculateSeasonalData, calculateStreaks, findBestRollingWindows,
+      findLongestStreaks, findSeasonalRecords
+    - `categories.test.ts`: 24 tests covering ALL_HALL_OF_FAME_CATEGORIES,
+      WEEKLY_TEAM_CATEGORIES, WEEKLY_MATCHUP_CATEGORIES, getCategoriesGrouped
+  - Fixed test expectations to match actual implementation:
+    - Categories use `formatValue` function instead of `unit` string
+    - Categories have `type` ('highest', 'lowest', 'both') instead of `scope` and
+      `isBest`
+    - getCategoriesGrouped returns Map with keys like 'Score & Margin', 'Matchup
+      Records', not 'weekly_team'
+    - formatRecord takes HallOfFameRecord object, not (value, categoryId)
+    - getRankEmoji returns "4." format for ranks > 3, not emojis
+  - All 86 tests passing with 0 failures (100% success rate)
+  - TypeScript compilation passes with 0 errors in hall-of-fame files
+  - No new ESLint violations introduced
+  - **Phase 3 Complete**: Utility Extraction 4/4 complete (100%) ✅
+  - **Outcome**: Verified complete migration of hall-of-fame utilities,
+    comprehensive test coverage ensures correctness
+  - **Next Steps**: WEB-HOOK-001 (Manager Sorting and Filtering) to begin Phase 4
+    (Hook Extraction)
 
 - ✅ **WEB-UTIL-003**: Manager Analytics Calculations
   - Created `features/draft-analysis/utils/calculations.ts` with 6 calculation

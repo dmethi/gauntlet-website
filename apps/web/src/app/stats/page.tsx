@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { StatsContent } from './stats-content';
-import { type PlainStatsDataset } from '@/lib/stats/compose';
+import { type PlainStatsDataset } from '@/shared/utils/stats';
 import { CURRENT_LEAGUES } from '@/config/leagues';
 import { useSearchParams } from 'next/navigation';
 

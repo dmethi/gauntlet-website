@@ -11,8 +11,7 @@ import {
   YAxis,
 } from 'recharts';
 import { colors } from '../../../../../../brand/colors';
-import { median } from '@/lib/stats/medians';
-import { TrackedPosition } from '@/lib/stats/positions';
+import { median, TrackedPosition } from '@/shared/utils/stats';
 
 // Define proper types (matching LeagueView.tsx pattern)
 interface TeamInfo {

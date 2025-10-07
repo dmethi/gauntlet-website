@@ -15,7 +15,7 @@ import {
   generateTransactionNarrative,
   generateStartSitNarrative,
   type Narrative,
-} from '../lib/narrative-generators.js';
+} from '../features/reports/utils/narratives.js';
 import { NARRATIVE_CONFIG } from '../config/narrative-thresholds.js';
 
 // ============================================================================
@@ -58,7 +58,9 @@ async function fetchStatsData() {
   try {
     // Read from local API route (simulating what the frontend does)
     // In production, you'd call the actual API
-    const { buildStatsDataset, serializeStatsDataset } = await import('../lib/stats/compose');
+    const { buildStatsDataset, serializeStatsDataset } = await import(
+      '../shared/utils/stats/compose'
+    );
     const { CURRENT_LEAGUES } = await import('../config/leagues');
 
     const leagueIds = CURRENT_LEAGUES.map(l => l.id);

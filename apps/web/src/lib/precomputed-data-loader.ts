@@ -7,7 +7,7 @@
 
 /* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 
-import { DraftAnalytics } from './draft-analytics';
+import { DraftAnalytics } from '@/features/draft-analysis/utils';
 import { ManagerAnalytics } from './manager-analytics';
 import { MockDraft } from './draft-generator';
 

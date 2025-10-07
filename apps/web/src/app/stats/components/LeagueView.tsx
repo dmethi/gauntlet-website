@@ -9,17 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { TrackedPosition } from '@/lib/stats/positions';
+import { TrackedPosition } from '@/shared/utils/stats';
 import { colors } from '../../../../../../brand/colors';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { rank } from '@/lib/stats/ranks';
+import { rank } from '@/shared/utils/stats';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import {
-  getPositionSummaries,
-  getTopPositionalAdvantages,
-} from '@/lib/stats/positional-advantages';
+import { getPositionSummaries, getTopPositionalAdvantages } from '@/shared/utils/stats';
 import { PlayerBreakdownRow } from '@/components/stats/PlayerBreakdown';
-import type { PlainStatsDataset } from '@/lib/stats/compose';
+import type { PlainStatsDataset } from '@/shared/utils/stats';
 
 // Define proper types
 interface TeamInfo {

@@ -16,7 +16,7 @@ import {
   firstOwnedWeek,
   lastOwnedWeek,
   playoffWeight,
-} from '@/lib/transactions-facts';
+} from '@/features/transactions/utils';
 import {
   Table,
   TableBody,

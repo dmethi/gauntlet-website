@@ -9,7 +9,7 @@ import {
   calculationCache,
   TeamSeasonStats,
   PositionalScoring,
-} from '@/lib/client-calculations';
+} from '@/shared/utils/calculations';
 import { CACHE_DURATIONS, LEAGUE_IDS, CURRENT_SEASON } from '@/lib/constants';
 import type {
   SleeperLeague,

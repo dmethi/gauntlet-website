@@ -199,6 +199,174 @@ const client = createAPIClient({ baseUrl: 'https://api.com' });
 - ✅ **Metrics utility**: Factory pattern with closure-based state
 - ⏳ **apps/web**: Migration in progress (see REFACTOR-601)
 
+## 🗂️ Shared Utilities Structure (MANDATORY)
+
+### ⚠️ ALWAYS Check Shared Utilities Before Building Custom Functions
+
+**Before writing any utility function, check if it already exists in the shared utilities structure!**
+
+### Shared Utilities Directory (`apps/web/src/shared/utils/`)
+
+```
+shared/utils/
+├── stats/                    # Statistical calculations & analysis
+│   ├── compose.ts           # Data composition utilities
+│   ├── join.ts              # Data joining utilities  
+│   ├── medians.ts           # Statistical functions (median, mean, stddev, percentile)
+│   ├── positional-advantages.ts  # Position advantage calculations
+│   ├── positions.ts         # Position-specific utilities
+│   ├── ranks.ts             # Ranking calculations
+│   ├── teams.ts             # Team data utilities
+│   └── index.ts             # Barrel export
+│
+├── calculations/             # Client-side calculations
+│   └── index.ts             # Team stats, positional scoring, calculation cache
+│
+└── colors/                   # Color utilities (if needed in future)
+    └── ...
+```
+
+### ✅ CORRECT: Using Shared Utilities
+
+```typescript
+// ✅ Import from shared utils
+import { median, mean, rank, percentile } from '@/shared/utils/stats';
+import { calculateTeamStats, calculationCache } from '@/shared/utils/calculations';
+
+// Use the existing functions
+const teamMedian = median(teamScores);
+const teamRank = rank(allTeamScores);
+const stats = calculateTeamStats(matchups, rosters);
+```
+
+### ❌ WRONG: Reimplementing Existing Functions
+
+```typescript
+// ❌ DON'T reimplement median calculation
+const median = (values: number[]): number => {
+  const sorted = [...values].sort((a, b) => a - b);
+  // ... this already exists in @/shared/utils/stats!
+};
+
+// ❌ DON'T reimplement ranking logic
+const rank = (values: number[]): number[] => {
+  // ... this already exists in @/shared/utils/stats!
+};
+```
+
+### Feature-Specific Utilities (`apps/web/src/features/*/utils/`)
+
+**When utilities are specific to ONE feature, place them in that feature's utils directory:**
+
+```
+features/
+├── draft-analysis/utils/
+│   ├── analytics.ts          # Draft analytics calculations
+│   ├── calculations.ts       # Manager-specific calculations
+│   └── index.ts
+│
+├── transactions/utils/
+│   ├── facts.ts              # Transaction fact building
+│   └── index.ts
+│
+├── start-sit/utils/
+│   ├── analysis.ts           # Start/sit efficiency analysis
+│   └── index.ts
+│
+├── reports/utils/
+│   ├── narratives.ts         # Narrative generation
+│   └── index.ts
+│
+└── stats/utils/              # Stats hub specific utilities
+    └── ...
+```
+
+### Decision Tree: Where to Place a New Utility?
+
+**Ask these questions:**
+
+1. **Is it used by 3+ features?** → `shared/utils/` (shared utility)
+2. **Is it used by 1-2 features in the same domain?** → Primary feature's `utils/` directory
+3. **Is it domain-specific logic?** → Feature-specific `utils/` directory
+4. **Is it a generic helper (not fantasy football specific)?** → Check if it belongs in a package or lib
+
+### ✅ CORRECT Pattern: Building New Shared Utilities
+
+```typescript
+// 1. Check if function exists first
+import { median } from '@/shared/utils/stats'; // Already exists!
+
+// 2. If not found, add to appropriate shared directory
+// File: apps/web/src/shared/utils/stats/variance.ts
+export const calculateVariance = (values: number[]): number => {
+  const avg = mean(values);
+  const squaredDiffs = values.map(val => Math.pow(val - avg, 2));
+  return mean(squaredDiffs);
+};
+
+// 3. Export from barrel file
+// File: apps/web/src/shared/utils/stats/index.ts
+export * from './variance';
+
+// 4. Import in your feature
+import { calculateVariance } from '@/shared/utils/stats';
+```
+
+### Available Shared Functions Reference
+
+**Statistics (`@/shared/utils/stats`):**
+- `median(values)` - Calculate median
+- `mean(values)` - Calculate mean/average  
+- `standardDeviation(values)` - Calculate standard deviation
+- `percentile(values, p)` - Calculate percentile
+- `rank(values)` - Rank values (1 = highest)
+- `percentileRank(values)` - Get percentile ranks
+- `rankWithinLeagues(values, leagueMap)` - Multi-league ranking
+
+**Data Composition (`@/shared/utils/stats`):**
+- `buildStatsDataset(config)` - Build complete stats dataset
+- `serializeStatsDataset(dataset)` - Serialize for client
+- `buildTeamInfoMap(config)` - Build team info mapping
+- `buildRosterLeagueMap(leagues, rosters)` - Roster to league mapping
+
+**Position Analysis (`@/shared/utils/stats`):**
+- `getStarterPositionPoints(config)` - Calculate position points
+- `aggregatePositionPoints(weekly, range)` - Aggregate across weeks
+- `calculatePositionalMedians(dataset, range)` - Position medians
+- `calculateAllPositionalAdvantages(dataset, range)` - All team advantages
+- `getTeamPositionalSummary(dataset, teamKey, range)` - Team summary
+- `getPositionSummaries(dataset, range)` - Position-by-position summaries
+
+**Team Analysis (`@/shared/utils/stats`):**
+- `getTeamAndOpponentPoints(config)` - Extract team/opponent points
+- `aggregateTeamPoints(weekly, range)` - Aggregate across weeks
+
+**Client Calculations (`@/shared/utils/calculations`):**
+- `calculateTeamStats(matchups, rosters, ...)` - Team season stats
+- `calculatePositionalScoring(matchups, players, ...)` - Position scoring
+- `calculationCache` - Shared calculation cache instance
+
+### Migration Complete (Phase 3: Utility Extraction)
+
+**Completed Tasks:**
+- ✅ **WEB-UTIL-005**: Stats utilities relocated to `shared/utils/stats/`
+- ✅ **WEB-UTIL-006**: Transaction & start-sit utilities to feature directories
+- ✅ **WEB-UTIL-007**: Draft analytics, calculations, narratives organized
+
+**Results:**
+- 12 utility files relocated (~3,200 lines)
+- 30+ files updated with new imports
+- Clean separation of shared vs feature-specific code
+- Foundation for enterprise-ready architecture
+
+### Best Practices
+
+1. **Always check shared utilities first** before writing new utility functions
+2. **Import from barrel exports** (`@/shared/utils/stats` not `@/shared/utils/stats/medians`)
+3. **Add tests** for new shared utilities (in adjacent `.test.ts` file)
+4. **Document complex functions** with JSDoc comments
+5. **Export from barrel** when adding new utilities to shared directories
+
 ## 🏗️ Critical Architecture Patterns
 
 ### Multi-League System Foundation
@@ -646,19 +814,51 @@ return NextResponse.json({
 }, { status: 500 });
 ```
 
-### File Organization Strategy
+### File Organization Strategy (Updated - Feature-Based Architecture)
+
 ```
-/lib/
-  /sleeper/ - All Sleeper API interaction
-  /stats/ - Analytics and statistical calculations  
-  /multi-league/ - Cross-league aggregation utilities
-  /simulation/ - Monte Carlo simulation logic
+/shared/                        # Cross-feature shared code
+  /utils/
+    /stats/                     # Statistical utilities (COMPLETED)
+    /calculations/              # Client-side calculations (COMPLETED)
+    /colors/                    # Color utilities (future)
+  /components/                  # Shared components (future)
+  /hooks/                       # Shared hooks (future)
+
+/features/                      # Feature-based organization
+  /draft-analysis/
+    /utils/                     # Draft-specific utilities (COMPLETED)
+  /transactions/
+    /utils/                     # Transaction utilities (COMPLETED)
+  /start-sit/
+    /utils/                     # Start-sit utilities (COMPLETED)
+  /reports/
+    /utils/                     # Report narratives (COMPLETED)
+  /stats/
+    /components/                # Stats hub components
+  /matchups/
+    /components/                # Matchup components
+
+/lib/                           # Infrastructure code only
+  /sleeper/                     # Sleeper API client (unified)
+  constants.ts                  # App-wide constants
+  utils.ts                      # Generic utilities (cn, etc)
+  hooks.ts                      # Shared hooks
+
 /components/
-  /ui/ - shadcn/ui components
-  /stats/ - Domain-specific analytics components
-  /charts/ - Visualization components
-/app/api/ - API routes mirroring frontend data needs
+  /ui/                          # shadcn/ui primitives
+  /charts/                      # Visualization components
+  /stats/                       # Domain analytics components
+
+/app/
+  /api/                         # API routes (minimal logic)
+  /[feature]/                   # Feature pages (use feature exports)
 ```
+
+**Migration Status:**
+- ✅ **Phase 3 Complete**: Utility extraction (WEB-UTIL-005 through 007)
+- 🔄 **Phase 4 Next**: Hook extraction (WEB-HOOK-001 through 003)
+- 🔄 **Phase 5 Next**: Component splitting (WEB-COMP-001 through 005)
 
 ## 🔧 TypeScript Standards
 
