@@ -2,7 +2,9 @@
 
 ## What Was Built
 
-A complete, production-ready Vercel Cron system for capturing live odds snapshots every 10 minutes during NFL games, replacing unreliable GitHub Actions.
+A complete, production-ready Vercel Cron system for capturing live odds
+snapshots every 10 minutes during NFL games, replacing unreliable GitHub
+Actions.
 
 ## Files Created/Modified
 
@@ -105,7 +107,8 @@ The `hasSignificantChange()` function prevents duplicate saves:
   - Odds (spread, total)
 - Skips save if ALL are unchanged
 
-This dramatically reduces database writes during quiet periods (e.g., Tuesday morning when no games are active).
+This dramatically reduces database writes during quiet periods (e.g., Tuesday
+morning when no games are active).
 
 ## Cron Schedules
 
@@ -115,19 +118,19 @@ All schedules configured in `apps/web/vercel.json`:
 [
   {
     "path": "/api/cron/live-odds",
-    "schedule": "*/10 0-5 * 9-12,1-2 5"  // Thu Night
+    "schedule": "*/10 0-5 * 9-12,1-2 5" // Thu Night
   },
   {
     "path": "/api/cron/live-odds",
-    "schedule": "*/10 0-5 * 9-12,1-2 6"  // Fri Night
+    "schedule": "*/10 0-5 * 9-12,1-2 6" // Fri Night
   },
   {
     "path": "/api/cron/live-odds",
-    "schedule": "*/10 17-23 * 12,1 6"    // Sat Late Season
+    "schedule": "*/10 17-23 * 12,1 6" // Sat Late Season
   },
   {
     "path": "/api/cron/live-odds",
-    "schedule": "*/10 0-5 * 12,1 0"      // Sat Night (late season)
+    "schedule": "*/10 0-5 * 12,1 0" // Sat Night (late season)
   },
   {
     "path": "/api/cron/live-odds",
@@ -139,15 +142,15 @@ All schedules configured in `apps/web/vercel.json`:
   },
   {
     "path": "/api/cron/live-odds",
-    "schedule": "*/10 0-5 * 9-12,1-2 1"  // Sun Night
+    "schedule": "*/10 0-5 * 9-12,1-2 1" // Sun Night
   },
   {
     "path": "/api/cron/live-odds",
-    "schedule": "*/10 0-5 * 9-12,1-2 2"  // Mon Night
+    "schedule": "*/10 0-5 * 9-12,1-2 2" // Mon Night
   },
   {
     "path": "/api/cron/live-odds",
-    "schedule": "0 10 * 9-12,1-2 *"      // Daily 6 AM
+    "schedule": "0 10 * 9-12,1-2 *" // Daily 6 AM
   }
 ]
 ```
@@ -184,6 +187,7 @@ curl -X POST http://localhost:3000/api/cron/live-odds \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -222,9 +226,9 @@ pnpm prisma studio
 
 # Or query directly
 psql $DATABASE_URL -c \
-  "SELECT week, \"leagueId\", \"matchupId\", \"capturedAt\" 
-   FROM \"LiveWinProbSample\" 
-   ORDER BY \"capturedAt\" DESC 
+  "SELECT week, \"leagueId\", \"matchupId\", \"capturedAt\"
+   FROM \"LiveWinProbSample\"
+   ORDER BY \"capturedAt\" DESC
    LIMIT 20;"
 ```
 
@@ -240,12 +244,14 @@ psql $DATABASE_URL -c \
 ### Expected Metrics
 
 **During NFL Games (Sunday 1-8 PM):**
+
 - Executions: Every 10 minutes (6 per hour)
 - Duration: 45-60 seconds per execution
 - Saved: 12 snapshots per execution (if data changed)
 - Skipped: Varies (depends on deduplication)
 
 **Outside Game Windows:**
+
 - Executions: Only daily 6 AM run
 - Duration: <10 seconds
 - Saved: 0 (no active games)
@@ -276,14 +282,14 @@ psql $DATABASE_URL -c \
 
 ## Advantages Over GitHub Actions
 
-| Feature | GitHub Actions | Vercel Cron |
-|---------|----------------|-------------|
-| Reliability | ❌ 5-10% success | ✅ 99.9% SLA |
-| Timing accuracy | ❌ 15-30 min delays | ✅ <30 sec drift |
-| Monitoring | ⚠️ Basic logs | ✅ Dashboard + logs |
-| Debugging | ❌ Limited | ✅ Full stack traces |
-| Retries | ❌ Manual | ✅ Automatic |
-| Cost | ✅ Free | ⚠️ Pro plan required |
+| Feature         | GitHub Actions      | Vercel Cron          |
+| --------------- | ------------------- | -------------------- |
+| Reliability     | ❌ 5-10% success    | ✅ 99.9% SLA         |
+| Timing accuracy | ❌ 15-30 min delays | ✅ <30 sec drift     |
+| Monitoring      | ⚠️ Basic logs       | ✅ Dashboard + logs  |
+| Debugging       | ❌ Limited          | ✅ Full stack traces |
+| Retries         | ❌ Manual           | ✅ Automatic         |
+| Cost            | ✅ Free             | ⚠️ Pro plan required |
 
 ## Security
 
@@ -326,6 +332,7 @@ psql $DATABASE_URL -c \
 If issues arise:
 
 1. **Disable cron schedules**:
+
    ```bash
    # Remove crons from vercel.json
    git add vercel.json
@@ -334,6 +341,7 @@ If issues arise:
    ```
 
 2. **Re-enable GitHub Actions**:
+
    ```bash
    # Uncomment workflow
    git restore .github/workflows/live-odds-updates.yml

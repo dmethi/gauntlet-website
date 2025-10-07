@@ -9,7 +9,9 @@
 
 ## Objective
 
-Extract remaining calculation and narrative utilities from `lib/` to appropriate feature directories, completing the utility organization work and establishing clean feature boundaries.
+Extract remaining calculation and narrative utilities from `lib/` to appropriate
+feature directories, completing the utility organization work and establishing
+clean feature boundaries.
 
 ---
 
@@ -29,7 +31,8 @@ Extract remaining calculation and narrative utilities from `lib/` to appropriate
    - Narrative generation for reports
    - Move to: `features/reports/utils/narratives.ts` (feature-specific)
 
-**Strategy**: Review each file to understand dependencies and determine proper location (shared vs. feature-specific).
+**Strategy**: Review each file to understand dependencies and determine proper
+location (shared vs. feature-specific).
 
 **Total Context**: ~300-500 lines estimated
 
@@ -79,11 +82,13 @@ mkdir -p src/shared/utils/calculations
 ### 3. Move draft-analytics.ts
 
 **If file is draft-analysis specific:**
+
 ```bash
 mv src/lib/draft-analytics.ts src/features/draft-analysis/utils/analytics.ts
 ```
 
 **Create barrel export `features/draft-analysis/utils/index.ts`:**
+
 ```typescript
 /**
  * Draft analysis utilities
@@ -95,6 +100,7 @@ export * from './calculations'; // If exists from WEB-UTIL-003
 ```
 
 **Update imports in consuming files:**
+
 ```typescript
 // OLD
 import { calculateDraftValue } from '@/lib/draft-analytics';
@@ -106,11 +112,13 @@ import { calculateDraftValue } from '@/features/draft-analysis/utils';
 ### 4. Move and categorize client-calculations.ts
 
 **Option A: If calculations are shared across features:**
+
 ```bash
 mv src/lib/client-calculations.ts src/shared/utils/calculations/index.ts
 ```
 
 **Option B: If calculations are feature-specific:**
+
 ```bash
 # Determine which feature and move accordingly
 # Example: If used only in matchups
@@ -118,11 +126,13 @@ mv src/lib/client-calculations.ts src/features/matchups/utils/calculations.ts
 ```
 
 **Review the file to decide:**
+
 - Used in 3+ features → `shared/utils/calculations/`
 - Used in 1-2 features → Move to primary feature
 - Mixed usage → Split file by feature
 
 **After categorization, update imports:**
+
 ```typescript
 // If shared:
 import { calculateProjection } from '@/shared/utils/calculations';
@@ -134,11 +144,13 @@ import { calculateProjection } from '@/features/matchups/utils';
 ### 5. Move narrative-generators.ts
 
 **Narratives are feature-specific to reports:**
+
 ```bash
 mv src/lib/narrative-generators.ts src/features/reports/utils/narratives.ts
 ```
 
 **Create barrel export `features/reports/utils/index.ts`:**
+
 ```typescript
 /**
  * Report generation utilities
@@ -149,6 +161,7 @@ export * from './narratives';
 ```
 
 **Update imports in report files:**
+
 ```typescript
 // OLD
 import { generateNarrative } from '@/lib/narrative-generators';
@@ -176,6 +189,7 @@ grep -r "from '@/lib/narrative-generators" src/ | cut -d: -f1 | sort -u
 ### 7. Add tests for key functions
 
 **Test draft analytics:**
+
 ```typescript
 // features/draft-analysis/utils/analytics.test.ts
 import { describe, it, expect } from 'vitest';
@@ -189,6 +203,7 @@ describe('calculateDraftValue', () => {
 ```
 
 **Test calculations:**
+
 ```typescript
 // shared/utils/calculations/index.test.ts (or feature-specific)
 import { describe, it, expect } from 'vitest';
@@ -202,6 +217,7 @@ describe('calculateProjection', () => {
 ```
 
 **Test narrative generators:**
+
 ```typescript
 // features/reports/utils/narratives.test.ts
 import { describe, it, expect } from 'vitest';
@@ -209,7 +225,9 @@ import { generateNarrative } from './narratives';
 
 describe('generateNarrative', () => {
   it('generates narrative text', () => {
-    const narrative = generateNarrative({ /* test data */ });
+    const narrative = generateNarrative({
+      /* test data */
+    });
     expect(narrative).toBeTruthy();
     expect(typeof narrative).toBe('string');
   });
@@ -347,16 +365,20 @@ This completes the utility extraction and organization work.
 ## Related Tasks
 
 **Blocks**: WEB-CLEAN-001 (cleanup needs utilities organized first)  
-**Blocked By**: WEB-SETUP-004 (feature folder structure), WEB-UTIL-003 (manager analytics)  
-**Related**: WEB-UTIL-005 (stats relocation), WEB-UTIL-006 (transaction relocation)
+**Blocked By**: WEB-SETUP-004 (feature folder structure), WEB-UTIL-003 (manager
+analytics)  
+**Related**: WEB-UTIL-005 (stats relocation), WEB-UTIL-006 (transaction
+relocation)
 
 ---
 
 ## Notes
 
 - **Review First**: This task requires understanding file contents before moving
-- **Categorization**: Key decision is whether calculations are shared or feature-specific
-- **Can Defer**: Marked LOW priority - can be done after component work if needed
+- **Categorization**: Key decision is whether calculations are shared or
+  feature-specific
+- **Can Defer**: Marked LOW priority - can be done after component work if
+  needed
 - **Completes Phase 3**: This is the final utility extraction task
 
 ---
@@ -364,11 +386,13 @@ This completes the utility extraction and organization work.
 ## Decision Tree for client-calculations.ts
 
 **Questions to answer:**
+
 1. Which features import this file? (use grep)
 2. Are calculations domain-specific or generic?
 3. Is there cross-feature usage?
 
 **Decision:**
+
 - **1 feature uses it** → Move to that feature's utils
 - **2 features use it** → Move to primary feature, other imports from there
 - **3+ features use it** → Move to `shared/utils/calculations/`
@@ -379,6 +403,7 @@ This completes the utility extraction and organization work.
 ## Expected lib/ Directory After This Task
 
 **Files that should remain in lib/:**
+
 - `colors.ts` - Re-exports brand colors (appropriate)
 - `constants.ts` - App-wide constants (appropriate)
 - `fonts.ts` - Font configurations (appropriate)
@@ -386,6 +411,7 @@ This completes the utility extraction and organization work.
 - `sleeper/` - API client (appropriate in lib)
 
 **Files that should be gone:**
+
 - ❌ All feature-specific utilities
 - ❌ All shared utilities (moved to shared/)
 - ❌ All calculation utilities
@@ -397,14 +423,17 @@ This completes the utility extraction and organization work.
 ## Common Issues & Solutions
 
 **Issue**: Can't determine if calculation is shared or feature-specific  
-**Solution**: Check number of consuming files. If used by 1-2 files in same feature, it's feature-specific
+**Solution**: Check number of consuming files. If used by 1-2 files in same
+feature, it's feature-specific
 
 **Issue**: File has both shared and feature-specific functions  
-**Solution**: Split the file - move shared functions to shared/utils/, feature-specific to feature
+**Solution**: Split the file - move shared functions to shared/utils/,
+feature-specific to feature
 
 **Issue**: Breaking changes when moving files  
 **Solution**: Use barrel exports to maintain clean import paths
 
 ---
 
-**Estimated Context Usage**: 300-500 lines reviewed and moved, 3-5 files updated, 35 min total
+**Estimated Context Usage**: 300-500 lines reviewed and moved, 3-5 files
+updated, 35 min total

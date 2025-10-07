@@ -8,7 +8,9 @@
 
 ## 📋 Overview
 
-This file tracks lower-priority issues discovered during the enterprise readiness assessment that should be addressed eventually, but are not blocking the main refactoring effort.
+This file tracks lower-priority issues discovered during the enterprise
+readiness assessment that should be addressed eventually, but are not blocking
+the main refactoring effort.
 
 ---
 
@@ -16,17 +18,19 @@ This file tracks lower-priority issues discovered during the enterprise readines
 
 ### CODING_CONVENTIONS.MD Violations
 
-The following files use **CLASS-based patterns** instead of the mandated **arrow function factory pattern**:
+The following files use **CLASS-based patterns** instead of the mandated **arrow
+function factory pattern**:
 
 #### 1. `lib/draft-generator.ts` - DraftGenerator Class
 
 **Current (Class-based):**
+
 ```typescript
 export class DraftGenerator {
   private generateDraftOrder(): number[] { ... }
   private initializeTeams(): TeamRoster[] { ... }
   private getNextBestPick(...): Player | null { ... }
-  
+
   public generateMockDraft(...): MockDraft { ... }
 }
 
@@ -36,12 +40,13 @@ const draft = generator.generateMockDraft(...);
 ```
 
 **Should be (Factory pattern):**
+
 ```typescript
 export const createDraftGenerator = () => {
   const generateDraftOrder = (): number[] => { ... };
   const initializeTeams = (): TeamRoster[] => { ... };
   const getNextBestPick = (...): Player | null => { ... };
-  
+
   return {
     generateMockDraft: (...): MockDraft => { ... }
   };
@@ -53,7 +58,8 @@ const draft = generator.generateMockDraft(...);
 ```
 
 **Estimated Effort**: 30 minutes  
-**Priority**: 🟡 MEDIUM (affects 2 files: draft-generator.ts, draft-data-fetcher.ts)  
+**Priority**: 🟡 MEDIUM (affects 2 files: draft-generator.ts,
+draft-data-fetcher.ts)  
 **Blocking**: None (isolated to draft generation logic)
 
 ---
@@ -61,14 +67,15 @@ const draft = generator.generateMockDraft(...);
 #### 2. `lib/simulation-cache.ts` - SimulationCache Class
 
 **Current (Class-based):**
+
 ```typescript
 class SimulationCache {
   private cache: Map<string, CachedSimulation> = new Map();
   private hitCounts: { hits: number; misses: number } = { hits: 0, misses: 0 };
-  
+
   private getCacheKey(...): string { ... }
   private getTTL(): number { ... }
-  
+
   public set(...): void { ... }
   public get(...): CachedSimulation | null { ... }
   public clear(): void { ... }
@@ -79,14 +86,15 @@ export const simulationCache = new SimulationCache();
 ```
 
 **Should be (Factory pattern):**
+
 ```typescript
 export const createSimulationCache = () => {
   const cache = new Map<string, CachedSimulation>();
   const hitCounts = { hits: 0, misses: 0 };
-  
+
   const getCacheKey = (...): string => { ... };
   const getTTL = (): number => { ... };
-  
+
   return {
     set: (...): void => { ... },
     get: (...): CachedSimulation | null => { ... },
@@ -108,7 +116,8 @@ export const simulationCache = createSimulationCache();
 
 ### Low-Value Extractions
 
-These types are **small, component-specific, and not reused**. Extracting them provides minimal benefit:
+These types are **small, component-specific, and not reused**. Extracting them
+provides minimal benefit:
 
 #### Chart Component Props
 
@@ -150,7 +159,8 @@ These types are **small, component-specific, and not reused**. Extracting them p
 5. **gauntlet-logo.tsx**:
    - `GauntletLogoProps` (1 field) - logo component
 
-**Recommendation**: Leave inline. These are component-specific props with no reuse.
+**Recommendation**: Leave inline. These are component-specific props with no
+reuse.
 
 ---
 
@@ -176,16 +186,20 @@ These types are **small, component-specific, and not reused**. Extracting them p
 **Location**: `lib/mock-draft-data.ts`
 
 **Types**:
+
 - `Player`
 - `DraftPick`
 - `TeamRoster`
 - `MockDraft`
 
 **Used by**:
+
 - `lib/draft-generator.ts` (re-exports these types)
 - `lib/draft-data-fetcher.ts`
 
-**Recommendation**: Keep co-located with data. Only used in 2 files for mock draft generation. If usage expands beyond mock drafts, consider moving to `features/draft-analysis/types.ts`.
+**Recommendation**: Keep co-located with data. Only used in 2 files for mock
+draft generation. If usage expands beyond mock drafts, consider moving to
+`features/draft-analysis/types.ts`.
 
 ---
 
@@ -194,12 +208,14 @@ These types are **small, component-specific, and not reused**. Extracting them p
 **Location**: `lib/simulation-cache.ts`
 
 **Types**:
+
 - `CachedSimulation`
 - `CacheStats`
 
 **Usage**: Internal to caching system
 
-**Recommendation**: Keep inline. These are implementation details of the caching system.
+**Recommendation**: Keep inline. These are implementation details of the caching
+system.
 
 ---
 
@@ -209,9 +225,11 @@ These types are **small, component-specific, and not reused**. Extracting them p
 
 **Location**: `app/api/` routes
 
-**Current State**: Many API routes have inline type definitions for request/response shapes.
+**Current State**: Many API routes have inline type definitions for
+request/response shapes.
 
 **Files**:
+
 - `api/preview/[season]/[week]/route.ts` (8 types)
 - `api/matchups/league-odds/[week]/route.ts` (3 types)
 - `api/matchups/[leagueId]/[week]/route.ts` (3 types)
@@ -219,13 +237,17 @@ These types are **small, component-specific, and not reused**. Extracting them p
 - `api/matchups/[leagueId]/[week]/[matchupId]/route.ts` (2 types)
 
 **Consideration**: Some of these overlap with:
+
 - WEB-EXTRACT-008 (Matchup types)
 - WEB-EXTRACT-010 (Report types)
 
-**Recommendation**: 
+**Recommendation**:
+
 - ✅ Major types extracted in WEB-EXTRACT-008 and WEB-EXTRACT-010
-- 🟡 API-specific request/response wrappers can stay inline (they're transformations of domain types)
-- 🟡 If API contract types become reused (e.g., TypeScript client), consider extracting to `shared/types/api-contracts.ts`
+- 🟡 API-specific request/response wrappers can stay inline (they're
+  transformations of domain types)
+- 🟡 If API contract types become reused (e.g., TypeScript client), consider
+  extracting to `shared/types/api-contracts.ts`
 
 ---
 
@@ -236,6 +258,7 @@ If chart components grow or get reused across features, consider creating:
 **Location**: `shared/components/charts/types.ts`
 
 **Potential types to centralize**:
+
 - Chart configuration interfaces
 - Tooltip props
 - Legend props
@@ -270,11 +293,13 @@ If **<2 checkboxes** → Keep in WEB-MISC.md
 
 1. **After Phase 2** (Type Extraction) complete
 2. **During Phase 5** (Component Splitting) - address class-based patterns
-3. **During Phase 8** (Cleanup & Polish) - address small inline types if time permits
+3. **During Phase 8** (Cleanup & Polish) - address small inline types if time
+   permits
 
 ### Priority Order (if time allows)
 
-1. 🟡 **MEDIUM**: Convert classes to factory pattern (draft-generator, simulation-cache)
+1. 🟡 **MEDIUM**: Convert classes to factory pattern (draft-generator,
+   simulation-cache)
 2. 🟢 **LOW**: Extract chart types (only if reuse emerges)
 3. 🟢 **LOW**: Component prop types (likely never - too small)
 
@@ -282,13 +307,13 @@ If **<2 checkboxes** → Keep in WEB-MISC.md
 
 ## 📊 Summary Statistics
 
-| Category                  | Count | Total Effort | Priority |
-| ------------------------- | ----- | ------------ | -------- |
-| Classes to refactor       | 2     | 55 minutes   | 🟡 MEDIUM |
-| Chart component props     | 4     | N/A          | 🟢 SKIP   |
-| UI component props        | 5     | N/A          | 🟢 SKIP   |
-| Tightly coupled types     | 2     | N/A          | 🟢 SKIP   |
-| API route inline types    | 5     | ~1 hour      | 🟡 MAYBE  |
+| Category                   | Count | Total Effort | Priority         |
+| -------------------------- | ----- | ------------ | ---------------- |
+| Classes to refactor        | 2     | 55 minutes   | 🟡 MEDIUM        |
+| Chart component props      | 4     | N/A          | 🟢 SKIP          |
+| UI component props         | 5     | N/A          | 🟢 SKIP          |
+| Tightly coupled types      | 2     | N/A          | 🟢 SKIP          |
+| API route inline types     | 5     | ~1 hour      | 🟡 MAYBE         |
 | **Total actionable items** | **2** | **~1 hour**  | **Post-Phase 8** |
 
 ---
@@ -306,7 +331,8 @@ If **<2 checkboxes** → Keep in WEB-MISC.md
 
 1. **Multi-file usage** - Stats types used in 3+ files ✅ (WEB-EXTRACT-004)
 2. **Domain models** - Matchup types are domain concepts ✅ (WEB-EXTRACT-008)
-3. **API contracts** - Transaction types shared by API and UI ✅ (WEB-EXTRACT-007)
+3. **API contracts** - Transaction types shared by API and UI ✅
+   (WEB-EXTRACT-007)
 4. **Duplicate definitions** - StartSitData defined 4 times ✅ (WEB-EXTRACT-006)
 
 ---

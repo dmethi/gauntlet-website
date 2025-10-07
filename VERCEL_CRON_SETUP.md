@@ -1,16 +1,19 @@
 # Vercel Cron Setup for Live Odds Snapshots
 
-This guide explains how to set up reliable live odds snapshots using Vercel Cron instead of GitHub Actions.
+This guide explains how to set up reliable live odds snapshots using Vercel Cron
+instead of GitHub Actions.
 
 ## Why Vercel Cron?
 
 **Problem with GitHub Actions:**
+
 - ❌ Scheduled workflows are **not guaranteed** to run
 - ❌ Delays of 15-30+ minutes are common during peak times
 - ❌ Some runs are simply dropped (5-10% success rate observed)
 - ❌ No SLA or reliability guarantees
 
 **Benefits of Vercel Cron:**
+
 - ✅ **Guaranteed execution** (SLA-backed on Pro plan)
 - ✅ **Accurate timing** (<30 second drift)
 - ✅ **Built-in monitoring** in Vercel dashboard
@@ -57,7 +60,8 @@ This guide explains how to set up reliable live odds snapshots using Vercel Cron
 
 ### 1. Environment Variables
 
-Add these to your Vercel project settings (Project Settings → Environment Variables):
+Add these to your Vercel project settings (Project Settings → Environment
+Variables):
 
 ```bash
 # Database connection (required)
@@ -70,6 +74,7 @@ CRON_SECRET=your-random-secret-here
 ```
 
 **Generate a secure CRON_SECRET:**
+
 ```bash
 openssl rand -base64 32
 ```
@@ -90,6 +95,7 @@ pnpm prisma:generate
 ```
 
 **Database Options:**
+
 - **Vercel Postgres** (easiest, integrated)
 - **Neon** (serverless, generous free tier)
 - **Supabase** (includes nice dashboard)
@@ -114,6 +120,7 @@ git push origin main
 ```
 
 Vercel will automatically:
+
 1. Install dependencies (including @gauntlet/server)
 2. Generate Prisma client
 3. Build Next.js app
@@ -130,11 +137,12 @@ After deployment:
    - Look for `/api/cron/live-odds`
 
 2. **Test Manual Trigger:**
+
    ```bash
    # Using curl
    curl -X POST https://your-app.vercel.app/api/cron/live-odds \
      -H "Authorization: Bearer YOUR_CRON_SECRET"
-   
+
    # Should return:
    # {
    #   "success": true,
@@ -157,14 +165,14 @@ After deployment:
 
 The following schedules are configured in `vercel.json`:
 
-| Day | Time (ET) | Time (UTC) | Event |
-|-----|-----------|------------|-------|
-| Daily | 6:00 AM | 10:00 | Pre-game update |
-| Thursday | 8:00-11:30 PM | Fri 00:00-05:59 | Thursday Night Football |
-| Friday | 8:00-11:30 PM | Sat 00:00-05:59 | International/holiday games |
+| Day      | Time (ET)     | Time (UTC)                        | Event                           |
+| -------- | ------------- | --------------------------------- | ------------------------------- |
+| Daily    | 6:00 AM       | 10:00                             | Pre-game update                 |
+| Thursday | 8:00-11:30 PM | Fri 00:00-05:59                   | Thursday Night Football         |
+| Friday   | 8:00-11:30 PM | Sat 00:00-05:59                   | International/holiday games     |
 | Saturday | 1:00-11:59 PM | Sat 17:00-23:59 + Sun 00:00-05:59 | Late-season games (Weeks 15-18) |
-| Sunday | 1:00-11:59 PM | Sun 17:00-23:59 + Mon 00:00-05:59 | Sunday games |
-| Monday | 8:15-11:59 PM | Tue 00:00-05:59 | Monday Night Football |
+| Sunday   | 1:00-11:59 PM | Sun 17:00-23:59 + Mon 00:00-05:59 | Sunday games                    |
+| Monday   | 8:15-11:59 PM | Tue 00:00-05:59                   | Monday Night Football           |
 
 Each window runs **every 10 minutes** (6 runs per hour).
 
@@ -173,6 +181,7 @@ Each window runs **every 10 minutes** (6 runs per hour).
 ### View Cron Execution History
 
 Vercel Dashboard → Project → Cron:
+
 - See all scheduled executions
 - View success/failure rates
 - Check execution durations
@@ -192,30 +201,37 @@ psql $DATABASE_URL -c "SELECT * FROM \"LiveWinProbSample\" ORDER BY \"capturedAt
 ### Common Issues
 
 **Issue: "Unauthorized" error**
+
 - Solution: Check CRON_SECRET is set correctly in Vercel env vars
 
 **Issue: Database connection failed**
+
 - Solution: Verify DATABASE_URL is set and database is accessible from Vercel
 
 **Issue: Prisma client not found**
+
 - Solution: Check build logs, ensure `prisma generate` ran successfully
 - Try: Add `postinstall` script to web package.json
 
 **Issue: Function timeout**
+
 - Solution: Increase maxDuration in vercel.json (currently 60s)
 
 **Issue: No snapshots being saved**
+
 - Solution: Check logs, verify simulations are running
 - Note: Snapshots are skipped if data hasn't changed (deduplication feature)
 
 ## Cost Considerations
 
 **Vercel Cron Usage:**
+
 - **Hobby Plan**: 1 cron job, limited executions
 - **Pro Plan**: Unlimited cron jobs, generous execution quota
 - **Enterprise**: Custom limits
 
 **Estimated Usage:**
+
 - ~60 executions per game day (6 windows × 10 executions)
 - ~360 executions per week during regular season
 - Each execution: ~45-60 seconds

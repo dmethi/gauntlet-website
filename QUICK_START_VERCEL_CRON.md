@@ -35,7 +35,8 @@ This installs the `@gauntlet/server` workspace dependency in the web app.
 
 ### 2. Configure Vercel Environment Variables
 
-Go to: https://vercel.com/your-username/gauntlet-website/settings/environment-variables
+Go to:
+https://vercel.com/your-username/gauntlet-website/settings/environment-variables
 
 Add these variables to **all environments** (Production, Preview, Development):
 
@@ -45,6 +46,7 @@ CRON_SECRET=<paste output of: openssl rand -base64 32>
 ```
 
 **Where to get DATABASE_URL?**
+
 - If using Vercel Postgres: Already in your env vars
 - If using external DB: Copy from your database provider
 
@@ -57,6 +59,7 @@ git push origin main
 ```
 
 Vercel will automatically:
+
 - ✅ Install all dependencies (including @gauntlet/server)
 - ✅ Generate Prisma client
 - ✅ Build Next.js app
@@ -82,6 +85,7 @@ curl -X POST https://gauntlet-website.vercel.app/api/cron/live-odds \
 ```
 
 **Expected output:**
+
 ```json
 {
   "success": true,
@@ -115,16 +119,17 @@ You should see new records appearing every 10 minutes during NFL games.
 
 The cron runs **every 10 minutes** during these windows:
 
-| Day | Time (ET) | Event |
-|-----|-----------|-------|
-| Daily | 6:00 AM | Pre-game update |
-| Thursday | 8:00-11:30 PM | Thursday Night Football |
-| Sunday | 1:00-11:59 PM | Sunday games (early + late + night) |
-| Monday | 8:15-11:59 PM | Monday Night Football |
+| Day      | Time (ET)     | Event                               |
+| -------- | ------------- | ----------------------------------- |
+| Daily    | 6:00 AM       | Pre-game update                     |
+| Thursday | 8:00-11:30 PM | Thursday Night Football             |
+| Sunday   | 1:00-11:59 PM | Sunday games (early + late + night) |
+| Monday   | 8:15-11:59 PM | Monday Night Football               |
 
 ### Next Execution
 
 To see when it will run next:
+
 1. Go to Vercel Dashboard → Cron
 2. Look at "Next execution" timestamp
 3. Or check logs for recent runs
@@ -136,6 +141,7 @@ To see when it will run next:
 **Cause**: CRON_SECRET not set or incorrect
 
 **Fix**:
+
 1. Go to Vercel Dashboard → Settings → Environment Variables
 2. Verify CRON_SECRET is set in Production
 3. Redeploy if you just added it
@@ -145,6 +151,7 @@ To see when it will run next:
 **Cause**: DATABASE_URL not set or invalid
 
 **Fix**:
+
 1. Verify DATABASE_URL is accessible from Vercel
 2. Check if database allows connections from Vercel IPs
 3. Try connecting locally: `psql $DATABASE_URL`
@@ -154,6 +161,7 @@ To see when it will run next:
 **Cause**: Prisma didn't generate during build
 
 **Fix**:
+
 1. Check build logs in Vercel
 2. Ensure `postinstall` script ran
 3. Manually trigger: `pnpm --filter @gauntlet/server prisma:generate`
@@ -163,16 +171,20 @@ To see when it will run next:
 **Cause**: This is NORMAL if no games are active!
 
 The deduplication logic skips saves when:
+
 - No NFL games are currently playing
 - Scores/projections haven't changed since last snapshot
 
 **Verify it's working**:
+
 - Check during an active NFL game (Thursday/Sunday/Monday night)
-- Look for `skippedCount` > 0 in response (this means it ran but nothing changed)
+- Look for `skippedCount` > 0 in response (this means it ran but nothing
+  changed)
 
 ## What Happens During Non-Game Times?
 
 **Outside game windows:**
+
 - ✅ Cron still runs (daily 6 AM update)
 - ✅ Script executes successfully
 - ✅ Deduplication catches unchanged data
@@ -186,12 +198,14 @@ This is **expected behavior** and very efficient!
 ### View Execution History
 
 **Vercel Dashboard:**
+
 1. Project → Cron
 2. See all executions with timestamps
 3. Success/failure rates
 4. Execution durations
 
 **Logs:**
+
 1. Project → Logs
 2. Filter: `/api/cron/live-odds`
 3. See detailed execution logs
@@ -201,22 +215,25 @@ This is **expected behavior** and very efficient!
 **Success Rate**: >99% (Vercel SLA)  
 **Execution Time**: 45-60 seconds  
 **Snapshots per Run**: 0-12 (depends on deduplication)  
-**Database Growth**: ~200 records per week  
+**Database Growth**: ~200 records per week
 
 ## Cost
 
 **Vercel Pro Plan Required:**
+
 - Hobby plan: Limited cron jobs
 - Pro plan: Unlimited cron jobs + generous compute quota
 
 **Estimated Usage:**
+
 - ~360 executions per week (regular season)
 - ~6 hours compute per week
 - Well within Pro plan limits
 
 ## Disable GitHub Actions (Optional)
 
-Now that Vercel Cron is working, you can disable the old GitHub Actions workflow:
+Now that Vercel Cron is working, you can disable the old GitHub Actions
+workflow:
 
 ```bash
 git mv .github/workflows/live-odds-updates.yml \
@@ -226,7 +243,8 @@ git commit -m "Disable GitHub Actions cron (using Vercel instead)"
 git push
 ```
 
-Or keep it as a backup! Both can run simultaneously without conflicts (deduplication handles it).
+Or keep it as a backup! Both can run simultaneously without conflicts
+(deduplication handles it).
 
 ## Next Steps
 

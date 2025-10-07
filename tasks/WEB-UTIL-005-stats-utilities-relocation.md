@@ -9,7 +9,9 @@
 
 ## Objective
 
-Relocate shared stats utilities from `lib/stats/` to `shared/utils/stats/` since they are used across multiple features (stats hub, matchups, analytics), establishing proper shared utility organization.
+Relocate shared stats utilities from `lib/stats/` to `shared/utils/stats/` since
+they are used across multiple features (stats hub, matchups, analytics),
+establishing proper shared utility organization.
 
 ---
 
@@ -19,13 +21,15 @@ Relocate shared stats utilities from `lib/stats/` to `shared/utils/stats/` since
 
 1. `lib/stats/compose.ts` - Data composition utilities
 2. `lib/stats/join.ts` - Data joining utilities
-3. `lib/stats/medians.ts` - Statistical calculations (median, mean, stddev, percentile)
+3. `lib/stats/medians.ts` - Statistical calculations (median, mean, stddev,
+   percentile)
 4. `lib/stats/positional-advantages.ts` - Position advantage calculations
 5. `lib/stats/positions.ts` - Position-specific utilities
 6. `lib/stats/ranks.ts` - Ranking calculations
 7. `lib/stats/teams.ts` - Team data utilities
 
 **Consuming files** (need import updates):
+
 - `app/stats/components/LeagueView.tsx`
 - `app/stats/components/TeamView.tsx`
 - `app/stats/components/TrendsView.tsx`
@@ -93,6 +97,7 @@ grep -r "from '../lib/stats" src/
 ### 5. Update import statements
 
 **Pattern to replace:**
+
 ```typescript
 // OLD
 import { median, mean } from '@/lib/stats/medians';
@@ -105,24 +110,28 @@ import { median, mean, rank } from '@/shared/utils/stats';
 **Files that need updates** (use search and replace):
 
 Update `app/stats/components/LeagueView.tsx`:
+
 ```typescript
 // Line ~3: Change import
 import { rank } from '@/shared/utils/stats';
 ```
 
 Update `app/stats/components/TeamView.tsx`:
+
 ```typescript
 // Line ~3: Change import
 import { median, rank } from '@/shared/utils/stats';
 ```
 
 Update `app/stats/components/TrendsView.tsx`:
+
 ```typescript
-// Line ~3: Change import  
+// Line ~3: Change import
 import { rank } from '@/shared/utils/stats';
 ```
 
 Update `lib/manager-analytics.ts`:
+
 ```typescript
 // Update stats imports
 import { median, mean, percentile } from '@/shared/utils/stats';
@@ -236,9 +245,11 @@ This is a pure relocation task - no logic changes needed.
 
 ## Related Tasks
 
-**Blocks**: WEB-COMP-002 (TrendsView needs these utils), WEB-HOOK-003 (stats hooks)  
+**Blocks**: WEB-COMP-002 (TrendsView needs these utils), WEB-HOOK-003 (stats
+hooks)  
 **Blocked By**: WEB-SETUP-004 (shared folder structure)  
-**Related**: WEB-UTIL-002 (color relocation), WEB-UTIL-006 (feature-specific relocation)
+**Related**: WEB-UTIL-002 (color relocation), WEB-UTIL-006 (feature-specific
+relocation)
 
 ---
 

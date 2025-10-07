@@ -9,7 +9,9 @@
 
 ## Objective
 
-Extract feature-specific utilities from `lib/` to proper feature directories (`features/transactions/` and `features/start-sit/`), establishing clear feature boundaries and improving code organization.
+Extract feature-specific utilities from `lib/` to proper feature directories
+(`features/transactions/` and `features/start-sit/`), establishing clear feature
+boundaries and improving code organization.
 
 ---
 
@@ -26,6 +28,7 @@ Extract feature-specific utilities from `lib/` to proper feature directories (`f
    - Used by: Start-sit efficiency components
 
 **Consuming files** (need import updates):
+
 - `app/stats/components/TransactionAnalysis.tsx`
 - `app/stats/utils/computeTransactionGradesForStatsHub.ts`
 - `components/start-sit-efficiency.tsx`
@@ -45,7 +48,7 @@ cd /Users/dhruv.methi/Documents/GitHub/gauntlet-website/apps/web
 # Create transaction utilities
 mkdir -p src/features/transactions/utils
 
-# Create start-sit utilities  
+# Create start-sit utilities
 mkdir -p src/features/start-sit/utils
 ```
 
@@ -57,12 +60,14 @@ mv src/lib/transactions-facts.ts src/features/transactions/utils/facts.ts
 ```
 
 **Review the file** to ensure it's feature-specific (not shared):
+
 ```bash
 # Check what it exports
 grep "^export" src/features/transactions/utils/facts.ts
 ```
 
 Expected exports:
+
 - `Facts` interface/type
 - `playoffWeight()` function
 - Transaction fact building functions
@@ -80,6 +85,7 @@ rmdir src/lib/start-sit 2>/dev/null || true
 ### 4. Create barrel exports
 
 **Create `features/transactions/utils/index.ts`:**
+
 ```typescript
 /**
  * Transaction analysis utilities
@@ -90,6 +96,7 @@ export * from './facts';
 ```
 
 **Create `features/start-sit/utils/index.ts`:**
+
 ```typescript
 /**
  * Start/Sit efficiency analysis utilities
@@ -114,6 +121,7 @@ grep -r "start-sit/analysis" src/
 ### 6. Update transaction utility imports
 
 **Update `app/stats/utils/computeTransactionGradesForStatsHub.ts`:**
+
 ```typescript
 // OLD
 import { Facts, playoffWeight } from '@/lib/transactions-facts';
@@ -123,6 +131,7 @@ import { Facts, playoffWeight } from '@/features/transactions/utils';
 ```
 
 **Update `app/stats/components/TransactionAnalysis.tsx`:**
+
 ```typescript
 // Update import path
 import type { Facts } from '@/features/transactions/utils';
@@ -131,6 +140,7 @@ import type { Facts } from '@/features/transactions/utils';
 ### 7. Update start-sit utility imports
 
 **Update `components/start-sit-efficiency.tsx`:**
+
 ```typescript
 // OLD
 import { analyzeStartSit } from '@/lib/start-sit/analysis';
@@ -140,17 +150,19 @@ import { analyzeStartSit } from '@/features/start-sit/utils';
 ```
 
 **Update `components/stats/StartSitEfficiencyTab.tsx`:**
+
 ```typescript
 // OLD
 import { calculateEfficiency } from '@/lib/start-sit/analysis';
 
-// NEW  
+// NEW
 import { calculateEfficiency } from '@/features/start-sit/utils';
 ```
 
 ### 8. Add tests for key functions
 
 **Create `features/transactions/utils/facts.test.ts`:**
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { playoffWeight } from './facts';
@@ -158,8 +170,8 @@ import { playoffWeight } from './facts';
 describe('playoffWeight', () => {
   it('returns higher weight for playoff weeks', () => {
     const playoffWeek = playoffWeight(15); // Week 15 is playoffs
-    const regularWeek = playoffWeight(5);  // Week 5 is regular season
-    
+    const regularWeek = playoffWeight(5); // Week 5 is regular season
+
     expect(playoffWeek).toBeGreaterThan(regularWeek);
   });
 
@@ -171,6 +183,7 @@ describe('playoffWeight', () => {
 ```
 
 **Create `features/start-sit/utils/analysis.test.ts`:**
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { analyzeStartSit } from './analysis';
@@ -181,7 +194,7 @@ describe('analyzeStartSit', () => {
       started: [{ points: 20 }, { points: 15 }],
       benched: [{ points: 10 }, { points: 5 }],
     });
-    
+
     expect(result.efficiency).toBeGreaterThan(0);
   });
 
@@ -223,8 +236,10 @@ pnpm test components/start-sit-efficiency
 
 ## Acceptance Criteria
 
-- [ ] `lib/transactions-facts.ts` moved to `features/transactions/utils/facts.ts`
-- [ ] `lib/start-sit/analysis.ts` moved to `features/start-sit/utils/analysis.ts`
+- [ ] `lib/transactions-facts.ts` moved to
+      `features/transactions/utils/facts.ts`
+- [ ] `lib/start-sit/analysis.ts` moved to
+      `features/start-sit/utils/analysis.ts`
 - [ ] Barrel exports created for both features
 - [ ] All imports updated (5-8 files)
 - [ ] Old files removed from `lib/`
@@ -303,28 +318,34 @@ This establishes proper feature-based organization for feature-specific utilitie
 
 **Blocks**: WEB-COMP-001 (component splitting needs organized utils)  
 **Blocked By**: WEB-SETUP-004 (feature folder structure)  
-**Related**: WEB-UTIL-005 (stats relocation), WEB-EXTRACT-006 (start-sit types), WEB-EXTRACT-007 (transaction types)
+**Related**: WEB-UTIL-005 (stats relocation), WEB-EXTRACT-006 (start-sit types),
+WEB-EXTRACT-007 (transaction types)
 
 ---
 
 ## Notes
 
-- **Feature-Specific**: These utilities are only used within their respective features
-- **Clear Boundaries**: Establishes that transactions and start-sit are distinct features
+- **Feature-Specific**: These utilities are only used within their respective
+  features
+- **Clear Boundaries**: Establishes that transactions and start-sit are distinct
+  features
 - **Test Coverage**: Add tests for core functions during move
-- **Future Work**: Consider if these should be further split into smaller utilities
+- **Future Work**: Consider if these should be further split into smaller
+  utilities
 
 ---
 
 ## File Size Reference
 
 **Transaction Utilities (~200 lines):**
+
 - `Facts` type definition
 - `playoffWeight()` - Weights transaction impact by week
 - Transaction fact building and aggregation
 - Replacement level calculations
 
 **Start-Sit Utilities (~300 lines):**
+
 - Start/sit decision analysis
 - Lineup efficiency calculations
 - Opportunity cost calculations

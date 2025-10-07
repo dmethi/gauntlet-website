@@ -9,7 +9,9 @@
 
 ## Objective
 
-Extract scattered formatting functions from components into centralized, tested utilities to eliminate duplication and ensure consistency across the application.
+Extract scattered formatting functions from components into centralized, tested
+utilities to eliminate duplication and ensure consistency across the
+application.
 
 ---
 
@@ -139,7 +141,9 @@ export const formatStatKey = (key: string): string => {
  */
 export const formatStatValue = (value: number, statKey: string): string => {
   // Whole numbers for counting stats
-  if (['rec', 'pass_td', 'rush_td', 'rec_td', 'int', 'sack'].includes(statKey)) {
+  if (
+    ['rec', 'pass_td', 'rush_td', 'rec_td', 'int', 'sack'].includes(statKey)
+  ) {
     return value.toFixed(0);
   }
   // One decimal for yards and points
@@ -208,6 +212,7 @@ describe('formatCompact', () => {
 ### 8. Replace inline formatting in components
 
 Update `components/matchup-odds-preview.tsx`:
+
 ```typescript
 // Remove inline function (lines 58-60)
 // Add import:
@@ -215,6 +220,7 @@ import { formatOdds } from '@/shared/utils/formatting';
 ```
 
 Update `components/matchup-simulation.tsx`:
+
 ```typescript
 // Remove inline function (lines 186-188)
 // Add import:
@@ -222,6 +228,7 @@ import { formatOdds } from '@/shared/utils/formatting';
 ```
 
 Update `components/stats/SummaryTable.tsx`:
+
 ```typescript
 // Replace inline formatting with:
 import { formatNumber, formatDelta } from '@/shared/utils/formatting';
@@ -293,7 +300,8 @@ Follow the exact function signatures and implementations in the task file.
 ## Notes
 
 - **Duplication Eliminated**: `formatOdds()` appears in 2 files
-- **Inline Patterns**: `.toFixed()` appears 80+ times, should gradually migrate to utilities
+- **Inline Patterns**: `.toFixed()` appears 80+ times, should gradually migrate
+  to utilities
 - **Future Enhancement**: Add currency formatting when needed
 - **Performance**: These are pure functions, highly cacheable
 

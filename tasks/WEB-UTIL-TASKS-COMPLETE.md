@@ -11,15 +11,15 @@
 
 ### Phase 3: Utility Extraction (Complete Task List)
 
-| Task | File | Status | Time | Priority |
-|------|------|--------|------|----------|
-| **WEB-UTIL-001** | `WEB-UTIL-001.md` | ✅ Fully Detailed | 50 min | 🔴 CRITICAL |
-| **WEB-UTIL-002** | `WEB-UTIL-002.md` | ⚠️ Needs Update | 40 min | 🟡 MEDIUM |
-| **WEB-UTIL-003** | `WEB-UTIL-003.md` | 📋 Placeholder | 1 hour | 🟡 MEDIUM |
-| **WEB-UTIL-004** | `WEB-UTIL-004.md` | 📋 Placeholder | 45 min | 🟡 MEDIUM |
-| **WEB-UTIL-005** | `WEB-UTIL-005-stats-utilities-relocation.md` | ✅ Detailed | 30 min | 🟡 MEDIUM |
-| **WEB-UTIL-006** | `WEB-UTIL-006-transaction-start-sit-utilities.md` | ✅ Detailed | 40 min | 🟡 MEDIUM |
-| **WEB-UTIL-007** | `WEB-UTIL-007-draft-client-calculation-utilities.md` | ✅ Detailed | 35 min | 🟢 LOW |
+| Task             | File                                                 | Status            | Time   | Priority    |
+| ---------------- | ---------------------------------------------------- | ----------------- | ------ | ----------- |
+| **WEB-UTIL-001** | `WEB-UTIL-001.md`                                    | ✅ Fully Detailed | 50 min | 🔴 CRITICAL |
+| **WEB-UTIL-002** | `WEB-UTIL-002.md`                                    | ⚠️ Needs Update   | 40 min | 🟡 MEDIUM   |
+| **WEB-UTIL-003** | `WEB-UTIL-003.md`                                    | 📋 Placeholder    | 1 hour | 🟡 MEDIUM   |
+| **WEB-UTIL-004** | `WEB-UTIL-004.md`                                    | 📋 Placeholder    | 45 min | 🟡 MEDIUM   |
+| **WEB-UTIL-005** | `WEB-UTIL-005-stats-utilities-relocation.md`         | ✅ Detailed       | 30 min | 🟡 MEDIUM   |
+| **WEB-UTIL-006** | `WEB-UTIL-006-transaction-start-sit-utilities.md`    | ✅ Detailed       | 40 min | 🟡 MEDIUM   |
+| **WEB-UTIL-007** | `WEB-UTIL-007-draft-client-calculation-utilities.md` | ✅ Detailed       | 35 min | 🟢 LOW      |
 
 ---
 
@@ -30,12 +30,14 @@
 **File**: `tasks/WEB-UTIL-005-stats-utilities-relocation.md`
 
 **What it does:**
+
 - Moves 7 shared stats utilities from `lib/stats/` to `shared/utils/stats/`
 - Updates 15+ import statements across the codebase
 - Creates barrel export for clean imports
 - Pure relocation - no logic changes
 
 **Key utilities moved:**
+
 - `compose.ts` - Data composition
 - `join.ts` - Data joining
 - `medians.ts` - Statistical calculations (median, mean, stddev, percentile)
@@ -45,6 +47,7 @@
 - `teams.ts` - Team data utilities
 
 **Why it matters:**
+
 - These utilities are used across stats hub, matchups, and analytics
 - Proper shared location improves discoverability
 - Quick win - 30 minutes, high impact
@@ -56,12 +59,14 @@
 **File**: `tasks/WEB-UTIL-006-transaction-start-sit-utilities.md`
 
 **What it does:**
+
 - Moves `lib/transactions-facts.ts` → `features/transactions/utils/facts.ts`
 - Moves `lib/start-sit/analysis.ts` → `features/start-sit/utils/analysis.ts`
 - Establishes clear feature boundaries
 - Adds tests for key functions
 
 **Files relocated:**
+
 - **Transaction utilities** (~200 lines)
   - `Facts` type and transaction analysis logic
   - `playoffWeight()` function
@@ -73,6 +78,7 @@
   - Opportunity cost calculations
 
 **Why it matters:**
+
 - Feature-specific organization
 - Clears out `lib/` directory
 - Establishes proper feature architecture
@@ -84,17 +90,20 @@
 **File**: `tasks/WEB-UTIL-007-draft-client-calculation-utilities.md`
 
 **What it does:**
+
 - Reviews and categorizes remaining utilities in `lib/`
 - Moves draft-analytics.ts to draft-analysis feature
 - Moves narrative-generators.ts to reports feature
 - Determines proper location for client-calculations.ts
 
 **Files to relocate:**
+
 - `lib/draft-analytics.ts` → `features/draft-analysis/utils/analytics.ts`
 - `lib/narrative-generators.ts` → `features/reports/utils/narratives.ts`
 - `lib/client-calculations.ts` → (determine if shared or feature-specific)
 
 **Why it matters:**
+
 - Completes utility extraction work
 - Results in clean, minimal `lib/` directory
 - All utilities properly organized by feature
@@ -113,13 +122,14 @@ All detailed task files include:
 ✅ **Verification Commands** - How to confirm success  
 ✅ **Copy-Paste Cursor Prompt** - Ready to execute  
 ✅ **Related Tasks** - Dependencies and blockers  
-✅ **Common Issues & Solutions** - Troubleshooting guide  
+✅ **Common Issues & Solutions** - Troubleshooting guide
 
 ---
 
 ## 📊 Complete Task Breakdown
 
 ### By Type:
+
 - **Extract** (create new utilities): WEB-UTIL-001 (50 min)
 - **Relocate** (move existing): WEB-UTIL-002, 005 (70 min)
 - **Split** (separate concerns): WEB-UTIL-003 (1 hour)
@@ -127,11 +137,13 @@ All detailed task files include:
 - **Feature-specific** (organize): WEB-UTIL-006, 007 (75 min)
 
 ### By Priority:
+
 - 🔴 **CRITICAL**: WEB-UTIL-001 (eliminates duplication)
 - 🟡 **MEDIUM**: WEB-UTIL-002, 003, 004, 005, 006
 - 🟢 **LOW**: WEB-UTIL-007 (can defer)
 
 ### By Status:
+
 - ✅ **Ready to Execute**: WEB-UTIL-001, 005, 006, 007 (4 tasks)
 - ⚠️ **Needs Update**: WEB-UTIL-002 (1 task)
 - 📋 **Needs Detail**: WEB-UTIL-003, 004 (2 tasks)
@@ -143,6 +155,7 @@ All detailed task files include:
 ### Week 2 - Utility Extraction Phase
 
 **Day 1 (80 min):**
+
 1. ✅ **WEB-UTIL-001** (50 min) - Formatting utilities
    - **Status**: ✅ Ready to execute
    - **Impact**: Eliminates formatOdds() duplication
@@ -153,33 +166,35 @@ All detailed task files include:
    - **Impact**: Organizes 7 shared utilities
    - **Unblocks**: Multiple features
 
-**Day 2 (1 hour 45 min):**
-3. 📋 **WEB-UTIL-003** (1 hour) - Manager analytics split
-   - **Status**: ⚠️ Needs detailed steps (scope is clear)
-   - **Impact**: Reduces 1,346-line file
-   - **Unblocks**: Component splitting
+**Day 2 (1 hour 45 min):** 3. 📋 **WEB-UTIL-003** (1 hour) - Manager analytics
+split
+
+- **Status**: ⚠️ Needs detailed steps (scope is clear)
+- **Impact**: Reduces 1,346-line file
+- **Unblocks**: Component splitting
 
 4. 📋 **WEB-UTIL-004** (45 min) - Hall of Fame consolidation
    - **Status**: ⚠️ Needs detailed steps (scope is clear)
    - **Impact**: Consolidates 5 files into 3
    - **Unblocks**: Hall of Fame pages
 
-**Day 3 (80 min):**
-5. ⚠️ **WEB-UTIL-002** (40 min) - Color relocation
-   - **Status**: ⚠️ Update needed (change focus to relocation)
-   - **Impact**: Organizes all color utilities
-   - **Unblocks**: Component work
+**Day 3 (80 min):** 5. ⚠️ **WEB-UTIL-002** (40 min) - Color relocation
+
+- **Status**: ⚠️ Update needed (change focus to relocation)
+- **Impact**: Organizes all color utilities
+- **Unblocks**: Component work
 
 6. ✅ **WEB-UTIL-006** (40 min) - Transaction/Start-Sit
    - **Status**: ✅ Ready to execute
    - **Impact**: Feature-specific organization
    - **Unblocks**: Feature architecture
 
-**Optional - Week 3 (35 min):**
-7. ✅ **WEB-UTIL-007** (35 min) - Draft/Client calculations
-   - **Status**: ✅ Ready to execute
-   - **Impact**: Completes utility extraction
-   - **Can defer**: Lower priority
+**Optional - Week 3 (35 min):** 7. ✅ **WEB-UTIL-007** (35 min) - Draft/Client
+calculations
+
+- **Status**: ✅ Ready to execute
+- **Impact**: Completes utility extraction
+- **Can defer**: Lower priority
 
 ---
 
@@ -188,6 +203,7 @@ All detailed task files include:
 ### ✅ Immediate (Can Start Now):
 
 1. **Execute WEB-UTIL-001** - Formatting Utilities
+
    ```bash
    # Task is fully detailed and ready
    cat tasks/WEB-UTIL-001.md
@@ -227,6 +243,7 @@ All detailed task files include:
 ## 📊 Impact Summary
 
 ### Before (Current State):
+
 - ❌ Duplicate `formatOdds()` in 2 files
 - ❌ Inline formatting scattered in 15+ components
 - ❌ Shared utilities in `lib/` mixed with feature-specific code
@@ -235,6 +252,7 @@ All detailed task files include:
 - ❌ No clear feature boundaries
 
 ### After (All 7 Tasks Complete):
+
 - ✅ All formatting utilities centralized and tested
 - ✅ Zero duplication
 - ✅ Shared utilities properly located in `shared/utils/`
@@ -248,18 +266,21 @@ All detailed task files include:
 ## 🎯 Success Metrics
 
 **Utility Organization:**
+
 - ✅ 15+ utility functions extracted and centralized
 - ✅ 7 stats utilities properly shared
 - ✅ 5 transaction/start-sit utilities feature-organized
 - ✅ 3 draft/client/narrative utilities categorized
 
 **Code Quality:**
+
 - ✅ Zero formatting duplication
 - ✅ 100% test coverage on utility functions
 - ✅ Clean import paths using barrel exports
 - ✅ Clear separation of shared vs. feature-specific code
 
 **Developer Experience:**
+
 - ✅ Easy to find utilities (predictable locations)
 - ✅ Easy to import utilities (barrel exports)
 - ✅ Easy to test utilities (isolated pure functions)
@@ -270,21 +291,23 @@ All detailed task files include:
 ## 🔍 Files Created Summary
 
 **Analysis & Planning:**
+
 1. ✅ `tasks/WEB-UTIL-ANALYSIS.md` - Comprehensive codebase analysis
 2. ✅ `tasks/WEB-UTIL-UPDATED-TASKS.md` - All 7 task specifications
 3. ✅ `tasks/WEB-UTIL-RECOMMENDATION.md` - Executive summary
 4. ✅ `tasks/WEB-UTIL-TASKS-COMPLETE.md` - This document
 
-**Detailed Task Files:**
-5. ✅ `tasks/WEB-UTIL-001.md` - Formatting utilities (UPDATED)
-6. ⚠️ `tasks/WEB-UTIL-002.md` - Color utilities (needs update)
-7. 📋 `tasks/WEB-UTIL-003.md` - Manager analytics (placeholder)
-8. 📋 `tasks/WEB-UTIL-004.md` - Hall of Fame (placeholder)
-9. ✅ `tasks/WEB-UTIL-005-stats-utilities-relocation.md` - Stats relocation (NEW)
-10. ✅ `tasks/WEB-UTIL-006-transaction-start-sit-utilities.md` - Transaction/Start-Sit (NEW)
-11. ✅ `tasks/WEB-UTIL-007-draft-client-calculation-utilities.md` - Draft/Client (NEW)
+**Detailed Task Files:** 5. ✅ `tasks/WEB-UTIL-001.md` - Formatting utilities
+(UPDATED) 6. ⚠️ `tasks/WEB-UTIL-002.md` - Color utilities (needs update) 7. 📋
+`tasks/WEB-UTIL-003.md` - Manager analytics (placeholder) 8. 📋
+`tasks/WEB-UTIL-004.md` - Hall of Fame (placeholder) 9. ✅
+`tasks/WEB-UTIL-005-stats-utilities-relocation.md` - Stats relocation (NEW) 10.
+✅ `tasks/WEB-UTIL-006-transaction-start-sit-utilities.md` -
+Transaction/Start-Sit (NEW) 11. ✅
+`tasks/WEB-UTIL-007-draft-client-calculation-utilities.md` - Draft/Client (NEW)
 
-**Total**: 11 documentation files covering comprehensive utility extraction strategy
+**Total**: 11 documentation files covering comprehensive utility extraction
+strategy
 
 ---
 
