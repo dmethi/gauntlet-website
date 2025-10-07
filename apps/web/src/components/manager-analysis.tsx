@@ -27,6 +27,7 @@ import { Label } from '@/components/ui/label';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import { ManagerAnalytics, ManagerProfile, PlayerOverlap } from '@/lib/manager-analytics';
 import { colors, dataVizColors } from '../../../../brand/colors';
+import { ManagerAnalysisProps } from '@/features/draft-analysis';
 
 // TODO: When implementing real draft data, make manager names clickable links
 // that navigate to individual manager analysis pages showing their full draft history,
@@ -42,10 +43,6 @@ import {
   Filter,
   Zap,
 } from 'lucide-react';
-
-interface ManagerAnalysisProps {
-  analytics: ManagerAnalytics;
-}
 
 export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) => {
   const [selectedCluster, setSelectedCluster] = useState<string>('all');

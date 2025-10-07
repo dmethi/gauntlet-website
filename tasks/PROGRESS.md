@@ -2,10 +2,10 @@
 
 **Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 28.6% (34/119 tasks)  
+**Overall Progress**: 30.3% (36/119 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 11.4% (4/35 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 17.1% (6/35 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (33)
+#### ✅ Completed (35)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -49,6 +49,8 @@
 - [x] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) ⏱️ 45 min
 - [x] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour
 - [x] **WEB-SETUP-004**: Create Feature Folder Structure ⏱️ 30 min
+- [x] **WEB-EXTRACT-001**: Manager Analysis Types ⏱️ 20 min
+- [x] **WEB-EXTRACT-002**: Manager Analytics Logic Types ⏱️ 25 min
 
 #### 🔄 In Progress (0)
 
@@ -56,7 +58,7 @@ _Ready to begin_
 
 #### ⏭️ Up Next (1)
 
-- [ ] **WEB-EXTRACT-001**: Manager Analysis Types [HIGH PRIORITY]
+- [ ] **WEB-EXTRACT-003**: Hooks Types [MEDIUM PRIORITY]
 
 #### 📋 Queued (5)
 
@@ -73,7 +75,7 @@ _Ready to begin_
 | Category            | Total  | Completed | In Progress | Remaining |
 | ------------------- | ------ | --------- | ----------- | --------- |
 | **SETUP**           | 13     | 7         | 0           | 6         |
-| **EXTRACT**         | 16     | 2         | 0           | 14        |
+| **EXTRACT**         | 16     | 4         | 0           | 12        |
 | **UTIL**            | 16     | 0         | 0           | 16        |
 | **HOOK**            | 11     | 0         | 0           | 11        |
 | **COMP**            | 15     | 0         | 0           | 15        |
@@ -86,7 +88,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3      | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4      | 2         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **119** | **34**   | **0**       | **85**    |
+| **Total**           | **119** | **36**   | **0**       | **83**    |
 
 ---
 
@@ -191,8 +193,8 @@ background jobs package.
 
 #### Phase 2: Type Extraction (Week 1-2) ⚠️ QUICK WINS
 
-- [ ] **WEB-EXTRACT-001**: Manager Analysis Types ⏱️ 20 min [HIGH]
-- [ ] **WEB-EXTRACT-002**: Manager Analytics Logic Types ⏱️ 25 min [HIGH]
+- [x] **WEB-EXTRACT-001**: Manager Analysis Types ⏱️ 20 min [HIGH] ✅
+- [x] **WEB-EXTRACT-002**: Manager Analytics Logic Types ⏱️ 25 min [HIGH] ✅
 - [ ] **WEB-EXTRACT-003**: Hooks Types ⏱️ 20 min [MEDIUM]
 - [ ] **WEB-EXTRACT-004**: Stats Component Types ⏱️ 30 min [MEDIUM]
 
@@ -310,6 +312,35 @@ package.
 ## 🎉 Recent Completions
 
 ### October 7, 2025 (Latest)
+
+- ✅ **WEB-EXTRACT-002**: Manager Analytics Logic Types
+  - Extracted all 13 interface definitions from `lib/manager-analytics.ts` (lines 8-229)
+  - Consolidated into `features/draft-analysis/types.ts` alongside existing ManagerAnalysisProps
+  - Updated `features/draft-analysis/index.ts` barrel export with all 14 types organized by category
+  - Added type import in `lib/manager-analytics.ts` for internal usage
+  - Added type re-export in `lib/manager-analytics.ts` for backwards compatibility
+  - Removed original 13 interface definitions from manager-analytics.ts
+  - File size reduced: 1,346 lines → 1,155 lines (191 lines saved, 14.2% reduction)
+  - Types file verification: 14 interfaces confirmed (13 from manager-analytics + 1 from manager-analysis)
+  - All 6 tests passing (no breaking changes)
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly
+  - **Phase 2 Progress**: Type Extraction 2/4 complete (50%)
+  - **Outcome**: Centralized all draft analysis types, major cleanup of manager-analytics.ts
+  - **Next Steps**: WEB-EXTRACT-003 (Hooks Types) - extract types from lib/hooks.ts
+
+- ✅ **WEB-EXTRACT-001**: Manager Analysis Types
+  - Created `features/draft-analysis/types.ts` with ManagerAnalysisProps interface
+  - Created barrel export `features/draft-analysis/index.ts`
+  - Updated `components/manager-analysis.tsx` to import from `@/features/draft-analysis`
+  - Removed inline interface definition (lines 46-48)
+  - Added comprehensive JSDoc documentation to types file
+  - All 6 tests passing (no breaking changes)
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly
+  - **Phase 2 Progress**: Type Extraction 1/4 complete (25%)
+  - **Outcome**: Established type extraction pattern for draft-analysis feature
+  - **Next Steps**: WEB-EXTRACT-002 (Manager Analytics Logic Types) - extract 13 more interfaces to same types.ts file
 
 - ✅ **WEB-SETUP-004**: Create Feature Folder Structure
   - Created `features/` directory with 6 feature subdirectories: draft-analysis, matchups, stats, hall-of-fame, transactions, start-sit

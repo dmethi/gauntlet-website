@@ -53,6 +53,10 @@ on:
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+concurrency:
+  group: live-odds-snapshot
+  cancel-in-progress: false # Let current snapshot complete before starting new one
+
 jobs:
   update-odds:
     runs-on: ubuntu-latest
