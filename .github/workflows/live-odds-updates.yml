@@ -31,11 +31,11 @@ on:
 
     # Sunday Night Football: 8:20 PM ET
     # Runs Monday 00:00-05:59 UTC
-    - cron: "*/10 0-4 * 9-12,1-2 1"
+    - cron: "*/10 0-5 * 9-12,1-2 1"
 
     # Monday Night Football: 8:15 PM ET
     # Runs Tuesday 00:00-05:59 UTC
-    - cron: "*/10 0-4 * 9-12,1-2 2"
+    - cron: "*/10 0-5 * 9-12,1-2 2"
 
   # Manual trigger for testing
   workflow_dispatch:
