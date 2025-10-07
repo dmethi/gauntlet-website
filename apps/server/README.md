@@ -101,6 +101,7 @@ DATABASE_URL=postgresql://user:pass@host:5432/dbname
 **Legacy naming.** This package was originally an Express HTTP server but has been simplified to background jobs only. The name stuck around.
 
 **Current reality:**
+
 - ❌ No HTTP server running
 - ❌ No Express routes
 - ❌ No API endpoints
@@ -122,6 +123,7 @@ DATABASE_URL=postgresql://user:pass@host:5432/dbname
 The web app (`apps/web`) **does NOT** use this database. It calls the Sleeper API directly.
 
 This database is for:
+
 - **Historical analysis**: "How did win probability change during the game?"
 - **Trends over time**: "How accurate were our pre-game predictions?"
 - **Excitement metrics**: "Which games had the most volatility?"
@@ -136,6 +138,7 @@ This database is for:
 ### Q: How much data does this generate?
 
 **A:** Approximately:
+
 - **18 snapshots per game** (10-minute intervals × 3-hour game)
 - **12 matchups per week** (6 per league × 2 leagues)
 - **216 records per week** (18 × 12) in `LiveWinProbSample`
@@ -144,6 +147,7 @@ This database is for:
 ### Q: Can I run this locally?
 
 **A:** Yes, but you need:
+
 1. A PostgreSQL database
 2. `DATABASE_URL` environment variable set
 3. Run `pnpm live-snapshot` when games are active
@@ -163,6 +167,7 @@ This database is for:
 ## Notes
 
 This package is intentionally minimal:
+
 - **3 TypeScript files** - Only what's needed for live snapshots
 - **3 Prisma models** - Only time-series data Sleeper doesn't provide
 - **1 GitHub workflow** - Runs during NFL games only

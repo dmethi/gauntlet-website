@@ -9,11 +9,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*", "src/**/*.json"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/__tests__/**"
-  ]
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts", "**/__tests__/**"]
 }

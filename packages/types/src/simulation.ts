@@ -133,13 +133,49 @@ export interface ProjectionErrorRecord {
 }
 
 /**
- * Complete variance dataset
+ * Data quality metrics for variance data export.
+ */
+export interface DataQualityMetrics {
+  /** Total number of players in variance data */
+  totalPlayers: number;
+  /** Players with sufficient data (≥4 games) */
+  playersWithVariance: number;
+  /** Outliers removed during export */
+  outlierRemovalCount: number;
+  /** Positions with variance data */
+  positionsWithVariance: string[];
+}
+
+/**
+ * Complete variance dataset with versioning
  * Exported from historical analysis for use in simulations
  */
 export interface VarianceData {
+  /** Semantic version of data format (e.g., "1.0.0") */
+  version: string;
+
+  /** Schema version number for breaking changes */
+  schemaVersion: number;
+
+  /** ISO 8601 timestamp of export */
   exportedAt: string;
+
+  /** NFL season (e.g., 2025) */
+  season: number;
+
+  /** NFL weeks covered in this export */
+  weeksCovered: number[];
+
+  /** Data quality and statistics */
+  dataQuality: DataQualityMetrics;
+
+  /** Position-level variance distributions */
   positionVariance: PositionVarianceRecord[];
+
+  /** Player-specific variance distributions */
   playerVariance: PlayerVarianceRecord[];
+
+  /** Individual projection error records */
   projectionErrors: ProjectionErrorRecord[];
 }
 

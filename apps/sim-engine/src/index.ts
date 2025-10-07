@@ -32,7 +32,18 @@ export {
   getDataInfo,
   getPositionDistributionSafe,
   getPlayerOutcomesSafe,
+  prewarmVarianceData,
 } from './data/variance-loader';
+
+// Schema versioning
+export {
+  validateSchemaVersion,
+  getSchemaMigrationGuidance,
+  CURRENT_SCHEMA_VERSION,
+  MIN_SUPPORTED_SCHEMA_VERSION,
+} from './data/schema-version';
+
+export type { SchemaValidation } from './data/schema-version';
 
 // ============================================
 // ERROR HANDLING
@@ -93,6 +104,7 @@ export type {
   PlayerVarianceRecord,
   ProjectionErrorRecord,
   VarianceData,
+  DataQualityMetrics,
 } from '@gauntlet/types';
 
 // ============================================

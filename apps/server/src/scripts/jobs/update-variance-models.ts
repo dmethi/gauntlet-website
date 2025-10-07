@@ -160,6 +160,7 @@ const updateVarianceModels = async (): Promise<void> => {
       version: '1.0.0',
       schemaVersion: 2,
       exportedAt: new Date().toISOString(),
+      season: currentSeason,
       weeksCovered: [currentWeek],
       dataQuality: {
         totalPlayers: newPlayerVariance.length,
@@ -167,6 +168,9 @@ const updateVarianceModels = async (): Promise<void> => {
           (p: { sampleSize: number }) => p.sampleSize >= 4
         ).length,
         outlierRemovalCount: outlierCount,
+        positionsWithVariance: Array.from(
+          new Set(cappedPositionVariance.map((p: { position: string }) => p.position))
+        ),
       },
       positionVariance: cappedPositionVariance,
       playerVariance: newPlayerVariance,
@@ -220,7 +224,12 @@ const updateVarianceModels = async (): Promise<void> => {
 };
 
 // Run job
-updateVarianceModels().catch(error => {
-  console.error('Fatal error:', error);
-  process.exit(1);
-});
+updateVarianceModels()
+  .then(() => {
+    // Explicitly exit to prevent hanging (logger/connections may keep event loop alive)
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });

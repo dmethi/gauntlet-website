@@ -139,10 +139,7 @@ remainingMultiplier = 1 - Math.pow(gameProgress, 1.5);
 ### Variance Application
 
 ```typescript
-function addVarianceToProjection(
-  projection: number,
-  position: Position
-): number {
+function addVarianceToProjection(projection: number, position: Position): number {
   const variance = POSITION_VARIANCE[position];
 
   // Box-Muller normal distribution
@@ -223,9 +220,7 @@ console.log(
 
 // Live updates during Sunday games (run every 5 minutes)
 const liveOdds = simulateLiveWinProbability(teamAlpha, teamBeta, 0.65, 1000);
-console.log(
-  `Win probability has shifted to ${liveOdds.team1WinPct}% after 65% game completion`
-);
+console.log(`Win probability has shifted to ${liveOdds.team1WinPct}% after 65% game completion`);
 ```
 
 ## 🎨 UX Opportunities
