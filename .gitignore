@@ -121,7 +121,11 @@ Thumbs.db
 tmp/
 temp/ 
 
-**/generated/\n# Cursor-specific files\n.cursor/
+# Generated Prisma files
+**/generated/
+
+# Cursor-specific files
+.cursor/
 
 *storybook.log
 storybook-static

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@gauntlet/lib": "workspace:*",
+    "@gauntlet/server": "workspace:*",
     "@gauntlet/sim-engine": "workspace:*",
     "@gauntlet/types": "workspace:*",
     "@gauntlet/ui": "workspace:*",
