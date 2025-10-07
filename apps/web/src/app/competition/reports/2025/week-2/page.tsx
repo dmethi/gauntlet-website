@@ -8,7 +8,7 @@ import { colors as brandColors } from '@/lib/colors';
 import reportData from '@/data/report-week2';
 
 // Helper to derive conference abbreviation (AFC/NFC) from league name
-const getConference = (name: string) =>
+const getConference = (name: string): string =>
   name.toUpperCase().includes('AFC') ? 'AFC' : name.toUpperCase().includes('NFC') ? 'NFC' : name;
 
 // Placeholder for Week 2 narrative overlay - to be populated by user
@@ -133,91 +133,11 @@ const EDITOR_CALLOUTS: Record<string, string> = {
     'Can confirm that that indeed is a brutal cocktail. Actively advised not to mix those ingredients in bartending school. Would not recommend.',
 };
 
-interface SeriesPoint {
-  timestamp: string;
-  winProbA: number;
-  winProbB: number;
-  gameProgress: number;
-  team1Score?: number | null;
-  team2Score?: number | null;
-}
-
-interface BoxRow {
-  playerId: string;
-  name: string;
-  position: string | null;
-  points: number;
-}
-
-interface MatchupView {
-  leagueId: string;
-  matchupId: number;
-  rosterAId: number;
-  rosterBId: number;
-  teamAName?: string;
-  teamBName?: string;
-  pointsA: number;
-  pointsB: number;
-  margin: number;
-  combinedPoints: number;
-  excitement: number;
-  startersA?: string[];
-  startersB?: string[];
-  startersPointsA?: Record<string, number>;
-  startersPointsB?: Record<string, number>;
-  series?: SeriesPoint[];
-  boxscoreA?: BoxRow[];
-  boxscoreB?: BoxRow[];
-  excitementMetrics?: { leadChanges: number; avgDeltaPct: number };
-  recap?: string;
-  odds?: string[];
-  narrativeRecap?: string;
-}
-
-interface ApiLeague {
-  leagueId: string;
-  leagueName: string;
-  overview?: string;
-  matchups: MatchupView[];
-}
-
-interface HallOfFameEntry {
-  category: string;
-  description: string;
-  player: string;
-  team: string;
-  value: string;
-  isNewThisWeek: boolean;
-}
-
-interface ApiResponse {
-  ok: boolean;
-  data?: {
-    season: string;
-    week: number;
-    myIntro?: string;
-    scribeIntro?: string;
-    leagues: ApiLeague[];
-    standings?: {
-      leagueId: string;
-      leagueName: string;
-      divisions: Record<string, any[]>;
-    }[];
-    powerRankings?: {
-      leagueId: string;
-      rosterId: string;
-      name: string;
-      score: number;
-    }[];
-    upcoming?: Record<string, any[]>;
-    callouts?: Record<string, string>;
-    hallOfFame?: HallOfFameEntry[];
-  };
-}
+import type { BoxRow } from '@/shared/types/reports';
 
 // Note: Win probability chart and score chart components removed as requested
 
-function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
+const MiniBoxscore = ({ rows }: { rows: BoxRow[] | undefined }): JSX.Element => {
   const items = (rows || []).slice(0, 9);
   if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
@@ -233,9 +153,9 @@ function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
       ))}
     </div>
   );
-}
+};
 
-export default function Week2Report2025() {
+export default function Week2Report2025(): JSX.Element {
   // Use hardcoded data instead of API fetch
   const data = { ok: true, data: reportData } as const;
 

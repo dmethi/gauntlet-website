@@ -3,7 +3,7 @@
  */
 
 import { EnhancedMatchup } from './hall-of-fame-data-service';
-import { ProcessedMatchup } from './hall-of-fame-calculations';
+import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
 
 export interface RollingWindowData {
   rosterId: number;

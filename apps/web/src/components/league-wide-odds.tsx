@@ -6,44 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, Crown, RefreshCw, Target, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-interface TeamOdds {
-  teamId: string;
-  teamName: string;
-  leagueId: string;
-  leagueName: string;
-  probability: number;
-  odds: string; // American odds format (+150, -200, etc.)
-  projectedRange: { p10: number; p50: number; p90: number };
-  totalProjection: number;
-  color: string; // RdYlGn color for heatmap
-}
-
-interface MatchupOdds {
-  matchupId: number;
-  team1: { name: string; leagueId: string; projection: number };
-  team2: { name: string; leagueId: string; projection: number };
-  projectedMargin: number;
-  probability: number;
-  odds: string;
-  color: string;
-}
-
-interface LeagueWideOdds {
-  week: number;
-  highestScorer: TeamOdds[];
-  lowestScorer: TeamOdds[];
-  closestMatchup: MatchupOdds[];
-  biggestBlowout: MatchupOdds[];
-  highestScoringMatchup: MatchupOdds[];
-  lowestScoringMatchup: MatchupOdds[];
-  lastUpdated: string;
-}
-
-interface LeagueWideOddsProps {
-  week: number;
-  className?: string;
-}
+import type {
+  TeamOdds,
+  MatchupOdds,
+  LeagueWideOdds,
+  LeagueWideOddsProps,
+} from '@/features/matchups/types';
 
 export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
   const [odds, setOdds] = useState<LeagueWideOdds | null>(null);

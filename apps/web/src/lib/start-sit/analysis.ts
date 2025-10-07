@@ -4,88 +4,21 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 import { CURRENT_LEAGUES } from '@/config/leagues';
+import type {
+  AlternativeSource,
+  PlayerProjection,
+  AlternativePlayer,
+  PositionDecision,
+  PositionBreakdownMetrics,
+  ManagerEfficiencyDetailed as ManagerEfficiency,
+  StartSitDataDetailed as StartSitData,
+} from '@/features/start-sit/types';
 
 // Configuration
 const PROJECTION_THRESHOLD = 0.15; // 15%
 const WAIVER_DISCOUNT = 0.35; // 35%
 const DEFAULT_SEASON = '2025';
 const DEFAULT_WEEKS = [1, 2, 3, 4];
-
-type AlternativeSource = 'bench' | 'waiver';
-
-interface PlayerProjection {
-  playerId: string;
-  projectedPoints: number;
-  actualPoints: number;
-  rawProjection: any;
-  rawStats: any;
-}
-
-interface AlternativePlayer extends PlayerProjection {
-  source: AlternativeSource;
-  adjustedActualPoints: number;
-}
-
-interface PositionDecision {
-  managerId: string;
-  managerName: string;
-  leagueId: string;
-  week: number;
-  position: string;
-  selectedPlayer: PlayerProjection;
-  alternatives: AlternativePlayer[];
-  optimalPlayer:
-    | AlternativePlayer
-    | (PlayerProjection & { source: 'selected'; adjustedActualPoints: number });
-  decisionCorrect: boolean;
-  pointsLeft: number;
-  efficiencyRate: number;
-  isRiskyDecision: boolean;
-  riskyAlternatives: AlternativePlayer[];
-  projectionDifferential: number;
-  actualOutcome: number;
-}
-
-interface PositionBreakdownMetrics {
-  decisionRate: number;
-  efficiencyRate: number;
-  decisionsCount: number;
-  weight: number;
-  pointsLost: number;
-  pointsLostVsMedian: number;
-}
-
-interface ManagerEfficiency {
-  managerId: string;
-  managerName: string;
-  leagueId: string;
-  decisions: PositionDecision[];
-  overallDecisionRate: number;
-  overallEfficiencyRate: number;
-  weightedDecisionScore: number;
-  pointsImpactScore: number;
-  positionBreakdown: Record<string, PositionBreakdownMetrics>;
-}
-
-interface StartSitData {
-  configuration: {
-    projectionThreshold: number;
-    waiverDiscount: number;
-    weeks: number[];
-    season: string;
-    weightedScoring: boolean;
-  };
-  managerEfficiencies: ManagerEfficiency[];
-  worstDecisions: Array<PositionDecision & { weight: number }>;
-  bestRiskyDecisions: Array<PositionDecision & { weight: number }>;
-  rosterContext: any[];
-  leagueStats: {
-    totalDecisions: number;
-    avgWeightedScore: number;
-    avgPointsImpact: number;
-  };
-  timestamp: string;
-}
 
 const POSITION_WEIGHTS: Record<string, number> = {
   FLEX: 1.0,

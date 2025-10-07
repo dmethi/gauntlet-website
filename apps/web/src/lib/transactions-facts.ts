@@ -1,14 +1,11 @@
 /* eslint-disable no-console */
 
-export type Facts = {
-  weeks: number[];
-  weekRosterPlayers: Map<string, Set<string>>; // key: `${week}:${rosterId}`
-  weekRosterStarters: Map<string, Set<string>>; // key: `${week}:${rosterId}`
-  weekOpponent: Map<string, number>; // key: `${week}:${rosterId}` -> opponentRosterId
-  playerWeekPoints: Map<string, number>; // key: `${week}:${playerId}`
-  replacementByWeekPos: Map<string, number>; // key: `${week}:${pos}`
-  rosterPlayerWeeks: Map<string, Set<number>>; // key: `${rosterId}:${playerId}` -> set of weeks
-};
+import type { TransactionFacts } from '@/features/transactions/types';
+
+/**
+ * @deprecated Use TransactionFacts from '@/features/transactions/types' instead
+ */
+export type Facts = TransactionFacts;
 
 type ApiMatchup = {
   matchupId: number;
@@ -21,7 +18,10 @@ type ApiMatchup = {
   }>;
 };
 
-export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promise<Facts> {
+export const buildFacts = async (
+  leagueId: string,
+  seasonWeeks: number[],
+): Promise<TransactionFacts> => {
   const weekRosterPlayers = new Map<string, Set<string>>();
   const weekRosterStarters = new Map<string, Set<string>>();
   const weekOpponent = new Map<string, number>();
@@ -112,7 +112,7 @@ export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promi
     replacementByWeekPos,
     rosterPlayerWeeks,
   };
-}
+};
 
 function median(arr: number[]): number {
   if (!arr.length) return 0;
@@ -121,17 +121,25 @@ function median(arr: number[]): number {
   return a.length % 2 === 0 ? (a[mid - 1] + a[mid]) / 2 : a[mid];
 }
 
-export function firstOwnedWeek(facts: Facts, rosterId: number, playerId: string): number | null {
+export const firstOwnedWeek = (
+  facts: TransactionFacts,
+  rosterId: number,
+  playerId: string,
+): number | null => {
   const set = facts.rosterPlayerWeeks.get(`${rosterId}:${playerId}`);
   if (!set || set.size === 0) return null;
   return Math.min(...Array.from(set.values()));
-}
+};
 
-export function lastOwnedWeek(facts: Facts, rosterId: number, playerId: string): number | null {
+export const lastOwnedWeek = (
+  facts: TransactionFacts,
+  rosterId: number,
+  playerId: string,
+): number | null => {
   const set = facts.rosterPlayerWeeks.get(`${rosterId}:${playerId}`);
   if (!set || set.size === 0) return null;
   return Math.max(...Array.from(set.values()));
-}
+};
 
 export const playoffWeight = (w: number) =>
   w === 15 ? 1.3 : w === 16 ? 1.6 : w === 17 ? 2.0 : 1.0;

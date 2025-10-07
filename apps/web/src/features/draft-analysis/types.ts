@@ -273,3 +273,219 @@ export interface ManagerAnalytics {
   // Player-level analysis
   player_level_analytics: PlayerLevelAnalytics;
 }
+
+// ============================================================================
+// Draft Analytics & Position Analysis Types
+// ============================================================================
+
+/**
+ * Position inflation analysis comparing spending patterns across leagues
+ */
+export interface PositionInflation {
+  pos: string;
+  avg_raw_A: number;
+  avg_raw_B: number;
+  share_A: number;
+  share_B: number;
+  delta_share: number;
+  delta_avg_raw: number;
+  z_score_A: number;
+  z_score_B: number;
+}
+
+/**
+ * Quartile breakdown for position spending analysis
+ */
+export interface PositionQuartile {
+  label: string;
+  range: string;
+  avgPrice: number;
+  count: number;
+  minPrice: number;
+  maxPrice: number;
+}
+
+/**
+ * Position quartile comparison across leagues
+ */
+export interface PositionQuartileBreakdown {
+  position: string;
+  league_A: PositionQuartile[];
+  league_B: PositionQuartile[];
+}
+
+/**
+ * Market shape data point for draft spending curves
+ */
+export interface MarketShapePoint {
+  rank: number;
+  cost: number;
+  cumulative_share: number;
+}
+
+/**
+ * Market shape analysis with concentration metrics
+ */
+export interface MarketShape {
+  league: string;
+  data: MarketShapePoint[];
+  gini_prices: number;
+  top1_share: number;
+  top3_share: number;
+  top10_share: number;
+}
+
+/**
+ * Replacement cost thresholds and prices by position
+ */
+export interface ReplacementCost {
+  thresholds: {
+    RB: number;
+    WR: number;
+    TE: number;
+    FLEX: number;
+  };
+  prices: {
+    [position: string]: {
+      locked: number;
+      effective: number;
+    };
+  };
+}
+
+/**
+ * Tier assignment for player value clustering
+ */
+export interface TierAssignment {
+  player_id: string;
+  tier: number;
+}
+
+/**
+ * Tier generation method configuration
+ */
+export interface TierMethod {
+  type: 'quantile' | 'kmeans';
+  breaks?: number[];
+  centroids?: number[];
+  k?: number;
+}
+
+/**
+ * Tier shift counts for draft comparison analysis
+ */
+export interface TierShiftCount {
+  from_tier: number;
+  to_tier: number;
+  count: number;
+  players: string[];
+}
+
+/**
+ * Nomination timing effect on player prices
+ */
+export interface NominationEffect {
+  method: string;
+  beta_per_10_picks: number;
+  r_naive: number;
+  beta_naive_per_10: number;
+  correlation: number;
+}
+
+/**
+ * Player price comparison across leagues
+ */
+export interface PlayerComparison {
+  player_id: string;
+  name: string;
+  position: string;
+  price_A: number;
+  price_B: number;
+  price_diff: number;
+  abs_price_diff: number;
+}
+
+/**
+ * Analysis of nomination order effects on pricing
+ */
+export interface NominationOrderAnalysis {
+  overall_correlation: {
+    league_A: number;
+    league_B: number;
+    combined: number;
+  };
+  position_effects: {
+    position: string;
+    league_A_correlation: number;
+    league_B_correlation: number;
+    avg_early_price: number;
+    avg_late_price: number;
+    effect_strength: 'Strong' | 'Moderate' | 'Weak' | 'None';
+  }[];
+  notable_differences: {
+    player_name: string;
+    position: string;
+    league_A_order: number;
+    league_B_order: number;
+    order_diff: number;
+    league_A_price: number;
+    league_B_price: number;
+    price_diff: number;
+    consistent_with_early_premium: boolean;
+  }[];
+}
+
+/**
+ * Comprehensive draft analytics data structure
+ */
+export interface DraftAnalytics {
+  league_A_name: string;
+  league_B_name: string;
+
+  // Position inflation/deflation
+  position_inflation: PositionInflation[];
+
+  // Position quartile breakdowns
+  position_quartile_breakdowns: PositionQuartileBreakdown[];
+
+  // Market shape and concentration
+  market_shape: {
+    league_A: MarketShape;
+    league_B: MarketShape;
+  };
+
+  // Replacement costs
+  replacement_costs: {
+    league_A: ReplacementCost;
+    league_B: ReplacementCost;
+  };
+
+  // Tier analysis
+  tiers: {
+    league_A: {
+      assignments: TierAssignment[];
+      method: TierMethod;
+    };
+    league_B: {
+      assignments: TierAssignment[];
+      method: TierMethod;
+    };
+    shifts: TierShiftCount[];
+  };
+
+  // Nomination effects
+  nomination_effects: {
+    league_A: NominationEffect;
+    league_B: NominationEffect;
+  };
+
+  // Nomination order analysis
+  nomination_order_analysis: NominationOrderAnalysis;
+
+  // Consensus vs divergence
+  consensus_players: PlayerComparison[];
+  divergent_players: PlayerComparison[];
+
+  // Cross-league correlation
+  spearman_rank_correlation: number;
+}

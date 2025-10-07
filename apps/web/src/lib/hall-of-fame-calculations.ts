@@ -4,35 +4,11 @@
  */
 
 import { CACHE_DURATIONS, LEAGUE_IDS } from './constants';
-
-// Types for Hall of Fame records
-export interface HallOfFameRecord {
-  category: string;
-  categoryDisplay: string;
-  description: string;
-  value: number;
-  teamName: string;
-  teamId: number;
-  leagueId: string;
-  leagueName: string;
-  week?: number;
-  season: string;
-  opponent?: string;
-  opponentId?: number;
-  contextData?: Record<string, any>;
-  scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime';
-}
-
-export interface HallOfFameCategory {
-  id: string;
-  name: string;
-  description: string;
-  group: string;
-  type: 'highest' | 'lowest' | 'both';
-  calculateValue: (data: any, allData?: any[]) => number | null;
-  formatValue: (value: number) => string;
-  scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime';
-}
+import type {
+  HallOfFameRecord,
+  HallOfFameCategory,
+  ProcessedMatchup,
+} from '@/features/hall-of-fame/types';
 
 // Import comprehensive categories
 import { ALL_HALL_OF_FAME_CATEGORIES, getCategoriesGrouped } from './hall-of-fame-categories';
@@ -40,29 +16,12 @@ import { ALL_HALL_OF_FAME_CATEGORIES, getCategoriesGrouped } from './hall-of-fam
 // Re-export for backward compatibility
 export const HALL_OF_FAME_CATEGORIES = ALL_HALL_OF_FAME_CATEGORIES;
 
-// Process matchup data to extract Hall of Fame records
-export interface ProcessedMatchup {
-  rosterId: number;
-  teamName: string;
-  leagueId: string;
-  leagueName: string;
-  week: number;
-  season: string;
-  points: number;
-  projectedPoints?: number;
-  opponentId?: number;
-  opponentName?: string;
-  opponentPoints?: number;
-  won?: boolean;
-  starters?: string[];
-  starters_points?: number[];
-  players?: string[];
-  players_points?: Record<string, number>;
-  playerData?: Map<string, any>; // Player metadata including position
-  matchupId?: number;
-  isPlayoff?: boolean;
-  custom_points?: number; // For optimal lineup calculations
-}
+// Re-export types for backward compatibility
+export type {
+  HallOfFameRecord,
+  HallOfFameCategory,
+  ProcessedMatchup,
+} from '@/features/hall-of-fame/types';
 
 /**
  * Calculate Hall of Fame records from matchup data

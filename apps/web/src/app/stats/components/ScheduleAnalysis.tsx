@@ -23,28 +23,7 @@ import {
 import { getRankColor } from '../utils/getRankColor';
 import { getTextColor } from '../utils/getTextColor';
 import type { PlainStatsDataset } from '@/lib/stats/compose';
-
-// Define proper types
-interface TeamInfo {
-  teamName: string;
-  leagueName: string;
-}
-
-interface TeamScore {
-  week: number;
-  value: number;
-}
-
-interface TeamData {
-  teamInfo: TeamInfo;
-  teamScores: TeamScore[];
-  opponentScores: TeamScore[];
-}
-
-interface ScheduleAnalysisProps {
-  allTeamEntries: [string, TeamData][];
-  dataset: PlainStatsDataset;
-}
+import type { TeamInfo, TeamScore, TeamData, ScheduleAnalysisProps } from '@/features/stats';
 
 // Utility function for mean calculation
 function mean(values: number[]): number {

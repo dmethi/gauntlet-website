@@ -26,4 +26,19 @@ export type {
 
   // Top-Level Analytics
   ManagerAnalytics,
+
+  // Draft Analytics Types
+  PositionInflation,
+  PositionQuartile,
+  PositionQuartileBreakdown,
+  MarketShapePoint,
+  MarketShape,
+  ReplacementCost,
+  TierAssignment,
+  TierMethod,
+  TierShiftCount,
+  NominationEffect,
+  PlayerComparison,
+  NominationOrderAnalysis,
+  DraftAnalytics,
 } from './types';

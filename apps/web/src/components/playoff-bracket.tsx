@@ -3,68 +3,17 @@
 import { TeamStats } from '@/lib/hooks';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface Matchup {
-  week: number;
-  points: number;
-  projected: number;
-  result: 'W' | 'L' | 'T';
-}
-
-interface Roster {
-  id: string;
-  matchups: Matchup[];
-}
-
-interface LeagueData {
-  rosters: Roster[];
-}
-
-interface PlayoffMatchup {
-  r: number; // round
-  m: number; // matchup id
-  t1: number; // team 1 roster id
-  t2: number; // team 2 roster id
-  t1_from?: { w: number; m: number } | { l: number; m: number }; // where team 1 comes from
-  t2_from?: { w: number; m: number } | { l: number; m: number }; // where team 2 comes from
-}
-
-interface PlayoffBracket {
-  winners_bracket?: PlayoffMatchup[];
-  losers_bracket?: PlayoffMatchup[];
-}
-
-interface PlayoffBracketProps {
-  teams: TeamStats[];
-  league?: LeagueData;
-  playoffBracket?: PlayoffBracket;
-}
-
-interface BracketTeam {
-  id: string;
-  name: string;
-  seed: number;
-  record: string;
-  points?: number;
-  isWinner?: boolean;
-  isEliminated?: boolean;
-}
-
-// PlayoffResult interface removed - using inline result type in MatchupProps
-
-interface MatchupProps {
-  team1?: BracketTeam;
-  team2?: BracketTeam;
-  matchupLabel: string;
-  isBye?: boolean;
-  result?: {
-    team1Score?: number;
-    team2Score?: number;
-    winnerId?: string;
-    isComplete?: boolean;
-  };
-  isToiletBowl?: boolean;
-}
+import type {
+  PlayoffMatchup,
+  PlayoffBracket,
+  PlayoffBracketProps,
+  BracketTeam,
+  MatchupProps,
+  LeagueData,
+  Matchup,
+  Roster,
+  MatchupResult,
+} from '@/features/playoffs/types';
 
 function Matchup({
   team1,

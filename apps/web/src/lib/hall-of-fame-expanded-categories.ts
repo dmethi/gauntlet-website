@@ -2,7 +2,7 @@
  * Expanded Hall of Fame categories using player stats and win probability data
  */
 
-import { HallOfFameCategory } from './hall-of-fame-calculations';
+import type { HallOfFameCategory } from '@/features/hall-of-fame/types';
 import { EnhancedMatchup } from './hall-of-fame-data-service';
 
 /**

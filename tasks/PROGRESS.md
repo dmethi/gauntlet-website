@@ -2,10 +2,10 @@
 
 **Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 30.3% (36/119 tasks)  
+**Overall Progress**: 37.3% (44/118 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 17.1% (6/35 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 35.7% (15/42 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (35)
+#### ✅ Completed (44)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -52,14 +52,23 @@
 - [x] **WEB-SETUP-004**: Create Feature Folder Structure ⏱️ 30 min
 - [x] **WEB-EXTRACT-001**: Manager Analysis Types ⏱️ 20 min
 - [x] **WEB-EXTRACT-002**: Manager Analytics Logic Types ⏱️ 25 min
+- [x] **WEB-EXTRACT-003**: Hooks Types ⏱️ 20 min
+- [x] **WEB-EXTRACT-004**: Stats Component Types ⏱️ 30 min
+- [x] **WEB-EXTRACT-005**: Playoff Bracket Types ⏱️ 25 min
+- [x] **WEB-EXTRACT-006**: Start/Sit Efficiency Types ⏱️ 30 min
+- [x] **WEB-EXTRACT-007**: Transaction Types ⏱️ 25 min
+- [x] **WEB-EXTRACT-008**: Matchup & Simulation Types ⏱️ 35 min
+- [x] **WEB-EXTRACT-009**: Hall of Fame Types ⏱️ 20 min
+- [x] **WEB-EXTRACT-010**: Competition Report Types ⏱️ 30 min
+- [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min
 
 #### 🔄 In Progress (0)
 
 _Ready to begin_
 
-#### ⏭️ Up Next (1)
+#### ⏭️ Up Next (0)
 
-- [ ] **WEB-EXTRACT-003**: Hooks Types [MEDIUM PRIORITY]
+_Ready to begin_
 
 #### 📋 Queued (5)
 
@@ -76,7 +85,7 @@ _Ready to begin_
 | Category            | Total   | Completed | In Progress | Remaining |
 | ------------------- | ------- | --------- | ----------- | --------- |
 | **SETUP**           | 13      | 7         | 0           | 6         |
-| **EXTRACT**         | 16      | 4         | 0           | 12        |
+| **EXTRACT**         | 23      | 13        | 0           | 10        |
 | **UTIL**            | 16      | 0         | 0           | 16        |
 | **HOOK**            | 11      | 0         | 0           | 11        |
 | **COMP**            | 15      | 0         | 0           | 15        |
@@ -89,7 +98,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
 | **SECURITY**        | 1       | 0         | 0           | 1         |
-| **Total**           | **119** | **36**    | **0**       | **83**    |
+| **Total**           | **126** | **44**    | **0**       | **82**    |
 
 ---
 
@@ -184,7 +193,7 @@ Next.js application.
 - ✅ Zero ESLint violations
 - 📊 **Enterprise Score: 9.0/10**
 
-**Total Effort**: ~40 hours across 35 focused tasks (8 weeks @ 5 hours/week)  
+**Total Effort**: ~43.5 hours across 42 focused tasks (8-9 weeks @ 5 hours/week)  
 **See**: `apps/web/ENTERPRISE_READINESS_ASSESSMENT.md` for detailed execution
 plan
 
@@ -196,12 +205,19 @@ plan
 - [x] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour [CRITICAL] ✅
 - [x] **WEB-SETUP-004**: Create Feature Folder Structure ⏱️ 30 min [HIGH] ✅
 
-#### Phase 2: Type Extraction (Week 1-2) ⚠️ QUICK WINS
+#### Phase 2: Type Extraction (Week 1-2) ✅ COMPLETE
 
 - [x] **WEB-EXTRACT-001**: Manager Analysis Types ⏱️ 20 min [HIGH] ✅
 - [x] **WEB-EXTRACT-002**: Manager Analytics Logic Types ⏱️ 25 min [HIGH] ✅
-- [ ] **WEB-EXTRACT-003**: Hooks Types ⏱️ 20 min [MEDIUM]
-- [ ] **WEB-EXTRACT-004**: Stats Component Types ⏱️ 30 min [MEDIUM]
+- [x] **WEB-EXTRACT-003**: Hooks Types ⏱️ 20 min [MEDIUM] ✅
+- [x] **WEB-EXTRACT-004**: Stats Component Types ⏱️ 30 min [MEDIUM] ✅
+- [x] **WEB-EXTRACT-005**: Playoff Bracket Types ⏱️ 25 min [MEDIUM] ✅
+- [x] **WEB-EXTRACT-006**: Start/Sit Efficiency Types ⏱️ 30 min [MEDIUM] ✅
+- [x] **WEB-EXTRACT-007**: Transaction Types ⏱️ 25 min [MEDIUM] ✅
+- [x] **WEB-EXTRACT-008**: Matchup & Simulation Types ⏱️ 35 min [MEDIUM] ✅
+- [x] **WEB-EXTRACT-009**: Hall of Fame Types ⏱️ 20 min [LOW] ✅
+- [x] **WEB-EXTRACT-010**: Competition Report Types ⏱️ 30 min [LOW] ✅
+- [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min [MEDIUM] ✅
 
 #### Phase 3: Utility Extraction (Week 2) 🟡 FOUNDATION
 
@@ -323,6 +339,212 @@ package.
 ## 🎉 Recent Completions
 
 ### October 7, 2025 (Latest)
+
+- ✅ **WEB-EXTRACT-011**: Draft Analytics Types
+  - Created 13 draft analytics type definitions in `features/draft-analysis/types.ts`
+  - Extracted types from `lib/draft-analytics.ts` (lines 8-179)
+  - Added comprehensive JSDoc documentation to all type definitions
+  - Updated `lib/draft-analytics.ts` to import from centralized types (removed 172 lines of duplicate type definitions)
+  - Added backward compatibility re-exports in `lib/draft-analytics.ts` for existing imports
+  - Updated `features/draft-analysis/index.ts` barrel export with 13 new type exports
+  - Consolidated types include:
+    - Position Analysis: PositionInflation, PositionQuartile, PositionQuartileBreakdown
+    - Market Analysis: MarketShapePoint, MarketShape, ReplacementCost
+    - Tier Analysis: TierAssignment, TierMethod, TierShiftCount
+    - Nomination Analysis: NominationEffect, NominationOrderAnalysis
+    - Player Comparison: PlayerComparison
+    - Comprehensive: DraftAnalytics (main interface)
+  - File size reduced: 650 lines → 508 lines (142 lines saved, 21.8% reduction)
+  - TypeScript compilation passes with 0 errors
+  - All 4 importing files continue to work without changes via backward compatibility re-exports:
+    - `components/charts/positional-curves-chart.tsx`
+    - `components/charts/position-inflation-chart.tsx`
+    - `app/draft/analysis/page.tsx`
+    - `app/draft/analysis/consolidated.tsx`
+  - No duplicate type definitions remain in draft-analytics.ts
+  - **Phase 2 Complete**: Type Extraction 11/11 complete (100%) ✅
+  - **Outcome**: Centralized ALL draft analytics types, establishing single source of truth for draft analysis features
+  - **Next Steps**: WEB-UTIL-001 (Formatting Utilities) to begin Phase 3 (Utility Extraction)
+
+- ✅ **WEB-EXTRACT-010**: Competition Report Types
+  - Created `shared/types/reports.ts` with 18 consolidated interface definitions
+  - Extracted types from 4 competition report pages (week-1, week-2, week-3, week-4)
+  - Updated week-1 page to import from `@/shared/types/reports` (removed 63 lines of duplicate type definitions)
+  - Updated week-2 page to import from `@/shared/types/reports` (removed 63 lines of duplicate type definitions)
+  - Updated week-3 page to import from `@/shared/types/reports` (removed 6 lines for BoxRow type)
+  - Updated week-4 page to import from `@/shared/types/reports` (removed 6 lines for BoxRow type)
+  - Created comprehensive barrel export in `shared/types/index.ts` with 16 type exports organized by category
+  - Consolidated types include:
+    - Core: BoxRow, SeriesPoint, MatchupView, ApiLeague
+    - Standings: StandingsTeam, StandingsDivision, LeagueStandings
+    - Rankings: PowerRanking, UpcomingMatchup, WeeklyCallout
+    - Response: WeeklyReportData, ApiResponse
+    - Generation: ReportConfig, ReportSection
+    - Preview: WeekPreviewData, PreviewApiResponse
+  - Total lines consolidated: ~138 lines of duplicate type definitions removed across 4 files
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly from centralized types
+  - No duplicate type definitions remain in report pages
+  - All 4 report pages now use centralized types consistently
+  - **Phase 2 Progress**: Type Extraction 10/11 complete (91%)
+  - **Outcome**: Centralized all competition report types, eliminated duplicate definitions, established clear type contracts for weekly reports
+  - **Next Steps**: WEB-EXTRACT-011 (Draft Analytics Types) to complete Phase 2, or WEB-UTIL-001 (Formatting Utilities) to begin utility extraction phase
+
+- ✅ **WEB-EXTRACT-009**: Hall of Fame Types
+  - Created `features/hall-of-fame/types.ts` with 11 consolidated interface definitions
+  - Extracted types from `lib/hall-of-fame-calculations.ts` (lines 8-65)
+  - Removed duplicate `HallOfFameEntry` from `app/competition/reports/2025/week-2/page.tsx` (lines 184-191)
+  - Updated 5 hall-of-fame utility files to import from centralized types:
+    - `lib/hall-of-fame-calculations.ts`: Removed 58 lines of type definitions, added type imports
+    - `lib/hall-of-fame-aggregations.ts`: Updated ProcessedMatchup import
+    - `lib/hall-of-fame-categories.ts`: Updated HallOfFameCategory and ProcessedMatchup imports
+    - `lib/hall-of-fame-data-service.ts`: Updated ProcessedMatchup import
+    - `lib/hall-of-fame-expanded-categories.ts`: Updated HallOfFameCategory import
+  - Maintained backward compatibility via re-exports in `lib/hall-of-fame-calculations.ts`
+  - Created comprehensive barrel export `features/hall-of-fame/index.ts` with 11 type exports organized by category
+  - Consolidated types include:
+    - Core: HallOfFameRecord, HallOfFameCategory, ProcessedMatchup
+    - Display: HallOfFameEntry, HallOfFameSection, SeasonalRecord, WeeklyHighlight
+    - Aggregation: CategoryGroup, RecordsByCategory, LeaderboardData
+    - Options: HallOfFameOptions
+  - Total lines consolidated: ~65 lines of duplicate type definitions removed across 6 files
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly from centralized types
+  - No duplicate type definitions remain in utility or page files
+  - Backward compatibility maintained for existing imports
+  - **Phase 2 Progress**: Type Extraction 9/11 complete (82%)
+  - **Outcome**: Centralized all hall of fame types, eliminated duplicate definitions, established clear type contracts
+  - **Next Steps**: WEB-EXTRACT-010 (Competition Report Types) or WEB-UTIL-001 (Formatting Utilities) to begin utility extraction phase
+
+- ✅ **WEB-EXTRACT-008**: Matchup & Simulation Types
+  - Created `features/matchups/types.ts` with 24 consolidated interface definitions
+  - Extracted types from 5 files: matchup-simulation.tsx, matchup-odds-preview.tsx, matchups/page.tsx, matchups/[leagueId]/[week]/[matchupId]/page.tsx, league-wide-odds.tsx
+  - Updated components to import from `@/features/matchups/types`:
+    - matchup-simulation.tsx: Removed 33 lines (SimulationData, ScoreBoxPlotProps)
+    - matchup-odds-preview.tsx: Removed 18 lines (MatchupOddsData, MatchupOddsPreviewProps)
+    - league-wide-odds.tsx: Removed 42 lines (TeamOdds, MatchupOdds, LeagueWideOdds, LeagueWideOddsProps)
+  - Updated pages to import from centralized types:
+    - matchups/page.tsx: Removed 31 lines (MatchupTeam, MatchupData, LeagueMatchups)
+    - matchups/[leagueId]/[week]/[matchupId]/page.tsx: Removed 39 lines (PlayerDetails, TeamRoster, MatchupDetails)
+  - Updated 2 API routes to use centralized types:
+    - api/matchups/league-odds/[week]/route.ts: Removed 32 lines (TeamOdds, MatchupOdds, LeagueWideOdds)
+    - api/matchups/[leagueId]/[week]/[matchupId]/route.ts: Removed 39 lines, updated player mapping to match PlayerDetails interface
+  - Made LeagueMatchups.week field optional for flexible usage
+  - Updated PlayerDetails mapping in API route to include all required fields (team, isStarter, status)
+  - Created comprehensive barrel export `features/matchups/index.ts` with 24 type exports organized by category
+  - Consolidated types include:
+    - Core: MatchupTeam, MatchupData, PlayerDetails, TeamRoster, MatchupDetails, LeagueMatchups
+    - Simulation: ScoreDistribution, SimulationData, ScoreBoxPlotProps, SimulationRequest, SimulationResponse
+    - Odds: MatchupOddsData, MatchupOddsPreviewProps, TeamOdds, MatchupOdds, LeagueWideOdds, LeagueWideOddsProps, OddsPreview
+    - Live: LiveMatchupUpdate
+  - Total lines consolidated: ~234 lines of duplicate type definitions removed across 7 files
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly from centralized types
+  - No duplicate type definitions remain in component/page files
+  - API routes successfully use centralized types with proper field mapping
+  - **Phase 2 Progress**: Type Extraction 8/11 complete (73%)
+  - **Outcome**: Centralized all matchup and simulation types, established single source of truth for matchup data structures
+  - **Next Steps**: WEB-EXTRACT-009 (Hall of Fame Types) or WEB-UTIL-001 (Formatting Utilities) to begin utility extraction phase
+
+- ✅ **WEB-EXTRACT-007**: Transaction Types
+  - Created `features/transactions/types.ts` with 9 consolidated interface definitions
+  - Extracted types from `app/league/transactions/page.tsx` (inline definitions at lines 29-68)
+  - Consolidated with more complete types from `app/stats/types.ts` (GradeTxn, RawTxn, TeamInfo)
+  - Updated app/league/transactions/page.tsx to import from `@/features/transactions/types` (removed 40 lines of duplicate type definitions)
+  - Updated app/stats/types.ts to re-export from centralized location with backwards compatibility
+  - Updated lib/transactions-facts.ts to use TransactionFacts type from centralized location
+  - Converted all functions in lib/transactions-facts.ts to arrow functions (buildFacts, firstOwnedWeek, lastOwnedWeek)
+  - Made fields optional in GradeTxn and RawTxn to maintain backwards compatibility with existing code
+  - Fixed optional chaining in 3 files to handle newly optional fields: page.tsx (addGroup.players), TransactionAnalysis.tsx (faabCost, weeklyPoints)
+  - Created barrel export `features/transactions/index.ts` with 9 type exports organized by category
+  - Consolidated types include: PlayerTransaction, GradeTxn, RawTxn, TransactionFacts, TeamInfo, ManagerTransactionStats, TransactionAnalysis, WaiverPickup, TradeAnalysis
+  - Added comprehensive JSDoc documentation to all type definitions
+  - File size reduced: league/transactions/page.tsx 1,169 lines → 1,129 lines (40 lines saved, 3.4% reduction)
+  - Total lines consolidated: ~60 lines of duplicate type definitions removed across 2 files
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly from centralized types
+  - No duplicate type definitions remain in component files
+  - Established backwards compatibility with deprecated re-exports in app/stats/types.ts
+  - **Phase 2 Progress**: Type Extraction 7/11 complete (64%)
+  - **Outcome**: Centralized all transaction types, eliminated duplicate definitions, established clear type contracts for transaction analysis
+  - **Next Steps**: WEB-EXTRACT-008 (Matchup & Simulation Types) - continue type extraction phase
+
+- ✅ **WEB-EXTRACT-006**: Start/Sit Efficiency Types
+  - Created `features/start-sit/types.ts` with 12 consolidated interface definitions
+  - Extracted types from `components/start-sit-efficiency.tsx` (1,162 lines)
+  - Extracted types from `lib/start-sit/analysis.ts` (653 lines)
+  - Updated start-sit-efficiency.tsx to import from `@/features/start-sit/types` (removed 75 lines of duplicate type definitions)
+  - Updated lib/start-sit/analysis.ts to import from centralized types (removed 80 lines of duplicate definitions)
+  - Removed duplicate `StartSitData` interface from 3 files:
+    - `app/start-sit/page.tsx` (removed 11 lines)
+    - `components/stats/StartSitEfficiencyTab.tsx` (removed 11 lines)  
+    - `lib/start-sit/analysis.ts` (removed 80 lines)
+  - Created barrel export `features/start-sit/index.ts` with 12 type exports organized by category
+  - Consolidated types include: PositionBreakdown, RosterContext, ManagerEfficiency, DecisionDetail, StartSitData, AlternativeSource, PlayerProjection, AlternativePlayer, PositionDecision, PositionBreakdownMetrics, ManagerEfficiencyDetailed, StartSitDataDetailed
+  - Added comprehensive JSDoc documentation to all type definitions
+  - File size reduced: start-sit-efficiency.tsx 1,162 lines → 1,093 lines (69 lines saved, 5.9% reduction)
+  - Total lines consolidated: ~177 lines of duplicate type definitions removed across 4 files
+  - TypeScript compilation passes with 0 errors
+  - All 6 tests passing (no breaking changes)
+  - All imports resolve correctly from centralized types
+  - No duplicate type definitions remain in component files
+  - Separated component-focused types (PositionBreakdown, ManagerEfficiency, DecisionDetail) from analysis types (PositionDecision, ManagerEfficiencyDetailed, etc.)
+  - **Phase 2 Progress**: Type Extraction 6/11 complete (55%)
+  - **Outcome**: Centralized all start/sit efficiency types, eliminated 4 duplicate definitions, established clear type contracts
+  - **Next Steps**: WEB-EXTRACT-007 (Transaction Types) - continue type extraction phase
+
+- ✅ **WEB-EXTRACT-005**: Playoff Bracket Types
+  - Created `features/playoffs/` directory structure with components/, hooks/, utils/ subdirectories
+  - Created `features/playoffs/types.ts` with 9 consolidated interface definitions
+  - Extracted types from `components/playoff-bracket.tsx` (1,400 lines)
+  - Created barrel export `features/playoffs/index.ts` with organized exports by category
+  - Updated playoff-bracket.tsx to import from `@/features/playoffs/types` (removed 51 lines of duplicate type definitions)
+  - Extracted MatchupResult interface from inline result type in MatchupProps
+  - Consolidated types: Matchup, Roster, LeagueData, PlayoffMatchup, PlayoffBracket, BracketTeam, MatchupProps, PlayoffBracketProps, MatchupResult
+  - File size reduced: 1,400 lines → 1,349 lines (51 lines saved, 3.6% reduction)
+  - TypeScript compilation passes with 0 errors
+  - All 6 tests passing (no breaking changes)
+  - All imports resolve correctly from centralized types
+  - No duplicate type definitions remain in component file
+  - **Phase 2 Progress**: Type Extraction 5/11 complete (45%)
+  - **Outcome**: Centralized all playoff bracket types, established playoffs feature structure
+  - **Next Steps**: WEB-EXTRACT-006 (Start/Sit Efficiency Types) - continue type extraction phase
+
+- ✅ **WEB-EXTRACT-003**: Hooks Types
+  - Created `shared/types/api.ts` with 21 consolidated interface definitions
+  - Extracted types from `lib/hooks.ts` (726 lines) - the central hooks file used across the application
+  - Created barrel export `shared/types/index.ts` with organized exports by category
+  - Updated hooks.ts to import all types from `@/shared/types` (removed ~220 lines of duplicate type definitions)
+  - Added backwards compatibility re-exports: TeamStats, PlayerInfo, PlayerStats, LeagueTransactionsResponse
+  - Consolidated duplicate API response types: WeekRollupsResponse, SuperlativesResponse, SeasonalAggregatesResponse, RosterDetailsResponse, LeagueTransactionsResponse, PlayoffBracketResponse, MatchupsResponse, SingleMatchupResponse, PlayersResponse, PlayerStatsResponse
+  - Consolidated data types: Matchup, WeeklyMetric, Roster, TeamStats, LeagueData, RosterWeekAggregate, PlayoffMatchup, MatchupTeam, MatchupData, PlayerInfo, PlayerStats
+  - Fixed type definitions to match actual usage patterns in codebase (added missing fields to RosterWeekAggregate, MatchupTeam, MatchupData, SeasonalAggregatesResponse)
+  - Added field compatibility: roster_ids/rosterIds camelCase alias for LeagueTransactionsResponse
+  - Total lines reduced: ~220 lines saved from hooks.ts (30.3% reduction of type definitions)
+  - TypeScript compilation passes with 0 errors
+  - All 6 tests passing (no breaking changes)
+  - All imports resolve correctly from centralized types
+  - **Phase 2 Complete**: Type Extraction 4/4 complete (100%) ✅
+  - **Outcome**: Centralized all API and hook types to shared/types/, creating single source of truth for API contracts
+  - **Next Steps**: WEB-UTIL-001 (Formatting Utilities) - begin utility extraction phase
+
+- ✅ **WEB-EXTRACT-004**: Stats Component Types
+  - Created `features/stats/types.ts` with 11 consolidated interface definitions
+  - Extracted types from 3 large stats components: TrendsView.tsx (1,606 lines), TeamView.tsx (1,198 lines), ScheduleAnalysis.tsx (1,243 lines)
+  - Created barrel export `features/stats/index.ts` with organized exports by category
+  - Updated TrendsView.tsx to import from `@/features/stats` (removed 59 lines of duplicate type definitions)
+  - Updated TeamView.tsx to import from `@/features/stats` (removed 43 lines of duplicate type definitions, added type alias for backwards compatibility)
+  - Updated ScheduleAnalysis.tsx to import from `@/features/stats` (removed 20 lines of duplicate type definitions)
+  - Consolidated duplicate types: TeamInfo, TeamScore, TeamData appear in all 3 files → single source of truth
+  - Fixed import paths: TrackedPosition from `@/lib/stats/positions`, PlainStatsDataset from `@/lib/stats/compose`
+  - Made fields required based on usage: opponentScores and teamInfo.teamInfo required in TeamView and ScheduleAnalysis
+  - Extended RidgeTeamData with additional fields: xs, densityPairs, maxDensity
+  - Total lines reduced: ~122 lines saved across 3 files (7.6% reduction)
+  - TypeScript compilation passes with 0 errors
+  - All imports resolve correctly from centralized types
+  - **Phase 2 Progress**: Type Extraction 3/4 complete (75%)
+  - **Outcome**: Centralized all stats component types, eliminated duplicate definitions across 3 mega-files
+  - **Next Steps**: WEB-EXTRACT-003 (Hooks Types) - extract types from lib/hooks.ts
 
 - ✅ **WEB-EXTRACT-002**: Manager Analytics Logic Types
   - Extracted all 13 interface definitions from `lib/manager-analytics.ts`

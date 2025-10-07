@@ -587,7 +587,7 @@ export function TransactionAnalysis() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          {txn.faabCost > 0 ? (
+                          {txn.faabCost && txn.faabCost > 0 ? (
                             <div className="flex flex-col items-end">
                               <div className="font-mono font-medium">${txn.faabCost}</div>
                               <div className="text-xs text-muted-foreground">
@@ -629,7 +629,7 @@ export function TransactionAnalysis() {
                                 >
                                   {txn.score.toFixed(1)}
                                 </span>
-                                {txn.faabCost > 0 && (
+                                {txn.faabCost && txn.faabCost > 0 && (
                                   <div className="text-xs text-red-400 font-mono">
                                     -{txn.costPenalty?.toFixed(1) || '0.0'}
                                   </div>
@@ -810,7 +810,7 @@ export function TransactionAnalysis() {
                       <h5 className="font-medium mb-2">Weekly Performance</h5>
                       <div className="flex gap-2 overflow-x-auto">
                         {player.weeklyPoints
-                          .filter(w => w.week <= currentNflWeek)
+                          ?.filter(w => w.week <= currentNflWeek)
                           .map(week => {
                             const displayValue = week.vorp !== undefined ? week.vorp : week.points;
                             const showVORP =

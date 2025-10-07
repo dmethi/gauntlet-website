@@ -4,26 +4,7 @@ import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, Zap } from 'lucide-react';
-
-interface MatchupOddsData {
-  team1WinPct: number;
-  team2WinPct: number;
-  impliedOdds: {
-    team1MoneyLine: number;
-    team2MoneyLine: number;
-    spread: number;
-    total: number;
-  };
-}
-
-interface MatchupOddsPreviewProps {
-  leagueId: string;
-  week: number;
-  matchupId: number;
-  teamAName: string;
-  teamBName: string;
-  className?: string;
-}
+import type { MatchupOddsData, MatchupOddsPreviewProps } from '@/features/matchups/types';
 
 export function MatchupOddsPreview({
   leagueId,

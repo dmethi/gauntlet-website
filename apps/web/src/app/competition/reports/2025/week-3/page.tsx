@@ -228,12 +228,7 @@ const getTimeWindowName = (window: string) => {
   return names[window] || window;
 };
 
-interface BoxRow {
-  playerId: string;
-  name: string;
-  position: string | null;
-  points: number;
-}
+import type { BoxRow } from '@/shared/types/reports';
 
 function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
   const items = (rows || []).slice(0, 9);

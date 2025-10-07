@@ -4,179 +4,38 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, no-console */
 
 import { MockDraft } from './draft-generator';
+import type {
+  PositionInflation,
+  PositionQuartile,
+  PositionQuartileBreakdown,
+  MarketShapePoint,
+  MarketShape,
+  ReplacementCost,
+  TierAssignment,
+  TierMethod,
+  TierShiftCount,
+  NominationEffect,
+  PlayerComparison,
+  NominationOrderAnalysis,
+  DraftAnalytics,
+} from '@/features/draft-analysis/types';
 
-export interface PositionInflation {
-  pos: string;
-  avg_raw_A: number;
-  avg_raw_B: number;
-  share_A: number;
-  share_B: number;
-  delta_share: number;
-  delta_avg_raw: number;
-  z_score_A: number;
-  z_score_B: number;
-}
-
-export interface PositionQuartile {
-  label: string;
-  range: string;
-  avgPrice: number;
-  count: number;
-  minPrice: number;
-  maxPrice: number;
-}
-
-export interface PositionQuartileBreakdown {
-  position: string;
-  league_A: PositionQuartile[];
-  league_B: PositionQuartile[];
-}
-
-export interface MarketShapePoint {
-  rank: number;
-  cost: number;
-  cumulative_share: number;
-}
-
-export interface MarketShape {
-  league: string;
-  data: MarketShapePoint[];
-  gini_prices: number;
-  top1_share: number;
-  top3_share: number;
-  top10_share: number;
-}
-
-export interface ReplacementCost {
-  thresholds: {
-    RB: number;
-    WR: number;
-    TE: number;
-    FLEX: number;
-  };
-  prices: {
-    [position: string]: {
-      locked: number;
-      effective: number;
-    };
-  };
-}
-
-export interface TierAssignment {
-  player_id: string;
-  tier: number;
-}
-
-export interface TierMethod {
-  type: 'quantile' | 'kmeans';
-  breaks?: number[];
-  centroids?: number[];
-  k?: number;
-}
-
-export interface TierShiftCount {
-  from_tier: number;
-  to_tier: number;
-  count: number;
-  players: string[];
-}
-
-export interface NominationEffect {
-  method: string;
-  beta_per_10_picks: number;
-  r_naive: number;
-  beta_naive_per_10: number;
-  correlation: number;
-}
-
-export interface PlayerComparison {
-  player_id: string;
-  name: string;
-  position: string;
-  price_A: number;
-  price_B: number;
-  price_diff: number;
-  abs_price_diff: number;
-}
-
-export interface NominationOrderAnalysis {
-  overall_correlation: {
-    league_A: number; // correlation coefficient between nomination order and price
-    league_B: number;
-    combined: number; // overall correlation across both leagues
-  };
-  position_effects: {
-    position: string;
-    league_A_correlation: number;
-    league_B_correlation: number;
-    avg_early_price: number; // avg price for picks 1-60
-    avg_late_price: number; // avg price for picks 61+
-    effect_strength: 'Strong' | 'Moderate' | 'Weak' | 'None';
-  }[];
-  notable_differences: {
-    player_name: string;
-    position: string;
-    league_A_order: number;
-    league_B_order: number;
-    order_diff: number; // absolute difference
-    league_A_price: number;
-    league_B_price: number;
-    price_diff: number;
-    consistent_with_early_premium: boolean; // earlier nomination = higher price?
-  }[];
-}
-
-export interface DraftAnalytics {
-  league_A_name: string;
-  league_B_name: string;
-
-  // Position inflation/deflation
-  position_inflation: PositionInflation[];
-
-  // Position quartile breakdowns
-  position_quartile_breakdowns: PositionQuartileBreakdown[];
-
-  // Market shape and concentration
-  market_shape: {
-    league_A: MarketShape;
-    league_B: MarketShape;
-  };
-
-  // Replacement costs
-  replacement_costs: {
-    league_A: ReplacementCost;
-    league_B: ReplacementCost;
-  };
-
-  // Tier analysis
-  tiers: {
-    league_A: {
-      assignments: TierAssignment[];
-      method: TierMethod;
-    };
-    league_B: {
-      assignments: TierAssignment[];
-      method: TierMethod;
-    };
-    shifts: TierShiftCount[];
-  };
-
-  // Nomination effects
-  nomination_effects: {
-    league_A: NominationEffect;
-    league_B: NominationEffect;
-  };
-
-  // Nomination order analysis
-  nomination_order_analysis: NominationOrderAnalysis;
-
-  // Consensus vs divergence
-  consensus_players: PlayerComparison[]; // Top 10 same-price
-  divergent_players: PlayerComparison[]; // Top 10 split-price
-
-  // Cross-league correlation
-  spearman_rank_correlation: number;
-}
+// Re-export for backward compatibility
+export type {
+  PositionInflation,
+  PositionQuartile,
+  PositionQuartileBreakdown,
+  MarketShapePoint,
+  MarketShape,
+  ReplacementCost,
+  TierAssignment,
+  TierMethod,
+  TierShiftCount,
+  NominationEffect,
+  PlayerComparison,
+  NominationOrderAnalysis,
+  DraftAnalytics,
+};
 
 // Mock data generator - matches expected structure
 export function generateMockAnalytics(draft1: MockDraft, draft2: MockDraft): DraftAnalytics {

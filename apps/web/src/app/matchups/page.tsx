@@ -17,41 +17,7 @@ import { ArrowLeft, Clock, Swords, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { MatchupOddsPreview } from '@/components/matchup-odds-preview';
 import { LeagueWideOdds } from '@/components/league-wide-odds';
-
-// Types
-interface MatchupTeam {
-  rosterId: number;
-  teamName: string;
-  ownerName: string;
-  points: number;
-  projectedPoints?: number;
-  roster: {
-    id: number;
-    players: string[];
-    starters: string[];
-    owner?: {
-      id: string;
-      username: string;
-      displayName: string;
-      avatar: string | null;
-    };
-    playerProjections?: Record<string, number>;
-    starterProjections?: Record<string, number>;
-  };
-}
-
-interface MatchupData {
-  matchupId: number;
-  teams: [MatchupTeam, MatchupTeam];
-  winner: MatchupTeam | null;
-  isComplete: boolean;
-}
-
-interface LeagueMatchups {
-  leagueId: string;
-  leagueName: string;
-  matchups: MatchupData[];
-}
+import type { MatchupTeam, MatchupData, LeagueMatchups } from '@/features/matchups/types';
 
 const LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },

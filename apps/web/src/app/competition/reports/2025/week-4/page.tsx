@@ -106,12 +106,7 @@ Luke couldn't keep pace despite Omarion Hampton (27.0) and CMC (22.6) combining 
   closing: `Week 4 crystallized the league's hierarchy. Ziyan stands alone at 4–0, the only undefeated left, while Vinny and Arnav are buried at 0–4, their seasons all but over. The middle is a dogfight: 16 teams sit between 1–3 and 3–1, separated by tiebreakers and vibes. Infinity's run game looks unstoppable, NielGetsCarried finally broke through, and Nolan's depth is proving elite. But the real story is variance: stars like Kenneth Gainwell (31.4) and Josh Jacobs (31.7) can flip entire weeks, while busts like A.J. Brown (1.7) sink ships. Week 5 will test who's real and who's been riding luck. The gauntlet doesn't forgive mediocrity — and it's starting to show.`,
 } as const;
 
-interface BoxRow {
-  playerId: string;
-  name: string;
-  position: string | null;
-  points: number;
-}
+import type { BoxRow } from '@/shared/types/reports';
 
 function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
   const items = (rows || []).slice(0, 9);

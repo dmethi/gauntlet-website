@@ -2,77 +2,33 @@
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { FantasyTeam, League } from '@gauntlet/types';
 import { getCurrentWeek } from '@gauntlet/lib';
+import type {
+  Matchup,
+  WeeklyMetric,
+  Roster,
+  TeamStats,
+  LeagueData,
+  WeekRollupsResponse,
+  SuperlativesResponse,
+  RosterWeekAggregate,
+  SeasonalAggregatesResponse,
+  RosterDetailsResponse,
+  LeagueTransactionsResponse,
+  PlayoffMatchup,
+  PlayoffBracketResponse,
+  MatchupTeam,
+  MatchupData,
+  MatchupsResponse,
+  SingleMatchupResponse,
+  PlayerInfo,
+  PlayersResponse,
+  PlayerStats,
+  PlayerStatsResponse,
+} from '@/shared/types';
 
-interface Matchup {
-  week: number;
-  points: number;
-  projected: number;
-  result: 'W' | 'L' | 'T';
-  matchupId?: number; // Add this for proper linking
-}
-
-interface WeeklyMetric {
-  week: number;
-  totalPoints: number;
-  expectedWins: number;
-  luckRating: number;
-  opponentPoints: number;
-}
-
-interface Roster extends FantasyTeam {
-  matchups: Matchup[];
-  weeklyMetrics: WeeklyMetric[];
-  league: League;
-  settings?: {
-    division?: number;
-    [key: string]: any;
-  };
-  owner: {
-    displayName: string;
-    username: string;
-    avatar?: string;
-    metadata: {
-      team_name: string;
-    };
-  };
-  coOwnerDetails?: Array<{
-    displayName?: string;
-    username?: string;
-    avatar?: string;
-  }>;
-}
-
-export interface TeamStats {
-  id: string;
-  name: string;
-  owner: string;
-  wins: number;
-  losses: number;
-  totalPoints: number;
-  expectedWins: number;
-  luckRating: number;
-  winPercentage: number;
-  canonicalRank: number;
-  division?: number | null;
-}
-
-interface LeagueData extends League {
-  playoff_week_start?: number;
-  rosters: Roster[];
-  transactions?: Array<{
-    id: string;
-    type: string;
-    createdAt: string;
-    rosterIds?: number[];
-    adds?: unknown;
-    drops?: unknown;
-    settings?: {
-      waiver_bid?: number;
-    };
-  }>;
-}
+// Re-export types for backwards compatibility
+export type { TeamStats, PlayerInfo, PlayerStats, LeagueTransactionsResponse };
 
 const getLeagueData = async (): Promise<LeagueData> => {
   const res = await fetch('/api/league/overview');
@@ -344,49 +300,6 @@ export function useTeamData(teamId: string) {
 }
 
 // Rollups hooks
-export interface WeekRollupsResponse<T = unknown> {
-  ok: boolean;
-  data: T[];
-  meta: unknown;
-}
-
-export interface SuperlativesResponse<T = unknown> {
-  ok: boolean;
-  data: T[];
-  meta: unknown;
-}
-
-export interface RosterWeekAggregate {
-  leagueId: string;
-  rosterId: number;
-  week: number;
-  points: number;
-  projectedPoints?: number | null;
-  optimalPoints?: number | null;
-  opponentRosterId?: number | null;
-  opponentPoints?: number | null;
-  won?: boolean | null;
-  streak?: number | null;
-  expectedWins?: number | null;
-  luck?: number | null;
-  positionalPoints?: Record<string, number> | null;
-  opponentPositionalPoints?: Record<string, number> | null;
-  powerRank?: number | null;
-}
-
-export interface SeasonalAggregatesResponse {
-  ok: boolean;
-  data: {
-    rosterWeekAggregates: RosterWeekAggregate[];
-    leagueWeekSummaries: Array<{
-      week: number;
-      averagePoints: number;
-      medianPoints: number;
-    }>;
-  };
-  meta: unknown;
-}
-
 export function useSeasonalAggregates(leagueId?: string, season?: string) {
   return useQuery<SeasonalAggregatesResponse>({
     queryKey: ['seasonal', leagueId, season],
@@ -397,12 +310,6 @@ export function useSeasonalAggregates(leagueId?: string, season?: string) {
     },
     enabled: Boolean(leagueId && season),
   });
-}
-
-export interface RosterDetailsResponse {
-  rosterId: number;
-  starters: string[];
-  players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
 }
 
 export function useRosterDetails(leagueId?: string, rosterId?: number) {
@@ -417,28 +324,6 @@ export function useRosterDetails(leagueId?: string, rosterId?: number) {
   });
 }
 
-export interface LeagueTransactionsResponse {
-  ok: boolean;
-  data: Array<{
-    id: string;
-    type: string;
-    createdAt: string;
-    rosterIds: number[];
-    adds?: Array<{
-      rosterId: number;
-      players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
-    }>;
-    drops?: Array<{
-      rosterId: number;
-      players: Array<{ id: string; fullName: string; position: string; team?: string | null }>;
-    }>;
-    waiver?: unknown;
-    settings?: {
-      waiver_bid?: number;
-    };
-  }>;
-}
-
 export function useLeagueTransactions(leagueId?: string) {
   return useQuery<LeagueTransactionsResponse>({
     queryKey: ['transactions', leagueId],
@@ -449,20 +334,6 @@ export function useLeagueTransactions(leagueId?: string) {
     },
     enabled: Boolean(leagueId),
   });
-}
-
-export interface PlayoffMatchup {
-  r: number; // round
-  m: number; // matchup id
-  t1: number; // team 1 roster id
-  t2: number; // team 2 roster id
-  t1_from?: { w: number; m: number } | { l: number; m: number };
-  t2_from?: { w: number; m: number } | { l: number; m: number };
-}
-
-export interface PlayoffBracketResponse {
-  winners_bracket?: PlayoffMatchup[];
-  losers_bracket?: PlayoffMatchup[];
 }
 
 export function usePlayoffBracket(leagueId?: string) {
@@ -529,42 +400,6 @@ export function useSeasonSuperlatives<T = unknown>(
 }
 
 // Matchups hook
-export interface MatchupTeam {
-  rosterId: number;
-  owner: {
-    id: string;
-    username: string;
-    displayName: string;
-    avatar?: string;
-  } | null;
-  points: number;
-  customPoints?: number;
-  starters: string[];
-  startersPoints: number[] | Record<string, number>;
-  players: string[];
-  playersPoints: Record<string, number>;
-  rosterSettings?: Record<string, unknown>;
-  rosterMetadata?: Record<string, unknown>;
-}
-
-export interface MatchupData {
-  matchupId: number;
-  teams: MatchupTeam[];
-  summary?: {
-    pointsA: number;
-    pointsB: number;
-    winnerRosterId?: number;
-    margin: number;
-  } | null;
-}
-
-export interface MatchupsResponse {
-  matchups: MatchupData[];
-  week: number;
-  leagueId: string;
-  totalMatchups: number;
-}
-
 export function useMatchups(leagueId: string, week: number) {
   return useQuery<MatchupsResponse>({
     queryKey: ['matchups', leagueId, week],
@@ -591,12 +426,6 @@ export function useMatchups(leagueId: string, week: number) {
   });
 }
 
-export interface SingleMatchupResponse {
-  matchup: MatchupData;
-  week: number;
-  leagueId: string;
-}
-
 export function useMatchup(leagueId: string, week: number, matchupId: number) {
   return useQuery<SingleMatchupResponse>({
     queryKey: ['matchup', leagueId, week, matchupId],
@@ -608,22 +437,6 @@ export function useMatchup(leagueId: string, week: number, matchupId: number) {
     enabled: Boolean(leagueId && week && matchupId),
     select: data => data,
   });
-}
-
-// Player data types
-export interface PlayerInfo {
-  id: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  team: string | null;
-  position: string;
-}
-
-export interface PlayersResponse {
-  players: Record<string, PlayerInfo>;
-  found: number;
-  requested: number;
 }
 
 // Hook for fetching multiple players by IDs
@@ -665,23 +478,6 @@ export function usePlayer(playerId: string) {
     enabled: Boolean(playerId),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
-
-// Player stats types
-export interface PlayerStats {
-  actual: Record<string, number> | null;
-  projections: Record<string, number> | null;
-  hasActual: boolean;
-  hasProjections: boolean;
-}
-
-export interface PlayerStatsResponse {
-  playerStats: Record<string, PlayerStats>;
-  week: number;
-  season: string;
-  requested: number;
-  foundStats: number;
-  foundProjections: number;
 }
 
 // Hook for fetching player stats for multiple players

@@ -1,23 +1,34 @@
 /**
  * Matchups Feature
- *
- * Exports:
- * - Components for matchup odds preview, simulation results
- * - Hooks for matchup data fetching and odds calculations
- * - Utilities for odds calculations and formatting
- *
- * Note: This feature is currently being migrated from flat structure.
- * Files will be added as part of WEB-EXTRACT-*, WEB-UTIL-*, WEB-HOOK-*, WEB-COMP-* tasks.
+ * Exports all matchup-related types for head-to-head matchups and simulations
  */
 
-// TODO: Add component exports when components are migrated
-// export * from './components';
+// Export types
+export type {
+  // Core matchup types
+  MatchupTeam,
+  MatchupData,
+  PlayerDetails,
+  TeamRoster,
+  MatchupDetails,
+  LeagueMatchups,
 
-// TODO: Add hook exports when hooks are migrated
-// export * from './hooks';
+  // Simulation types
+  ScoreDistribution,
+  SimulationData,
+  ScoreBoxPlotProps,
+  SimulationRequest,
+  SimulationResponse,
 
-// TODO: Add utility exports when utilities are migrated
-// export * from './utils';
+  // Odds types
+  MatchupOddsData,
+  MatchupOddsPreviewProps,
+  TeamOdds,
+  MatchupOdds,
+  LeagueWideOdds,
+  LeagueWideOddsProps,
+  OddsPreview,
 
-// TODO: Add type exports
-// export type * from './types';
+  // Live updates
+  LiveMatchupUpdate,
+} from './types';

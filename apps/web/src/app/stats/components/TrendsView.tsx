@@ -21,72 +21,22 @@ import { getRankColor } from '../utils/getRankColor';
 import { getTextColor } from '../utils/getTextColor';
 import { RidgePlot } from './RidgePlot';
 import type { PlainStatsDataset } from '@/lib/stats/compose';
-
-// Define proper types (matching LeagueView.tsx and ScatterAnalysis.tsx pattern)
-interface TeamInfo {
-  teamName: string;
-  leagueName: string;
-  avatar?: string;
-}
-
-interface TeamScore {
-  week: number;
-  value: number;
-}
-
-interface TeamData {
-  teamInfo: TeamInfo;
-  teamScores: TeamScore[];
-  opponentScores?: TeamScore[];
-}
-
-interface PositionalTeamData {
-  scores: { week: number; value: number }[];
-}
-
-interface PositionData {
-  teams: [string, PositionalTeamData][];
-  // Add other properties as needed
-}
-
-interface TrendsViewProps {
-  allTeamEntries: [string, TeamData][];
-  positionsMap: Map<TrackedPosition, PositionData>;
-  dataset: PlainStatsDataset;
-}
+import type {
+  TeamInfo,
+  TeamScore,
+  TeamData,
+  PositionalTeamData,
+  PositionData,
+  TrendsViewProps,
+  PowerRankingTeam,
+  RidgeTeamData,
+} from '@/features/stats';
 
 // Helper function for mean calculation
 const mean = (arr: number[]): number => {
   if (!arr.length) return 0;
   return arr.reduce((sum, val) => sum + val, 0) / arr.length;
 };
-
-// Power ranking team interface
-interface PowerRankingTeam {
-  key: string;
-  teamInfo: TeamInfo;
-  avgPoints: number;
-  expectedWins: number;
-  rolling3Avg: number;
-  weeklyScores: number;
-}
-
-// Ridge plot data interface
-interface RidgeTeamData {
-  teamName: string;
-  leagueName: string;
-  teamKey: string;
-  min: number;
-  max: number;
-  pad: number;
-  median: number;
-  range: number;
-  scores: number[];
-  gamesPlayed: number;
-  xs: number[];
-  densityPairs: [number, number][];
-  maxDensity: number;
-}
 
 export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsViewProps) {
   // Calculate league data for sorting (season view for consistency)

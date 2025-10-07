@@ -25,47 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-type GradeTxn = {
-  id: string;
-  type: string;
-  createdAt: string;
-  rosterIds?: number[];
-  players: Array<{
-    playerId: string;
-    name: string;
-    position: string;
-    role: 'add' | 'drop';
-    pre: { ppg: number; pps: number; total: number };
-    post: { poPts: number };
-    forYou?: { starts: number; points: number; weightedPoints: number };
-    afterDrop?: {
-      selfHarm: number;
-      oppHarm: number;
-      selfHarmWeighted: number;
-      oppHarmWeighted: number;
-    };
-    weeklyPoints?: Array<{ week: number; points: number; started: boolean; weight: number }>;
-  }>;
-  score: number;
-  grade: string;
-};
-
-type RawTxn = {
-  id: string;
-  type: string;
-  status: string;
-  createdAt: string;
-  rosterIds?: number[];
-  adds: Array<{
-    rosterId: number;
-    players: Array<{ id: string; fullName: string; position: string }>;
-  }>;
-  drops: Array<{
-    rosterId: number;
-    players: Array<{ id: string; fullName: string; position: string }>;
-  }>;
-};
+import type { GradeTxn, RawTxn } from '@/features/transactions/types';
 
 function LeagueTransactionsContent() {
   const searchParams = useSearchParams();
@@ -807,7 +767,7 @@ function LeagueTransactionsContent() {
 
                               // Use raw transaction data to show specific destinations
                               return (rawTxn.adds || []).flatMap(addGroup =>
-                                addGroup.players.map(player => {
+                                (addGroup.players || []).map(player => {
                                   const teamName =
                                     rosterMap.get(Number(addGroup.rosterId)) ||
                                     `Team ${addGroup.rosterId}`;

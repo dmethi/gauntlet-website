@@ -175,76 +175,13 @@ const EDITOR_CALLOUTS: Record<string, string> = {
     'Very few sights sicken me as much as seeing Jeffrey victory lapping what is clearly a good decision in retrospect (which in this case was drafting Henry for ~$50). Luckily he’s got plentyyyyy of downside risk on his roster, and Daddy Derrick can’t come rescue him every week his QB and WR1 combine for under 10. That final fumble was a bad omen Jeffrey. Count your days.',
 };
 
-interface SeriesPoint {
-  timestamp: string;
-  winProbA: number;
-  winProbB: number;
-  gameProgress: number;
-  team1Score?: number | null;
-  team2Score?: number | null;
-}
-
-interface BoxRow {
-  playerId: string;
-  name: string;
-  position: string | null;
-  points: number;
-}
-
-interface MatchupView {
-  leagueId: string;
-  matchupId: number;
-  rosterAId: number;
-  rosterBId: number;
-  teamAName?: string;
-  teamBName?: string;
-  pointsA: number;
-  pointsB: number;
-  margin: number;
-  combinedPoints: number;
-  excitement: number;
-  startersA?: string[];
-  startersB?: string[];
-  startersPointsA?: Record<string, number>;
-  startersPointsB?: Record<string, number>;
-  series?: SeriesPoint[];
-  boxscoreA?: BoxRow[];
-  boxscoreB?: BoxRow[];
-  excitementMetrics?: { leadChanges: number; avgDeltaPct: number };
-  recap?: string;
-  odds?: string[];
-}
-
-interface ApiLeague {
-  leagueId: string;
-  leagueName: string;
-  overview?: string;
-  matchups: MatchupView[];
-}
-
-interface ApiResponse {
-  ok: boolean;
-  data?: {
-    season: string;
-    week: number;
-    myIntro?: string;
-    scribeIntro?: string;
-    leagues: ApiLeague[];
-    standings?: {
-      leagueId: string;
-      leagueName: string;
-      divisions: Record<string, any[]>;
-    }[];
-    powerRankings?: {
-      leagueId: string;
-      rosterId: string;
-      name: string;
-      score: number;
-    }[];
-    upcoming?: Record<string, any[]>;
-    callouts?: Record<string, string>;
-  };
-}
+import type {
+  SeriesPoint,
+  BoxRow,
+  MatchupView,
+  ApiLeague,
+  ApiResponse,
+} from '@/shared/types/reports';
 
 function WinProbChart({
   series,

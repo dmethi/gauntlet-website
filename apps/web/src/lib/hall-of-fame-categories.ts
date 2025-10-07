@@ -3,7 +3,7 @@
  * Organized by scope and subject as specified
  */
 
-import { HallOfFameCategory, ProcessedMatchup } from './hall-of-fame-calculations';
+import type { HallOfFameCategory, ProcessedMatchup } from '@/features/hall-of-fame/types';
 
 // Helper function to get positional points from a matchup
 function getPositionalPoints(matchup: ProcessedMatchup, position: string): number {

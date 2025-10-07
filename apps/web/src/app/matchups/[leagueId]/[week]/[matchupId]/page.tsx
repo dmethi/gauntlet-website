@@ -9,48 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/components/matchup-simulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
-
-// Types
-interface PlayerDetails {
-  id: string;
-  name: string;
-  position: string;
-  team: string;
-  points: number;
-  projectedPoints: number;
-  isStarter: boolean;
-  status: 'active' | 'inactive' | 'questionable' | 'out' | 'ir';
-}
-
-interface TeamRoster {
-  rosterId: number;
-  teamName: string;
-  ownerName: string;
-  points: number;
-  projectedPoints: number;
-  starters: PlayerDetails[];
-  bench: PlayerDetails[];
-  remainingPlayers: number;
-  playersActive: number;
-  owner: {
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string | null;
-  };
-}
-
-interface MatchupDetails {
-  matchupId: number;
-  week: number;
-  leagueId: string;
-  leagueName: string;
-  teams: [TeamRoster, TeamRoster];
-  winner: TeamRoster | null;
-  isComplete: boolean;
-  margin: number;
-  gameStatus: 'pre_game' | 'in_progress' | 'final';
-}
+import type { PlayerDetails, TeamRoster, MatchupDetails } from '@/features/matchups/types';
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'FLEX', 'K', 'DEF'];
 

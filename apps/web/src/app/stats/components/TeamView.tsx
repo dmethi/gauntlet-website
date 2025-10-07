@@ -18,49 +18,18 @@ import { getTeamPositionalSummary } from '@/lib/stats/positional-advantages';
 import { PlayerBreakdownRow } from '@/components/stats/PlayerBreakdown';
 import type { PlainStatsDataset } from '@/lib/stats/compose';
 import { mean, median } from '@/lib/stats/medians';
+import type {
+  TeamInfo,
+  TeamScore,
+  TeamData,
+  PlayerScore,
+  PositionalTeamData,
+  PositionData,
+  TeamViewProps,
+} from '@/features/stats';
 
-// Define proper types
-interface TeamInfo {
-  teamName: string;
-  leagueName: string;
-  leagueId: string;
-  rosterId: number;
-}
-
-interface TeamScore {
-  week: number;
-  value: number;
-}
-
-interface TeamData {
-  teamInfo: TeamInfo;
-  teamScores: TeamScore[];
-  opponentScores: TeamScore[];
-}
-
-interface PlayerScore {
-  week: number;
-  value: number;
-}
-
-interface PositionTeamData {
-  teamInfo: TeamInfo;
-  scores: PlayerScore[];
-}
-
-interface PositionData {
-  teams: [string, PositionTeamData][];
-  // Add other properties as needed
-}
-
-interface TeamViewProps {
-  allTeamEntries: [string, TeamData][];
-  positionsMap: Map<TrackedPosition, PositionData>;
-  dataset: PlainStatsDataset;
-  fromWeek: number;
-  toWeek: number;
-  availableWeeks: number[];
-}
+// Type alias for backwards compatibility
+type PositionTeamData = PositionalTeamData;
 
 // Helper function to get performance color
 const getPerformanceColor = (value: number, isPositive: boolean) => {

@@ -19,5 +19,18 @@
 // TODO: Add utility exports when utilities are migrated
 // export * from './utils';
 
-// TODO: Add type exports
-// export type * from './types';
+// Export types
+export type {
+  PositionBreakdown,
+  RosterContext,
+  ManagerEfficiency,
+  DecisionDetail,
+  StartSitData,
+  AlternativeSource,
+  PlayerProjection,
+  AlternativePlayer,
+  PositionDecision,
+  PositionBreakdownMetrics,
+  ManagerEfficiencyDetailed,
+  StartSitDataDetailed,
+} from './types';

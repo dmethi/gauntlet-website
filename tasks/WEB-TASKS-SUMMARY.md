@@ -1,7 +1,7 @@
 # Apps/Web Task Files Summary
 
 **Generated**: October 7, 2025  
-**Total Tasks**: 31  
+**Total Tasks**: 38 (37 planned + 1 discovered)  
 **Status**: All task files created ✅
 
 ---
@@ -39,14 +39,26 @@
 
 ---
 
-### 📄 Phase 2-8: Remaining Tasks (27 tasks) - PLACEHOLDER FORMAT
+### ✅ Phase 2: Type Extraction (11 tasks) - DETAILED + PLACEHOLDER
 
-#### Phase 2: Type Extraction (4 tasks)
+**Completed (4 tasks):**
+- ✅ **WEB-EXTRACT-001.md**: Manager Analysis Types ⏱️ 20 min
+- ✅ **WEB-EXTRACT-002.md**: Manager Analytics Logic Types ⏱️ 25 min
+- ✅ **WEB-EXTRACT-003.md**: Hooks Types ⏱️ 20 min
+- ✅ **WEB-EXTRACT-004.md**: Stats Component Types ⏱️ 30 min
 
-- **WEB-EXTRACT-001.md**: Manager Analysis Types ⏱️ 20 min
-- **WEB-EXTRACT-002.md**: Manager Analytics Logic Types ⏱️ 25 min
-- **WEB-EXTRACT-003.md**: Hooks Types ⏱️ 20 min
-- **WEB-EXTRACT-004.md**: Stats Component Types ⏱️ 30 min
+**New Tasks (7 detailed files):**
+- 📄 **WEB-EXTRACT-005-playoff-bracket-types.md**: Playoff & Bracket Types ⏱️ 25 min
+- 📄 **WEB-EXTRACT-006-start-sit-types.md**: Start/Sit Efficiency Types ⏱️ 30 min
+- 📄 **WEB-EXTRACT-007-transaction-types.md**: Transaction Analysis Types ⏱️ 25 min
+- 📄 **WEB-EXTRACT-008-matchup-types.md**: Matchup & Simulation Types ⏱️ 35 min
+- 📄 **WEB-EXTRACT-009-hall-of-fame-types.md**: Hall of Fame Types ⏱️ 20 min
+- 📄 **WEB-EXTRACT-010-report-types.md**: Competition Report Types ⏱️ 30 min
+- 📄 **WEB-EXTRACT-011-draft-analytics-types.md**: Draft Analytics Types ⏱️ 35 min (discovered during audit)
+
+---
+
+### 📄 Phase 3-8: Remaining Tasks (27 tasks) - PLACEHOLDER FORMAT
 
 #### Phase 3: Utility Extraction (4 tasks)
 
@@ -95,15 +107,21 @@
 
 | Status         | Count  | Description                                        |
 | -------------- | ------ | -------------------------------------------------- |
-| ✅ Detailed    | 4      | Phase 1 SETUP tasks with full implementation steps |
-| 📄 Placeholder | 27     | Phase 2-8 tasks with basic structure               |
-| **Total**      | **31** | All task files created                             |
+| ✅ Completed   | 4      | Phase 2 EXTRACT tasks (finished)                   |
+| ✅ Detailed    | 11     | Phase 1 SETUP + Phase 2 additional EXTRACT tasks   |
+| 📄 Placeholder | 27     | Phase 3-8 tasks with basic structure               |
+| **Total**      | **42** | All task files created (38 planned + 4 completed)  |
 
 ---
 
 ## 🎯 Detailed vs Placeholder Tasks
 
-### Detailed Tasks (4 files)
+### Completed Tasks (4 files)
+
+These tasks have been **successfully completed**:
+- ✅ **WEB-EXTRACT-001** through **WEB-EXTRACT-004**
+
+### Detailed Tasks (10 files)
 
 These tasks have **complete, step-by-step instructions** including:
 
@@ -115,7 +133,9 @@ These tasks have **complete, step-by-step instructions** including:
 - ✅ Related task dependencies
 - ✅ Context requirements (files and line numbers)
 
-**Files**: `WEB-SETUP-001` through `WEB-SETUP-004`
+**Files**: 
+- `WEB-SETUP-001` through `WEB-SETUP-004` (Phase 1)
+- `WEB-EXTRACT-005` through `WEB-EXTRACT-011` (Phase 2 additional)
 
 ### Placeholder Tasks (27 files)
 
@@ -231,15 +251,15 @@ test -f WEB-EXTRACT-001.md && echo "✅ Placeholder tasks exist"
 
 | Phase             | Tasks  | Total Time     | Status                       |
 | ----------------- | ------ | -------------- | ---------------------------- |
-| Phase 1 (SETUP)   | 4      | 3.25 hours     | ✅ Detailed tasks ready      |
-| Phase 2 (EXTRACT) | 4      | 1.5 hours      | 📄 Placeholders ready        |
+| Phase 1 (SETUP)   | 4      | 3.25 hours     | ✅ Complete                  |
+| Phase 2 (EXTRACT) | 11     | 3.95 hours     | ✅ 4 complete, 7 ready       |
 | Phase 3 (UTIL)    | 4      | 3 hours        | 📄 Placeholders ready        |
 | Phase 4 (HOOK)    | 3      | 2.75 hours     | 📄 Placeholders ready        |
 | Phase 5 (COMP)    | 5      | 9 hours        | 📄 Placeholders ready        |
 | Phase 6 (PAGE)    | 3      | 2.75 hours     | 📄 Placeholders ready        |
 | Phase 7 (TEST)    | 4      | 9 hours        | 📄 Placeholders ready        |
 | Phase 8 (CLEAN)   | 4      | 5.25 hours     | 📄 Placeholders ready        |
-| **Total**         | **31** | **36.5 hours** | **8 weeks @ 4.5 hours/week** |
+| **Total**         | **38** | **38.95 hours** | **8 weeks @ 4.9 hours/week** |
 
 ---
 

@@ -5,43 +5,12 @@ import {
   calculateLeagueProjections,
 } from '@/lib/calculate-league-projections';
 import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
-
-interface MatchupTeam {
-  rosterId: number;
-  teamName: string;
-  ownerName: string;
-  points: number;
-  projectedPoints: number;
-  starters: Array<{
-    id: string;
-    name: string;
-    position: string;
-    points: number;
-    projectedPoints: number;
-    nflTeam?: string;
-  }>;
-  bench: Array<{
-    id: string;
-    name: string;
-    position: string;
-    points: number;
-    projectedPoints: number;
-    nflTeam?: string;
-  }>;
-  remainingPlayers: number;
-  playersActive: number;
-  owner: {
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string | null;
-  };
-}
+import type { TeamRoster, PlayerDetails } from '@/features/matchups/types';
 
 interface MatchupDetails {
   matchupId: number;
-  teams: [MatchupTeam, MatchupTeam];
-  winner: MatchupTeam | null;
+  teams: [TeamRoster, TeamRoster];
+  winner: TeamRoster | null;
   isComplete: boolean;
   margin: number;
 }
@@ -94,7 +63,7 @@ export async function GET(
     const rostersById = new Map<number, SleeperRoster>(rosters.map(r => [r.roster_id, r]));
 
     // Build team data
-    const teams: MatchupTeam[] = targetMatchups.map(matchup => {
+    const teams: TeamRoster[] = targetMatchups.map(matchup => {
       const roster = rostersById.get(matchup.roster_id);
       const owner = roster ? usersById.get(roster.owner_id) : null;
       const starters = matchup.starters || [];
@@ -103,29 +72,33 @@ export async function GET(
       const starterPoints = (matchup.starters_points as Record<string, number> | undefined) || {};
 
       // Build starter players
-      const starterPlayers = starters.map((playerId: string, index: number) => {
+      const starterPlayers: PlayerDetails[] = starters.map((playerId: string, index: number) => {
         const player = playersData[playerId] || {};
         const actualPoints = Number(starterPoints[index.toString()] || 0);
         return {
           id: playerId,
           name: player.full_name || playerId,
           position: player.position || 'FLEX',
+          team: player.team || '',
           points: actualPoints,
           projectedPoints: projectionOf(playerId),
-          nflTeam: player.team || undefined,
+          isStarter: true,
+          status: 'active' as const,
         };
       });
 
       // Build bench players
-      const benchPlayers = bench.map((playerId: string) => {
+      const benchPlayers: PlayerDetails[] = bench.map((playerId: string) => {
         const player = playersData[playerId] || {};
         return {
           id: playerId,
           name: player.full_name || playerId,
           position: player.position || 'FLEX',
+          team: player.team || '',
           points: 0, // Bench players don't have points in current week
           projectedPoints: projectionOf(playerId),
-          nflTeam: player.team || undefined,
+          isStarter: false,
+          status: 'active' as const,
         };
       });
 
@@ -149,7 +122,7 @@ export async function GET(
     });
 
     // Determine winner
-    let winner: MatchupTeam | null = null;
+    let winner: TeamRoster | null = null;
     let isComplete = false;
     let margin = 0;
 
@@ -171,7 +144,7 @@ export async function GET(
 
     const matchupDetails: MatchupDetails = {
       matchupId: targetMatchupId,
-      teams: teams as [MatchupTeam, MatchupTeam],
+      teams: teams as [TeamRoster, TeamRoster],
       winner,
       isComplete,
       margin,

@@ -6,7 +6,7 @@
 import { CACHE_DURATIONS, LEAGUE_IDS } from './constants';
 import { createServiceClient } from './sleeper/unified-client';
 import { PlayerStats } from './sleeper/unified-client';
-import { ProcessedMatchup } from './hall-of-fame-calculations';
+import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
 
 // All Gauntlet league IDs (current and historical)
 export const ALL_GAUNTLET_LEAGUES = {

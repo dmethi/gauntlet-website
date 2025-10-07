@@ -18,20 +18,9 @@ import {
   Zap,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import type { ScoreBoxPlotProps, SimulationData } from '@/features/matchups/types';
 
 // Inline Score Box Plot Component
-interface ScoreBoxPlotProps {
-  scores: {
-    mean: number;
-    median: number;
-    p10: number;
-    p90: number;
-  };
-  maxScale: number;
-  teamColor: string;
-  width?: number;
-  height?: number;
-}
 
 function ScoreBoxPlot({
   scores,
@@ -137,42 +126,6 @@ function ScoreBoxPlot({
       </Tooltip>
     </TooltipProvider>
   );
-}
-
-interface SimulationData {
-  team1WinPct: number;
-  team2WinPct: number;
-  medianMargin: number;
-  team1Scores: {
-    mean: number;
-    median: number;
-    p10: number;
-    p90: number;
-  };
-  team2Scores: {
-    mean: number;
-    median: number;
-    p10: number;
-    p90: number;
-  };
-  impliedOdds: {
-    team1MoneyLine: number;
-    team2MoneyLine: number;
-    spread: number;
-    total: number;
-  };
-  teams: Array<{
-    rosterId: number;
-    teamName: string;
-    ownerName: string;
-    avatar?: string;
-    players: Array<{
-      id: string;
-      name: string;
-      position: string;
-      projection: number;
-    }>;
-  }>;
 }
 
 interface MatchupSimulationProps {

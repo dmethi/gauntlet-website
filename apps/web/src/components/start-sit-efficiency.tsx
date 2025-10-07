@@ -13,82 +13,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { usePlayers } from '@/lib/hooks';
-
-// Types based on our analysis script
-interface PositionBreakdown {
-  decisionRate: number;
-  efficiencyRate: number;
-  decisionsCount: number;
-  weight: number;
-  pointsLost: number;
-  pointsLostVsMedian: number;
-}
-
-interface RosterContext {
-  managerId: string;
-  managerName: string;
-  leagueId: string;
-  week: number;
-  startingLineup: Array<{
-    position: string;
-    player: any;
-    pointsScored: number;
-  }>;
-  benchPlayers: any[];
-  waiverAlternatives: any[];
-  decisions: any[];
-}
-
-interface ManagerEfficiency {
-  managerId: string;
-  managerName: string;
-  leagueId: string;
-  decisions: any[];
-  overallDecisionRate: number;
-  overallEfficiencyRate: number;
-  weightedDecisionScore: number;
-  pointsImpactScore: number;
-  positionBreakdown: Record<string, PositionBreakdown>;
-}
-
-interface DecisionDetail {
-  managerId: string;
-  managerName: string;
-  leagueId: string;
-  week: number;
-  position: string;
-  selectedPlayer: {
-    playerId: string;
-    projectedPoints: number;
-    actualPoints: number;
-  };
-  alternatives: Array<{
-    playerId: string;
-    projectedPoints: number;
-    actualPoints: number;
-    adjustedActualPoints: number;
-    source: 'bench' | 'waiver';
-  }>;
-  optimalPlayer: any;
-  pointsLeft: number;
-  weight: number;
-  // For risky decisions
-  isRiskyDecision?: boolean;
-  projectionDifferential?: number;
-  actualOutcome?: number;
-}
-
-interface StartSitData {
-  managerEfficiencies: ManagerEfficiency[];
-  worstDecisions: DecisionDetail[];
-  bestRiskyDecisions: DecisionDetail[];
-  rosterContext?: RosterContext[];
-  leagueStats: {
-    totalDecisions: number;
-    avgWeightedScore: number;
-    avgPointsImpact: number;
-  };
-}
+import type {
+  PositionBreakdown,
+  RosterContext,
+  ManagerEfficiency,
+  DecisionDetail,
+  StartSitData,
+} from '@/features/start-sit/types';
 
 // Helper to get player name from the players data
 const getPlayerName = (playerId: string, players: Record<string, any>) => {

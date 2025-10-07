@@ -6,39 +6,7 @@ import {
   calculateLeagueProjections,
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
-
-interface TeamOdds {
-  teamId: string;
-  teamName: string;
-  leagueId: string;
-  leagueName: string;
-  probability: number;
-  odds: string;
-  projectedRange: { p10: number; p50: number; p90: number };
-  totalProjection: number;
-  color: string;
-}
-
-interface MatchupOdds {
-  matchupId: number;
-  team1: { name: string; leagueId: string; projection: number };
-  team2: { name: string; leagueId: string; projection: number };
-  projectedMargin: number;
-  probability: number;
-  odds: string;
-  color: string;
-}
-
-interface LeagueWideOdds {
-  week: number;
-  highestScorer: TeamOdds[];
-  lowestScorer: TeamOdds[];
-  closestMatchup: MatchupOdds[];
-  biggestBlowout: MatchupOdds[];
-  highestScoringMatchup: MatchupOdds[];
-  lowestScoringMatchup: MatchupOdds[];
-  lastUpdated: string;
-}
+import type { TeamOdds, MatchupOdds, LeagueWideOdds } from '@/features/matchups/types';
 
 const leagueNames: Record<string, string> = {
   '1263744209295245312': 'Gauntlet AFC',

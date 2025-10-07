@@ -3,19 +3,7 @@
 import { useState, useEffect } from 'react';
 import StartSitEfficiency from '@/components/start-sit-efficiency';
 import { Card, CardContent } from '@/components/ui/card';
-
-interface StartSitData {
-  managerEfficiencies: any[];
-  worstDecisions: any[];
-  bestRiskyDecisions: any[];
-  rosterContext: any[];
-  leagueStats: {
-    totalDecisions: number;
-    avgWeightedScore: number;
-    avgPointsImpact: number;
-  };
-  timestamp: string;
-}
+import type { StartSitData } from '@/features/start-sit/types';
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center space-x-2">
