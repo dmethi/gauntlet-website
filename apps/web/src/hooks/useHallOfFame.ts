@@ -57,7 +57,7 @@ async function getLeagueMatchups(leagueId: string, weeks: number): Promise<Proce
   const weekPromises = Array.from({ length: weeks }, (_, i) => i + 1).map(week =>
     fetchSleeperData<SleeperMatchup[]>(`league/${leagueId}/matchups/${week}`)
       .then(matchups => ({ week, matchups }))
-      .catch(() => ({ week, matchups: [] }))
+      .catch(() => ({ week, matchups: [] })),
   );
 
   const weekResults = await Promise.all(weekPromises);
@@ -129,7 +129,7 @@ export function useHallOfFame() {
 
       // Fetch matchups from all leagues in parallel
       const allMatchupsPromises = leagueIds.map(leagueId =>
-        getLeagueMatchups(leagueId, currentWeek)
+        getLeagueMatchups(leagueId, currentWeek),
       );
 
       const allMatchupsArrays = await Promise.all(allMatchupsPromises);

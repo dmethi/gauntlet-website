@@ -115,16 +115,16 @@ interface BoxRow {
 
 function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
   const items = (rows || []).slice(0, 9);
-  if (!items.length) return <div className='text-xs text-muted-foreground'>No starters</div>;
+  if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
-    <div className='space-y-1'>
+    <div className="space-y-1">
       {items.map(p => (
-        <div key={p.playerId} className='flex items-center justify-between text-xs'>
-          <div className='truncate'>
-            <span className='text-muted-foreground mr-1'>{p.position}</span>
+        <div key={p.playerId} className="flex items-center justify-between text-xs">
+          <div className="truncate">
+            <span className="text-muted-foreground mr-1">{p.position}</span>
             {p.name}
           </div>
-          <div className='font-medium'>{p.points.toFixed(1)}</div>
+          <div className="font-medium">{p.points.toFixed(1)}</div>
         </div>
       ))}
     </div>
@@ -163,26 +163,26 @@ export default function Week4Report2025() {
   };
 
   return (
-    <div className='px-2 md:px-4 py-6 space-y-6 overflow-x-hidden'>
+    <div className="px-2 md:px-4 py-6 space-y-6 overflow-x-hidden">
       <PageHeader
-        title='Week 4 Report — 2025'
-        subtitle='The undefeateds fall, the basement rises'
+        title="Week 4 Report — 2025"
+        subtitle="The undefeateds fall, the basement rises"
       />
 
       {/* Main Introduction */}
-      <div className='text-sm leading-relaxed space-y-4'>
-        <div className='whitespace-pre-wrap'>{WEEK4_CONTENT.main_intro}</div>
+      <div className="text-sm leading-relaxed space-y-4">
+        <div className="whitespace-pre-wrap">{WEEK4_CONTENT.main_intro}</div>
       </div>
 
       {/* Hall of Fame & Shame Records */}
-      <h2 className='text-lg font-semibold'>🏆 Week 4 Records</h2>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      <h2 className="text-lg font-semibold">🏆 Week 4 Records</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Hall of Fame */}
-        <div className='space-y-2'>
-          <h3 className='text-base font-semibold text-gauntlet-gold flex items-center gap-2'>
+        <div className="space-y-2">
+          <h3 className="text-base font-semibold text-gauntlet-gold flex items-center gap-2">
             <span>✨</span> Hall of Fame
           </h3>
-          <div className='text-xs space-y-2'>
+          <div className="text-xs space-y-2">
             {(weekRecords as any[])
               .filter((r: any) => r.type === 'fame')
               .sort((a: any, b: any) => a.rank - b.rank)
@@ -190,14 +190,14 @@ export default function Week4Report2025() {
               .map((r: any, idx: number) => {
                 const rankStr = ['1st', '2nd', '3rd', '4th', '5th'][r.rank - 1] || `${r.rank}th`;
                 return (
-                  <div key={idx} className='flex items-start gap-2 p-2 rounded bg-gauntlet-gold/5'>
-                    <span className='font-mono text-[10px] text-gauntlet-gold/70 min-w-[28px]'>
+                  <div key={idx} className="flex items-start gap-2 p-2 rounded bg-gauntlet-gold/5">
+                    <span className="font-mono text-[10px] text-gauntlet-gold/70 min-w-[28px]">
                       {rankStr}
                     </span>
-                    <div className='flex-1 min-w-0'>
-                      <div className='font-medium truncate'>{r.teamName}</div>
-                      <div className='text-muted-foreground truncate'>{r.category}</div>
-                      <div className='text-gauntlet-gold font-medium'>{r.description}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{r.teamName}</div>
+                      <div className="text-muted-foreground truncate">{r.category}</div>
+                      <div className="text-gauntlet-gold font-medium">{r.description}</div>
                     </div>
                   </div>
                 );
@@ -206,11 +206,11 @@ export default function Week4Report2025() {
         </div>
 
         {/* Hall of Shame */}
-        <div className='space-y-2'>
-          <h3 className='text-base font-semibold text-gauntlet-crimson flex items-center gap-2'>
+        <div className="space-y-2">
+          <h3 className="text-base font-semibold text-gauntlet-crimson flex items-center gap-2">
             <span>💀</span> Hall of Shame
           </h3>
-          <div className='text-xs space-y-2'>
+          <div className="text-xs space-y-2">
             {(weekRecords as any[])
               .filter((r: any) => r.type === 'shame')
               .sort((a: any, b: any) => a.rank - b.rank)
@@ -220,98 +220,98 @@ export default function Week4Report2025() {
                 return (
                   <div
                     key={idx}
-                    className='flex items-start gap-2 p-2 rounded bg-gauntlet-crimson/5'
+                    className="flex items-start gap-2 p-2 rounded bg-gauntlet-crimson/5"
                   >
-                    <span className='font-mono text-[10px] text-gauntlet-crimson/70 min-w-[28px]'>
+                    <span className="font-mono text-[10px] text-gauntlet-crimson/70 min-w-[28px]">
                       {rankStr}
                     </span>
-                    <div className='flex-1 min-w-0'>
-                      <div className='font-medium truncate'>{r.teamName}</div>
-                      <div className='text-muted-foreground truncate'>{r.category}</div>
-                      <div className='text-gauntlet-crimson font-medium'>{r.description}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{r.teamName}</div>
+                      <div className="text-muted-foreground truncate">{r.category}</div>
+                      <div className="text-gauntlet-crimson font-medium">{r.description}</div>
                     </div>
                   </div>
                 );
               })}
             {(weekRecords as any[]).filter((r: any) => r.type === 'shame').length === 0 && (
-              <div className='text-muted-foreground italic p-2'>No shame records this week!</div>
+              <div className="text-muted-foreground italic p-2">No shame records this week!</div>
             )}
           </div>
         </div>
       </div>
 
       {/* Data-driven Matchup Details */}
-      <h2 className='text-lg font-semibold'>Matchup Details & Box Scores</h2>
+      <h2 className="text-lg font-semibold">Matchup Details & Box Scores</h2>
       {data?.ok && data.data && data.data.leagues && data.data.leagues.length > 0 ? (
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {(data.data.leagues || []).map(l => (
-            <div key={l.leagueId} className='space-y-4'>
-              <div className='flex items-center gap-2'>
-                <Badge variant='outline'>{getConference(l.leagueName)}</Badge>
+            <div key={l.leagueId} className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{getConference(l.leagueName)}</Badge>
               </div>
 
-              <div className='space-y-6'>
+              <div className="space-y-6">
                 {l.matchups.map(m => {
                   const recap = getMatchupRecap(m.teamAName || '', m.teamBName || '', l.leagueName);
 
                   return (
-                    <div key={`${l.leagueId}-${m.matchupId}`} className='p-3 space-y-3'>
-                      <div className='rounded-md bg-gauntlet-crimson/10 px-3 py-2'>
+                    <div key={`${l.leagueId}-${m.matchupId}`} className="p-3 space-y-3">
+                      <div className="rounded-md bg-gauntlet-crimson/10 px-3 py-2">
                         {/* Mobile-first stacked layout */}
-                        <div className='sm:hidden'>
-                          <div className='flex items-center justify-between text-base font-semibold mb-1'>
-                            <span className='truncate flex-1 mr-2'>
+                        <div className="sm:hidden">
+                          <div className="flex items-center justify-between text-base font-semibold mb-1">
+                            <span className="truncate flex-1 mr-2">
                               {m.teamAName || `Team ${m.rosterAId}`}
                             </span>
-                            <span className='text-right font-mono'>{m.pointsA.toFixed(2)}</span>
+                            <span className="text-right font-mono">{m.pointsA.toFixed(2)}</span>
                           </div>
-                          <div className='flex items-center justify-between text-base font-semibold'>
-                            <span className='truncate flex-1 mr-2'>
+                          <div className="flex items-center justify-between text-base font-semibold">
+                            <span className="truncate flex-1 mr-2">
                               {m.teamBName || `Team ${m.rosterBId}`}
                             </span>
-                            <span className='text-right font-mono'>{m.pointsB.toFixed(2)}</span>
+                            <span className="text-right font-mono">{m.pointsB.toFixed(2)}</span>
                           </div>
                         </div>
 
                         {/* Desktop horizontal layout */}
-                        <div className='hidden sm:flex items-center justify-between text-base font-semibold'>
-                          <div className='truncate max-w-[45%]'>
+                        <div className="hidden sm:flex items-center justify-between text-base font-semibold">
+                          <div className="truncate max-w-[45%]">
                             {m.teamAName || `Team ${m.rosterAId}`} ({m.pointsA.toFixed(2)})
                           </div>
-                          <div className='text-muted-foreground px-2'>vs</div>
-                          <div className='truncate text-right max-w-[45%]'>
+                          <div className="text-muted-foreground px-2">vs</div>
+                          <div className="truncate text-right max-w-[45%]">
                             {m.teamBName || `Team ${m.rosterBId}`} ({m.pointsB.toFixed(2)})
                           </div>
                         </div>
                       </div>
 
-                      <div className='text-xs text-muted-foreground'>
+                      <div className="text-xs text-muted-foreground">
                         Combined: {m.combinedPoints.toFixed(1)} • Margin: {m.margin.toFixed(1)}
                       </div>
 
                       {/* Show recap if found */}
                       {recap ? (
-                        <div className='text-sm leading-relaxed'>
-                          <div className='font-medium mb-1'>{recap.title}</div>
-                          <div className='whitespace-pre-wrap'>{recap.recap}</div>
+                        <div className="text-sm leading-relaxed">
+                          <div className="font-medium mb-1">{recap.title}</div>
+                          <div className="whitespace-pre-wrap">{recap.recap}</div>
                         </div>
                       ) : (
-                        <div className='text-sm text-muted-foreground italic'>
+                        <div className="text-sm text-muted-foreground italic">
                           Detailed recap available above
                         </div>
                       )}
 
                       {/* Box scores */}
-                      <hr className='border-border' />
-                      <div className='grid grid-cols-2 gap-4'>
+                      <hr className="border-border" />
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className='text-xs font-semibold mb-1'>
+                          <div className="text-xs font-semibold mb-1">
                             {m.teamAName || `Team ${m.rosterAId}`}
                           </div>
                           <MiniBoxscore rows={m.boxscoreA} />
                         </div>
                         <div>
-                          <div className='text-xs font-semibold mb-1'>
+                          <div className="text-xs font-semibold mb-1">
                             {m.teamBName || `Team ${m.rosterBId}`}
                           </div>
                           <MiniBoxscore rows={m.boxscoreB} />
@@ -325,15 +325,15 @@ export default function Week4Report2025() {
           ))}
         </div>
       ) : (
-        <div className='text-sm text-muted-foreground italic'>
+        <div className="text-sm text-muted-foreground italic">
           [Data file not yet populated - run data generation script to populate report-week4.json]
         </div>
       )}
 
       {/* Power Rankings */}
-      <h2 className='text-lg font-semibold'>Power Rankings</h2>
+      <h2 className="text-lg font-semibold">Power Rankings</h2>
       {data?.data?.powerRankings && data.data.powerRankings.length > 0 ? (
-        <div className='space-y-2 text-sm'>
+        <div className="space-y-2 text-sm">
           {((data.data.powerRankings || []) as any[]).map((p: any) => {
             const val = p.normalized as number;
             const min = 80;
@@ -362,10 +362,10 @@ export default function Week4Report2025() {
             return (
               <div
                 key={`${p.leagueId}-${p.rosterId}`}
-                className='flex items-center justify-between rounded px-2 py-1'
+                className="flex items-center justify-between rounded px-2 py-1"
                 style={{ backgroundColor: bg }}
               >
-                <div className='truncate'>
+                <div className="truncate">
                   #{p.rank} {p.name}
                   {p.deltaLabel && (
                     <span
@@ -380,48 +380,48 @@ export default function Week4Report2025() {
                       ({p.deltaLabel})
                     </span>
                   )}
-                  <Badge variant='outline' className='ml-2 text-xs'>
+                  <Badge variant="outline" className="ml-2 text-xs">
                     {data?.data?.leagues?.find(l => l.leagueId === p.leagueId)?.leagueName}
                   </Badge>
                   {Number.isFinite(p.wins) && Number.isFinite(p.losses) ? (
-                    <span className='text-muted-foreground ml-2 text-xs'>
+                    <span className="text-muted-foreground ml-2 text-xs">
                       ({p.wins}-{p.losses})
                     </span>
                   ) : null}
                 </div>
-                <div className='ml-2 text-xs text-muted-foreground'>{val}</div>
+                <div className="ml-2 text-xs text-muted-foreground">{val}</div>
               </div>
             );
           })}
         </div>
       ) : (
-        <div className='text-sm text-muted-foreground italic'>
+        <div className="text-sm text-muted-foreground italic">
           [Power rankings will appear here after data generation]
         </div>
       )}
-      <hr className='border-border' />
+      <hr className="border-border" />
 
       {/* League-by-League Power Rankings */}
-      <h2 className='text-lg font-semibold'>League Power Rankings</h2>
+      <h2 className="text-lg font-semibold">League Power Rankings</h2>
       {data?.data?.leagues && data.data.leagues.length > 0 ? (
-        <div className='space-y-4'>
+        <div className="space-y-4">
           {data?.data?.leagues?.map(l => {
             const leagueRanks = ((data?.data?.powerRankings || []) as any[]).filter(
-              (p: any) => p.leagueId === l.leagueId
+              (p: any) => p.leagueId === l.leagueId,
             );
             return (
-              <div key={l.leagueId} className='mb-4'>
-                <h3 className='text-md font-semibold'>{getConference(l.leagueName)}</h3>
-                <div className='space-y-1 text-sm'>
+              <div key={l.leagueId} className="mb-4">
+                <h3 className="text-md font-semibold">{getConference(l.leagueName)}</h3>
+                <div className="space-y-1 text-sm">
                   {leagueRanks.map(p => (
                     <div
                       key={p.rosterId}
-                      className='flex items-center justify-between rounded px-2 py-1'
+                      className="flex items-center justify-between rounded px-2 py-1"
                     >
-                      <div className='truncate'>
+                      <div className="truncate">
                         #{p.rank} {p.name}
                       </div>
-                      <div className='ml-2 text-xs text-muted-foreground'>{p.normalized}</div>
+                      <div className="ml-2 text-xs text-muted-foreground">{p.normalized}</div>
                     </div>
                   ))}
                 </div>
@@ -430,38 +430,38 @@ export default function Week4Report2025() {
           })}
         </div>
       ) : (
-        <div className='text-sm text-muted-foreground italic'>
+        <div className="text-sm text-muted-foreground italic">
           [League rankings will appear here after data generation]
         </div>
       )}
-      <hr className='border-border' />
+      <hr className="border-border" />
 
       {/* Standings */}
       {data?.ok && data.data?.standings && data.data.standings.length > 0 && (
-        <div className='space-y-4'>
-          <h2 className='text-lg font-semibold'>Current Standings</h2>
-          <div className='grid md:grid-cols-2 gap-6'>
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Current Standings</h2>
+          <div className="grid md:grid-cols-2 gap-6">
             {data.data.standings.map(league => (
-              <div key={league.leagueId} className='space-y-3'>
-                <h3 className='font-semibold'>{league.leagueName}</h3>
+              <div key={league.leagueId} className="space-y-3">
+                <h3 className="font-semibold">{league.leagueName}</h3>
                 {Object.entries(league.divisions).map(([divName, teams]) => (
-                  <div key={divName} className='space-y-2'>
-                    <h4 className='text-sm font-medium text-muted-foreground'>{divName}</h4>
-                    <div className='space-y-1'>
+                  <div key={divName} className="space-y-2">
+                    <h4 className="text-sm font-medium text-muted-foreground">{divName}</h4>
+                    <div className="space-y-1">
                       {teams.map((team: any) => (
-                        <div key={team.rosterId} className='flex items-center justify-between'>
-                          <div className='truncate text-xs'>
+                        <div key={team.rosterId} className="flex items-center justify-between">
+                          <div className="truncate text-xs">
                             {team.teamName || team.name}
-                            <span className='text-xs text-muted-foreground ml-2'>
+                            <span className="text-xs text-muted-foreground ml-2">
                               PR #
                               {((data?.data?.powerRankings || []) as any[]).find(
                                 (p: any) =>
                                   p.leagueId === league.leagueId &&
-                                  String(p.rosterId) === String(team.rosterId)
+                                  String(p.rosterId) === String(team.rosterId),
                               )?.rank ?? '-'}
                             </span>
                           </div>
-                          <div className='text-xs ml-2'>
+                          <div className="text-xs ml-2">
                             {team.wins}-{team.losses} • {team.points.toFixed(1)} pts
                           </div>
                         </div>
@@ -477,37 +477,37 @@ export default function Week4Report2025() {
 
       {/* Upcoming Matchups */}
       {data?.ok && data.data?.upcoming && Object.keys(data.data.upcoming).length > 0 && (
-        <div className='space-y-4'>
-          <h2 className='text-lg font-semibold'>
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">
             Upcoming Matchups (Week {Number((data.data as any).week) + 1})
           </h2>
-          <div className='space-y-4'>
+          <div className="space-y-4">
             {Object.entries((data.data as any).upcoming || {}).map(([leagueId, pairs]: any) => (
-              <div key={leagueId} className='space-y-2'>
-                <div className='flex items-center gap-2'>
-                  <Badge variant='outline'>
+              <div key={leagueId} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">
                     {getConference(
                       (data.data?.leagues || []).find(l => l.leagueId === leagueId)?.leagueName ||
-                        leagueId
+                        leagueId,
                     )}
                   </Badge>
                 </div>
-                <div className='grid md:grid-cols-2 gap-2 text-sm'>
+                <div className="grid md:grid-cols-2 gap-2 text-sm">
                   {(pairs as any[]).map(p => (
                     <div
                       key={`${leagueId}-${p.matchupId}`}
-                      className='flex items-center justify-start gap-2'
+                      className="flex items-center justify-start gap-2"
                     >
-                      <div className='truncate'>
+                      <div className="truncate">
                         {p.teamAName}
-                        <span className='text-xs text-muted-foreground ml-1'>
+                        <span className="text-xs text-muted-foreground ml-1">
                           ({p.teamARecord})
                         </span>
                       </div>
-                      <div className='text-muted-foreground'>vs</div>
-                      <div className='truncate'>
+                      <div className="text-muted-foreground">vs</div>
+                      <div className="truncate">
                         {p.teamBName}
-                        <span className='text-xs text-muted-foreground ml-1'>
+                        <span className="text-xs text-muted-foreground ml-1">
                           ({p.teamBRecord})
                         </span>
                       </div>
@@ -523,32 +523,32 @@ export default function Week4Report2025() {
       {/* ============================================================================ */}
       {/* STATS DEEP DIVE SECTION */}
       {/* ============================================================================ */}
-      <div className='space-y-8 my-12'>
+      <div className="space-y-8 my-12">
         <div>
-          <h2 className='text-2xl font-bold mb-2'>📊 Stats Deep Dive</h2>
-          <p className='text-muted-foreground'>
+          <h2 className="text-2xl font-bold mb-2">📊 Stats Deep Dive</h2>
+          <p className="text-muted-foreground">
             Beyond the box scores, the data reveals who's genuinely elite, who's getting lucky, and
             who's one fix away from turning their season around.
           </p>
         </div>
 
         {/* Spotlight Teams */}
-        <div className='space-y-6'>
+        <div className="space-y-6">
           <div>
-            <h3 className='text-xl font-semibold mb-1'>Team Spotlights</h3>
-            <p className='text-sm text-muted-foreground mb-4'>
+            <h3 className="text-xl font-semibold mb-1">Team Spotlights</h3>
+            <p className="text-sm text-muted-foreground mb-4">
               Six teams stood out this week for very different reasons. Some are thriving, some are
               surviving, and some need to figure it out fast.
             </p>
           </div>
 
           {/* Spotlight 1: ziyanp22 */}
-          <div className='border rounded-lg p-4 space-y-3'>
+          <div className="border rounded-lg p-4 space-y-3">
             <div>
-              <h4 className='font-semibold text-lg'>ziyanp22 (Ziyan, 3-1)</h4>
-              <p className='text-sm text-muted-foreground'>WR Dominance Masking RB Disaster</p>
+              <h4 className="font-semibold text-lg">ziyanp22 (Ziyan, 3-1)</h4>
+              <p className="text-sm text-muted-foreground">WR Dominance Masking RB Disaster</p>
             </div>
-            <div className='text-sm space-y-3 leading-relaxed'>
+            <div className="text-sm space-y-3 leading-relaxed">
               <p>
                 Ziyan sits at 3-1 and is <strong>surging</strong>. His weekly scores: 112 → 137 →
                 116 → 138. That's a <strong>+6 points per week improvement</strong> - the strongest
@@ -584,37 +584,37 @@ export default function Week4Report2025() {
                 away with the league.
               </p>
             </div>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 pt-2'>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Trajectory</div>
-                <div className='font-semibold text-green-600'>+5.9 pts/week</div>
-                <div className='text-[10px] text-muted-foreground'>Strongly improving</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div className="text-xs">
+                <div className="text-muted-foreground">Trajectory</div>
+                <div className="font-semibold text-green-600">+5.9 pts/week</div>
+                <div className="text-[10px] text-muted-foreground">Strongly improving</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>WR Dominance</div>
-                <div className='font-semibold text-green-600'>58.9 PPW</div>
-                <div className='text-[10px] text-muted-foreground'>+24.6 vs league avg</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">WR Dominance</div>
+                <div className="font-semibold text-green-600">58.9 PPW</div>
+                <div className="text-[10px] text-muted-foreground">+24.6 vs league avg</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>RB Deficit</div>
-                <div className='font-semibold text-red-600'>24.2 PPW</div>
-                <div className='text-[10px] text-muted-foreground'>-14.0 vs league avg</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">RB Deficit</div>
+                <div className="font-semibold text-red-600">24.2 PPW</div>
+                <div className="text-[10px] text-muted-foreground">-14.0 vs league avg</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Net Edge</div>
-                <div className='font-semibold'>+11 pts/game</div>
-                <div className='text-[10px] text-muted-foreground'>Why he's 3-1</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Net Edge</div>
+                <div className="font-semibold">+11 pts/game</div>
+                <div className="text-[10px] text-muted-foreground">Why he's 3-1</div>
               </div>
             </div>
           </div>
 
           {/* Spotlight 2: vayyala */}
-          <div className='border rounded-lg p-4 space-y-3'>
+          <div className="border rounded-lg p-4 space-y-3">
             <div>
-              <h4 className='font-semibold text-lg'>vayyala (Vinny, 0-4)</h4>
-              <p className='text-sm text-muted-foreground'>Statistical Catastrophe</p>
+              <h4 className="font-semibold text-lg">vayyala (Vinny, 0-4)</h4>
+              <p className="text-sm text-muted-foreground">Statistical Catastrophe</p>
             </div>
-            <div className='text-sm space-y-3 leading-relaxed'>
+            <div className="text-sm space-y-3 leading-relaxed">
               <p>
                 Vinny's 0-4 record isn't just bad luck - it's a perfect storm of roster problems
                 meeting historically tough matchups.
@@ -644,37 +644,37 @@ export default function Week4Report2025() {
                 him competitive in easier matchups ahead.
               </p>
             </div>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 pt-2'>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Scoring</div>
-                <div className='font-semibold text-red-600'>86.0 PPG</div>
-                <div className='text-[10px] text-muted-foreground'>-25.3 vs avg</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div className="text-xs">
+                <div className="text-muted-foreground">Scoring</div>
+                <div className="font-semibold text-red-600">86.0 PPG</div>
+                <div className="text-[10px] text-muted-foreground">-25.3 vs avg</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>WR Disaster</div>
-                <div className='font-semibold text-red-600'>22.0 PPW</div>
-                <div className='text-[10px] text-muted-foreground'>-12.3 vs avg</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">WR Disaster</div>
+                <div className="font-semibold text-red-600">22.0 PPW</div>
+                <div className="text-[10px] text-muted-foreground">-12.3 vs avg</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Schedule</div>
-                <div className='font-semibold'>#1 hardest</div>
-                <div className='text-[10px] text-muted-foreground'>28% avg win rate</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Schedule</div>
+                <div className="font-semibold">#1 hardest</div>
+                <div className="text-[10px] text-muted-foreground">28% avg win rate</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Expected Wins</div>
-                <div className='font-semibold'>~0.3</div>
-                <div className='text-[10px] text-muted-foreground'>Hardest path</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Expected Wins</div>
+                <div className="font-semibold">~0.3</div>
+                <div className="text-[10px] text-muted-foreground">Hardest path</div>
               </div>
             </div>
           </div>
 
           {/* Spotlight 3: 2 Dolla Balla$ */}
-          <div className='border rounded-lg p-4 space-y-3'>
+          <div className="border rounded-lg p-4 space-y-3">
             <div>
-              <h4 className='font-semibold text-lg'>2 Dolla Balla$ (Nolan, 2-2)</h4>
-              <p className='text-sm text-muted-foreground'>Boom/Bust, But Heating Up</p>
+              <h4 className="font-semibold text-lg">2 Dolla Balla$ (Nolan, 2-2)</h4>
+              <p className="text-sm text-muted-foreground">Boom/Bust, But Heating Up</p>
             </div>
-            <div className='text-sm space-y-3 leading-relaxed'>
+            <div className="text-sm space-y-3 leading-relaxed">
               <p>
                 Nolan has put up a top-5 scoring performance twice this season (Weeks 1 and 4). He
                 won both of those games. His other two weeks? Ranked 12th and 22nd in scoring - he
@@ -700,37 +700,37 @@ export default function Week4Report2025() {
                 If Week 4's defensive spike is sustainable, this team is dangerous.
               </p>
             </div>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 pt-2'>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Trajectory</div>
-                <div className='font-semibold text-green-600'>+5.1 pts/week</div>
-                <div className='text-[10px] text-muted-foreground'>Strongly improving</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div className="text-xs">
+                <div className="text-muted-foreground">Trajectory</div>
+                <div className="font-semibold text-green-600">+5.1 pts/week</div>
+                <div className="text-[10px] text-muted-foreground">Strongly improving</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Top-5 Record</div>
-                <div className='font-semibold text-green-600'>2-0</div>
-                <div className='text-[10px] text-muted-foreground'>0-2 outside top-5</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Top-5 Record</div>
+                <div className="font-semibold text-green-600">2-0</div>
+                <div className="text-[10px] text-muted-foreground">0-2 outside top-5</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>QB Advantage</div>
-                <div className='font-semibold text-green-600'>+5.8 pts/week</div>
-                <div className='text-[10px] text-muted-foreground'>Carrying the team</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">QB Advantage</div>
+                <div className="font-semibold text-green-600">+5.8 pts/week</div>
+                <div className="text-[10px] text-muted-foreground">Carrying the team</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>DEF Problem</div>
-                <div className='font-semibold text-red-600'>-4.4 pts/week</div>
-                <div className='text-[10px] text-muted-foreground'>But 8.3 in Week 4!</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">DEF Problem</div>
+                <div className="font-semibold text-red-600">-4.4 pts/week</div>
+                <div className="text-[10px] text-muted-foreground">But 8.3 in Week 4!</div>
               </div>
             </div>
           </div>
 
           {/* Spotlight 4: To Infinity and Bijan */}
-          <div className='border rounded-lg p-4 space-y-3'>
+          <div className="border rounded-lg p-4 space-y-3">
             <div>
-              <h4 className='font-semibold text-lg'>To Infinity and Bijan (Joel, 3-1)</h4>
-              <p className='text-sm text-muted-foreground'>RB Dominance, WR Disaster</p>
+              <h4 className="font-semibold text-lg">To Infinity and Bijan (Joel, 3-1)</h4>
+              <p className="text-sm text-muted-foreground">RB Dominance, WR Disaster</p>
             </div>
-            <div className='text-sm space-y-3 leading-relaxed'>
+            <div className="text-sm space-y-3 leading-relaxed">
               <p>
                 Joel's season starts and ends with one position: running back. He's averaging 64
                 points per week from his RBs - the league average is 38 points. That's 26 extra
@@ -759,37 +759,37 @@ export default function Week4Report2025() {
                 even league-average WR production, he'd be scoring 140+ every week.
               </p>
             </div>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 pt-2'>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>RB Dominance</div>
-                <div className='font-semibold text-green-600'>64.0 PPW</div>
-                <div className='text-[10px] text-muted-foreground'>+25.8 vs avg (68% edge)</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div className="text-xs">
+                <div className="text-muted-foreground">RB Dominance</div>
+                <div className="font-semibold text-green-600">64.0 PPW</div>
+                <div className="text-[10px] text-muted-foreground">+25.8 vs avg (68% edge)</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>RB Streak</div>
-                <div className='font-semibold text-green-600'>3x #1</div>
-                <div className='text-[10px] text-muted-foreground'>Weeks 2, 3, 4</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">RB Streak</div>
+                <div className="font-semibold text-green-600">3x #1</div>
+                <div className="text-[10px] text-muted-foreground">Weeks 2, 3, 4</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>WR Disaster</div>
-                <div className='font-semibold text-red-600'>17.6 PPW</div>
-                <div className='text-[10px] text-muted-foreground'>-16.8 vs avg</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">WR Disaster</div>
+                <div className="font-semibold text-red-600">17.6 PPW</div>
+                <div className="text-[10px] text-muted-foreground">-16.8 vs avg</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Net Edge</div>
-                <div className='font-semibold'>+9 pts/game</div>
-                <div className='text-[10px] text-muted-foreground'>Why he's 3-1</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Net Edge</div>
+                <div className="font-semibold">+9 pts/game</div>
+                <div className="text-[10px] text-muted-foreground">Why he's 3-1</div>
               </div>
             </div>
           </div>
 
           {/* Spotlight 5: Dont go Chasing Saquon */}
-          <div className='border rounded-lg p-4 space-y-3'>
+          <div className="border rounded-lg p-4 space-y-3">
             <div>
-              <h4 className='font-semibold text-lg'>Dont go Chasing Saquon (Arnav, 0-4)</h4>
-              <p className='text-sm text-muted-foreground'>Winless Despite Pieces</p>
+              <h4 className="font-semibold text-lg">Dont go Chasing Saquon (Arnav, 0-4)</h4>
+              <p className="text-sm text-muted-foreground">Winless Despite Pieces</p>
             </div>
-            <div className='text-sm space-y-3 leading-relaxed'>
+            <div className="text-sm space-y-3 leading-relaxed">
               <p>
                 Arnav is 0-4, and unlike Vinny's statistical catastrophe, this one stings
                 differently. The roster has pieces. The scoring isn't historically bad (averaging 97
@@ -814,37 +814,37 @@ export default function Week4Report2025() {
                 game-breaking edge.
               </p>
             </div>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 pt-2'>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Record</div>
-                <div className='font-semibold text-red-600'>0-4</div>
-                <div className='text-[10px] text-muted-foreground'>0 top-5 weeks</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div className="text-xs">
+                <div className="text-muted-foreground">Record</div>
+                <div className="font-semibold text-red-600">0-4</div>
+                <div className="text-[10px] text-muted-foreground">0 top-5 weeks</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Scoring</div>
-                <div className='font-semibold'>96.7 PPG</div>
-                <div className='text-[10px] text-muted-foreground'>-14.6 vs avg</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Scoring</div>
+                <div className="font-semibold">96.7 PPG</div>
+                <div className="text-[10px] text-muted-foreground">-14.6 vs avg</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Trajectory</div>
-                <div className='font-semibold text-red-600'>-2.1 pts/week</div>
-                <div className='text-[10px] text-muted-foreground'>Declining</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Trajectory</div>
+                <div className="font-semibold text-red-600">-2.1 pts/week</div>
+                <div className="text-[10px] text-muted-foreground">Declining</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Main Problem</div>
-                <div className='font-semibold'>No elite position</div>
-                <div className='text-[10px] text-muted-foreground'>All mediocre</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Main Problem</div>
+                <div className="font-semibold">No elite position</div>
+                <div className="text-[10px] text-muted-foreground">All mediocre</div>
               </div>
             </div>
           </div>
 
           {/* Spotlight 6: Marginal Returns */}
-          <div className='border rounded-lg p-4 space-y-3'>
+          <div className="border rounded-lg p-4 space-y-3">
             <div>
-              <h4 className='font-semibold text-lg'>Marginal Returns (Jeffrey, 4-0)</h4>
-              <p className='text-sm text-muted-foreground'>Last Undefeated, But Questions Remain</p>
+              <h4 className="font-semibold text-lg">Marginal Returns (Jeffrey, 4-0)</h4>
+              <p className="text-sm text-muted-foreground">Last Undefeated, But Questions Remain</p>
             </div>
-            <div className='text-sm space-y-3 leading-relaxed'>
+            <div className="text-sm space-y-3 leading-relaxed">
               <p>
                 Jeffrey is the only undefeated team left in the entire league at 4-0. But the
                 numbers suggest this record is built on schedule fortune more than dominance.
@@ -872,150 +872,150 @@ export default function Week4Report2025() {
                 have off-weeks?
               </p>
             </div>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 pt-2'>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Record</div>
-                <div className='font-semibold text-green-600'>4-0</div>
-                <div className='text-[10px] text-muted-foreground'>Only undefeated</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div className="text-xs">
+                <div className="text-muted-foreground">Record</div>
+                <div className="font-semibold text-green-600">4-0</div>
+                <div className="text-[10px] text-muted-foreground">Only undefeated</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Scoring</div>
-                <div className='font-semibold'>~110 PPG</div>
-                <div className='text-[10px] text-muted-foreground'>League average</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Scoring</div>
+                <div className="font-semibold">~110 PPG</div>
+                <div className="text-[10px] text-muted-foreground">League average</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>TE/DEF Edge</div>
-                <div className='font-semibold text-green-600'>+7-10 pts/week</div>
-                <div className='text-[10px] text-muted-foreground'>Combined</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">TE/DEF Edge</div>
+                <div className="font-semibold text-green-600">+7-10 pts/week</div>
+                <div className="text-[10px] text-muted-foreground">Combined</div>
               </div>
-              <div className='text-xs'>
-                <div className='text-muted-foreground'>Schedule</div>
-                <div className='font-semibold'>Easier so far</div>
-                <div className='text-[10px] text-muted-foreground'>Test ahead</div>
+              <div className="text-xs">
+                <div className="text-muted-foreground">Schedule</div>
+                <div className="font-semibold">Easier so far</div>
+                <div className="text-[10px] text-muted-foreground">Test ahead</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Quick Team Updates */}
-        <div className='space-y-4'>
-          <h3 className='text-xl font-semibold'>Quick Team Updates</h3>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs'>
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold">Quick Team Updates</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
             {/* AFC Teams */}
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>achak7 (Akhil, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">achak7 (Akhil, 2-2)</div>
+              <div className="text-muted-foreground">
                 Clutch but declining. 2-0 in close games, but -5.3 pts/week drop. WR crashed in Week
                 4.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>lol jerry jones (Neil, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">lol jerry jones (Neil, 2-2)</div>
+              <div className="text-muted-foreground">
                 Explosive but wildly inconsistent. Scored 127 in Week 4 (4th), boom/bust profile.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>NielGetsCarried (Arpit & Yash, 1-3)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">NielGetsCarried (Arpit & Yash, 1-3)</div>
+              <div className="text-muted-foreground">
                 First win explosion! 140 pts (#1 in league), RB dominated (58.7). Breakthrough or
                 fluke?
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>benweinfeld (Ben, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">benweinfeld (Ben, 2-2)</div>
+              <div className="text-muted-foreground">
                 RB team. Solid RB production, but WR is a massive hole (-17.5 pts/week vs
                 opponents).
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>Nacua Matata (Adam, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">Nacua Matata (Adam, 2-2)</div>
+              <div className="text-muted-foreground">
                 Balanced, no disasters. Classic "solid all-around" roster. 6-8 win ceiling.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>scboom5 (Shivang, 3-1)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">scboom5 (Shivang, 3-1)</div>
+              <div className="text-muted-foreground">
                 Elite RBs (Hampton + Irving = 51 pts in Week 4). Championship RB duo if they stay
                 hot.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>Dr Patel Parikh MD MBA (Darshan/Kyle, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">Dr Patel Parikh MD MBA (Darshan/Kyle, 2-2)</div>
+              <div className="text-muted-foreground">
                 WR dominance (+26.6 pts/week), everything else average. WRs masking problems.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>Quonspiracy Theorists (Anant, 1-3)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">Quonspiracy Theorists (Anant, 1-3)</div>
+              <div className="text-muted-foreground">
                 Lost Week 4 by 2.7 pts. Solid roster, bad luck. One QB upgrade from competitive.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>vchak (Vinay, 1-3)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">vchak (Vinay, 1-3)</div>
+              <div className="text-muted-foreground">
                 Middling everywhere. No elite position, no disaster. Classic 5-9 team.
               </div>
             </div>
 
             {/* NFC Teams */}
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>cescott25 (Christian, 3-1)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">cescott25 (Christian, 3-1)</div>
+              <div className="text-muted-foreground">
                 Opportunistic wins with balanced scoring. 3-1 probably overperforming slightly.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>DJ Herbussy (Akhil C, 3-1)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">DJ Herbussy (Akhil C, 3-1)</div>
+              <div className="text-muted-foreground">
                 Was 3-0, lost Week 4. Depth issues exposed (Montgomery's 1.2 pts).
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>Mach 10 (Dhruv, 3-1)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">Mach 10 (Dhruv, 3-1)</div>
+              <div className="text-muted-foreground">
                 Big play dependent. When Pickens + Gibbs/Achane hit, wins. Needs consistent QB.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>The zoo (Rithik, 1-3)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">The zoo (Rithik, 1-3)</div>
+              <div className="text-muted-foreground">
                 First win finally! Balanced Week 4 (London, Etienne, PIT DEF all 20+). 4-6 more
                 possible.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>Saint Brown Does Mahomes (Aman, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">Saint Brown Does Mahomes (Aman, 2-2)</div>
+              <div className="text-muted-foreground">
                 Star-powered wins. When Mahomes + Cook + Amon-Ra hit, unstoppable. Otherwise,
                 average.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>Jaxson Dart-Njigba (Alex, 1-3)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">Jaxson Dart-Njigba (Alex, 1-3)</div>
+              <div className="text-muted-foreground">
                 Solid pieces (DK, Sutton, Kamara), can't execute. Better than 1-3. 5-7 win range.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>lukebowsh (Luke, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">lukebowsh (Luke, 2-2)</div>
+              <div className="text-muted-foreground">
                 Depleted roster surviving. Bo Nix breakout keeping him afloat. 4-6 wins total.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>C&G^2 (Josh, 2-2)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">C&G^2 (Josh, 2-2)</div>
+              <div className="text-muted-foreground">
                 Solid, not spectacular. Balanced roster, no dominance. Classic middle-pack. 6-8
                 wins.
               </div>
             </div>
-            <div className='border rounded p-3 space-y-1'>
-              <div className='font-semibold'>The Golden Age (Hunter, 3-1)</div>
-              <div className='text-muted-foreground'>
+            <div className="border rounded p-3 space-y-1">
+              <div className="font-semibold">The Golden Age (Hunter, 3-1)</div>
+              <div className="text-muted-foreground">
                 Was 3-0, fell to Joel. When Caleb doesn't deliver, offense stalls. Still good, but
                 vulnerable.
               </div>
@@ -1024,19 +1024,19 @@ export default function Week4Report2025() {
         </div>
 
         {/* League-Wide Scatter Analysis */}
-        <div className='space-y-4'>
-          <h3 className='text-xl font-semibold'>League-Wide Performance Patterns</h3>
-          <p className='text-sm text-muted-foreground'>
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold">League-Wide Performance Patterns</h3>
+          <p className="text-sm text-muted-foreground">
             The positional breakdowns reveal who has sustainable edges and who's barely holding on.
           </p>
 
           {/* RB Analysis */}
-          <div className='border rounded-lg p-4 space-y-3'>
-            <h4 className='font-semibold'>RB Position: Dominance vs Disaster</h4>
-            <div className='text-sm space-y-2'>
+          <div className="border rounded-lg p-4 space-y-3">
+            <h4 className="font-semibold">RB Position: Dominance vs Disaster</h4>
+            <div className="text-sm space-y-2">
               <div>
-                <div className='font-medium text-green-600'>✅ RB Dominance:</div>
-                <div className='ml-4 space-y-1 text-muted-foreground'>
+                <div className="font-medium text-green-600">✅ RB Dominance:</div>
+                <div className="ml-4 space-y-1 text-muted-foreground">
                   <div>
                     <strong>Joel (To Infinity and Bijan):</strong> 64.0 PPW, +25.8 advantage. The
                     biggest positional edge in the entire league. Three consecutive #1 RB finishes
@@ -1050,8 +1050,8 @@ export default function Week4Report2025() {
                 </div>
               </div>
               <div>
-                <div className='font-medium text-red-600'>❌ RB Disaster:</div>
-                <div className='ml-4 space-y-1 text-muted-foreground'>
+                <div className="font-medium text-red-600">❌ RB Disaster:</div>
+                <div className="ml-4 space-y-1 text-muted-foreground">
                   <div>
                     <strong>Ziyan (ziyanp22):</strong> 24.2 PPW, -14.0 disadvantage. Ranks: 20th →
                     23rd → 24th → 11th. Week 4's jump to 11th was best of season, but still just
@@ -1067,12 +1067,12 @@ export default function Week4Report2025() {
           </div>
 
           {/* WR Analysis */}
-          <div className='border rounded-lg p-4 space-y-3'>
-            <h4 className='font-semibold'>WR Position: Elite Production vs Collapse</h4>
-            <div className='text-sm space-y-2'>
+          <div className="border rounded-lg p-4 space-y-3">
+            <h4 className="font-semibold">WR Position: Elite Production vs Collapse</h4>
+            <div className="text-sm space-y-2">
               <div>
-                <div className='font-medium text-green-600'>✅ WR Dominance:</div>
-                <div className='ml-4 space-y-1 text-muted-foreground'>
+                <div className="font-medium text-green-600">✅ WR Dominance:</div>
+                <div className="ml-4 space-y-1 text-muted-foreground">
                   <div>
                     <strong>Ziyan (ziyanp22):</strong> 58.9 PPW, +24.6 advantage (72% edge). Ranks:
                     1st → 2nd → 2nd → 2nd. Never finished outside top 3 all season. This is
@@ -1085,8 +1085,8 @@ export default function Week4Report2025() {
                 </div>
               </div>
               <div>
-                <div className='font-medium text-red-600'>❌ WR Collapse:</div>
-                <div className='ml-4 space-y-1 text-muted-foreground'>
+                <div className="font-medium text-red-600">❌ WR Collapse:</div>
+                <div className="ml-4 space-y-1 text-muted-foreground">
                   <div>
                     <strong>Joel (To Infinity and Bijan):</strong> 17.6 PPW, -16.8 disadvantage.
                     Bottom 2 at WR for three straight weeks (22nd, 24th, 24th). Giving back
@@ -1106,14 +1106,14 @@ export default function Week4Report2025() {
           </div>
 
           {/* Overall Efficiency */}
-          <div className='border rounded-lg p-4 space-y-3'>
-            <h4 className='font-semibold'>Overall Team Efficiency</h4>
-            <div className='text-sm space-y-2'>
+          <div className="border rounded-lg p-4 space-y-3">
+            <h4 className="font-semibold">Overall Team Efficiency</h4>
+            <div className="text-sm space-y-2">
               <div>
-                <div className='font-medium text-green-600'>
+                <div className="font-medium text-green-600">
                   ✅ Elite (High Scoring + Weak Opponents):
                 </div>
-                <div className='ml-4 space-y-1 text-muted-foreground'>
+                <div className="ml-4 space-y-1 text-muted-foreground">
                   <div>
                     <strong>Ziyan:</strong> Scoring 127+ PPG while opponents average 109 PPG. This
                     18-point weekly advantage is massive. Statistical dominance across the board.
@@ -1125,10 +1125,10 @@ export default function Week4Report2025() {
                 </div>
               </div>
               <div>
-                <div className='font-medium text-red-600'>
+                <div className="font-medium text-red-600">
                   ❌ Disaster (Low Scoring + Strong Opponents):
                 </div>
-                <div className='ml-4 space-y-1 text-muted-foreground'>
+                <div className="ml-4 space-y-1 text-muted-foreground">
                   <div>
                     <strong>Vinny:</strong> 86 PPG (more than 2σ below average) while facing elite
                     opponent scoring. Creates a 30-point weekly deficit. Can't score AND faces elite
@@ -1147,30 +1147,30 @@ export default function Week4Report2025() {
 
       {/* Hall of Fame */}
       {data?.ok && data.data?.hallOfFame && data.data.hallOfFame.length > 0 && (
-        <div className='space-y-4'>
-          <h2 className='text-lg font-semibold'>Week 4 Hall of Fame</h2>
-          <div className='space-y-2'>
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Week 4 Hall of Fame</h2>
+          <div className="space-y-2">
             {data.data.hallOfFame.length > 0 ? (
               data.data.hallOfFame.map((entry: any, idx) => (
-                <div key={idx} className='p-3 bg-yellow-50 border border-yellow-200 rounded'>
-                  <div className='font-medium'>{entry.category}</div>
-                  <div className='text-sm'>{entry.description}</div>
-                  <div className='text-xs text-muted-foreground'>
+                <div key={idx} className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                  <div className="font-medium">{entry.category}</div>
+                  <div className="text-sm">{entry.description}</div>
+                  <div className="text-xs text-muted-foreground">
                     {entry.player} ({entry.team}) - {entry.value}
                   </div>
                 </div>
               ))
             ) : (
-              <div className='text-sm text-muted-foreground'>No hall of fame entries yet.</div>
+              <div className="text-sm text-muted-foreground">No hall of fame entries yet.</div>
             )}
           </div>
         </div>
       )}
 
       {/* Closing Note */}
-      <div className='space-y-4'>
-        <h2 className='text-lg font-semibold'>Closing Note</h2>
-        <div className='text-sm leading-relaxed'>{WEEK4_CONTENT.closing}</div>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Closing Note</h2>
+        <div className="text-sm leading-relaxed">{WEEK4_CONTENT.closing}</div>
       </div>
     </div>
   );

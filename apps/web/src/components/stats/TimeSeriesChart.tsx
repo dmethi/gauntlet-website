@@ -55,19 +55,19 @@ export function TimeSeriesChart({
   const yDomain = viewMode === 'raw' ? undefined : [1, viewMode === 'rank24' ? 24 : 12];
 
   return (
-    <ResponsiveContainer width='100%' height={height}>
+    <ResponsiveContainer width="100%" height={height}>
       <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-        <CartesianGrid strokeDasharray='3 3' className='stroke-border' />
+        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
         <XAxis
-          dataKey='week'
+          dataKey="week"
           label={{ value: 'Week', position: 'insideBottom', offset: -5 }}
-          className='text-xs'
+          className="text-xs"
         />
         <YAxis
           label={{ value: yAxisLabel, angle: -90, position: 'insideLeft' }}
           domain={yDomain}
           reversed={viewMode !== 'raw'}
-          className='text-xs'
+          className="text-xs"
         />
         <Tooltip
           contentStyle={{
@@ -82,16 +82,16 @@ export function TimeSeriesChart({
         {overlays?.median && (
           <ReferenceLine
             y={overlays.median}
-            stroke='hsl(var(--muted-foreground))'
-            strokeDasharray='5 5'
+            stroke="hsl(var(--muted-foreground))"
+            strokeDasharray="5 5"
             label={{ value: 'Median', position: 'right' }}
           />
         )}
         {overlays?.average && (
           <ReferenceLine
             y={overlays.average}
-            stroke='hsl(var(--muted-foreground))'
-            strokeDasharray='3 3'
+            stroke="hsl(var(--muted-foreground))"
+            strokeDasharray="3 3"
             label={{ value: 'Average', position: 'right' }}
           />
         )}
@@ -100,7 +100,7 @@ export function TimeSeriesChart({
         {series.map(s => (
           <Line
             key={s.key}
-            type='monotone'
+            type="monotone"
             dataKey={s.key}
             stroke={s.color}
             strokeWidth={2}

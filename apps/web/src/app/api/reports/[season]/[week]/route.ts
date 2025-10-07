@@ -19,7 +19,7 @@ async function calculatePowerRankings(week: number) {
         fetch(`https://api.sleeper.app/v1/league/${league.id}/rosters`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/users`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/matchups/${week}`).then(r =>
-          r.json()
+          r.json(),
         ), // Use dynamic week
       ]);
 
@@ -64,7 +64,7 @@ async function calculatePowerRankings(week: number) {
       const zscore = (arr: number[]) => {
         const mu = arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
         const sd = Math.sqrt(
-          arr.reduce((a, b) => a + Math.pow(b - mu, 2), 0) / Math.max(1, arr.length - 1) || 0
+          arr.reduce((a, b) => a + Math.pow(b - mu, 2), 0) / Math.max(1, arr.length - 1) || 0,
         );
         return arr.map(v => (sd === 0 ? 0 : (v - mu) / sd));
       };
@@ -139,7 +139,7 @@ async function calculateStandings(week: number) {
 
         // Calculate wins/losses for Week 1
         const opponentMatchup = matchups.find(
-          (m: any) => m.matchup_id === matchup?.matchup_id && m.roster_id !== roster.roster_id
+          (m: any) => m.matchup_id === matchup?.matchup_id && m.roster_id !== roster.roster_id,
         );
         const opponentPoints = opponentMatchup?.points || 0;
 
@@ -222,7 +222,7 @@ async function calculateUpcomingMatchups(nextWeek: number) {
         fetch(`https://api.sleeper.app/v1/league/${league.id}/rosters`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/users`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/matchups/${nextWeek}`).then(r =>
-          r.json()
+          r.json(),
         ),
       ]);
 
@@ -427,7 +427,7 @@ function getDefaultNarratives() {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { season: string; week: string } }
+  { params }: { params: { season: string; week: string } },
 ) {
   const week = parseInt(params.week, 10);
   const season = params.season;
@@ -602,7 +602,7 @@ export async function GET(
         try {
           // Fetch matchups for the specified week
           const matchupsResponse = await fetch(
-            `https://api.sleeper.app/v1/league/${l.id}/matchups/${week}`
+            `https://api.sleeper.app/v1/league/${l.id}/matchups/${week}`,
           );
           const matchupsData = matchupsResponse.ok ? await matchupsResponse.json() : [];
 
@@ -778,7 +778,7 @@ export async function GET(
             standingsByDivision: {},
           };
         }
-      })
+      }),
     );
 
     // Calculate power rankings for this week
@@ -792,14 +792,14 @@ export async function GET(
         const nextWeek = week + 1;
         if (nextWeek <= 18) {
           const nextMatchupsResponse = await fetch(
-            `https://api.sleeper.app/v1/league/${league.id}/matchups/${nextWeek}`
+            `https://api.sleeper.app/v1/league/${league.id}/matchups/${nextWeek}`,
           );
           const nextMatchupsData = nextMatchupsResponse.ok ? await nextMatchupsResponse.json() : [];
 
           // Get team names
           const leagueData = perLeague.find(l => l.leagueId === league.id);
           const teamMap = new Map(
-            leagueData?.teams.map((t: any) => [t.rosterId, t.teamName]) || []
+            leagueData?.teams.map((t: any) => [t.rosterId, t.teamName]) || [],
           );
 
           // Group by matchup_id and create pairs
@@ -841,7 +841,7 @@ export async function GET(
             for (let weekNum = 1; weekNum <= week; weekNum++) {
               try {
                 const weekMatchupsResponse = await fetch(
-                  `https://api.sleeper.app/v1/league/${l.leagueId}/matchups/${weekNum}`
+                  `https://api.sleeper.app/v1/league/${l.leagueId}/matchups/${weekNum}`,
                 );
                 const weekMatchupsData = weekMatchupsResponse.ok
                   ? await weekMatchupsResponse.json()
@@ -849,12 +849,12 @@ export async function GET(
 
                 // Find this team's matchup for this week
                 const teamMatchupData = weekMatchupsData.find(
-                  (m: any) => m.roster_id === team.rosterId
+                  (m: any) => m.roster_id === team.rosterId,
                 );
                 if (teamMatchupData && teamMatchupData.matchup_id) {
                   const opponentData = weekMatchupsData.find(
                     (m: any) =>
-                      m.matchup_id === teamMatchupData.matchup_id && m.roster_id !== team.rosterId
+                      m.matchup_id === teamMatchupData.matchup_id && m.roster_id !== team.rosterId,
                   );
 
                   if (opponentData) {
@@ -873,7 +873,7 @@ export async function GET(
               } catch (error) {
                 console.warn(
                   `Error fetching week ${weekNum} data for team ${team.rosterId}:`,
-                  error
+                  error,
                 );
               }
             }
@@ -884,7 +884,7 @@ export async function GET(
               losses,
               points: Math.round(totalPoints * 100) / 100,
             };
-          })
+          }),
         );
 
         // Sort teams by wins, then by total points
@@ -906,7 +906,7 @@ export async function GET(
           leagueName: l.leagueName,
           divisions,
         };
-      })
+      }),
     );
 
     // Calculate real hall of fame stats from this week's data
@@ -955,7 +955,7 @@ export async function GET(
     if (allTeamScores.length > 0) {
       // Highest score this week
       const highestScore = allTeamScores.reduce((max, current) =>
-        current.score > max.score ? current : max
+        current.score > max.score ? current : max,
       );
 
       if (highestScore.score > 0) {
@@ -973,7 +973,7 @@ export async function GET(
       const validScores = allTeamScores.filter(team => team.score > 0);
       if (validScores.length > 0) {
         const lowestScore = validScores.reduce((min, current) =>
-          current.score < min.score ? current : min
+          current.score < min.score ? current : min,
         );
 
         hallOfFame.push({
@@ -989,7 +989,7 @@ export async function GET(
       // Biggest blowout this week
       if (allMatchupMargins.length > 0) {
         const biggestBlowout = allMatchupMargins.reduce((max, current) =>
-          current.margin > max.margin ? current : max
+          current.margin > max.margin ? current : max,
         );
 
         if (biggestBlowout.margin > 0) {
@@ -1029,7 +1029,7 @@ export async function GET(
     console.error('Error building report data:', error);
     return NextResponse.json(
       { ok: false, error: error?.message || 'Server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

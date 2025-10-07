@@ -83,8 +83,8 @@ const POSITION_COLORS = {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className='p-3 rounded-lg border bg-background text-foreground border-border'>
-        <p className='font-semibold mb-2'>Rank #{label}</p>
+      <div className="p-3 rounded-lg border bg-background text-foreground border-border">
+        <p className="font-semibold mb-2">Rank #{label}</p>
         {payload.map((entry: any, index: number) => {
           const position = entry.dataKey.split('_')[0];
           const league = entry.dataKey.includes('AFC') ? 'AFC' : 'NFC';
@@ -94,11 +94,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           if (entry.value === null) return null;
 
           return (
-            <div key={index} className='flex items-center gap-2 mb-1'>
-              <div className='w-3 h-3 rounded-sm' style={{ backgroundColor: entry.color }} />
-              <span className='text-sm'>
-                {position} {league}: <strong className='ml-1'>${entry.value}</strong>
-                {playerName && <div className='text-xs text-foreground/60'>{playerName}</div>}
+            <div key={index} className="flex items-center gap-2 mb-1">
+              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }} />
+              <span className="text-sm">
+                {position} {league}: <strong className="ml-1">${entry.value}</strong>
+                {playerName && <div className="text-xs text-foreground/60">{playerName}</div>}
               </span>
             </div>
           );
@@ -116,7 +116,7 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
   height = 500,
 }) => {
   const [visiblePositions, setVisiblePositions] = useState<Set<string>>(
-    new Set(['QB', 'RB', 'WR', 'TE', 'DEF'])
+    new Set(['QB', 'RB', 'WR', 'TE', 'DEF']),
   );
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
 
@@ -168,11 +168,11 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
   };
 
   return (
-    <div className='space-y-4'>
+    <div className="space-y-4">
       {/* Position Controls */}
-      <div className='flex flex-wrap gap-2'>
-        <div className='flex items-center gap-2'>
-          <span className='text-sm font-medium text-muted-foreground'>Show positions:</span>
+      <div className="flex flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-muted-foreground">Show positions:</span>
           {['QB', 'RB', 'WR', 'TE', 'DEF'].map(position => (
             <Button
               key={position}
@@ -183,14 +183,14 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
                     ? 'secondary'
                     : 'outline'
               }
-              size='sm'
+              size="sm"
               onClick={() =>
                 selectedPosition ? togglePosition(position) : toggleVisibility(position)
               }
-              className='text-xs flex items-center gap-1.5'
+              className="text-xs flex items-center gap-1.5"
             >
               <div
-                className='w-3 h-3 rounded-full'
+                className="w-3 h-3 rounded-full"
                 style={{
                   backgroundColor: POSITION_COLORS[position as keyof typeof POSITION_COLORS],
                 }}
@@ -201,10 +201,10 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
         </div>
         {selectedPosition && (
           <Button
-            variant='ghost'
-            size='sm'
+            variant="ghost"
+            size="sm"
             onClick={() => setSelectedPosition(null)}
-            className='text-xs'
+            className="text-xs"
           >
             Show All
           </Button>
@@ -212,14 +212,14 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
       </div>
 
       {/* Static Legend for Line Styles */}
-      <div className='flex items-center justify-center gap-6 py-2 text-sm text-muted-foreground'>
-        <div className='flex items-center gap-2'>
-          <div className='w-8 h-0.5 bg-muted-foreground'></div>
+      <div className="flex items-center justify-center gap-6 py-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-0.5 bg-muted-foreground"></div>
           <span>AFC (Solid)</span>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           <div
-            className='w-8 h-0.5'
+            className="w-8 h-0.5"
             style={{
               background: `repeating-linear-gradient(
                 to right,
@@ -235,8 +235,8 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
       </div>
 
       {/* Chart */}
-      <div className='w-full' style={{ height }}>
-        <ResponsiveContainer width='100%' height='100%'>
+      <div className="w-full" style={{ height }}>
+        <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={chartData}
             margin={{
@@ -246,9 +246,9 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
               bottom: 60,
             }}
           >
-            <CartesianGrid strokeDasharray='3 3' stroke='#6b7280' opacity={0.4} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#6b7280" opacity={0.4} />
             <XAxis
-              dataKey='rank'
+              dataKey="rank"
               axisLine={{ stroke: '#6b7280' }}
               tickLine={{ stroke: '#6b7280' }}
               tick={{ fill: '#9ca3af', fontSize: 12 }}
@@ -278,7 +278,7 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
               position => (
                 <React.Fragment key={position}>
                   <Line
-                    type='monotone'
+                    type="monotone"
                     dataKey={`${position}_AFC`}
                     stroke={POSITION_COLORS[position as keyof typeof POSITION_COLORS]}
                     strokeWidth={selectedPosition === position ? 3 : 2}
@@ -289,10 +289,10 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
                     }}
                     connectNulls={false}
                     name={`${position} AFC`}
-                    strokeDasharray='0'
+                    strokeDasharray="0"
                   />
                   <Line
-                    type='monotone'
+                    type="monotone"
                     dataKey={`${position}_NFC`}
                     stroke={POSITION_COLORS[position as keyof typeof POSITION_COLORS]}
                     strokeWidth={selectedPosition === position ? 3 : 2}
@@ -303,17 +303,17 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
                     }}
                     connectNulls={false}
                     name={`${position} NFC`}
-                    strokeDasharray='5 5'
+                    strokeDasharray="5 5"
                     opacity={0.8}
                   />
                 </React.Fragment>
-              )
+              ),
             )}
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      <div className='text-xs text-muted-foreground'>
+      <div className="text-xs text-muted-foreground">
         <p>
           <strong>How to read:</strong> Each line shows how much was spent on players at each
           positional rank (1st QB, 2nd QB, etc.). Steeper drops indicate more "stars and scrubs"

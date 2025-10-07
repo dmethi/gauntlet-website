@@ -48,7 +48,7 @@ interface ScatterAnalysisProps {
 
 export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysisProps) {
   return (
-    <div className='space-y-8'>
+    <div className="space-y-8">
       {/* Overall Team Efficiency */}
       <Card>
         <CardHeader>
@@ -59,8 +59,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='h-96'>
-            <ResponsiveContainer width='100%' height='100%'>
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
               <ScatterChart
                 data={(() => {
                   const data = allTeamEntries
@@ -91,8 +91,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                 margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
               >
                 <XAxis
-                  type='number'
-                  dataKey='pointsFor'
+                  type="number"
+                  dataKey="pointsFor"
                   domain={['dataMin - 10', 'dataMax + 10']}
                   label={{
                     value: 'Skill',
@@ -104,8 +104,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                   tickFormatter={value => Number(value).toFixed(0)}
                 />
                 <YAxis
-                  type='number'
-                  dataKey='pointsAgainst'
+                  type="number"
+                  dataKey="pointsAgainst"
                   domain={['dataMin - 10', 'dataMax + 10']}
                   reversed={true}
                   label={{
@@ -128,10 +128,10 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                         const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
                         return gamesPlayed > 0 ? pointsFor / gamesPlayed : 0;
                       })
-                      .filter(x => x > 0)
+                      .filter(x => x > 0),
                   )}
-                  stroke='rgba(156, 163, 175, 0.8)'
-                  strokeDasharray='5 5'
+                  stroke="rgba(156, 163, 175, 0.8)"
+                  strokeDasharray="5 5"
                   strokeWidth={2}
                 />
                 <ReferenceLine
@@ -144,10 +144,10 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                         const gamesPlayed = team.teamScores.filter(d => d.value > 0).length;
                         return gamesPlayed > 0 ? pointsAgainst / gamesPlayed : 0;
                       })
-                      .filter(x => x > 0)
+                      .filter(x => x > 0),
                   )}
-                  stroke='rgba(156, 163, 175, 0.8)'
-                  strokeDasharray='5 5'
+                  stroke="rgba(156, 163, 175, 0.8)"
+                  strokeDasharray="5 5"
                   strokeWidth={2}
                 />
                 <Tooltip
@@ -156,7 +156,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                       const data = payload[0].payload;
                       return (
                         <div
-                          className='p-4 rounded-lg shadow-xl border min-w-[240px]'
+                          className="p-4 rounded-lg shadow-xl border min-w-[240px]"
                           style={{
                             backgroundColor: colors.core.charcoalSteel,
                             borderColor: colors.core.regalGold,
@@ -164,45 +164,45 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                           }}
                         >
                           <div
-                            className='font-bold text-lg mb-1'
+                            className="font-bold text-lg mb-1"
                             style={{ color: colors.core.regalGold }}
                           >
                             {data.teamName}
                           </div>
-                          <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+                          <div className="text-xs text-gray-300 mb-3">{data.leagueName}</div>
 
-                          <div className='space-y-3'>
+                          <div className="space-y-3">
                             <div>
-                              <div className='flex items-center gap-2 mb-1'>
+                              <div className="flex items-center gap-2 mb-1">
                                 <div
-                                  className='w-3 h-3 rounded-full'
+                                  className="w-3 h-3 rounded-full"
                                   style={{ backgroundColor: colors.rdylgn[8] }}
                                 ></div>
-                                <span className='font-medium'>Points Scored</span>
+                                <span className="font-medium">Points Scored</span>
                               </div>
-                              <div className='ml-5'>
-                                <div className='font-bold text-lg'>
+                              <div className="ml-5">
+                                <div className="font-bold text-lg">
                                   {data.pointsFor.toFixed(1)}/game
                                 </div>
-                                <div className='text-xs text-gray-400'>
+                                <div className="text-xs text-gray-400">
                                   {data.totalFor.toFixed(1)} season total
                                 </div>
                               </div>
                             </div>
 
                             <div>
-                              <div className='flex items-center gap-2 mb-1'>
+                              <div className="flex items-center gap-2 mb-1">
                                 <div
-                                  className='w-3 h-3 rounded-full'
+                                  className="w-3 h-3 rounded-full"
                                   style={{ backgroundColor: colors.rdylgn[2] }}
                                 ></div>
-                                <span className='font-medium'>Points Allowed</span>
+                                <span className="font-medium">Points Allowed</span>
                               </div>
-                              <div className='ml-5'>
-                                <div className='font-bold text-lg'>
+                              <div className="ml-5">
+                                <div className="font-bold text-lg">
                                   {data.pointsAgainst.toFixed(1)}/game
                                 </div>
-                                <div className='text-xs text-gray-400'>
+                                <div className="text-xs text-gray-400">
                                   {data.totalAgainst.toFixed(1)} season total
                                 </div>
                               </div>
@@ -215,7 +215,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                   }}
                 />
                 <Scatter
-                  dataKey='pointsFor'
+                  dataKey="pointsFor"
                   shape={(props: {
                     cx?: number;
                     cy?: number;
@@ -235,7 +235,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                             cx={cx}
                             cy={cy}
                             r={14}
-                            fill='white'
+                            fill="white"
                             stroke={colors.core.regalGold}
                             strokeWidth={3}
                           />
@@ -245,7 +245,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                             width={24}
                             height={24}
                             href={avatarUrl}
-                            clipPath='circle(12px at 12px 12px)'
+                            clipPath="circle(12px at 12px 12px)"
                             aria-label={`${payload.teamName} avatar`}
                           />
                         </g>
@@ -266,16 +266,16 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                             cy={cy}
                             r={12}
                             fill={colors.core.regalGold}
-                            stroke='rgba(0,0,0,0.3)'
+                            stroke="rgba(0,0,0,0.3)"
                             strokeWidth={2}
                           />
                           <text
                             x={cx}
                             y={cy + 1}
-                            textAnchor='middle'
-                            fontSize='9'
-                            fontWeight='bold'
-                            fill='white'
+                            textAnchor="middle"
+                            fontSize="9"
+                            fontWeight="bold"
+                            fill="white"
                           >
                             {initials}
                           </text>
@@ -301,8 +301,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='h-80'>
-              <ResponsiveContainer width='100%' height='100%'>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart
                   data={(() => {
                     const posData = positionsMap.get(position);
@@ -328,7 +328,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                             // Find who this team played against that week
                             const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
                             const opponentScore = teamData?.opponentScores.find(
-                              (d: TeamScore) => d.week === scoreData.week
+                              (d: TeamScore) => d.week === scoreData.week,
                             );
 
                             if (opponentScore && opponentScore.value > 0) {
@@ -336,7 +336,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                               for (const [oppKey, oppTeam] of allTeamEntries) {
                                 if (oppKey === teamKey) continue;
                                 const oppTeamScore = oppTeam.teamScores.find(
-                                  (d: TeamScore) => d.week === scoreData.week
+                                  (d: TeamScore) => d.week === scoreData.week,
                                 );
                                 if (
                                   oppTeamScore &&
@@ -347,7 +347,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                                   const oppPosScore =
                                     oppPosData?.scores.find(
                                       (d: { week: number; value: number }) =>
-                                        d.week === scoreData.week
+                                        d.week === scoreData.week,
                                     )?.value || 0;
                                   posPointsAgainst += oppPosScore;
                                   break;
@@ -376,8 +376,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                   margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
                 >
                   <XAxis
-                    type='number'
-                    dataKey='pointsFor'
+                    type="number"
+                    dataKey="pointsFor"
                     domain={['dataMin - 2', 'dataMax + 2']}
                     label={{
                       value: 'Skill',
@@ -389,8 +389,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                     tickFormatter={value => Number(value).toFixed(0)}
                   />
                   <YAxis
-                    type='number'
-                    dataKey='pointsAgainst'
+                    type="number"
+                    dataKey="pointsAgainst"
                     domain={['dataMin - 2', 'dataMax + 2']}
                     reversed={true}
                     label={{
@@ -421,8 +421,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                         .filter(x => x !== 0);
                       return median(values);
                     })()}
-                    stroke='#6b7280'
-                    strokeDasharray='8 4'
+                    stroke="#6b7280"
+                    strokeDasharray="8 4"
                     strokeWidth={2}
                   />
                   <ReferenceLine
@@ -442,14 +442,14 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
 
                               const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
                               const opponentScore = teamData?.opponentScores.find(
-                                (d: TeamScore) => d.week === scoreData.week
+                                (d: TeamScore) => d.week === scoreData.week,
                               );
 
                               if (opponentScore && opponentScore.value > 0) {
                                 for (const [oppKey, oppTeam] of allTeamEntries) {
                                   if (oppKey === teamKey) continue;
                                   const oppTeamScore = oppTeam.teamScores.find(
-                                    (d: TeamScore) => d.week === scoreData.week
+                                    (d: TeamScore) => d.week === scoreData.week,
                                   );
                                   if (
                                     oppTeamScore &&
@@ -459,7 +459,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                                     const oppPosScore =
                                       oppPosData?.scores.find(
                                         (d: { week: number; value: number }) =>
-                                          d.week === scoreData.week
+                                          d.week === scoreData.week,
                                       )?.value || 0;
                                     posPointsAgainst += oppPosScore;
                                     break;
@@ -477,8 +477,8 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
 
                       return median(chartData);
                     })()}
-                    stroke='#6b7280'
-                    strokeDasharray='8 4'
+                    stroke="#6b7280"
+                    strokeDasharray="8 4"
                     strokeWidth={2}
                   />
                   <Tooltip
@@ -487,7 +487,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                         const data = payload[0].payload;
                         return (
                           <div
-                            className='p-4 rounded-lg shadow-xl border min-w-[280px]'
+                            className="p-4 rounded-lg shadow-xl border min-w-[280px]"
                             style={{
                               backgroundColor: colors.core.charcoalSteel,
                               borderColor: colors.core.regalGold,
@@ -495,45 +495,45 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                             }}
                           >
                             <div
-                              className='font-bold text-lg mb-1'
+                              className="font-bold text-lg mb-1"
                               style={{ color: colors.core.regalGold }}
                             >
                               {data.teamName}
                             </div>
-                            <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+                            <div className="text-xs text-gray-300 mb-3">{data.leagueName}</div>
 
-                            <div className='space-y-3'>
+                            <div className="space-y-3">
                               <div>
-                                <div className='flex items-center gap-2 mb-1'>
+                                <div className="flex items-center gap-2 mb-1">
                                   <div
-                                    className='w-3 h-3 rounded-full'
+                                    className="w-3 h-3 rounded-full"
                                     style={{ backgroundColor: colors.rdylgn[8] }}
                                   ></div>
-                                  <span className='font-medium'>{position} Scored</span>
+                                  <span className="font-medium">{position} Scored</span>
                                 </div>
-                                <div className='ml-5'>
-                                  <div className='font-bold text-lg'>
+                                <div className="ml-5">
+                                  <div className="font-bold text-lg">
                                     {data.pointsFor.toFixed(1)}/game
                                   </div>
-                                  <div className='text-xs text-gray-400'>
+                                  <div className="text-xs text-gray-400">
                                     {data.totalFor.toFixed(1)} season total
                                   </div>
                                 </div>
                               </div>
 
                               <div>
-                                <div className='flex items-center gap-2 mb-1'>
+                                <div className="flex items-center gap-2 mb-1">
                                   <div
-                                    className='w-3 h-3 rounded-full'
+                                    className="w-3 h-3 rounded-full"
                                     style={{ backgroundColor: colors.rdylgn[2] }}
                                   ></div>
-                                  <span className='font-medium'>{position} Allowed</span>
+                                  <span className="font-medium">{position} Allowed</span>
                                 </div>
-                                <div className='ml-5'>
-                                  <div className='font-bold text-lg'>
+                                <div className="ml-5">
+                                  <div className="font-bold text-lg">
                                     {data.pointsAgainst.toFixed(1)}/game
                                   </div>
-                                  <div className='text-xs text-gray-400'>
+                                  <div className="text-xs text-gray-400">
                                     {data.totalAgainst.toFixed(1)} season total
                                   </div>
                                 </div>
@@ -546,7 +546,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                     }}
                   />
                   <Scatter
-                    dataKey='pointsFor'
+                    dataKey="pointsFor"
                     shape={(props: {
                       cx?: number;
                       cy?: number;
@@ -566,7 +566,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                               cx={cx}
                               cy={cy}
                               r={12}
-                              fill='white'
+                              fill="white"
                               stroke={colors.core.regalGold}
                               strokeWidth={2}
                             />
@@ -576,7 +576,7 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                               width={20}
                               height={20}
                               href={avatarUrl}
-                              clipPath='circle(10px at 10px 10px)'
+                              clipPath="circle(10px at 10px 10px)"
                               aria-label={`${payload.teamName} avatar`}
                             />
                           </g>
@@ -597,16 +597,16 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
                               cy={cy}
                               r={10}
                               fill={colors.core.regalGold}
-                              stroke='rgba(0,0,0,0.3)'
+                              stroke="rgba(0,0,0,0.3)"
                               strokeWidth={2}
                             />
                             <text
                               x={cx}
                               y={cy + 1}
-                              textAnchor='middle'
-                              fontSize='8'
-                              fontWeight='bold'
-                              fill='white'
+                              textAnchor="middle"
+                              fontSize="8"
+                              fontWeight="bold"
+                              fill="white"
                             >
                               {initials}
                             </text>

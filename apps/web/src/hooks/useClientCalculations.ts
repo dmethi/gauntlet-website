@@ -35,7 +35,7 @@ async function fetchSleeperData<T>(endpoint: string): Promise<T> {
  */
 async function getAllMatchups(
   leagueId: string,
-  weeks: number
+  weeks: number,
 ): Promise<Map<number, SleeperMatchup[]>> {
   const matchupsByWeek = new Map<number, SleeperMatchup[]>();
 
@@ -44,7 +44,7 @@ async function getAllMatchups(
     week =>
       fetchSleeperData<SleeperMatchup[]>(`league/${leagueId}/matchups/${week}`)
         .then(matchups => ({ week, matchups }))
-        .catch(() => ({ week, matchups: [] })) // Handle weeks that haven't happened yet
+        .catch(() => ({ week, matchups: [] })), // Handle weeks that haven't happened yet
   );
 
   const results = await Promise.all(promises);
@@ -105,7 +105,7 @@ export function useClientTeamStats(leagueId?: string) {
  */
 export function useClientPositionalScoring(
   leagueId: string | undefined,
-  rosterId: number | undefined
+  rosterId: number | undefined,
 ) {
   return useQuery({
     queryKey: ['client-positional-scoring', leagueId, rosterId],

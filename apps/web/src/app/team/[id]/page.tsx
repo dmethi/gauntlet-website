@@ -36,31 +36,31 @@ const TeamPageLoader = () => (
     speed={2}
     width={1200}
     height={1000}
-    viewBox='0 0 1200 1000'
-    backgroundColor='hsl(var(--muted))'
-    foregroundColor='hsl(var(--muted-foreground))'
+    viewBox="0 0 1200 1000"
+    backgroundColor="hsl(var(--muted))"
+    foregroundColor="hsl(var(--muted-foreground))"
   >
     {/* Title and Subtitle */}
-    <rect x='16' y='32' rx='3' ry='3' width='400' height='36' />
-    <rect x='16' y='72' rx='3' ry='3' width='200' height='20' />
+    <rect x="16" y="32" rx="3" ry="3" width="400" height="36" />
+    <rect x="16" y="72" rx="3" ry="3" width="200" height="20" />
 
     {/* Stat Cards */}
-    <rect x='16' y='128' rx='8' ry='8' width='280' height='100' />
-    <rect x='312' y='128' rx='8' ry='8' width='280' height='100' />
-    <rect x='608' y='128' rx='8' ry='8' width='280' height='100' />
-    <rect x='904' y='128' rx='8' ry='8' width='280' height='100' />
+    <rect x="16" y="128" rx="8" ry="8" width="280" height="100" />
+    <rect x="312" y="128" rx="8" ry="8" width="280" height="100" />
+    <rect x="608" y="128" rx="8" ry="8" width="280" height="100" />
+    <rect x="904" y="128" rx="8" ry="8" width="280" height="100" />
 
     {/* Weekly Performance Chart */}
-    <rect x='16' y='260' rx='3' ry='3' width='300' height='28' />
-    <rect x='16' y='300' rx='8' ry='8' width='1168' height='200' />
+    <rect x="16" y="260" rx="3" ry="3" width="300" height="28" />
+    <rect x="16" y="300" rx="8" ry="8" width="1168" height="200" />
 
     {/* Expected vs Actual Chart */}
-    <rect x='16' y='540' rx='3' ry='3' width='400' height='28' />
-    <rect x='16' y='580' rx='8' ry='8' width='1168' height='200' />
+    <rect x="16" y="540" rx="3" ry="3" width="400" height="28" />
+    <rect x="16" y="580" rx="8" ry="8" width="1168" height="200" />
 
     {/* Matchups Table */}
-    <rect x='16' y='820' rx='3' ry='3' width='250' height='28' />
-    <rect x='16' y='860' rx='8' ry='8' width='1168' height='120' />
+    <rect x="16" y="820" rx="3" ry="3" width="250" height="28" />
+    <rect x="16" y="860" rx="8" ry="8" width="1168" height="120" />
   </ContentLoader>
 );
 
@@ -78,7 +78,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className='container mx-auto px-4 py-8'>
+      <div className="container mx-auto px-4 py-8">
         <TeamPageLoader />
       </div>
     );
@@ -86,16 +86,16 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
   if (error) {
     return (
-      <Container className='py-8'>
-        <PageHeader title='Team not found' subtitle='Failed to load team data' />
+      <Container className="py-8">
+        <PageHeader title="Team not found" subtitle="Failed to load team data" />
       </Container>
     );
   }
 
   if (!team) {
     return (
-      <Container className='py-8'>
-        <PageHeader title='Team not found' subtitle='No team data available' />
+      <Container className="py-8">
+        <PageHeader title="Team not found" subtitle="No team data available" />
       </Container>
     );
   }
@@ -119,20 +119,20 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   const averagePoints = totalPoints / ((team.matchups ?? []).length || 1);
   // Compute regular-season record using dynamic playoff start if available
   const regularSeasonWeeks = (team.weeklyMetrics ?? []).filter(
-    wm => wm.week >= 1 && wm.week < playoffStart
+    wm => wm.week >= 1 && wm.week < playoffStart,
   );
   const totalExpectedWins = regularSeasonWeeks.reduce(
     (sum, metric) => sum + metric.expectedWins,
-    0
+    0,
   );
   const totalLuckRating = regularSeasonWeeks.reduce((sum, metric) => sum + metric.luckRating, 0);
   const wins = regularSeasonWeeks.reduce(
     (count, wm) => count + (wm.totalPoints > wm.opponentPoints ? 1 : 0),
-    0
+    0,
   );
   const losses = regularSeasonWeeks.reduce(
     (count, wm) => count + (wm.totalPoints <= wm.opponentPoints ? 1 : 0),
-    0
+    0,
   );
 
   const getTeamName = () =>
@@ -197,16 +197,16 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   const initials = getInitials(name);
 
   return (
-    <Container className='py-8'>
-      <div className='flex items-start justify-between gap-4 mb-6'>
-        <div className='flex items-center gap-4'>
-          <div className='h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold flex-shrink-0'>
+    <Container className="py-8">
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold flex-shrink-0">
             {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatarUrl}
                 alt={`${name} avatar`}
-                className='h-full w-full aspect-square object-cover rounded-full'
+                className="h-full w-full aspect-square object-cover rounded-full"
               />
             ) : (
               <span>{initials}</span>
@@ -218,46 +218,46 @@ export default function TeamPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
-        <div className='rounded-md border border-border bg-card p-4'>
-          <h3 className='text-sm font-medium text-muted-foreground'>Total Points</h3>
-          <p className='text-3xl font-bold'>{totalPoints.toFixed(2)}</p>
-          <p className='text-xs text-muted-foreground'>Avg: {averagePoints.toFixed(2)}</p>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-md border border-border bg-card p-4">
+          <h3 className="text-sm font-medium text-muted-foreground">Total Points</h3>
+          <p className="text-3xl font-bold">{totalPoints.toFixed(2)}</p>
+          <p className="text-xs text-muted-foreground">Avg: {averagePoints.toFixed(2)}</p>
         </div>
-        <div className='rounded-md border border-border bg-card p-4'>
-          <h3 className='text-sm font-medium text-muted-foreground'>Expected Wins</h3>
-          <p className='text-3xl font-bold'>{totalExpectedWins.toFixed(1)}</p>
+        <div className="rounded-md border border-border bg-card p-4">
+          <h3 className="text-sm font-medium text-muted-foreground">Expected Wins</h3>
+          <p className="text-3xl font-bold">{totalExpectedWins.toFixed(1)}</p>
         </div>
-        <div className='rounded-md border border-border bg-card p-4'>
-          <h3 className='text-sm font-medium text-muted-foreground'>Luck Rating</h3>
-          <p className='text-3xl font-bold'>{totalLuckRating.toFixed(2)}</p>
+        <div className="rounded-md border border-border bg-card p-4">
+          <h3 className="text-sm font-medium text-muted-foreground">Luck Rating</h3>
+          <p className="text-3xl font-bold">{totalLuckRating.toFixed(2)}</p>
         </div>
-        <div className='rounded-md border border-border bg-card p-4'>
-          <h3 className='text-sm font-medium text-muted-foreground'>Record</h3>
-          <p className='text-3xl font-bold'>
+        <div className="rounded-md border border-border bg-card p-4">
+          <h3 className="text-sm font-medium text-muted-foreground">Record</h3>
+          <p className="text-3xl font-bold">
             {wins}-{losses}
           </p>
         </div>
       </div>
 
-      <div className='mt-8'>
-        <h2 className='mb-4 text-2xl font-bold'>Weekly Performance</h2>
+      <div className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold">Weekly Performance</h2>
         <TeamPerformanceChart weeklyData={weeklyData} teamId={team.id} />
       </div>
 
-      <div className='mt-8'>
-        <h2 className='mb-4 text-2xl font-bold'>Expected vs Actual Performance</h2>
+      <div className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold">Expected vs Actual Performance</h2>
         <TeamExpectedPerformanceChart weeklyData={weeklyData} teamId={team.id} />
       </div>
 
       {/* Positional Scoring (Regular Season) */}
-      <div className='mt-8'>
-        <h2 className='mb-4 text-2xl font-bold'>Positional Scoring</h2>
+      <div className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold">Positional Scoring</h2>
         {seasonal?.ok ? (
           (() => {
             const rows = seasonal.data.rosterWeekAggregates
               .filter(
-                r => r.rosterId === Number(team.id) && r.week >= 1 && r.week < Number(playoffStart)
+                r => r.rosterId === Number(team.id) && r.week >= 1 && r.week < Number(playoffStart),
               )
               .reduce<Record<string, { team: number; opponent: number }>>((acc, r) => {
                 const pos = (r.positionalPoints as Record<string, number>) || {};
@@ -278,7 +278,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
             // League averages per position (average per roster across regular season)
             const rosterIds = Array.from(
-              new Set<number>(seasonal.data.rosterWeekAggregates.map(r => r.rosterId)).values()
+              new Set<number>(seasonal.data.rosterWeekAggregates.map(r => r.rosterId)).values(),
             );
             const perRosterTotals: Record<number, Record<string, number>> = {};
             for (const rid of rosterIds) perRosterTotals[rid] = {};
@@ -295,8 +295,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             const leagueAverages: Record<string, number> = {};
             const allPositions = Array.from(
               new Set<string>(
-                rosterIds.flatMap(rid => Object.keys(perRosterTotals[rid] || {}))
-              ).values()
+                rosterIds.flatMap(rid => Object.keys(perRosterTotals[rid] || {})),
+              ).values(),
             );
             for (const p of allPositions) {
               let sum = 0;
@@ -341,7 +341,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               const compareTotals: Record<string, number> = {};
               seasonal.data.rosterWeekAggregates
                 .filter(
-                  r => r.rosterId === compareTeamId && r.week >= 1 && r.week < Number(playoffStart)
+                  r => r.rosterId === compareTeamId && r.week >= 1 && r.week < Number(playoffStart),
                 )
                 .forEach(r => {
                   const pos = (r.positionalPoints as Record<string, number>) || {};
@@ -371,18 +371,18 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
             return (
               <>
-                <div className='flex items-center justify-between mb-2'>
+                <div className="flex items-center justify-between mb-2">
                   {league ? (
-                    <label className='text-sm text-muted-foreground'>
+                    <label className="text-sm text-muted-foreground">
                       Compare:&nbsp;
                       <select
-                        className='border border-border rounded px-2 py-1 bg-background'
+                        className="border border-border rounded px-2 py-1 bg-background"
                         value={compareTeamId ?? ''}
                         onChange={e =>
                           setCompareTeamId(e.target.value ? Number(e.target.value) : undefined)
                         }
                       >
-                        <option value=''>None</option>
+                        <option value="">None</option>
                         {league.rosters
                           .filter(r => r.id !== team.id)
                           .map(r => {
@@ -402,8 +402,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   ) : null}
                 </div>
                 <TeamPositionalBarChart data={positionalRows} teamId={team.id} />
-                <div className='mt-8'>
-                  <h3 className='mb-4 text-xl font-semibold'>Normalized Positional Strength</h3>
+                <div className="mt-8">
+                  <h3 className="mb-4 text-xl font-semibold">Normalized Positional Strength</h3>
                   <TeamPositionalRadarChart
                     data={radarData}
                     teamName={name}
@@ -415,27 +415,27 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             );
           })()
         ) : (
-          <div className='rounded-md border border-border bg-card p-4 text-sm text-muted-foreground'>
+          <div className="rounded-md border border-border bg-card p-4 text-sm text-muted-foreground">
             Loading positional aggregates…
           </div>
         )}
       </div>
 
       {/* Roster: starters and bench */}
-      <div className='mt-8'>
-        <h2 className='mb-4 text-2xl font-bold'>Roster</h2>
+      <div className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold">Roster</h2>
         {rosterDetails ? (
-          <div className='space-y-6'>
+          <div className="space-y-6">
             {/* Starters */}
-            <div className='rounded-md border border-border bg-card'>
-              <div className='border-b border-border bg-muted/30 px-4 py-3'>
-                <h3 className='text-lg font-semibold flex items-center gap-2'>
-                  <div className='h-2 w-2 bg-green-500 rounded-full'></div>
+            <div className="rounded-md border border-border bg-card">
+              <div className="border-b border-border bg-muted/30 px-4 py-3">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <div className="h-2 w-2 bg-green-500 rounded-full"></div>
                   Starting Lineup ({rosterDetails.starters.length})
                 </h3>
               </div>
-              <div className='p-4'>
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'>
+              <div className="p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {rosterDetails.starters.map(pid => {
                     const p = rosterDetails.players.find(pl => pl.id === pid);
                     if (!p) return null;
@@ -455,16 +455,16 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                     return (
                       <div
                         key={pid}
-                        className='flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors'
+                        className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors"
                       >
                         <div
                           className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}
                         >
                           {p.position}
                         </div>
-                        <div className='flex-1 min-w-0'>
-                          <div className='font-medium text-sm truncate'>{p.fullName}</div>
-                          {p.team && <div className='text-xs text-muted-foreground'>{p.team}</div>}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm truncate">{p.fullName}</div>
+                          {p.team && <div className="text-xs text-muted-foreground">{p.team}</div>}
                         </div>
                       </div>
                     );
@@ -474,10 +474,10 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Bench */}
-            <div className='rounded-md border border-border bg-card'>
-              <div className='border-b border-border bg-muted/30 px-4 py-3'>
-                <h3 className='text-lg font-semibold flex items-center gap-2'>
-                  <div className='h-2 w-2 bg-orange-500 rounded-full'></div>
+            <div className="rounded-md border border-border bg-card">
+              <div className="border-b border-border bg-muted/30 px-4 py-3">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <div className="h-2 w-2 bg-orange-500 rounded-full"></div>
                   Bench (
                   {
                     rosterDetails.players.filter(pl => !rosterDetails.starters.includes(pl.id))
@@ -486,8 +486,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   )
                 </h3>
               </div>
-              <div className='p-4'>
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'>
+              <div className="p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {rosterDetails.players
                     .filter(pl => !rosterDetails.starters.includes(pl.id))
                     .map(p => {
@@ -506,17 +506,17 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                       return (
                         <div
                           key={p.id}
-                          className='flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors opacity-75'
+                          className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors opacity-75"
                         >
                           <div
                             className={`px-2 py-1 rounded text-xs font-medium ${getPositionColor(p.position)}`}
                           >
                             {p.position}
                           </div>
-                          <div className='flex-1 min-w-0'>
-                            <div className='font-medium text-sm truncate'>{p.fullName}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-sm truncate">{p.fullName}</div>
                             {p.team && (
-                              <div className='text-xs text-muted-foreground'>{p.team}</div>
+                              <div className="text-xs text-muted-foreground">{p.team}</div>
                             )}
                           </div>
                         </div>
@@ -527,23 +527,23 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Roster Summary */}
-            <div className='rounded-md border border-border bg-card p-4'>
-              <h3 className='text-lg font-semibold mb-3'>Roster Breakdown</h3>
-              <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center'>
+            <div className="rounded-md border border-border bg-card p-4">
+              <h3 className="text-lg font-semibold mb-3">Roster Breakdown</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
                 {['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(position => {
                   const positionPlayers = rosterDetails.players.filter(
-                    p => p.position === position
+                    p => p.position === position,
                   );
                   const starters = positionPlayers.filter(p =>
-                    rosterDetails.starters.includes(p.id)
+                    rosterDetails.starters.includes(p.id),
                   ).length;
                   const bench = positionPlayers.length - starters;
 
                   return (
-                    <div key={position} className='p-3 rounded-lg bg-muted/30'>
-                      <div className='text-sm font-medium text-muted-foreground'>{position}</div>
-                      <div className='text-lg font-bold'>{positionPlayers.length}</div>
-                      <div className='text-xs text-muted-foreground'>
+                    <div key={position} className="p-3 rounded-lg bg-muted/30">
+                      <div className="text-sm font-medium text-muted-foreground">{position}</div>
+                      <div className="text-lg font-bold">{positionPlayers.length}</div>
+                      <div className="text-xs text-muted-foreground">
                         {starters}S / {bench}B
                       </div>
                     </div>
@@ -553,18 +553,18 @@ export default function TeamPage({ params }: { params: { id: string } }) {
             </div>
           </div>
         ) : (
-          <div className='rounded-md border border-border bg-card p-4 text-sm text-muted-foreground'>
+          <div className="rounded-md border border-border bg-card p-4 text-sm text-muted-foreground">
             Loading roster…
           </div>
         )}
       </div>
 
-      <div className='mt-8'>
-        <h2 className='mb-2 text-2xl font-bold'>Weekly Matchups</h2>
-        <p className='text-sm text-muted-foreground mb-4'>
+      <div className="mt-8">
+        <h2 className="mb-2 text-2xl font-bold">Weekly Matchups</h2>
+        <p className="text-sm text-muted-foreground mb-4">
           Click on a week to view the full matchup breakdown with player details and analytics.
         </p>
-        <div className='overflow-x-auto rounded-md border border-border bg-card'>
+        <div className="overflow-x-auto rounded-md border border-border bg-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -581,18 +581,18 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 .map(matchup => {
                   const weekData = weeklyData.find(w => w.week === matchup.week);
                   const leagueAvgForWeek = weeklyAverages.find(
-                    w => w.week === matchup.week
+                    w => w.week === matchup.week,
                   )?.averagePoints;
                   const leagueAvgCell =
                     typeof leagueAvgForWeek === 'number' ? leagueAvgForWeek.toFixed(2) : '—';
                   return (
-                    <TableRow key={`reg-${matchup.week}`} className='hover:bg-muted/50'>
+                    <TableRow key={`reg-${matchup.week}`} className="hover:bg-muted/50">
                       <TableCell>
                         <MatchupLink
                           matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
                           week={matchup.week}
-                          variant='compact'
-                          className='font-medium'
+                          variant="compact"
+                          className="font-medium"
                         />
                       </TableCell>
                       <TableCell>{matchup.points.toFixed(2)}</TableCell>
@@ -612,10 +612,10 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 })}
 
               {(team.matchups ?? []).some(
-                m => m.week >= playoffStart && m.week <= playoffStart + 2
+                m => m.week >= playoffStart && m.week <= playoffStart + 2,
               ) && (
                 <TableRow>
-                  <TableCell colSpan={5} className='bg-muted/40 text-xs uppercase tracking-wider'>
+                  <TableCell colSpan={5} className="bg-muted/40 text-xs uppercase tracking-wider">
                     Playoffs (Weeks {playoffStart}–{playoffStart + 2})
                   </TableCell>
                 </TableRow>
@@ -626,24 +626,24 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 .map(matchup => {
                   // Use authoritative weekly metrics for playoff weeks (weeklyData is regular-season-only)
                   const playoffWeek = (team.weeklyMetrics ?? []).find(
-                    wm => wm.week === matchup.week
+                    wm => wm.week === matchup.week,
                   );
                   const weekData = playoffWeek
                     ? { opponentPoints: playoffWeek.opponentPoints }
                     : undefined;
                   const leagueAvgForWeek = weeklyAverages.find(
-                    w => w.week === matchup.week
+                    w => w.week === matchup.week,
                   )?.averagePoints;
                   const leagueAvgCell =
                     typeof leagueAvgForWeek === 'number' ? leagueAvgForWeek.toFixed(2) : '—';
                   return (
-                    <TableRow key={`po-${matchup.week}`} className='hover:bg-muted/50'>
+                    <TableRow key={`po-${matchup.week}`} className="hover:bg-muted/50">
                       <TableCell>
                         <MatchupLink
                           matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
                           week={matchup.week}
-                          variant='compact'
-                          className='font-medium'
+                          variant="compact"
+                          className="font-medium"
                         />
                       </TableCell>
                       <TableCell>{matchup.points.toFixed(2)}</TableCell>
@@ -666,9 +666,9 @@ export default function TeamPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className='mt-8'>
-        <h2 className='mb-2 text-2xl font-bold'>Transactions</h2>
-        <div className='rounded-md border border-border bg-card px-4 py-1'>
+      <div className="mt-8">
+        <h2 className="mb-2 text-2xl font-bold">Transactions</h2>
+        <div className="rounded-md border border-border bg-card px-4 py-1">
           {tx?.ok ? (
             (() => {
               const teamId = Number(team.id);
@@ -699,7 +699,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               );
             })()
           ) : (
-            <div className='text-sm text-muted-foreground'>
+            <div className="text-sm text-muted-foreground">
               {tx ? 'No transactions found.' : 'Loading transactions...'}
             </div>
           )}

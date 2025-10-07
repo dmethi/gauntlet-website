@@ -5,18 +5,20 @@
 @layer base {
   :root {
     /* Gauntlet Brand Colors - Balanced Medieval Aesthetic */
-    --crimson-red: #8B1538;
-    --battle-red: #A31621;
-    --ember-red: #6B1426;
-    --regal-gold: #D4AF37;
-    --warm-gold: #EBB748;
-    --charcoal-steel: #1A1A1A;
-    --off-white: #F3E9D2;
-    --burnt-orange: #B8621B;
-    
+    --crimson-red: #8b1538;
+    --battle-red: #a31621;
+    --ember-red: #6b1426;
+    --regal-gold: #d4af37;
+    --warm-gold: #ebb748;
+    --charcoal-steel: #1a1a1a;
+    --off-white: #f3e9d2;
+    --burnt-orange: #b8621b;
+
     /* Font Configuration */
-    --font-avenir: 'Avenir', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    
+    --font-avenir:
+      'Avenir', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+      Arial, sans-serif;
+
     /* Light mode semantic colors (brand-aligned, papyrus/tan) */
     /* Papyrus/off-white base approximating #F3E9D2 */
     --background: 39 58% 89%;
@@ -70,7 +72,7 @@
     --ring: 345 69% 35%;
     /* Enhanced dark mode chart colors - optimized for dark backgrounds */
     --chart-1: 0 84% 60%; /* Bright red for primary data */
-    --chart-2: 160 60% 45%; /* Teal for secondary data */  
+    --chart-2: 160 60% 45%; /* Teal for secondary data */
     --chart-3: 30 80% 55%; /* Orange for tertiary data */
     --chart-4: 280 65% 60%; /* Purple for quaternary data */
     --chart-5: 340 75% 55%; /* Pink for quinary data */
@@ -82,12 +84,12 @@
     @apply border-border;
     box-sizing: border-box;
   }
-  
+
   html {
     overflow-x: hidden;
     width: 100%;
   }
-  
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-avenir);
@@ -152,7 +154,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -215,7 +217,7 @@
   * {
     max-width: 100%;
   }
-  
+
   /* Ensure grids don't overflow */
   .grid {
     width: 100%;
@@ -229,4 +231,4 @@
   .mobile-viewport {
     height: -webkit-fill-available;
   }
-} 
+}

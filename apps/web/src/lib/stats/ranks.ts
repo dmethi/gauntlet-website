@@ -49,7 +49,7 @@ export function percentileRank(values: number[]): number[] {
  */
 export function rankWithinLeagues(
   values: Map<string, number>,
-  leagueRosterMap: Map<string, string> // rosterId -> leagueId
+  leagueRosterMap: Map<string, string>, // rosterId -> leagueId
 ): Map<string, number> {
   // Group by league
   const leagueGroups = new Map<string, { rosterId: string; value: number }[]>();

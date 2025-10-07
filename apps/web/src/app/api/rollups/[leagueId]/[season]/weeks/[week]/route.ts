@@ -3,7 +3,7 @@ import { computeWeeklyRollups } from '@/lib/api-replacements';
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { leagueId: string; season: string; week: string } }
+  { params }: { params: { leagueId: string; season: string; week: string } },
 ) {
   try {
     const { leagueId, season, week } = params;
@@ -34,7 +34,7 @@ export async function GET(
         error: 'Failed to compute weekly rollup',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

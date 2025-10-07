@@ -98,12 +98,12 @@ export function TransactionAnalysis() {
   // Get unique teams and leagues for filters (MOVED TO TOP TO AVOID HOOK ORDER ISSUES)
   const uniqueTeams = useMemo(
     () => Array.from(new Set(allData.map(txn => txn.teamName).filter(Boolean))).sort(),
-    [allData]
+    [allData],
   );
 
   const uniqueLeagues = useMemo(
     () => Array.from(new Set(allData.map(txn => txn.leagueName).filter(Boolean))).sort(),
-    [allData]
+    [allData],
   );
 
   // Load transaction data using the full working implementation
@@ -154,7 +154,7 @@ export function TransactionAnalysis() {
               teams.reduce((acc: any, team: any) => {
                 acc[team.leagueName] = (acc[team.leagueName] || 0) + 1;
                 return acc;
-              }, {})
+              }, {}),
             );
           }
         } catch (error) {
@@ -190,7 +190,7 @@ export function TransactionAnalysis() {
               league.id,
               league.name,
               teamsData,
-              currentNflWeek
+              currentNflWeek,
             );
 
             allTransactions.push(...gradedTransactions);
@@ -249,26 +249,26 @@ export function TransactionAnalysis() {
 
   if (loading) {
     return (
-      <div className='space-y-6'>
+      <div className="space-y-6">
         {/* Loading placeholder for manager rankings */}
-        <Card className='mb-6'>
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <TrendingUp className='h-5 w-5' />
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
               Manager Rankings by Net VORP
             </CardTitle>
             <CardDescription>Loading transaction efficiency rankings...</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='flex items-center justify-center h-32'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'></div>
+            <div className="flex items-center justify-center h-32">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></div>
                 <div
-                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.1s' }}
                 ></div>
                 <div
-                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.2s' }}
                 ></div>
               </div>
@@ -279,36 +279,36 @@ export function TransactionAnalysis() {
         {/* Loading placeholder for transactions */}
         <Card>
           <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <TrendingUp className='h-5 w-5' />
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
               Transaction Analysis
             </CardTitle>
             <CardDescription>Loading transaction data with VORP calculations...</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='flex flex-col items-center justify-center h-64 space-y-4'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'></div>
+            <div className="flex flex-col items-center justify-center h-64 space-y-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"></div>
                 <div
-                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.1s' }}
                 ></div>
                 <div
-                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.2s' }}
                 ></div>
               </div>
-              <div className='text-center'>
-                <div className='text-lg font-medium text-muted-foreground mb-1'>
+              <div className="text-center">
+                <div className="text-lg font-medium text-muted-foreground mb-1">
                   Loading Transaction Analysis
                 </div>
-                <div className='text-sm text-muted-foreground'>{loadingStep}</div>
+                <div className="text-sm text-muted-foreground">{loadingStep}</div>
               </div>
 
               {/* Progress indicator */}
-              <div className='w-full max-w-md bg-gray-200 rounded-full h-2'>
+              <div className="w-full max-w-md bg-gray-200 rounded-full h-2">
                 <div
-                  className='bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse'
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse"
                   style={{ width: '60%' }}
                 ></div>
               </div>
@@ -322,26 +322,26 @@ export function TransactionAnalysis() {
   // Don't render anything until ALL data is fully loaded
   if (loading || !teamsLoaded || !transactionsProcessed || allData.length === 0) {
     return (
-      <div className='space-y-6'>
+      <div className="space-y-6">
         {/* Loading placeholder for manager rankings */}
-        <Card className='mb-6'>
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <TrendingUp className='h-5 w-5' />
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
               Manager Rankings by Net VORP
             </CardTitle>
             <CardDescription>Loading transaction efficiency rankings...</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='flex items-center justify-center h-32'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'></div>
+            <div className="flex items-center justify-center h-32">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></div>
                 <div
-                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.1s' }}
                 ></div>
                 <div
-                  className='w-4 h-4 bg-blue-600 rounded-full animate-pulse'
+                  className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.2s' }}
                 ></div>
               </div>
@@ -352,36 +352,36 @@ export function TransactionAnalysis() {
         {/* Loading placeholder for transactions */}
         <Card>
           <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <TrendingUp className='h-5 w-5' />
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
               Transaction Analysis
             </CardTitle>
             <CardDescription>Loading transaction data with VORP calculations...</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='flex flex-col items-center justify-center h-64 space-y-4'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'></div>
+            <div className="flex flex-col items-center justify-center h-64 space-y-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"></div>
                 <div
-                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.1s' }}
                 ></div>
                 <div
-                  className='w-6 h-6 bg-blue-600 rounded-full animate-pulse'
+                  className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"
                   style={{ animationDelay: '0.2s' }}
                 ></div>
               </div>
-              <div className='text-center'>
-                <div className='text-lg font-medium text-muted-foreground mb-1'>
+              <div className="text-center">
+                <div className="text-lg font-medium text-muted-foreground mb-1">
                   Loading Transaction Analysis
                 </div>
-                <div className='text-sm text-muted-foreground'>{loadingStep}</div>
+                <div className="text-sm text-muted-foreground">{loadingStep}</div>
               </div>
 
               {/* Progress indicator */}
-              <div className='w-full max-w-md bg-gray-200 rounded-full h-2'>
+              <div className="w-full max-w-md bg-gray-200 rounded-full h-2">
                 <div
-                  className='bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse'
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse"
                   style={{ width: '60%' }}
                 ></div>
               </div>
@@ -393,15 +393,15 @@ export function TransactionAnalysis() {
   }
 
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <ManagerRankings transactions={allData} allTeams={teamsMap} />
 
       <Card>
         <CardHeader>
-          <div className='flex items-center justify-between'>
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className='flex items-center gap-2'>
-                <TrendingUp className='h-5 w-5' />
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
                 Transaction Analysis
               </CardTitle>
               <CardDescription>
@@ -410,41 +410,41 @@ export function TransactionAnalysis() {
             </div>
 
             {/* Stats Overview */}
-            <div className='grid grid-cols-4 gap-4 text-center'>
-              <div className='bg-green-50 p-3 rounded-lg'>
-                <div className='text-2xl font-bold text-green-600'>
+            <div className="grid grid-cols-4 gap-4 text-center">
+              <div className="bg-green-50 p-3 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
                   {filteredData.filter(t => t.score > 0).length}
                 </div>
-                <div className='text-xs text-green-700'>Positive</div>
+                <div className="text-xs text-green-700">Positive</div>
               </div>
-              <div className='bg-red-50 p-3 rounded-lg'>
-                <div className='text-2xl font-bold text-red-600'>
+              <div className="bg-red-50 p-3 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">
                   {filteredData.filter(t => t.score < 0).length}
                 </div>
-                <div className='text-xs text-red-700'>Negative</div>
+                <div className="text-xs text-red-700">Negative</div>
               </div>
-              <div className='bg-gray-50 p-3 rounded-lg'>
-                <div className='text-2xl font-bold text-gray-600'>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-2xl font-bold text-gray-600">
                   {filteredData.filter(t => t.score === 0).length}
                 </div>
-                <div className='text-xs text-gray-700'>Neutral</div>
+                <div className="text-xs text-gray-700">Neutral</div>
               </div>
-              <div className='bg-blue-50 p-3 rounded-lg'>
-                <div className='text-2xl font-bold text-blue-600'>{filteredData.length}</div>
-                <div className='text-xs text-blue-700'>Total</div>
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">{filteredData.length}</div>
+                <div className="text-xs text-blue-700">Total</div>
               </div>
             </div>
           </div>
 
           {/* Filters Row */}
-          <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mt-4'>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             {/* Team Filter */}
             <Select value={teamFilter} onValueChange={setTeamFilter}>
               <SelectTrigger>
-                <SelectValue placeholder='All Teams' />
+                <SelectValue placeholder="All Teams" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Teams</SelectItem>
+                <SelectItem value="all">All Teams</SelectItem>
                 {uniqueTeams.map(team => (
                   <SelectItem key={team} value={team || ''}>
                     {team}
@@ -456,10 +456,10 @@ export function TransactionAnalysis() {
             {/* League Filter */}
             <Select value={leagueFilter} onValueChange={setLeagueFilter}>
               <SelectTrigger>
-                <SelectValue placeholder='All Leagues' />
+                <SelectValue placeholder="All Leagues" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Leagues</SelectItem>
+                <SelectItem value="all">All Leagues</SelectItem>
                 {uniqueLeagues.map(league => (
                   <SelectItem key={league} value={league || ''}>
                     {league}
@@ -471,57 +471,57 @@ export function TransactionAnalysis() {
             {/* Grade Filter */}
             <Select value={gradeFilter} onValueChange={setGradeFilter}>
               <SelectTrigger>
-                <SelectValue placeholder='All Grades' />
+                <SelectValue placeholder="All Grades" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Grades</SelectItem>
-                <SelectItem value='A+'>A+</SelectItem>
-                <SelectItem value='A'>A</SelectItem>
-                <SelectItem value='B'>B</SelectItem>
-                <SelectItem value='C'>C</SelectItem>
-                <SelectItem value='D'>D</SelectItem>
-                <SelectItem value='F'>F</SelectItem>
+                <SelectItem value="all">All Grades</SelectItem>
+                <SelectItem value="A+">A+</SelectItem>
+                <SelectItem value="A">A</SelectItem>
+                <SelectItem value="B">B</SelectItem>
+                <SelectItem value="C">C</SelectItem>
+                <SelectItem value="D">D</SelectItem>
+                <SelectItem value="F">F</SelectItem>
               </SelectContent>
             </Select>
 
             {/* Search */}
-            <div className='relative'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
-                type='text'
-                placeholder='Search players...'
+                type="text"
+                placeholder="Search players..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className='pl-10 pr-4 py-2 w-full border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                className="pl-10 pr-4 py-2 w-full border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
 
           {/* Sort Controls */}
-          <div className='flex items-center gap-4 mt-4'>
-            <div className='flex items-center gap-2'>
-              <span className='text-sm text-gray-600'>Sort by:</span>
+          <div className="flex items-center gap-4 mt-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Sort by:</span>
               <Select value={sortBy} onValueChange={value => setSortBy(value as typeof sortBy)}>
-                <SelectTrigger className='w-32'>
+                <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='score'>Score</SelectItem>
-                  <SelectItem value='grade'>Grade</SelectItem>
-                  <SelectItem value='date'>Date</SelectItem>
+                  <SelectItem value="score">Score</SelectItem>
+                  <SelectItem value="grade">Grade</SelectItem>
+                  <SelectItem value="date">Date</SelectItem>
                 </SelectContent>
               </Select>
 
               <button
-                title='Sort'
+                title="Sort"
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className='p-2 hover:bg-gray-100 rounded-md'
+                className="p-2 hover:bg-gray-100 rounded-md"
               >
-                <ArrowUpDown className='h-4 w-4' />
+                <ArrowUpDown className="h-4 w-4" />
               </button>
             </div>
 
-            <div className='text-sm text-gray-500'>
+            <div className="text-sm text-gray-500">
               Showing {filteredData.length} of {allData.length} transactions
             </div>
           </div>
@@ -529,8 +529,8 @@ export function TransactionAnalysis() {
 
         <CardContent>
           {filteredData.length === 0 ? (
-            <div className='text-center py-12'>
-              <div className='text-muted-foreground'>No transactions match your filters</div>
+            <div className="text-center py-12">
+              <div className="text-muted-foreground">No transactions match your filters</div>
               <button
                 onClick={() => {
                   setTeamFilter('all');
@@ -538,13 +538,13 @@ export function TransactionAnalysis() {
                   setGradeFilter('all');
                   setSearchTerm('');
                 }}
-                className='mt-2 text-blue-600 hover:text-blue-800 text-sm'
+                className="mt-2 text-blue-600 hover:text-blue-800 text-sm"
               >
                 Clear all filters
               </button>
             </div>
           ) : (
-            <div className='overflow-x-auto rounded-md border border-border bg-card'>
+            <div className="overflow-x-auto rounded-md border border-border bg-card">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -552,10 +552,10 @@ export function TransactionAnalysis() {
                     <TableHead>Team</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Players</TableHead>
-                    <TableHead className='text-right'>FAAB</TableHead>
-                    <TableHead className='text-right'>Raw VORP</TableHead>
-                    <TableHead className='text-right'>Adjusted VORP</TableHead>
-                    <TableHead className='text-right'>Grade</TableHead>
+                    <TableHead className="text-right">FAAB</TableHead>
+                    <TableHead className="text-right">Raw VORP</TableHead>
+                    <TableHead className="text-right">Adjusted VORP</TableHead>
+                    <TableHead className="text-right">Grade</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -564,43 +564,43 @@ export function TransactionAnalysis() {
                     return (
                       <TableRow
                         key={txn.id}
-                        className='cursor-pointer hover:bg-muted/50'
+                        className="cursor-pointer hover:bg-muted/50"
                         onClick={() => setSelectedTxn(txn)}
                       >
                         <TableCell>{new Date(txn.createdAt).toLocaleDateString()}</TableCell>
                         <TableCell>
-                          <div className='flex flex-col'>
-                            <div className='font-medium'>{txn.teamName}</div>
-                            <div className='text-xs text-muted-foreground'>{txn.leagueName}</div>
+                          <div className="flex flex-col">
+                            <div className="font-medium">{txn.teamName}</div>
+                            <div className="text-xs text-muted-foreground">{txn.leagueName}</div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className='capitalize'>{txn.type.replace('_', ' ')}</div>
+                          <div className="capitalize">{txn.type.replace('_', ' ')}</div>
                         </TableCell>
                         <TableCell>
-                          <div className='flex flex-col gap-1'>
+                          <div className="flex flex-col gap-1">
                             {txn.players.map(p => (
-                              <div key={p.playerId} className='text-sm text-muted-foreground'>
+                              <div key={p.playerId} className="text-sm text-muted-foreground">
                                 {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
                               </div>
                             ))}
                           </div>
                         </TableCell>
-                        <TableCell className='text-right'>
+                        <TableCell className="text-right">
                           {txn.faabCost > 0 ? (
-                            <div className='flex flex-col items-end'>
-                              <div className='font-mono font-medium'>${txn.faabCost}</div>
-                              <div className='text-xs text-muted-foreground'>
+                            <div className="flex flex-col items-end">
+                              <div className="font-mono font-medium">${txn.faabCost}</div>
+                              <div className="text-xs text-muted-foreground">
                                 {((txn.faabCost / 200) * 100).toFixed(0)}%
                               </div>
                             </div>
                           ) : (
-                            <div className='text-xs text-green-600 font-medium'>FREE</div>
+                            <div className="text-xs text-green-600 font-medium">FREE</div>
                           )}
                         </TableCell>
-                        <TableCell className='text-right'>
+                        <TableCell className="text-right">
                           {txn.rawScore !== undefined ? (
-                            <div className='flex flex-col items-end'>
+                            <div className="flex flex-col items-end">
                               <div
                                 className={`font-mono font-medium ${
                                   txn.rawScore >= 0 ? 'text-green-600' : 'text-red-600'
@@ -610,27 +610,27 @@ export function TransactionAnalysis() {
                                 {txn.rawScore.toFixed(1)}
                               </div>
                               {txn.faabCost === 0 && (
-                                <div className='text-xs text-muted-foreground'>No Cost</div>
+                                <div className="text-xs text-muted-foreground">No Cost</div>
                               )}
                             </div>
                           ) : (
-                            <span className='text-muted-foreground text-sm'>N/A</span>
+                            <span className="text-muted-foreground text-sm">N/A</span>
                           )}
                         </TableCell>
-                        <TableCell className='text-right'>
+                        <TableCell className="text-right">
                           {(() => {
                             const bg = getDivergingBg(txn.score / scoreRange);
                             const fg = getTextColorForBg(bg);
                             return (
-                              <div className='flex flex-col items-end'>
+                              <div className="flex flex-col items-end">
                                 <span
-                                  className='px-2 py-0.5 rounded font-mono font-medium'
+                                  className="px-2 py-0.5 rounded font-mono font-medium"
                                   style={{ backgroundColor: bg, color: fg }}
                                 >
                                   {txn.score.toFixed(1)}
                                 </span>
                                 {txn.faabCost > 0 && (
-                                  <div className='text-xs text-red-400 font-mono'>
+                                  <div className="text-xs text-red-400 font-mono">
                                     -{txn.costPenalty?.toFixed(1) || '0.0'}
                                   </div>
                                 )}
@@ -638,11 +638,11 @@ export function TransactionAnalysis() {
                             );
                           })()}
                         </TableCell>
-                        <TableCell className='text-right'>
+                        <TableCell className="text-right">
                           <Button
-                            variant='ghost'
-                            size='sm'
-                            className='h-6 px-2'
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2"
                             onClick={e => {
                               e.stopPropagation();
                               setSelectedTxn(txn);
@@ -663,41 +663,41 @@ export function TransactionAnalysis() {
 
       {/* Original Dialog Modal */}
       <Dialog open={!!selectedTxn} onOpenChange={open => !open && setSelectedTxn(null)}>
-        <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Transaction Details</DialogTitle>
           </DialogHeader>
           {selectedTxn && (
-            <div className='text-sm space-y-4'>
-              <div className='flex items-center gap-2'>
+            <div className="text-sm space-y-4">
+              <div className="flex items-center gap-2">
                 <Badge>{selectedTxn.grade}</Badge>
                 {(() => {
                   const scoreRange = Math.max(...allData.map(t => Math.abs(t.score))) || 1;
                   const bg = getDivergingBg(selectedTxn.score / scoreRange);
                   const fg = getTextColorForBg(bg);
                   return (
-                    <span className='px-1.5 rounded' style={{ backgroundColor: bg, color: fg }}>
+                    <span className="px-1.5 rounded" style={{ backgroundColor: bg, color: fg }}>
                       Score: {selectedTxn.score.toFixed(2)}
                     </span>
                   );
                 })()}
               </div>
 
-              <div className='text-muted-foreground'>
-                <div className='flex flex-col gap-1'>
+              <div className="text-muted-foreground">
+                <div className="flex flex-col gap-1">
                   <div>
                     {new Date(selectedTxn.createdAt).toLocaleString()} •{' '}
                     {selectedTxn.type.replace('_', ' ')}
                   </div>
-                  <div className='text-xs'>
+                  <div className="text-xs">
                     Team: {selectedTxn.teamName} • League: {selectedTxn.leagueName}
                   </div>
                 </div>
               </div>
 
               {/* Score Breakdown */}
-              <div className='bg-muted/30 rounded-lg p-3 space-y-2'>
-                <h3 className='font-semibold text-base'>Score Breakdown</h3>
+              <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+                <h3 className="font-semibold text-base">Score Breakdown</h3>
                 {(() => {
                   const contribution = selectedTxn.players
                     .filter(p => p.role === 'add' && p.forYou)
@@ -711,37 +711,37 @@ export function TransactionAnalysis() {
                   const totalPenalties = selfHarm + oppHarm;
 
                   return (
-                    <div className='grid grid-cols-1 md:grid-cols-4 gap-3 text-xs'>
-                      <div className='text-center'>
-                        <div className='font-medium text-green-600'>Contribution</div>
-                        <div className='text-lg font-bold'>+{contribution.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                      <div className="text-center">
+                        <div className="font-medium text-green-600">Contribution</div>
+                        <div className="text-lg font-bold">+{contribution.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           Playoff-weighted VORP when started
                         </div>
                       </div>
-                      <div className='text-center'>
-                        <div className='font-medium text-red-600'>Self-Harm</div>
-                        <div className='text-lg font-bold'>-{selfHarm.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                      <div className="text-center">
+                        <div className="font-medium text-red-600">Self-Harm</div>
+                        <div className="text-lg font-bold">-{selfHarm.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           Points lost vs your best starter
                         </div>
                       </div>
-                      <div className='text-center'>
-                        <div className='font-medium text-orange-600'>Opponent-Harm</div>
-                        <div className='text-lg font-bold'>-{oppHarm.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                      <div className="text-center">
+                        <div className="font-medium text-orange-600">Opponent-Harm</div>
+                        <div className="text-lg font-bold">-{oppHarm.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           Points above replacement by any opponent
                         </div>
                       </div>
-                      <div className='text-center'>
-                        <div className='font-medium text-blue-600'>Net Score</div>
+                      <div className="text-center">
+                        <div className="font-medium text-blue-600">Net Score</div>
                         <div
                           className={`text-lg font-bold ${selectedTxn.score >= 0 ? 'text-green-600' : 'text-red-600'}`}
                         >
                           {selectedTxn.score >= 0 ? '+' : ''}
                           {selectedTxn.score.toFixed(1)}
                         </div>
-                        <div className='text-muted-foreground'>
+                        <div className="text-muted-foreground">
                           {contribution.toFixed(1)} - {totalPenalties.toFixed(1)}
                         </div>
                       </div>
@@ -751,7 +751,7 @@ export function TransactionAnalysis() {
               </div>
 
               {/* Players Section */}
-              <div className='space-y-4'>
+              <div className="space-y-4">
                 {selectedTxn.players.map(player => (
                   <div
                     key={player.playerId}
@@ -761,10 +761,10 @@ export function TransactionAnalysis() {
                         : 'bg-red-50 border-red-200'
                     }`}
                   >
-                    <div className='flex items-start justify-between mb-2'>
+                    <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h4 className='font-semibold'>{player.name}</h4>
-                        <div className='text-sm text-muted-foreground'>
+                        <h4 className="font-semibold">{player.name}</h4>
+                        <div className="text-sm text-muted-foreground">
                           {player.position} • {player.role === 'add' ? 'Added' : 'Dropped'}
                         </div>
                       </div>
@@ -780,35 +780,35 @@ export function TransactionAnalysis() {
                     </div>
 
                     {player.role === 'add' && player.forYou && (
-                      <div className='grid grid-cols-2 gap-4 text-sm'>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <div className='font-medium'>Times Started</div>
-                          <div className='text-lg'>{player.forYou.starts}</div>
+                          <div className="font-medium">Times Started</div>
+                          <div className="text-lg">{player.forYou.starts}</div>
                         </div>
                         <div>
-                          <div className='font-medium'>Total Points</div>
-                          <div className='text-lg'>{player.forYou.points.toFixed(1)}</div>
+                          <div className="font-medium">Total Points</div>
+                          <div className="text-lg">{player.forYou.points.toFixed(1)}</div>
                         </div>
                       </div>
                     )}
 
                     {player.role === 'drop' && player.afterDrop && (
-                      <div className='grid grid-cols-2 gap-4 text-sm'>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <div className='font-medium'>Self-Harm</div>
-                          <div className='text-lg'>{player.afterDrop.selfHarm.toFixed(1)}</div>
+                          <div className="font-medium">Self-Harm</div>
+                          <div className="text-lg">{player.afterDrop.selfHarm.toFixed(1)}</div>
                         </div>
                         <div>
-                          <div className='font-medium'>Opponent-Harm</div>
-                          <div className='text-lg'>{player.afterDrop.oppHarm.toFixed(1)}</div>
+                          <div className="font-medium">Opponent-Harm</div>
+                          <div className="text-lg">{player.afterDrop.oppHarm.toFixed(1)}</div>
                         </div>
                       </div>
                     )}
 
                     {/* Weekly Performance */}
-                    <div className='mt-3'>
-                      <h5 className='font-medium mb-2'>Weekly Performance</h5>
-                      <div className='flex gap-2 overflow-x-auto'>
+                    <div className="mt-3">
+                      <h5 className="font-medium mb-2">Weekly Performance</h5>
+                      <div className="flex gap-2 overflow-x-auto">
                         {player.weeklyPoints
                           .filter(w => w.week <= currentNflWeek)
                           .map(week => {
@@ -832,10 +832,10 @@ export function TransactionAnalysis() {
                                     : `${week.points.toFixed(1)} pts`
                                 }
                               >
-                                <div className='font-semibold'>W{week.week}</div>
-                                <div className='font-bold'>{displayValue.toFixed(1)}</div>
-                                {showVORP && <div className='text-xs opacity-75'>VORP</div>}
-                                {week.started && <div className='text-xs'>✓</div>}
+                                <div className="font-semibold">W{week.week}</div>
+                                <div className="font-bold">{displayValue.toFixed(1)}</div>
+                                {showVORP && <div className="text-xs opacity-75">VORP</div>}
+                                {week.started && <div className="text-xs">✓</div>}
                               </div>
                             );
                           })}

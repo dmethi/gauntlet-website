@@ -123,7 +123,7 @@ export interface LeagueProjection {
  */
 export function calculateLeagueProjection(
   rawProjection: any,
-  scoringSettings: ScoringSettings
+  scoringSettings: ScoringSettings,
 ): LeagueProjection {
   const breakdown: Record<string, number> = {};
   let totalPoints = 0;
@@ -249,7 +249,7 @@ export function calculateLeagueProjection(
  */
 export function calculateLeagueProjections(
   rawProjections: any[],
-  scoringSettings: ScoringSettings
+  scoringSettings: ScoringSettings,
 ): Record<string, LeagueProjection> {
   const result: Record<string, LeagueProjection> = {};
 

@@ -63,7 +63,7 @@ export function getStarterPositionPoints({
  */
 export function aggregatePositionPoints(
   weeklyPoints: Map<number, Map<string, PositionPoints>>, // Changed to use teamKey (leagueId-rosterId)
-  weekRange: { from: number; to: number }
+  weekRange: { from: number; to: number },
 ): Map<string, PositionPoints> {
   const totals = new Map<string, PositionPoints>();
 

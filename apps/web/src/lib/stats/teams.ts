@@ -31,7 +31,7 @@ export function getTeamAndOpponentPoints({
       week,
       'with',
       weekLeagueMatchups.size,
-      'leagues'
+      'leagues',
     );
     const weekTeamData: TeamWeekData[] = [];
 
@@ -42,7 +42,7 @@ export function getTeamAndOpponentPoints({
         leagueId,
         'with',
         leagueMatchups.length,
-        'matchups'
+        'matchups',
       );
 
       // Group by matchup_id within this league only
@@ -51,7 +51,7 @@ export function getTeamAndOpponentPoints({
         '[DEBUG] getTeamAndOpponentPoints: league',
         leagueId,
         'matchup_ids:',
-        leagueMatchups.map(m => m.matchup_id)
+        leagueMatchups.map(m => m.matchup_id),
       );
 
       for (const matchup of leagueMatchups) {
@@ -65,13 +65,13 @@ export function getTeamAndOpponentPoints({
         leagueId,
         'grouped into',
         matchupGroups.size,
-        'matchup groups'
+        'matchup groups',
       );
       console.log(
         '[DEBUG] getTeamAndOpponentPoints: league',
         leagueId,
         'group sizes:',
-        Array.from(matchupGroups.values()).map(g => g.length)
+        Array.from(matchupGroups.values()).map(g => g.length),
       );
 
       // Process each matchup pair within this league
@@ -112,7 +112,7 @@ export function getTeamAndOpponentPoints({
             '[DEBUG] getTeamAndOpponentPoints: unexpected group size',
             pair.length,
             'for matchupId',
-            matchupId
+            matchupId,
           );
         }
       }
@@ -122,7 +122,7 @@ export function getTeamAndOpponentPoints({
         leagueId,
         'generated',
         weekTeamData.length - (weekTeamData.length - leagueMatchups.length),
-        'team data entries'
+        'team data entries',
       );
     }
 
@@ -131,7 +131,7 @@ export function getTeamAndOpponentPoints({
       week,
       'total generated',
       weekTeamData.length,
-      'team data entries'
+      'team data entries',
     );
     weeklyTeamData.set(week, weekTeamData);
   }
@@ -145,7 +145,7 @@ export function getTeamAndOpponentPoints({
  */
 export function aggregateTeamPoints(
   weeklyData: Map<number, TeamWeekData[]>,
-  weekRange: { from: number; to: number }
+  weekRange: { from: number; to: number },
 ): Map<string, { teamTotal: number; opponentTotal: number; gamesPlayed: number }> {
   console.log('[DEBUG] aggregateTeamPoints: starting with', weeklyData.size, 'weeks', weekRange);
   const totals = new Map<

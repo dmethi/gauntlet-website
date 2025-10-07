@@ -237,16 +237,16 @@ interface BoxRow {
 
 function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
   const items = (rows || []).slice(0, 9);
-  if (!items.length) return <div className='text-xs text-muted-foreground'>No starters</div>;
+  if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
-    <div className='space-y-1'>
+    <div className="space-y-1">
       {items.map(p => (
-        <div key={p.playerId} className='flex items-center justify-between text-xs'>
-          <div className='truncate'>
-            <span className='text-muted-foreground mr-1'>{p.position}</span>
+        <div key={p.playerId} className="flex items-center justify-between text-xs">
+          <div className="truncate">
+            <span className="text-muted-foreground mr-1">{p.position}</span>
             {p.name}
           </div>
-          <div className='font-medium'>{p.points.toFixed(1)}</div>
+          <div className="font-medium">{p.points.toFixed(1)}</div>
         </div>
       ))}
     </div>
@@ -285,60 +285,60 @@ export default function Week3Report2025() {
   };
 
   return (
-    <div className='px-2 md:px-4 py-6 space-y-6 overflow-x-hidden'>
-      <PageHeader title='Week 3 Report — 2025' subtitle='Championship contenders emerge' />
+    <div className="px-2 md:px-4 py-6 space-y-6 overflow-x-hidden">
+      <PageHeader title="Week 3 Report — 2025" subtitle="Championship contenders emerge" />
 
       {/* Main Introduction */}
-      <div className='text-sm leading-relaxed space-y-4'>
-        <div className='whitespace-pre-wrap'>{WEEK3_CONTENT.main_intro}</div>
+      <div className="text-sm leading-relaxed space-y-4">
+        <div className="whitespace-pre-wrap">{WEEK3_CONTENT.main_intro}</div>
       </div>
 
       {/* Data-driven Matchup Details */}
-      <h2 className='text-lg font-semibold'>Matchup Details & Box Scores</h2>
+      <h2 className="text-lg font-semibold">Matchup Details & Box Scores</h2>
       {data?.ok && data.data ? (
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {(data.data.leagues || []).map(l => (
-            <div key={l.leagueId} className='space-y-4'>
-              <div className='flex items-center gap-2'>
-                <Badge variant='outline'>{getConference(l.leagueName)}</Badge>
+            <div key={l.leagueId} className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{getConference(l.leagueName)}</Badge>
               </div>
 
-              <div className='space-y-6'>
+              <div className="space-y-6">
                 {l.matchups.map(m => {
                   const recap = getMatchupRecap(m.teamAName || '', m.teamBName || '', l.leagueName);
 
                   return (
-                    <div key={`${l.leagueId}-${m.matchupId}`} className='p-3 space-y-3'>
-                      <div className='rounded-md bg-gauntlet-crimson/10 px-3 py-2'>
+                    <div key={`${l.leagueId}-${m.matchupId}`} className="p-3 space-y-3">
+                      <div className="rounded-md bg-gauntlet-crimson/10 px-3 py-2">
                         {/* Mobile-first stacked layout */}
-                        <div className='sm:hidden'>
-                          <div className='flex items-center justify-between text-base font-semibold mb-1'>
-                            <span className='truncate flex-1 mr-2'>
+                        <div className="sm:hidden">
+                          <div className="flex items-center justify-between text-base font-semibold mb-1">
+                            <span className="truncate flex-1 mr-2">
                               {m.teamAName || `Team ${m.rosterAId}`}
                             </span>
-                            <span className='text-right font-mono'>{m.pointsA.toFixed(2)}</span>
+                            <span className="text-right font-mono">{m.pointsA.toFixed(2)}</span>
                           </div>
-                          <div className='flex items-center justify-between text-base font-semibold'>
-                            <span className='truncate flex-1 mr-2'>
+                          <div className="flex items-center justify-between text-base font-semibold">
+                            <span className="truncate flex-1 mr-2">
                               {m.teamBName || `Team ${m.rosterBId}`}
                             </span>
-                            <span className='text-right font-mono'>{m.pointsB.toFixed(2)}</span>
+                            <span className="text-right font-mono">{m.pointsB.toFixed(2)}</span>
                           </div>
                         </div>
 
                         {/* Desktop horizontal layout */}
-                        <div className='hidden sm:flex items-center justify-between text-base font-semibold'>
-                          <div className='truncate max-w-[45%]'>
+                        <div className="hidden sm:flex items-center justify-between text-base font-semibold">
+                          <div className="truncate max-w-[45%]">
                             {m.teamAName || `Team ${m.rosterAId}`} ({m.pointsA.toFixed(2)})
                           </div>
-                          <div className='text-muted-foreground px-2'>vs</div>
-                          <div className='truncate text-right max-w-[45%]'>
+                          <div className="text-muted-foreground px-2">vs</div>
+                          <div className="truncate text-right max-w-[45%]">
                             {m.teamBName || `Team ${m.rosterBId}`} ({m.pointsB.toFixed(2)})
                           </div>
                         </div>
                       </div>
 
-                      <div className='text-xs text-muted-foreground'>
+                      <div className="text-xs text-muted-foreground">
                         Combined: {m.combinedPoints.toFixed(1)} • Margin: {m.margin.toFixed(1)}
                         {m.excitementMetrics ? (
                           <>
@@ -351,27 +351,27 @@ export default function Week3Report2025() {
 
                       {/* Show recap if found */}
                       {recap ? (
-                        <div className='text-sm leading-relaxed'>
-                          <div className='font-medium mb-1'>{recap.title}</div>
-                          <div className='whitespace-pre-wrap'>{recap.recap}</div>
+                        <div className="text-sm leading-relaxed">
+                          <div className="font-medium mb-1">{recap.title}</div>
+                          <div className="whitespace-pre-wrap">{recap.recap}</div>
                         </div>
                       ) : (
-                        <div className='text-sm text-muted-foreground italic'>
+                        <div className="text-sm text-muted-foreground italic">
                           Detailed recap available above
                         </div>
                       )}
 
                       {/* Box scores */}
-                      <hr className='border-border' />
-                      <div className='grid grid-cols-2 gap-4'>
+                      <hr className="border-border" />
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className='text-xs font-semibold mb-1'>
+                          <div className="text-xs font-semibold mb-1">
                             {m.teamAName || `Team ${m.rosterAId}`}
                           </div>
                           <MiniBoxscore rows={m.boxscoreA} />
                         </div>
                         <div>
-                          <div className='text-xs font-semibold mb-1'>
+                          <div className="text-xs font-semibold mb-1">
                             {m.teamBName || `Team ${m.rosterBId}`}
                           </div>
                           <MiniBoxscore rows={m.boxscoreB} />
@@ -389,8 +389,8 @@ export default function Week3Report2025() {
       )}
 
       {/* Power Rankings */}
-      <h2 className='text-lg font-semibold'>Power Rankings</h2>
-      <div className='space-y-2 text-sm'>
+      <h2 className="text-lg font-semibold">Power Rankings</h2>
+      <div className="space-y-2 text-sm">
         {((data.data.powerRankings || []) as any[]).map((p: any) => {
           const val = p.normalized as number;
           const min = 80;
@@ -419,10 +419,10 @@ export default function Week3Report2025() {
           return (
             <div
               key={`${p.leagueId}-${p.rosterId}`}
-              className='flex items-center justify-between rounded px-2 py-1'
+              className="flex items-center justify-between rounded px-2 py-1"
               style={{ backgroundColor: bg }}
             >
-              <div className='truncate'>
+              <div className="truncate">
                 #{p.rank} {p.name}
                 {p.deltaLabel && (
                   <span
@@ -437,42 +437,42 @@ export default function Week3Report2025() {
                     ({p.deltaLabel})
                   </span>
                 )}
-                <Badge variant='outline' className='ml-2 text-xs'>
+                <Badge variant="outline" className="ml-2 text-xs">
                   {data?.data?.leagues?.find(l => l.leagueId === p.leagueId)?.leagueName}
                 </Badge>
                 {Number.isFinite(p.wins) && Number.isFinite(p.losses) ? (
-                  <span className='text-muted-foreground ml-2 text-xs'>
+                  <span className="text-muted-foreground ml-2 text-xs">
                     ({p.wins}-{p.losses})
                   </span>
                 ) : null}
               </div>
-              <div className='ml-2 text-xs text-muted-foreground'>{val}</div>
+              <div className="ml-2 text-xs text-muted-foreground">{val}</div>
             </div>
           );
         })}
       </div>
-      <hr className='border-border' />
+      <hr className="border-border" />
 
       {/* League-by-League Power Rankings */}
-      <h2 className='text-lg font-semibold'>League Power Rankings</h2>
-      <div className='space-y-4'>
+      <h2 className="text-lg font-semibold">League Power Rankings</h2>
+      <div className="space-y-4">
         {data?.data?.leagues?.map(l => {
           const leagueRanks = ((data?.data?.powerRankings || []) as any[]).filter(
-            (p: any) => p.leagueId === l.leagueId
+            (p: any) => p.leagueId === l.leagueId,
           );
           return (
-            <div key={l.leagueId} className='mb-4'>
-              <h3 className='text-md font-semibold'>{getConference(l.leagueName)}</h3>
-              <div className='space-y-1 text-sm'>
+            <div key={l.leagueId} className="mb-4">
+              <h3 className="text-md font-semibold">{getConference(l.leagueName)}</h3>
+              <div className="space-y-1 text-sm">
                 {leagueRanks.map(p => (
                   <div
                     key={p.rosterId}
-                    className='flex items-center justify-between rounded px-2 py-1'
+                    className="flex items-center justify-between rounded px-2 py-1"
                   >
-                    <div className='truncate'>
+                    <div className="truncate">
                       #{p.rank} {p.name}
                     </div>
-                    <div className='ml-2 text-xs text-muted-foreground'>{p.normalized}</div>
+                    <div className="ml-2 text-xs text-muted-foreground">{p.normalized}</div>
                   </div>
                 ))}
               </div>
@@ -480,34 +480,34 @@ export default function Week3Report2025() {
           );
         })}
       </div>
-      <hr className='border-border' />
+      <hr className="border-border" />
 
       {/* Standings */}
       {data?.ok && data.data?.standings && data.data.standings.length > 0 && (
-        <div className='space-y-4'>
-          <h2 className='text-lg font-semibold'>Current Standings</h2>
-          <div className='grid md:grid-cols-2 gap-6'>
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Current Standings</h2>
+          <div className="grid md:grid-cols-2 gap-6">
             {data.data.standings.map(league => (
-              <div key={league.leagueId} className='space-y-3'>
-                <h3 className='font-semibold'>{league.leagueName}</h3>
+              <div key={league.leagueId} className="space-y-3">
+                <h3 className="font-semibold">{league.leagueName}</h3>
                 {Object.entries(league.divisions).map(([divName, teams]) => (
-                  <div key={divName} className='space-y-2'>
-                    <h4 className='text-sm font-medium text-muted-foreground'>{divName}</h4>
-                    <div className='space-y-1'>
+                  <div key={divName} className="space-y-2">
+                    <h4 className="text-sm font-medium text-muted-foreground">{divName}</h4>
+                    <div className="space-y-1">
                       {teams.map((team: any) => (
-                        <div key={team.rosterId} className='flex items-center justify-between'>
-                          <div className='truncate'>
+                        <div key={team.rosterId} className="flex items-center justify-between">
+                          <div className="truncate">
                             {team.teamName || team.name}
-                            <span className='text-xs text-muted-foreground ml-2'>
+                            <span className="text-xs text-muted-foreground ml-2">
                               PR #
                               {((data?.data?.powerRankings || []) as any[]).find(
                                 (p: any) =>
                                   p.leagueId === league.leagueId &&
-                                  String(p.rosterId) === String(team.rosterId)
+                                  String(p.rosterId) === String(team.rosterId),
                               )?.rank ?? '-'}
                             </span>
                           </div>
-                          <div className='ml-2'>
+                          <div className="ml-2">
                             {team.wins}-{team.losses} • {team.points.toFixed(1)} pts
                           </div>
                         </div>
@@ -523,45 +523,45 @@ export default function Week3Report2025() {
 
       {/* Hall of Fame */}
       {data?.ok && data.data?.hallOfFame && data.data.hallOfFame.length > 0 && (
-        <div className='space-y-4'>
-          <h2 className='text-lg font-semibold'>Week 3 Hall of Fame</h2>
-          <div className='space-y-2'>
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Week 3 Hall of Fame</h2>
+          <div className="space-y-2">
             {data.data.hallOfFame.length > 0 ? (
               data.data.hallOfFame.map((entry: any, idx) => (
-                <div key={idx} className='p-3 bg-yellow-50 border border-yellow-200 rounded'>
-                  <div className='font-medium'>{entry.category}</div>
-                  <div className='text-sm'>{entry.description}</div>
-                  <div className='text-xs text-muted-foreground'>
+                <div key={idx} className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                  <div className="font-medium">{entry.category}</div>
+                  <div className="text-sm">{entry.description}</div>
+                  <div className="text-xs text-muted-foreground">
                     {entry.player} ({entry.team}) - {entry.value}
                   </div>
                 </div>
               ))
             ) : (
-              <div className='text-sm text-muted-foreground'>No hall of fame entries yet.</div>
+              <div className="text-sm text-muted-foreground">No hall of fame entries yet.</div>
             )}
           </div>
         </div>
       )}
 
       {/* Closing Note */}
-      <div className='space-y-4'>
-        <h2 className='text-lg font-semibold'>Closing Note</h2>
-        <div className='text-sm leading-relaxed'>{WEEK3_CONTENT.closing}</div>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Closing Note</h2>
+        <div className="text-sm leading-relaxed">{WEEK3_CONTENT.closing}</div>
       </div>
 
       {/* Week 4 Preview */}
-      <div className='space-y-6'>
-        <h2 className='text-lg font-semibold'>Week 4 Preview</h2>
+      <div className="space-y-6">
+        <h2 className="text-lg font-semibold">Week 4 Preview</h2>
 
         {/* Overview */}
-        <div className='text-sm leading-relaxed'>{WEEK4_PREVIEW.overview}</div>
+        <div className="text-sm leading-relaxed">{WEEK4_PREVIEW.overview}</div>
 
         {/* Slate-based Matchup Display */}
         {(['AFC', 'NFC'] as const).map(conference => {
           const slates = conference === 'AFC' ? afcSlates : nfcSlates;
 
           return (
-            <div key={conference} className='space-y-4'>
+            <div key={conference} className="space-y-4">
               <h3
                 className={`text-base font-semibold ${conference === 'AFC' ? 'text-gauntlet-crimson' : 'text-blue-600'}`}
               >
@@ -572,24 +572,24 @@ export default function Week3Report2025() {
                 if (windowMatchups.length === 0) return null;
 
                 return (
-                  <div key={timeWindow} className='space-y-3'>
+                  <div key={timeWindow} className="space-y-3">
                     {windowMatchups.map((matchup, index) => (
-                      <div key={index} className='p-3 space-y-4'>
+                      <div key={index} className="p-3 space-y-4">
                         {/* Matchup Header */}
-                        <div className='rounded-md bg-gauntlet-crimson/10 px-3 py-2'>
-                          <div className='flex items-center justify-between text-base font-semibold'>
-                            <div className='flex items-center gap-2'>
+                        <div className="rounded-md bg-gauntlet-crimson/10 px-3 py-2">
+                          <div className="flex items-center justify-between text-base font-semibold">
+                            <div className="flex items-center gap-2">
                               <span>{matchup.teamA.name}</span>
-                              <span className='text-muted-foreground text-sm'>
+                              <span className="text-muted-foreground text-sm">
                                 ({matchup.teamA.record})
                               </span>
-                              <span className='text-muted-foreground'>vs</span>
+                              <span className="text-muted-foreground">vs</span>
                               <span>{matchup.teamB.name}</span>
-                              <span className='text-muted-foreground text-sm'>
+                              <span className="text-muted-foreground text-sm">
                                 ({matchup.teamB.record})
                               </span>
                             </div>
-                            <div className='text-sm text-muted-foreground'>
+                            <div className="text-sm text-muted-foreground">
                               {matchup.teamA.projection.toFixed(1)} vs{' '}
                               {matchup.teamB.projection.toFixed(1)}
                             </div>
@@ -597,9 +597,9 @@ export default function Week3Report2025() {
                         </div>
 
                         {/* Betting Lines */}
-                        <div className='text-xs text-muted-foreground space-y-1'>
+                        <div className="text-xs text-muted-foreground space-y-1">
                           <div>
-                            <span className='font-medium'>Spread:</span>{' '}
+                            <span className="font-medium">Spread:</span>{' '}
                             {matchup.bettingOdds.favorite === 'teamA'
                               ? matchup.teamA.name
                               : matchup.teamB.name}{' '}
@@ -610,14 +610,14 @@ export default function Week3Report2025() {
                             {matchup.bettingOdds.moneylineB}
                           </div>
                           <div>
-                            <span className='font-medium'>Total:</span> {matchup.bettingOdds.total}{' '}
+                            <span className="font-medium">Total:</span> {matchup.bettingOdds.total}{' '}
                             • O/U: {matchup.bettingOdds.over}/{matchup.bettingOdds.under}
                           </div>
                         </div>
 
                         {/* Time Window Distribution Table */}
-                        <div className='space-y-2'>
-                          <h5 className='text-sm font-medium'>
+                        <div className="space-y-2">
+                          <h5 className="text-sm font-medium">
                             Player Distribution by Game Window
                           </h5>
                           {(() => {
@@ -628,28 +628,28 @@ export default function Week3Report2025() {
                               0;
 
                             return (
-                              <div className='overflow-x-auto'>
-                                <table className='w-full text-xs'>
+                              <div className="overflow-x-auto">
+                                <table className="w-full text-xs">
                                   <thead>
                                     <tr>
-                                      <th className='text-left font-medium text-muted-foreground'></th>
-                                      <th className='text-center font-medium text-muted-foreground'>
+                                      <th className="text-left font-medium text-muted-foreground"></th>
+                                      <th className="text-center font-medium text-muted-foreground">
                                         Thu
                                       </th>
-                                      <th className='text-center font-medium text-muted-foreground'>
+                                      <th className="text-center font-medium text-muted-foreground">
                                         Early
                                       </th>
-                                      <th className='text-center font-medium text-muted-foreground'>
+                                      <th className="text-center font-medium text-muted-foreground">
                                         Late
                                       </th>
-                                      <th className='text-center font-medium text-muted-foreground'>
+                                      <th className="text-center font-medium text-muted-foreground">
                                         SNF
                                       </th>
-                                      <th className='text-center font-medium text-muted-foreground'>
+                                      <th className="text-center font-medium text-muted-foreground">
                                         MNF
                                       </th>
                                       {hasOther && (
-                                        <th className='text-center font-medium text-muted-foreground'>
+                                        <th className="text-center font-medium text-muted-foreground">
                                           Other
                                         </th>
                                       )}
@@ -657,47 +657,47 @@ export default function Week3Report2025() {
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td className='font-medium'>{matchup.teamA.name}</td>
-                                      <td className='text-center'>
+                                      <td className="font-medium">{matchup.teamA.name}</td>
+                                      <td className="text-center">
                                         {matchup.timeWindows.thursdayNight?.teamA || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.early?.teamA || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.late?.teamA || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.sundayNight?.teamA || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.mondayNight?.teamA || 0}
                                       </td>
                                       {hasOther && (
-                                        <td className='text-center'>
+                                        <td className="text-center">
                                           {matchup.timeWindows.other?.teamA || 0}
                                         </td>
                                       )}
                                     </tr>
                                     <tr>
-                                      <td className='font-medium'>{matchup.teamB.name}</td>
-                                      <td className='text-center'>
+                                      <td className="font-medium">{matchup.teamB.name}</td>
+                                      <td className="text-center">
                                         {matchup.timeWindows.thursdayNight?.teamB || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.early?.teamB || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.late?.teamB || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.sundayNight?.teamB || 0}
                                       </td>
-                                      <td className='text-center'>
+                                      <td className="text-center">
                                         {matchup.timeWindows.mondayNight?.teamB || 0}
                                       </td>
                                       {hasOther && (
-                                        <td className='text-center'>
+                                        <td className="text-center">
                                           {matchup.timeWindows.other?.teamB || 0}
                                         </td>
                                       )}
@@ -710,37 +710,37 @@ export default function Week3Report2025() {
                         </div>
 
                         {/* Projected Starter Totals */}
-                        <div className='space-y-2'>
-                          <h5 className='text-sm font-medium'>Current Starter Projections</h5>
-                          <div className='grid grid-cols-2 gap-4'>
+                        <div className="space-y-2">
+                          <h5 className="text-sm font-medium">Current Starter Projections</h5>
+                          <div className="grid grid-cols-2 gap-4">
                             {/* Team A Starters */}
                             <div>
-                              <div className='text-xs font-semibold mb-2'>{matchup.teamA.name}</div>
-                              <div className='space-y-1'>
+                              <div className="text-xs font-semibold mb-2">{matchup.teamA.name}</div>
+                              <div className="space-y-1">
                                 {matchup.teamA.players.slice(0, 9).map((player, playerIndex) => (
                                   <div
                                     key={playerIndex}
-                                    className='flex items-center justify-between text-xs'
+                                    className="flex items-center justify-between text-xs"
                                   >
-                                    <div className='truncate flex-1'>
-                                      <span className='text-muted-foreground mr-1'>
+                                    <div className="truncate flex-1">
+                                      <span className="text-muted-foreground mr-1">
                                         {player.position}
                                       </span>
                                       {player.name}
                                       {player.team && player.team !== 'FA' && (
-                                        <span className='ml-1 text-muted-foreground'>
+                                        <span className="ml-1 text-muted-foreground">
                                           ({player.team})
                                         </span>
                                       )}
                                     </div>
-                                    <div className='font-medium'>
+                                    <div className="font-medium">
                                       {player.projection.toFixed(1)}
                                     </div>
                                   </div>
                                 ))}
                               </div>
-                              <hr className='border-border my-2' />
-                              <div className='flex items-center justify-between text-xs font-semibold'>
+                              <hr className="border-border my-2" />
+                              <div className="flex items-center justify-between text-xs font-semibold">
                                 <span>Total</span>
                                 <span>{matchup.teamA.projection.toFixed(1)}</span>
                               </div>
@@ -748,32 +748,32 @@ export default function Week3Report2025() {
 
                             {/* Team B Starters */}
                             <div>
-                              <div className='text-xs font-semibold mb-2'>{matchup.teamB.name}</div>
-                              <div className='space-y-1'>
+                              <div className="text-xs font-semibold mb-2">{matchup.teamB.name}</div>
+                              <div className="space-y-1">
                                 {matchup.teamB.players.slice(0, 9).map((player, playerIndex) => (
                                   <div
                                     key={playerIndex}
-                                    className='flex items-center justify-between text-xs'
+                                    className="flex items-center justify-between text-xs"
                                   >
-                                    <div className='truncate flex-1'>
-                                      <span className='text-muted-foreground mr-1'>
+                                    <div className="truncate flex-1">
+                                      <span className="text-muted-foreground mr-1">
                                         {player.position}
                                       </span>
                                       {player.name}
                                       {player.team && player.team !== 'FA' && (
-                                        <span className='ml-1 text-muted-foreground'>
+                                        <span className="ml-1 text-muted-foreground">
                                           ({player.team})
                                         </span>
                                       )}
                                     </div>
-                                    <div className='font-medium'>
+                                    <div className="font-medium">
                                       {player.projection.toFixed(1)}
                                     </div>
                                   </div>
                                 ))}
                               </div>
-                              <hr className='border-border my-2' />
-                              <div className='flex items-center justify-between text-xs font-semibold'>
+                              <hr className="border-border my-2" />
+                              <div className="flex items-center justify-between text-xs font-semibold">
                                 <span>Total</span>
                                 <span>{matchup.teamB.projection.toFixed(1)}</span>
                               </div>
@@ -783,8 +783,8 @@ export default function Week3Report2025() {
 
                         {/* Matchup Narrative */}
                         {matchup.narrative && (
-                          <div className='mt-3 pt-3 border-t border-gray-200'>
-                            <div className='text-sm leading-relaxed text-muted-foreground'>
+                          <div className="mt-3 pt-3 border-t border-gray-200">
+                            <div className="text-sm leading-relaxed text-muted-foreground">
                               {matchup.narrative}
                             </div>
                           </div>
@@ -799,26 +799,26 @@ export default function Week3Report2025() {
         })}
 
         {/* League Odds Snapshot */}
-        <div className='space-y-4'>
-          <h3 className='text-base font-semibold'>Week 4 League Odds</h3>
-          <div className='grid md:grid-cols-2 gap-6'>
+        <div className="space-y-4">
+          <h3 className="text-base font-semibold">Week 4 League Odds</h3>
+          <div className="grid md:grid-cols-2 gap-6">
             {/* Highest Scorers */}
             <div>
-              <h4 className='text-sm font-semibold mb-2 text-green-600'>Highest Scorer</h4>
-              <div className='space-y-1'>
+              <h4 className="text-sm font-semibold mb-2 text-green-600">Highest Scorer</h4>
+              <div className="space-y-1">
                 {WEEK4_PREVIEW.leagueOdds.highestScorer
                   .slice(0, 6)
                   .map((team: any, index: number) => (
-                    <div key={index} className='flex items-center justify-between text-xs'>
+                    <div key={index} className="flex items-center justify-between text-xs">
                       <div>
-                        <span className='font-medium'>{team.team}</span>
-                        <Badge variant='outline' className='ml-1 text-xs'>
+                        <span className="font-medium">{team.team}</span>
+                        <Badge variant="outline" className="ml-1 text-xs">
                           {team.leagueId}
                         </Badge>
                       </div>
                       <div>
                         <span>{(team.probability * 100).toFixed(1)}%</span>
-                        <span className='ml-1 text-muted-foreground'>({team.odds})</span>
+                        <span className="ml-1 text-muted-foreground">({team.odds})</span>
                       </div>
                     </div>
                   ))}
@@ -827,21 +827,21 @@ export default function Week3Report2025() {
 
             {/* Lowest Scorers */}
             <div>
-              <h4 className='text-sm font-semibold mb-2 text-red-600'>Lowest Scorer</h4>
-              <div className='space-y-1'>
+              <h4 className="text-sm font-semibold mb-2 text-red-600">Lowest Scorer</h4>
+              <div className="space-y-1">
                 {WEEK4_PREVIEW.leagueOdds.lowestScorer
                   .slice(0, 6)
                   .map((team: any, index: number) => (
-                    <div key={index} className='flex items-center justify-between text-xs'>
+                    <div key={index} className="flex items-center justify-between text-xs">
                       <div>
-                        <span className='font-medium'>{team.team}</span>
-                        <Badge variant='outline' className='ml-1 text-xs'>
+                        <span className="font-medium">{team.team}</span>
+                        <Badge variant="outline" className="ml-1 text-xs">
                           {team.leagueId}
                         </Badge>
                       </div>
                       <div>
                         <span>{(team.probability * 100).toFixed(1)}%</span>
-                        <span className='ml-1 text-muted-foreground'>({team.odds})</span>
+                        <span className="ml-1 text-muted-foreground">({team.odds})</span>
                       </div>
                     </div>
                   ))}
@@ -850,23 +850,23 @@ export default function Week3Report2025() {
 
             {/* Closest Matchups */}
             <div>
-              <h4 className='text-sm font-semibold mb-2 text-yellow-600'>Closest Matchup</h4>
-              <div className='space-y-1'>
+              <h4 className="text-sm font-semibold mb-2 text-yellow-600">Closest Matchup</h4>
+              <div className="space-y-1">
                 {WEEK4_PREVIEW.leagueOdds.closestMatchup
                   .slice(0, 6)
                   .map((matchup: any, index: number) => (
-                    <div key={index} className='flex items-center justify-between text-xs'>
+                    <div key={index} className="flex items-center justify-between text-xs">
                       <div>
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {matchup.teams[0]} vs {matchup.teams[1]}
                         </span>
-                        <Badge variant='outline' className='ml-1 text-xs'>
+                        <Badge variant="outline" className="ml-1 text-xs">
                           {matchup.leagueId}
                         </Badge>
                       </div>
                       <div>
                         <span>{(matchup.probability * 100).toFixed(1)}%</span>
-                        <span className='ml-1 text-muted-foreground'>({matchup.odds})</span>
+                        <span className="ml-1 text-muted-foreground">({matchup.odds})</span>
                       </div>
                     </div>
                   ))}
@@ -875,23 +875,23 @@ export default function Week3Report2025() {
 
             {/* Biggest Blowouts */}
             <div>
-              <h4 className='text-sm font-semibold mb-2 text-purple-600'>Biggest Blowout</h4>
-              <div className='space-y-1'>
+              <h4 className="text-sm font-semibold mb-2 text-purple-600">Biggest Blowout</h4>
+              <div className="space-y-1">
                 {WEEK4_PREVIEW.leagueOdds.biggestBlowout
                   .slice(0, 6)
                   .map((matchup: any, index: number) => (
-                    <div key={index} className='flex items-center justify-between text-xs'>
+                    <div key={index} className="flex items-center justify-between text-xs">
                       <div>
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {matchup.teams[0]} vs {matchup.teams[1]}
                         </span>
-                        <Badge variant='outline' className='ml-1 text-xs'>
+                        <Badge variant="outline" className="ml-1 text-xs">
                           {matchup.leagueId}
                         </Badge>
                       </div>
                       <div>
                         <span>{(matchup.probability * 100).toFixed(1)}%</span>
-                        <span className='ml-1 text-muted-foreground'>({matchup.odds})</span>
+                        <span className="ml-1 text-muted-foreground">({matchup.odds})</span>
                       </div>
                     </div>
                   ))}
@@ -900,23 +900,23 @@ export default function Week3Report2025() {
 
             {/* Highest Scoring Matchups */}
             <div>
-              <h4 className='text-sm font-semibold mb-2 text-blue-600'>Highest Scoring</h4>
-              <div className='space-y-1'>
+              <h4 className="text-sm font-semibold mb-2 text-blue-600">Highest Scoring</h4>
+              <div className="space-y-1">
                 {WEEK4_PREVIEW.leagueOdds.highestScoringMatchup
                   .slice(0, 6)
                   .map((matchup: any, index: number) => (
-                    <div key={index} className='flex items-center justify-between text-xs'>
+                    <div key={index} className="flex items-center justify-between text-xs">
                       <div>
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {matchup.teams[0]} vs {matchup.teams[1]}
                         </span>
-                        <Badge variant='outline' className='ml-1 text-xs'>
+                        <Badge variant="outline" className="ml-1 text-xs">
                           {matchup.leagueId}
                         </Badge>
                       </div>
                       <div>
                         <span>{(matchup.probability * 100).toFixed(1)}%</span>
-                        <span className='ml-1 text-muted-foreground'>({matchup.odds})</span>
+                        <span className="ml-1 text-muted-foreground">({matchup.odds})</span>
                       </div>
                     </div>
                   ))}
@@ -925,23 +925,23 @@ export default function Week3Report2025() {
 
             {/* Lowest Scoring Matchups */}
             <div>
-              <h4 className='text-sm font-semibold mb-2 text-gray-600'>Lowest Scoring</h4>
-              <div className='space-y-1'>
+              <h4 className="text-sm font-semibold mb-2 text-gray-600">Lowest Scoring</h4>
+              <div className="space-y-1">
                 {WEEK4_PREVIEW.leagueOdds.lowestScoringMatchup
                   .slice(0, 6)
                   .map((matchup: any, index: number) => (
-                    <div key={index} className='flex items-center justify-between text-xs'>
+                    <div key={index} className="flex items-center justify-between text-xs">
                       <div>
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {matchup.teams[0]} vs {matchup.teams[1]}
                         </span>
-                        <Badge variant='outline' className='ml-1 text-xs'>
+                        <Badge variant="outline" className="ml-1 text-xs">
                           {matchup.leagueId}
                         </Badge>
                       </div>
                       <div>
                         <span>{(matchup.probability * 100).toFixed(1)}%</span>
-                        <span className='ml-1 text-muted-foreground'>({matchup.odds})</span>
+                        <span className="ml-1 text-muted-foreground">({matchup.odds})</span>
                       </div>
                     </div>
                   ))}

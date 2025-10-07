@@ -29,23 +29,23 @@ The `apps/web` Next.js application has **strong domain functionality** but exhib
 
 #### Top 15 Problem Files (Lines of Code)
 
-| Rank | File | Lines | Category | Priority |
-|------|------|-------|----------|----------|
-| 1 | `data/report-week2.ts` | 2,805 | Data | 🔴 Critical |
-| 2 | `components/manager-analysis.tsx` | 1,624 | Component | 🔴 Critical |
-| 3 | `app/stats/components/TrendsView.tsx` | 1,606 | Component | 🔴 Critical |
-| 4 | `app/league/draft/page.tsx` | 1,488 | Page | 🔴 Critical |
-| 5 | `components/playoff-bracket.tsx` | 1,400 | Component | 🔴 Critical |
-| 6 | `lib/manager-analytics.ts` | 1,346 | Logic | 🔴 Critical |
-| 7 | `app/hall-of-fame-enhanced/page.tsx` | 1,251 | Page | 🔴 Critical |
-| 8 | `app/stats/components/ScheduleAnalysis.tsx` | 1,243 | Component | 🔴 Critical |
-| 9 | `app/draft/analysis/page.tsx` | 1,228 | Page | 🔴 Critical |
-| 10 | `app/stats/components/TeamView.tsx` | 1,198 | Component | 🔴 Critical |
-| 11 | `app/competition/reports/2025/week-4/page.tsx` | 1,177 | Page | 🟡 High |
-| 12 | `app/league/transactions/page.tsx` | 1,169 | Page | 🟡 High |
-| 13 | `components/start-sit-efficiency.tsx` | 1,162 | Component | 🟡 High |
-| 14 | `app/api/reports/[season]/[week]/route.ts` | 1,035 | API | 🟡 High |
-| 15 | `app/matchup/[matchupId]/page.tsx` | 957 | Page | 🟡 High |
+| Rank | File                                           | Lines | Category  | Priority    |
+| ---- | ---------------------------------------------- | ----- | --------- | ----------- |
+| 1    | `data/report-week2.ts`                         | 2,805 | Data      | 🔴 Critical |
+| 2    | `components/manager-analysis.tsx`              | 1,624 | Component | 🔴 Critical |
+| 3    | `app/stats/components/TrendsView.tsx`          | 1,606 | Component | 🔴 Critical |
+| 4    | `app/league/draft/page.tsx`                    | 1,488 | Page      | 🔴 Critical |
+| 5    | `components/playoff-bracket.tsx`               | 1,400 | Component | 🔴 Critical |
+| 6    | `lib/manager-analytics.ts`                     | 1,346 | Logic     | 🔴 Critical |
+| 7    | `app/hall-of-fame-enhanced/page.tsx`           | 1,251 | Page      | 🔴 Critical |
+| 8    | `app/stats/components/ScheduleAnalysis.tsx`    | 1,243 | Component | 🔴 Critical |
+| 9    | `app/draft/analysis/page.tsx`                  | 1,228 | Page      | 🔴 Critical |
+| 10   | `app/stats/components/TeamView.tsx`            | 1,198 | Component | 🔴 Critical |
+| 11   | `app/competition/reports/2025/week-4/page.tsx` | 1,177 | Page      | 🟡 High     |
+| 12   | `app/league/transactions/page.tsx`             | 1,169 | Page      | 🟡 High     |
+| 13   | `components/start-sit-efficiency.tsx`          | 1,162 | Component | 🟡 High     |
+| 14   | `app/api/reports/[season]/[week]/route.ts`     | 1,035 | API       | 🟡 High     |
+| 15   | `app/matchup/[matchupId]/page.tsx`             | 957   | Page      | 🟡 High     |
 
 **Total Lines in Top 15**: 19,079 lines (32.6% of entire codebase!)
 
@@ -73,6 +73,7 @@ The `apps/web` Next.js application has **strong domain functionality** but exhib
 - ❌ No CI/CD quality gates
 
 **Evidence**:
+
 ```typescript
 // manager-analysis.tsx line 3
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, sort-imports, prefer-const */
@@ -93,6 +94,7 @@ The `apps/web` Next.js application has **strong domain functionality** but exhib
 - ❌ No sub-component extraction
 
 **Evidence**:
+
 ```typescript
 // manager-analysis.tsx (1,624 lines)
 export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) => {
@@ -115,6 +117,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 #### 4. File Organization: ❌ **2/10** (CRITICAL)
 
 **Current Structure** (flat, unorganized):
+
 ```
 apps/web/src/
 ├── components/          # Flat, mixed concerns (48 files)
@@ -136,6 +139,7 @@ apps/web/src/
 ```
 
 **Issues**:
+
 - No feature-based organization (everything flat)
 - No co-location (components, hooks, utils, types scattered)
 - Inconsistent sub-folders (some exist, most don't)
@@ -153,12 +157,21 @@ apps/web/src/
 - ❌ Heavy use of `any` type (see eslint-disable comments)
 
 **Evidence**:
+
 ```typescript
 // hooks.ts - types inline with logic
-interface Matchup { /* ... */ }
-interface WeeklyMetric { /* ... */ }
-interface Roster extends FantasyTeam { /* ... */ }
-export interface TeamStats { /* ... */ }
+interface Matchup {
+  /* ... */
+}
+interface WeeklyMetric {
+  /* ... */
+}
+interface Roster extends FantasyTeam {
+  /* ... */
+}
+export interface TeamStats {
+  /* ... */
+}
 // ... 40+ more interfaces in same file!
 ```
 
@@ -185,6 +198,7 @@ export interface TeamStats { /* ... */ }
 - ❌ 243 exports in flat `lib/` directory (unorganized)
 
 **Evidence**:
+
 ```typescript
 // manager-analysis.tsx line 29
 import { colors, dataVizColors } from '../../../../brand/colors';
@@ -377,16 +391,19 @@ apps/web/src/
 ### Migration Strategy
 
 **Phase 1**: Infrastructure (Week 1)
+
 - Add testing infrastructure
 - Add ESLint/Prettier configuration
 - Create folder structure
 
 **Phase 2**: Extract Shared Code (Week 2)
+
 - Move `components/ui/` to `shared/components/primitives/`
 - Extract shared hooks to `shared/hooks/`
 - Extract shared utils to `shared/utils/`
 
 **Phase 3**: Feature Migration (Week 3-6)
+
 - Migrate one feature at a time (draft-analysis → matchups → stats → hall-of-fame)
 - For each feature:
   1. Extract types
@@ -396,6 +413,7 @@ apps/web/src/
   5. Add tests
 
 **Phase 4**: Cleanup (Week 7-8)
+
 - Remove deprecated files
 - Add comprehensive tests
 - Documentation pass
@@ -407,12 +425,14 @@ apps/web/src/
 ### Phase 1: Foundation & Infrastructure (Week 1) 🔴 CRITICAL
 
 #### WEB-SETUP-001: Testing Infrastructure Setup
+
 **Effort**: 1 hour  
 **Priority**: 🔴 CRITICAL
 
 **Objective**: Set up Vitest and React Testing Library for apps/web
 
 **Deliverables**:
+
 - Install Vitest, @vitest/ui, @vitest/coverage-v8
 - Install @testing-library/react, @testing-library/jest-dom
 - Create `vitest.config.ts` with Next.js support
@@ -421,6 +441,7 @@ apps/web/src/
 - Create sample test to verify setup
 
 **Acceptance Criteria**:
+
 - [ ] `pnpm test` runs successfully
 - [ ] `pnpm test:coverage` generates report
 - [ ] Sample test passes
@@ -429,12 +450,14 @@ apps/web/src/
 ---
 
 #### WEB-SETUP-002: Code Quality Automation
+
 **Effort**: 45 minutes  
 **Priority**: 🔴 CRITICAL
 
 **Objective**: Add ESLint and Prettier configuration matching CODING_CONVENTIONS.MD
 
 **Deliverables**:
+
 - Install ESLint with TypeScript support
 - Install Prettier with ESLint integration
 - Create `eslint.config.mjs` (flat config)
@@ -447,6 +470,7 @@ apps/web/src/
   - No-any rule
 
 **Acceptance Criteria**:
+
 - [ ] `pnpm lint` runs successfully
 - [ ] `pnpm format` works
 - [ ] Rules match CODING_CONVENTIONS.MD
@@ -455,12 +479,14 @@ apps/web/src/
 ---
 
 #### WEB-SETUP-003: Test Utilities and Factories
+
 **Effort**: 1 hour  
 **Priority**: 🔴 CRITICAL
 
 **Objective**: Create test utilities and data factories
 
 **Deliverables**:
+
 - Create `src/shared/test/` directory
 - Create `factories/` with data factories:
   - `teamFactory.ts`
@@ -473,6 +499,7 @@ apps/web/src/
 - Export from `index.ts`
 
 **Acceptance Criteria**:
+
 - [ ] Factories generate valid test data
 - [ ] `renderWithProviders` works with React Query
 - [ ] Example test uses factories
@@ -481,12 +508,14 @@ apps/web/src/
 ---
 
 #### WEB-SETUP-004: Create Feature Folder Structure
+
 **Effort**: 30 minutes  
 **Priority**: 🟡 HIGH
 
 **Objective**: Create empty feature folders matching proposed structure
 
 **Deliverables**:
+
 - Create `src/features/` directory
 - Create subdirectories:
   - `draft-analysis/`, `matchups/`, `stats/`, `hall-of-fame/`, `transactions/`, `start-sit/`
@@ -497,6 +526,7 @@ apps/web/src/
   - `components/`, `hooks/`, `utils/`, `types/`, `atoms/`
 
 **Acceptance Criteria**:
+
 - [ ] All folders created
 - [ ] Empty `index.ts` files in place
 - [ ] TypeScript compilation still works
@@ -507,18 +537,21 @@ apps/web/src/
 ### Phase 2: Type Extraction (Week 1-2) ⚠️ HIGH PRIORITY
 
 #### WEB-EXTRACT-001: Manager Analysis Types
+
 **Effort**: 20 minutes  
 **Priority**: ⚠️ HIGH (Quick Win)
 
 **Objective**: Extract types from `manager-analysis.tsx` to separate file
 
 **Deliverables**:
+
 - Create `features/draft-analysis/types.ts`
 - Move all interfaces from `components/manager-analysis.tsx`
 - Update imports
 - Export types from barrel file
 
 **Acceptance Criteria**:
+
 - [ ] All types extracted
 - [ ] Component imports from `types.ts`
 - [ ] TypeScript compilation passes
@@ -527,17 +560,20 @@ apps/web/src/
 ---
 
 #### WEB-EXTRACT-002: Manager Analytics Logic Types
+
 **Effort**: 25 minutes  
 **Priority**: ⚠️ HIGH
 
 **Objective**: Extract types from `lib/manager-analytics.ts` (1,346 lines)
 
 **Deliverables**:
+
 - Create `features/draft-analysis/types.ts` (merge with EXTRACT-001)
 - Move 18+ interfaces from `manager-analytics.ts`
 - Update imports in both files
 
 **Acceptance Criteria**:
+
 - [ ] Types separated from implementation
 - [ ] All imports updated
 - [ ] TypeScript compilation passes
@@ -545,17 +581,20 @@ apps/web/src/
 ---
 
 #### WEB-EXTRACT-003: Hooks Types
+
 **Effort**: 20 minutes  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract types from `lib/hooks.ts`
 
 **Deliverables**:
+
 - Create `shared/types/api.ts`
 - Move interfaces: `Matchup`, `WeeklyMetric`, `Roster`, `TeamStats`, etc.
 - Update imports
 
 **Acceptance Criteria**:
+
 - [ ] Types centralized in `shared/types/`
 - [ ] Hooks file cleaner
 - [ ] TypeScript compilation passes
@@ -563,17 +602,20 @@ apps/web/src/
 ---
 
 #### WEB-EXTRACT-004: Stats Component Types
+
 **Effort**: 30 minutes  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract types from stats components
 
 **Deliverables**:
+
 - Create `features/stats/types.ts`
 - Move types from `TrendsView.tsx`, `TeamView.tsx`, `ScheduleAnalysis.tsx`
 - Consolidate duplicate types
 
 **Acceptance Criteria**:
+
 - [ ] Feature-level types file created
 - [ ] Components import from centralized types
 - [ ] No duplicate type definitions
@@ -583,12 +625,14 @@ apps/web/src/
 ### Phase 3: Utility Extraction (Week 2) 🟡 MEDIUM PRIORITY
 
 #### WEB-UTIL-001: Formatting Utilities
+
 **Effort**: 40 minutes  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract formatting functions to shared utilities
 
 **Deliverables**:
+
 - Create `shared/utils/formatting/`
 - Extract functions:
   - `currency.ts` - `formatCurrency()`, `formatCompactCurrency()`
@@ -598,6 +642,7 @@ apps/web/src/
 - Export from `index.ts`
 
 **Acceptance Criteria**:
+
 - [ ] All formatting functions extracted
 - [ ] 100% test coverage on utilities
 - [ ] Components use shared formatters
@@ -606,12 +651,14 @@ apps/web/src/
 ---
 
 #### WEB-UTIL-002: Color Utilities
+
 **Effort**: 35 minutes  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Consolidate color utilities
 
 **Deliverables**:
+
 - Create `shared/utils/colors/`
 - Extract functions:
   - `chart-colors.ts` - `getClusterBadgeColor()`, `getChartColor()`
@@ -622,6 +669,7 @@ apps/web/src/
 - Export from `index.ts`
 
 **Acceptance Criteria**:
+
 - [ ] Color utilities centralized
 - [ ] Duplicate logic removed
 - [ ] Tests cover all functions
@@ -630,12 +678,14 @@ apps/web/src/
 ---
 
 #### WEB-UTIL-003: Manager Analytics Calculations
+
 **Effort**: 1 hour  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract calculation logic from `manager-analytics.ts`
 
 **Deliverables**:
+
 - Create `features/draft-analysis/utils/calculations.ts`
 - Extract pure functions:
   - `calculateGiniSpend()`
@@ -646,6 +696,7 @@ apps/web/src/
 - Update `manager-analytics.ts` to use extracted functions
 
 **Acceptance Criteria**:
+
 - [ ] Calculation logic separated from data fetching
 - [ ] 80%+ test coverage
 - [ ] All pure functions tested
@@ -654,12 +705,14 @@ apps/web/src/
 ---
 
 #### WEB-UTIL-004: Hall of Fame Utilities
+
 **Effort**: 45 minutes  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Consolidate 5 hall-of-fame utility files
 
 **Deliverables**:
+
 - Create `features/hall-of-fame/utils/`
 - Consolidate files:
   - `calculations.ts` (from `hall-of-fame-calculations.ts`)
@@ -670,6 +723,7 @@ apps/web/src/
 - Export from `index.ts`
 
 **Acceptance Criteria**:
+
 - [ ] 5 files consolidated to 4
 - [ ] Duplicate logic removed
 - [ ] Barrel exports in place
@@ -680,12 +734,14 @@ apps/web/src/
 ### Phase 4: Hook Extraction (Week 3) 🟡 MEDIUM PRIORITY
 
 #### WEB-HOOK-001: Manager Sorting and Filtering
+
 **Effort**: 1 hour  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract sorting/filtering logic from `manager-analysis.tsx`
 
 **Deliverables**:
+
 - Create `features/draft-analysis/hooks/`
 - Extract hooks:
   - `useManagerSorting.ts` - Sorting state and logic
@@ -694,6 +750,7 @@ apps/web/src/
 - Update `manager-analysis.tsx` to use hooks
 
 **Acceptance Criteria**:
+
 - [ ] Hooks extracted and tested
 - [ ] Component file reduced by 150+ lines
 - [ ] Tests cover sorting/filtering logic
@@ -702,17 +759,20 @@ apps/web/src/
 ---
 
 #### WEB-HOOK-002: Draft Analytics Data Hook
+
 **Effort**: 45 minutes  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract data fetching logic from `manager-analytics.ts`
 
 **Deliverables**:
+
 - Create `features/draft-analysis/hooks/useDraftAnalytics.ts`
 - Extract React Query logic
 - Write tests using mock API client
 
 **Acceptance Criteria**:
+
 - [ ] Data fetching hook extracted
 - [ ] Tests cover loading/error states
 - [ ] Hook is reusable
@@ -721,12 +781,14 @@ apps/web/src/
 ---
 
 #### WEB-HOOK-003: Stats Hub Hooks
+
 **Effort**: 1 hour  
 **Priority**: 🟡 MEDIUM
 
 **Objective**: Extract hooks from stats components
 
 **Deliverables**:
+
 - Create `features/stats/hooks/`
 - Extract hooks:
   - `useLeagueStats.ts`
@@ -736,6 +798,7 @@ apps/web/src/
 - Write tests
 
 **Acceptance Criteria**:
+
 - [ ] All stats hooks extracted
 - [ ] Components use new hooks
 - [ ] Tests cover data fetching
@@ -746,12 +809,14 @@ apps/web/src/
 ### Phase 5: Component Splitting (Week 3-5) 🟢 NORMAL PRIORITY
 
 #### WEB-COMP-001: Split Manager Analysis Component
+
 **Effort**: 2 hours  
 **Priority**: 🟢 HIGH (but do after utils/hooks)
 
 **Objective**: Break down `manager-analysis.tsx` (1,624 lines) into sub-components
 
 **Deliverables**:
+
 - Create `features/draft-analysis/components/ManagerAnalysis/`
 - Split into sub-components:
   - `ManagerAnalysis.tsx` - Main component (100 lines)
@@ -764,6 +829,7 @@ apps/web/src/
 - Write tests for each component
 
 **Acceptance Criteria**:
+
 - [ ] Main component <150 lines
 - [ ] 5+ sub-components created
 - [ ] All sub-components tested
@@ -773,12 +839,14 @@ apps/web/src/
 ---
 
 #### WEB-COMP-002: Split TrendsView Component
+
 **Effort**: 2 hours  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Break down `TrendsView.tsx` (1,606 lines)
 
 **Deliverables**:
+
 - Create `features/stats/components/TrendsView/`
 - Split into:
   - `TrendsView.tsx` - Main component
@@ -788,6 +856,7 @@ apps/web/src/
 - Write tests
 
 **Acceptance Criteria**:
+
 - [ ] Main component <200 lines
 - [ ] Sub-components extracted
 - [ ] Tests passing
@@ -796,12 +865,14 @@ apps/web/src/
 ---
 
 #### WEB-COMP-003: Split Playoff Bracket Component
+
 **Effort**: 1.5 hours  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Break down `playoff-bracket.tsx` (1,400 lines)
 
 **Deliverables**:
+
 - Create `shared/components/playoffs/PlayoffBracket/`
 - Split into:
   - `PlayoffBracket.tsx` - Main layout
@@ -811,6 +882,7 @@ apps/web/src/
 - Write tests
 
 **Acceptance Criteria**:
+
 - [ ] Main component <200 lines
 - [ ] Reusable sub-components
 - [ ] Tests covering bracket logic
@@ -819,17 +891,20 @@ apps/web/src/
 ---
 
 #### WEB-COMP-004: Split Schedule Analysis Component
+
 **Effort**: 1.5 hours  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Break down `ScheduleAnalysis.tsx` (1,243 lines)
 
 **Deliverables**:
+
 - Create `features/stats/components/ScheduleAnalysis/`
 - Split into sub-components
 - Write tests
 
 **Acceptance Criteria**:
+
 - [ ] Main component <200 lines
 - [ ] Sub-components extracted
 - [ ] Tests passing
@@ -837,17 +912,20 @@ apps/web/src/
 ---
 
 #### WEB-COMP-005: Split TeamView Component
+
 **Effort**: 1.5 hours  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Break down `TeamView.tsx` (1,198 lines)
 
 **Deliverables**:
+
 - Create `features/stats/components/TeamView/`
 - Split into sub-components
 - Write tests
 
 **Acceptance Criteria**:
+
 - [ ] Main component <200 lines
 - [ ] Sub-components tested
 - [ ] Performance improved
@@ -857,18 +935,21 @@ apps/web/src/
 ### Phase 6: Page Migration (Week 4-5) 🟢 NORMAL PRIORITY
 
 #### WEB-PAGE-001: Migrate Draft Analysis Pages
+
 **Effort**: 1 hour  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Migrate draft-related pages to use new feature structure
 
 **Deliverables**:
+
 - Update `app/draft/analysis/page.tsx`
 - Update `app/league/draft/page.tsx`
 - Import from `features/draft-analysis`
 - Remove old imports
 
 **Acceptance Criteria**:
+
 - [ ] Pages use feature exports
 - [ ] Old imports removed
 - [ ] Pages still functional
@@ -877,17 +958,20 @@ apps/web/src/
 ---
 
 #### WEB-PAGE-002: Migrate Stats Pages
+
 **Effort**: 1 hour  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Migrate stats pages to use new feature structure
 
 **Deliverables**:
+
 - Update `app/stats/page.tsx`
 - Update stats sub-pages
 - Import from `features/stats`
 
 **Acceptance Criteria**:
+
 - [ ] Stats pages use feature exports
 - [ ] Old imports removed
 - [ ] Functionality preserved
@@ -895,16 +979,19 @@ apps/web/src/
 ---
 
 #### WEB-PAGE-003: Migrate Matchup Pages
+
 **Effort**: 45 minutes  
 **Priority**: 🟢 MEDIUM
 
 **Objective**: Migrate matchup pages to use new feature structure
 
 **Deliverables**:
+
 - Update matchup-related pages
 - Import from `features/matchups`
 
 **Acceptance Criteria**:
+
 - [ ] Matchup pages use feature exports
 - [ ] Old code removed
 
@@ -913,18 +1000,21 @@ apps/web/src/
 ### Phase 7: Testing (Week 5-6) 🔴 CRITICAL
 
 #### WEB-TEST-001: Component Tests (Critical Paths)
+
 **Effort**: 3 hours  
 **Priority**: 🔴 CRITICAL
 
 **Objective**: Write tests for critical components
 
 **Deliverables**:
+
 - Test all components in `features/draft-analysis/`
 - Test all components in `features/matchups/`
 - Test all components in `features/stats/`
 - Achieve 80%+ coverage
 
 **Acceptance Criteria**:
+
 - [ ] All critical components tested
 - [ ] 80%+ coverage achieved
 - [ ] Tests cover edge cases
@@ -933,17 +1023,20 @@ apps/web/src/
 ---
 
 #### WEB-TEST-002: Hook Tests
+
 **Effort**: 2 hours  
 **Priority**: 🔴 CRITICAL
 
 **Objective**: Write tests for all custom hooks
 
 **Deliverables**:
+
 - Test all hooks in `features/*/hooks/`
 - Test all hooks in `shared/hooks/`
 - Cover loading/error states
 
 **Acceptance Criteria**:
+
 - [ ] All hooks tested
 - [ ] Loading states covered
 - [ ] Error states covered
@@ -952,17 +1045,20 @@ apps/web/src/
 ---
 
 #### WEB-TEST-003: Utility Tests
+
 **Effort**: 2 hours  
 **Priority**: 🔴 CRITICAL
 
 **Objective**: Write tests for all utility functions
 
 **Deliverables**:
+
 - Test all utilities in `features/*/utils/`
 - Test all utilities in `shared/utils/`
 - Cover edge cases
 
 **Acceptance Criteria**:
+
 - [ ] All utilities tested
 - [ ] Edge cases covered
 - [ ] 100% utility coverage
@@ -970,17 +1066,20 @@ apps/web/src/
 ---
 
 #### WEB-TEST-004: Integration Tests (API Routes)
+
 **Effort**: 2 hours  
 **Priority**: 🟡 HIGH
 
 **Objective**: Write integration tests for API routes
 
 **Deliverables**:
+
 - Test critical API routes
 - Mock external dependencies
 - Test error handling
 
 **Acceptance Criteria**:
+
 - [ ] Critical routes tested
 - [ ] Error handling covered
 - [ ] Mock data factories used
@@ -990,17 +1089,20 @@ apps/web/src/
 ### Phase 8: Cleanup & Polish (Week 7-8) 🟢 LOW PRIORITY
 
 #### WEB-CLEAN-001: Remove Deprecated Files
+
 **Effort**: 30 minutes  
 **Priority**: 🟢 LOW
 
 **Objective**: Delete old component files after migration
 
 **Deliverables**:
+
 - Delete deprecated components
 - Delete old utility files
 - Clean up empty directories
 
 **Acceptance Criteria**:
+
 - [ ] All deprecated files removed
 - [ ] No broken imports
 - [ ] Build passes
@@ -1008,17 +1110,20 @@ apps/web/src/
 ---
 
 #### WEB-CLEAN-002: Fix ESLint Violations
+
 **Effort**: 2 hours  
 **Priority**: 🟡 HIGH
 
 **Objective**: Fix all ESLint violations
 
 **Deliverables**:
+
 - Remove all `eslint-disable` comments
 - Fix underlying issues
 - Achieve 0 warnings
 
 **Acceptance Criteria**:
+
 - [ ] Zero ESLint errors
 - [ ] <5 warnings
 - [ ] No `eslint-disable` comments
@@ -1026,17 +1131,20 @@ apps/web/src/
 ---
 
 #### WEB-DOC-001: Add JSDoc Documentation
+
 **Effort**: 2 hours  
 **Priority**: 🟢 LOW
 
 **Objective**: Add JSDoc to all exported functions/components
 
 **Deliverables**:
+
 - JSDoc for all exported functions
 - JSDoc for all React components
 - Examples in JSDoc
 
 **Acceptance Criteria**:
+
 - [ ] All exports documented
 - [ ] IDE tooltips show docs
 - [ ] Examples included
@@ -1044,17 +1152,20 @@ apps/web/src/
 ---
 
 #### WEB-DOC-002: Create Feature READMEs
+
 **Effort**: 1 hour  
 **Priority**: 🟢 LOW
 
 **Objective**: Document each feature
 
 **Deliverables**:
+
 - README.md for each feature
 - Architecture diagrams
 - Usage examples
 
 **Acceptance Criteria**:
+
 - [ ] All features documented
 - [ ] Diagrams included
 - [ ] Examples provided
@@ -1065,40 +1176,40 @@ apps/web/src/
 
 ### By Priority
 
-| Priority | Count | Total Effort | Focus |
-|----------|-------|--------------|-------|
-| 🔴 CRITICAL | 8 | 12 hours | Testing, Component Patterns, Quality |
-| ⚠️ HIGH | 4 | 1.5 hours | Type Extraction (Quick Wins) |
-| 🟡 MEDIUM | 15 | 15 hours | Utilities, Hooks, Cleanup |
-| 🟢 LOW | 8 | 12 hours | Polish, Documentation |
-| **TOTAL** | **35** | **40.5 hours** | **8 weeks @ 5 hours/week** |
+| Priority    | Count  | Total Effort   | Focus                                |
+| ----------- | ------ | -------------- | ------------------------------------ |
+| 🔴 CRITICAL | 8      | 12 hours       | Testing, Component Patterns, Quality |
+| ⚠️ HIGH     | 4      | 1.5 hours      | Type Extraction (Quick Wins)         |
+| 🟡 MEDIUM   | 15     | 15 hours       | Utilities, Hooks, Cleanup            |
+| 🟢 LOW      | 8      | 12 hours       | Polish, Documentation                |
+| **TOTAL**   | **35** | **40.5 hours** | **8 weeks @ 5 hours/week**           |
 
 ### By Phase
 
-| Phase | Tasks | Effort | Timeline |
-|-------|-------|--------|----------|
-| Phase 1: Infrastructure | 4 | 3.25 hours | Week 1 |
-| Phase 2: Type Extraction | 4 | 1.5 hours | Week 1-2 |
-| Phase 3: Utility Extraction | 4 | 3 hours | Week 2 |
-| Phase 4: Hook Extraction | 3 | 2.75 hours | Week 3 |
-| Phase 5: Component Splitting | 5 | 9 hours | Week 3-5 |
-| Phase 6: Page Migration | 3 | 2.75 hours | Week 4-5 |
-| Phase 7: Testing | 4 | 9 hours | Week 5-6 |
-| Phase 8: Cleanup & Polish | 8 | 5.25 hours | Week 7-8 |
+| Phase                        | Tasks | Effort     | Timeline |
+| ---------------------------- | ----- | ---------- | -------- |
+| Phase 1: Infrastructure      | 4     | 3.25 hours | Week 1   |
+| Phase 2: Type Extraction     | 4     | 1.5 hours  | Week 1-2 |
+| Phase 3: Utility Extraction  | 4     | 3 hours    | Week 2   |
+| Phase 4: Hook Extraction     | 3     | 2.75 hours | Week 3   |
+| Phase 5: Component Splitting | 5     | 9 hours    | Week 3-5 |
+| Phase 6: Page Migration      | 3     | 2.75 hours | Week 4-5 |
+| Phase 7: Testing             | 4     | 9 hours    | Week 5-6 |
+| Phase 8: Cleanup & Polish    | 8     | 5.25 hours | Week 7-8 |
 
 ### By Category
 
-| Category | Tasks | Effort |
-|----------|-------|--------|
-| Setup & Infrastructure | 4 | 3.25 hours |
-| Type Extraction | 4 | 1.5 hours |
-| Utility Extraction | 4 | 3 hours |
-| Hook Extraction | 3 | 2.75 hours |
-| Component Splitting | 5 | 9 hours |
-| Page Migration | 3 | 2.75 hours |
-| Testing | 4 | 9 hours |
-| Cleanup | 2 | 2.5 hours |
-| Documentation | 2 | 3 hours |
+| Category               | Tasks | Effort     |
+| ---------------------- | ----- | ---------- |
+| Setup & Infrastructure | 4     | 3.25 hours |
+| Type Extraction        | 4     | 1.5 hours  |
+| Utility Extraction     | 4     | 3 hours    |
+| Hook Extraction        | 3     | 2.75 hours |
+| Component Splitting    | 5     | 9 hours    |
+| Page Migration         | 3     | 2.75 hours |
+| Testing                | 4     | 9 hours    |
+| Cleanup                | 2     | 2.5 hours  |
+| Documentation          | 2     | 3 hours    |
 
 ---
 
@@ -1215,18 +1326,18 @@ Week 8:
 
 ### Quantifiable Improvements
 
-| Metric | Current | Target | Improvement |
-|--------|---------|--------|-------------|
-| **Test Coverage** | 0% | 80%+ | +80% |
-| **Largest File** | 2,805 lines | <300 lines | -2,505 lines |
-| **Avg Component Size** | ~600 lines | <200 lines | -400 lines |
-| **Files >1,000 lines** | 10 files | 0 files | -10 files |
-| **ESLint Violations** | 100+ | <5 | -95+ |
-| **Barrel Exports** | 0% | 100% | +100% |
-| **Feature Organization** | 0% | 100% | +100% |
-| **Type Separation** | 10% | 90% | +80% |
-| **Component Memoization** | 0% | 80% | +80% |
-| **Enterprise Score** | 3.5/10 | 9.0/10 | +5.5 points |
+| Metric                    | Current     | Target     | Improvement  |
+| ------------------------- | ----------- | ---------- | ------------ |
+| **Test Coverage**         | 0%          | 80%+       | +80%         |
+| **Largest File**          | 2,805 lines | <300 lines | -2,505 lines |
+| **Avg Component Size**    | ~600 lines  | <200 lines | -400 lines   |
+| **Files >1,000 lines**    | 10 files    | 0 files    | -10 files    |
+| **ESLint Violations**     | 100+        | <5         | -95+         |
+| **Barrel Exports**        | 0%          | 100%       | +100%        |
+| **Feature Organization**  | 0%          | 100%       | +100%        |
+| **Type Separation**       | 10%         | 90%        | +80%         |
+| **Component Memoization** | 0%          | 80%        | +80%         |
+| **Enterprise Score**      | 3.5/10      | 9.0/10     | +5.5 points  |
 
 ---
 
@@ -1234,31 +1345,31 @@ Week 8:
 
 ### Before Refactoring: **3.5/10** 🔴
 
-| Category | Score | Weight | Weighted |
-|----------|-------|--------|----------|
-| Testing Infrastructure | 0/10 | 20% | 0.0 |
-| Code Quality Automation | 0/10 | 15% | 0.0 |
-| Component Patterns | 1/10 | 15% | 0.15 |
-| File Organization | 2/10 | 15% | 0.3 |
-| Type System | 4/10 | 10% | 0.4 |
-| State Management | 5/10 | 10% | 0.5 |
-| Import Conventions | 2/10 | 5% | 0.1 |
-| Separation of Concerns | 1/10 | 10% | 0.1 |
-| **Total** | | **100%** | **3.5/10** |
+| Category                | Score | Weight   | Weighted   |
+| ----------------------- | ----- | -------- | ---------- |
+| Testing Infrastructure  | 0/10  | 20%      | 0.0        |
+| Code Quality Automation | 0/10  | 15%      | 0.0        |
+| Component Patterns      | 1/10  | 15%      | 0.15       |
+| File Organization       | 2/10  | 15%      | 0.3        |
+| Type System             | 4/10  | 10%      | 0.4        |
+| State Management        | 5/10  | 10%      | 0.5        |
+| Import Conventions      | 2/10  | 5%       | 0.1        |
+| Separation of Concerns  | 1/10  | 10%      | 0.1        |
+| **Total**               |       | **100%** | **3.5/10** |
 
 ### After Refactoring: **9.0/10** ✅ (Target)
 
-| Category | Score | Weight | Weighted |
-|----------|-------|--------|----------|
-| Testing Infrastructure | 9/10 | 20% | 1.8 |
-| Code Quality Automation | 10/10 | 15% | 1.5 |
-| Component Patterns | 9/10 | 15% | 1.35 |
-| File Organization | 10/10 | 15% | 1.5 |
-| Type System | 9/10 | 10% | 0.9 |
-| State Management | 8/10 | 10% | 0.8 |
-| Import Conventions | 9/10 | 5% | 0.45 |
-| Separation of Concerns | 9/10 | 10% | 0.9 |
-| **Total** | | **100%** | **9.0/10** |
+| Category                | Score | Weight   | Weighted   |
+| ----------------------- | ----- | -------- | ---------- |
+| Testing Infrastructure  | 9/10  | 20%      | 1.8        |
+| Code Quality Automation | 10/10 | 15%      | 1.5        |
+| Component Patterns      | 9/10  | 15%      | 1.35       |
+| File Organization       | 10/10 | 15%      | 1.5        |
+| Type System             | 9/10  | 10%      | 0.9        |
+| State Management        | 8/10  | 10%      | 0.8        |
+| Import Conventions      | 9/10  | 5%       | 0.45       |
+| Separation of Concerns  | 9/10  | 10%      | 0.9        |
+| **Total**               |       | **100%** | **9.0/10** |
 
 ---
 
@@ -1304,7 +1415,7 @@ This assessment identifies **35 high-level tasks**. For each task to be executab
 
 ### Task File Template Structure
 
-```markdown
+````markdown
 # [TASK-ID]: [Task Name]
 
 **Category**: [SETUP/EXTRACT/UTIL/HOOK/COMP/TEST/CLEAN/DOC]  
@@ -1319,6 +1430,7 @@ This assessment identifies **35 high-level tasks**. For each task to be executab
 ## Context Needed
 
 **Read these files** (with specific line ranges):
+
 1. `file1.ts` (lines 1-100)
 2. `file2.tsx` (lines 50-150)
 
@@ -1345,6 +1457,7 @@ pnpm test
 pnpm tsc --noEmit
 pnpm lint
 ```
+````
 
 ## Cursor Prompt (Copy-Paste Ready)
 
@@ -1361,6 +1474,7 @@ I'm working on [TASK-ID]. Please:
 **Blocks**: [TASK-XXX]  
 **Blocked By**: [TASK-XXX]  
 **Related**: [TASK-XXX]
+
 ```
 
 ### Creating Drill-Down Tasks
@@ -1412,3 +1526,4 @@ The `apps/web` codebase requires **significant refactoring** to achieve enterpri
 
 Let's transform this codebase into an enterprise-ready application! 🚀
 
+```

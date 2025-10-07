@@ -36,7 +36,7 @@ export async function GET(request: Request) {
             transactions: 0, // Can be calculated if needed
           },
         };
-      })
+      }),
     );
 
     return NextResponse.json({

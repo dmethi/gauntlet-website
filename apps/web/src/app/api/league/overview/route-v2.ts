@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     // Fetch all matchups for the season in parallel
     const weeks = Array.from({ length: currentWeek }, (_, i) => i + 1);
     const allMatchups = (await Promise.all(
-      weeks.map(week => sleeperClient.fetchMatchups(leagueId, week))
+      weeks.map(week => sleeperClient.fetchMatchups(leagueId, week)),
     )) as any[][];
 
     // Build user map for quick lookups
@@ -191,7 +191,7 @@ export async function GET(request: NextRequest) {
         error: 'Failed to fetch league data',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

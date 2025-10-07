@@ -51,7 +51,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
   const [selectedCluster, setSelectedCluster] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('concentration');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(
-    null
+    null,
   );
 
   // Handle sorting
@@ -319,11 +319,11 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
   };
 
   return (
-    <div className='space-y-8'>
+    <div className="space-y-8">
       {/* Header */}
-      <div className='text-center'>
-        <h2 className='text-3xl font-bold mb-2'>Manager Behavior Profiles</h2>
-        <p className='text-muted-foreground'>
+      <div className="text-center">
+        <h2 className="text-3xl font-bold mb-2">Manager Behavior Profiles</h2>
+        <p className="text-muted-foreground">
           Comprehensive analysis of draft strategies, spending patterns, and roster construction
         </p>
       </div>
@@ -333,8 +333,8 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
       {/* Concentration Metrics */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <Target className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5" />
             Concentration Metrics
           </CardTitle>
           <CardDescription>
@@ -342,92 +342,92 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='overflow-x-auto'>
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className="cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('manager')}
                   >
                     Manager{' '}
                     {sortConfig?.key === 'manager' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('league')}
                   >
                     League{' '}
                     {sortConfig?.key === 'league' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('gini')}
                   >
                     <InfoTooltip
-                      title='Gini Coefficient'
-                      description='Measures spending inequality. 0 = perfectly equal, 1 = maximum concentration'
-                      interpretation='Higher values indicate more top-heavy spending (stars & scrubs approach)'
+                      title="Gini Coefficient"
+                      description="Measures spending inequality. 0 = perfectly equal, 1 = maximum concentration"
+                      interpretation="Higher values indicate more top-heavy spending (stars & scrubs approach)"
                     />
                     Gini{' '}
                     {sortConfig?.key === 'gini' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('top1')}
                   >
                     <InfoTooltip
-                      title='Top Player %'
-                      description='Percentage of budget spent on highest-priced player'
-                      interpretation='Stars & Scrubs builds typically show 25%+ on top player'
+                      title="Top Player %"
+                      description="Percentage of budget spent on highest-priced player"
+                      interpretation="Stars & Scrubs builds typically show 25%+ on top player"
                     />
                     Top 1%{' '}
                     {sortConfig?.key === 'top1' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('top2')}
                   >
                     <InfoTooltip
-                      title='Top 2 Players %'
-                      description='Percentage of budget spent on two highest-priced players'
-                      interpretation='Elite duo approach typically shows 40%+ on top 2'
+                      title="Top 2 Players %"
+                      description="Percentage of budget spent on two highest-priced players"
+                      interpretation="Elite duo approach typically shows 40%+ on top 2"
                     />
                     Top 2%{' '}
                     {sortConfig?.key === 'top2' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('top3')}
                   >
                     <InfoTooltip
-                      title='Top 3 Players %'
-                      description='Percentage of budget spent on three highest-priced players'
-                      interpretation='Core trio strategy typically shows 55%+ on top 3'
+                      title="Top 3 Players %"
+                      description="Percentage of budget spent on three highest-priced players"
+                      interpretation="Core trio strategy typically shows 55%+ on top 3"
                     />
                     Top 3%{' '}
                     {sortConfig?.key === 'top3' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('top4')}
                   >
                     <InfoTooltip
-                      title='Top 4 Players %'
-                      description='Percentage of budget spent on four highest-priced players'
-                      interpretation='Balanced approach typically shows 60-70% on top 4'
+                      title="Top 4 Players %"
+                      description="Percentage of budget spent on four highest-priced players"
+                      interpretation="Balanced approach typically shows 60-70% on top 4"
                     />
                     Top 4%{' '}
                     {sortConfig?.key === 'top4' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='text-center cursor-pointer hover:bg-muted/50'
+                    className="text-center cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('top5')}
                   >
                     <InfoTooltip
-                      title='Top 5 Players %'
-                      description='Percentage of budget spent on five highest-priced players'
-                      interpretation='Shows how much remains for depth after core investments'
+                      title="Top 5 Players %"
+                      description="Percentage of budget spent on five highest-priced players"
+                      interpretation="Shows how much remains for depth after core investments"
                     />
                     Top 5%{' '}
                     {sortConfig?.key === 'top5' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
@@ -461,21 +461,21 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                     <TableRow
                       key={`concentration-${profile.manager || 'mgr'}-${profile.league || 'lg'}-${index}`}
                     >
-                      <TableCell className='font-medium'>
+                      <TableCell className="font-medium">
                         {profile.manager || 'Unknown Manager'}
                       </TableCell>
-                      <TableCell className='text-center text-sm'>{profile.league}</TableCell>
+                      <TableCell className="text-center text-sm">{profile.league}</TableCell>
 
                       {/* Gini */}
                       <TableCell
                         className={`text-center ${getContrastingTextColor(
-                          getHeatmapColor(profile.concentration.giniSpend, maxGini, minGini)
+                          getHeatmapColor(profile.concentration.giniSpend, maxGini, minGini),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.giniSpend,
                             maxGini,
-                            minGini
+                            minGini,
                           ),
                         }}
                       >
@@ -485,13 +485,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       {/* Top 1% */}
                       <TableCell
                         className={`text-center ${getContrastingTextColor(
-                          getHeatmapColor(profile.concentration.top1_share, maxTop1, minTop1)
+                          getHeatmapColor(profile.concentration.top1_share, maxTop1, minTop1),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top1_share,
                             maxTop1,
-                            minTop1
+                            minTop1,
                           ),
                         }}
                       >
@@ -501,13 +501,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       {/* Top 2% */}
                       <TableCell
                         className={`text-center ${getContrastingTextColor(
-                          getHeatmapColor(profile.concentration.top2_share, maxTop2, minTop2)
+                          getHeatmapColor(profile.concentration.top2_share, maxTop2, minTop2),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top2_share,
                             maxTop2,
-                            minTop2
+                            minTop2,
                           ),
                         }}
                       >
@@ -517,13 +517,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       {/* Top 3% */}
                       <TableCell
                         className={`text-center ${getContrastingTextColor(
-                          getHeatmapColor(profile.concentration.top3_share, maxTop3, minTop3)
+                          getHeatmapColor(profile.concentration.top3_share, maxTop3, minTop3),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top3_share,
                             maxTop3,
-                            minTop3
+                            minTop3,
                           ),
                         }}
                       >
@@ -533,13 +533,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       {/* Top 4% */}
                       <TableCell
                         className={`text-center ${getContrastingTextColor(
-                          getHeatmapColor(profile.concentration.top4_share, maxTop4, minTop4)
+                          getHeatmapColor(profile.concentration.top4_share, maxTop4, minTop4),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top4_share,
                             maxTop4,
-                            minTop4
+                            minTop4,
                           ),
                         }}
                       >
@@ -549,13 +549,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       {/* Top 5% */}
                       <TableCell
                         className={`text-center ${getContrastingTextColor(
-                          getHeatmapColor(profile.concentration.top5_share, maxTop5, minTop5)
+                          getHeatmapColor(profile.concentration.top5_share, maxTop5, minTop5),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.concentration.top5_share,
                             maxTop5,
-                            minTop5
+                            minTop5,
                           ),
                         }}
                       >
@@ -573,8 +573,8 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
       {/* Player Overlap Analysis */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <GitMerge className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <GitMerge className="h-5 w-5" />
             Player Overlap Analysis
           </CardTitle>
           <CardDescription>
@@ -582,42 +582,42 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='text-sm font-medium'>Copycat Pairs</CardTitle>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Copycat Pairs</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold'>
+                <div className="text-2xl font-bold">
                   {analytics.player_overlap_analytics.copycat_pairs.length}
                 </div>
-                <p className='text-xs text-muted-foreground'>
+                <p className="text-xs text-muted-foreground">
                   Manager pairs with 40%+ shared players
                 </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='text-sm font-medium'>Average Overlap</CardTitle>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Average Overlap</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold'>
+                <div className="text-2xl font-bold">
                   {analytics.player_overlap_analytics.avg_overlap_percentage.toFixed(1)}%
                 </div>
-                <p className='text-xs text-muted-foreground'>Mean player overlap between leagues</p>
+                <p className="text-xs text-muted-foreground">Mean player overlap between leagues</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='text-sm font-medium'>Maverick Managers</CardTitle>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Maverick Managers</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold'>
+                <div className="text-2xl font-bold">
                   {analytics.player_overlap_analytics.maverick_managers.length}
                 </div>
-                <p className='text-xs text-muted-foreground'>
+                <p className="text-xs text-muted-foreground">
                   Managers with &lt;20% player overlap
                 </p>
               </CardContent>
@@ -626,22 +626,22 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
           {/* Copycat Pairs */}
           {analytics.player_overlap_analytics.copycat_pairs.length > 0 && (
-            <div className='mb-6'>
-              <h4 className='font-medium mb-3'>High Overlap Pairs (40%+ shared players)</h4>
-              <div className='grid gap-2'>
+            <div className="mb-6">
+              <h4 className="font-medium mb-3">High Overlap Pairs (40%+ shared players)</h4>
+              <div className="grid gap-2">
                 {analytics.player_overlap_analytics.copycat_pairs
                   .slice(0, 5)
                   .map((pair: any, idx: number) => (
                     <div
                       key={`pair-${pair.manager_a || 'A'}-${pair.manager_b || 'B'}-${idx}`}
-                      className='flex justify-between items-center p-3 rounded border'
+                      className="flex justify-between items-center p-3 rounded border"
                     >
                       <div>
-                        <span className='font-medium'>{pair.manager_a}</span>
-                        <span className='mx-2 text-muted-foreground'>↔</span>
-                        <span className='font-medium'>{pair.manager_b}</span>
+                        <span className="font-medium">{pair.manager_a}</span>
+                        <span className="mx-2 text-muted-foreground">↔</span>
+                        <span className="font-medium">{pair.manager_b}</span>
                       </div>
-                      <Badge variant='secondary'>
+                      <Badge variant="secondary">
                         {pair.overlap_percentage.toFixed(1)}% overlap
                       </Badge>
                     </div>
@@ -653,21 +653,21 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
           {/* Maverick Managers */}
           {analytics.player_overlap_analytics.maverick_managers.length > 0 && (
             <div>
-              <h4 className='font-medium mb-3'>Maverick Managers (&lt;20% overlap)</h4>
-              <div className='grid grid-cols-2 md:grid-cols-3 gap-3'>
+              <h4 className="font-medium mb-3">Maverick Managers (&lt;20% overlap)</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {analytics.player_overlap_analytics.maverick_managers.map(
                   (manager: any, idx: number) => (
                     <div
                       key={`maverick-${manager.manager || 'mgr'}-${idx}`}
-                      className='p-3 rounded border text-center'
+                      className="p-3 rounded border text-center"
                     >
-                      <div className='font-medium'>{manager.manager}</div>
-                      <div className='text-sm text-muted-foreground'>{manager.league}</div>
-                      <Badge variant='outline' className='mt-1'>
+                      <div className="font-medium">{manager.manager}</div>
+                      <div className="text-sm text-muted-foreground">{manager.league}</div>
+                      <Badge variant="outline" className="mt-1">
                         {manager.avg_overlap_with_others.toFixed(1)}% avg
                       </Badge>
                     </div>
-                  )
+                  ),
                 )}
               </div>
             </div>
@@ -678,8 +678,8 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
       {/* Player Overlap by Count */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <Users className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
             Player Overlap by Count
           </CardTitle>
           <CardDescription>
@@ -709,46 +709,46 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
             if (sortedCounts.length === 0) {
               return (
-                <div className='text-center py-8 text-muted-foreground'>
+                <div className="text-center py-8 text-muted-foreground">
                   No manager pairs with 2+ shared players found
                 </div>
               );
             }
 
             return (
-              <div className='space-y-6'>
+              <div className="space-y-6">
                 {sortedCounts.map(count => (
                   <div key={count}>
-                    <h4 className='font-medium mb-3 flex items-center gap-2'>
-                      <Badge variant='secondary'>{count} Players</Badge>
-                      <span className='text-sm text-muted-foreground'>
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Badge variant="secondary">{count} Players</Badge>
+                      <span className="text-sm text-muted-foreground">
                         ({overlapsByCount[count].length} pair
                         {overlapsByCount[count].length !== 1 ? 's' : ''})
                       </span>
                     </h4>
-                    <div className='grid gap-3'>
+                    <div className="grid gap-3">
                       {overlapsByCount[count].map((overlap: any, idx: number) => (
                         <div
                           key={`overlap-${count}-${idx}`}
-                          className='p-4 rounded border bg-muted/20'
+                          className="p-4 rounded border bg-muted/20"
                         >
-                          <div className='flex justify-between items-start mb-2'>
-                            <div className='flex items-center gap-2'>
-                              <span className='font-medium'>{overlap.manager_a}</span>
-                              <Badge variant='outline' className='text-xs'>
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{overlap.manager_a}</span>
+                              <Badge variant="outline" className="text-xs">
                                 AFC
                               </Badge>
-                              <span className='text-muted-foreground'>↔</span>
-                              <span className='font-medium'>{overlap.manager_b}</span>
-                              <Badge variant='outline' className='text-xs'>
+                              <span className="text-muted-foreground">↔</span>
+                              <span className="font-medium">{overlap.manager_b}</span>
+                              <Badge variant="outline" className="text-xs">
                                 NFC
                               </Badge>
                             </div>
-                            <Badge variant='secondary'>
+                            <Badge variant="secondary">
                               {overlap.overlap_percentage.toFixed(1)}% total overlap
                             </Badge>
                           </div>
-                          <div className='text-sm text-muted-foreground'>
+                          <div className="text-sm text-muted-foreground">
                             <strong>Shared players:</strong>{' '}
                             {overlap.shared_player_names.join(', ')}
                           </div>
@@ -766,8 +766,8 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
       {/* Cross-League Price Differences */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <TrendingUp className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
             Cross-League Price Differences
           </CardTitle>
           <CardDescription>
@@ -800,11 +800,13 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
             // Separate into cross-league players (drafted in both) and single-league players
             const crossLeaguePlayers = allDraftedPlayers.filter(
               player =>
-                player.afc_price !== null && player.nfc_price !== null && !player.only_in_one_league
+                player.afc_price !== null &&
+                player.nfc_price !== null &&
+                !player.only_in_one_league,
             );
 
             const singleLeaguePlayers = allDraftedPlayers.filter(
-              player => player.only_in_one_league
+              player => player.only_in_one_league,
             );
 
             // Calculate differences for cross-league players
@@ -886,29 +888,29 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
             if (playersWithDiffs.length === 0) {
               return (
-                <div className='text-center py-8 text-muted-foreground'>
+                <div className="text-center py-8 text-muted-foreground">
                   No players found drafted in both leagues
                 </div>
               );
             }
 
             return (
-              <div className='border rounded-lg'>
-                <div className='max-h-96 overflow-auto'>
+              <div className="border rounded-lg">
+                <div className="max-h-96 overflow-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead
-                          className='cursor-pointer hover:bg-muted/50'
+                          className="cursor-pointer hover:bg-muted/50"
                           onClick={() => handleSort('player_name')}
                         >
                           Player{' '}
                           {sortConfig?.key === 'player_name' &&
                             (sortConfig.direction === 'asc' ? '↑' : '↓')}
                         </TableHead>
-                        <TableHead className='text-center'>Pos</TableHead>
+                        <TableHead className="text-center">Pos</TableHead>
                         <TableHead
-                          className='text-center cursor-pointer hover:bg-muted/50'
+                          className="text-center cursor-pointer hover:bg-muted/50"
                           onClick={() => handleSort('afc_price')}
                         >
                           AFC Price{' '}
@@ -916,7 +918,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             (sortConfig.direction === 'asc' ? '↑' : '↓')}
                         </TableHead>
                         <TableHead
-                          className='text-center cursor-pointer hover:bg-muted/50'
+                          className="text-center cursor-pointer hover:bg-muted/50"
                           onClick={() => handleSort('nfc_price')}
                         >
                           NFC Price{' '}
@@ -924,16 +926,16 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             (sortConfig.direction === 'asc' ? '↑' : '↓')}
                         </TableHead>
                         <TableHead
-                          className='text-center cursor-pointer hover:bg-muted/50'
+                          className="text-center cursor-pointer hover:bg-muted/50"
                           onClick={() => handleSort('price_diff')}
                         >
                           Price Gap{' '}
                           {sortConfig?.key === 'price_diff' &&
                             (sortConfig.direction === 'asc' ? '↑' : '↓')}
                         </TableHead>
-                        <TableHead className='text-center'>Higher In</TableHead>
-                        <TableHead className='text-center'>AFC Pick #</TableHead>
-                        <TableHead className='text-center'>NFC Pick #</TableHead>
+                        <TableHead className="text-center">Higher In</TableHead>
+                        <TableHead className="text-center">AFC Pick #</TableHead>
+                        <TableHead className="text-center">NFC Pick #</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -955,23 +957,23 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
                         return playersWithDiffs.slice(0, 100).map((player, index) => (
                           <TableRow key={`price-diff-${player.player_id}-${index}`}>
-                            <TableCell className='font-medium'>{player.player_name}</TableCell>
-                            <TableCell className='text-center'>
-                              <Badge variant='outline' className='text-xs'>
+                            <TableCell className="font-medium">{player.player_name}</TableCell>
+                            <TableCell className="text-center">
+                              <Badge variant="outline" className="text-xs">
                                 {player.position}
                               </Badge>
                             </TableCell>
-                            <TableCell className='text-center'>
+                            <TableCell className="text-center">
                               {player.afc_price !== null ? `$${player.afc_price}` : '-'}
                             </TableCell>
-                            <TableCell className='text-center'>
+                            <TableCell className="text-center">
                               {player.nfc_price !== null ? `$${player.nfc_price}` : '-'}
                             </TableCell>
                             <TableCell
                               className={`text-center font-medium ${
                                 player.is_cross_league
                                   ? getContrastingTextColor(
-                                      getHeatmapColor(player.price_diff_abs, maxDiff, minDiff)
+                                      getHeatmapColor(player.price_diff_abs, maxDiff, minDiff),
                                     )
                                   : ''
                               }`}
@@ -983,24 +985,24 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             >
                               {player.is_cross_league ? `$${player.price_diff_abs}` : '-'}
                             </TableCell>
-                            <TableCell className='text-center'>
+                            <TableCell className="text-center">
                               {player.is_cross_league ? (
                                 <Badge
                                   variant={player.higher_in === 'AFC' ? 'destructive' : 'secondary'}
-                                  className='text-xs'
+                                  className="text-xs"
                                 >
                                   {player.higher_in}
                                 </Badge>
                               ) : (
-                                <Badge variant='outline' className='text-xs'>
+                                <Badge variant="outline" className="text-xs">
                                   {player.higher_in}
                                 </Badge>
                               )}
                             </TableCell>
-                            <TableCell className='text-center text-sm'>
+                            <TableCell className="text-center text-sm">
                               {player.afc_pick_number || '-'}
                             </TableCell>
-                            <TableCell className='text-center text-sm'>
+                            <TableCell className="text-center text-sm">
                               {player.nfc_pick_number || '-'}
                             </TableCell>
                           </TableRow>
@@ -1018,20 +1020,20 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
       {/* Positional Allocation Heatmap */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2 justify-between'>
-            <div className='flex items-center gap-2'>
-              <TrendingUp className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2 justify-between">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
               Positional Allocation Heatmap
             </div>
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className='w-48'>
-                <SelectValue placeholder='Sort by' />
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='concentration'>Sort by Concentration</SelectItem>
-                <SelectItem value='patience'>Sort by Patience</SelectItem>
-                <SelectItem value='starters'>Sort by Starter %</SelectItem>
-                <SelectItem value='top1'>Sort by Top Player %</SelectItem>
+                <SelectItem value="concentration">Sort by Concentration</SelectItem>
+                <SelectItem value="patience">Sort by Patience</SelectItem>
+                <SelectItem value="starters">Sort by Starter %</SelectItem>
+                <SelectItem value="top1">Sort by Top Player %</SelectItem>
               </SelectContent>
             </Select>
           </CardTitle>
@@ -1040,65 +1042,65 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='overflow-x-auto'>
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Manager</TableHead>
-                  <TableHead className='text-center'>League</TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">League</TableHead>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Quarterback %'
-                      description='Percentage of budget spent on QB position'
-                      interpretation='Elite QB approach typically shows 12%+ allocation'
+                      title="Quarterback %"
+                      description="Percentage of budget spent on QB position"
+                      interpretation="Elite QB approach typically shows 12%+ allocation"
                     />
                     QB %
                   </TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Running Back %'
-                      description='Percentage of budget spent on RB position'
-                      interpretation='RB-heavy builds typically show 35%+ allocation'
+                      title="Running Back %"
+                      description="Percentage of budget spent on RB position"
+                      interpretation="RB-heavy builds typically show 35%+ allocation"
                     />
                     RB %
                   </TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Wide Receiver %'
-                      description='Percentage of budget spent on WR position'
-                      interpretation='WR-focused builds typically show 40%+ allocation'
+                      title="Wide Receiver %"
+                      description="Percentage of budget spent on WR position"
+                      interpretation="WR-focused builds typically show 40%+ allocation"
                     />
                     WR %
                   </TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Tight End %'
-                      description='Percentage of budget spent on TE position'
-                      interpretation='Premium TE builds typically show 8%+ allocation'
+                      title="Tight End %"
+                      description="Percentage of budget spent on TE position"
+                      interpretation="Premium TE builds typically show 8%+ allocation"
                     />
                     TE %
                   </TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Defense %'
-                      description='Percentage of budget spent on DEF position'
-                      interpretation='Typically minimal allocation (1-2%)'
+                      title="Defense %"
+                      description="Percentage of budget spent on DEF position"
+                      interpretation="Typically minimal allocation (1-2%)"
                     />
                     DEF %
                   </TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Starter Allocation %'
-                      description='Percentage of budget spent on starting lineup vs bench'
-                      interpretation='Star-focused builds allocate 75%+ to starters'
+                      title="Starter Allocation %"
+                      description="Percentage of budget spent on starting lineup vs bench"
+                      interpretation="Star-focused builds allocate 75%+ to starters"
                     />
                     Starters %
                   </TableHead>
-                  <TableHead className='text-center'>
+                  <TableHead className="text-center">
                     <InfoTooltip
-                      title='Patience Score'
-                      description='Measures draft timing strategy (0-1 scale)'
-                      interpretation='Higher scores indicate more patient, value-hunting approach'
+                      title="Patience Score"
+                      description="Measures draft timing strategy (0-1 scale)"
+                      interpretation="Higher scores indicate more patient, value-hunting approach"
                     />
                     Patience
                   </TableHead>
@@ -1119,7 +1121,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                     <TableRow
                       key={`alloc-${profile.manager || 'mgr'}-${profile.league || 'lg'}-${index}`}
                     >
-                      <TableCell className='font-medium'>
+                      <TableCell className="font-medium">
                         {profile.manager || 'Unknown Manager'}
                       </TableCell>
                       <TableCell>{profile.league}</TableCell>
@@ -1130,14 +1132,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.spend_shares.pctQB || 0,
                             Math.max(...allQB),
-                            Math.min(...allQB)
-                          )
+                            Math.min(...allQB),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctQB || 0,
                             Math.max(...allQB),
-                            Math.min(...allQB)
+                            Math.min(...allQB),
                           ),
                         }}
                       >
@@ -1150,14 +1152,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.spend_shares.pctRB || 0,
                             Math.max(...allRB),
-                            Math.min(...allRB)
-                          )
+                            Math.min(...allRB),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctRB || 0,
                             Math.max(...allRB),
-                            Math.min(...allRB)
+                            Math.min(...allRB),
                           ),
                         }}
                       >
@@ -1170,14 +1172,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.spend_shares.pctWR || 0,
                             Math.max(...allWR),
-                            Math.min(...allWR)
-                          )
+                            Math.min(...allWR),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctWR || 0,
                             Math.max(...allWR),
-                            Math.min(...allWR)
+                            Math.min(...allWR),
                           ),
                         }}
                       >
@@ -1190,14 +1192,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.spend_shares.pctTE || 0,
                             Math.max(...allTE),
-                            Math.min(...allTE)
-                          )
+                            Math.min(...allTE),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctTE || 0,
                             Math.max(...allTE),
-                            Math.min(...allTE)
+                            Math.min(...allTE),
                           ),
                         }}
                       >
@@ -1210,14 +1212,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.spend_shares.pctDEF || 0,
                             Math.max(...allDEF),
-                            Math.min(...allDEF)
-                          )
+                            Math.min(...allDEF),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctDEF || 0,
                             Math.max(...allDEF),
-                            Math.min(...allDEF)
+                            Math.min(...allDEF),
                           ),
                         }}
                       >
@@ -1230,14 +1232,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.spend_shares.pctStarters,
                             Math.max(...allStarters),
-                            Math.min(...allStarters)
-                          )
+                            Math.min(...allStarters),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.spend_shares.pctStarters,
                             Math.max(...allStarters),
-                            Math.min(...allStarters)
+                            Math.min(...allStarters),
                           ),
                         }}
                       >
@@ -1250,14 +1252,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                           getHeatmapColor(
                             profile.pacing.patience_score,
                             Math.max(...allPatience),
-                            Math.min(...allPatience)
-                          )
+                            Math.min(...allPatience),
+                          ),
                         )}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             profile.pacing.patience_score,
                             Math.max(...allPatience),
-                            Math.min(...allPatience)
+                            Math.min(...allPatience),
                           ),
                         }}
                       >
@@ -1275,63 +1277,63 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
       {/* Detailed Metrics */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <BarChart3 className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
             Detailed Performance Metrics
           </CardTitle>
           <CardDescription>
             Advanced analytics on spending concentration, timing, and roster construction
           </CardDescription>
         </CardHeader>
-        <CardContent className='space-y-6'>
+        <CardContent className="space-y-6">
           {/* Concentration Metrics */}
           <div>
-            <h4 className='font-medium mb-3 flex items-center gap-2'>
-              <Target className='h-4 w-4' />
+            <h4 className="font-medium mb-3 flex items-center gap-2">
+              <Target className="h-4 w-4" />
               Spending Concentration Analysis
             </h4>
-            <div className='overflow-x-auto'>
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Manager</TableHead>
                     <TableHead>
                       <InfoTooltip
-                        title='Build Type'
-                        description='Strategic archetype based on spending patterns'
-                        interpretation='Different approaches to roster construction'
+                        title="Build Type"
+                        description="Strategic archetype based on spending patterns"
+                        interpretation="Different approaches to roster construction"
                       />
                       Build Type
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Gini Coefficient'
-                        description='Statistical measure of spending inequality (0-1 scale)'
-                        interpretation='0 = perfectly equal, 1 = maximum concentration. Stars & Scrubs builds show 0.4+'
+                        title="Gini Coefficient"
+                        description="Statistical measure of spending inequality (0-1 scale)"
+                        interpretation="0 = perfectly equal, 1 = maximum concentration. Stars & Scrubs builds show 0.4+"
                       />
                       Gini
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Top 2 Players %'
-                        description='Percentage of budget spent on top 2 players'
-                        interpretation='Higher concentration indicates elite duo approach'
+                        title="Top 2 Players %"
+                        description="Percentage of budget spent on top 2 players"
+                        interpretation="Higher concentration indicates elite duo approach"
                       />
                       Top 2%
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Starter Investment %'
-                        description='Percentage of total budget allocated to starting lineup'
-                        interpretation='Star-focused builds typically allocate 75%+ to starters'
+                        title="Starter Investment %"
+                        description="Percentage of total budget allocated to starting lineup"
+                        interpretation="Star-focused builds typically allocate 75%+ to starters"
                       />
                       Starters %
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Last Starter Pick'
-                        description='Draft position of final starting lineup player acquired'
-                        interpretation='Lower numbers suggest early roster completion; higher suggest late bargain hunting'
+                        title="Last Starter Pick"
+                        description="Draft position of final starting lineup player acquired"
+                        interpretation="Lower numbers suggest early roster completion; higher suggest late bargain hunting"
                       />
                       Last Starter
                     </TableHead>
@@ -1349,7 +1351,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       <TableRow
                         key={`conc-${profile.manager || 'mgr'}-${profile.league || 'lg'}-${index}`}
                       >
-                        <TableCell className='font-medium'>
+                        <TableCell className="font-medium">
                           {profile.manager || 'Unknown Manager'}
                         </TableCell>
                         <TableCell>
@@ -1364,14 +1366,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             getHeatmapColor(
                               profile.concentration.giniSpend,
                               Math.max(...allGini),
-                              Math.min(...allGini)
-                            )
+                              Math.min(...allGini),
+                            ),
                           )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.concentration.giniSpend,
                               Math.max(...allGini),
-                              Math.min(...allGini)
+                              Math.min(...allGini),
                             ),
                           }}
                         >
@@ -1384,14 +1386,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             getHeatmapColor(
                               profile.concentration.top2_share,
                               Math.max(...allTop2),
-                              Math.min(...allTop2)
-                            )
+                              Math.min(...allTop2),
+                            ),
                           )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.concentration.top2_share,
                               Math.max(...allTop2),
-                              Math.min(...allTop2)
+                              Math.min(...allTop2),
                             ),
                           }}
                         >
@@ -1404,14 +1406,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             getHeatmapColor(
                               profile.spend_shares.pctStarters,
                               Math.max(...allStarters),
-                              Math.min(...allStarters)
-                            )
+                              Math.min(...allStarters),
+                            ),
                           )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.spend_shares.pctStarters,
                               Math.max(...allStarters),
-                              Math.min(...allStarters)
+                              Math.min(...allStarters),
                             ),
                           }}
                         >
@@ -1424,14 +1426,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                             getHeatmapColor(
                               profile.pacing.last_starter_index,
                               Math.max(...allLastStarter),
-                              Math.min(...allLastStarter)
-                            )
+                              Math.min(...allLastStarter),
+                            ),
                           )}`}
                           style={{
                             backgroundColor: getHeatmapColor(
                               profile.pacing.last_starter_index,
                               Math.max(...allLastStarter),
-                              Math.min(...allLastStarter)
+                              Math.min(...allLastStarter),
                             ),
                           }}
                         >
@@ -1447,45 +1449,45 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
 
           {/* Draft Timing Analysis */}
           <div>
-            <h4 className='font-medium mb-3 flex items-center gap-2'>
-              <Clock className='h-4 w-4' />
+            <h4 className="font-medium mb-3 flex items-center gap-2">
+              <Clock className="h-4 w-4" />
               Draft Timing & Patience Analysis
             </h4>
-            <div className='overflow-x-auto'>
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Manager</TableHead>
                     <TableHead>League</TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Picks 1-30 Spend %'
-                        description='Percentage of budget spent in first 30 draft picks'
-                        interpretation='Early aggressive spending indicates star-chasing approach'
+                        title="Picks 1-30 Spend %"
+                        description="Percentage of budget spent in first 30 draft picks"
+                        interpretation="Early aggressive spending indicates star-chasing approach"
                       />
                       Picks 1-30
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Picks 31-60 Spend %'
-                        description='Percentage of budget spent in picks 31-60'
-                        interpretation='Balanced mid-draft investment'
+                        title="Picks 31-60 Spend %"
+                        description="Percentage of budget spent in picks 31-60"
+                        interpretation="Balanced mid-draft investment"
                       />
                       Picks 31-60
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Picks 61-120 Spend %'
-                        description='Percentage of budget spent in picks 61-120'
-                        interpretation='Late-round value hunting and depth building'
+                        title="Picks 61-120 Spend %"
+                        description="Percentage of budget spent in picks 61-120"
+                        interpretation="Late-round value hunting and depth building"
                       />
                       Picks 61-120
                     </TableHead>
-                    <TableHead className='text-center'>
+                    <TableHead className="text-center">
                       <InfoTooltip
-                        title='Picks 121+ Spend %'
-                        description='Percentage of budget spent in final draft rounds'
-                        interpretation='Patient bargain hunting in deep draft positions'
+                        title="Picks 121+ Spend %"
+                        description="Percentage of budget spent in final draft rounds"
+                        interpretation="Patient bargain hunting in deep draft positions"
                       />
                       Picks 121+
                     </TableHead>
@@ -1498,7 +1500,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                       const getPickRangeSpend = (
                         profile: ManagerProfile,
                         minPick: number,
-                        maxPick: number
+                        maxPick: number,
                       ) => {
                         // This is a mock calculation since we don't have actual pick positions
                         // In real implementation, this would calculate based on actual draft position
@@ -1526,7 +1528,7 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                         <TableRow
                           key={`pacing-${profile.manager || 'mgr'}-${profile.league || 'lg'}-${index}`}
                         >
-                          <TableCell className='font-medium'>
+                          <TableCell className="font-medium">
                             {profile.manager || 'Unknown Manager'}
                           </TableCell>
                           <TableCell>{profile.league}</TableCell>
@@ -1537,14 +1539,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                               getHeatmapColor(
                                 picks1_30,
                                 Math.max(...allPicks1_30),
-                                Math.min(...allPicks1_30)
-                              )
+                                Math.min(...allPicks1_30),
+                              ),
                             )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks1_30,
                                 Math.max(...allPicks1_30),
-                                Math.min(...allPicks1_30)
+                                Math.min(...allPicks1_30),
                               ),
                             }}
                           >
@@ -1557,14 +1559,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                               getHeatmapColor(
                                 picks31_60,
                                 Math.max(...allPicks31_60),
-                                Math.min(...allPicks31_60)
-                              )
+                                Math.min(...allPicks31_60),
+                              ),
                             )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks31_60,
                                 Math.max(...allPicks31_60),
-                                Math.min(...allPicks31_60)
+                                Math.min(...allPicks31_60),
                               ),
                             }}
                           >
@@ -1577,14 +1579,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                               getHeatmapColor(
                                 picks61_120,
                                 Math.max(...allPicks61_120),
-                                Math.min(...allPicks61_120)
-                              )
+                                Math.min(...allPicks61_120),
+                              ),
                             )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks61_120,
                                 Math.max(...allPicks61_120),
-                                Math.min(...allPicks61_120)
+                                Math.min(...allPicks61_120),
                               ),
                             }}
                           >
@@ -1597,14 +1599,14 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
                               getHeatmapColor(
                                 picks121_plus,
                                 Math.max(...allPicks121_plus),
-                                Math.min(...allPicks121_plus)
-                              )
+                                Math.min(...allPicks121_plus),
+                              ),
                             )}`}
                             style={{
                               backgroundColor: getHeatmapColor(
                                 picks121_plus,
                                 Math.max(...allPicks121_plus),
-                                Math.min(...allPicks121_plus)
+                                Math.min(...allPicks121_plus),
                               ),
                             }}
                           >

@@ -41,7 +41,7 @@ export async function GET(_req: NextRequest) {
         console.error('❌ Error parsing Week 2 data:', error);
         return NextResponse.json(
           { ok: false, error: 'Failed to parse Week 2 data' },
-          { status: 500 }
+          { status: 500 },
         );
       }
     } else {

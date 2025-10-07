@@ -49,7 +49,7 @@ export interface PositionSummary {
  */
 export function calculatePositionalMedians(
   dataset: PlainStatsDataset,
-  weekRange: { from: number; to: number }
+  weekRange: { from: number; to: number },
 ): Record<TrackedPosition, number> {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const medians: Record<TrackedPosition, number> = {} as any;
@@ -65,7 +65,7 @@ export function calculatePositionalMedians(
 
     for (const [, teamPosData] of posTeamsMap.entries()) {
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to
+        d => d.week >= weekRange.from && d.week <= weekRange.to,
       );
 
       if (validScores.length > 0) {
@@ -85,7 +85,7 @@ export function calculatePositionalMedians(
  */
 export function calculateAllPositionalAdvantages(
   dataset: PlainStatsDataset,
-  weekRange: { from: number; to: number }
+  weekRange: { from: number; to: number },
 ): PositionalAdvantage[] {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const positionsMap = new Map(dataset.positions);
@@ -104,7 +104,7 @@ export function calculateAllPositionalAdvantages(
       if (!teamInfo) continue;
 
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to
+        d => d.week >= weekRange.from && d.week <= weekRange.to,
       );
 
       if (validScores.length > 0) {
@@ -135,7 +135,7 @@ export function calculateAllPositionalAdvantages(
 export function getTeamPositionalSummary(
   dataset: PlainStatsDataset,
   teamKey: string,
-  weekRange: { from: number; to: number }
+  weekRange: { from: number; to: number },
 ): TeamPositionalSummary | null {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const positionsMap = new Map(dataset.positions);
@@ -157,7 +157,7 @@ export function getTeamPositionalSummary(
 
     if (teamPosData) {
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to
+        d => d.week >= weekRange.from && d.week <= weekRange.to,
       );
 
       if (validScores.length > 0) {
@@ -207,7 +207,7 @@ export function getTeamPositionalSummary(
  */
 export function getPositionSummaries(
   dataset: PlainStatsDataset,
-  weekRange: { from: number; to: number }
+  weekRange: { from: number; to: number },
 ): PositionSummary[] {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const positionsMap = new Map(dataset.positions);
@@ -228,7 +228,7 @@ export function getPositionSummaries(
       if (!teamInfo) continue;
 
       const validScores = teamPosData.scores.filter(
-        d => d.week >= weekRange.from && d.week <= weekRange.to
+        d => d.week >= weekRange.from && d.week <= weekRange.to,
       );
 
       if (validScores.length > 0) {
@@ -270,7 +270,7 @@ export function getPositionSummaries(
 export function getTopPositionalAdvantages(
   dataset: PlainStatsDataset,
   weekRange: { from: number; to: number },
-  topCount: number = 10
+  topCount: number = 10,
 ): {
   topAdvantages: PositionalAdvantage[];
   topDisadvantages: PositionalAdvantage[];

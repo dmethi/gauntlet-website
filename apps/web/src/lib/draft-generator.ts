@@ -72,7 +72,7 @@ export class DraftGenerator {
   private getNextBestPick(
     context: DraftContext,
     teamId: number,
-    strategy: 'value' | 'need' | 'balanced' = 'balanced'
+    strategy: 'value' | 'need' | 'balanced' = 'balanced',
   ): Player | null {
     const team = context.teams[teamId - 1];
     const availableWithinBudget = context.availablePlayers.filter(player => {
@@ -104,7 +104,7 @@ export class DraftGenerator {
           // Early picks: prioritize value with some need consideration
           return this.pickByNeed(
             team,
-            availableWithinBudget.sort((a, b) => b.aav - a.aav).slice(0, 10)
+            availableWithinBudget.sort((a, b) => b.aav - a.aav).slice(0, 10),
           );
         } else {
           // Later picks: prioritize need
@@ -210,7 +210,7 @@ export class DraftGenerator {
   public generateMockDraft(
     draftId: string,
     draftName: string,
-    variancePercent: number = 10
+    variancePercent: number = 10,
   ): MockDraft {
     const context: DraftContext = {
       availablePlayers: [...mockPlayerData].sort((a, b) => a.rank - b.rank),
@@ -263,7 +263,7 @@ export class DraftGenerator {
         // On last few picks, try to spend remaining budget more evenly
         actualPrice = Math.min(
           team.remaining,
-          actualPrice + Math.floor(team.remaining / Math.max(1, remainingPicks))
+          actualPrice + Math.floor(team.remaining / Math.max(1, remainingPicks)),
         );
       } else if (team.remaining < actualPrice) {
         // Can't exceed budget

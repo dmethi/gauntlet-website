@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+coverage/
+
+# Data files
+src/data/**/*.json
+public/**/*.json
+
+# Generated files
+*.gen.ts
+*.gen.tsx
+

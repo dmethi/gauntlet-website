@@ -174,7 +174,7 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
           team2Players as any,
           10000,
           0,
-          undefined
+          undefined,
         );
 
         // Sim-engine now properly receives current scores from completed games

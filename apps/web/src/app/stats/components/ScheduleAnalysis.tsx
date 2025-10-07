@@ -54,7 +54,7 @@ function mean(values: number[]): number {
 export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisProps) {
   // State for selected team analysis
   const [selectedTeamKey, setSelectedTeamKey] = useState<string>(
-    allTeamEntries.length > 0 ? allTeamEntries[0][0] : ''
+    allTeamEntries.length > 0 ? allTeamEntries[0][0] : '',
   );
 
   // Team options for dropdown
@@ -460,20 +460,20 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='overflow-auto'>
-          <table className='w-full text-xs border-collapse'>
+        <div className="overflow-auto">
+          <table className="w-full text-xs border-collapse">
             <thead>
               <tr>
-                <th className='sticky left-0 z-10 bg-muted px-2 py-1 text-left border-r'>
+                <th className="sticky left-0 z-10 bg-muted px-2 py-1 text-left border-r">
                   vs Opponent →
                 </th>
                 {teamsList.map(team => (
                   <th
                     key={team.key}
-                    className='px-1 py-1 text-center border-r min-w-[60px]'
+                    className="px-1 py-1 text-center border-r min-w-[60px]"
                     title={team.info.teamName}
                   >
-                    <div className='transform -rotate-45 origin-center whitespace-nowrap text-xs'>
+                    <div className="transform -rotate-45 origin-center whitespace-nowrap text-xs">
                       {team.info.teamName.slice(0, 12)}
                     </div>
                   </th>
@@ -485,11 +485,11 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                 const teamRecord = scheduleMatrix.get(team.key);
 
                 return (
-                  <tr key={team.key} className='border-b'>
-                    <td className='sticky left-0 z-10 bg-muted px-2 py-1 font-medium border-r'>
-                      <div className='flex flex-col'>
-                        <span className='font-medium'>{team.info.teamName}</span>
-                        <span className='text-xs text-muted-foreground'>
+                  <tr key={team.key} className="border-b">
+                    <td className="sticky left-0 z-10 bg-muted px-2 py-1 font-medium border-r">
+                      <div className="flex flex-col">
+                        <span className="font-medium">{team.info.teamName}</span>
+                        <span className="text-xs text-muted-foreground">
                           {team.info.leagueName}
                         </span>
                       </div>
@@ -499,7 +499,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         return (
                           <td
                             key={opponent.key}
-                            className='px-1 py-1 text-center border-r bg-muted/50'
+                            className="px-1 py-1 text-center border-r bg-muted/50"
                           >
                             —
                           </td>
@@ -515,9 +515,9 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         return (
                           <td
                             key={opponent.key}
-                            className='px-1 py-1 text-center border-r bg-gray-50'
+                            className="px-1 py-1 text-center border-r bg-gray-50"
                           >
-                            <span className='text-muted-foreground'>—</span>
+                            <span className="text-muted-foreground">—</span>
                           </td>
                         );
                       }
@@ -529,11 +529,11 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                       return (
                         <td
                           key={opponent.key}
-                          className='px-1 py-1 text-center border-r'
+                          className="px-1 py-1 text-center border-r"
                           style={{ backgroundColor: `${recordColor}20` }}
                         >
                           <div
-                            className='font-mono text-xs font-medium'
+                            className="font-mono text-xs font-medium"
                             style={{ color: recordColor }}
                           >
                             {wins}-{losses}
@@ -548,36 +548,36 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
           </table>
         </div>
 
-        <div className='mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm'>
-          <div className='rounded-md border p-3'>
-            <h4 className='font-semibold mb-2'>Legend</h4>
-            <div className='space-y-1 text-xs'>
-              <div className='flex items-center gap-2'>
-                <div className='w-4 h-4 rounded' style={{ backgroundColor: '#16a34a20' }}></div>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="rounded-md border p-3">
+            <h4 className="font-semibold mb-2">Legend</h4>
+            <div className="space-y-1 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: '#16a34a20' }}></div>
                 <span>Winning record</span>
               </div>
-              <div className='flex items-center gap-2'>
-                <div className='w-4 h-4 rounded' style={{ backgroundColor: '#ca8a0420' }}></div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: '#ca8a0420' }}></div>
                 <span>Even record</span>
               </div>
-              <div className='flex items-center gap-2'>
-                <div className='w-4 h-4 rounded' style={{ backgroundColor: '#dc262620' }}></div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: '#dc262620' }}></div>
                 <span>Losing record</span>
               </div>
             </div>
           </div>
 
-          <div className='rounded-md border p-3'>
-            <h4 className='font-semibold mb-2'>Analysis</h4>
-            <p className='text-xs text-muted-foreground'>
+          <div className="rounded-md border p-3">
+            <h4 className="font-semibold mb-2">Analysis</h4>
+            <p className="text-xs text-muted-foreground">
               Reveals schedule strength by showing how each team would perform with different
               opponents.
             </p>
           </div>
 
-          <div className='rounded-md border p-3'>
-            <h4 className='font-semibold mb-2'>Usage</h4>
-            <p className='text-xs text-muted-foreground'>
+          <div className="rounded-md border p-3">
+            <h4 className="font-semibold mb-2">Usage</h4>
+            <p className="text-xs text-muted-foreground">
               Row team vs Column team schedule. &quot;5-2&quot; means Row team would be 5-2 if they
               faced Column team&apos;s opponents.
             </p>
@@ -585,28 +585,28 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </div>
 
         {/* Summary Statistics */}
-        <div className='mt-8'>
-          <h3 className='mb-4 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+        <div className="mt-8">
+          <h3 className="mb-4 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             Hypothetical Records Summary
           </h3>
 
-          <div className='rounded-md border'>
-            <table className='w-full text-sm'>
-              <thead className='bg-muted/50'>
+          <div className="rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className='px-4 py-3 text-center'>Rank</th>
-                  <th className='px-4 py-3 text-left'>Team</th>
-                  <th className='px-4 py-3 text-center'>Record</th>
-                  <th className='px-4 py-3 text-center'>Win %</th>
-                  <th className='px-4 py-3 text-center'>Total Games</th>
+                  <th className="px-4 py-3 text-center">Rank</th>
+                  <th className="px-4 py-3 text-left">Team</th>
+                  <th className="px-4 py-3 text-center">Record</th>
+                  <th className="px-4 py-3 text-center">Win %</th>
+                  <th className="px-4 py-3 text-center">Total Games</th>
                 </tr>
               </thead>
               <tbody>
                 {summaryStats.map((stat, index) => (
-                  <tr key={stat.teamKey} className='border-t hover:bg-muted/20'>
-                    <td className='px-4 py-3 text-center'>
+                  <tr key={stat.teamKey} className="border-t hover:bg-muted/20">
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(index + 1, 24),
                           color: getTextColor(getRankColor(index + 1, 24)),
@@ -615,19 +615,19 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         {index + 1}
                       </span>
                     </td>
-                    <td className='px-4 py-3'>
-                      <div className='font-medium'>{stat.teamInfo.teamName}</div>
-                      <div className='text-xs text-muted-foreground'>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{stat.teamInfo.teamName}</div>
+                      <div className="text-xs text-muted-foreground">
                         {stat.teamInfo.leagueName}
                       </div>
                     </td>
-                    <td className='px-4 py-3 text-center font-mono font-bold'>
+                    <td className="px-4 py-3 text-center font-mono font-bold">
                       {stat.totalWins}-{stat.totalLosses}
                     </td>
-                    <td className='px-4 py-3 text-center font-mono'>
+                    <td className="px-4 py-3 text-center font-mono">
                       {(stat.winPct * 100).toFixed(1)}%
                     </td>
-                    <td className='px-4 py-3 text-center font-mono text-muted-foreground'>
+                    <td className="px-4 py-3 text-center font-mono text-muted-foreground">
                       {stat.totalGames}
                     </td>
                   </tr>
@@ -638,28 +638,28 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </div>
 
         {/* League-by-League Breakdown */}
-        <div className='mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6'>
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* AFC League */}
           <div>
-            <h4 className='mb-3 text-base font-semibold' style={{ color: colors.core.crimsonRed }}>
+            <h4 className="mb-3 text-base font-semibold" style={{ color: colors.core.crimsonRed }}>
               AFC League Analysis
             </h4>
-            <div className='rounded-md border'>
-              <table className='w-full text-sm'>
-                <thead className='bg-muted/30'>
+            <div className="rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/30">
                   <tr>
-                    <th className='px-3 py-2 text-center'>Rank</th>
-                    <th className='px-3 py-2 text-left'>Team</th>
-                    <th className='px-3 py-2 text-center'>Record</th>
-                    <th className='px-3 py-2 text-center'>Win %</th>
+                    <th className="px-3 py-2 text-center">Rank</th>
+                    <th className="px-3 py-2 text-left">Team</th>
+                    <th className="px-3 py-2 text-center">Record</th>
+                    <th className="px-3 py-2 text-center">Win %</th>
                   </tr>
                 </thead>
                 <tbody>
                   {afcSummary.map((stat, index) => (
-                    <tr key={stat.teamKey} className='border-t hover:bg-muted/20'>
-                      <td className='px-3 py-2 text-center'>
+                    <tr key={stat.teamKey} className="border-t hover:bg-muted/20">
+                      <td className="px-3 py-2 text-center">
                         <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
+                          className="rounded-full px-2 py-1 text-xs font-medium"
                           style={{
                             backgroundColor: getRankColor(index + 1, afcSummary.length),
                             color: getTextColor(getRankColor(index + 1, afcSummary.length)),
@@ -668,11 +668,11 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                           {index + 1}
                         </span>
                       </td>
-                      <td className='px-3 py-2 font-medium'>{stat.teamInfo.teamName}</td>
-                      <td className='px-3 py-2 text-center font-mono font-bold'>
+                      <td className="px-3 py-2 font-medium">{stat.teamInfo.teamName}</td>
+                      <td className="px-3 py-2 text-center font-mono font-bold">
                         {stat.totalWins}-{stat.totalLosses}
                       </td>
-                      <td className='px-3 py-2 text-center font-mono'>
+                      <td className="px-3 py-2 text-center font-mono">
                         {(stat.winPct * 100).toFixed(1)}%
                       </td>
                     </tr>
@@ -684,25 +684,25 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
 
           {/* NFC League */}
           <div>
-            <h4 className='mb-3 text-base font-semibold' style={{ color: colors.core.crimsonRed }}>
+            <h4 className="mb-3 text-base font-semibold" style={{ color: colors.core.crimsonRed }}>
               NFC League Analysis
             </h4>
-            <div className='rounded-md border'>
-              <table className='w-full text-sm'>
-                <thead className='bg-muted/30'>
+            <div className="rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/30">
                   <tr>
-                    <th className='px-3 py-2 text-center'>Rank</th>
-                    <th className='px-3 py-2 text-left'>Team</th>
-                    <th className='px-3 py-2 text-center'>Record</th>
-                    <th className='px-3 py-2 text-center'>Win %</th>
+                    <th className="px-3 py-2 text-center">Rank</th>
+                    <th className="px-3 py-2 text-left">Team</th>
+                    <th className="px-3 py-2 text-center">Record</th>
+                    <th className="px-3 py-2 text-center">Win %</th>
                   </tr>
                 </thead>
                 <tbody>
                   {nfcSummary.map((stat, index) => (
-                    <tr key={stat.teamKey} className='border-t hover:bg-muted/20'>
-                      <td className='px-3 py-2 text-center'>
+                    <tr key={stat.teamKey} className="border-t hover:bg-muted/20">
+                      <td className="px-3 py-2 text-center">
                         <span
-                          className='rounded-full px-2 py-1 text-xs font-medium'
+                          className="rounded-full px-2 py-1 text-xs font-medium"
                           style={{
                             backgroundColor: getRankColor(index + 1, nfcSummary.length),
                             color: getTextColor(getRankColor(index + 1, nfcSummary.length)),
@@ -711,11 +711,11 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                           {index + 1}
                         </span>
                       </td>
-                      <td className='px-3 py-2 font-medium'>{stat.teamInfo.teamName}</td>
-                      <td className='px-3 py-2 text-center font-mono font-bold'>
+                      <td className="px-3 py-2 font-medium">{stat.teamInfo.teamName}</td>
+                      <td className="px-3 py-2 text-center font-mono font-bold">
                         {stat.totalWins}-{stat.totalLosses}
                       </td>
-                      <td className='px-3 py-2 text-center font-mono'>
+                      <td className="px-3 py-2 text-center font-mono">
                         {(stat.winPct * 100).toFixed(1)}%
                       </td>
                     </tr>
@@ -727,30 +727,30 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </div>
 
         {/* Schedule Difficulty Analysis */}
-        <div className='mt-8'>
-          <h3 className='mb-4 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+        <div className="mt-8">
+          <h3 className="mb-4 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             Schedule Difficulty Rankings
           </h3>
-          <p className='text-sm text-muted-foreground mb-4'>
+          <p className="text-sm text-muted-foreground mb-4">
             Which schedules are hardest? Teams with lowest average win% had the toughest opponents.
           </p>
 
-          <div className='rounded-md border'>
-            <table className='w-full text-sm'>
-              <thead className='bg-muted/50'>
+          <div className="rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className='px-4 py-3 text-center'>Difficulty Rank</th>
-                  <th className='px-4 py-3 text-left'>Schedule Owner</th>
-                  <th className='px-4 py-3 text-center'>Avg Win % vs This Schedule</th>
-                  <th className='px-4 py-3 text-center'>Games</th>
+                  <th className="px-4 py-3 text-center">Difficulty Rank</th>
+                  <th className="px-4 py-3 text-left">Schedule Owner</th>
+                  <th className="px-4 py-3 text-center">Avg Win % vs This Schedule</th>
+                  <th className="px-4 py-3 text-center">Games</th>
                 </tr>
               </thead>
               <tbody>
                 {scheduleDifficulty.map((sched, index) => (
-                  <tr key={sched.scheduleOwnerKey} className='border-t hover:bg-muted/20'>
-                    <td className='px-4 py-3 text-center'>
+                  <tr key={sched.scheduleOwnerKey} className="border-t hover:bg-muted/20">
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(index + 1, 24),
                           color: getTextColor(getRankColor(index + 1, 24)),
@@ -759,13 +759,13 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         {index + 1}
                       </span>
                     </td>
-                    <td className='px-4 py-3'>
-                      <div className='font-medium'>{sched.scheduleOwnerInfo.teamName}</div>
-                      <div className='text-xs text-muted-foreground'>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{sched.scheduleOwnerInfo.teamName}</div>
+                      <div className="text-xs text-muted-foreground">
                         {sched.scheduleOwnerInfo.leagueName}
                       </div>
                     </td>
-                    <td className='px-4 py-3 text-center font-mono'>
+                    <td className="px-4 py-3 text-center font-mono">
                       <span
                         style={{
                           color:
@@ -779,7 +779,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         {(sched.avgWinPct * 100).toFixed(1)}%
                       </span>
                     </td>
-                    <td className='px-4 py-3 text-center font-mono text-muted-foreground'>
+                    <td className="px-4 py-3 text-center font-mono text-muted-foreground">
                       {sched.totalGames}
                     </td>
                   </tr>
@@ -790,28 +790,28 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </div>
 
         {/* League-by-League Matrices */}
-        <div className='mt-8 space-y-8'>
-          <h3 className='text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+        <div className="mt-8 space-y-8">
+          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             League-by-League Schedule Analysis
           </h3>
 
           {/* AFC Matrix */}
           <div>
-            <h4 className='mb-3 text-base font-semibold'>AFC League (12×12 Matrix)</h4>
-            <div className='overflow-auto rounded-md border'>
-              <table className='w-full text-xs border-collapse'>
+            <h4 className="mb-3 text-base font-semibold">AFC League (12×12 Matrix)</h4>
+            <div className="overflow-auto rounded-md border">
+              <table className="w-full text-xs border-collapse">
                 <thead>
                   <tr>
-                    <th className='sticky left-0 z-10 bg-muted px-2 py-1 text-left border-r'>
+                    <th className="sticky left-0 z-10 bg-muted px-2 py-1 text-left border-r">
                       AFC Team →
                     </th>
                     {afcTeams.map(([key, t]) => (
                       <th
                         key={key}
-                        className='px-1 py-1 text-center border-r min-w-[50px]'
+                        className="px-1 py-1 text-center border-r min-w-[50px]"
                         title={t.teamInfo.teamName}
                       >
-                        <div className='transform -rotate-45 origin-center whitespace-nowrap text-xs'>
+                        <div className="transform -rotate-45 origin-center whitespace-nowrap text-xs">
                           {t.teamInfo.teamName.slice(0, 10)}
                         </div>
                       </th>
@@ -823,8 +823,8 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                     const teamRecord = afcMatrix.get(teamKey);
 
                     return (
-                      <tr key={teamKey} className='border-b'>
-                        <td className='sticky left-0 z-10 bg-muted px-2 py-1 font-medium border-r text-xs'>
+                      <tr key={teamKey} className="border-b">
+                        <td className="sticky left-0 z-10 bg-muted px-2 py-1 font-medium border-r text-xs">
                           {team.teamInfo.teamName}
                         </td>
                         {afcTeams.map(([opponentKey, _opponent]) => {
@@ -832,7 +832,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                             return (
                               <td
                                 key={opponentKey}
-                                className='px-1 py-1 text-center border-r bg-muted/50'
+                                className="px-1 py-1 text-center border-r bg-muted/50"
                               >
                                 —
                               </td>
@@ -848,9 +848,9 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                             return (
                               <td
                                 key={opponentKey}
-                                className='px-1 py-1 text-center border-r bg-gray-50'
+                                className="px-1 py-1 text-center border-r bg-gray-50"
                               >
-                                <span className='text-muted-foreground'>—</span>
+                                <span className="text-muted-foreground">—</span>
                               </td>
                             );
                           }
@@ -862,11 +862,11 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                           return (
                             <td
                               key={opponentKey}
-                              className='px-1 py-1 text-center border-r'
+                              className="px-1 py-1 text-center border-r"
                               style={{ backgroundColor: `${recordColor}20` }}
                             >
                               <div
-                                className='font-mono text-xs font-medium'
+                                className="font-mono text-xs font-medium"
                                 style={{ color: recordColor }}
                               >
                                 {wins}-{losses}
@@ -884,21 +884,21 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
 
           {/* NFC Matrix */}
           <div>
-            <h4 className='mb-3 text-base font-semibold'>NFC League (12×12 Matrix)</h4>
-            <div className='overflow-auto rounded-md border'>
-              <table className='w-full text-xs border-collapse'>
+            <h4 className="mb-3 text-base font-semibold">NFC League (12×12 Matrix)</h4>
+            <div className="overflow-auto rounded-md border">
+              <table className="w-full text-xs border-collapse">
                 <thead>
                   <tr>
-                    <th className='sticky left-0 z-10 bg-muted px-2 py-1 text-left border-r'>
+                    <th className="sticky left-0 z-10 bg-muted px-2 py-1 text-left border-r">
                       NFC Team →
                     </th>
                     {nfcTeams.map(([key, t]) => (
                       <th
                         key={key}
-                        className='px-1 py-1 text-center border-r min-w-[50px]'
+                        className="px-1 py-1 text-center border-r min-w-[50px]"
                         title={t.teamInfo.teamName}
                       >
-                        <div className='transform -rotate-45 origin-center whitespace-nowrap text-xs'>
+                        <div className="transform -rotate-45 origin-center whitespace-nowrap text-xs">
                           {t.teamInfo.teamName.slice(0, 10)}
                         </div>
                       </th>
@@ -910,8 +910,8 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                     const teamRecord = nfcMatrix.get(teamKey);
 
                     return (
-                      <tr key={teamKey} className='border-b'>
-                        <td className='sticky left-0 z-10 bg-muted px-2 py-1 font-medium border-r text-xs'>
+                      <tr key={teamKey} className="border-b">
+                        <td className="sticky left-0 z-10 bg-muted px-2 py-1 font-medium border-r text-xs">
                           {team.teamInfo.teamName}
                         </td>
                         {nfcTeams.map(([opponentKey, _opponent]) => {
@@ -919,7 +919,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                             return (
                               <td
                                 key={opponentKey}
-                                className='px-1 py-1 text-center border-r bg-muted/50'
+                                className="px-1 py-1 text-center border-r bg-muted/50"
                               >
                                 —
                               </td>
@@ -935,9 +935,9 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                             return (
                               <td
                                 key={opponentKey}
-                                className='px-1 py-1 text-center border-r bg-gray-50'
+                                className="px-1 py-1 text-center border-r bg-gray-50"
                               >
-                                <span className='text-muted-foreground'>—</span>
+                                <span className="text-muted-foreground">—</span>
                               </td>
                             );
                           }
@@ -949,11 +949,11 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                           return (
                             <td
                               key={opponentKey}
-                              className='px-1 py-1 text-center border-r'
+                              className="px-1 py-1 text-center border-r"
                               style={{ backgroundColor: `${recordColor}20` }}
                             >
                               <div
-                                className='font-mono text-xs font-medium'
+                                className="font-mono text-xs font-medium"
                                 style={{ color: recordColor }}
                               >
                                 {wins}-{losses}
@@ -971,29 +971,29 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </div>
 
         {/* Comprehensive Luck Rankings */}
-        <div className='mt-8'>
-          <h3 className='mb-4 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+        <div className="mt-8">
+          <h3 className="mb-4 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             League-Wide Luck Rankings
           </h3>
 
-          <div className='rounded-md border'>
-            <table className='w-full text-sm'>
-              <thead className='bg-muted/50'>
+          <div className="rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className='px-4 py-3 text-center'>Luck Rank</th>
-                  <th className='px-4 py-3 text-left'>Team</th>
-                  <th className='px-4 py-3 text-center'>Actual Record</th>
-                  <th className='px-4 py-3 text-center'>Expected Win%</th>
-                  <th className='px-4 py-3 text-center'>Point Diff</th>
-                  <th className='px-4 py-3 text-center'>Luck Rating</th>
+                  <th className="px-4 py-3 text-center">Luck Rank</th>
+                  <th className="px-4 py-3 text-left">Team</th>
+                  <th className="px-4 py-3 text-center">Actual Record</th>
+                  <th className="px-4 py-3 text-center">Expected Win%</th>
+                  <th className="px-4 py-3 text-center">Point Diff</th>
+                  <th className="px-4 py-3 text-center">Luck Rating</th>
                 </tr>
               </thead>
               <tbody>
                 {allTeamsLuckAnalysis.map((analysis, index) => (
-                  <tr key={analysis.teamKey} className='border-t hover:bg-muted/20'>
-                    <td className='px-4 py-3 text-center'>
+                  <tr key={analysis.teamKey} className="border-t hover:bg-muted/20">
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(index + 1, 24),
                           color: getTextColor(getRankColor(index + 1, 24)),
@@ -1002,19 +1002,19 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         {index + 1}
                       </span>
                     </td>
-                    <td className='px-4 py-3'>
-                      <div className='font-medium'>{analysis.teamInfo.teamName}</div>
-                      <div className='text-xs text-muted-foreground'>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{analysis.teamInfo.teamName}</div>
+                      <div className="text-xs text-muted-foreground">
                         {analysis.teamInfo.leagueName}
                       </div>
                     </td>
-                    <td className='px-4 py-3 text-center font-mono font-bold'>
+                    <td className="px-4 py-3 text-center font-mono font-bold">
                       {analysis.actualWins}-{analysis.actualGames - analysis.actualWins}
                     </td>
-                    <td className='px-4 py-3 text-center font-mono'>
+                    <td className="px-4 py-3 text-center font-mono">
                       {(analysis.expectedWinPct * 100).toFixed(1)}%
                     </td>
-                    <td className='px-4 py-3 text-center font-mono'>
+                    <td className="px-4 py-3 text-center font-mono">
                       <span
                         style={{
                           color:
@@ -1029,9 +1029,9 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                         {analysis.pointDiff.toFixed(1)}
                       </span>
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='font-mono font-bold'
+                        className="font-mono font-bold"
                         style={{
                           color:
                             analysis.luckRating > 0.05
@@ -1053,18 +1053,18 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </div>
 
         {/* Team-Specific Distribution Analysis */}
-        <div className='mt-8'>
-          <h3 className='mb-4 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+        <div className="mt-8">
+          <h3 className="mb-4 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             Team Distribution Analysis
           </h3>
 
-          <div className='mb-6'>
-            <label className='text-sm font-medium mb-2 block'>
+          <div className="mb-6">
+            <label className="text-sm font-medium mb-2 block">
               Select Team for Distribution Analysis
             </label>
             <Select value={selectedTeamKey} onValueChange={setSelectedTeamKey}>
-              <SelectTrigger className='w-80'>
-                <SelectValue placeholder='Select team' />
+              <SelectTrigger className="w-80">
+                <SelectValue placeholder="Select team" />
               </SelectTrigger>
               <SelectContent>
                 {teamOptions.map(opt => (
@@ -1077,37 +1077,37 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
           </div>
 
           {selectedTeamLuckAnalysis && (
-            <div className='space-y-6'>
+            <div className="space-y-6">
               {/* Four-Metric Summary */}
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-                <div className='rounded-md border p-4'>
-                  <h4 className='font-semibold text-sm mb-2'>Overall Strength</h4>
-                  <div className='text-2xl font-bold' style={{ color: colors.core.regalGold }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="rounded-md border p-4">
+                  <h4 className="font-semibold text-sm mb-2">Overall Strength</h4>
+                  <div className="text-2xl font-bold" style={{ color: colors.core.regalGold }}>
                     {(selectedTeamLuckAnalysis.overallWinPct * 100).toFixed(1)}%
                   </div>
-                  <div className='text-xs text-muted-foreground'>vs all teams</div>
+                  <div className="text-xs text-muted-foreground">vs all teams</div>
                 </div>
 
-                <div className='rounded-md border p-4'>
-                  <h4 className='font-semibold text-sm mb-2'>Current Performance</h4>
-                  <div className='text-2xl font-bold' style={{ color: colors.core.regalGold }}>
+                <div className="rounded-md border p-4">
+                  <h4 className="font-semibold text-sm mb-2">Current Performance</h4>
+                  <div className="text-2xl font-bold" style={{ color: colors.core.regalGold }}>
                     {(selectedTeamLuckAnalysis.actualWinPct * 100).toFixed(1)}%
                   </div>
-                  <div className='text-xs text-muted-foreground'>with actual schedule</div>
+                  <div className="text-xs text-muted-foreground">with actual schedule</div>
                 </div>
 
-                <div className='rounded-md border p-4'>
-                  <h4 className='font-semibold text-sm mb-2'>Schedule Difficulty</h4>
-                  <div className='text-2xl font-bold' style={{ color: colors.core.regalGold }}>
+                <div className="rounded-md border p-4">
+                  <h4 className="font-semibold text-sm mb-2">Schedule Difficulty</h4>
+                  <div className="text-2xl font-bold" style={{ color: colors.core.regalGold }}>
                     {(selectedTeamLuckAnalysis.othersWithMyScheduleAvg * 100).toFixed(1)}%
                   </div>
-                  <div className='text-xs text-muted-foreground'>others with this schedule</div>
+                  <div className="text-xs text-muted-foreground">others with this schedule</div>
                 </div>
 
-                <div className='rounded-md border p-4'>
-                  <h4 className='font-semibold text-sm mb-2'>Luck Rating</h4>
+                <div className="rounded-md border p-4">
+                  <h4 className="font-semibold text-sm mb-2">Luck Rating</h4>
                   <div
-                    className='text-2xl font-bold'
+                    className="text-2xl font-bold"
                     style={{
                       color:
                         selectedTeamLuckAnalysis.luckRating > 0.05
@@ -1120,7 +1120,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                     {selectedTeamLuckAnalysis.luckRating > 0 ? '+' : ''}
                     {(selectedTeamLuckAnalysis.luckRating * 100).toFixed(1)}%
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {selectedTeamLuckAnalysis.luckRating > 0.05
                       ? 'Lucky'
                       : selectedTeamLuckAnalysis.luckRating < -0.05
@@ -1131,17 +1131,17 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
               </div>
 
               {/* Distribution Charts */}
-              <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Team with different schedules */}
-                <div className='rounded-md border p-4'>
-                  <h4 className='font-semibold mb-3'>
+                <div className="rounded-md border p-4">
+                  <h4 className="font-semibold mb-3">
                     {selectedTeamLuckAnalysis.team.teamInfo.teamName} with Different Schedules
                   </h4>
-                  <div className='h-64'>
-                    <ResponsiveContainer width='100%' height='100%'>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={selectedTeamLuckAnalysis.myDistChart}>
                         <XAxis
-                          dataKey='wins'
+                          dataKey="wins"
                           label={{ value: 'Wins', position: 'insideBottom', offset: -5 }}
                         />
                         <YAxis
@@ -1157,7 +1157,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                           strokeWidth={2}
                           label={{ value: 'Actual', position: 'top' }}
                         />
-                        <Bar dataKey='count'>
+                        <Bar dataKey="count">
                           {selectedTeamLuckAnalysis.myDistChart.map((entry, index) => (
                             <Cell
                               key={`cell-${index}`}
@@ -1168,22 +1168,22 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                  <p className='text-xs text-muted-foreground mt-2'>
+                  <p className="text-xs text-muted-foreground mt-2">
                     Shows how many schedules would result in each win count for this team
                   </p>
                 </div>
 
                 {/* Other teams with this schedule */}
-                <div className='rounded-md border p-4'>
-                  <h4 className='font-semibold mb-3'>
+                <div className="rounded-md border p-4">
+                  <h4 className="font-semibold mb-3">
                     Other Teams with {selectedTeamLuckAnalysis.team.teamInfo.teamName}&apos;s
                     Schedule
                   </h4>
-                  <div className='h-64'>
-                    <ResponsiveContainer width='100%' height='100%'>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={selectedTeamLuckAnalysis.othersDistChart}>
                         <XAxis
-                          dataKey='wins'
+                          dataKey="wins"
                           label={{ value: 'Wins', position: 'insideBottom', offset: -5 }}
                         />
                         <YAxis
@@ -1199,7 +1199,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                           strokeWidth={2}
                           label={{ value: 'Actual', position: 'top' }}
                         />
-                        <Bar dataKey='count'>
+                        <Bar dataKey="count">
                           {selectedTeamLuckAnalysis.othersDistChart.map((entry, index) => (
                             <Cell
                               key={`cell-${index}`}
@@ -1210,7 +1210,7 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                  <p className='text-xs text-muted-foreground mt-2'>
+                  <p className="text-xs text-muted-foreground mt-2">
                     Shows how many teams would achieve each win count with this team&apos;s schedule
                   </p>
                 </div>
@@ -1219,9 +1219,9 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
           )}
         </div>
 
-        <div className='mt-6 text-sm bg-muted/20 rounded-md p-4'>
-          <h4 className='font-semibold mb-2'>How to Read This Analysis</h4>
-          <div className='space-y-2 text-muted-foreground'>
+        <div className="mt-6 text-sm bg-muted/20 rounded-md p-4">
+          <h4 className="font-semibold mb-2">How to Read This Analysis</h4>
+          <div className="space-y-2 text-muted-foreground">
             <p>
               <strong>Hypothetical Records:</strong> Shows what each team&apos;s record would be by
               comparing their weekly scores against every other team&apos;s actual opponents.

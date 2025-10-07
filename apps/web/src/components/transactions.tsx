@@ -32,33 +32,33 @@ function formatTransactionType(type: string) {
 
 export function TransactionList({ items }: { items: TransactionViewModel[] }) {
   if (!items?.length) {
-    return <div className='text-sm text-muted-foreground'>No transactions found.</div>;
+    return <div className="text-sm text-muted-foreground">No transactions found.</div>;
   }
   return (
-    <div className='rounded-md border border-border bg-card px-4 py-1'>
+    <div className="rounded-md border border-border bg-card px-4 py-1">
       {items.map(t => (
-        <div key={t.id} className='py-2 border-b last:border-b-0 border-border/50'>
-          <div className='flex items-start gap-2 mb-1'>
-            <span className='font-medium text-sm'>{formatTransactionType(t.type)}</span>
+        <div key={t.id} className="py-2 border-b last:border-b-0 border-border/50">
+          <div className="flex items-start gap-2 mb-1">
+            <span className="font-medium text-sm">{formatTransactionType(t.type)}</span>
             {t.type === 'waiver' && t.waiverBid != null && (
-              <span className='text-xs bg-muted px-2 py-1 rounded text-muted-foreground'>
+              <span className="text-xs bg-muted px-2 py-1 rounded text-muted-foreground">
                 ${t.waiverBid}
               </span>
             )}
-            {t.status && <Badge variant='outline'>{t.status}</Badge>}
+            {t.status && <Badge variant="outline">{t.status}</Badge>}
           </div>
 
-          <div className='text-sm space-y-1'>
+          <div className="text-sm space-y-1">
             {t.adds?.length ? (
-              <div className='flex items-center gap-2 flex-wrap'>
-                <span className='text-green-500 dark:text-green-400 font-semibold'>+</span>
-                <span className='text-muted-foreground'>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-green-500 dark:text-green-400 font-semibold">+</span>
+                <span className="text-muted-foreground">
                   {t.adds.map((a, i) => (
-                    <span key={`a-${i}`} className='mr-1'>
+                    <span key={`a-${i}`} className="mr-1">
                       {a.href ? (
                         <Link
                           href={a.href}
-                          className='underline underline-offset-2 hover:text-foreground'
+                          className="underline underline-offset-2 hover:text-foreground"
                         >
                           {a.label}
                         </Link>
@@ -72,15 +72,15 @@ export function TransactionList({ items }: { items: TransactionViewModel[] }) {
               </div>
             ) : null}
             {t.drops?.length ? (
-              <div className='flex items-center gap-2 flex-wrap'>
-                <span className='text-red-500 dark:text-red-400 font-semibold'>−</span>
-                <span className='text-muted-foreground'>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-red-500 dark:text-red-400 font-semibold">−</span>
+                <span className="text-muted-foreground">
                   {t.drops.map((d, i) => (
-                    <span key={`d-${i}`} className='mr-1'>
+                    <span key={`d-${i}`} className="mr-1">
                       {d.href ? (
                         <Link
                           href={d.href}
-                          className='underline underline-offset-2 hover:text-foreground'
+                          className="underline underline-offset-2 hover:text-foreground"
                         >
                           {d.label}
                         </Link>
@@ -95,7 +95,7 @@ export function TransactionList({ items }: { items: TransactionViewModel[] }) {
             ) : null}
           </div>
 
-          <div className='text-xs text-muted-foreground mt-1'>
+          <div className="text-xs text-muted-foreground mt-1">
             {new Date(t.createdAt).toLocaleString()}
           </div>
         </div>
@@ -165,7 +165,7 @@ export function TeamTransactionsList({
         ?.flatMap(a =>
           a.players.map(p => ({
             label: `${p.fullName} to ${rosterMap.get(a.rosterId) || `Team ${a.rosterId}`}`,
-          }))
+          })),
         )
         .filter(Boolean) ?? undefined,
     drops:
@@ -173,7 +173,7 @@ export function TeamTransactionsList({
         ?.flatMap(d =>
           d.players.map(p => ({
             label: `${p.fullName} from ${rosterMap.get(d.rosterId) || `Team ${d.rosterId}`}`,
-          }))
+          })),
         )
         .filter(Boolean) ?? undefined,
     waiverBid: t.settings?.waiver_bid ?? null,

@@ -109,7 +109,7 @@ function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
     } else if (state === 'in') {
       const period = (statusRoot?.period as number) || (statusType?.period as number) || 1;
       const clock = parseClockSeconds(
-        statusRoot?.clock ?? statusType?.clock ?? statusRoot?.displayClock
+        statusRoot?.clock ?? statusType?.clock ?? statusRoot?.displayClock,
       );
 
       // NFL: 4 quarters, 15 minutes (900 seconds) each
@@ -158,7 +158,7 @@ function toLineupPlayersWithMinutes(
   leagueProjections: Record<string, any>,
   playersMap: Record<string, any>,
   starterPoints: Record<string, number> | undefined,
-  nflGameStates: Map<string, NFLGameState>
+  nflGameStates: Map<string, NFLGameState>,
 ) {
   return (ids || []).map((id, index) => {
     const p = playersMap?.[id] || {};
@@ -211,7 +211,7 @@ function toLineupPlayersWithMinutes(
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { leagueId: string; week: string; matchupId: string } }
+  { params }: { params: { leagueId: string; week: string; matchupId: string } },
 ) {
   try {
     const leagueId = params.leagueId;
@@ -274,14 +274,14 @@ export async function GET(
       leagueProjections,
       playersMap,
       team1.starters_points as Record<string, number> | undefined,
-      nflGameStates
+      nflGameStates,
     );
     const team2Players = toLineupPlayersWithMinutes(
       team2.starters || [],
       leagueProjections,
       playersMap,
       team2.starters_points as Record<string, number> | undefined,
-      nflGameStates
+      nflGameStates,
     );
 
     // If we had no ESPN-derived live teams, approximate using any players who currently have scores
@@ -299,7 +299,7 @@ export async function GET(
       team2Players as any,
       20000, // Doubled from 10k to 20k iterations
       0, // gameProgress=0 since projections are already adjusted based on actual NFL time
-      liveNflTeams
+      liveNflTeams,
     );
 
     // Calculate aggregate matchup game state for transparency

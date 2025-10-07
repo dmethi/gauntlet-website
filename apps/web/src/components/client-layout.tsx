@@ -31,7 +31,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   return (
-    <div className='flex h-screen'>
+    <div className="flex h-screen">
       <Sidebar
         teams={teams}
         isMobileOpen={isMobileMenuOpen}

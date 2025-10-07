@@ -9,7 +9,7 @@ import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { leagueId: string; week: string } }
+  { params }: { params: { leagueId: string; week: string } },
 ) {
   const { leagueId, week } = params;
   const { searchParams } = new URL(request.url);
@@ -34,7 +34,7 @@ export async function GET(
     // Get projections for the week
     const projections = await sleeperClient.fetchWeeklyProjections(
       weekNumber,
-      nflState?.season || '2025'
+      nflState?.season || '2025',
     );
 
     // Map users to rosters
@@ -95,7 +95,7 @@ export async function GET(
     console.error('Matchups v2 API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch matchups', detail: debug ? (error as Error).message : undefined },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

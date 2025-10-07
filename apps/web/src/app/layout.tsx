@@ -32,7 +32,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.variable} ${geizer.variable}`}>
         <Providers>
           <ClientLayout>{children}</ClientLayout>

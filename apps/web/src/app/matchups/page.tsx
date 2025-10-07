@@ -112,7 +112,7 @@ function MatchupsPageContent() {
           console.error(
             '❌ [MATCHUPS CLIENT] API response not OK:',
             response.status,
-            response.statusText
+            response.statusText,
           );
           throw new Error(`Failed to fetch matchups for ${league.name}`);
         }
@@ -140,7 +140,7 @@ function MatchupsPageContent() {
           winner: matchup.summary?.winnerRosterId
             ? (() => {
                 const winnerTeam = matchup.teams.find(
-                  (team: any) => team.rosterId === matchup.summary.winnerRosterId
+                  (team: any) => team.rosterId === matchup.summary.winnerRosterId,
                 );
                 if (!winnerTeam) return null;
 
@@ -185,7 +185,7 @@ function MatchupsPageContent() {
   useEffect(() => {
     const initialize = async () => {
       console.log(
-        `🔄 [MATCHUPS CLIENT] Initializing... URL week: ${weekParam}, selectedWeek: ${selectedWeek}`
+        `🔄 [MATCHUPS CLIENT] Initializing... URL week: ${weekParam}, selectedWeek: ${selectedWeek}`,
       );
 
       // If week is in URL, use it directly
@@ -201,7 +201,7 @@ function MatchupsPageContent() {
       // If no URL week, fetch current NFL week from Sleeper API
       try {
         console.log(
-          '🏈 [MATCHUPS CLIENT] No URL week, fetching current NFL state from Sleeper API...'
+          '🏈 [MATCHUPS CLIENT] No URL week, fetching current NFL state from Sleeper API...',
         );
         const res = await fetch('/api/nfl-state', {
           headers: { 'Cache-Control': 'no-cache' },
@@ -253,24 +253,24 @@ function MatchupsPageContent() {
   // Show loading during initialization to prevent flash of wrong data
   if (isInitializing || selectedWeek === 0) {
     return (
-      <div className='min-h-screen bg-background p-6'>
-        <div className='max-w-7xl mx-auto space-y-8'>
-          <div className='space-y-4'>
-            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className='text-3xl font-bold font-geizer tracking-wide text-foreground'>
+                <h1 className="text-3xl font-bold font-geizer tracking-wide text-foreground">
                   Matchups
                 </h1>
-                <p className='text-muted-foreground mt-2 font-avenir'>
+                <p className="text-muted-foreground mt-2 font-avenir">
                   Loading current NFL week...
                 </p>
               </div>
-              <Skeleton className='h-10 w-32' />
+              <Skeleton className="h-10 w-32" />
             </div>
           </div>
-          <div className='grid gap-4'>
+          <div className="grid gap-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className='h-32 w-full' />
+              <Skeleton key={i} className="h-32 w-full" />
             ))}
           </div>
         </div>
@@ -280,12 +280,12 @@ function MatchupsPageContent() {
 
   if (error) {
     return (
-      <div className='min-h-screen bg-background p-6'>
-        <div className='max-w-7xl mx-auto'>
-          <div className='text-center py-12'>
-            <div className='text-red-500 text-lg mb-4'>Error loading matchups</div>
-            <p className='text-muted-foreground'>{error}</p>
-            <Button onClick={() => handleWeekChange(selectedWeek)} className='mt-4'>
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <div className="text-red-500 text-lg mb-4">Error loading matchups</div>
+            <p className="text-muted-foreground">{error}</p>
+            <Button onClick={() => handleWeekChange(selectedWeek)} className="mt-4">
               Retry
             </Button>
           </div>
@@ -295,36 +295,36 @@ function MatchupsPageContent() {
   }
 
   return (
-    <div className='min-h-screen bg-background p-6'>
-      <div className='max-w-7xl mx-auto space-y-8'>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className='space-y-4'>
+        <div className="space-y-4">
           {leagueIdParam && (
-            <Link href='/matchups'>
-              <Button variant='ghost' size='sm'>
-                <ArrowLeft className='h-4 w-4 mr-2' />
+            <Link href="/matchups">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to All Matchups
               </Button>
             </Link>
           )}
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className='text-3xl font-bold font-geizer tracking-wide text-foreground'>
+              <h1 className="text-3xl font-bold font-geizer tracking-wide text-foreground">
                 {leagueIdParam ? `${filteredLeagues[0]?.name || 'League'} Matchups` : 'Matchups'}
               </h1>
-              <p className='text-muted-foreground mt-2 font-avenir'>
+              <p className="text-muted-foreground mt-2 font-avenir">
                 {leagueIdParam
                   ? `View matchups for ${filteredLeagues[0]?.name || 'this league'}`
                   : 'View all matchups across both Gauntlet leagues'}
               </p>
             </div>
 
-            <div className='flex items-center gap-3'>
+            <div className="flex items-center gap-3">
               <Select
                 value={selectedWeek.toString()}
                 onValueChange={value => handleWeekChange(parseInt(value))}
               >
-                <SelectTrigger className='w-32'>
+                <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -340,21 +340,21 @@ function MatchupsPageContent() {
         </div>
 
         {/* League-Wide Odds */}
-        <LeagueWideOdds week={selectedWeek} className='mb-8' />
+        <LeagueWideOdds week={selectedWeek} className="mb-8" />
 
         {/* Loading State */}
         {loading && (
-          <div className='space-y-8'>
+          <div className="space-y-8">
             {filteredLeagues.map(league => (
               <Card key={league.id}>
                 <CardHeader>
-                  <Skeleton className='h-7 w-48' />
-                  <Skeleton className='h-4 w-32' />
+                  <Skeleton className="h-7 w-48" />
+                  <Skeleton className="h-4 w-32" />
                 </CardHeader>
                 <CardContent>
-                  <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {[1, 2, 3, 4, 5, 6].map(i => (
-                      <Skeleton key={i} className='h-32 w-full' />
+                      <Skeleton key={i} className="h-32 w-full" />
                     ))}
                   </div>
                 </CardContent>
@@ -368,20 +368,20 @@ function MatchupsPageContent() {
           leagueMatchups.map(league => (
             <Card key={league.leagueId}>
               <CardHeader>
-                <div className='flex items-center gap-3'>
-                  <Trophy className='h-6 w-6 text-gauntlet-crimson' />
+                <div className="flex items-center gap-3">
+                  <Trophy className="h-6 w-6 text-gauntlet-crimson" />
                   <div>
-                    <CardTitle className='text-xl font-geizer tracking-wide'>
+                    <CardTitle className="text-xl font-geizer tracking-wide">
                       {league.leagueName}
                     </CardTitle>
-                    <CardDescription className='font-avenir'>
+                    <CardDescription className="font-avenir">
                       Week {selectedWeek} • {league.matchups.length} matchups
                     </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {league.matchups.map(matchup => (
                     <MatchupCard
                       key={matchup.matchupId}
@@ -397,10 +397,10 @@ function MatchupsPageContent() {
 
         {/* Empty State */}
         {!loading && leagueMatchups.every(league => league.matchups.length === 0) && (
-          <div className='text-center py-12'>
-            <Swords className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
-            <div className='text-lg font-medium text-muted-foreground mb-2'>No matchups found</div>
-            <p className='text-muted-foreground'>No matchups available for Week {selectedWeek}</p>
+          <div className="text-center py-12">
+            <Swords className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <div className="text-lg font-medium text-muted-foreground mb-2">No matchups found</div>
+            <p className="text-muted-foreground">No matchups available for Week {selectedWeek}</p>
           </div>
         )}
       </div>
@@ -422,32 +422,32 @@ function MatchupCard({
 
   return (
     <Link href={`/matchups/${leagueId}/${week}/${matchup.matchupId}`}>
-      <Card className='hover:shadow-md transition-shadow cursor-pointer'>
-        <CardContent className='p-4'>
-          <div className='space-y-4'>
+      <Card className="hover:shadow-md transition-shadow cursor-pointer">
+        <CardContent className="p-4">
+          <div className="space-y-4">
             {/* Status Badge */}
-            <div className='flex justify-between items-center'>
-              <Badge variant={matchup.isComplete ? 'secondary' : 'default'} className='text-xs'>
+            <div className="flex justify-between items-center">
+              <Badge variant={matchup.isComplete ? 'secondary' : 'default'} className="text-xs">
                 {matchup.isComplete ? 'Final' : 'Live'}
               </Badge>
               {isGameActive && (
-                <div className='flex items-center gap-1 text-xs text-muted-foreground'>
-                  <Clock className='h-3 w-3' />
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
                   In Progress
                 </div>
               )}
             </div>
 
             {/* Teams */}
-            <div className='space-y-2'>
+            <div className="space-y-2">
               <TeamRow team={teamA} isWinner={matchup.winner?.rosterId === teamA.rosterId} />
-              <div className='border-t border-muted my-2' />
+              <div className="border-t border-muted my-2" />
               <TeamRow team={teamB} isWinner={matchup.winner?.rosterId === teamB.rosterId} />
             </div>
 
             {/* Live Odds Preview - only for active games */}
             {!matchup.isComplete && (
-              <div className='py-2 border-t border-muted'>
+              <div className="py-2 border-t border-muted">
                 <MatchupOddsPreview
                   leagueId={leagueId}
                   week={week}
@@ -459,10 +459,10 @@ function MatchupCard({
             )}
 
             {/* Matchup Info */}
-            <div className='flex justify-between items-center text-xs text-muted-foreground pt-2 border-t border-muted'>
+            <div className="flex justify-between items-center text-xs text-muted-foreground pt-2 border-t border-muted">
               <span>Matchup {matchup.matchupId}</span>
-              <div className='flex items-center gap-1'>
-                <Swords className='h-3 w-3' />
+              <div className="flex items-center gap-1">
+                <Swords className="h-3 w-3" />
                 View Details
               </div>
             </div>
@@ -479,7 +479,7 @@ function Avatar({ src, alt, fallback }: { src?: string | null; alt: string; fall
 
   if (!src || hasError) {
     return (
-      <div className='h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium'>
+      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
         {fallback.charAt(0).toUpperCase()}
       </div>
     );
@@ -489,7 +489,7 @@ function Avatar({ src, alt, fallback }: { src?: string | null; alt: string; fall
     <img
       src={src}
       alt={alt}
-      className='h-8 w-8 rounded-full'
+      className="h-8 w-8 rounded-full"
       onError={() => setHasError(true)}
       onLoad={() => setHasError(false)}
     />
@@ -501,20 +501,20 @@ function TeamRow({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) 
     <div
       className={`flex items-center justify-between p-2 rounded ${isWinner ? 'bg-green-50 dark:bg-green-950' : ''}`}
     >
-      <div className='flex items-center gap-3'>
+      <div className="flex items-center gap-3">
         <Avatar src={team.roster.owner?.avatar} alt={team.ownerName} fallback={team.ownerName} />
         <div>
-          <div className='font-medium text-sm'>{team.teamName}</div>
-          <div className='text-xs text-muted-foreground'>{team.ownerName}</div>
+          <div className="font-medium text-sm">{team.teamName}</div>
+          <div className="text-xs text-muted-foreground">{team.ownerName}</div>
         </div>
       </div>
 
-      <div className='text-right'>
+      <div className="text-right">
         <div className={`font-bold ${isWinner ? 'text-green-600 dark:text-green-400' : ''}`}>
           {team.points.toFixed(1)}
         </div>
         {team.projectedPoints && (
-          <div className='text-xs text-muted-foreground'>
+          <div className="text-xs text-muted-foreground">
             Proj: {team.projectedPoints.toFixed(1)}
           </div>
         )}
@@ -527,13 +527,13 @@ export default function MatchupsPage() {
   return (
     <Suspense
       fallback={
-        <div className='min-h-screen bg-background p-6'>
-          <div className='max-w-7xl mx-auto space-y-8'>
-            <Skeleton className='h-12 w-64' />
-            <Skeleton className='h-32 w-full' />
-            <div className='space-y-8'>
-              <Skeleton className='h-96 w-full' />
-              <Skeleton className='h-96 w-full' />
+        <div className="min-h-screen bg-background p-6">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <Skeleton className="h-12 w-64" />
+            <Skeleton className="h-32 w-full" />
+            <div className="space-y-8">
+              <Skeleton className="h-96 w-full" />
+              <Skeleton className="h-96 w-full" />
             </div>
           </div>
         </div>

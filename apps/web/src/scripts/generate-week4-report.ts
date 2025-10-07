@@ -139,9 +139,9 @@ async function calculatePowerRankings(week: number): Promise<PowerRanking[]> {
       const allMatchups = await Promise.all(
         Array.from({ length: week }, (_, i) =>
           fetch(`https://api.sleeper.app/v1/league/${league.id}/matchups/${i + 1}`).then(r =>
-            r.json()
-          )
-        )
+            r.json(),
+          ),
+        ),
       );
 
       const usersMap = new Map(users.map((u: any) => [u.user_id, u]));
@@ -176,14 +176,14 @@ async function calculatePowerRankings(week: number): Promise<PowerRanking[]> {
             // Calculate expected wins for this week
             const expectedWins =
               weekMatchups.filter(
-                (m: any) => m.roster_id !== roster.roster_id && points > (m.points || 0)
+                (m: any) => m.roster_id !== roster.roster_id && points > (m.points || 0),
               ).length /
               (weekMatchups.length - 1);
             totalExpectedWins += expectedWins;
 
             // Calculate actual win/loss
             const opponentMatchup = weekMatchups.find(
-              (m: any) => m.matchup_id === myMatchup.matchup_id && m.roster_id !== roster.roster_id
+              (m: any) => m.matchup_id === myMatchup.matchup_id && m.roster_id !== roster.roster_id,
             );
             if (opponentMatchup) {
               if (points > (opponentMatchup.points || 0)) wins++;
@@ -218,7 +218,7 @@ async function calculatePowerRankings(week: number): Promise<PowerRanking[]> {
       const zscore = (arr: number[]) => {
         const mu = arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
         const sd = Math.sqrt(
-          arr.reduce((a, b) => a + Math.pow(b - mu, 2), 0) / Math.max(1, arr.length - 1) || 0
+          arr.reduce((a, b) => a + Math.pow(b - mu, 2), 0) / Math.max(1, arr.length - 1) || 0,
         );
         return arr.map(v => (sd === 0 ? 0 : (v - mu) / sd));
       };
@@ -347,7 +347,7 @@ async function calculateUpcomingMatchups(currentWeek: number): Promise<Record<st
         fetch(`https://api.sleeper.app/v1/league/${league.id}/rosters`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/users`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/matchups/${nextWeek}`).then(r =>
-          r.json()
+          r.json(),
         ),
       ]);
 
@@ -412,7 +412,7 @@ async function generateWeek4Report() {
         fetch(`https://api.sleeper.app/v1/league/${league.id}/rosters`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/users`).then(r => r.json()),
         fetch(`https://api.sleeper.app/v1/league/${league.id}/matchups/${WEEK}`).then(r =>
-          r.json()
+          r.json(),
         ),
       ]);
 

@@ -765,7 +765,7 @@ export function shuffleArray<T>(array: T[]): T[] {
 export function canAddPlayerToRoster(
   roster: DraftPick[],
   player: Player,
-  constraints = ROSTER_CONSTRAINTS
+  constraints = ROSTER_CONSTRAINTS,
 ): boolean {
   const positionCounts = {
     QB: roster.filter(p => p.player.position === 'QB').length,

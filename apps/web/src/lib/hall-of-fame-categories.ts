@@ -299,7 +299,7 @@ export const WEEKLY_TEAM_CATEGORIES: HallOfFameCategory[] = [
 function getCombinedPositionalPoints(
   matchup: ProcessedMatchup,
   position: string,
-  allMatchups?: ProcessedMatchup[]
+  allMatchups?: ProcessedMatchup[],
 ): number {
   const teamPoints = getPositionalPoints(matchup, position);
 
@@ -310,7 +310,7 @@ function getCombinedPositionalPoints(
         m.matchupId === matchup.matchupId &&
         m.leagueId === matchup.leagueId &&
         m.week === matchup.week &&
-        m.rosterId !== matchup.rosterId
+        m.rosterId !== matchup.rosterId,
     );
 
     if (opponentMatchup) {
@@ -559,12 +559,12 @@ export function getCategoriesGrouped(): Map<string, HallOfFameCategory[]> {
       'fewest_points_win',
       'largest_margin_victory',
       'smallest_margin_victory',
-    ].includes(c.id)
+    ].includes(c.id),
   );
   grouped.set('Score & Margin', weeklyTeamScoring);
 
   const weeklyTeamLineup = WEEKLY_TEAM_CATEGORIES.filter(c =>
-    ['bench_blunder', 'total_donuts', 'most_negative_starters'].includes(c.id)
+    ['bench_blunder', 'total_donuts', 'most_negative_starters'].includes(c.id),
   );
   grouped.set('Lineup Quality', weeklyTeamLineup);
 
@@ -576,12 +576,12 @@ export function getCategoriesGrouped(): Map<string, HallOfFameCategory[]> {
       c.id.includes('_te_') ||
       c.id.includes('_def_') ||
       c.id.includes('top3') ||
-      c.id.includes('bottom3')
+      c.id.includes('bottom3'),
   );
   grouped.set('Positional Splits', weeklyTeamPositional);
 
   const weeklyTeamVolatility = WEEKLY_TEAM_CATEGORIES.filter(c =>
-    ['star_concentration'].includes(c.id)
+    ['star_concentration'].includes(c.id),
   );
   grouped.set('Volatility/Consistency', weeklyTeamVolatility);
 

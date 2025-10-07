@@ -54,7 +54,7 @@ export function PlayerBoxPlot({
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/player/${playerId}/distribution?position=${position}&projection=${projection}`
+          `/api/player/${playerId}/distribution?position=${position}&projection=${projection}`,
         );
 
         if (!response.ok) {
@@ -103,12 +103,12 @@ export function PlayerBoxPlot({
   const p10Percent = valueToPercent(distribution.p10 ?? 0);
   const p25Percent = valueToPercent(
     distribution.p25 ??
-      (distribution.p10 && distribution.median ? (distribution.p10 + distribution.median) / 2 : 0)
+      (distribution.p10 && distribution.median ? (distribution.p10 + distribution.median) / 2 : 0),
   );
   const medianPercent = valueToPercent(distribution.median ?? 0);
   const p75Percent = valueToPercent(
     distribution.p75 ??
-      (distribution.median && distribution.p90 ? (distribution.median + distribution.p90) / 2 : 0)
+      (distribution.median && distribution.p90 ? (distribution.median + distribution.p90) / 2 : 0),
   );
   const p90Percent = valueToPercent(distribution.p90 ?? 0);
   const meanPercent = valueToPercent(distribution.mean ?? 0);
@@ -136,18 +136,18 @@ export function PlayerBoxPlot({
         <TooltipTrigger asChild>
           <div className={`${className} cursor-help relative`} style={{ width, height }}>
             {/* Background container - flattened and centered */}
-            <div className='w-full h-full bg-muted/20 rounded-md relative overflow-hidden flex items-center'>
+            <div className="w-full h-full bg-muted/20 rounded-md relative overflow-hidden flex items-center">
               {/* Container for the actual plot, centered vertically */}
-              <div className='relative w-full h-4'>
+              <div className="relative w-full h-4">
                 {/* Zero line (at 30%) */}
                 <div
-                  className='absolute top-0 bottom-0 w-0.5 bg-muted-foreground/30'
+                  className="absolute top-0 bottom-0 w-0.5 bg-muted-foreground/30"
                   style={{ left: `${zeroPosition}%` }}
                 />
 
                 {/* Whisker line (P10-P90) */}
                 <div
-                  className='absolute top-1/2 h-0.5 -translate-y-1/2 rounded'
+                  className="absolute top-1/2 h-0.5 -translate-y-1/2 rounded"
                   style={{
                     left: `${p10Percent}%`,
                     width: `${p90Percent - p10Percent}%`,
@@ -158,7 +158,7 @@ export function PlayerBoxPlot({
 
                 {/* Left whisker cap (P10) */}
                 <div
-                  className='absolute top-1/2 w-0.5 h-3 -translate-y-1/2 rounded'
+                  className="absolute top-1/2 w-0.5 h-3 -translate-y-1/2 rounded"
                   style={{
                     left: `${p10Percent}%`,
                     backgroundColor: sourceColor,
@@ -167,7 +167,7 @@ export function PlayerBoxPlot({
 
                 {/* Right whisker cap (P90) */}
                 <div
-                  className='absolute top-1/2 w-0.5 h-3 -translate-y-1/2 rounded'
+                  className="absolute top-1/2 w-0.5 h-3 -translate-y-1/2 rounded"
                   style={{
                     left: `${p90Percent}%`,
                     backgroundColor: sourceColor,
@@ -176,7 +176,7 @@ export function PlayerBoxPlot({
 
                 {/* IQR Box (P25-P75) */}
                 <div
-                  className='absolute top-1/2 h-4 -translate-y-1/2 rounded border-2'
+                  className="absolute top-1/2 h-4 -translate-y-1/2 rounded border-2"
                   style={{
                     left: `${p25Percent}%`,
                     width: `${p75Percent - p25Percent}%`,
@@ -188,7 +188,7 @@ export function PlayerBoxPlot({
 
                 {/* Median line */}
                 <div
-                  className='absolute top-1/2 w-1 h-4 -translate-y-1/2 rounded'
+                  className="absolute top-1/2 w-1 h-4 -translate-y-1/2 rounded"
                   style={{
                     left: `${medianPercent}%`,
                     backgroundColor: sourceColor,
@@ -197,7 +197,7 @@ export function PlayerBoxPlot({
 
                 {/* Projection marker */}
                 <div
-                  className='absolute top-1/2 w-1.5 h-1.5 -translate-y-1/2 -translate-x-1/2 rounded-full border border-white'
+                  className="absolute top-1/2 w-1.5 h-1.5 -translate-y-1/2 -translate-x-1/2 rounded-full border border-white"
                   style={{
                     left: `${projectionPercent}%`,
                     backgroundColor: 'rgb(239, 68, 68)',
@@ -207,19 +207,19 @@ export function PlayerBoxPlot({
             </div>
           </div>
         </TooltipTrigger>
-        <TooltipContent side='top' className='max-w-xs'>
-          <div className='space-y-1 text-xs'>
-            <div className='font-medium'>
+        <TooltipContent side="top" className="max-w-xs">
+          <div className="space-y-1 text-xs">
+            <div className="font-medium">
               {distribution.dataSource === 'player'
                 ? 'Player-Specific Data'
                 : distribution.dataSource === 'position'
                   ? 'Position Average'
                   : 'Estimated Range'}
             </div>
-            <div className='text-foreground/70 text-xs mb-2'>
+            <div className="text-foreground/70 text-xs mb-2">
               📊 Scaled: 0 pts at 30%, max {maxProjection.toFixed(0)} pts at 100%
             </div>
-            <div className='grid grid-cols-2 gap-x-3 gap-y-1'>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1">
               <div>P10: {distribution.p10?.toFixed(1) ?? 'N/A'} pts</div>
               <div>P90: {distribution.p90?.toFixed(1) ?? 'N/A'} pts</div>
               <div>
@@ -245,9 +245,9 @@ export function PlayerBoxPlot({
               <div>Median: {distribution.median?.toFixed(1) ?? 'N/A'} pts</div>
               <div>Mean: {distribution.mean?.toFixed(1) ?? 'N/A'} pts</div>
             </div>
-            <div className='pt-1 border-t border-muted'>
+            <div className="pt-1 border-t border-muted">
               <div>🎯 This week: {projection.toFixed(1)} pts</div>
-              <div className='text-foreground/70'>📊 Based on: {distribution.sampleSize} games</div>
+              <div className="text-foreground/70">📊 Based on: {distribution.sampleSize} games</div>
             </div>
           </div>
         </TooltipContent>

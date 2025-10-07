@@ -85,17 +85,17 @@ function Matchup({
             : 'bg-muted/20'
         }`}
       >
-        <div className='text-xs text-muted-foreground font-medium uppercase tracking-wide'>
+        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
           {matchupLabel}
         </div>
-        <div className='flex items-center justify-between w-full p-3 bg-background rounded-md border border-muted'>
-          <div className='flex items-center space-x-2'>
-            <Badge variant='default' className='text-xs font-medium'>
+        <div className="flex items-center justify-between w-full p-3 bg-background rounded-md border border-muted">
+          <div className="flex items-center space-x-2">
+            <Badge variant="default" className="text-xs font-medium">
               #{team1.seed}
             </Badge>
-            <span className='font-medium text-sm'>{team1.name}</span>
+            <span className="font-medium text-sm">{team1.name}</span>
           </div>
-          <Badge variant={isDangerBye ? 'destructive' : 'outline'} className='text-xs'>
+          <Badge variant={isDangerBye ? 'destructive' : 'outline'} className="text-xs">
             {isDangerBye ? 'FORCED IN' : 'BYE WEEK'}
           </Badge>
         </div>
@@ -104,11 +104,11 @@ function Matchup({
   }
 
   return (
-    <div className='flex flex-col items-center space-y-3 p-4 border rounded-lg bg-card min-w-[220px] shadow-sm hover:shadow-md transition-shadow duration-200'>
-      <div className='text-xs text-muted-foreground font-medium uppercase tracking-wide'>
+    <div className="flex flex-col items-center space-y-3 p-4 border rounded-lg bg-card min-w-[220px] shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
         {matchupLabel}
       </div>
-      <div className='space-y-2 w-full'>
+      <div className="space-y-2 w-full">
         {team1 && (
           <div
             className={`flex items-center justify-between p-3 rounded-md border transition-colors ${
@@ -123,31 +123,31 @@ function Matchup({
                 : 'bg-background border-muted hover:border-muted-foreground/30'
             }`}
           >
-            <div className='flex items-center space-x-2'>
-              <Badge variant='secondary' className='text-xs font-medium'>
+            <div className="flex items-center space-x-2">
+              <Badge variant="secondary" className="text-xs font-medium">
                 #{team1.seed}
               </Badge>
-              <span className='font-medium text-sm'>{team1.name}</span>
+              <span className="font-medium text-sm">{team1.name}</span>
               {result?.isComplete &&
                 (isToiletBowl
                   ? result.winnerId !== team1.id && (
-                      <Badge variant='destructive' className='text-xs'>
+                      <Badge variant="destructive" className="text-xs">
                         ADVANCES
                       </Badge>
                     )
                   : result.winnerId === team1.id && (
-                      <Badge variant='default' className='text-xs bg-green-600 hover:bg-green-700'>
+                      <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
                         W
                       </Badge>
                     ))}
             </div>
-            <div className='flex items-center space-x-2'>
+            <div className="flex items-center space-x-2">
               {result?.team1Score !== undefined ? (
-                <span className='font-mono text-sm font-medium'>
+                <span className="font-mono text-sm font-medium">
                   {result.team1Score.toFixed(1)}
                 </span>
               ) : null}
-              <span className='text-xs text-muted-foreground font-mono'>{team1.record}</span>
+              <span className="text-xs text-muted-foreground font-mono">{team1.record}</span>
             </div>
           </div>
         )}
@@ -165,31 +165,31 @@ function Matchup({
                 : 'bg-background border-muted hover:border-muted-foreground/30'
             }`}
           >
-            <div className='flex items-center space-x-2'>
-              <Badge variant='secondary' className='text-xs font-medium'>
+            <div className="flex items-center space-x-2">
+              <Badge variant="secondary" className="text-xs font-medium">
                 #{team2.seed}
               </Badge>
-              <span className='font-medium text-sm'>{team2.name}</span>
+              <span className="font-medium text-sm">{team2.name}</span>
               {result?.isComplete &&
                 (isToiletBowl
                   ? result.winnerId !== team2.id && (
-                      <Badge variant='destructive' className='text-xs'>
+                      <Badge variant="destructive" className="text-xs">
                         ADVANCES
                       </Badge>
                     )
                   : result.winnerId === team2.id && (
-                      <Badge variant='default' className='text-xs bg-green-600 hover:bg-green-700'>
+                      <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
                         W
                       </Badge>
                     ))}
             </div>
-            <div className='flex items-center space-x-2'>
+            <div className="flex items-center space-x-2">
               {result?.team2Score !== undefined ? (
-                <span className='font-mono text-sm font-medium'>
+                <span className="font-mono text-sm font-medium">
                   {result.team2Score.toFixed(1)}
                 </span>
               ) : null}
-              <span className='text-xs text-muted-foreground font-mono'>{team2.record}</span>
+              <span className="text-xs text-muted-foreground font-mono">{team2.record}</span>
             </div>
           </div>
         )}
@@ -200,13 +200,13 @@ function Matchup({
 
 function BracketColumn({ title, matchups }: { title: string; matchups: JSX.Element[] }) {
   return (
-    <div className='flex flex-col items-center space-y-6'>
-      <div className='text-center'>
-        <h4 className='font-bold text-sm text-foreground bg-muted px-3 py-2 rounded-full'>
+    <div className="flex flex-col items-center space-y-6">
+      <div className="text-center">
+        <h4 className="font-bold text-sm text-foreground bg-muted px-3 py-2 rounded-full">
           {title}
         </h4>
       </div>
-      <div className='flex flex-col space-y-4'>{matchups}</div>
+      <div className="flex flex-col space-y-4">{matchups}</div>
     </div>
   );
 }
@@ -236,7 +236,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
   const getPlayoffResult = (
     rosterId1: string | number,
     rosterId2: string | number,
-    week: number
+    week: number,
   ) => {
     if (!league?.rosters) return undefined;
 
@@ -291,7 +291,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
     rosterId1: string | number,
     rosterId2: string | number,
     week: number,
-    isToiletBowl = false
+    isToiletBowl = false,
   ) => {
     const result = getPlayoffResult(rosterId1, rosterId2, week);
     if (!result) return null;
@@ -330,7 +330,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
             upperAdvancingTeams.week15.bye1.id,
             upperAdvancingTeams.week15.wc1Winner.id,
             16,
-            false
+            false,
           )
         : null,
     sf2Winner:
@@ -339,7 +339,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
             upperAdvancingTeams.week15.bye2.id,
             upperAdvancingTeams.week15.wc2Winner.id,
             16,
-            false
+            false,
           )
         : null,
     sf1Loser:
@@ -348,7 +348,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
             upperAdvancingTeams.week15.bye1.id,
             upperAdvancingTeams.week15.wc1Winner.id,
             16,
-            true
+            true,
           )
         : null,
     sf2Loser:
@@ -357,7 +357,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
             upperAdvancingTeams.week15.bye2.id,
             upperAdvancingTeams.week15.wc2Winner.id,
             16,
-            true
+            true,
           )
         : null,
   };
@@ -380,7 +380,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
             lowerAdvancingTeams.week15.bye2.id,
             lowerAdvancingTeams.week15.wc1Loser.id,
             16,
-            true
+            true,
           ) // loser advances
         : null,
     sf2Loser:
@@ -389,7 +389,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
             lowerAdvancingTeams.week15.bye1.id,
             lowerAdvancingTeams.week15.wc2Loser.id,
             16,
-            true
+            true,
           ) // loser advances
         : null,
   };
@@ -435,7 +435,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
     playoffWeeks.forEach(week => {
       const rostersWithData = league.rosters.filter(roster =>
-        roster.matchups.some(m => m.week === week)
+        roster.matchups.some(m => m.week === week),
       );
 
       analysis[week] = {
@@ -505,21 +505,21 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       if (!byeTeam) return null; // Invalid data
 
       return (
-        <div className='flex flex-col items-center space-y-3 p-4 border-2 border-dashed rounded-lg bg-muted/20 min-w-[240px]'>
-          <div className='text-xs text-muted-foreground font-medium uppercase tracking-wide text-center'>
+        <div className="flex flex-col items-center space-y-3 p-4 border-2 border-dashed rounded-lg bg-muted/20 min-w-[240px]">
+          <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide text-center">
             Round {matchup.r} • Week {week} • Matchup {matchup.m}
             <br />
             BYE WEEK
           </div>
-          <div className='w-full'>
-            <div className='flex items-center justify-between p-3 bg-background rounded-md border border-muted'>
-              <div className='flex items-center space-x-2'>
-                <Badge variant='secondary' className='text-xs font-medium'>
+          <div className="w-full">
+            <div className="flex items-center justify-between p-3 bg-background rounded-md border border-muted">
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="text-xs font-medium">
                   #{byeTeam.seed}
                 </Badge>
-                <span className='font-medium text-sm'>{byeTeam.name}</span>
+                <span className="font-medium text-sm">{byeTeam.name}</span>
               </div>
-              <Badge variant='outline' className='text-xs'>
+              <Badge variant="outline" className="text-xs">
                 BYE WEEK
               </Badge>
             </div>
@@ -530,18 +530,18 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
     // Regular head-to-head matchup
     return (
-      <div className='flex flex-col items-center space-y-3 p-4 border rounded-lg bg-card min-w-[240px] shadow-sm'>
-        <div className='text-xs text-muted-foreground font-medium uppercase tracking-wide text-center'>
+      <div className="flex flex-col items-center space-y-3 p-4 border rounded-lg bg-card min-w-[240px] shadow-sm">
+        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide text-center">
           Round {matchup.r} • Week {week} • Matchup {matchup.m}
           {bracket === 'losers' && ' (Loser Advances)'}
           {!hasScores && <br />}
           {!hasScores && (
-            <span className='text-yellow-600 dark:text-yellow-400'>
+            <span className="text-yellow-600 dark:text-yellow-400">
               {actualGameExists ? 'Scores Pending' : 'Game Data Missing'}
             </span>
           )}
         </div>
-        <div className='space-y-2 w-full'>
+        <div className="space-y-2 w-full">
           {team1 && (
             <div
               className={`flex items-center justify-between p-3 rounded-md border transition-colors ${
@@ -556,38 +556,38 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   : 'bg-background border-muted'
               }`}
             >
-              <div className='flex items-center space-x-2'>
-                <Badge variant='secondary' className='text-xs font-medium'>
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="text-xs font-medium">
                   #{team1.seed}
                 </Badge>
-                <span className='font-medium text-sm'>{team1.name}</span>
+                <span className="font-medium text-sm">{team1.name}</span>
                 {isComplete &&
                   (bracket === 'losers'
                     ? winnerId !== matchup.t1 && (
-                        <Badge variant='destructive' className='text-xs'>
+                        <Badge variant="destructive" className="text-xs">
                           ADVANCES
                         </Badge>
                       )
                     : winnerId === matchup.t1 && (
                         <Badge
-                          variant='default'
-                          className='text-xs bg-green-600 hover:bg-green-700'
+                          variant="default"
+                          className="text-xs bg-green-600 hover:bg-green-700"
                         >
                           W
                         </Badge>
                       ))}
               </div>
-              <div className='flex items-center space-x-2'>
+              <div className="flex items-center space-x-2">
                 {hasScores && team1Matchup ? (
-                  <span className='font-mono text-sm font-medium'>
+                  <span className="font-mono text-sm font-medium">
                     {team1Matchup.points.toFixed(1)}
                   </span>
                 ) : (
-                  <span className='text-xs text-muted-foreground'>
+                  <span className="text-xs text-muted-foreground">
                     {actualGameExists ? 'TBD' : '--'}
                   </span>
                 )}
-                <span className='text-xs text-muted-foreground font-mono'>{team1.record}</span>
+                <span className="text-xs text-muted-foreground font-mono">{team1.record}</span>
               </div>
             </div>
           )}
@@ -605,38 +605,38 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   : 'bg-background border-muted'
               }`}
             >
-              <div className='flex items-center space-x-2'>
-                <Badge variant='secondary' className='text-xs font-medium'>
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="text-xs font-medium">
                   #{team2.seed}
                 </Badge>
-                <span className='font-medium text-sm'>{team2.name}</span>
+                <span className="font-medium text-sm">{team2.name}</span>
                 {isComplete &&
                   (bracket === 'losers'
                     ? winnerId !== matchup.t2 && (
-                        <Badge variant='destructive' className='text-xs'>
+                        <Badge variant="destructive" className="text-xs">
                           ADVANCES
                         </Badge>
                       )
                     : winnerId === matchup.t2 && (
                         <Badge
-                          variant='default'
-                          className='text-xs bg-green-600 hover:bg-green-700'
+                          variant="default"
+                          className="text-xs bg-green-600 hover:bg-green-700"
                         >
                           W
                         </Badge>
                       ))}
               </div>
-              <div className='flex items-center space-x-2'>
+              <div className="flex items-center space-x-2">
                 {hasScores && team2Matchup ? (
-                  <span className='font-mono text-sm font-medium'>
+                  <span className="font-mono text-sm font-medium">
                     {team2Matchup.points.toFixed(1)}
                   </span>
                 ) : (
-                  <span className='text-xs text-muted-foreground'>
+                  <span className="text-xs text-muted-foreground">
                     {actualGameExists ? 'TBD' : '--'}
                   </span>
                 )}
-                <span className='text-xs text-muted-foreground font-mono'>{team2.record}</span>
+                <span className="text-xs text-muted-foreground font-mono">{team2.record}</span>
               </div>
             </div>
           )}
@@ -718,37 +718,37 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       };
     }) => {
       return (
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {/* Winners Bracket - Championship Path (Left to Right) */}
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center space-x-2'>
+              <CardTitle className="flex items-center space-x-2">
                 <span>Winners Bracket</span>
-                <Badge variant='secondary' className='text-xs'>
+                <Badge variant="secondary" className="text-xs">
                   Championship Path (6 Teams)
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='overflow-x-auto'>
-                <div className='flex justify-start space-x-12 min-w-max p-6'>
+              <div className="overflow-x-auto">
+                <div className="flex justify-start space-x-12 min-w-max p-6">
                   {structure.winners.map(roundData => (
-                    <div key={`winners-r${roundData.round}`} className='flex flex-col space-y-6'>
-                      <div className='text-center'>
-                        <h3 className='font-medium text-sm mb-2'>Round {roundData.round}</h3>
-                        <p className='text-xs text-muted-foreground'>
+                    <div key={`winners-r${roundData.round}`} className="flex flex-col space-y-6">
+                      <div className="text-center">
+                        <h3 className="font-medium text-sm mb-2">Round {roundData.round}</h3>
+                        <p className="text-xs text-muted-foreground">
                           Week {roundToWeek(roundData.round)}
                         </p>
                       </div>
-                      <div className='space-y-8'>
+                      <div className="space-y-8">
                         {roundData.matchups.map(matchup => (
-                          <div key={matchup.m} className='relative'>
-                            <OfficialMatchup matchup={matchup} bracket='winners' />
+                          <div key={matchup.m} className="relative">
+                            <OfficialMatchup matchup={matchup} bracket="winners" />
                             {/* Flow arrows for winners */}
                             {roundData.round < Math.max(...structure.winners.map(r => r.round)) && (
-                              <div className='absolute top-1/2 -right-6 transform -translate-y-1/2'>
-                                <div className='w-4 h-0.5 bg-green-400'></div>
-                                <div className='w-0 h-0 border-l-4 border-l-green-400 border-t-2 border-t-transparent border-b-2 border-b-transparent absolute -right-1 -top-1'></div>
+                              <div className="absolute top-1/2 -right-6 transform -translate-y-1/2">
+                                <div className="w-4 h-0.5 bg-green-400"></div>
+                                <div className="w-0 h-0 border-l-4 border-l-green-400 border-t-2 border-t-transparent border-b-2 border-b-transparent absolute -right-1 -top-1"></div>
                               </div>
                             )}
                           </div>
@@ -764,33 +764,33 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
           {/* Losers Bracket - Toilet Bowl (Center to Right, Losers Advance) */}
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center space-x-2'>
+              <CardTitle className="flex items-center space-x-2">
                 <span>Losers Bracket</span>
-                <Badge variant='destructive' className='text-xs'>
+                <Badge variant="destructive" className="text-xs">
                   Toilet Bowl (8 Teams - Losers Advance)
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='overflow-x-auto'>
-                <div className='flex justify-center space-x-12 min-w-max p-6'>
+              <div className="overflow-x-auto">
+                <div className="flex justify-center space-x-12 min-w-max p-6">
                   {structure.losers.map(roundData => (
-                    <div key={`losers-r${roundData.round}`} className='flex flex-col space-y-6'>
-                      <div className='text-center'>
-                        <h3 className='font-medium text-sm mb-2'>Round {roundData.round}</h3>
-                        <p className='text-xs text-muted-foreground'>
+                    <div key={`losers-r${roundData.round}`} className="flex flex-col space-y-6">
+                      <div className="text-center">
+                        <h3 className="font-medium text-sm mb-2">Round {roundData.round}</h3>
+                        <p className="text-xs text-muted-foreground">
                           Week {roundToWeek(roundData.round)}
                         </p>
                       </div>
-                      <div className='space-y-8'>
+                      <div className="space-y-8">
                         {roundData.matchups.map(matchup => (
-                          <div key={matchup.m} className='relative'>
-                            <OfficialMatchup matchup={matchup} bracket='losers' />
+                          <div key={matchup.m} className="relative">
+                            <OfficialMatchup matchup={matchup} bracket="losers" />
                             {/* Flow arrows for losers (losers advance right) */}
                             {roundData.round < Math.max(...structure.losers.map(r => r.round)) && (
-                              <div className='absolute top-1/2 -right-6 transform -translate-y-1/2'>
-                                <div className='w-4 h-0.5 bg-red-400'></div>
-                                <div className='w-0 h-0 border-l-4 border-l-red-400 border-t-2 border-t-transparent border-b-2 border-b-transparent absolute -right-1 -top-1'></div>
+                              <div className="absolute top-1/2 -right-6 transform -translate-y-1/2">
+                                <div className="w-4 h-0.5 bg-red-400"></div>
+                                <div className="w-0 h-0 border-l-4 border-l-red-400 border-t-2 border-t-transparent border-b-2 border-b-transparent absolute -right-1 -top-1"></div>
                               </div>
                             )}
                           </div>
@@ -806,23 +806,23 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
           {/* Placement Games Islands */}
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center space-x-2'>
+              <CardTitle className="flex items-center space-x-2">
                 <span>Placement Games</span>
-                <Badge variant='outline' className='text-xs'>
+                <Badge variant="outline" className="text-xs">
                   3rd, 5th Place Islands
                 </Badge>
-                <Badge variant='secondary' className='text-xs ml-2'>
+                <Badge variant="secondary" className="text-xs ml-2">
                   {structure.placements.length} Games
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {structure.placements.length > 0 ? (
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {structure.placements.map(matchup => (
-                    <div key={`placement-${matchup.m}`} className='flex flex-col items-center'>
-                      <div className='text-xs text-muted-foreground mb-2 text-center'>
-                        <p className='font-medium'>Placement Game</p>
+                    <div key={`placement-${matchup.m}`} className="flex flex-col items-center">
+                      <div className="text-xs text-muted-foreground mb-2 text-center">
+                        <p className="font-medium">Placement Game</p>
                         <p>
                           Round {matchup.r} • Week {roundToWeek(matchup.r)}
                         </p>
@@ -837,9 +837,9 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                   ))}
                 </div>
               ) : (
-                <div className='text-center text-muted-foreground p-8'>
+                <div className="text-center text-muted-foreground p-8">
                   <p>No placement games detected from bracket flow</p>
-                  <p className='text-sm mt-2'>
+                  <p className="text-sm mt-2">
                     All matchups appear to be part of main championship/toilet bowl paths
                   </p>
                 </div>
@@ -848,20 +848,20 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
           </Card>
 
           {/* Flow Analysis Debug */}
-          <details className='text-sm'>
-            <summary className='cursor-pointer hover:text-foreground mb-2'>
+          <details className="text-sm">
+            <summary className="cursor-pointer hover:text-foreground mb-2">
               🔍 Bracket Flow Analysis
             </summary>
             <Card>
-              <CardContent className='pt-4 space-y-4'>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-xs'>
+              <CardContent className="pt-4 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <h4 className='font-medium mb-2'>Winners Flow:</h4>
+                    <h4 className="font-medium mb-2">Winners Flow:</h4>
                     {structure.winners.map(roundData => (
-                      <div key={roundData.round} className='mb-4'>
-                        <p className='font-medium'>Round {roundData.round}:</p>
+                      <div key={roundData.round} className="mb-4">
+                        <p className="font-medium">Round {roundData.round}:</p>
                         {roundData.matchups.map(matchup => (
-                          <div key={matchup.m} className='ml-2 mb-2'>
+                          <div key={matchup.m} className="ml-2 mb-2">
                             <p>
                               M{matchup.m}: t1={matchup.t1} (from {JSON.stringify(matchup.t1_from)})
                               vs t2={matchup.t2} (from {JSON.stringify(matchup.t2_from)})
@@ -872,12 +872,12 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                     ))}
                   </div>
                   <div>
-                    <h4 className='font-medium mb-2'>Losers Flow:</h4>
+                    <h4 className="font-medium mb-2">Losers Flow:</h4>
                     {structure.losers.map(roundData => (
-                      <div key={roundData.round} className='mb-4'>
-                        <p className='font-medium'>Round {roundData.round}:</p>
+                      <div key={roundData.round} className="mb-4">
+                        <p className="font-medium">Round {roundData.round}:</p>
                         {roundData.matchups.map(matchup => (
-                          <div key={matchup.m} className='ml-2 mb-2'>
+                          <div key={matchup.m} className="ml-2 mb-2">
                             <p>
                               M{matchup.m}: t1={matchup.t1} (from {JSON.stringify(matchup.t1_from)})
                               vs t2={matchup.t2} (from {JSON.stringify(matchup.t2_from)})
@@ -890,15 +890,15 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                 </div>
                 {structure.placements.length > 0 && (
                   <div>
-                    <h4 className='font-medium mb-2'>Placement Games:</h4>
+                    <h4 className="font-medium mb-2">Placement Games:</h4>
                     {structure.placements.map(matchup => (
-                      <div key={matchup.m} className='mb-2'>
+                      <div key={matchup.m} className="mb-2">
                         <p>
                           M{matchup.m} R{matchup.r}: t1={matchup.t1} (from{' '}
                           {JSON.stringify(matchup.t1_from)}) vs t2={matchup.t2} (from{' '}
                           {JSON.stringify(matchup.t2_from)})
                         </p>
-                        <p className='text-xs text-muted-foreground ml-2'>
+                        <p className="text-xs text-muted-foreground ml-2">
                           Analysis:{' '}
                           {matchup.t1_from &&
                           'l' in matchup.t1_from &&
@@ -919,17 +919,17 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
     };
 
     return (
-      <div className='space-y-8'>
-        <Card className='bg-blue-50 dark:bg-blue-900/20'>
-          <CardContent className='pt-6'>
-            <div className='flex items-center space-x-2'>
+      <div className="space-y-8">
+        <Card className="bg-blue-50 dark:bg-blue-900/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center space-x-2">
               <Badge
-                variant='secondary'
-                className='bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                variant="secondary"
+                className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
               >
                 Official Bracket Data
               </Badge>
-              <span className='text-sm text-blue-700 dark:text-blue-300'>
+              <span className="text-sm text-blue-700 dark:text-blue-300">
                 Loaded from Sleeper API - showing official playoff bracket structure with live
                 scores & flow
               </span>
@@ -944,17 +944,17 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
   // Fallback to reconstructed bracket system
   return (
-    <div className='space-y-8'>
-      <Card className='bg-yellow-50 dark:bg-yellow-900/20'>
-        <CardContent className='pt-6'>
-          <div className='flex items-center space-x-2'>
+    <div className="space-y-8">
+      <Card className="bg-yellow-50 dark:bg-yellow-900/20">
+        <CardContent className="pt-6">
+          <div className="flex items-center space-x-2">
             <Badge
-              variant='outline'
-              className='bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+              variant="outline"
+              className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
             >
               Reconstructed Bracket
             </Badge>
-            <span className='text-sm text-yellow-700 dark:text-yellow-300'>
+            <span className="text-sm text-yellow-700 dark:text-yellow-300">
               No official bracket data available - showing estimated structure based on seeding
             </span>
           </div>
@@ -963,54 +963,54 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       {/* Upper Bracket */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center space-x-2'>
+          <CardTitle className="flex items-center space-x-2">
             <span>Upper Bracket</span>
-            <Badge variant='secondary' className='text-xs'>
+            <Badge variant="secondary" className="text-xs">
               Winners Championship
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='overflow-x-auto'>
-            <div className='flex justify-center space-x-12 min-w-max p-6'>
+          <div className="overflow-x-auto">
+            <div className="flex justify-center space-x-12 min-w-max p-6">
               {/* Week 15 - Wild Card */}
               <BracketColumn
-                title='Week 15 Wild Card'
+                title="Week 15 Wild Card"
                 matchups={[
                   <Matchup
-                    key='upper-bye-1'
+                    key="upper-bye-1"
                     team1={upperBracket[0]}
-                    matchupLabel='Bye Week'
+                    matchupLabel="Bye Week"
                     isBye
                     result={getByeResult(upperBracket[0].id, 15)}
                   />,
                   <Matchup
-                    key='upper-bye-2'
+                    key="upper-bye-2"
                     team1={upperBracket[1]}
-                    matchupLabel='Bye Week'
+                    matchupLabel="Bye Week"
                     isBye
                     result={getByeResult(Number(upperBracket[1].id), 15)}
                   />,
                   <Matchup
-                    key='upper-wc-1'
+                    key="upper-wc-1"
                     team1={upperBracket[2]}
                     team2={upperBracket[5]}
-                    matchupLabel='#3 vs #6'
+                    matchupLabel="#3 vs #6"
                     result={getPlayoffResult(
                       Number(upperBracket[2].id),
                       Number(upperBracket[5].id),
-                      15
+                      15,
                     )}
                   />,
                   <Matchup
-                    key='upper-wc-2'
+                    key="upper-wc-2"
                     team1={upperBracket[3]}
                     team2={upperBracket[4]}
-                    matchupLabel='#4 vs #5'
+                    matchupLabel="#4 vs #5"
                     result={getPlayoffResult(
                       Number(upperBracket[3].id),
                       Number(upperBracket[4].id),
-                      15
+                      15,
                     )}
                   />,
                 ]}
@@ -1018,34 +1018,34 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* Week 16 - Semifinals */}
               <BracketColumn
-                title='Week 16 Semifinals'
+                title="Week 16 Semifinals"
                 matchups={[
                   <Matchup
-                    key='upper-sf-1'
+                    key="upper-sf-1"
                     team1={upperAdvancingTeams.week15.bye1 || undefined}
                     team2={upperAdvancingTeams.week15.wc1Winner || undefined}
-                    matchupLabel='Semifinal 1'
+                    matchupLabel="Semifinal 1"
                     result={
                       upperAdvancingTeams.week15.bye1 && upperAdvancingTeams.week15.wc1Winner
                         ? getPlayoffResult(
                             Number(upperAdvancingTeams.week15.bye1.id),
                             Number(upperAdvancingTeams.week15.wc1Winner.id),
-                            16
+                            16,
                           )
                         : undefined
                     }
                   />,
                   <Matchup
-                    key='upper-sf-2'
+                    key="upper-sf-2"
                     team1={upperAdvancingTeams.week15.bye2 || undefined}
                     team2={upperAdvancingTeams.week15.wc2Winner || undefined}
-                    matchupLabel='Semifinal 2'
+                    matchupLabel="Semifinal 2"
                     result={
                       upperAdvancingTeams.week15.bye2 && upperAdvancingTeams.week15.wc2Winner
                         ? getPlayoffResult(
                             Number(upperAdvancingTeams.week15.bye2.id),
                             Number(upperAdvancingTeams.week15.wc2Winner.id),
-                            16
+                            16,
                           )
                         : undefined
                     }
@@ -1055,19 +1055,19 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* Week 17 - Championship */}
               <BracketColumn
-                title='Week 17 Championship'
+                title="Week 17 Championship"
                 matchups={[
                   <Matchup
-                    key='upper-final'
+                    key="upper-final"
                     team1={upperAdvancingTeamsWeek16.sf1Winner || undefined}
                     team2={upperAdvancingTeamsWeek16.sf2Winner || undefined}
-                    matchupLabel='Championship Final'
+                    matchupLabel="Championship Final"
                     result={
                       upperAdvancingTeamsWeek16.sf1Winner && upperAdvancingTeamsWeek16.sf2Winner
                         ? getPlayoffResult(
                             Number(upperAdvancingTeamsWeek16.sf1Winner.id),
                             Number(upperAdvancingTeamsWeek16.sf2Winner.id),
-                            17
+                            17,
                           )
                         : undefined
                     }
@@ -1082,55 +1082,55 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       {/* Lower Bracket */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center space-x-2'>
+          <CardTitle className="flex items-center space-x-2">
             <span>Lower Bracket</span>
-            <Badge variant='destructive' className='text-xs'>
+            <Badge variant="destructive" className="text-xs">
               Toilet Bowl (Losers Advance)
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='overflow-x-auto'>
-            <div className='flex justify-center space-x-12 min-w-max p-6'>
+          <div className="overflow-x-auto">
+            <div className="flex justify-center space-x-12 min-w-max p-6">
               {/* Week 15 - Wild Card */}
               <BracketColumn
-                title='Week 15 Toilet Wild Card'
+                title="Week 15 Toilet Wild Card"
                 matchups={[
                   <Matchup
-                    key='lower-bye-1'
+                    key="lower-bye-1"
                     team1={lowerBracket[5]}
-                    matchupLabel='Forced Bye (Auto-Advance)'
+                    matchupLabel="Forced Bye (Auto-Advance)"
                     isBye
                     result={getByeResult(Number(lowerBracket[5].id), 15)}
                   />,
                   <Matchup
-                    key='lower-bye-2'
+                    key="lower-bye-2"
                     team1={lowerBracket[4]}
-                    matchupLabel='Forced Bye (Auto-Advance)'
+                    matchupLabel="Forced Bye (Auto-Advance)"
                     isBye
                     result={getByeResult(Number(lowerBracket[4].id), 15)}
                   />,
                   <Matchup
-                    key='lower-wc-1'
+                    key="lower-wc-1"
                     team1={lowerBracket[0]}
                     team2={lowerBracket[3]}
-                    matchupLabel='#7 vs #10 (Loser Advances)'
+                    matchupLabel="#7 vs #10 (Loser Advances)"
                     result={getPlayoffResult(
                       Number(lowerBracket[0].id),
                       Number(lowerBracket[3].id),
-                      15
+                      15,
                     )}
                     isToiletBowl={true}
                   />,
                   <Matchup
-                    key='lower-wc-2'
+                    key="lower-wc-2"
                     team1={lowerBracket[1]}
                     team2={lowerBracket[2]}
-                    matchupLabel='#8 vs #9 (Loser Advances)'
+                    matchupLabel="#8 vs #9 (Loser Advances)"
                     result={getPlayoffResult(
                       Number(lowerBracket[1].id),
                       Number(lowerBracket[2].id),
-                      15
+                      15,
                     )}
                     isToiletBowl={true}
                   />,
@@ -1139,35 +1139,35 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* Week 16 - Semifinals */}
               <BracketColumn
-                title='Week 16 Toilet Semifinals'
+                title="Week 16 Toilet Semifinals"
                 matchups={[
                   <Matchup
-                    key='lower-sf-1'
+                    key="lower-sf-1"
                     team1={lowerAdvancingTeams.week15.bye2 || undefined} // #11 forced bye
                     team2={lowerAdvancingTeams.week15.wc1Loser || undefined} // LOSER from #7 vs #10
-                    matchupLabel='Toilet Semifinal 1 (Loser Advances)'
+                    matchupLabel="Toilet Semifinal 1 (Loser Advances)"
                     result={
                       lowerAdvancingTeams.week15.bye2 && lowerAdvancingTeams.week15.wc1Loser
                         ? getPlayoffResult(
                             Number(lowerAdvancingTeams.week15.bye2.id),
                             Number(lowerAdvancingTeams.week15.wc1Loser.id),
-                            16
+                            16,
                           )
                         : undefined
                     }
                     isToiletBowl={true}
                   />,
                   <Matchup
-                    key='lower-sf-2'
+                    key="lower-sf-2"
                     team1={lowerAdvancingTeams.week15.bye1 || undefined} // #12 forced bye
                     team2={lowerAdvancingTeams.week15.wc2Loser || undefined} // LOSER from #8 vs #9
-                    matchupLabel='Toilet Semifinal 2 (Loser Advances)'
+                    matchupLabel="Toilet Semifinal 2 (Loser Advances)"
                     result={
                       lowerAdvancingTeams.week15.bye1 && lowerAdvancingTeams.week15.wc2Loser
                         ? getPlayoffResult(
                             Number(lowerAdvancingTeams.week15.bye1.id),
                             Number(lowerAdvancingTeams.week15.wc2Loser.id),
-                            16
+                            16,
                           )
                         : undefined
                     }
@@ -1178,19 +1178,19 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* Week 17 - Championship */}
               <BracketColumn
-                title='Week 17 Toilet Bowl'
+                title="Week 17 Toilet Bowl"
                 matchups={[
                   <Matchup
-                    key='lower-final'
+                    key="lower-final"
                     team1={lowerAdvancingTeamsWeek16.sf1Loser || undefined}
                     team2={lowerAdvancingTeamsWeek16.sf2Loser || undefined}
-                    matchupLabel='Sacko Championship (Last Place Game)'
+                    matchupLabel="Sacko Championship (Last Place Game)"
                     result={
                       lowerAdvancingTeamsWeek16.sf1Loser && lowerAdvancingTeamsWeek16.sf2Loser
                         ? getPlayoffResult(
                             Number(lowerAdvancingTeamsWeek16.sf1Loser.id),
                             Number(lowerAdvancingTeamsWeek16.sf2Loser.id),
-                            17
+                            17,
                           )
                         : undefined
                     }
@@ -1206,31 +1206,31 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       {/* Placement Games */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center space-x-2'>
+          <CardTitle className="flex items-center space-x-2">
             <span>Placement Games</span>
-            <Badge variant='outline' className='text-xs'>
+            <Badge variant="outline" className="text-xs">
               Final Rankings
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='overflow-x-auto'>
-            <div className='flex justify-center space-x-8 min-w-max p-6'>
+          <div className="overflow-x-auto">
+            <div className="flex justify-center space-x-8 min-w-max p-6">
               {/* 3rd/4th Place Game */}
               <BracketColumn
-                title='3rd/4th Place'
+                title="3rd/4th Place"
                 matchups={[
                   <Matchup
-                    key='3rd-4th-place'
+                    key="3rd-4th-place"
                     team1={upperAdvancingTeamsWeek16.sf1Loser || undefined}
                     team2={upperAdvancingTeamsWeek16.sf2Loser || undefined}
-                    matchupLabel='Bronze Medal Game'
+                    matchupLabel="Bronze Medal Game"
                     result={
                       upperAdvancingTeamsWeek16.sf1Loser && upperAdvancingTeamsWeek16.sf2Loser
                         ? getPlayoffResult(
                             Number(upperAdvancingTeamsWeek16.sf1Loser.id),
                             Number(upperAdvancingTeamsWeek16.sf2Loser.id),
-                            17
+                            17,
                           )
                         : undefined
                     }
@@ -1240,19 +1240,19 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* 5th/6th Place Game */}
               <BracketColumn
-                title='5th/6th Place'
+                title="5th/6th Place"
                 matchups={[
                   <Matchup
-                    key='5th-6th-place'
+                    key="5th-6th-place"
                     team1={upperAdvancingTeams.week15.wc1Loser || undefined}
                     team2={upperAdvancingTeams.week15.wc2Loser || undefined}
-                    matchupLabel='Middle Tier Final'
+                    matchupLabel="Middle Tier Final"
                     result={
                       upperAdvancingTeams.week15.wc1Loser && upperAdvancingTeams.week15.wc2Loser
                         ? getPlayoffResult(
                             Number(upperAdvancingTeams.week15.wc1Loser.id),
                             Number(upperAdvancingTeams.week15.wc2Loser.id),
-                            17
+                            17,
                           )
                         : undefined
                     }
@@ -1262,19 +1262,19 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* 9th/10th Place Game */}
               <BracketColumn
-                title='9th/10th Place'
+                title="9th/10th Place"
                 matchups={[
                   <Matchup
-                    key='9th-10th-place'
+                    key="9th-10th-place"
                     team1={lowerAdvancingTeams.week15.wc1Winner || undefined} // Winner of #7 vs #10 (eliminated from toilet)
                     team2={lowerAdvancingTeams.week15.wc2Winner || undefined} // Winner of #8 vs #9 (eliminated from toilet)
-                    matchupLabel='Avoided Sacko Game'
+                    matchupLabel="Avoided Sacko Game"
                     result={
                       lowerAdvancingTeams.week15.wc1Winner && lowerAdvancingTeams.week15.wc2Winner
                         ? getPlayoffResult(
                             Number(lowerAdvancingTeams.week15.wc1Winner.id),
                             Number(lowerAdvancingTeams.week15.wc2Winner.id),
-                            17
+                            17,
                           )
                         : undefined
                     }
@@ -1284,10 +1284,10 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
 
               {/* 7th/8th Place Game */}
               <BracketColumn
-                title='7th/8th Place'
+                title="7th/8th Place"
                 matchups={[
                   <Matchup
-                    key='7th-8th-place'
+                    key="7th-8th-place"
                     team1={
                       (() => {
                         // Winners of toilet semifinals (eliminated from advancing to Sacko)
@@ -1298,7 +1298,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                           const sf1Result = getPlayoffResult(
                             Number(lowerAdvancingTeams.week15.bye2.id),
                             Number(lowerAdvancingTeams.week15.wc1Loser.id),
-                            16
+                            16,
                           );
                           if (sf1Result) {
                             const winnerId = Number(sf1Result.winnerId);
@@ -1318,7 +1318,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                           const sf2Result = getPlayoffResult(
                             Number(lowerAdvancingTeams.week15.bye1.id),
                             Number(lowerAdvancingTeams.week15.wc2Loser.id),
-                            16
+                            16,
                           );
                           if (sf2Result) {
                             const winnerId = Number(sf2Result.winnerId);
@@ -1328,14 +1328,14 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                         return null;
                       })() || undefined
                     }
-                    matchupLabel='Toilet Escape Game'
+                    matchupLabel="Toilet Escape Game"
                     result={(() => {
                       const team1Data =
                         lowerAdvancingTeams.week15.bye2 && lowerAdvancingTeams.week15.wc1Loser
                           ? getPlayoffResult(
                               Number(lowerAdvancingTeams.week15.bye2.id),
                               Number(lowerAdvancingTeams.week15.wc1Loser.id),
-                              16
+                              16,
                             )
                           : null;
                       const team2Data =
@@ -1343,7 +1343,7 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                           ? getPlayoffResult(
                               Number(lowerAdvancingTeams.week15.bye1.id),
                               Number(lowerAdvancingTeams.week15.wc2Loser.id),
-                              16
+                              16,
                             )
                           : null;
 
@@ -1363,13 +1363,13 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       </Card>
 
       {/* Playoffs Info */}
-      <Card className='bg-muted/30'>
-        <CardContent className='pt-6'>
-          <div className='text-sm text-muted-foreground'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      <Card className="bg-muted/30">
+        <CardContent className="pt-6">
+          <div className="text-sm text-muted-foreground">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h4 className='font-medium text-card-foreground mb-2'>Bracket Format:</h4>
-                <ul className='space-y-1 text-xs'>
+                <h4 className="font-medium text-card-foreground mb-2">Bracket Format:</h4>
+                <ul className="space-y-1 text-xs">
                   <li>• All 12 teams make playoffs</li>
                   <li>• Top 6 teams → Upper Bracket (Winners Championship)</li>
                   <li>• Bottom 6 teams → Lower Bracket (Toilet Bowl)</li>
@@ -1378,8 +1378,8 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
                 </ul>
               </div>
               <div>
-                <h4 className='font-medium text-card-foreground mb-2'>Special Rules:</h4>
-                <ul className='space-y-1 text-xs'>
+                <h4 className="font-medium text-card-foreground mb-2">Special Rules:</h4>
+                <ul className="space-y-1 text-xs">
                   <li>
                     • <strong>Upper Bracket:</strong> Winners advance (normal)
                   </li>

@@ -384,7 +384,7 @@ export function generateMockAnalytics(draft1: MockDraft, draft2: MockDraft): Dra
 
   // Generate tier assignments (quantile-based)
   const generateTierAssignments = (
-    draft: MockDraft
+    draft: MockDraft,
   ): { assignments: TierAssignment[]; method: TierMethod } => {
     const picks = draft.teams.flatMap(t => t.picks).sort((a, b) => b.actualPrice - a.actualPrice);
     const breaks = [0.1, 0.25, 0.55, 0.85, 1.0];
@@ -438,7 +438,7 @@ export function generateMockAnalytics(draft1: MockDraft, draft2: MockDraft): Dra
   // Generate nomination order analysis
   const generateNominationOrderAnalysis = (
     draft1: MockDraft,
-    draft2: MockDraft
+    draft2: MockDraft,
   ): NominationOrderAnalysis => {
     // Helper function to calculate correlation coefficient
     const calculateCorrelation = (x: number[], y: number[]): number => {

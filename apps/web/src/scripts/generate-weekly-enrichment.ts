@@ -212,7 +212,7 @@ function processPositionalTrends(dataset: any): Narrative[] {
       for (let week = 1; week < currentWeekNum; week++) {
         const weekRanks = previousRanksByWeek.get(week);
         const weekScore = (posTeamsMap.get(teamKey) as any)?.scores.find(
-          (s: any) => s.week === week
+          (s: any) => s.week === week,
         );
 
         if (weekRanks && weekScore) {
@@ -478,19 +478,19 @@ async function generateEnrichment() {
       narratives: {
         positionalTrends: filterAndLimit(
           positionalTrends,
-          NARRATIVE_CONFIG.maxNarrativesPerSection.positionalTrends
+          NARRATIVE_CONFIG.maxNarrativesPerSection.positionalTrends,
         ),
         luckAnalysis: filterAndLimit(
           luckAnalysis,
-          NARRATIVE_CONFIG.maxNarrativesPerSection.luckAnalysis
+          NARRATIVE_CONFIG.maxNarrativesPerSection.luckAnalysis,
         ),
         scatterOutliers: filterAndLimit(
           scatterOutliers,
-          NARRATIVE_CONFIG.maxNarrativesPerSection.scatterOutliers
+          NARRATIVE_CONFIG.maxNarrativesPerSection.scatterOutliers,
         ),
         transactions: filterAndLimit(
           transactions,
-          NARRATIVE_CONFIG.maxNarrativesPerSection.transactions
+          NARRATIVE_CONFIG.maxNarrativesPerSection.transactions,
         ),
         startSit: filterAndLimit(startSit, NARRATIVE_CONFIG.maxNarrativesPerSection.startSit),
       },

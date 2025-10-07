@@ -68,7 +68,7 @@ export async function GET() {
             error: error instanceof Error ? error.message : String(error),
           };
         }
-      })
+      }),
     );
 
     return NextResponse.json({

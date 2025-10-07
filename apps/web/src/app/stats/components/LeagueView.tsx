@@ -140,7 +140,7 @@ export function LeagueView({
   }, [allTeamEntries, positionsMap, weekNum, isSeasonView]);
 
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>League Rankings</CardTitle>
@@ -151,14 +151,14 @@ export function LeagueView({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='mb-4 flex items-center gap-3'>
-            <label className='text-sm font-medium'>View</label>
+          <div className="mb-4 flex items-center gap-3">
+            <label className="text-sm font-medium">View</label>
             <Select value={selectedWeek} onValueChange={setSelectedWeek}>
-              <SelectTrigger className='w-48'>
-                <SelectValue placeholder='Select week' />
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Select week" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='season'>Season Overview</SelectItem>
+                <SelectItem value="season">Season Overview</SelectItem>
                 {availableWeeks.map(week => (
                   <SelectItem key={week} value={String(week)}>
                     Week {week}
@@ -168,29 +168,29 @@ export function LeagueView({
             </Select>
           </div>
 
-          <div className='rounded-md border'>
-            <table className='w-full text-sm'>
-              <thead className='bg-muted/50'>
+          <div className="rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className='px-3 py-2 text-center'>Rank</th>
-                  <th className='px-3 py-2 text-left'>Team</th>
-                  <th className='px-3 py-2 text-right'>Total</th>
+                  <th className="px-3 py-2 text-center">Rank</th>
+                  <th className="px-3 py-2 text-left">Team</th>
+                  <th className="px-3 py-2 text-right">Total</th>
                   {isSeasonView && (
-                    <th className='px-3 py-2 text-center min-w-[120px]'>Weekly Trend</th>
+                    <th className="px-3 py-2 text-center min-w-[120px]">Weekly Trend</th>
                   )}
-                  <th className='px-3 py-2 text-center'>QB</th>
-                  <th className='px-3 py-2 text-center'>RB</th>
-                  <th className='px-3 py-2 text-center'>WR</th>
-                  <th className='px-3 py-2 text-center'>TE</th>
-                  <th className='px-3 py-2 text-center'>DEF</th>
+                  <th className="px-3 py-2 text-center">QB</th>
+                  <th className="px-3 py-2 text-center">RB</th>
+                  <th className="px-3 py-2 text-center">WR</th>
+                  <th className="px-3 py-2 text-center">TE</th>
+                  <th className="px-3 py-2 text-center">DEF</th>
                 </tr>
               </thead>
               <tbody>
                 {leagueData.map((team, _index) => (
-                  <tr key={team.key} className='border-t hover:bg-muted/20'>
-                    <td className='px-3 py-2 text-center'>
+                  <tr key={team.key} className="border-t hover:bg-muted/20">
+                    <td className="px-3 py-2 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(team.rank, 24),
                           color: getTextColor(getRankColor(team.rank, 24)),
@@ -199,22 +199,22 @@ export function LeagueView({
                         {team.rank}
                       </span>
                     </td>
-                    <td className='px-3 py-2'>
-                      <div className='font-medium'>{team.teamInfo.teamName}</div>
-                      <div className='text-xs text-muted-foreground'>
+                    <td className="px-3 py-2">
+                      <div className="font-medium">{team.teamInfo.teamName}</div>
+                      <div className="text-xs text-muted-foreground">
                         {team.teamInfo.leagueName}
                       </div>
                     </td>
                     <td
-                      className='px-3 py-2 text-right font-mono font-bold'
+                      className="px-3 py-2 text-right font-mono font-bold"
                       style={{ color: colors.core.regalGold }}
                     >
                       {team.teamTotal.toFixed(1)}
                     </td>
                     {isSeasonView && (
-                      <td className='px-2 py-2'>
-                        <div className='w-28 h-8'>
-                          <ResponsiveContainer width='100%' height='100%'>
+                      <td className="px-2 py-2">
+                        <div className="w-28 h-8">
+                          <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                               data={(() => {
                                 // Get weekly scores for sparkline
@@ -230,8 +230,8 @@ export function LeagueView({
                               })()}
                             >
                               <Line
-                                type='monotone'
-                                dataKey='score'
+                                type="monotone"
+                                dataKey="score"
                                 stroke={colors.core.regalGold}
                                 strokeWidth={2}
                                 dot={false}
@@ -257,17 +257,17 @@ export function LeagueView({
                       </td>
                     )}
                     {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => (
-                      <td key={position} className='px-2 py-2 text-center'>
-                        <div className='space-y-2'>
+                      <td key={position} className="px-2 py-2 text-center">
+                        <div className="space-y-2">
                           {/* Position heatmap cell */}
                           <div
-                            className='rounded-lg p-2 transition-colors min-w-[70px]'
+                            className="rounded-lg p-2 transition-colors min-w-[70px]"
                             style={{
                               backgroundColor: getRankColor(team.positionRanks[position], 24),
                             }}
                           >
                             <div
-                              className='font-mono font-bold text-xs'
+                              className="font-mono font-bold text-xs"
                               style={{
                                 color: getTextColor(getRankColor(team.positionRanks[position], 24)),
                               }}
@@ -275,7 +275,7 @@ export function LeagueView({
                               #{team.positionRanks[position]}
                             </div>
                             <div
-                              className='font-mono text-xs'
+                              className="font-mono text-xs"
                               style={{
                                 color: getTextColor(getRankColor(team.positionRanks[position], 24)),
                               }}
@@ -286,8 +286,8 @@ export function LeagueView({
 
                           {/* Position sparkline (season view only) */}
                           {isSeasonView && (
-                            <div className='w-16 h-6'>
-                              <ResponsiveContainer width='100%' height='100%'>
+                            <div className="w-16 h-6">
+                              <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
                                   data={(() => {
                                     // Get weekly positional scores
@@ -306,8 +306,8 @@ export function LeagueView({
                                   })()}
                                 >
                                   <Line
-                                    type='monotone'
-                                    dataKey='score'
+                                    type="monotone"
+                                    dataKey="score"
                                     stroke={
                                       team.positionRanks[position] <= 6
                                         ? colors.rdylgn[8] // Elite = green
@@ -347,47 +347,47 @@ export function LeagueView({
           </div>
 
           {/* Color Legend */}
-          <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-            <h4 className='font-semibold mb-2'>Position Color Guide</h4>
-            <div className='grid grid-cols-2 md:grid-cols-5 gap-3 text-muted-foreground'>
-              <div className='flex items-center'>
+          <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+            <h4 className="font-semibold mb-2">Position Color Guide</h4>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-muted-foreground">
+              <div className="flex items-center">
                 <span
-                  className='inline-block w-4 h-4 rounded mr-2'
+                  className="inline-block w-4 h-4 rounded mr-2"
                   style={{ backgroundColor: colors.rdylgn[9] }}
                 ></span>
                 <strong>Top 10%</strong>
               </div>
-              <div className='flex items-center'>
+              <div className="flex items-center">
                 <span
-                  className='inline-block w-4 h-4 rounded mr-2'
+                  className="inline-block w-4 h-4 rounded mr-2"
                   style={{ backgroundColor: colors.rdylgn[8] }}
                 ></span>
                 <strong>Top 25%</strong>
               </div>
-              <div className='flex items-center'>
+              <div className="flex items-center">
                 <span
-                  className='inline-block w-4 h-4 rounded mr-2'
+                  className="inline-block w-4 h-4 rounded mr-2"
                   style={{ backgroundColor: colors.rdylgn[7] }}
                 ></span>
                 <strong>Top 50%</strong>
               </div>
-              <div className='flex items-center'>
+              <div className="flex items-center">
                 <span
-                  className='inline-block w-4 h-4 rounded mr-2'
+                  className="inline-block w-4 h-4 rounded mr-2"
                   style={{ backgroundColor: colors.rdylgn[5] }}
                 ></span>
                 <strong>Middle</strong>
               </div>
-              <div className='flex items-center'>
+              <div className="flex items-center">
                 <span
-                  className='inline-block w-4 h-4 rounded mr-2'
+                  className="inline-block w-4 h-4 rounded mr-2"
                   style={{ backgroundColor: colors.rdylgn[3] }}
                 ></span>
                 <strong>Bottom 25%</strong>
               </div>
-              <div className='flex items-center'>
+              <div className="flex items-center">
                 <span
-                  className='inline-block w-4 h-4 rounded mr-2'
+                  className="inline-block w-4 h-4 rounded mr-2"
                   style={{ backgroundColor: colors.rdylgn[1] }}
                 ></span>
                 <strong>Bottom 10%</strong>
@@ -396,8 +396,8 @@ export function LeagueView({
           </div>
 
           {/* Position Tables */}
-          <div className='mt-8 space-y-6'>
-            <h3 className='text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+          <div className="mt-8 space-y-6">
+            <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
               Position Rankings
             </h3>
 
@@ -442,27 +442,27 @@ export function LeagueView({
                 .sort((a, b) => a.rank - b.rank);
 
               return (
-                <div key={position} className='rounded-md border'>
-                  <div className='px-4 py-2' style={{ backgroundColor: colors.core.charcoalSteel }}>
-                    <h4 className='font-semibold text-white'>
+                <div key={position} className="rounded-md border">
+                  <div className="px-4 py-2" style={{ backgroundColor: colors.core.charcoalSteel }}>
+                    <h4 className="font-semibold text-white">
                       {position} Rankings
                       {!isSeasonView && (
-                        <span className='ml-2 text-xs text-gray-300'>
+                        <span className="ml-2 text-xs text-gray-300">
                           (Click rows to see players)
                         </span>
                       )}
                     </h4>
                   </div>
 
-                  <div className='p-4'>
-                    <div className='rounded-md border'>
-                      <table className='w-full text-sm'>
-                        <thead className='bg-muted/20'>
+                  <div className="p-4">
+                    <div className="rounded-md border">
+                      <table className="w-full text-sm">
+                        <thead className="bg-muted/20">
                           <tr>
-                            <th className='px-3 py-2 text-center'>Rank</th>
-                            <th className='px-3 py-2 text-left'>Team</th>
-                            <th className='px-3 py-2 text-right'>Points</th>
-                            {!isSeasonView && <th className='px-3 py-2 text-center'>Players</th>}
+                            <th className="px-3 py-2 text-center">Rank</th>
+                            <th className="px-3 py-2 text-left">Team</th>
+                            <th className="px-3 py-2 text-right">Points</th>
+                            {!isSeasonView && <th className="px-3 py-2 text-center">Players</th>}
                           </tr>
                         </thead>
                         <tbody>
@@ -490,46 +490,46 @@ export function LeagueView({
                                     : undefined
                                 }
                               >
-                                <td className='px-3 py-2 text-center'>
+                                <td className="px-3 py-2 text-center">
                                   <span
-                                    className='rounded-full px-2 py-1 text-xs font-medium'
+                                    className="rounded-full px-2 py-1 text-xs font-medium"
                                     style={{
                                       backgroundColor: getRankColor(team.rank, positionData.length),
                                       color: getTextColor(
-                                        getRankColor(team.rank, positionData.length)
+                                        getRankColor(team.rank, positionData.length),
                                       ),
                                     }}
                                   >
                                     {team.rank}
                                   </span>
                                 </td>
-                                <td className='px-3 py-2'>
-                                  <div className='flex items-center gap-1'>
+                                <td className="px-3 py-2">
+                                  <div className="flex items-center gap-1">
                                     <div>
-                                      <div className='font-medium'>{team.teamInfo.teamName}</div>
-                                      <div className='text-xs text-muted-foreground'>
+                                      <div className="font-medium">{team.teamInfo.teamName}</div>
+                                      <div className="text-xs text-muted-foreground">
                                         {team.teamInfo.leagueName}
                                       </div>
                                     </div>
                                     {!isSeasonView && (
-                                      <span className='text-xs text-muted-foreground ml-auto'>
+                                      <span className="text-xs text-muted-foreground ml-auto">
                                         {isExpanded ? '▼' : '▶'}
                                       </span>
                                     )}
                                   </div>
                                 </td>
                                 <td
-                                  className='px-3 py-2 text-right font-mono font-bold'
+                                  className="px-3 py-2 text-right font-mono font-bold"
                                   style={{ color: colors.core.regalGold }}
                                 >
                                   {team.posScore.toFixed(1)}
                                 </td>
                                 {!isSeasonView && (
-                                  <td className='px-3 py-2 text-center text-xs text-muted-foreground'>
+                                  <td className="px-3 py-2 text-center text-xs text-muted-foreground">
                                     Click to expand
                                   </td>
                                 )}
-                              </tr>
+                              </tr>,
                             );
 
                             // Player breakdown row (if expanded and weekly view)
@@ -538,14 +538,14 @@ export function LeagueView({
                               const playersForPosition = weekPlayerData?.positions[position] || [];
 
                               rows.push(
-                                <tr key={`${team.key}-breakdown`} className='bg-muted/5'>
-                                  <td colSpan={4} className='p-0'>
+                                <tr key={`${team.key}-breakdown`} className="bg-muted/5">
+                                  <td colSpan={4} className="p-0">
                                     <PlayerBreakdownRow
                                       players={playersForPosition}
                                       position={position}
                                     />
                                   </td>
-                                </tr>
+                                </tr>,
                               );
                             }
 
@@ -577,50 +577,50 @@ export function LeagueView({
               const { topAdvantages, topDisadvantages } = getTopPositionalAdvantages(
                 dataset,
                 { from: fromWeek, to: toWeek },
-                8
+                8,
               );
 
               return (
-                <div className='space-y-6'>
+                <div className="space-y-6">
                   {/* Top Advantages and Disadvantages */}
-                  <div className='grid md:grid-cols-2 gap-6'>
+                  <div className="grid md:grid-cols-2 gap-6">
                     {/* Top Advantages */}
-                    <div className='rounded-md border'>
-                      <div className='px-4 py-2' style={{ backgroundColor: colors.rdylgn[2] }}>
-                        <h4 className='font-semibold text-white'>Biggest Positional Advantages</h4>
+                    <div className="rounded-md border">
+                      <div className="px-4 py-2" style={{ backgroundColor: colors.rdylgn[2] }}>
+                        <h4 className="font-semibold text-white">Biggest Positional Advantages</h4>
                       </div>
-                      <div className='p-4'>
-                        <table className='w-full text-sm'>
-                          <thead className='bg-muted/20'>
+                      <div className="p-4">
+                        <table className="w-full text-sm">
+                          <thead className="bg-muted/20">
                             <tr>
-                              <th className='px-3 py-2 text-left'>Team</th>
-                              <th className='px-3 py-2 text-center'>Position</th>
-                              <th className='px-3 py-2 text-right'>Advantage</th>
-                              <th className='px-3 py-2 text-right'>%</th>
+                              <th className="px-3 py-2 text-left">Team</th>
+                              <th className="px-3 py-2 text-center">Position</th>
+                              <th className="px-3 py-2 text-right">Advantage</th>
+                              <th className="px-3 py-2 text-right">%</th>
                             </tr>
                           </thead>
                           <tbody>
                             {topAdvantages.map(adv => (
-                              <tr key={`${adv.teamKey}-${adv.position}`} className='border-t'>
-                                <td className='px-3 py-2'>
+                              <tr key={`${adv.teamKey}-${adv.position}`} className="border-t">
+                                <td className="px-3 py-2">
                                   <div>
-                                    <div className='font-medium'>{adv.teamName}</div>
-                                    <div className='text-xs text-muted-foreground'>
+                                    <div className="font-medium">{adv.teamName}</div>
+                                    <div className="text-xs text-muted-foreground">
                                       {adv.leagueName}
                                     </div>
                                   </div>
                                 </td>
-                                <td className='px-3 py-2 text-center font-mono font-bold'>
+                                <td className="px-3 py-2 text-center font-mono font-bold">
                                   {adv.position}
                                 </td>
                                 <td
-                                  className='px-3 py-2 text-right font-mono font-bold'
+                                  className="px-3 py-2 text-right font-mono font-bold"
                                   style={{ color: colors.rdylgn[8] }}
                                 >
                                   +{adv.advantage.toFixed(1)}
                                 </td>
                                 <td
-                                  className='px-3 py-2 text-right font-mono'
+                                  className="px-3 py-2 text-right font-mono"
                                   style={{ color: colors.rdylgn[8] }}
                                 >
                                   +{adv.percentageAdvantage.toFixed(1)}%
@@ -633,44 +633,44 @@ export function LeagueView({
                     </div>
 
                     {/* Top Disadvantages */}
-                    <div className='rounded-md border'>
-                      <div className='px-4 py-2' style={{ backgroundColor: colors.rdylgn[8] }}>
-                        <h4 className='font-semibold text-white'>
+                    <div className="rounded-md border">
+                      <div className="px-4 py-2" style={{ backgroundColor: colors.rdylgn[8] }}>
+                        <h4 className="font-semibold text-white">
                           Biggest Positional Disadvantages
                         </h4>
                       </div>
-                      <div className='p-4'>
-                        <table className='w-full text-sm'>
-                          <thead className='bg-muted/20'>
+                      <div className="p-4">
+                        <table className="w-full text-sm">
+                          <thead className="bg-muted/20">
                             <tr>
-                              <th className='px-3 py-2 text-left'>Team</th>
-                              <th className='px-3 py-2 text-center'>Position</th>
-                              <th className='px-3 py-2 text-right'>Disadvantage</th>
-                              <th className='px-3 py-2 text-right'>%</th>
+                              <th className="px-3 py-2 text-left">Team</th>
+                              <th className="px-3 py-2 text-center">Position</th>
+                              <th className="px-3 py-2 text-right">Disadvantage</th>
+                              <th className="px-3 py-2 text-right">%</th>
                             </tr>
                           </thead>
                           <tbody>
                             {topDisadvantages.map(adv => (
-                              <tr key={`${adv.teamKey}-${adv.position}`} className='border-t'>
-                                <td className='px-3 py-2'>
+                              <tr key={`${adv.teamKey}-${adv.position}`} className="border-t">
+                                <td className="px-3 py-2">
                                   <div>
-                                    <div className='font-medium'>{adv.teamName}</div>
-                                    <div className='text-xs text-muted-foreground'>
+                                    <div className="font-medium">{adv.teamName}</div>
+                                    <div className="text-xs text-muted-foreground">
                                       {adv.leagueName}
                                     </div>
                                   </div>
                                 </td>
-                                <td className='px-3 py-2 text-center font-mono font-bold'>
+                                <td className="px-3 py-2 text-center font-mono font-bold">
                                   {adv.position}
                                 </td>
                                 <td
-                                  className='px-3 py-2 text-right font-mono font-bold'
+                                  className="px-3 py-2 text-right font-mono font-bold"
                                   style={{ color: colors.rdylgn[2] }}
                                 >
                                   {adv.advantage.toFixed(1)}
                                 </td>
                                 <td
-                                  className='px-3 py-2 text-right font-mono'
+                                  className="px-3 py-2 text-right font-mono"
                                   style={{ color: colors.rdylgn[2] }}
                                 >
                                   {adv.percentageAdvantage.toFixed(1)}%
@@ -686,12 +686,12 @@ export function LeagueView({
                   {/* Position-by-Position Tables */}
                   <div>
                     <h4
-                      className='mb-4 text-md font-semibold'
+                      className="mb-4 text-md font-semibold"
                       style={{ color: colors.core.charcoalSteel }}
                     >
                       Position-by-Position Rankings
                     </h4>
-                    <div className='grid md:grid-cols-2 gap-6'>
+                    <div className="grid md:grid-cols-2 gap-6">
                       {(() => {
                         const positionSummaries = getPositionSummaries(dataset, {
                           from: fromWeek,
@@ -699,22 +699,22 @@ export function LeagueView({
                         });
 
                         return positionSummaries.map(posSummary => (
-                          <div key={posSummary.position} className='rounded-md border'>
+                          <div key={posSummary.position} className="rounded-md border">
                             <div
-                              className='px-3 py-2'
+                              className="px-3 py-2"
                               style={{ backgroundColor: colors.core.charcoalSteel }}
                             >
-                              <h5 className='font-semibold text-white text-center'>
+                              <h5 className="font-semibold text-white text-center">
                                 {posSummary.position} (Median: {posSummary.leagueMedian.toFixed(1)})
                               </h5>
                             </div>
-                            <div className='p-3'>
-                              <table className='w-full text-xs'>
-                                <thead className='bg-muted/20'>
+                            <div className="p-3">
+                              <table className="w-full text-xs">
+                                <thead className="bg-muted/20">
                                   <tr>
-                                    <th className='px-2 py-1 text-left text-xs'>Team</th>
-                                    <th className='px-2 py-1 text-right text-xs'>Weekly Avg</th>
-                                    <th className='px-2 py-1 text-right text-xs'>vs Median</th>
+                                    <th className="px-2 py-1 text-left text-xs">Team</th>
+                                    <th className="px-2 py-1 text-right text-xs">Weekly Avg</th>
+                                    <th className="px-2 py-1 text-right text-xs">vs Median</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -727,21 +727,21 @@ export function LeagueView({
                                           : colors.rdylgn[2];
 
                                     return (
-                                      <tr key={team.teamKey} className='border-t'>
-                                        <td className='px-2 py-1'>
-                                          <div className='font-medium text-xs'>{team.teamName}</div>
-                                          <div className='text-xs text-muted-foreground'>
+                                      <tr key={team.teamKey} className="border-t">
+                                        <td className="px-2 py-1">
+                                          <div className="font-medium text-xs">{team.teamName}</div>
+                                          <div className="text-xs text-muted-foreground">
                                             #{team.rank}
                                           </div>
                                         </td>
                                         <td
-                                          className='px-2 py-1 text-right font-mono text-xs'
+                                          className="px-2 py-1 text-right font-mono text-xs"
                                           style={{ color: colors.core.regalGold }}
                                         >
                                           {team.weeklyAverage.toFixed(1)}
                                         </td>
                                         <td
-                                          className='px-2 py-1 text-right font-mono text-xs font-bold'
+                                          className="px-2 py-1 text-right font-mono text-xs font-bold"
                                           style={{ color: advantageColor }}
                                         >
                                           {team.advantage > 0 ? '+' : ''}

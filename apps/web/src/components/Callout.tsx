@@ -29,8 +29,8 @@ export function Callout({
   const size = compact ? 'px-2 py-1 text-xs' : 'px-3 py-2 text-sm';
   return (
     <aside className={`rounded-md border ${size} ${toneStyles[tone]} ${className || ''}`}>
-      <div className='mb-1 font-semibold opacity-80'>{heading}</div>
-      <div className='leading-relaxed'>{children}</div>
+      <div className="mb-1 font-semibold opacity-80">{heading}</div>
+      <div className="leading-relaxed">{children}</div>
     </aside>
   );
 }

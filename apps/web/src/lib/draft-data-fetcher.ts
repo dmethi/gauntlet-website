@@ -56,7 +56,7 @@ class DraftDataFetcher {
       // Real drafts must sum to each manager's auction budget (typically $200)
       console.warn(
         `ℹ️ Missing/invalid auction price for pick_no=${pick.pick_no} roster_id=${pick.roster_id}. metadata=`,
-        pick.metadata
+        pick.metadata,
       );
       return 1;
     } else {
@@ -78,12 +78,12 @@ class DraftDataFetcher {
     rosters: SleeperRoster[],
     users: SleeperUser[],
     allPlayers: Record<string, SleeperPlayer>,
-    draftName: string
+    draftName: string,
   ): Promise<MockDraft> {
     console.log(`🔄 Transforming ${draftName} (${draftInfo.type} format)`);
 
     console.log(
-      `📥 ${draftName} data summary → users: ${users.length}, rosters: ${rosters.length}, picks: ${picks.length}`
+      `📥 ${draftName} data summary → users: ${users.length}, rosters: ${rosters.length}, picks: ${picks.length}`,
     );
     const sampleUsers = users
       .slice(0, 5)
@@ -116,7 +116,7 @@ class DraftDataFetcher {
       const teamName = user?.display_name || user?.username || `Team ${rosterId}`;
       if (!user) {
         console.warn(
-          `⚠️ Missing user for roster_id=${rosterId} in ${draftName}. Using fallback team name.`
+          `⚠️ Missing user for roster_id=${rosterId} in ${draftName}. Using fallback team name.`,
         );
       }
 
@@ -152,7 +152,7 @@ class DraftDataFetcher {
         const player = this.transformPlayer(
           sleeperPlayer,
           pick.pick_no, // Use pick number as rank for now
-          0 // AAV will be calculated
+          0, // AAV will be calculated
         );
 
         const actualPrice = this.calculatePrice(draftInfo.type, pick, teamPicks.length);
@@ -181,7 +181,7 @@ class DraftDataFetcher {
         200;
       if (totalSpent > expectedBudget * 1.2) {
         console.warn(
-          `⚠️ Team ${teamName} spent $${totalSpent} in ${draftName}, expected around $${expectedBudget}. Check price parsing.`
+          `⚠️ Team ${teamName} spent $${totalSpent} in ${draftName}, expected around $${expectedBudget}. Check price parsing.`,
         );
       }
 
@@ -216,7 +216,7 @@ class DraftDataFetcher {
    */
   async fetchRealDrafts(
     draftId1: string,
-    draftId2: string
+    draftId2: string,
   ): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
     console.log('🏈 Fetching real draft data from Sleeper API...');
 
@@ -249,7 +249,7 @@ class DraftDataFetcher {
       rosters1,
       users1,
       allPlayers,
-      'Draft 1'
+      'Draft 1',
     );
 
     const draft2 = await this.transformDraftData(
@@ -259,7 +259,7 @@ class DraftDataFetcher {
       rosters2,
       users2,
       allPlayers,
-      'Draft 2'
+      'Draft 2',
     );
 
     console.log('✅ Successfully fetched and transformed real draft data');

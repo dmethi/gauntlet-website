@@ -185,7 +185,7 @@ export async function buildStatsDataset({
         id,
         name: labels[i] || `League ${i + 1}`,
         league: await statsClient.fetchLeague(id),
-      }))
+      })),
     ),
     statsClient.fetchPlayersIndex(),
   ]);
@@ -202,7 +202,7 @@ export async function buildStatsDataset({
       ]);
       rostersMap.set(leagueId, rosters);
       usersMap.set(leagueId, users);
-    })
+    }),
   );
 
   // 4. Build team info mapping
@@ -244,20 +244,20 @@ export async function buildStatsDataset({
   console.log(
     '[DEBUG] buildStatsDataset: calling getTeamAndOpponentPoints with',
     allMatchups.size,
-    'weeks'
+    'weeks',
   );
   const teamWeeklyData = getTeamAndOpponentPoints({ matchups: allMatchups });
   console.log(
     '[DEBUG] buildStatsDataset: getTeamAndOpponentPoints returned',
     teamWeeklyData.size,
-    'weeks'
+    'weeks',
   );
 
   const positionWeeklyData = getStarterPositionPoints({ matchups: allMatchups, playersIndex });
   console.log(
     '[DEBUG] buildStatsDataset: getStarterPositionPoints returned',
     positionWeeklyData.size,
-    'weeks'
+    'weeks',
   );
 
   // 6.5. Build weekly player breakdowns
@@ -316,7 +316,7 @@ export async function buildStatsDataset({
   console.log(
     '[DEBUG] buildStatsDataset: weekly player data built for',
     weeklyPlayerData.size,
-    'weeks'
+    'weeks',
   );
 
   // 7. Calculate weekly medians and averages
@@ -359,13 +359,13 @@ export async function buildStatsDataset({
   console.log(
     '[DEBUG] buildStatsDataset: calling aggregateTeamPoints with teamWeeklyData',
     teamWeeklyData.size,
-    'weeks'
+    'weeks',
   );
   const teamSeasonTotals = aggregateTeamPoints(teamWeeklyData, actualRange);
   console.log(
     '[DEBUG] buildStatsDataset: aggregateTeamPoints returned',
     teamSeasonTotals.size,
-    'rosters'
+    'rosters',
   );
 
   const positionSeasonTotals = aggregatePositionPoints(positionWeeklyData, actualRange);
@@ -394,7 +394,7 @@ export async function buildStatsDataset({
   console.log(
     '[DEBUG] buildStatsDataset: building teams from teamSeasonTotals',
     teamSeasonTotals.size,
-    'entries'
+    'entries',
   );
 
   for (const [teamKey, totals] of teamSeasonTotals) {

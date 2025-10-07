@@ -31,10 +31,10 @@ async function main() {
 
     console.log('✅ Real drafts loaded successfully');
     console.log(
-      `   - Draft 1: ${draft1.name} (${draft1.teams.length} teams, ${draft1.totalPicks} picks)`
+      `   - Draft 1: ${draft1.name} (${draft1.teams.length} teams, ${draft1.totalPicks} picks)`,
     );
     console.log(
-      `   - Draft 2: ${draft2.name} (${draft2.teams.length} teams, ${draft2.totalPicks} picks)`
+      `   - Draft 2: ${draft2.name} (${draft2.teams.length} teams, ${draft2.totalPicks} picks)`,
     );
 
     // 📈 Step 2: Generate league analytics
@@ -51,7 +51,7 @@ async function main() {
     console.log(`   - Manager profiles: ${managerAnalytics.profiles.length}`);
     console.log(`   - Build type clusters: ${managerAnalytics.cluster_summary.length}`);
     console.log(
-      `   - High similarity pairs: ${managerAnalytics.player_overlap_analytics.copycat_pairs.length}`
+      `   - High similarity pairs: ${managerAnalytics.player_overlap_analytics.copycat_pairs.length}`,
     );
 
     // 💾 Step 4: Save all precomputed data
@@ -80,15 +80,15 @@ async function main() {
     writeFileSync(join(OUTPUT_DIR, 'drafts.json'), JSON.stringify({ draft1, draft2 }, null, 2));
     writeFileSync(
       join(OUTPUT_DIR, 'league-analytics.json'),
-      JSON.stringify(leagueAnalytics, null, 2)
+      JSON.stringify(leagueAnalytics, null, 2),
     );
     writeFileSync(
       join(OUTPUT_DIR, 'manager-analytics.json'),
-      JSON.stringify(managerAnalytics, null, 2)
+      JSON.stringify(managerAnalytics, null, 2),
     );
     writeFileSync(
       join(OUTPUT_DIR, 'metadata.json'),
-      JSON.stringify(completeData.metadata, null, 2)
+      JSON.stringify(completeData.metadata, null, 2),
     );
 
     // 🎉 Success summary
@@ -102,11 +102,11 @@ async function main() {
     console.log(`📦  Data size: ${dataSize}KB`);
     console.log(`🏈  Players analyzed: ${draft1.totalPicks + draft2.totalPicks}`);
     console.log(
-      `💰  Total draft value: $${draft1.teams.reduce((sum, t) => sum + t.totalSpent, 0) + draft2.teams.reduce((sum, t) => sum + t.totalSpent, 0)}`
+      `💰  Total draft value: $${draft1.teams.reduce((sum, t) => sum + t.totalSpent, 0) + draft2.teams.reduce((sum, t) => sum + t.totalSpent, 0)}`,
     );
     console.log(`🏆  Build types identified: ${managerAnalytics.cluster_summary.length}`);
     console.log(
-      `🔗  Manager similarities computed: ${(managerAnalytics.profiles.length * (managerAnalytics.profiles.length - 1)) / 2}`
+      `🔗  Manager similarities computed: ${(managerAnalytics.profiles.length * (managerAnalytics.profiles.length - 1)) / 2}`,
     );
     console.log('━'.repeat(50));
 

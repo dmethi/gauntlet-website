@@ -186,44 +186,44 @@ export function RidgePlot({ data, domain, height, title }: RidgePlotProps) {
   const totalSvgHeight = 20 + contentHeight + 55; // top margin + content + axis space
 
   return (
-    <div ref={containerRef} className='relative w-full'>
-      <svg ref={svgRef} width='100%' height={totalSvgHeight}></svg>
+    <div ref={containerRef} className="relative w-full">
+      <svg ref={svgRef} width="100%" height={totalSvgHeight}></svg>
 
       {/* Custom Tooltip */}
       {hoveredTeam && (
         <div
-          className='absolute pointer-events-none z-10 rounded-lg border bg-background p-3 shadow-lg'
+          className="absolute pointer-events-none z-10 rounded-lg border bg-background p-3 shadow-lg"
           style={{
             left: mousePos.x + 10,
             top: mousePos.y - 10,
             transform: 'translate(-50%, -100%)',
           }}
         >
-          <div className='mb-2'>
-            <div className='font-semibold text-sm'>{hoveredTeam.teamName}</div>
-            <div className='text-xs text-muted-foreground'>{hoveredTeam.leagueName}</div>
+          <div className="mb-2">
+            <div className="font-semibold text-sm">{hoveredTeam.teamName}</div>
+            <div className="text-xs text-muted-foreground">{hoveredTeam.leagueName}</div>
           </div>
-          <div className='grid grid-cols-2 gap-4 text-xs'>
+          <div className="grid grid-cols-2 gap-4 text-xs">
             <div>
-              <div className='font-semibold'>Median Score</div>
-              <div className='text-lg font-bold'>{hoveredTeam.median.toFixed(1)}</div>
-              <div className='text-xs text-gray-400'>50th percentile</div>
+              <div className="font-semibold">Median Score</div>
+              <div className="text-lg font-bold">{hoveredTeam.median.toFixed(1)}</div>
+              <div className="text-xs text-gray-400">50th percentile</div>
             </div>
             <div>
-              <div className='font-semibold'>Score Range</div>
-              <div className='text-sm'>
+              <div className="font-semibold">Score Range</div>
+              <div className="text-sm">
                 {hoveredTeam.min.toFixed(1)} - {hoveredTeam.max.toFixed(1)}
               </div>
-              <div className='text-xs text-gray-400'>Range: {hoveredTeam.range.toFixed(1)}</div>
+              <div className="text-xs text-gray-400">Range: {hoveredTeam.range.toFixed(1)}</div>
             </div>
             <div>
-              <div className='font-semibold'>Games Played</div>
-              <div className='text-lg font-bold'>{hoveredTeam.gamesPlayed}</div>
+              <div className="font-semibold">Games Played</div>
+              <div className="text-lg font-bold">{hoveredTeam.gamesPlayed}</div>
             </div>
             <div>
-              <div className='font-semibold'>Consistency</div>
-              <div className='text-sm'>
-                <span className='font-semibold'>
+              <div className="font-semibold">Consistency</div>
+              <div className="text-sm">
+                <span className="font-semibold">
                   {hoveredTeam.range < 20
                     ? '🎯 Narrow'
                     : hoveredTeam.range < 40

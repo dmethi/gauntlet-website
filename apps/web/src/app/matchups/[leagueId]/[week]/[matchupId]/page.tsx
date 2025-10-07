@@ -239,12 +239,12 @@ export default function MatchupDetailPage() {
 
   if (error || !matchup) {
     return (
-      <div className='min-h-screen bg-background p-6'>
-        <div className='max-w-7xl mx-auto'>
-          <div className='text-center py-12'>
-            <div className='text-red-500 text-lg mb-4'>Error loading matchup</div>
-            <p className='text-muted-foreground'>{error || 'Matchup not found'}</p>
-            <Button onClick={() => router.back()} className='mt-4'>
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <div className="text-red-500 text-lg mb-4">Error loading matchup</div>
+            <p className="text-muted-foreground">{error || 'Matchup not found'}</p>
+            <Button onClick={() => router.back()} className="mt-4">
               Go Back
             </Button>
           </div>
@@ -260,12 +260,12 @@ export default function MatchupDetailPage() {
   const maxProjection = Math.max(...allPlayers.map(player => player.projectedPoints));
 
   return (
-    <div className='min-h-screen bg-background p-6'>
-      <div className='max-w-7xl mx-auto space-y-6'>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className='flex items-center gap-4'>
-          <Button variant='ghost' size='sm' onClick={() => router.back()}>
-            <ArrowLeft className='h-4 w-4 mr-2' />
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.back()}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Matchups
           </Button>
         </div>
@@ -273,12 +273,12 @@ export default function MatchupDetailPage() {
         {/* Matchup Header */}
         <Card>
           <CardHeader>
-            <div className='flex items-center justify-between'>
+            <div className="flex items-center justify-between">
               <div>
-                <CardTitle className='text-2xl font-geizer tracking-wide'>
+                <CardTitle className="text-2xl font-geizer tracking-wide">
                   {matchup.leagueName} • Week {matchup.week}
                 </CardTitle>
-                <CardDescription className='font-avenir'>
+                <CardDescription className="font-avenir">
                   Matchup {matchup.matchupId}
                 </CardDescription>
               </div>
@@ -291,14 +291,14 @@ export default function MatchupDetailPage() {
 
         {/* Score Summary */}
         <Card>
-          <CardContent className='p-6'>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 items-center'>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <TeamScore team={teamA} isLeading={teamA.points > teamB.points} />
-              <div className='text-center'>
-                <div className='text-4xl font-bold text-muted-foreground'>VS</div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-muted-foreground">VS</div>
                 {!matchup.isComplete && (
-                  <div className='flex items-center justify-center gap-1 text-sm text-muted-foreground mt-2'>
-                    <Clock className='h-4 w-4' />
+                  <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground mt-2">
+                    <Clock className="h-4 w-4" />
                     {matchup.gameStatus === 'in_progress' ? 'In Progress' : 'Not Started'}
                   </div>
                 )}
@@ -307,10 +307,10 @@ export default function MatchupDetailPage() {
             </div>
 
             {matchup.isComplete && matchup.winner && (
-              <div className='text-center mt-4 pt-4 border-t border-muted'>
-                <div className='flex items-center justify-center gap-2 text-green-600 dark:text-green-400'>
-                  <Trophy className='h-5 w-5' />
-                  <span className='font-medium'>
+              <div className="text-center mt-4 pt-4 border-t border-muted">
+                <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
+                  <Trophy className="h-5 w-5" />
+                  <span className="font-medium">
                     {matchup.winner.ownerName} wins by {matchup.margin.toFixed(1)} points
                   </span>
                 </div>
@@ -327,7 +327,7 @@ export default function MatchupDetailPage() {
         />
 
         {/* Team Rosters */}
-        <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <TeamRosterCard
             team={teamA}
             isLeading={teamA.points > teamB.points}
@@ -348,14 +348,14 @@ export default function MatchupDetailPage() {
 
 function LoadingSkeleton() {
   return (
-    <div className='min-h-screen bg-background p-6'>
-      <div className='max-w-7xl mx-auto space-y-6'>
-        <Skeleton className='h-10 w-32' />
-        <Skeleton className='h-24 w-full' />
-        <Skeleton className='h-32 w-full' />
-        <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
-          <Skeleton className='h-96 w-full' />
-          <Skeleton className='h-96 w-full' />
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <Skeleton className="h-10 w-32" />
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-32 w-full" />
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <Skeleton className="h-96 w-full" />
+          <Skeleton className="h-96 w-full" />
         </div>
       </div>
     </div>
@@ -367,12 +367,12 @@ function TeamScore({ team, isLeading }: { team: TeamRoster; isLeading: boolean }
     team.projectedPoints > 0 ? Math.min((team.points / team.projectedPoints) * 100, 100) : 0;
 
   return (
-    <div className='text-center space-y-3'>
-      <div className='flex items-center justify-center gap-3'>
-        <Avatar src={team.owner.avatar} alt={team.ownerName} fallback={team.ownerName} size='lg' />
+    <div className="text-center space-y-3">
+      <div className="flex items-center justify-center gap-3">
+        <Avatar src={team.owner.avatar} alt={team.ownerName} fallback={team.ownerName} size="lg" />
         <div>
-          <div className='font-bold text-lg'>{team.teamName}</div>
-          <div className='text-sm text-muted-foreground'>{team.ownerName}</div>
+          <div className="font-bold text-lg">{team.teamName}</div>
+          <div className="text-sm text-muted-foreground">{team.ownerName}</div>
         </div>
       </div>
 
@@ -382,13 +382,13 @@ function TeamScore({ team, isLeading }: { team: TeamRoster; isLeading: boolean }
         {team.points.toFixed(1)}
       </div>
 
-      <div className='space-y-1'>
-        <div className='text-sm text-muted-foreground'>
+      <div className="space-y-1">
+        <div className="text-sm text-muted-foreground">
           Projected: {team.projectedPoints.toFixed(1)}
         </div>
-        <div className='h-2 bg-muted rounded-full overflow-hidden'>
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
-            className='h-full bg-gauntlet-crimson transition-all duration-300 rounded-full'
+            className="h-full bg-gauntlet-crimson transition-all duration-300 rounded-full"
             style={{ width: `${completionPercentage}%` }}
           />
         </div>
@@ -417,34 +417,34 @@ function TeamRosterCard({
   return (
     <Card className={`${isLeading ? 'ring-2 ring-green-500' : ''}`}>
       <CardHeader>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-3'>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <Avatar
               src={team.owner.avatar}
               alt={team.ownerName}
               fallback={team.ownerName}
-              size='md'
+              size="md"
             />
             <div>
-              <CardTitle className='text-lg font-geizer tracking-wide'>{team.teamName}</CardTitle>
-              <CardDescription className='font-avenir'>{team.ownerName}</CardDescription>
+              <CardTitle className="text-lg font-geizer tracking-wide">{team.teamName}</CardTitle>
+              <CardDescription className="font-avenir">{team.ownerName}</CardDescription>
             </div>
           </div>
           {isLeading && (
-            <Badge variant='outline' className='text-green-600 border-green-600'>
-              <TrendingUp className='h-3 w-3 mr-1' />
+            <Badge variant="outline" className="text-green-600 border-green-600">
+              <TrendingUp className="h-3 w-3 mr-1" />
               Leading
             </Badge>
           )}
         </div>
       </CardHeader>
-      <CardContent className='space-y-4'>
+      <CardContent className="space-y-4">
         {/* Starters */}
         <div>
-          <h3 className='font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3'>
+          <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">
             Starting Lineup
           </h3>
-          <div className='space-y-2'>
+          <div className="space-y-2">
             {sortedStarters.map(player => (
               <PlayerRow
                 key={player.id}
@@ -458,11 +458,11 @@ function TeamRosterCard({
 
         {/* Bench */}
         {team.bench.length > 0 && (
-          <div className='pt-4 border-t border-muted'>
-            <h3 className='font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3'>
+          <div className="pt-4 border-t border-muted">
+            <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">
               Bench
             </h3>
-            <div className='space-y-2'>
+            <div className="space-y-2">
               {team.bench.map(player => (
                 <PlayerRow
                   key={player.id}
@@ -476,19 +476,19 @@ function TeamRosterCard({
         )}
 
         {/* Team Summary */}
-        <div className='pt-4 border-t border-muted'>
-          <div className='grid grid-cols-3 gap-4 text-center text-sm'>
+        <div className="pt-4 border-t border-muted">
+          <div className="grid grid-cols-3 gap-4 text-center text-sm">
             <div>
-              <div className='font-bold text-lg'>{team.points.toFixed(1)}</div>
-              <div className='text-muted-foreground'>Points</div>
+              <div className="font-bold text-lg">{team.points.toFixed(1)}</div>
+              <div className="text-muted-foreground">Points</div>
             </div>
             <div>
-              <div className='font-bold text-lg'>{team.projectedPoints.toFixed(1)}</div>
-              <div className='text-muted-foreground'>Projected</div>
+              <div className="font-bold text-lg">{team.projectedPoints.toFixed(1)}</div>
+              <div className="text-muted-foreground">Projected</div>
             </div>
             <div>
-              <div className='font-bold text-lg'>{team.playersActive}</div>
-              <div className='text-muted-foreground'>Active</div>
+              <div className="font-bold text-lg">{team.playersActive}</div>
+              <div className="text-muted-foreground">Active</div>
             </div>
           </div>
         </div>
@@ -519,11 +519,11 @@ function PlayerRow({
   };
 
   return (
-    <div className='grid grid-cols-[1fr_2fr] items-center gap-4 p-3 rounded border border-muted'>
+    <div className="grid grid-cols-[1fr_2fr] items-center gap-4 p-3 rounded border border-muted">
       {/* First half: Player info */}
-      <div className='flex items-center gap-3 min-w-0'>
-        <div className='flex items-center gap-2 shrink-0'>
-          <Badge variant='secondary' className='text-xs px-2 py-0'>
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-2 shrink-0">
+          <Badge variant="secondary" className="text-xs px-2 py-0">
             {player.position}
           </Badge>
           {player.status !== 'active' && (
@@ -532,14 +532,14 @@ function PlayerRow({
             </Badge>
           )}
         </div>
-        <div className='min-w-0'>
-          <div className='font-medium text-sm truncate'>{player.name}</div>
-          <div className='text-xs text-muted-foreground'>{player.team}</div>
+        <div className="min-w-0">
+          <div className="font-medium text-sm truncate">{player.name}</div>
+          <div className="text-xs text-muted-foreground">{player.team}</div>
         </div>
       </div>
 
       {/* Second half: Plot and scores */}
-      <div className='grid grid-cols-[1fr_auto] items-center gap-3'>
+      <div className="grid grid-cols-[1fr_auto] items-center gap-3">
         {/* Player Distribution Box Plot */}
         <PlayerBoxPlot
           playerId={player.id}
@@ -547,14 +547,14 @@ function PlayerRow({
           projection={player.projectedPoints}
           width={160}
           height={28}
-          className='hidden sm:block justify-self-end'
+          className="hidden sm:block justify-self-end"
           maxProjection={40}
           distribution={distribution}
         />
 
-        <div className='text-right whitespace-nowrap'>
-          <div className='font-bold text-sm'>{player.points.toFixed(1)}</div>
-          <div className='text-xs text-muted-foreground'>
+        <div className="text-right whitespace-nowrap">
+          <div className="font-bold text-sm">{player.points.toFixed(1)}</div>
+          <div className="text-xs text-muted-foreground">
             Proj: {player.projectedPoints.toFixed(1)}
           </div>
         </div>

@@ -71,7 +71,7 @@ export interface StreakData {
  */
 export function calculateRollingWindows(
   matchups: ProcessedMatchup[],
-  windowSize: 3 | 5 = 3
+  windowSize: 3 | 5 = 3,
 ): RollingWindowData[] {
   const results: RollingWindowData[] = [];
 
@@ -170,7 +170,7 @@ export function calculateStreaks(matchups: ProcessedMatchup[]): StreakData[] {
       const weekScores = matchups
         .filter(
           match =>
-            match.leagueId === m.leagueId && match.season === m.season && match.week === m.week
+            match.leagueId === m.leagueId && match.season === m.season && match.week === m.week,
         )
         .map(match => match.points);
 
@@ -456,7 +456,7 @@ export function calculateSeasonalData(matchups: EnhancedMatchup[]): SeasonalData
         matchups,
         data.rosterId,
         data.leagueId,
-        data.season
+        data.season,
       );
       data.luckDelta = data.wins - data.expectedWins;
 
@@ -475,13 +475,13 @@ function calculateExpectedWinsForSeason(
   matchups: ProcessedMatchup[],
   rosterId: number,
   leagueId: string,
-  season: string
+  season: string,
 ): number {
   let expectedWins = 0;
 
   // Get all matchups for this team
   const teamMatchups = matchups.filter(
-    m => m.rosterId === rosterId && m.leagueId === leagueId && m.season === season && !m.isPlayoff // Regular season only
+    m => m.rosterId === rosterId && m.leagueId === leagueId && m.season === season && !m.isPlayoff, // Regular season only
   );
 
   // For each week, calculate expected wins
@@ -509,10 +509,10 @@ function calculateExpectedWinsForSeason(
 export function findBestRollingWindows(
   windows: RollingWindowData[],
   type: 'highest' | 'lowest' = 'highest',
-  limit: number = 5
+  limit: number = 5,
 ): RollingWindowData[] {
   const sorted = [...windows].sort((a, b) =>
-    type === 'highest' ? b.totalPoints - a.totalPoints : a.totalPoints - b.totalPoints
+    type === 'highest' ? b.totalPoints - a.totalPoints : a.totalPoints - b.totalPoints,
   );
 
   return sorted.slice(0, limit);
@@ -524,7 +524,7 @@ export function findBestRollingWindows(
 export function findLongestStreaks(
   streaks: StreakData[],
   type: 'win' | 'loss' | 'above_median' | 'below_median',
-  limit: number = 5
+  limit: number = 5,
 ): StreakData[] {
   return streaks
     .filter(s => s.type === type)
@@ -539,7 +539,7 @@ export function findSeasonalRecords(
   seasonalData: SeasonalData[],
   category: keyof SeasonalData,
   type: 'highest' | 'lowest' = 'highest',
-  limit: number = 5
+  limit: number = 5,
 ): SeasonalData[] {
   const sorted = [...seasonalData].sort((a, b) => {
     const aVal = a[category] as number;

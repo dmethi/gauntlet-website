@@ -104,14 +104,14 @@ export function TeamPerformanceChart({
   }
 
   return (
-    <div className='h-64 sm:h-80 md:h-96 w-full min-w-0'>
-      <div ref={elementRef} className='h-full w-full'>
+    <div className="h-64 sm:h-80 md:h-96 w-full min-w-0">
+      <div ref={elementRef} className="h-full w-full">
         {size.width > 0 && size.height > 0 ? (
           <LineChart key={key} width={size.width} height={size.height} data={weeklyData}>
-            <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
             <XAxis
-              dataKey='week'
-              type='number'
+              dataKey="week"
+              type="number"
               domain={['dataMin', 'dataMax']}
               tickCount={weeklyData.length}
               stroke={chartColors.axis}
@@ -120,28 +120,28 @@ export function TeamPerformanceChart({
             <Tooltip />
             <Legend />
             <Line
-              type='monotone'
-              dataKey='points'
+              type="monotone"
+              dataKey="points"
               stroke={teamColor}
-              name='Team Points'
+              name="Team Points"
               dot={true}
               isAnimationActive={false}
             />
             <Line
-              type='monotone'
-              dataKey='opponentPoints'
+              type="monotone"
+              dataKey="opponentPoints"
               stroke={chartColors.opponent}
-              name='Opponent Points'
+              name="Opponent Points"
               dot={true}
               isAnimationActive={false}
             />
             <Line
-              type='monotone'
-              dataKey='leagueAverage'
+              type="monotone"
+              dataKey="leagueAverage"
               stroke={chartColors.leagueAverage}
-              name='League Average'
+              name="League Average"
               dot={false}
-              strokeDasharray='5 5'
+              strokeDasharray="5 5"
               hide={!weeklyData.some(d => typeof d.leagueAverage === 'number')}
               isAnimationActive={false}
             />
@@ -170,14 +170,14 @@ export function TeamExpectedPerformanceChart({
   }
 
   return (
-    <div className='h-64 sm:h-80 md:h-96 w-full min-w-0'>
-      <div ref={elementRef} className='h-full w-full'>
+    <div className="h-64 sm:h-80 md:h-96 w-full min-w-0">
+      <div ref={elementRef} className="h-full w-full">
         {size.width > 0 && size.height > 0 ? (
           <LineChart key={key} width={size.width} height={size.height} data={weeklyData}>
-            <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
             <XAxis
-              dataKey='week'
-              type='number'
+              dataKey="week"
+              type="number"
               domain={['dataMin', 'dataMax']}
               tickCount={weeklyData.length}
               stroke={chartColors.axis}
@@ -186,18 +186,18 @@ export function TeamExpectedPerformanceChart({
             <Tooltip />
             <Legend />
             <Line
-              type='monotone'
-              dataKey='expectedWins'
+              type="monotone"
+              dataKey="expectedWins"
               stroke={teamColor}
-              name='Expected Wins'
+              name="Expected Wins"
               dot={true}
               isAnimationActive={false}
             />
             <Line
-              type='monotone'
-              dataKey='luckRating'
+              type="monotone"
+              dataKey="luckRating"
               stroke={chartColors.luckRating}
-              name='Luck Rating'
+              name="Luck Rating"
               dot={true}
               isAnimationActive={false}
             />
@@ -237,25 +237,25 @@ export function TeamPositionalBarChart({
   }
 
   return (
-    <div className='h-64 sm:h-80 md:h-96 w-full min-w-0'>
-      <div ref={elementRef} className='h-full w-full'>
+    <div className="h-64 sm:h-80 md:h-96 w-full min-w-0">
+      <div ref={elementRef} className="h-full w-full">
         {size.width > 0 && size.height > 0 ? (
           <BarChart key={key} width={size.width} height={size.height} data={data}>
-            <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
-            <XAxis dataKey='position' stroke={chartColors.axis} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+            <XAxis dataKey="position" stroke={chartColors.axis} />
             <YAxis stroke={chartColors.axis} />
             <Tooltip />
             <Legend />
-            <Bar dataKey='team' name='Team' fill={teamColor} isAnimationActive={false} />
+            <Bar dataKey="team" name="Team" fill={teamColor} isAnimationActive={false} />
             <Bar
-              dataKey='opponent'
-              name='Opponent'
+              dataKey="opponent"
+              name="Opponent"
               fill={chartColors.opponent}
               isAnimationActive={false}
             />
             <Bar
-              dataKey='leagueAverage'
-              name='League Average'
+              dataKey="leagueAverage"
+              name="League Average"
               fill={chartColors.leagueAverage}
               isAnimationActive={false}
             />
@@ -295,23 +295,23 @@ export function TeamPositionalRadarChart({
     return <div>No data available</div>;
   }
   return (
-    <div className='h-64 sm:h-80 md:h-96 w-full min-w-0'>
-      <div ref={elementRef} className='h-full w-full'>
+    <div className="h-64 sm:h-80 md:h-96 w-full min-w-0">
+      <div ref={elementRef} className="h-full w-full">
         {size.width > 0 && size.height > 0 ? (
           <RadarChart
             key={key}
             data={data}
-            outerRadius='70%'
+            outerRadius="70%"
             width={size.width}
             height={size.height}
           >
             <PolarGrid />
-            <PolarAngleAxis dataKey='position' />
+            <PolarAngleAxis dataKey="position" />
             <PolarRadiusAxis domain={[0, 1]} tick={false} tickCount={6} />
             <Tooltip />
             <Radar
               name={teamName}
-              dataKey='value'
+              dataKey="value"
               stroke={teamColor}
               fill={teamColor}
               fillOpacity={0.3}

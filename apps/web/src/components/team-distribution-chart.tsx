@@ -99,7 +99,7 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/matchups/${leagueId}/${week}/${matchupId}/distributions`
+          `/api/matchups/${leagueId}/${week}/${matchupId}/distributions`,
         );
 
         if (!response.ok) {
@@ -121,15 +121,15 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
 
   if (loading) {
     return (
-      <Card className='w-full'>
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle className='text-lg font-geizer tracking-wide flex items-center gap-2'>
-            <TrendingUp className='h-5 w-5' />
+          <CardTitle className="text-lg font-geizer tracking-wide flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
             Team Score Distributions
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Skeleton className='h-48 w-full' />
+          <Skeleton className="h-48 w-full" />
         </CardContent>
       </Card>
     );
@@ -137,15 +137,15 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
 
   if (error || !data) {
     return (
-      <Card className='w-full'>
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle className='text-lg font-geizer tracking-wide flex items-center gap-2'>
-            <TrendingUp className='h-5 w-5' />
+          <CardTitle className="text-lg font-geizer tracking-wide flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
             Team Score Distributions
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='text-center py-8 text-muted-foreground'>
+          <div className="text-center py-8 text-muted-foreground">
             {error || 'Unable to load distribution data'}
           </div>
         </CardContent>
@@ -198,21 +198,21 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
   ];
 
   return (
-    <Card className='w-full'>
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle className='text-lg font-geizer tracking-wide flex items-center gap-2'>
-          <TrendingUp className='h-5 w-5' />
+        <CardTitle className="text-lg font-geizer tracking-wide flex items-center gap-2">
+          <TrendingUp className="h-5 w-5" />
           Team Score Distributions
         </CardTitle>
-        <div className='flex items-center gap-6 text-sm text-muted-foreground'>
-          <div className='flex items-center gap-2'>
-            <div className='w-3 h-3 rounded-full' style={{ backgroundColor: team1Color }}></div>
+        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: team1Color }}></div>
             <span>
               {data.team1.name} ({(data.winProbabilities.team1 * 100).toFixed(1)}%)
             </span>
           </div>
-          <div className='flex items-center gap-2'>
-            <div className='w-3 h-3 rounded-full' style={{ backgroundColor: team2Color }}></div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: team2Color }}></div>
             <span>
               {data.team2.name} ({(data.winProbabilities.team2 * 100).toFixed(1)}%)
             </span>
@@ -220,10 +220,10 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
         </div>
       </CardHeader>
       <CardContent>
-        <div className='w-full h-64'>
-          <ResponsiveContainer width='100%' height='100%'>
-            <div className='relative w-full h-full flex items-center justify-center'>
-              <svg width='90%' height='90%' className='overflow-visible'>
+        <div className="w-full h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <svg width="90%" height="90%" className="overflow-visible">
                 {(() => {
                   const chartHeight = 200; // Unused variable
                   const chartWidth = 500;
@@ -247,8 +247,8 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                         <text
                           x={leftMargin - 15}
                           y={yPos + 5}
-                          textAnchor='end'
-                          className='text-sm font-medium'
+                          textAnchor="end"
+                          className="text-sm font-medium"
                           fill={team.color}
                         >
                           {team.name}
@@ -261,8 +261,8 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                           x2={toX(team.rangeEnd)}
                           y2={yPos}
                           stroke={team.color}
-                          strokeWidth='3'
-                          opacity='0.7'
+                          strokeWidth="3"
+                          opacity="0.7"
                         />
 
                         {/* Left whisker cap (P10) */}
@@ -272,7 +272,7 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                           x2={toX(team.rangeStart)}
                           y2={yPos + boxHeight / 4}
                           stroke={team.color}
-                          strokeWidth='3'
+                          strokeWidth="3"
                         />
 
                         {/* Right whisker cap (P90) */}
@@ -282,7 +282,7 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                           x2={toX(team.rangeEnd)}
                           y2={yPos + boxHeight / 4}
                           stroke={team.color}
-                          strokeWidth='3'
+                          strokeWidth="3"
                         />
 
                         {/* Box (P25-P75) */}
@@ -292,10 +292,10 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                           width={toX(team.boxEnd) - toX(team.boxStart)}
                           height={boxHeight}
                           fill={team.color}
-                          fillOpacity='0.25'
+                          fillOpacity="0.25"
                           stroke={team.color}
-                          strokeWidth='2'
-                          rx='4'
+                          strokeWidth="2"
+                          rx="4"
                         />
 
                         {/* Median line */}
@@ -305,15 +305,15 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                           x2={toX(team.median)}
                           y2={yPos + boxHeight / 2}
                           stroke={team.color}
-                          strokeWidth='4'
+                          strokeWidth="4"
                         />
 
                         {/* Mean marker (diamond) */}
                         <polygon
                           points={`${toX(team.mean)},${yPos - 6} ${toX(team.mean) + 6},${yPos} ${toX(team.mean)},${yPos + 6} ${toX(team.mean) - 6},${yPos}`}
-                          fill='white'
+                          fill="white"
                           stroke={team.color}
-                          strokeWidth='2'
+                          strokeWidth="2"
                         />
                       </g>
                     );
@@ -332,9 +332,9 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                         y1={chartData.length * 150}
                         x2={chartWidth - 40}
                         y2={chartData.length * 150}
-                        stroke='currentColor'
-                        strokeWidth='1'
-                        opacity='0.3'
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        opacity="0.3"
                       />
 
                       {/* X-axis labels */}
@@ -355,16 +355,16 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
                               y1={chartData.length * 150 - 5}
                               x2={x}
                               y2={chartData.length * 150 + 5}
-                              stroke='currentColor'
-                              strokeWidth='1'
-                              opacity='0.4'
+                              stroke="currentColor"
+                              strokeWidth="1"
+                              opacity="0.4"
                             />
                             <text
                               x={x}
                               y={chartData.length * 150 + 20}
-                              textAnchor='middle'
-                              className='text-xs opacity-60'
-                              fill='currentColor'
+                              textAnchor="middle"
+                              className="text-xs opacity-60"
+                              fill="currentColor"
                             >
                               {Math.round(value)} pts
                             </text>
@@ -380,38 +380,38 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
         </div>
 
         {/* Enhanced Summary Stats */}
-        <div className='grid grid-cols-2 gap-6 mt-6 text-sm'>
+        <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
           {[
             { team: data.team1, color: team1Color, winPct: data.winProbabilities.team1 },
             { team: data.team2, color: team2Color, winPct: data.winProbabilities.team2 },
           ].map(({ team, color, winPct }, _index) => (
-            <div key={team.name} className='space-y-2'>
-              <div className='font-semibold text-base flex items-center gap-2' style={{ color }}>
-                <div className='w-3 h-3 rounded-full' style={{ backgroundColor: color }}></div>
+            <div key={team.name} className="space-y-2">
+              <div className="font-semibold text-base flex items-center gap-2" style={{ color }}>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }}></div>
                 {team.name}
               </div>
-              <div className='grid grid-cols-2 gap-2 text-muted-foreground'>
+              <div className="grid grid-cols-2 gap-2 text-muted-foreground">
                 <div>
-                  Mean: <span className='font-medium'>{team.mean?.toFixed(1) || 'N/A'}</span>
+                  Mean: <span className="font-medium">{team.mean?.toFixed(1) || 'N/A'}</span>
                 </div>
                 <div>
-                  Median: <span className='font-medium'>{team.median?.toFixed(1) || 'N/A'}</span>
+                  Median: <span className="font-medium">{team.median?.toFixed(1) || 'N/A'}</span>
                 </div>
                 <div>
-                  Q1: <span className='font-medium'>{team.p25?.toFixed(1) || 'N/A'}</span>
+                  Q1: <span className="font-medium">{team.p25?.toFixed(1) || 'N/A'}</span>
                 </div>
                 <div>
-                  Q3: <span className='font-medium'>{team.p75?.toFixed(1) || 'N/A'}</span>
+                  Q3: <span className="font-medium">{team.p75?.toFixed(1) || 'N/A'}</span>
                 </div>
               </div>
-              <div className='text-muted-foreground'>
+              <div className="text-muted-foreground">
                 Range:{' '}
-                <span className='font-medium'>
+                <span className="font-medium">
                   {team.p10?.toFixed(1) || 'N/A'} - {team.p90?.toFixed(1) || 'N/A'} pts
                 </span>
               </div>
-              <div className='text-xs' style={{ color }}>
-                Win Probability: <span className='font-bold'>{(winPct * 100).toFixed(1)}%</span>
+              <div className="text-xs" style={{ color }}>
+                Win Probability: <span className="font-bold">{(winPct * 100).toFixed(1)}%</span>
               </div>
             </div>
           ))}

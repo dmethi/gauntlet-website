@@ -7,7 +7,7 @@ import {
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { leagueId: string; week: string } }
+  { params }: { params: { leagueId: string; week: string } },
 ) {
   try {
     const { leagueId, week } = params;
@@ -49,7 +49,7 @@ export async function GET(
         const winProb = await calculateWinProbability(
           roster1.starters,
           roster2.starters,
-          weekNumber
+          weekNumber,
         );
 
         return {
@@ -67,7 +67,7 @@ export async function GET(
           },
           iterations: winProb.iterations,
         };
-      })
+      }),
     );
 
     const validResults = results.filter(r => r !== null);
@@ -87,7 +87,7 @@ export async function GET(
         error: 'Failed to calculate win probabilities',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

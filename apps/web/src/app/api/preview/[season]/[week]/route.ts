@@ -218,7 +218,7 @@ async function getPlayerData(season: string): Promise<{
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { season: string; week: string } }
+  { params }: { params: { season: string; week: string } },
 ) {
   try {
     const season = params.season;
@@ -407,7 +407,7 @@ export async function GET(
             // Find which game window this player's team is playing in
             for (const window of gameWindows) {
               const hasGame = window.games.some(
-                game => game.homeAbbrev === playerTeam || game.awayAbbrev === playerTeam
+                game => game.homeAbbrev === playerTeam || game.awayAbbrev === playerTeam,
               );
 
               if (hasGame) {

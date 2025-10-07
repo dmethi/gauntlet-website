@@ -174,7 +174,7 @@ export class UnifiedSleeperClient {
 
       if (!response.ok) {
         const error = new Error(
-          `Sleeper API error: ${response.status} ${response.statusText} for ${url}`
+          `Sleeper API error: ${response.status} ${response.statusText} for ${url}`,
         );
         return this.handleError(error, endpoint);
       }
@@ -323,7 +323,7 @@ export class UnifiedSleeperClient {
     // Cache players for 1 week since most data is static
     const allPlayers = await this.fetchFromSleeper<Record<string, any>>(
       '/players/nfl',
-      CACHE_DURATIONS.ONE_WEEK
+      CACHE_DURATIONS.ONE_WEEK,
     );
 
     // Transform to simplified index (from sleeper/client.ts)
@@ -355,22 +355,22 @@ export class UnifiedSleeperClient {
   async fetchWeeklyPlayerStats(
     week: number,
     season = '2025',
-    seasonType = 'regular'
+    seasonType = 'regular',
   ): Promise<Record<string, any>> {
     return this.fetchFromSleeper(
       `/stats/nfl/${seasonType}/${season}/${week}`,
-      CACHE_DURATIONS.ONE_HOUR
+      CACHE_DURATIONS.ONE_HOUR,
     );
   }
 
   async fetchWeeklyProjections(
     week: number,
     season = '2025',
-    seasonType = 'regular'
+    seasonType = 'regular',
   ): Promise<Record<string, any>> {
     return this.fetchFromSleeper(
       `/projections/nfl/${seasonType}/${season}/${week}`,
-      CACHE_DURATIONS.ONE_HOUR
+      CACHE_DURATIONS.ONE_HOUR,
     );
   }
 

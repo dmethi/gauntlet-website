@@ -19,7 +19,7 @@ export async function getAllLeagues() {
         name: config.name, // Override sleeper name with config name
         season: config.season, // Override sleeper season with config season
       };
-    })
+    }),
   );
   return leagues;
 }
@@ -130,7 +130,7 @@ export async function getPlayerById(playerId: string) {
 export async function getTransactionsByWeek(leagueId: string, week: number) {
   // Fetch from Sleeper transactions endpoint
   const response = await fetch(
-    `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`
+    `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`,
   );
   const transactions = await response.json();
 
@@ -204,7 +204,7 @@ export async function getAllTransactionsByLeague(leagueId: string) {
   for (let week = 1; week <= 18; week++) {
     try {
       const response = await fetch(
-        `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`
+        `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`,
       );
 
       if (!response.ok) {
@@ -327,7 +327,7 @@ export async function getDraftByLeague(leagueId: string) {
 export async function calculateWinProbability(
   team1Starters: string[],
   team2Starters: string[],
-  week: number
+  week: number,
 ) {
   const projections = await sleeperClient.fetchWeeklyProjections(week, '2025');
 
@@ -445,7 +445,7 @@ export async function computeWeeklyRollups(leagueId: string, week: number) {
 
     // Find opponent in this matchup
     const opponent = matchups.find(
-      m => m.matchupId === matchup.matchupId && m.rosterId !== matchup.rosterId
+      m => m.matchupId === matchup.matchupId && m.rosterId !== matchup.rosterId,
     );
 
     // Calculate projected points for this roster's starters
@@ -458,7 +458,7 @@ export async function computeWeeklyRollups(leagueId: string, week: number) {
     // Calculate expected wins (simplified - could be more sophisticated)
     const expectedWins =
       matchups.filter(
-        m => m.rosterId !== matchup.rosterId && (matchup.points || 0) > (m.points || 0)
+        m => m.rosterId !== matchup.rosterId && (matchup.points || 0) > (m.points || 0),
       ).length / Math.max(1, matchups.length - 1);
 
     rosterWeekAggregates.push({

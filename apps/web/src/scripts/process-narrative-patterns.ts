@@ -104,7 +104,7 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
       if (!teamPosData) continue;
 
       const validScores = teamPosData.scores.filter(
-        (s: any) => s.week >= 1 && s.week <= currentWeek && s.value > 0
+        (s: any) => s.week >= 1 && s.week <= currentWeek && s.value > 0,
       );
 
       if (validScores.length === 0) continue;
@@ -219,7 +219,7 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
 
     const netAdvantage = Object.values(positionalAnalysis).reduce(
       (sum: number, data: any) => sum + data.advantageVsLeague,
-      0
+      0,
     );
 
     // ============================================
@@ -316,7 +316,7 @@ function processNarrativePatterns(fullData: any, currentWeek: number) {
 
     const gamesFlippedByTiming = counterfactualGames.filter(g => g.resultFlip).length;
     const lossesFlippedToWins = counterfactualGames.filter(
-      g => g.actualResult === 'L' && g.resultFlip
+      g => g.actualResult === 'L' && g.resultFlip,
     ).length;
 
     // Pattern 11: Clutch Factor (from margins)
@@ -485,7 +485,7 @@ async function processContext() {
       const sample = narrativePatterns[0];
       console.log(`\n📋 Sample Team: ${sample.teamName}`);
       console.log(
-        `   • Record: ${sample.winLossPattern.record.wins}-${sample.winLossPattern.record.losses}`
+        `   • Record: ${sample.winLossPattern.record.wins}-${sample.winLossPattern.record.losses}`,
       );
       console.log(`   • Top scoring weeks: ${sample.winLossPattern.topScoringWeeks}`);
       console.log(`   • Wins in top scoring: ${sample.winLossPattern.winsInTopScoring}`);
@@ -494,32 +494,32 @@ async function processContext() {
       if (sample.positionalBalance.strengths.length > 0) {
         const topStrength = sample.positionalBalance.strengths[0];
         console.log(
-          `   • Top strength: ${topStrength.position} (+${topStrength.data.advantageVsLeague}pts vs league avg)`
+          `   • Top strength: ${topStrength.position} (+${topStrength.data.advantageVsLeague}pts vs league avg)`,
         );
       }
       if (sample.positionalBalance.weaknesses.length > 0) {
         const topWeakness = sample.positionalBalance.weaknesses[0];
         console.log(
-          `   • Top weakness: ${topWeakness.position} (${topWeakness.data.advantageVsLeague}pts vs league avg)`
+          `   • Top weakness: ${topWeakness.position} (${topWeakness.data.advantageVsLeague}pts vs league avg)`,
         );
       }
 
       // Show new opponent-aware patterns
       console.log(`\n   🆕 Opponent-Aware Patterns:`);
       console.log(
-        `   • Opponent timing: ${sample.scheduleTimingLuck.avgOppTimingResidual > 0 ? '+' : ''}${sample.scheduleTimingLuck.avgOppTimingResidual}pts (${sample.scheduleTimingLuck.interpretation})`
+        `   • Opponent timing: ${sample.scheduleTimingLuck.avgOppTimingResidual > 0 ? '+' : ''}${sample.scheduleTimingLuck.avgOppTimingResidual}pts (${sample.scheduleTimingLuck.interpretation})`,
       );
       console.log(
-        `   • Games flipped by timing: ${sample.counterfactualGames.gamesFlippedByTiming}`
+        `   • Games flipped by timing: ${sample.counterfactualGames.gamesFlippedByTiming}`,
       );
       console.log(
-        `   • Losses → Wins if neutral timing: ${sample.counterfactualGames.lossesFlippedToWins}`
+        `   • Losses → Wins if neutral timing: ${sample.counterfactualGames.lossesFlippedToWins}`,
       );
       console.log(
-        `   • Clutch rating: ${sample.clutchFactor.clutchRating}% in close games (${sample.clutchFactor.interpretation})`
+        `   • Clutch rating: ${sample.clutchFactor.clutchRating}% in close games (${sample.clutchFactor.interpretation})`,
       );
       console.log(
-        `   • Trajectory: ${sample.trajectory.trend} (${sample.trajectory.slopePPW > 0 ? '+' : ''}${sample.trajectory.slopePPW}pts/week)`
+        `   • Trajectory: ${sample.trajectory.trend} (${sample.trajectory.slopePPW > 0 ? '+' : ''}${sample.trajectory.slopePPW}pts/week)`,
       );
       console.log('');
     }

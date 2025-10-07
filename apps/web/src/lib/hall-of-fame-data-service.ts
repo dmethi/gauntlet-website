@@ -125,7 +125,7 @@ class HallOfFameDataService {
       matchups,
       season,
       leagueId,
-      league.name
+      league.name,
     );
 
     this.setCache(cacheKey, enhancedMatchups, CACHE_DURATIONS.ONE_DAY);
@@ -139,7 +139,7 @@ class HallOfFameDataService {
     leagueId: string,
     weeks: number,
     rosterToUser: Map<number, any>,
-    season: string
+    season: string,
   ): Promise<ProcessedMatchup[]> {
     const allMatchups: ProcessedMatchup[] = [];
 
@@ -148,7 +148,7 @@ class HallOfFameDataService {
       this.sleeperClient
         .fetchMatchups(leagueId, week)
         .then(matchups => ({ week, matchups }))
-        .catch(() => ({ week, matchups: [] }))
+        .catch(() => ({ week, matchups: [] })),
     );
 
     const weekResults = await Promise.all(weekPromises);
@@ -210,7 +210,7 @@ class HallOfFameDataService {
     matchups: ProcessedMatchup[],
     season: string,
     leagueId: string,
-    leagueName: string
+    leagueName: string,
   ): Promise<EnhancedMatchup[]> {
     // Fetch player data for position mapping
     const playersData = await this.sleeperClient.fetchAllPlayers();
@@ -256,7 +256,7 @@ class HallOfFameDataService {
           enhancedMatchup.excitementScore = this.calculateExcitementScore(
             matchupWinProb,
             matchup.points || 0,
-            matchup.opponentPoints || 0
+            matchup.opponentPoints || 0,
           );
         }
 
@@ -266,7 +266,7 @@ class HallOfFameDataService {
             matchup.starters,
             matchup.starters_points,
             stats,
-            projections
+            projections,
           );
 
           enhancedMatchup.topPerformer = performances.top;
@@ -287,7 +287,7 @@ class HallOfFameDataService {
    */
   private async getWinProbabilityData(
     leagueId: string,
-    week: number
+    week: number,
   ): Promise<LiveWinProbSample[]> {
     // Skip for now - would need server-side API or different approach
     // Win probability data would need to be fetched server-side
@@ -316,7 +316,7 @@ class HallOfFameDataService {
   private calculateExcitementScore(
     samples: LiveWinProbSample[],
     finalScoreA: number,
-    finalScoreB: number
+    finalScoreB: number,
   ): number {
     const totalPoints = finalScoreA + finalScoreB;
     const margin = Math.abs(finalScoreA - finalScoreB);
@@ -338,7 +338,7 @@ class HallOfFameDataService {
     starters: string[],
     starterPoints: number[],
     stats: Record<string, PlayerStats>,
-    projections: Record<string, PlayerStats>
+    projections: Record<string, PlayerStats>,
   ): {
     top?: { playerId: string; points: number; position: string };
     worst?: { playerId: string; points: number; position: string };

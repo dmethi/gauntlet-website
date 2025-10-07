@@ -16,8 +16,8 @@ export const prisma = new Proxy(
       - prisma.roster.findMany() → getRostersByLeague()
       - prisma.matchup.findMany() → getMatchupsByWeek()
       
-      See API_FIRST_ARCHITECTURE.md for migration guide.`
+      See API_FIRST_ARCHITECTURE.md for migration guide.`,
       );
     },
-  }
+  },
 );

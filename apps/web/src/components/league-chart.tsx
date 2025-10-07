@@ -81,12 +81,12 @@ export function LeagueChart({ data }: LeagueChartProps) {
   if (!data || data.length === 0) {
     return (
       <ChartContainer
-        title='League Scoring Trends'
-        description='Average points by week'
+        title="League Scoring Trends"
+        description="Average points by week"
         actions={<ChartLegend items={[{ label: 'League Average', color: seriesColor }]} />}
       >
-        <div className='h-64 sm:h-80 md:h-96 w-full min-w-0 flex items-center justify-center'>
-          <p className='text-muted-foreground'>No data available</p>
+        <div className="h-64 sm:h-80 md:h-96 w-full min-w-0 flex items-center justify-center">
+          <p className="text-muted-foreground">No data available</p>
         </div>
       </ChartContainer>
     );
@@ -94,18 +94,18 @@ export function LeagueChart({ data }: LeagueChartProps) {
 
   return (
     <ChartContainer
-      title='League Scoring Trends'
-      description='Average points by week'
+      title="League Scoring Trends"
+      description="Average points by week"
       actions={<ChartLegend items={[{ label: 'League Average', color: seriesColor }]} />}
     >
-      <div className='h-64 sm:h-80 md:h-96 w-full min-w-0'>
-        <div ref={elementRef} className='h-full w-full'>
+      <div className="h-64 sm:h-80 md:h-96 w-full min-w-0">
+        <div ref={elementRef} className="h-full w-full">
           {size.width > 0 && size.height > 0 ? (
             <LineChart key={key} width={size.width} height={size.height} data={data}>
-              <CartesianGrid strokeDasharray='3 3' stroke={chartColors.grid} />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
               <XAxis
-                dataKey='week'
-                type='number'
+                dataKey="week"
+                type="number"
                 domain={['dataMin', 'dataMax']}
                 tickCount={data.length}
                 stroke={chartColors.axis}
@@ -127,10 +127,10 @@ export function LeagueChart({ data }: LeagueChartProps) {
               />
               <Legend />
               <Line
-                type='monotone'
-                dataKey='averagePoints'
+                type="monotone"
+                dataKey="averagePoints"
                 stroke={seriesColor}
-                name='League Average'
+                name="League Average"
                 dot={true}
                 isAnimationActive={false}
               />

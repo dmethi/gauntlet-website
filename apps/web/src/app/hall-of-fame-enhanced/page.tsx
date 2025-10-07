@@ -36,40 +36,40 @@ const HallOfFameLoader = () => (
     speed={2}
     width={1200}
     height={800}
-    viewBox='0 0 1200 800'
-    backgroundColor='hsl(var(--muted))'
-    foregroundColor='hsl(var(--muted-foreground))'
-    uniqueKey='hall-of-fame-loader'
+    viewBox="0 0 1200 800"
+    backgroundColor="hsl(var(--muted))"
+    foregroundColor="hsl(var(--muted-foreground))"
+    uniqueKey="hall-of-fame-loader"
   >
-    <rect x='16' y='32' rx='3' ry='3' width='400' height='36' />
-    <rect x='16' y='72' rx='3' ry='3' width='200' height='20' />
-    <rect x='16' y='120' rx='8' ry='8' width='600' height='40' />
-    <rect x='16' y='180' rx='8' ry='8' width='380' height='250' />
-    <rect x='410' y='180' rx='8' ry='8' width='380' height='250' />
-    <rect x='804' y='180' rx='8' ry='8' width='380' height='250' />
+    <rect x="16" y="32" rx="3" ry="3" width="400" height="36" />
+    <rect x="16" y="72" rx="3" ry="3" width="200" height="20" />
+    <rect x="16" y="120" rx="8" ry="8" width="600" height="40" />
+    <rect x="16" y="180" rx="8" ry="8" width="380" height="250" />
+    <rect x="410" y="180" rx="8" ry="8" width="380" height="250" />
+    <rect x="804" y="180" rx="8" ry="8" width="380" height="250" />
   </ContentLoader>
 );
 
 function getGroupIcon(groupKey: string) {
   switch (groupKey) {
     case 'Score & Margin':
-      return <Trophy className='h-5 w-5' />;
+      return <Trophy className="h-5 w-5" />;
     case 'Lineup Quality':
-      return <Target className='h-5 w-5' />;
+      return <Target className="h-5 w-5" />;
     case 'Positional Splits':
-      return <Zap className='h-5 w-5' />;
+      return <Zap className="h-5 w-5" />;
     case 'Player Records':
-      return <Users className='h-5 w-5' />;
+      return <Users className="h-5 w-5" />;
     case 'Win Probability':
-      return <Sparkles className='h-5 w-5' />;
+      return <Sparkles className="h-5 w-5" />;
     case 'Rolling Windows':
-      return <Clock className='h-5 w-5' />;
+      return <Clock className="h-5 w-5" />;
     case 'Season Records':
-      return <Calendar className='h-5 w-5' />;
+      return <Calendar className="h-5 w-5" />;
     case 'Matchup Records':
-      return <Swords className='h-5 w-5' />;
+      return <Swords className="h-5 w-5" />;
     default:
-      return <Trophy className='h-5 w-5' />;
+      return <Trophy className="h-5 w-5" />;
   }
 }
 
@@ -86,39 +86,39 @@ function getLeagueShortName(leagueId: string): string {
 // Component for rolling window records
 function RollingWindowCard({ title, windows }: { title: string; windows: any[] }) {
   return (
-    <Card className='h-full'>
+    <Card className="h-full">
       <CardHeader>
-        <CardTitle className='text-lg'>{title}</CardTitle>
+        <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='space-y-3'>
+        <div className="space-y-3">
           {windows.map((window, index) => (
             <div
               key={`${window.rosterId}-${window.startWeek}`}
-              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+              className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
             >
-              <div className='flex items-start gap-2 flex-1'>
-                <span className='font-mono text-sm mt-0.5'>{getRankEmoji(index + 1)}</span>
-                <div className='flex-1 min-w-0'>
+              <div className="flex items-start gap-2 flex-1">
+                <span className="font-mono text-sm mt-0.5">{getRankEmoji(index + 1)}</span>
+                <div className="flex-1 min-w-0">
                   <Link
                     href={`/team/${window.rosterId}`}
-                    className='font-medium hover:underline block truncate'
+                    className="font-medium hover:underline block truncate"
                   >
                     {window.teamName}
                   </Link>
-                  <div className='flex items-center gap-2 mt-1'>
-                    <Badge variant='outline' className={getLeagueBadgeColor(window.leagueId)}>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className={getLeagueBadgeColor(window.leagueId)}>
                       {getLeagueShortName(window.leagueId)}
                     </Badge>
-                    <span className='text-xs text-muted-foreground'>
+                    <span className="text-xs text-muted-foreground">
                       Weeks {window.startWeek}-{window.endWeek}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className='text-right'>
-                <div className='font-bold text-sm'>{window.totalPoints.toFixed(2)} pts</div>
-                <div className='text-xs text-muted-foreground'>
+              <div className="text-right">
+                <div className="font-bold text-sm">{window.totalPoints.toFixed(2)} pts</div>
+                <div className="text-xs text-muted-foreground">
                   {window.averagePoints.toFixed(2)}/wk
                 </div>
               </div>
@@ -133,38 +133,38 @@ function RollingWindowCard({ title, windows }: { title: string; windows: any[] }
 // Component for streak records
 function StreakCard({ title, streaks, type }: { title: string; streaks: any[]; type: string }) {
   return (
-    <Card className='h-full'>
+    <Card className="h-full">
       <CardHeader>
-        <CardTitle className='text-lg'>{title}</CardTitle>
+        <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='space-y-3'>
+        <div className="space-y-3">
           {streaks.map((streak, index) => (
             <div
               key={`${streak.rosterId}-${streak.startWeek}`}
-              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+              className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
             >
-              <div className='flex items-start gap-2 flex-1'>
-                <span className='font-mono text-sm mt-0.5'>{getRankEmoji(index + 1)}</span>
-                <div className='flex-1 min-w-0'>
+              <div className="flex items-start gap-2 flex-1">
+                <span className="font-mono text-sm mt-0.5">{getRankEmoji(index + 1)}</span>
+                <div className="flex-1 min-w-0">
                   <Link
                     href={`/team/${streak.rosterId}`}
-                    className='font-medium hover:underline block truncate'
+                    className="font-medium hover:underline block truncate"
                   >
                     {streak.teamName}
                   </Link>
-                  <div className='flex items-center gap-2 mt-1'>
-                    <Badge variant='outline' className={getLeagueBadgeColor(streak.leagueId)}>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className={getLeagueBadgeColor(streak.leagueId)}>
                       {getLeagueShortName(streak.leagueId)}
                     </Badge>
-                    <span className='text-xs text-muted-foreground'>
+                    <span className="text-xs text-muted-foreground">
                       {streak.season} • Weeks {streak.startWeek}-{streak.endWeek}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className='text-right'>
-                <div className='font-bold text-sm'>{streak.length} weeks</div>
+              <div className="text-right">
+                <div className="font-bold text-sm">{streak.length} weeks</div>
               </div>
             </div>
           ))}
@@ -187,36 +187,36 @@ function SeasonalCard({
   formatFn: (value: number) => string;
 }) {
   return (
-    <Card className='h-full'>
+    <Card className="h-full">
       <CardHeader>
-        <CardTitle className='text-lg'>{title}</CardTitle>
+        <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='space-y-3'>
+        <div className="space-y-3">
           {records.map((record, index) => (
             <div
               key={`${record.rosterId}-${record.season}`}
-              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+              className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
             >
-              <div className='flex items-start gap-2 flex-1'>
-                <span className='font-mono text-sm mt-0.5'>{getRankEmoji(index + 1)}</span>
-                <div className='flex-1 min-w-0'>
+              <div className="flex items-start gap-2 flex-1">
+                <span className="font-mono text-sm mt-0.5">{getRankEmoji(index + 1)}</span>
+                <div className="flex-1 min-w-0">
                   <Link
                     href={`/team/${record.rosterId}`}
-                    className='font-medium hover:underline block truncate'
+                    className="font-medium hover:underline block truncate"
                   >
                     {record.teamName}
                   </Link>
-                  <div className='flex items-center gap-2 mt-1'>
-                    <Badge variant='outline' className={getLeagueBadgeColor(record.leagueId)}>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className={getLeagueBadgeColor(record.leagueId)}>
                       {getLeagueShortName(record.leagueId)}
                     </Badge>
-                    <span className='text-xs text-muted-foreground'>{record.season} Season</span>
+                    <span className="text-xs text-muted-foreground">{record.season} Season</span>
                   </div>
                 </div>
               </div>
-              <div className='text-right'>
-                <div className='font-bold text-sm'>{formatFn(record[statKey])}</div>
+              <div className="text-right">
+                <div className="font-bold text-sm">{formatFn(record[statKey])}</div>
               </div>
             </div>
           ))}
@@ -234,7 +234,7 @@ export default function EnhancedHallOfFamePage() {
 
   if (isLoading) {
     return (
-      <Container className='py-8'>
+      <Container className="py-8">
         <HallOfFameLoader />
       </Container>
     );
@@ -242,9 +242,9 @@ export default function EnhancedHallOfFamePage() {
 
   if (error) {
     return (
-      <Container className='py-8'>
-        <PageHeader title='Hall of Fame & Shame' subtitle='Failed to load records' />
-        <div className='text-center mt-8 text-muted-foreground'>
+      <Container className="py-8">
+        <PageHeader title="Hall of Fame & Shame" subtitle="Failed to load records" />
+        <div className="text-center mt-8 text-muted-foreground">
           {error instanceof Error ? error.message : 'An error occurred'}
         </div>
       </Container>
@@ -253,8 +253,8 @@ export default function EnhancedHallOfFamePage() {
 
   if (!data) {
     return (
-      <Container className='py-8'>
-        <PageHeader title='Hall of Fame & Shame' subtitle='No records available' />
+      <Container className="py-8">
+        <PageHeader title="Hall of Fame & Shame" subtitle="No records available" />
       </Container>
     );
   }
@@ -271,66 +271,66 @@ export default function EnhancedHallOfFamePage() {
   } = data;
 
   return (
-    <Container className='py-8'>
-      <div className='mb-8'>
+    <Container className="py-8">
+      <div className="mb-8">
         <PageHeader
-          title='Hall of Fame & Shame'
-          subtitle='Comprehensive records across all Gauntlet leagues'
+          title="Hall of Fame & Shame"
+          subtitle="Comprehensive records across all Gauntlet leagues"
         />
-        <div className='mt-4 flex items-center justify-between'>
-          <div className='text-sm text-muted-foreground'>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
             {totalMatchups.toLocaleString()} matchups • {totalLeagues} leagues • {totalSeasons}{' '}
             seasons
           </div>
-          <div className='flex items-center gap-2'>
-            <Filter className='h-4 w-4 text-muted-foreground' />
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
             <Select value={leagueFilter} onValueChange={setLeagueFilter}>
-              <SelectTrigger className='w-32'>
-                <SelectValue placeholder='All Leagues' />
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="All Leagues" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Leagues</SelectItem>
+                <SelectItem value="all">All Leagues</SelectItem>
                 <SelectItem value={LEAGUE_IDS.AFC}>AFC</SelectItem>
                 <SelectItem value={LEAGUE_IDS.NFC}>NFC</SelectItem>
               </SelectContent>
             </Select>
             <Select value={seasonFilter} onValueChange={setSeasonFilter}>
-              <SelectTrigger className='w-32'>
-                <SelectValue placeholder='All Seasons' />
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="All Seasons" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Seasons</SelectItem>
-                <SelectItem value='2024'>2024</SelectItem>
-                <SelectItem value='2023'>2023</SelectItem>
+                <SelectItem value="all">All Seasons</SelectItem>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2023">2023</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-        <TabsList className='h-auto p-1 grid grid-cols-3 gap-1'>
-          <TabsTrigger value='weekly' className='flex items-center gap-1'>
-            <Trophy className='h-4 w-4' />
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="h-auto p-1 grid grid-cols-3 gap-1">
+          <TabsTrigger value="weekly" className="flex items-center gap-1">
+            <Trophy className="h-4 w-4" />
             <span>Weekly</span>
           </TabsTrigger>
-          <TabsTrigger value='rolling' className='flex items-center gap-1'>
-            <Clock className='h-4 w-4' />
+          <TabsTrigger value="rolling" className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
             <span>Rolling</span>
           </TabsTrigger>
-          <TabsTrigger value='seasonal' className='flex items-center gap-1'>
-            <Calendar className='h-4 w-4' />
+          <TabsTrigger value="seasonal" className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
             <span>Seasonal</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Weekly Records Tab */}
-        <TabsContent value='weekly' className='mt-6'>
-          <div className='space-y-8'>
+        <TabsContent value="weekly" className="mt-6">
+          <div className="space-y-8">
             {/* Group categories by type */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Score & Margin Records</h3>
-              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+              <h3 className="text-lg font-semibold mb-4">Score & Margin Records</h3>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {[
                   'highest_team_points',
                   'lowest_team_points',
@@ -343,63 +343,63 @@ export default function EnhancedHallOfFamePage() {
                   const category = getCategoryInfo(categoryId);
                   if (!records || !category || records.length === 0) return null;
                   return (
-                    <Card key={categoryId} className='h-full'>
+                    <Card key={categoryId} className="h-full">
                       <CardHeader>
-                        <CardTitle className='text-lg'>{category.name}</CardTitle>
+                        <CardTitle className="text-lg">{category.name}</CardTitle>
                         <CardDescription>{category.description}</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className='space-y-3'>
+                        <div className="space-y-3">
                           {records.slice(0, 5).map((record, index) => {
                             const matchupId = record.contextData?.matchupId;
 
                             return (
                               <div
                                 key={`${categoryId}-${record.leagueId}-${record.teamId || 'na'}-${record.week}-${record.value}-${index}`}
-                                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                               >
-                                <div className='flex items-start gap-2 flex-1'>
-                                  <span className='font-mono text-sm mt-0.5'>
+                                <div className="flex items-start gap-2 flex-1">
+                                  <span className="font-mono text-sm mt-0.5">
                                     {getRankEmoji(index + 1)}
                                   </span>
-                                  <div className='flex-1 min-w-0'>
+                                  <div className="flex-1 min-w-0">
                                     <Link
                                       href={`/team/${record.teamId}`}
-                                      className='font-medium hover:underline block truncate'
+                                      className="font-medium hover:underline block truncate"
                                     >
                                       {record.teamName}
                                     </Link>
-                                    <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap">
                                       <Badge
-                                        variant='outline'
+                                        variant="outline"
                                         className={getLeagueBadgeColor(record.leagueId)}
                                       >
                                         {getLeagueShortName(record.leagueId)}
                                       </Badge>
-                                      <span className='text-xs text-muted-foreground'>
+                                      <span className="text-xs text-muted-foreground">
                                         Week {record.week}
                                       </span>
                                       {record.opponent && (
-                                        <span className='text-xs text-muted-foreground'>
+                                        <span className="text-xs text-muted-foreground">
                                           vs {record.opponent}
                                         </span>
                                       )}
                                       {matchupId && (
                                         <Link
                                           href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                          className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                         >
                                           <svg
-                                            className='h-3 w-3'
-                                            fill='none'
-                                            viewBox='0 0 24 24'
-                                            stroke='currentColor'
+                                            className="h-3 w-3"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
                                           >
                                             <path
-                                              strokeLinecap='round'
-                                              strokeLinejoin='round'
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
                                               strokeWidth={2}
-                                              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                             />
                                           </svg>
                                           View Matchup
@@ -408,8 +408,8 @@ export default function EnhancedHallOfFamePage() {
                                     </div>
                                   </div>
                                 </div>
-                                <div className='text-right'>
-                                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                                <div className="text-right">
+                                  <div className="font-bold text-sm">{formatRecord(record)}</div>
                                 </div>
                               </div>
                             );
@@ -424,8 +424,8 @@ export default function EnhancedHallOfFamePage() {
 
             {/* Positional Records */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Positional Records</h3>
-              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+              <h3 className="text-lg font-semibold mb-4">Positional Records</h3>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {[
                   'qb_points_weekly',
                   'rb_points_weekly',
@@ -445,66 +445,66 @@ export default function EnhancedHallOfFamePage() {
                   const bottomRecords = isBothType ? records.slice(-5) : [];
 
                   return (
-                    <Card key={categoryId} className='h-full'>
+                    <Card key={categoryId} className="h-full">
                       <CardHeader>
-                        <CardTitle className='text-lg'>{category.name}</CardTitle>
+                        <CardTitle className="text-lg">{category.name}</CardTitle>
                         <CardDescription>{category.description}</CardDescription>
                       </CardHeader>
-                      <CardContent className='space-y-6'>
+                      <CardContent className="space-y-6">
                         {/* Hall of Fame (Top 5) */}
                         <div>
-                          <h4 className='font-semibold text-sm text-green-600 dark:text-green-400 mb-3 flex items-center gap-2'>
-                            <Trophy className='h-4 w-4' />
+                          <h4 className="font-semibold text-sm text-green-600 dark:text-green-400 mb-3 flex items-center gap-2">
+                            <Trophy className="h-4 w-4" />
                             Hall of Fame
                           </h4>
-                          <div className='space-y-3'>
+                          <div className="space-y-3">
                             {topRecords.map((record, index) => (
                               <div
                                 key={`${record.teamId}-${record.week}-high-${categoryId}`}
-                                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                               >
-                                <div className='flex items-start gap-2 flex-1'>
-                                  <span className='font-mono text-sm mt-0.5'>
+                                <div className="flex items-start gap-2 flex-1">
+                                  <span className="font-mono text-sm mt-0.5">
                                     {getRankEmoji(index + 1)}
                                   </span>
-                                  <div className='flex-1 min-w-0'>
+                                  <div className="flex-1 min-w-0">
                                     <Link
                                       href={`/team/${record.teamId}`}
-                                      className='font-medium hover:underline block truncate'
+                                      className="font-medium hover:underline block truncate"
                                     >
                                       {record.teamName}
                                     </Link>
-                                    <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap">
                                       <Badge
-                                        variant='outline'
+                                        variant="outline"
                                         className={getLeagueBadgeColor(record.leagueId)}
                                       >
                                         {getLeagueShortName(record.leagueId)}
                                       </Badge>
-                                      <span className='text-xs text-muted-foreground'>
+                                      <span className="text-xs text-muted-foreground">
                                         Week {record.week}
                                       </span>
                                       {record.opponent && (
-                                        <span className='text-xs text-muted-foreground'>
+                                        <span className="text-xs text-muted-foreground">
                                           vs {record.opponent}
                                         </span>
                                       )}
                                       {record.contextData?.matchupId && (
                                         <Link
                                           href={`/matchups/${record.leagueId}/${record.week}/${record.contextData.matchupId}`}
-                                          className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                         >
                                           <svg
-                                            className='h-3 w-3'
-                                            fill='none'
-                                            viewBox='0 0 24 24'
-                                            stroke='currentColor'
+                                            className="h-3 w-3"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
                                           >
                                             <path
-                                              strokeLinecap='round'
-                                              strokeLinejoin='round'
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
                                               strokeWidth={2}
-                                              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                             />
                                           </svg>
                                           View Matchup
@@ -513,8 +513,8 @@ export default function EnhancedHallOfFamePage() {
                                     </div>
                                   </div>
                                 </div>
-                                <div className='text-right'>
-                                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                                <div className="text-right">
+                                  <div className="font-bold text-sm">{formatRecord(record)}</div>
                                 </div>
                               </div>
                             ))}
@@ -524,61 +524,61 @@ export default function EnhancedHallOfFamePage() {
                         {/* Hall of Shame (Bottom 5) - only show for "both" type categories */}
                         {isBothType && bottomRecords.length > 0 && (
                           <div>
-                            <h4 className='font-semibold text-sm text-red-600 dark:text-red-400 mb-3 flex items-center gap-2'>
-                              <TrendingDown className='h-4 w-4' />
+                            <h4 className="font-semibold text-sm text-red-600 dark:text-red-400 mb-3 flex items-center gap-2">
+                              <TrendingDown className="h-4 w-4" />
                               Hall of Shame
                             </h4>
-                            <div className='space-y-3'>
+                            <div className="space-y-3">
                               {bottomRecords.map((record, index) => {
                                 const matchupId = record.contextData?.matchupId;
 
                                 return (
                                   <div
                                     key={`${record.teamId}-${record.week}-low-${categoryId}`}
-                                    className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                    className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                                   >
-                                    <div className='flex items-start gap-2 flex-1'>
-                                      <span className='font-mono text-sm mt-0.5'>
+                                    <div className="flex items-start gap-2 flex-1">
+                                      <span className="font-mono text-sm mt-0.5">
                                         {getRankEmoji(index + 1)}
                                       </span>
-                                      <div className='flex-1 min-w-0'>
+                                      <div className="flex-1 min-w-0">
                                         <Link
                                           href={`/team/${record.teamId}`}
-                                          className='font-medium hover:underline block truncate'
+                                          className="font-medium hover:underline block truncate"
                                         >
                                           {record.teamName}
                                         </Link>
-                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <Badge
-                                            variant='outline'
+                                            variant="outline"
                                             className={getLeagueBadgeColor(record.leagueId)}
                                           >
                                             {getLeagueShortName(record.leagueId)}
                                           </Badge>
-                                          <span className='text-xs text-muted-foreground'>
+                                          <span className="text-xs text-muted-foreground">
                                             Week {record.week}
                                           </span>
                                           {record.opponent && (
-                                            <span className='text-xs text-muted-foreground'>
+                                            <span className="text-xs text-muted-foreground">
                                               vs {record.opponent}
                                             </span>
                                           )}
                                           {matchupId && (
                                             <Link
                                               href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                             >
                                               <svg
-                                                className='h-3 w-3'
-                                                fill='none'
-                                                viewBox='0 0 24 24'
-                                                stroke='currentColor'
+                                                className="h-3 w-3"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
                                               >
                                                 <path
-                                                  strokeLinecap='round'
-                                                  strokeLinejoin='round'
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
                                                   strokeWidth={2}
-                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                                 />
                                               </svg>
                                               View Matchup
@@ -587,8 +587,8 @@ export default function EnhancedHallOfFamePage() {
                                         </div>
                                       </div>
                                     </div>
-                                    <div className='text-right'>
-                                      <div className='font-bold text-sm'>
+                                    <div className="text-right">
+                                      <div className="font-bold text-sm">
                                         {formatRecord(record)}
                                       </div>
                                     </div>
@@ -607,8 +607,8 @@ export default function EnhancedHallOfFamePage() {
 
             {/* Team Performance Stats */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Team Performance Stats</h3>
-              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+              <h3 className="text-lg font-semibold mb-4">Team Performance Stats</h3>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {[
                   'most_passing_yards',
                   'most_passing_tds',
@@ -637,68 +637,68 @@ export default function EnhancedHallOfFamePage() {
                   const bottomRecords = isBothType ? records.slice(-5) : [];
 
                   return (
-                    <Card key={categoryId} className='h-full'>
+                    <Card key={categoryId} className="h-full">
                       <CardHeader>
-                        <CardTitle className='text-lg'>{category.name}</CardTitle>
+                        <CardTitle className="text-lg">{category.name}</CardTitle>
                         <CardDescription>{category.description}</CardDescription>
                       </CardHeader>
-                      <CardContent className='space-y-6'>
+                      <CardContent className="space-y-6">
                         {/* Hall of Fame (Top 5) */}
                         <div>
                           {isBothType && (
-                            <h4 className='font-semibold text-sm text-green-600 dark:text-green-400 mb-3 flex items-center gap-2'>
-                              <Trophy className='h-4 w-4' />
+                            <h4 className="font-semibold text-sm text-green-600 dark:text-green-400 mb-3 flex items-center gap-2">
+                              <Trophy className="h-4 w-4" />
                               Hall of Fame
                             </h4>
                           )}
-                          <div className='space-y-3'>
+                          <div className="space-y-3">
                             {topRecords.map((record, index) => (
                               <div
                                 key={`${record.teamId}-${record.week}-high-${categoryId}`}
-                                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                               >
-                                <div className='flex items-start gap-2 flex-1'>
-                                  <span className='font-mono text-sm mt-0.5'>
+                                <div className="flex items-start gap-2 flex-1">
+                                  <span className="font-mono text-sm mt-0.5">
                                     {getRankEmoji(index + 1)}
                                   </span>
-                                  <div className='flex-1 min-w-0'>
+                                  <div className="flex-1 min-w-0">
                                     <Link
                                       href={`/team/${record.teamId}`}
-                                      className='font-medium hover:underline block truncate'
+                                      className="font-medium hover:underline block truncate"
                                     >
                                       {record.teamName}
                                     </Link>
-                                    <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap">
                                       <Badge
-                                        variant='outline'
+                                        variant="outline"
                                         className={getLeagueBadgeColor(record.leagueId)}
                                       >
                                         {getLeagueShortName(record.leagueId)}
                                       </Badge>
-                                      <span className='text-xs text-muted-foreground'>
+                                      <span className="text-xs text-muted-foreground">
                                         Week {record.week}
                                       </span>
                                       {record.opponent && (
-                                        <span className='text-xs text-muted-foreground'>
+                                        <span className="text-xs text-muted-foreground">
                                           vs {record.opponent}
                                         </span>
                                       )}
                                       {record.contextData?.matchupId && (
                                         <Link
                                           href={`/matchups/${record.leagueId}/${record.week}/${record.contextData.matchupId}`}
-                                          className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                         >
                                           <svg
-                                            className='h-3 w-3'
-                                            fill='none'
-                                            viewBox='0 0 24 24'
-                                            stroke='currentColor'
+                                            className="h-3 w-3"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
                                           >
                                             <path
-                                              strokeLinecap='round'
-                                              strokeLinejoin='round'
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
                                               strokeWidth={2}
-                                              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                             />
                                           </svg>
                                           View Matchup
@@ -707,8 +707,8 @@ export default function EnhancedHallOfFamePage() {
                                     </div>
                                   </div>
                                 </div>
-                                <div className='text-right'>
-                                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                                <div className="text-right">
+                                  <div className="font-bold text-sm">{formatRecord(record)}</div>
                                 </div>
                               </div>
                             ))}
@@ -718,61 +718,61 @@ export default function EnhancedHallOfFamePage() {
                         {/* Hall of Shame (Bottom 5) - only show for "both" type categories */}
                         {isBothType && bottomRecords.length > 0 && (
                           <div>
-                            <h4 className='font-semibold text-sm text-red-600 dark:text-red-400 mb-3 flex items-center gap-2'>
-                              <TrendingDown className='h-4 w-4' />
+                            <h4 className="font-semibold text-sm text-red-600 dark:text-red-400 mb-3 flex items-center gap-2">
+                              <TrendingDown className="h-4 w-4" />
                               Hall of Shame
                             </h4>
-                            <div className='space-y-3'>
+                            <div className="space-y-3">
                               {bottomRecords.map((record, index) => {
                                 const matchupId = record.contextData?.matchupId;
 
                                 return (
                                   <div
                                     key={`${record.teamId}-${record.week}-low-${categoryId}`}
-                                    className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                    className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                                   >
-                                    <div className='flex items-start gap-2 flex-1'>
-                                      <span className='font-mono text-sm mt-0.5'>
+                                    <div className="flex items-start gap-2 flex-1">
+                                      <span className="font-mono text-sm mt-0.5">
                                         {getRankEmoji(index + 1)}
                                       </span>
-                                      <div className='flex-1 min-w-0'>
+                                      <div className="flex-1 min-w-0">
                                         <Link
                                           href={`/team/${record.teamId}`}
-                                          className='font-medium hover:underline block truncate'
+                                          className="font-medium hover:underline block truncate"
                                         >
                                           {record.teamName}
                                         </Link>
-                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <Badge
-                                            variant='outline'
+                                            variant="outline"
                                             className={getLeagueBadgeColor(record.leagueId)}
                                           >
                                             {getLeagueShortName(record.leagueId)}
                                           </Badge>
-                                          <span className='text-xs text-muted-foreground'>
+                                          <span className="text-xs text-muted-foreground">
                                             Week {record.week}
                                           </span>
                                           {record.opponent && (
-                                            <span className='text-xs text-muted-foreground'>
+                                            <span className="text-xs text-muted-foreground">
                                               vs {record.opponent}
                                             </span>
                                           )}
                                           {matchupId && (
                                             <Link
                                               href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                             >
                                               <svg
-                                                className='h-3 w-3'
-                                                fill='none'
-                                                viewBox='0 0 24 24'
-                                                stroke='currentColor'
+                                                className="h-3 w-3"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
                                               >
                                                 <path
-                                                  strokeLinecap='round'
-                                                  strokeLinejoin='round'
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
                                                   strokeWidth={2}
-                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                                 />
                                               </svg>
                                               View Matchup
@@ -781,8 +781,8 @@ export default function EnhancedHallOfFamePage() {
                                         </div>
                                       </div>
                                     </div>
-                                    <div className='text-right'>
-                                      <div className='font-bold text-sm'>
+                                    <div className="text-right">
+                                      <div className="font-bold text-sm">
                                         {formatRecord(record)}
                                       </div>
                                     </div>
@@ -801,8 +801,8 @@ export default function EnhancedHallOfFamePage() {
 
             {/* Matchup Records */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Matchup Records</h3>
-              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+              <h3 className="text-lg font-semibold mb-4">Matchup Records</h3>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {[
                   'biggest_blowout',
                   'closest_game',
@@ -825,13 +825,13 @@ export default function EnhancedHallOfFamePage() {
                   const category = getCategoryInfo(categoryId);
                   if (!records || !category || records.length === 0) return null;
                   return (
-                    <Card key={categoryId} className='h-full'>
+                    <Card key={categoryId} className="h-full">
                       <CardHeader>
-                        <CardTitle className='text-lg'>{category.name}</CardTitle>
+                        <CardTitle className="text-lg">{category.name}</CardTitle>
                         <CardDescription>{category.description}</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className='space-y-3'>
+                        <div className="space-y-3">
                           {records.slice(0, 5).map((record, index) => {
                             const isMatchupRecord = record.contextData?.isMatchupRecord;
                             const matchupId = record.contextData?.matchupId;
@@ -840,64 +840,64 @@ export default function EnhancedHallOfFamePage() {
                             return (
                               <div
                                 key={`${categoryId}-${record.leagueId}-${record.teamId || 'na'}-${record.week}-${record.value}-${index}`}
-                                className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                                className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                               >
-                                <div className='flex items-start gap-2 flex-1'>
-                                  <span className='font-mono text-sm mt-0.5'>
+                                <div className="flex items-start gap-2 flex-1">
+                                  <span className="font-mono text-sm mt-0.5">
                                     {getRankEmoji(index + 1)}
                                   </span>
-                                  <div className='flex-1 min-w-0'>
+                                  <div className="flex-1 min-w-0">
                                     {isMatchupRecord && bothTeams ? (
                                       // Display for matchup records - show both teams
                                       <div>
-                                        <div className='font-medium text-sm'>
+                                        <div className="font-medium text-sm">
                                           <Link
                                             href={`/team/${bothTeams.teamA.id}`}
-                                            className='hover:underline'
+                                            className="hover:underline"
                                           >
                                             {bothTeams.teamA.name}
                                           </Link>
-                                          <span className='text-muted-foreground mx-2'>vs</span>
+                                          <span className="text-muted-foreground mx-2">vs</span>
                                           <Link
                                             href={`/team/${bothTeams.teamB.id}`}
-                                            className='hover:underline'
+                                            className="hover:underline"
                                           >
                                             {bothTeams.teamB.name}
                                           </Link>
                                         </div>
-                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <Badge
-                                            variant='outline'
+                                            variant="outline"
                                             className={getLeagueBadgeColor(record.leagueId)}
                                           >
                                             {getLeagueShortName(record.leagueId)}
                                           </Badge>
-                                          <span className='text-xs text-muted-foreground'>
+                                          <span className="text-xs text-muted-foreground">
                                             Week {record.week}
                                           </span>
                                           {matchupId && (
                                             <Link
                                               href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                             >
                                               <svg
-                                                className='h-3 w-3'
-                                                fill='none'
-                                                viewBox='0 0 24 24'
-                                                stroke='currentColor'
+                                                className="h-3 w-3"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
                                               >
                                                 <path
-                                                  strokeLinecap='round'
-                                                  strokeLinejoin='round'
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
                                                   strokeWidth={2}
-                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                                 />
                                               </svg>
                                               View Matchup
                                             </Link>
                                           )}
                                         </div>
-                                        <div className='text-xs text-muted-foreground mt-1'>
+                                        <div className="text-xs text-muted-foreground mt-1">
                                           ({bothTeams.teamA.points?.toFixed(1)} -{' '}
                                           {bothTeams.teamB.points?.toFixed(1)})
                                         </div>
@@ -907,41 +907,41 @@ export default function EnhancedHallOfFamePage() {
                                       <div>
                                         <Link
                                           href={`/team/${record.teamId}`}
-                                          className='font-medium hover:underline block truncate'
+                                          className="font-medium hover:underline block truncate"
                                         >
                                           {record.teamName}
                                         </Link>
-                                        <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <Badge
-                                            variant='outline'
+                                            variant="outline"
                                             className={getLeagueBadgeColor(record.leagueId)}
                                           >
                                             {getLeagueShortName(record.leagueId)}
                                           </Badge>
-                                          <span className='text-xs text-muted-foreground'>
+                                          <span className="text-xs text-muted-foreground">
                                             Week {record.week}
                                           </span>
                                           {record.opponent && (
-                                            <span className='text-xs text-muted-foreground'>
+                                            <span className="text-xs text-muted-foreground">
                                               vs {record.opponent}
                                             </span>
                                           )}
                                           {matchupId && (
                                             <Link
                                               href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                             >
                                               <svg
-                                                className='h-3 w-3'
-                                                fill='none'
-                                                viewBox='0 0 24 24'
-                                                stroke='currentColor'
+                                                className="h-3 w-3"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
                                               >
                                                 <path
-                                                  strokeLinecap='round'
-                                                  strokeLinejoin='round'
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
                                                   strokeWidth={2}
-                                                  d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                                 />
                                               </svg>
                                               View Matchup
@@ -952,8 +952,8 @@ export default function EnhancedHallOfFamePage() {
                                     )}
                                   </div>
                                 </div>
-                                <div className='text-right'>
-                                  <div className='font-bold text-sm'>{formatRecord(record)}</div>
+                                <div className="text-right">
+                                  <div className="font-bold text-sm">{formatRecord(record)}</div>
                                 </div>
                               </div>
                             );
@@ -968,93 +968,93 @@ export default function EnhancedHallOfFamePage() {
 
             {/* Positional Difference Records */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Greatest Positional Differences</h3>
-              <p className='text-sm text-muted-foreground mb-4'>
+              <h3 className="text-lg font-semibold mb-4">Greatest Positional Differences</h3>
+              <p className="text-sm text-muted-foreground mb-4">
                 The largest scoring gaps between teams at each position within a single matchup
               </p>
-              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {(['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const).map(position => {
                   const records = positionalDifferences[position];
                   if (!records || records.length === 0) return null;
 
                   return (
-                    <Card key={position} className='h-full'>
+                    <Card key={position} className="h-full">
                       <CardHeader>
-                        <CardTitle className='text-lg'>{position} Dominance</CardTitle>
+                        <CardTitle className="text-lg">{position} Dominance</CardTitle>
                         <CardDescription>
                           Biggest single-matchup advantage at {position}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className='space-y-3'>
+                        <div className="space-y-3">
                           {records.map((record, index) => (
                             <div
                               key={`${record.leagueId}-${record.week}-${record.matchupId}-${index}`}
-                              className='flex items-start justify-between gap-2 pb-2 border-b last:border-0'
+                              className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                             >
-                              <div className='flex items-start gap-2 flex-1'>
-                                <span className='font-mono text-sm mt-0.5'>
+                              <div className="flex items-start gap-2 flex-1">
+                                <span className="font-mono text-sm mt-0.5">
                                   {getRankEmoji(index + 1)}
                                 </span>
-                                <div className='flex-1 min-w-0'>
-                                  <div className='font-medium text-sm'>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-sm">
                                     <Link
                                       href={`/team/${record.teamId}`}
-                                      className='hover:underline text-green-600 dark:text-green-400'
+                                      className="hover:underline text-green-600 dark:text-green-400"
                                     >
                                       {record.teamName}
                                     </Link>
-                                    <span className='text-muted-foreground mx-1'>vs</span>
+                                    <span className="text-muted-foreground mx-1">vs</span>
                                     <Link
                                       href={`/team/${record.opponentId}`}
-                                      className='hover:underline text-red-600 dark:text-red-400'
+                                      className="hover:underline text-red-600 dark:text-red-400"
                                     >
                                       {record.opponentName}
                                     </Link>
                                   </div>
-                                  <div className='flex items-center gap-2 mt-1 flex-wrap'>
+                                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                                     <Badge
-                                      variant='outline'
+                                      variant="outline"
                                       className={getLeagueBadgeColor(record.leagueId)}
                                     >
                                       {getLeagueShortName(record.leagueId)}
                                     </Badge>
-                                    <span className='text-xs text-muted-foreground'>
+                                    <span className="text-xs text-muted-foreground">
                                       Week {record.week}
                                     </span>
                                     {record.matchupId && (
                                       <Link
                                         href={`/matchups/${record.leagueId}/${record.week}/${record.matchupId}`}
-                                        className='inline-flex items-center gap-1 text-xs text-primary hover:underline'
+                                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                                       >
                                         <svg
-                                          className='h-3 w-3'
-                                          fill='none'
-                                          viewBox='0 0 24 24'
-                                          stroke='currentColor'
+                                          className="h-3 w-3"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
                                         >
                                           <path
-                                            strokeLinecap='round'
-                                            strokeLinejoin='round'
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                             strokeWidth={2}
-                                            d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                           />
                                         </svg>
                                         View Matchup
                                       </Link>
                                     )}
                                   </div>
-                                  <div className='text-xs text-muted-foreground mt-1'>
+                                  <div className="text-xs text-muted-foreground mt-1">
                                     {record.teamScore.toFixed(1)} -{' '}
                                     {record.opponentScore.toFixed(1)}
                                   </div>
                                 </div>
                               </div>
-                              <div className='text-right'>
-                                <div className='font-bold text-sm text-green-600 dark:text-green-400'>
+                              <div className="text-right">
+                                <div className="font-bold text-sm text-green-600 dark:text-green-400">
                                   +{record.difference.toFixed(1)}
                                 </div>
-                                <div className='text-xs text-muted-foreground'>diff</div>
+                                <div className="text-xs text-muted-foreground">diff</div>
                               </div>
                             </div>
                           ))}
@@ -1069,97 +1069,97 @@ export default function EnhancedHallOfFamePage() {
         </TabsContent>
 
         {/* Rolling Windows Tab */}
-        <TabsContent value='rolling' className='mt-6'>
-          <div className='space-y-6'>
+        <TabsContent value="rolling" className="mt-6">
+          <div className="space-y-6">
             {rollingWindows.threeWeek.highest.length > 0 ||
             rollingWindows.threeWeek.lowest.length > 0 ? (
               <div>
-                <h3 className='text-lg font-semibold mb-4'>3-Week Windows</h3>
-                <div className='grid gap-6 md:grid-cols-2'>
+                <h3 className="text-lg font-semibold mb-4">3-Week Windows</h3>
+                <div className="grid gap-6 md:grid-cols-2">
                   <RollingWindowCard
-                    title='Highest 3-Week Totals'
+                    title="Highest 3-Week Totals"
                     windows={rollingWindows.threeWeek.highest}
                   />
                   <RollingWindowCard
-                    title='Lowest 3-Week Totals'
+                    title="Lowest 3-Week Totals"
                     windows={rollingWindows.threeWeek.lowest}
                   />
                 </div>
               </div>
             ) : (
-              <div className='text-center py-8 text-muted-foreground'>
-                <Clock className='h-12 w-12 mx-auto mb-4 opacity-50' />
+              <div className="text-center py-8 text-muted-foreground">
+                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Not enough weeks of data for 3-week rolling windows</p>
-                <p className='text-sm mt-2'>Need at least 3 weeks of matchups</p>
+                <p className="text-sm mt-2">Need at least 3 weeks of matchups</p>
               </div>
             )}
 
             {rollingWindows.fiveWeek.highest.length > 0 ||
             rollingWindows.fiveWeek.lowest.length > 0 ? (
               <div>
-                <h3 className='text-lg font-semibold mb-4'>5-Week Windows</h3>
-                <div className='grid gap-6 md:grid-cols-2'>
+                <h3 className="text-lg font-semibold mb-4">5-Week Windows</h3>
+                <div className="grid gap-6 md:grid-cols-2">
                   <RollingWindowCard
-                    title='Highest 5-Week Totals'
+                    title="Highest 5-Week Totals"
                     windows={rollingWindows.fiveWeek.highest}
                   />
                   <RollingWindowCard
-                    title='Lowest 5-Week Totals'
+                    title="Lowest 5-Week Totals"
                     windows={rollingWindows.fiveWeek.lowest}
                   />
                 </div>
               </div>
             ) : (
-              <div className='text-center py-8 text-muted-foreground'>
-                <Clock className='h-12 w-12 mx-auto mb-4 opacity-50' />
+              <div className="text-center py-8 text-muted-foreground">
+                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Not enough weeks of data for 5-week rolling windows</p>
-                <p className='text-sm mt-2'>Need at least 5 weeks of matchups</p>
+                <p className="text-sm mt-2">Need at least 5 weeks of matchups</p>
               </div>
             )}
           </div>
         </TabsContent>
 
         {/* Seasonal Tab */}
-        <TabsContent value='seasonal' className='mt-6'>
-          <div className='space-y-8'>
+        <TabsContent value="seasonal" className="mt-6">
+          <div className="space-y-8">
             {/* Season Records */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Season Records</h3>
-              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+              <h3 className="text-lg font-semibold mb-4">Season Records</h3>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <SeasonalCard
-                  title='Most Wins'
+                  title="Most Wins"
                   records={seasonal.mostWins}
-                  statKey='wins'
+                  statKey="wins"
                   formatFn={v => `${v} wins`}
                 />
                 <SeasonalCard
-                  title='Most Points'
+                  title="Most Points"
                   records={seasonal.mostPoints}
-                  statKey='totalPoints'
+                  statKey="totalPoints"
                   formatFn={v => `${v.toFixed(2)} pts`}
                 />
                 <SeasonalCard
-                  title='Luckiest Teams'
+                  title="Luckiest Teams"
                   records={seasonal.luckiest}
-                  statKey='luckDelta'
+                  statKey="luckDelta"
                   formatFn={v => `+${v.toFixed(2)} luck`}
                 />
                 <SeasonalCard
-                  title='Unluckiest Teams'
+                  title="Unluckiest Teams"
                   records={seasonal.unluckiest}
-                  statKey='luckDelta'
+                  statKey="luckDelta"
                   formatFn={v => `${v.toFixed(2)} luck`}
                 />
                 <SeasonalCard
-                  title='Most Donuts'
+                  title="Most Donuts"
                   records={seasonal.mostDonuts}
-                  statKey='totalDonuts'
+                  statKey="totalDonuts"
                   formatFn={v => `${v} donuts`}
                 />
                 <SeasonalCard
-                  title='Most Blowout Wins'
+                  title="Most Blowout Wins"
                   records={seasonal.mostBlowouts}
-                  statKey='blowoutWins'
+                  statKey="blowoutWins"
                   formatFn={v => `${v} blowouts`}
                 />
               </div>
@@ -1167,13 +1167,13 @@ export default function EnhancedHallOfFamePage() {
 
             {/* Streaks */}
             <div>
-              <h3 className='text-lg font-semibold mb-4'>Winning & Losing Streaks</h3>
-              <div className='grid gap-6 md:grid-cols-2'>
-                <StreakCard title='Longest Win Streaks' streaks={streaks.winStreaks} type='win' />
+              <h3 className="text-lg font-semibold mb-4">Winning & Losing Streaks</h3>
+              <div className="grid gap-6 md:grid-cols-2">
+                <StreakCard title="Longest Win Streaks" streaks={streaks.winStreaks} type="win" />
                 <StreakCard
-                  title='Longest Losing Streaks'
+                  title="Longest Losing Streaks"
                   streaks={streaks.lossStreaks}
-                  type='loss'
+                  type="loss"
                 />
               </div>
             </div>
@@ -1182,20 +1182,20 @@ export default function EnhancedHallOfFamePage() {
       </Tabs>
 
       {/* Summary Stats */}
-      <div className='mt-12 grid gap-4 md:grid-cols-4'>
+      <div className="mt-12 grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium'>All-Time High Score</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">All-Time High Score</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>
+            <div className="text-2xl font-bold">
               {(() => {
                 const highestScoreRecords = weeklyRecords.get('highest_team_points');
                 if (!highestScoreRecords || highestScoreRecords.length === 0) return 'N/A';
                 return formatRecord(highestScoreRecords[0]);
               })()}
             </div>
-            <p className='text-xs text-muted-foreground'>
+            <p className="text-xs text-muted-foreground">
               {(() => {
                 const highestScoreRecords = weeklyRecords.get('highest_team_points');
                 if (!highestScoreRecords || highestScoreRecords.length === 0) return '';
@@ -1207,40 +1207,40 @@ export default function EnhancedHallOfFamePage() {
         </Card>
 
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium'>Longest Win Streak</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Longest Win Streak</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{streaks.winStreaks[0]?.length || 0} games</div>
-            <p className='text-xs text-muted-foreground'>
+            <div className="text-2xl font-bold">{streaks.winStreaks[0]?.length || 0} games</div>
+            <p className="text-xs text-muted-foreground">
               {streaks.winStreaks[0]?.teamName || 'N/A'}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium'>Best 3-Week Run</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Best 3-Week Run</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>
+            <div className="text-2xl font-bold">
               {rollingWindows.threeWeek.highest[0]?.totalPoints.toFixed(2) || 'N/A'} pts
             </div>
-            <p className='text-xs text-muted-foreground'>
+            <p className="text-xs text-muted-foreground">
               {rollingWindows.threeWeek.highest[0]?.teamName || 'N/A'}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm font-medium'>Season Points Record</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Season Points Record</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>
+            <div className="text-2xl font-bold">
               {seasonal.mostPoints[0]?.totalPoints.toFixed(2) || 'N/A'} pts
             </div>
-            <p className='text-xs text-muted-foreground'>
+            <p className="text-xs text-muted-foreground">
               {seasonal.mostPoints[0]?.teamName || 'N/A'} • {seasonal.mostPoints[0]?.season || ''}
             </p>
           </CardContent>

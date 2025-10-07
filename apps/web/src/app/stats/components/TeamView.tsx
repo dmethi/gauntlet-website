@@ -78,7 +78,7 @@ export function TeamView({
 }: TeamViewProps) {
   // State management
   const [selectedTeamKey, setSelectedTeamKey] = useState<string>(
-    allTeamEntries.length > 0 ? allTeamEntries[0][0] : ''
+    allTeamEntries.length > 0 ? allTeamEntries[0][0] : '',
   );
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -117,7 +117,7 @@ export function TeamView({
     const leagueTotals = allTeamEntries.map(([, tt]) =>
       tt.teamScores
         .filter(d => d.week >= fromWeek && d.week <= toWeek)
-        .reduce((a, d) => a + d.value, 0)
+        .reduce((a, d) => a + d.value, 0),
     );
 
     const leagueAvgByWeek = weeks.map(week => {
@@ -142,7 +142,7 @@ export function TeamView({
     const leagueTotalsOnly = leagueTeams.map(([, tt]) =>
       tt.teamScores
         .filter(d => d.week >= fromWeek && d.week <= toWeek)
-        .reduce((a, d) => a + d.value, 0)
+        .reduce((a, d) => a + d.value, 0),
     );
     const ranksLeague = rank(leagueTotalsOnly);
     const seasonRankLeague =
@@ -162,7 +162,7 @@ export function TeamView({
         const weeklyRanks = rank(weeklyScores.map(s => s.score));
 
         const oppData = weeklyScores.find(
-          s => s.key !== selectedTeamKey && Math.abs(s.score - myOppScore) < 0.01
+          s => s.key !== selectedTeamKey && Math.abs(s.score - myOppScore) < 0.01,
         );
         if (oppData) {
           const oppIndex = weeklyScores.findIndex(s => s.key === oppData.key);
@@ -195,7 +195,7 @@ export function TeamView({
           <CardDescription>Season totals and weekly breakdown for individual teams</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='text-center text-muted-foreground'>No team data available</div>
+          <div className="text-center text-muted-foreground">No team data available</div>
         </CardContent>
       </Card>
     );
@@ -225,11 +225,11 @@ export function TeamView({
         <CardDescription>Season totals and weekly breakdown for individual teams</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='mb-6 flex items-center gap-3'>
-          <label className='text-sm font-medium'>Select Team</label>
+        <div className="mb-6 flex items-center gap-3">
+          <label className="text-sm font-medium">Select Team</label>
           <Select value={selectedTeamKey} onValueChange={setSelectedTeamKey}>
-            <SelectTrigger className='w-80'>
-              <SelectValue placeholder='Select team' />
+            <SelectTrigger className="w-80">
+              <SelectValue placeholder="Select team" />
             </SelectTrigger>
             <SelectContent>
               {teamOptions.map(opt => (
@@ -241,45 +241,45 @@ export function TeamView({
           </Select>
         </div>
 
-        <div className='space-y-6'>
+        <div className="space-y-6">
           {/* Season Summary */}
           <div>
-            <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+            <h3 className="mb-3 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
               Season Summary (Weeks {fromWeek}-{toWeek})
             </h3>
-            <div className='rounded-md border'>
-              <table className='w-full text-sm'>
-                <thead className='bg-muted/50'>
+            <div className="rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className='px-4 py-3 text-left'>Metric</th>
-                    <th className='px-4 py-3 text-right'>Team</th>
-                    <th className='px-4 py-3 text-right'>Opponent</th>
-                    <th className='px-4 py-3 text-right'>League Avg</th>
-                    <th className='px-4 py-3 text-right'>League Median</th>
-                    <th className='px-4 py-3 text-center'>Rank (24)</th>
-                    <th className='px-4 py-3 text-center'>Rank (League)</th>
-                    <th className='px-4 py-3 text-center'>Avg Opp Rank</th>
+                    <th className="px-4 py-3 text-left">Metric</th>
+                    <th className="px-4 py-3 text-right">Team</th>
+                    <th className="px-4 py-3 text-right">Opponent</th>
+                    <th className="px-4 py-3 text-right">League Avg</th>
+                    <th className="px-4 py-3 text-right">League Median</th>
+                    <th className="px-4 py-3 text-center">Rank (24)</th>
+                    <th className="px-4 py-3 text-center">Rank (League)</th>
+                    <th className="px-4 py-3 text-center">Avg Opp Rank</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className='px-4 py-3 font-medium'>Total Points</td>
+                    <td className="px-4 py-3 font-medium">Total Points</td>
                     <td
-                      className='px-4 py-3 text-right font-mono font-bold'
+                      className="px-4 py-3 text-right font-mono font-bold"
                       style={{ color: colors.core.regalGold }}
                     >
                       {teamTotal.toFixed(1)}
                     </td>
-                    <td className='px-4 py-3 text-right font-mono'>{oppTotal.toFixed(1)}</td>
-                    <td className='px-4 py-3 text-right font-mono'>
+                    <td className="px-4 py-3 text-right font-mono">{oppTotal.toFixed(1)}</td>
+                    <td className="px-4 py-3 text-right font-mono">
                       {mean(leagueTotals).toFixed(1)}
                     </td>
-                    <td className='px-4 py-3 text-right font-mono'>
+                    <td className="px-4 py-3 text-right font-mono">
                       {median(leagueTotals).toFixed(1)}
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(seasonRank24, 24),
                           color: getTextColor(getRankColor(seasonRank24, 24)),
@@ -288,9 +288,9 @@ export function TeamView({
                         {seasonRank24}
                       </span>
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(seasonRankLeague, 12),
                           color: getTextColor(getRankColor(seasonRankLeague, 12)),
@@ -299,9 +299,9 @@ export function TeamView({
                         {seasonRankLeague}
                       </span>
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(Math.round(avgOppRank), 24),
                           color: getTextColor(getRankColor(Math.round(avgOppRank), 24)),
@@ -312,10 +312,10 @@ export function TeamView({
                       </span>
                     </td>
                   </tr>
-                  <tr className='border-t'>
-                    <td className='px-4 py-3 font-medium'>Point Differential</td>
+                  <tr className="border-t">
+                    <td className="px-4 py-3 font-medium">Point Differential</td>
                     <td
-                      className='px-4 py-3 text-right font-mono font-bold'
+                      className="px-4 py-3 text-right font-mono font-bold"
                       style={{
                         color: getPerformanceColor(teamTotal - oppTotal, teamTotal - oppTotal > 0),
                       }}
@@ -323,33 +323,33 @@ export function TeamView({
                       {teamTotal - oppTotal > 0 ? '+' : ''}
                       {(teamTotal - oppTotal).toFixed(1)}
                     </td>
-                    <td className='px-4 py-3'></td>
-                    <td className='px-4 py-3'></td>
-                    <td className='px-4 py-3'></td>
-                    <td className='px-4 py-3'></td>
-                    <td className='px-4 py-3'></td>
-                    <td className='px-4 py-3'></td>
+                    <td className="px-4 py-3"></td>
+                    <td className="px-4 py-3"></td>
+                    <td className="px-4 py-3"></td>
+                    <td className="px-4 py-3"></td>
+                    <td className="px-4 py-3"></td>
+                    <td className="px-4 py-3"></td>
                   </tr>
-                  <tr className='border-t bg-muted/20'>
-                    <td className='px-4 py-3 font-medium'>Weekly Average</td>
+                  <tr className="border-t bg-muted/20">
+                    <td className="px-4 py-3 font-medium">Weekly Average</td>
                     <td
-                      className='px-4 py-3 text-right font-mono font-bold'
+                      className="px-4 py-3 text-right font-mono font-bold"
                       style={{ color: colors.core.regalGold }}
                     >
                       {gamesPlayed > 0 ? (teamTotal / gamesPlayed).toFixed(1) : '0.0'}
                     </td>
-                    <td className='px-4 py-3 text-right font-mono'>
+                    <td className="px-4 py-3 text-right font-mono">
                       {gamesPlayed > 0 ? (oppTotal / gamesPlayed).toFixed(1) : '0.0'}
                     </td>
-                    <td className='px-4 py-3 text-right font-mono'>
+                    <td className="px-4 py-3 text-right font-mono">
                       {mean(leagueAvgByWeek).toFixed(1)}
                     </td>
-                    <td className='px-4 py-3 text-right font-mono'>
+                    <td className="px-4 py-3 text-right font-mono">
                       {mean(leagueMedByWeek).toFixed(1)}
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(seasonRank24, 24),
                           color: getTextColor(getRankColor(seasonRank24, 24)),
@@ -358,9 +358,9 @@ export function TeamView({
                         {seasonRank24}
                       </span>
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(seasonRankLeague, 12),
                           color: getTextColor(getRankColor(seasonRankLeague, 12)),
@@ -369,9 +369,9 @@ export function TeamView({
                         {seasonRankLeague}
                       </span>
                     </td>
-                    <td className='px-4 py-3 text-center'>
+                    <td className="px-4 py-3 text-center">
                       <span
-                        className='rounded-full px-2 py-1 text-xs font-medium'
+                        className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: getRankColor(Math.round(avgOppRank), 24),
                           color: getTextColor(getRankColor(Math.round(avgOppRank), 24)),
@@ -389,23 +389,23 @@ export function TeamView({
 
           {/* Weekly Breakdown */}
           <div>
-            <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+            <h3 className="mb-3 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
               Weekly Breakdown
             </h3>
-            <div className='rounded-md border'>
-              <table className='w-full text-sm'>
-                <thead className='bg-muted/50'>
+            <div className="rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className='px-4 py-3 text-left'>Week</th>
-                    <th className='px-4 py-3 text-right'>Team</th>
-                    <th className='px-4 py-3 text-center'>Rank (24)</th>
-                    <th className='px-4 py-3 text-center'>Rank (League)</th>
-                    <th className='px-4 py-3 text-right'>Opponent</th>
-                    <th className='px-4 py-3 text-center'>Opp Rank (24)</th>
-                    <th className='px-4 py-3 text-center'>Opp Rank (League)</th>
-                    <th className='px-4 py-3 text-right'>vs League Avg</th>
-                    <th className='px-4 py-3 text-right'>vs League Median</th>
-                    <th className='px-4 py-3 text-center'>Result</th>
+                    <th className="px-4 py-3 text-left">Week</th>
+                    <th className="px-4 py-3 text-right">Team</th>
+                    <th className="px-4 py-3 text-center">Rank (24)</th>
+                    <th className="px-4 py-3 text-center">Rank (League)</th>
+                    <th className="px-4 py-3 text-right">Opponent</th>
+                    <th className="px-4 py-3 text-center">Opp Rank (24)</th>
+                    <th className="px-4 py-3 text-center">Opp Rank (League)</th>
+                    <th className="px-4 py-3 text-right">vs League Avg</th>
+                    <th className="px-4 py-3 text-right">vs League Median</th>
+                    <th className="px-4 py-3 text-center">Result</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -413,35 +413,35 @@ export function TeamView({
                     const myTeam = t.teamScores.find(d => d.week === week)?.value || 0;
                     const myOpp = t.opponentScores.find(d => d.week === week)?.value || 0;
                     const vals = allTeamEntries.map(
-                      ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0
+                      ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0,
                     );
                     const ranks24 = rank(vals);
                     const teamIndex24Weekly = allTeamEntries.findIndex(
-                      ([k]) => k === selectedTeamKey
+                      ([k]) => k === selectedTeamKey,
                     );
                     const rank24 = ranks24[teamIndex24Weekly] || 0;
 
                     const leagueEntriesWeek = allTeamEntries.filter(
-                      ([, tt]) => tt.teamInfo.leagueId === leagueId
+                      ([, tt]) => tt.teamInfo.leagueId === leagueId,
                     );
                     const valsLeague = leagueEntriesWeek.map(
-                      ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0
+                      ([, tt]) => tt.teamScores.find(d => d.week === week)?.value || 0,
                     );
                     const ranksLeague = rank(valsLeague);
                     const teamIndexLeagueWeekly = leagueEntriesWeek.findIndex(
-                      ([k]) => k === selectedTeamKey
+                      ([k]) => k === selectedTeamKey,
                     );
                     const rankLeague = ranksLeague[teamIndexLeagueWeekly] || 0;
 
                     // Calculate opponent ranks
                     const oppVals = allTeamEntries.map(
-                      ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0
+                      ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0,
                     );
                     const oppRanks24 = rank(oppVals);
                     const oppRank24 = oppRanks24[teamIndex24Weekly] || 0;
 
                     const oppValsLeague = leagueEntriesWeek.map(
-                      ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0
+                      ([, tt]) => tt.opponentScores.find(d => d.week === week)?.value || 0,
                     );
                     const oppRanksLeague = rank(oppValsLeague);
                     const oppRankLeague = oppRanksLeague[teamIndexLeagueWeekly] || 0;
@@ -455,17 +455,17 @@ export function TeamView({
                     if (myTeam === 0) return null; // Skip weeks with no data
 
                     return (
-                      <tr key={week} className='border-t hover:bg-muted/20'>
-                        <td className='px-4 py-3 font-medium'>Week {week}</td>
+                      <tr key={week} className="border-t hover:bg-muted/20">
+                        <td className="px-4 py-3 font-medium">Week {week}</td>
                         <td
-                          className='px-4 py-3 text-right font-mono font-bold'
+                          className="px-4 py-3 text-right font-mono font-bold"
                           style={{ color: colors.core.regalGold }}
                         >
                           {myTeam.toFixed(1)}
                         </td>
-                        <td className='px-4 py-3 text-center'>
+                        <td className="px-4 py-3 text-center">
                           <span
-                            className='rounded-full px-2 py-1 text-xs font-medium'
+                            className="rounded-full px-2 py-1 text-xs font-medium"
                             style={{
                               backgroundColor: getRankColor(rank24, 24),
                               color: getTextColor(getRankColor(rank24, 24)),
@@ -474,9 +474,9 @@ export function TeamView({
                             {rank24}
                           </span>
                         </td>
-                        <td className='px-4 py-3 text-center'>
+                        <td className="px-4 py-3 text-center">
                           <span
-                            className='rounded-full px-2 py-1 text-xs font-medium'
+                            className="rounded-full px-2 py-1 text-xs font-medium"
                             style={{
                               backgroundColor: getRankColor(rankLeague, 12),
                               color: getTextColor(getRankColor(rankLeague, 12)),
@@ -485,10 +485,10 @@ export function TeamView({
                             {rankLeague}
                           </span>
                         </td>
-                        <td className='px-4 py-3 text-right font-mono'>{myOpp.toFixed(1)}</td>
-                        <td className='px-4 py-3 text-center'>
+                        <td className="px-4 py-3 text-right font-mono">{myOpp.toFixed(1)}</td>
+                        <td className="px-4 py-3 text-center">
                           <span
-                            className='rounded-full px-2 py-1 text-xs font-medium'
+                            className="rounded-full px-2 py-1 text-xs font-medium"
                             style={{
                               backgroundColor: getRankColor(oppRank24, 24),
                               color: getTextColor(getRankColor(oppRank24, 24)),
@@ -498,9 +498,9 @@ export function TeamView({
                             {oppRank24}
                           </span>
                         </td>
-                        <td className='px-4 py-3 text-center'>
+                        <td className="px-4 py-3 text-center">
                           <span
-                            className='rounded-full px-2 py-1 text-xs font-medium'
+                            className="rounded-full px-2 py-1 text-xs font-medium"
                             style={{
                               backgroundColor: getRankColor(oppRankLeague, 12),
                               color: getTextColor(getRankColor(oppRankLeague, 12)),
@@ -511,20 +511,20 @@ export function TeamView({
                           </span>
                         </td>
                         <td
-                          className='px-4 py-3 text-right font-mono text-xs'
+                          className="px-4 py-3 text-right font-mono text-xs"
                           style={{ color: getPerformanceColor(vsAvg, vsAvg > 0) }}
                         >
                           {vsAvg > 0 ? '+' : ''}
                           {vsAvg.toFixed(1)}
                         </td>
                         <td
-                          className='px-4 py-3 text-right font-mono text-xs'
+                          className="px-4 py-3 text-right font-mono text-xs"
                           style={{ color: getPerformanceColor(vsMedian, vsMedian > 0) }}
                         >
                           {vsMedian > 0 ? '+' : ''}
                           {vsMedian.toFixed(1)}
                         </td>
-                        <td className='px-4 py-3 text-center'>
+                        <td className="px-4 py-3 text-center">
                           <span
                             className={`rounded-full px-2 py-1 text-xs font-bold text-white ${
                               won ? 'bg-green-600' : 'bg-red-600'
@@ -543,10 +543,10 @@ export function TeamView({
 
           {/* Position Breakdowns */}
           <div>
-            <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+            <h3 className="mb-3 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
               Position Breakdowns
             </h3>
-            <div className='space-y-4'>
+            <div className="space-y-4">
               {positions.map(position => {
                 const posData = positionsMap.get(position);
                 const posTeamsMap = new Map(posData?.teams || []);
@@ -554,9 +554,9 @@ export function TeamView({
 
                 if (!teamPosData) {
                   return (
-                    <div key={position} className='rounded-md border p-4'>
-                      <h4 className='mb-2 font-semibold'>{position}</h4>
-                      <div className='text-sm text-muted-foreground'>No data available</div>
+                    <div key={position} className="rounded-md border p-4">
+                      <h4 className="mb-2 font-semibold">{position}</h4>
+                      <div className="text-sm text-muted-foreground">No data available</div>
                     </div>
                   );
                 }
@@ -566,7 +566,7 @@ export function TeamView({
                   .filter((d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek)
                   .reduce((a: number, d: PlayerScore) => a + d.value, 0);
                 const posValidWeeks = teamPosData.scores.filter(
-                  (d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek
+                  (d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek,
                 );
                 const posGamesPlayed = posValidWeeks.length;
 
@@ -575,7 +575,7 @@ export function TeamView({
                 const allPosTotals = allPosTeams.map((pt: PositionTeamData) =>
                   pt.scores
                     .filter((d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek)
-                    .reduce((a: number, d: PlayerScore) => a + d.value, 0)
+                    .reduce((a: number, d: PlayerScore) => a + d.value, 0),
                 );
                 const posRanks24 = rank(allPosTotals);
                 const posRank24 =
@@ -583,7 +583,7 @@ export function TeamView({
                     allPosTeams.findIndex(
                       pt =>
                         pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                        pt.teamInfo.rosterId === t.teamInfo.rosterId
+                        pt.teamInfo.rosterId === t.teamInfo.rosterId,
                     )
                   ] || 0;
 
@@ -591,7 +591,7 @@ export function TeamView({
                 const leaguePosTotals = leaguePosTeams.map((pt: PositionTeamData) =>
                   pt.scores
                     .filter((d: PlayerScore) => d.week >= fromWeek && d.week <= toWeek)
-                    .reduce((a: number, d: PlayerScore) => a + d.value, 0)
+                    .reduce((a: number, d: PlayerScore) => a + d.value, 0),
                 );
                 const posRanksLeague = rank(leaguePosTotals);
                 const posRankLeague =
@@ -599,7 +599,7 @@ export function TeamView({
                     leaguePosTeams.findIndex(
                       pt =>
                         pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                        pt.teamInfo.rosterId === t.teamInfo.rosterId
+                        pt.teamInfo.rosterId === t.teamInfo.rosterId,
                     )
                   ] || 0;
 
@@ -629,7 +629,7 @@ export function TeamView({
 
                 const oppPosSeasonTotal = myWeeklyOpponentData.reduce(
                   (a, d) => a + d.oppPosScore,
-                  0
+                  0,
                 );
 
                 // Calculate opponent positional ranks by averaging ranks across all opponents faced
@@ -676,50 +676,50 @@ export function TeamView({
                 const oppPosRankLeague =
                   oppRanksLeague.length > 0
                     ? Math.round(
-                        oppRanksLeague.reduce((sum, r) => sum + r, 0) / oppRanksLeague.length
+                        oppRanksLeague.reduce((sum, r) => sum + r, 0) / oppRanksLeague.length,
                       )
                     : 0;
 
                 return (
-                  <div key={position} className='rounded-md border'>
+                  <div key={position} className="rounded-md border">
                     <div
-                      className='px-4 py-2'
+                      className="px-4 py-2"
                       style={{ backgroundColor: colors.core.charcoalSteel }}
                     >
-                      <h4 className='font-semibold text-white'>{position}</h4>
+                      <h4 className="font-semibold text-white">{position}</h4>
                     </div>
 
                     {/* Position Season Summary */}
-                    <div className='p-4'>
-                      <div className='mb-4 rounded-md border'>
-                        <table className='w-full text-sm'>
-                          <thead className='bg-muted/20'>
+                    <div className="p-4">
+                      <div className="mb-4 rounded-md border">
+                        <table className="w-full text-sm">
+                          <thead className="bg-muted/20">
                             <tr>
-                              <th className='px-3 py-2 text-left'>Season Total</th>
-                              <th className='px-3 py-2 text-right'>Team</th>
-                              <th className='px-3 py-2 text-center'>Rank (24)</th>
-                              <th className='px-3 py-2 text-center'>Rank (League)</th>
-                              <th className='px-3 py-2 text-right'>Opponent</th>
-                              <th className='px-3 py-2 text-center'>Opp Rank (24)</th>
-                              <th className='px-3 py-2 text-center'>Opp Rank (League)</th>
-                              <th className='px-3 py-2 text-right'>League Avg</th>
-                              <th className='px-3 py-2 text-right'>League Median</th>
+                              <th className="px-3 py-2 text-left">Season Total</th>
+                              <th className="px-3 py-2 text-right">Team</th>
+                              <th className="px-3 py-2 text-center">Rank (24)</th>
+                              <th className="px-3 py-2 text-center">Rank (League)</th>
+                              <th className="px-3 py-2 text-right">Opponent</th>
+                              <th className="px-3 py-2 text-center">Opp Rank (24)</th>
+                              <th className="px-3 py-2 text-center">Opp Rank (League)</th>
+                              <th className="px-3 py-2 text-right">League Avg</th>
+                              <th className="px-3 py-2 text-right">League Median</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
-                              <td className='px-3 py-2 font-medium'>
+                              <td className="px-3 py-2 font-medium">
                                 Weeks {fromWeek}-{toWeek}
                               </td>
                               <td
-                                className='px-3 py-2 text-right font-mono font-bold'
+                                className="px-3 py-2 text-right font-mono font-bold"
                                 style={{ color: colors.core.regalGold }}
                               >
                                 {posSeasonTotal.toFixed(1)}
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(posRank24, 24),
                                     color: getTextColor(getRankColor(posRank24, 24)),
@@ -728,9 +728,9 @@ export function TeamView({
                                   {posRank24}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(posRankLeague, 12),
                                     color: getTextColor(getRankColor(posRankLeague, 12)),
@@ -739,12 +739,12 @@ export function TeamView({
                                   {posRankLeague}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-right font-mono'>
+                              <td className="px-3 py-2 text-right font-mono">
                                 {oppPosSeasonTotal.toFixed(1)}
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(oppPosRank24, 24),
                                     color: getTextColor(getRankColor(oppPosRank24, 24)),
@@ -753,9 +753,9 @@ export function TeamView({
                                   {oppPosRank24}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(oppPosRankLeague, 12),
                                     color: getTextColor(getRankColor(oppPosRankLeague, 12)),
@@ -764,26 +764,26 @@ export function TeamView({
                                   {oppPosRankLeague}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-right font-mono'>
+                              <td className="px-3 py-2 text-right font-mono">
                                 {posLeagueAvg.toFixed(1)}
                               </td>
-                              <td className='px-3 py-2 text-right font-mono'>
+                              <td className="px-3 py-2 text-right font-mono">
                                 {posLeagueMedian.toFixed(1)}
                               </td>
                             </tr>
-                            <tr className='border-t bg-muted/20'>
-                              <td className='px-3 py-2 font-medium'>Weekly Average</td>
+                            <tr className="border-t bg-muted/20">
+                              <td className="px-3 py-2 font-medium">Weekly Average</td>
                               <td
-                                className='px-3 py-2 text-right font-mono font-bold'
+                                className="px-3 py-2 text-right font-mono font-bold"
                                 style={{ color: colors.core.regalGold }}
                               >
                                 {posGamesPlayed > 0
                                   ? (posSeasonTotal / posGamesPlayed).toFixed(1)
                                   : '0.0'}
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(posRank24, 24),
                                     color: getTextColor(getRankColor(posRank24, 24)),
@@ -792,9 +792,9 @@ export function TeamView({
                                   {posRank24}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(posRankLeague, 12),
                                     color: getTextColor(getRankColor(posRankLeague, 12)),
@@ -803,14 +803,14 @@ export function TeamView({
                                   {posRankLeague}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-right font-mono'>
+                              <td className="px-3 py-2 text-right font-mono">
                                 {posGamesPlayed > 0
                                   ? (oppPosSeasonTotal / posGamesPlayed).toFixed(1)
                                   : '0.0'}
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(oppPosRank24, 24),
                                     color: getTextColor(getRankColor(oppPosRank24, 24)),
@@ -819,9 +819,9 @@ export function TeamView({
                                   {oppPosRank24}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-center'>
+                              <td className="px-3 py-2 text-center">
                                 <span
-                                  className='rounded-full px-2 py-1 text-xs font-medium'
+                                  className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
                                     backgroundColor: getRankColor(oppPosRankLeague, 12),
                                     color: getTextColor(getRankColor(oppPosRankLeague, 12)),
@@ -830,10 +830,10 @@ export function TeamView({
                                   {oppPosRankLeague}
                                 </span>
                               </td>
-                              <td className='px-3 py-2 text-right font-mono'>
+                              <td className="px-3 py-2 text-right font-mono">
                                 {(posLeagueAvg / weeks.length).toFixed(1)}
                               </td>
-                              <td className='px-3 py-2 text-right font-mono'>
+                              <td className="px-3 py-2 text-right font-mono">
                                 {(posLeagueMedian / weeks.length).toFixed(1)}
                               </td>
                             </tr>
@@ -842,19 +842,19 @@ export function TeamView({
                       </div>
 
                       {/* Position Weekly Breakdown */}
-                      <div className='max-h-48 overflow-auto rounded-md border'>
-                        <table className='w-full text-sm'>
-                          <thead className='bg-muted/20 sticky top-0'>
+                      <div className="max-h-48 overflow-auto rounded-md border">
+                        <table className="w-full text-sm">
+                          <thead className="bg-muted/20 sticky top-0">
                             <tr>
-                              <th className='px-3 py-2 text-left'>Week</th>
-                              <th className='px-3 py-2 text-right'>Team</th>
-                              <th className='px-3 py-2 text-center'>Rank (24)</th>
-                              <th className='px-3 py-2 text-center'>Rank (Lg)</th>
-                              <th className='px-3 py-2 text-right'>Opponent</th>
-                              <th className='px-3 py-2 text-center'>Opp Rank (24)</th>
-                              <th className='px-3 py-2 text-center'>Opp Rank (Lg)</th>
-                              <th className='px-3 py-2 text-right'>vs Avg</th>
-                              <th className='px-3 py-2 text-right'>vs Median</th>
+                              <th className="px-3 py-2 text-left">Week</th>
+                              <th className="px-3 py-2 text-right">Team</th>
+                              <th className="px-3 py-2 text-center">Rank (24)</th>
+                              <th className="px-3 py-2 text-center">Rank (Lg)</th>
+                              <th className="px-3 py-2 text-right">Opponent</th>
+                              <th className="px-3 py-2 text-center">Opp Rank (24)</th>
+                              <th className="px-3 py-2 text-center">Opp Rank (Lg)</th>
+                              <th className="px-3 py-2 text-right">vs Avg</th>
+                              <th className="px-3 py-2 text-right">vs Median</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -877,7 +877,7 @@ export function TeamView({
                               // Calculate weekly ranks for this position
                               const allWeeklyPosVals = allPosTeams.map(
                                 (pt: PositionTeamData) =>
-                                  pt.scores.find((d: PlayerScore) => d.week === week)?.value || 0
+                                  pt.scores.find((d: PlayerScore) => d.week === week)?.value || 0,
                               );
                               const weeklyPosRanks24 = rank(allWeeklyPosVals);
                               const weeklyPosRank24 =
@@ -885,13 +885,13 @@ export function TeamView({
                                   allPosTeams.findIndex(
                                     pt =>
                                       pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                                      pt.teamInfo.rosterId === t.teamInfo.rosterId
+                                      pt.teamInfo.rosterId === t.teamInfo.rosterId,
                                   )
                                 ] || 0;
 
                               const leagueWeeklyPosVals = leaguePosTeams.map(
                                 (pt: PositionTeamData) =>
-                                  pt.scores.find((d: PlayerScore) => d.week === week)?.value || 0
+                                  pt.scores.find((d: PlayerScore) => d.week === week)?.value || 0,
                               );
                               const weeklyPosRanksLeague = rank(leagueWeeklyPosVals);
                               const weeklyPosRankLeague =
@@ -899,7 +899,7 @@ export function TeamView({
                                   leaguePosTeams.findIndex(
                                     pt =>
                                       pt.teamInfo.leagueId === t.teamInfo.leagueId &&
-                                      pt.teamInfo.rosterId === t.teamInfo.rosterId
+                                      pt.teamInfo.rosterId === t.teamInfo.rosterId,
                                   )
                                 ] || 0;
 
@@ -941,7 +941,7 @@ export function TeamView({
                               rows.push(
                                 <tr
                                   key={week}
-                                  className='border-t hover:bg-muted/10 cursor-pointer'
+                                  className="border-t hover:bg-muted/10 cursor-pointer"
                                   onClick={() => {
                                     const newExpanded = new Set(expandedRows);
                                     if (isExpanded) {
@@ -952,23 +952,23 @@ export function TeamView({
                                     setExpandedRows(newExpanded);
                                   }}
                                 >
-                                  <td className='px-3 py-2 font-medium'>
-                                    <div className='flex items-center gap-1'>
+                                  <td className="px-3 py-2 font-medium">
+                                    <div className="flex items-center gap-1">
                                       Week {week}
-                                      <span className='text-xs text-muted-foreground'>
+                                      <span className="text-xs text-muted-foreground">
                                         {isExpanded ? '▼' : '▶'}
                                       </span>
                                     </div>
                                   </td>
                                   <td
-                                    className='px-3 py-2 text-right font-mono font-bold'
+                                    className="px-3 py-2 text-right font-mono font-bold"
                                     style={{ color: colors.core.regalGold }}
                                   >
                                     {myPosPoints.toFixed(1)}
                                   </td>
-                                  <td className='px-3 py-2 text-center'>
+                                  <td className="px-3 py-2 text-center">
                                     <span
-                                      className='rounded-full px-2 py-1 text-xs font-medium'
+                                      className="rounded-full px-2 py-1 text-xs font-medium"
                                       style={{
                                         backgroundColor: getRankColor(weeklyPosRank24, 24),
                                         color: getTextColor(getRankColor(weeklyPosRank24, 24)),
@@ -977,9 +977,9 @@ export function TeamView({
                                       {weeklyPosRank24}
                                     </span>
                                   </td>
-                                  <td className='px-3 py-2 text-center'>
+                                  <td className="px-3 py-2 text-center">
                                     <span
-                                      className='rounded-full px-2 py-1 text-xs font-medium'
+                                      className="rounded-full px-2 py-1 text-xs font-medium"
                                       style={{
                                         backgroundColor: getRankColor(weeklyPosRankLeague, 12),
                                         color: getTextColor(getRankColor(weeklyPosRankLeague, 12)),
@@ -988,12 +988,12 @@ export function TeamView({
                                       {weeklyPosRankLeague}
                                     </span>
                                   </td>
-                                  <td className='px-3 py-2 text-right font-mono'>
+                                  <td className="px-3 py-2 text-right font-mono">
                                     {oppPosPoints.toFixed(1)}
                                   </td>
-                                  <td className='px-3 py-2 text-center'>
+                                  <td className="px-3 py-2 text-center">
                                     <span
-                                      className='rounded-full px-2 py-1 text-xs font-medium'
+                                      className="rounded-full px-2 py-1 text-xs font-medium"
                                       style={{
                                         backgroundColor: getRankColor(oppWeeklyPosRank24, 24),
                                         color: getTextColor(getRankColor(oppWeeklyPosRank24, 24)),
@@ -1003,13 +1003,13 @@ export function TeamView({
                                       {oppWeeklyPosRank24}
                                     </span>
                                   </td>
-                                  <td className='px-3 py-2 text-center'>
+                                  <td className="px-3 py-2 text-center">
                                     <span
-                                      className='rounded-full px-2 py-1 text-xs font-medium'
+                                      className="rounded-full px-2 py-1 text-xs font-medium"
                                       style={{
                                         backgroundColor: getRankColor(oppWeeklyPosRankLeague, 12),
                                         color: getTextColor(
-                                          getRankColor(oppWeeklyPosRankLeague, 12)
+                                          getRankColor(oppWeeklyPosRankLeague, 12),
                                         ),
                                       }}
                                       title={`Opponent ${position} ranked ${oppWeeklyPosRankLeague} of 12 in league`}
@@ -1018,14 +1018,14 @@ export function TeamView({
                                     </span>
                                   </td>
                                   <td
-                                    className='px-3 py-2 text-right font-mono text-xs'
+                                    className="px-3 py-2 text-right font-mono text-xs"
                                     style={{ color: getPerformanceColor(vsAvg, vsAvg > 0) }}
                                   >
                                     {vsAvg > 0 ? '+' : ''}
                                     {vsAvg.toFixed(1)}
                                   </td>
                                   <td
-                                    className='px-3 py-2 text-right font-mono text-xs'
+                                    className="px-3 py-2 text-right font-mono text-xs"
                                     style={{
                                       color: getPerformanceColor(vsMedian, vsMedian > 0),
                                     }}
@@ -1033,7 +1033,7 @@ export function TeamView({
                                     {vsMedian > 0 ? '+' : ''}
                                     {vsMedian.toFixed(1)}
                                   </td>
-                                </tr>
+                                </tr>,
                               );
 
                               // Player breakdown row (if expanded)
@@ -1044,14 +1044,14 @@ export function TeamView({
                                   weekPlayerData?.positions[position] || [];
 
                                 rows.push(
-                                  <tr key={`${week}-breakdown`} className='bg-muted/5'>
-                                    <td colSpan={9} className='p-0'>
+                                  <tr key={`${week}-breakdown`} className="bg-muted/5">
+                                    <td colSpan={9} className="p-0">
                                       <PlayerBreakdownRow
                                         players={playersForPosition}
                                         position={position}
                                       />
                                     </td>
-                                  </tr>
+                                  </tr>,
                                 );
                               }
 
@@ -1069,7 +1069,7 @@ export function TeamView({
 
           {/* Team Positional Advantages */}
           <div>
-            <h3 className='mb-3 text-lg font-semibold' style={{ color: colors.core.crimsonRed }}>
+            <h3 className="mb-3 text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
               Positional Advantages vs League Median
             </h3>
             {(() => {
@@ -1080,8 +1080,8 @@ export function TeamView({
 
               if (!teamSummary) {
                 return (
-                  <div className='rounded-md border p-4'>
-                    <div className='text-sm text-muted-foreground'>
+                  <div className="rounded-md border p-4">
+                    <div className="text-sm text-muted-foreground">
                       No positional data available
                     </div>
                   </div>
@@ -1089,15 +1089,15 @@ export function TeamView({
               }
 
               return (
-                <div className='rounded-md border'>
-                  <table className='w-full text-sm'>
-                    <thead className='bg-muted/50'>
+                <div className="rounded-md border">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/50">
                       <tr>
-                        <th className='px-4 py-3 text-left'>Position</th>
-                        <th className='px-4 py-3 text-right'>Weekly Avg</th>
-                        <th className='px-4 py-3 text-right'>League Median</th>
-                        <th className='px-4 py-3 text-right'>Advantage/Disadvantage</th>
-                        <th className='px-4 py-3 text-right'>% Difference</th>
+                        <th className="px-4 py-3 text-left">Position</th>
+                        <th className="px-4 py-3 text-right">Weekly Avg</th>
+                        <th className="px-4 py-3 text-right">League Median</th>
+                        <th className="px-4 py-3 text-right">Advantage/Disadvantage</th>
+                        <th className="px-4 py-3 text-right">% Difference</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1124,26 +1124,26 @@ export function TeamView({
                               : colors.rdylgn[2];
 
                         return (
-                          <tr key={position} className='border-t'>
-                            <td className='px-4 py-3 font-medium'>{position}</td>
+                          <tr key={position} className="border-t">
+                            <td className="px-4 py-3 font-medium">{position}</td>
                             <td
-                              className='px-4 py-3 text-right font-mono font-bold'
+                              className="px-4 py-3 text-right font-mono font-bold"
                               style={{ color: colors.core.regalGold }}
                             >
                               {posData.weeklyAverage.toFixed(1)}
                             </td>
-                            <td className='px-4 py-3 text-right font-mono'>
+                            <td className="px-4 py-3 text-right font-mono">
                               {posData.leagueMedian.toFixed(1)}
                             </td>
                             <td
-                              className='px-4 py-3 text-right font-mono font-bold'
+                              className="px-4 py-3 text-right font-mono font-bold"
                               style={{ color: advantageColor }}
                             >
                               {posData.advantage > 0 ? '+' : ''}
                               {posData.advantage.toFixed(1)}
                             </td>
                             <td
-                              className='px-4 py-3 text-right font-mono font-bold'
+                              className="px-4 py-3 text-right font-mono font-bold"
                               style={{ color: advantageColor }}
                             >
                               {posData.percentageAdvantage > 0 ? '+' : ''}
@@ -1152,12 +1152,12 @@ export function TeamView({
                           </tr>
                         );
                       })}
-                      <tr className='border-t-2 bg-muted/20'>
-                        <td className='px-4 py-3 font-bold'>Total Advantage</td>
-                        <td className='px-4 py-3'></td>
-                        <td className='px-4 py-3'></td>
+                      <tr className="border-t-2 bg-muted/20">
+                        <td className="px-4 py-3 font-bold">Total Advantage</td>
+                        <td className="px-4 py-3"></td>
+                        <td className="px-4 py-3"></td>
                         <td
-                          className='px-4 py-3 text-right font-mono font-bold'
+                          className="px-4 py-3 text-right font-mono font-bold"
                           style={{
                             color:
                               teamSummary.totalAdvantage > 0
@@ -1171,7 +1171,7 @@ export function TeamView({
                           {teamSummary.totalAdvantage.toFixed(1)}
                         </td>
                         <td
-                          className='px-4 py-3 text-right font-mono font-bold'
+                          className="px-4 py-3 text-right font-mono font-bold"
                           style={{
                             color:
                               teamSummary.averageAdvantage > 0

@@ -52,20 +52,20 @@ function ScoreBoxPlot({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className='relative cursor-help' style={{ width, height }}>
+          <div className="relative cursor-help" style={{ width, height }}>
             {/* Background with scale */}
-            <div className='w-full h-full bg-muted/20 rounded relative flex items-center'>
+            <div className="w-full h-full bg-muted/20 rounded relative flex items-center">
               {/* Scale markers */}
-              <div className='absolute bottom-0 left-0 text-[8px] text-muted-foreground/60'>0</div>
-              <div className='absolute bottom-0 right-0 text-[8px] text-muted-foreground/60'>
+              <div className="absolute bottom-0 left-0 text-[8px] text-muted-foreground/60">0</div>
+              <div className="absolute bottom-0 right-0 text-[8px] text-muted-foreground/60">
                 {maxScale.toFixed(0)}
               </div>
 
               {/* Box plot container centered vertically */}
-              <div className='relative w-full h-3'>
+              <div className="relative w-full h-3">
                 {/* Whisker line (P10-P90) */}
                 <div
-                  className='absolute top-1/2 h-0.5 -translate-y-1/2 rounded'
+                  className="absolute top-1/2 h-0.5 -translate-y-1/2 rounded"
                   style={{
                     left: `${p10Percent}%`,
                     width: `${p90Percent - p10Percent}%`,
@@ -76,7 +76,7 @@ function ScoreBoxPlot({
 
                 {/* Left whisker cap (P10) */}
                 <div
-                  className='absolute top-1/2 w-0.5 h-2 -translate-y-1/2'
+                  className="absolute top-1/2 w-0.5 h-2 -translate-y-1/2"
                   style={{
                     left: `${p10Percent}%`,
                     backgroundColor: teamColor,
@@ -85,7 +85,7 @@ function ScoreBoxPlot({
 
                 {/* Right whisker cap (P90) */}
                 <div
-                  className='absolute top-1/2 w-0.5 h-2 -translate-y-1/2'
+                  className="absolute top-1/2 w-0.5 h-2 -translate-y-1/2"
                   style={{
                     left: `${p90Percent}%`,
                     backgroundColor: teamColor,
@@ -94,7 +94,7 @@ function ScoreBoxPlot({
 
                 {/* IQR Box (P25-P75 approximation) */}
                 <div
-                  className='absolute top-1/2 h-3 -translate-y-1/2 rounded border'
+                  className="absolute top-1/2 h-3 -translate-y-1/2 rounded border"
                   style={{
                     left: `${p25Percent}%`,
                     width: `${p75Percent - p25Percent}%`,
@@ -106,7 +106,7 @@ function ScoreBoxPlot({
 
                 {/* Median line */}
                 <div
-                  className='absolute top-1/2 w-0.5 h-3 -translate-y-1/2 rounded'
+                  className="absolute top-1/2 w-0.5 h-3 -translate-y-1/2 rounded"
                   style={{
                     left: `${medianPercent}%`,
                     backgroundColor: teamColor,
@@ -115,7 +115,7 @@ function ScoreBoxPlot({
 
                 {/* Mean marker (diamond) */}
                 <div
-                  className='absolute top-1/2 w-1 h-1 -translate-y-1/2 -translate-x-1/2 rounded-full border border-white'
+                  className="absolute top-1/2 w-1 h-1 -translate-y-1/2 -translate-x-1/2 rounded-full border border-white"
                   style={{
                     left: `${meanPercent}%`,
                     backgroundColor: teamColor,
@@ -125,13 +125,13 @@ function ScoreBoxPlot({
             </div>
           </div>
         </TooltipTrigger>
-        <TooltipContent side='top' className='text-xs'>
-          <div className='space-y-1'>
+        <TooltipContent side="top" className="text-xs">
+          <div className="space-y-1">
             <div>P10: {scores.p10.toFixed(1)} pts</div>
             <div>P90: {scores.p90.toFixed(1)} pts</div>
             <div>Median: {scores.median.toFixed(1)} pts</div>
             <div>Mean: {scores.mean.toFixed(1)} pts</div>
-            <div className='text-foreground/70'>Scale: 0 - {maxScale.toFixed(0)} pts</div>
+            <div className="text-foreground/70">Scale: 0 - {maxScale.toFixed(0)} pts</div>
           </div>
         </TooltipContent>
       </Tooltip>
@@ -299,15 +299,15 @@ export function MatchupSimulation({
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2 font-geizer tracking-wide'>
-            <Zap className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
+            <Zap className="h-5 w-5" />
             Monte Carlo Simulation
           </CardTitle>
         </CardHeader>
-        <CardContent className='space-y-4'>
-          <Skeleton className='h-20 w-full' />
-          <Skeleton className='h-16 w-full' />
-          <Skeleton className='h-24 w-full' />
+        <CardContent className="space-y-4">
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-24 w-full" />
         </CardContent>
       </Card>
     );
@@ -317,15 +317,15 @@ export function MatchupSimulation({
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2 font-geizer tracking-wide text-red-600'>
-            <AlertCircle className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide text-red-600">
+            <AlertCircle className="h-5 w-5" />
             Simulation Error
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className='text-muted-foreground mb-4'>{error}</p>
-          <Button onClick={() => fetchSimulation()} variant='outline'>
-            <RefreshCw className='h-4 w-4 mr-2' />
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={() => fetchSimulation()} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
             Retry
           </Button>
         </CardContent>
@@ -352,20 +352,20 @@ export function MatchupSimulation({
   return (
     <Card className={className}>
       <CardHeader>
-        <div className='flex items-center justify-between'>
-          <CardTitle className='flex items-center gap-2 font-geizer tracking-wide'>
-            <Zap className='h-5 w-5 text-yellow-500' />
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
+            <Zap className="h-5 w-5 text-yellow-500" />
             Monte Carlo Simulation
-            <Badge variant='outline' className='ml-2'>
+            <Badge variant="outline" className="ml-2">
               20,000 sims
             </Badge>
           </CardTitle>
-          <div className='flex items-center gap-2'>
+          <div className="flex items-center gap-2">
             {lastUpdated && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <Info className='h-4 w-4 text-muted-foreground' />
+                    <Info className="h-4 w-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Last updated: {lastUpdated.toLocaleTimeString()}</p>
@@ -375,8 +375,8 @@ export function MatchupSimulation({
             )}
             <Button
               onClick={() => fetchSimulation(false)}
-              variant='ghost'
-              size='sm'
+              variant="ghost"
+              size="sm"
               disabled={loading}
             >
               <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -385,19 +385,19 @@ export function MatchupSimulation({
         </div>
       </CardHeader>
 
-      <CardContent className='space-y-6'>
+      <CardContent className="space-y-6">
         {/* Win Probabilities */}
-        <div className='grid grid-cols-2 gap-4'>
+        <div className="grid grid-cols-2 gap-4">
           <Card>
-            <CardContent className='pt-4'>
-              <div className='text-center space-y-2'>
-                <div className='font-semibold text-sm'>{simulationData.teams[0].teamName}</div>
+            <CardContent className="pt-4">
+              <div className="text-center space-y-2">
+                <div className="font-semibold text-sm">{simulationData.teams[0].teamName}</div>
                 <div
                   className={`text-3xl font-bold ${getWinProbColor(simulationData.team1WinPct)}`}
                 >
                   {(simulationData.team1WinPct * 100).toFixed(1)}%
                 </div>
-                <Badge variant='outline' className='text-xs'>
+                <Badge variant="outline" className="text-xs">
                   {formatOdds(simulationData.impliedOdds.team1MoneyLine)}
                 </Badge>
               </div>
@@ -405,15 +405,15 @@ export function MatchupSimulation({
           </Card>
 
           <Card>
-            <CardContent className='pt-4'>
-              <div className='text-center space-y-2'>
-                <div className='font-semibold text-sm'>{simulationData.teams[1].teamName}</div>
+            <CardContent className="pt-4">
+              <div className="text-center space-y-2">
+                <div className="font-semibold text-sm">{simulationData.teams[1].teamName}</div>
                 <div
                   className={`text-3xl font-bold ${getWinProbColor(simulationData.team2WinPct)}`}
                 >
                   {(simulationData.team2WinPct * 100).toFixed(1)}%
                 </div>
-                <Badge variant='outline' className='text-xs'>
+                <Badge variant="outline" className="text-xs">
                   {formatOdds(simulationData.impliedOdds.team2MoneyLine)}
                 </Badge>
               </div>
@@ -422,33 +422,33 @@ export function MatchupSimulation({
         </div>
 
         {/* Score Projections */}
-        <div className='space-y-3'>
-          <h4 className='font-semibold flex items-center gap-2'>
-            <BarChart3 className='h-4 w-4' />
+        <div className="space-y-3">
+          <h4 className="font-semibold flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
             Score Ranges
           </h4>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className="grid grid-cols-2 gap-4">
             {/* Team 1 */}
-            <div className='space-y-2'>
-              <div className='text-sm font-medium'>{simulationData.teams[0].teamName}</div>
-              <div className='text-2xl font-bold'>
+            <div className="space-y-2">
+              <div className="text-sm font-medium">{simulationData.teams[0].teamName}</div>
+              <div className="text-2xl font-bold">
                 {simulationData.team1Scores.median.toFixed(1)}
               </div>
-              <div className='text-xs text-muted-foreground'>
+              <div className="text-xs text-muted-foreground">
                 Range: {simulationData.team1Scores.p10.toFixed(1)} -{' '}
                 {simulationData.team1Scores.p90.toFixed(1)}
               </div>
               {/* Inline Box Plot for Team 1 */}
-              <div className='mt-2'>
+              <div className="mt-2">
                 <ScoreBoxPlot
                   scores={simulationData.team1Scores}
                   maxScale={Math.max(
                     200,
                     simulationData.team1Scores.p90,
-                    simulationData.team2Scores.p90
+                    simulationData.team2Scores.p90,
                   )}
-                  teamColor='rgb(99, 102, 241)' // Indigo for team 1
+                  teamColor="rgb(99, 102, 241)" // Indigo for team 1
                   width={300}
                   height={24}
                 />
@@ -456,25 +456,25 @@ export function MatchupSimulation({
             </div>
 
             {/* Team 2 */}
-            <div className='space-y-2'>
-              <div className='text-sm font-medium'>{simulationData.teams[1].teamName}</div>
-              <div className='text-2xl font-bold'>
+            <div className="space-y-2">
+              <div className="text-sm font-medium">{simulationData.teams[1].teamName}</div>
+              <div className="text-2xl font-bold">
                 {simulationData.team2Scores.median.toFixed(1)}
               </div>
-              <div className='text-xs text-muted-foreground'>
+              <div className="text-xs text-muted-foreground">
                 Range: {simulationData.team2Scores.p10.toFixed(1)} -{' '}
                 {simulationData.team2Scores.p90.toFixed(1)}
               </div>
               {/* Inline Box Plot for Team 2 */}
-              <div className='mt-2'>
+              <div className="mt-2">
                 <ScoreBoxPlot
                   scores={simulationData.team2Scores}
                   maxScale={Math.max(
                     200,
                     simulationData.team1Scores.p90,
-                    simulationData.team2Scores.p90
+                    simulationData.team2Scores.p90,
                   )}
-                  teamColor='rgb(16, 185, 129)' // Emerald for team 2
+                  teamColor="rgb(16, 185, 129)" // Emerald for team 2
                   width={300}
                   height={24}
                 />
@@ -484,17 +484,17 @@ export function MatchupSimulation({
         </div>
 
         {/* Interactive Betting Lines */}
-        <div className='space-y-4'>
-          <h4 className='font-semibold flex items-center gap-2'>
-            <DollarSign className='h-4 w-4' />
+        <div className="space-y-4">
+          <h4 className="font-semibold flex items-center gap-2">
+            <DollarSign className="h-4 w-4" />
             Win Margin Calculator
           </h4>
 
           {/* Spread Slider */}
-          <div className='space-y-3'>
-            <div className='flex items-center justify-between'>
-              <span className='text-sm font-medium'>Win Margin</span>
-              <Badge variant='outline'>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Win Margin</span>
+              <Badge variant="outline">
                 {marginSlider[0] === 0
                   ? 'Win Outright'
                   : marginSlider[0] > 0
@@ -504,40 +504,40 @@ export function MatchupSimulation({
             </div>
 
             <input
-              type='range'
+              type="range"
               value={marginSlider[0]}
               onChange={e => setMarginSlider([parseFloat(e.target.value)])}
               min={-21}
               max={21}
               step={0.5}
-              className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 slider'
-              aria-label='Point spread margin slider'
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 slider"
+              aria-label="Point spread margin slider"
             />
 
-            <div className='grid grid-cols-2 gap-2 text-sm'>
-              <div className='text-center'>
-                <div className='font-medium'>{simulationData.teams[0].teamName}</div>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="text-center">
+                <div className="font-medium">{simulationData.teams[0].teamName}</div>
                 <div className={getWinProbColor(winProbs.team1)}>
                   {(winProbs.team1 * 100).toFixed(1)}%
                 </div>
-                <div className='text-xs text-muted-foreground'>
+                <div className="text-xs text-muted-foreground">
                   {formatOdds(
                     winProbs.team1 > 0.5
                       ? -Math.round((winProbs.team1 / (1 - winProbs.team1)) * 100)
-                      : Math.round(((1 - winProbs.team1) / winProbs.team1) * 100)
+                      : Math.round(((1 - winProbs.team1) / winProbs.team1) * 100),
                   )}
                 </div>
               </div>
-              <div className='text-center'>
-                <div className='font-medium'>{simulationData.teams[1].teamName}</div>
+              <div className="text-center">
+                <div className="font-medium">{simulationData.teams[1].teamName}</div>
                 <div className={getWinProbColor(winProbs.team2)}>
                   {(winProbs.team2 * 100).toFixed(1)}%
                 </div>
-                <div className='text-xs text-muted-foreground'>
+                <div className="text-xs text-muted-foreground">
                   {formatOdds(
                     winProbs.team2 > 0.5
                       ? -Math.round((winProbs.team2 / (1 - winProbs.team2)) * 100)
-                      : Math.round(((1 - winProbs.team2) / winProbs.team2) * 100)
+                      : Math.round(((1 - winProbs.team2) / winProbs.team2) * 100),
                   )}
                 </div>
               </div>
@@ -545,42 +545,42 @@ export function MatchupSimulation({
           </div>
 
           {/* Over/Under Display (no slider) */}
-          <div className='space-y-3'>
-            <div className='flex items-center justify-between'>
-              <span className='text-sm font-medium'>Total Points</span>
-              <Badge variant='outline'>O/U {ouDisplay.total}</Badge>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Total Points</span>
+              <Badge variant="outline">O/U {ouDisplay.total}</Badge>
             </div>
 
-            <div className='grid grid-cols-2 gap-2 text-sm'>
-              <div className='text-center p-3 bg-muted/30 rounded-lg'>
-                <div className='font-medium flex items-center justify-center gap-1'>
-                  <TrendingUp className='h-3 w-3' />
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="font-medium flex items-center justify-center gap-1">
+                  <TrendingUp className="h-3 w-3" />
                   Over {ouDisplay.total}
                 </div>
                 <div className={`text-lg font-semibold ${getWinProbColor(ouDisplay.over)}`}>
                   {(ouDisplay.over * 100).toFixed(1)}%
                 </div>
-                <div className='text-xs text-muted-foreground'>
+                <div className="text-xs text-muted-foreground">
                   {formatOdds(
                     ouDisplay.over > 0.5
                       ? -Math.round((ouDisplay.over / (1 - ouDisplay.over)) * 100)
-                      : Math.round(((1 - ouDisplay.over) / ouDisplay.over) * 100)
+                      : Math.round(((1 - ouDisplay.over) / ouDisplay.over) * 100),
                   )}
                 </div>
               </div>
-              <div className='text-center p-3 bg-muted/30 rounded-lg'>
-                <div className='font-medium flex items-center justify-center gap-1'>
-                  <TrendingDown className='h-3 w-3' />
+              <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="font-medium flex items-center justify-center gap-1">
+                  <TrendingDown className="h-3 w-3" />
                   Under {ouDisplay.total}
                 </div>
                 <div className={`text-lg font-semibold ${getWinProbColor(ouDisplay.under)}`}>
                   {(ouDisplay.under * 100).toFixed(1)}%
                 </div>
-                <div className='text-xs text-muted-foreground'>
+                <div className="text-xs text-muted-foreground">
                   {formatOdds(
                     ouDisplay.under > 0.5
                       ? -Math.round((ouDisplay.under / (1 - ouDisplay.under)) * 100)
-                      : Math.round(((1 - ouDisplay.under) / ouDisplay.under) * 100)
+                      : Math.round(((1 - ouDisplay.under) / ouDisplay.under) * 100),
                   )}
                 </div>
               </div>
@@ -590,37 +590,37 @@ export function MatchupSimulation({
 
         {/* NFL Game Context - Transparency Section */}
         {(simulationData as any).nflGameContext && (
-          <div className='pt-4 border-t'>
-            <h4 className='font-semibold mb-3 flex items-center gap-2 text-sm'>
-              <Clock className='h-4 w-4' />
+          <div className="pt-4 border-t">
+            <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
+              <Clock className="h-4 w-4" />
               NFL Game Progress
-              <Badge variant='outline' className='text-xs'>
+              <Badge variant="outline" className="text-xs">
                 {((simulationData as any).nflGameContext.averageGameProgress * 100).toFixed(0)}%
                 Complete
               </Badge>
             </h4>
 
-            <div className='space-y-3'>
+            <div className="space-y-3">
               {/* Summary Stats */}
-              <div className='grid grid-cols-2 gap-4 text-sm'>
-                <div className='bg-muted/30 p-3 rounded-lg text-center'>
-                  <div className='font-medium'>Avg. Minutes Remaining</div>
-                  <div className='text-lg font-semibold text-blue-600'>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="bg-muted/30 p-3 rounded-lg text-center">
+                  <div className="font-medium">Avg. Minutes Remaining</div>
+                  <div className="text-lg font-semibold text-blue-600">
                     {(simulationData as any).nflGameContext.averageMinutesRemaining.toFixed(1)}m
                   </div>
                 </div>
-                <div className='bg-muted/30 p-3 rounded-lg text-center'>
-                  <div className='font-medium'>NFL Games</div>
-                  <div className='text-lg font-semibold text-green-600'>
+                <div className="bg-muted/30 p-3 rounded-lg text-center">
+                  <div className="font-medium">NFL Games</div>
+                  <div className="text-lg font-semibold text-green-600">
                     {(simulationData as any).nflGameContext.totalNflGames}
                   </div>
                 </div>
               </div>
 
               {/* Game States */}
-              <div className='space-y-2'>
-                <div className='text-xs font-medium text-muted-foreground'>Game States:</div>
-                <div className='flex flex-wrap gap-2'>
+              <div className="space-y-2">
+                <div className="text-xs font-medium text-muted-foreground">Game States:</div>
+                <div className="flex flex-wrap gap-2">
                   {(simulationData as any).nflGameContext.gameStates.map((state: any) => (
                     <Badge
                       key={state.team}
@@ -631,7 +631,7 @@ export function MatchupSimulation({
                             ? 'default'
                             : 'secondary'
                       }
-                      className='text-xs'
+                      className="text-xs"
                     >
                       {state.team}:{' '}
                       {state.state === 'post'
@@ -645,7 +645,7 @@ export function MatchupSimulation({
               </div>
 
               {/* Explanation */}
-              <div className='text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 p-2 rounded border-l-2 border-blue-200'>
+              <div className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 p-2 rounded border-l-2 border-blue-200">
                 <strong>Minutes-Based Projections:</strong> Player projections are automatically
                 adjusted based on actual NFL game time remaining. Completed games = 0 projection
                 remaining, live games = proportional to time left.
@@ -655,23 +655,23 @@ export function MatchupSimulation({
         )}
 
         {/* Simulation Stats */}
-        <div className='pt-4 border-t'>
-          <div className='grid grid-cols-3 gap-4 text-center text-sm'>
+        <div className="pt-4 border-t">
+          <div className="grid grid-cols-3 gap-4 text-center text-sm">
             <div>
-              <div className='font-medium'>Median Margin</div>
-              <div className='text-muted-foreground'>
+              <div className="font-medium">Median Margin</div>
+              <div className="text-muted-foreground">
                 {Math.abs(simulationData.medianMargin).toFixed(1)} pts
               </div>
             </div>
             <div>
-              <div className='font-medium'>Projected Total</div>
-              <div className='text-muted-foreground'>
+              <div className="font-medium">Projected Total</div>
+              <div className="text-muted-foreground">
                 {(simulationData.team1Scores.mean + simulationData.team2Scores.mean).toFixed(1)}
               </div>
             </div>
             <div>
-              <div className='font-medium'>Method</div>
-              <div className='text-muted-foreground'>Minutes-Based</div>
+              <div className="font-medium">Method</div>
+              <div className="text-muted-foreground">Minutes-Based</div>
             </div>
           </div>
         </div>

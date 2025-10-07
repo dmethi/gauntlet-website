@@ -141,11 +141,11 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
   }, []);
 
   return (
-    <div className='flex-1 overflow-y-auto'>
-      <div className='container mx-auto p-6'>
-        <div className='mb-8'>
-          <h1 className='text-3xl font-bold tracking-tight'>Stats Hub</h1>
-          <p className='text-muted-foreground mt-2'>
+    <div className="flex-1 overflow-y-auto">
+      <div className="container mx-auto p-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">Stats Hub</h1>
+          <p className="text-muted-foreground mt-2">
             Individual team analysis and weekly performance breakdowns
           </p>
         </div>
@@ -153,14 +153,14 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
         {isLoading && <StatsPageSkeleton loadingProgress={loadingProgress} />}
 
         {error && (
-          <div className='rounded-lg border border-destructive/50 bg-destructive/10 p-6'>
-            <div className='flex items-center gap-2'>
-              <div className='text-destructive font-semibold'>Error loading stats</div>
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6">
+            <div className="flex items-center gap-2">
+              <div className="text-destructive font-semibold">Error loading stats</div>
             </div>
-            <p className='text-destructive/80 mt-2'>{error}</p>
+            <p className="text-destructive/80 mt-2">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className='mt-4 px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors'
+              className="mt-4 px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors"
             >
               Retry
             </button>
@@ -189,97 +189,97 @@ export default function StatsPage({ searchParams }: StatsPageProps) {
 
 function StatsPageSkeleton({ loadingProgress }: { loadingProgress: number }) {
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       {/* Loading progress bar */}
-      <div className='w-full bg-muted rounded-full h-2 mb-4'>
+      <div className="w-full bg-muted rounded-full h-2 mb-4">
         <div
-          className='bg-gradient-to-r from-gauntlet-crimson to-gauntlet-gold h-2 rounded-full transition-all duration-300 ease-out'
+          className="bg-gradient-to-r from-gauntlet-crimson to-gauntlet-gold h-2 rounded-full transition-all duration-300 ease-out"
           style={{ width: `${loadingProgress}%` }}
         />
       </div>
 
       {/* Loading text */}
-      <div className='text-center text-sm text-muted-foreground mb-6'>
+      <div className="text-center text-sm text-muted-foreground mb-6">
         Loading stats data... {Math.round(loadingProgress)}%
       </div>
       {/* Tabs skeleton */}
-      <div className='flex space-x-1 rounded-md bg-muted p-1'>
-        <div className='h-9 w-24 bg-muted-foreground/20 animate-pulse rounded-sm' />
-        <div className='h-9 w-24 bg-muted-foreground/20 animate-pulse rounded-sm' />
-        <div className='h-9 w-32 bg-muted-foreground/20 animate-pulse rounded-sm' />
-        <div className='h-9 w-28 bg-muted-foreground/20 animate-pulse rounded-sm' />
-        <div className='h-9 w-28 bg-muted-foreground/20 animate-pulse rounded-sm' />
+      <div className="flex space-x-1 rounded-md bg-muted p-1">
+        <div className="h-9 w-24 bg-muted-foreground/20 animate-pulse rounded-sm" />
+        <div className="h-9 w-24 bg-muted-foreground/20 animate-pulse rounded-sm" />
+        <div className="h-9 w-32 bg-muted-foreground/20 animate-pulse rounded-sm" />
+        <div className="h-9 w-28 bg-muted-foreground/20 animate-pulse rounded-sm" />
+        <div className="h-9 w-28 bg-muted-foreground/20 animate-pulse rounded-sm" />
       </div>
 
       {/* Main content card */}
-      <div className='rounded-lg border bg-card'>
-        <div className='p-6'>
+      <div className="rounded-lg border bg-card">
+        <div className="p-6">
           {/* Card header */}
-          <div className='space-y-2 mb-6'>
-            <div className='h-6 w-32 bg-muted animate-pulse rounded' />
-            <div className='h-4 w-80 bg-muted animate-pulse rounded' />
+          <div className="space-y-2 mb-6">
+            <div className="h-6 w-32 bg-muted animate-pulse rounded" />
+            <div className="h-4 w-80 bg-muted animate-pulse rounded" />
           </div>
 
           {/* Team selector */}
-          <div className='flex items-center gap-3 mb-6'>
-            <div className='h-4 w-20 bg-muted animate-pulse rounded' />
-            <div className='h-10 w-80 bg-muted animate-pulse rounded' />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-4 w-20 bg-muted animate-pulse rounded" />
+            <div className="h-10 w-80 bg-muted animate-pulse rounded" />
           </div>
 
           {/* Tables skeleton */}
-          <div className='space-y-6'>
+          <div className="space-y-6">
             {/* Season Summary table */}
-            <div className='space-y-3'>
-              <div className='h-5 w-40 bg-muted animate-pulse rounded' />
-              <div className='rounded-md border'>
-                <div className='h-12 bg-muted/50 animate-pulse rounded-t-md' />
-                <div className='space-y-px'>
+            <div className="space-y-3">
+              <div className="h-5 w-40 bg-muted animate-pulse rounded" />
+              <div className="rounded-md border">
+                <div className="h-12 bg-muted/50 animate-pulse rounded-t-md" />
+                <div className="space-y-px">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className='h-12 bg-muted/20 animate-pulse' />
+                    <div key={i} className="h-12 bg-muted/20 animate-pulse" />
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Weekly Breakdown table */}
-            <div className='space-y-3'>
-              <div className='h-5 w-36 bg-muted animate-pulse rounded' />
-              <div className='rounded-md border'>
-                <div className='h-12 bg-muted/50 animate-pulse rounded-t-md' />
-                <div className='space-y-px'>
+            <div className="space-y-3">
+              <div className="h-5 w-36 bg-muted animate-pulse rounded" />
+              <div className="rounded-md border">
+                <div className="h-12 bg-muted/50 animate-pulse rounded-t-md" />
+                <div className="space-y-px">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className='h-12 bg-muted/20 animate-pulse' />
+                    <div key={i} className="h-12 bg-muted/20 animate-pulse" />
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Positional Advantages table */}
-            <div className='space-y-3'>
-              <div className='h-5 w-56 bg-muted animate-pulse rounded' />
-              <div className='rounded-md border'>
-                <div className='h-12 bg-muted/50 animate-pulse rounded-t-md' />
-                <div className='space-y-px'>
+            <div className="space-y-3">
+              <div className="h-5 w-56 bg-muted animate-pulse rounded" />
+              <div className="rounded-md border">
+                <div className="h-12 bg-muted/50 animate-pulse rounded-t-md" />
+                <div className="space-y-px">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className='h-12 bg-muted/20 animate-pulse' />
+                    <div key={i} className="h-12 bg-muted/20 animate-pulse" />
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Position breakdowns */}
-            <div className='space-y-4'>
-              <div className='h-5 w-44 bg-muted animate-pulse rounded' />
-              <div className='space-y-4'>
+            <div className="space-y-4">
+              <div className="h-5 w-44 bg-muted animate-pulse rounded" />
+              <div className="space-y-4">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className='rounded-md border'>
-                    <div className='h-12 bg-muted/50 animate-pulse' />
-                    <div className='p-4 space-y-4'>
-                      <div className='rounded-md border'>
-                        <div className='h-8 bg-muted/30 animate-pulse rounded-t-md' />
-                        <div className='space-y-px'>
+                  <div key={i} className="rounded-md border">
+                    <div className="h-12 bg-muted/50 animate-pulse" />
+                    <div className="p-4 space-y-4">
+                      <div className="rounded-md border">
+                        <div className="h-8 bg-muted/30 animate-pulse rounded-t-md" />
+                        <div className="space-y-px">
                           {Array.from({ length: 3 }).map((_, j) => (
-                            <div key={j} className='h-8 bg-muted/10 animate-pulse' />
+                            <div key={j} className="h-8 bg-muted/10 animate-pulse" />
                           ))}
                         </div>
                       </div>

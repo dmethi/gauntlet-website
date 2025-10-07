@@ -53,7 +53,7 @@ export async function GET(_request: NextRequest, { params }: { params: { playerI
         error: 'Internal server error',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

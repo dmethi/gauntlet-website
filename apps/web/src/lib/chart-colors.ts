@@ -182,7 +182,7 @@ export function getChartColor(colorKey: keyof typeof staticChartColors): string 
 export function getPerformanceColor(
   value: number,
   context: 'points' | 'luck' | 'percentage' = 'points',
-  theme: 'light' | 'dark' = 'light'
+  theme: 'light' | 'dark' = 'light',
 ): string {
   const isDark = theme === 'dark';
 

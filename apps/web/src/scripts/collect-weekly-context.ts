@@ -435,7 +435,7 @@ function processScatterData(dataset: any) {
   }
 
   console.log(
-    `✅ Processed scatter data for overall + ${Object.keys(results.byPosition).length} positions`
+    `✅ Processed scatter data for overall + ${Object.keys(results.byPosition).length} positions`,
   );
   return results;
 }
@@ -522,7 +522,7 @@ function processNarrativePatterns(dataset: any, currentWeek: number) {
       if (!teamPosData) continue;
 
       const validScores = teamPosData.scores.filter(
-        (s: any) => s.week >= 1 && s.week <= currentWeek && s.value > 0
+        (s: any) => s.week >= 1 && s.week <= currentWeek && s.value > 0,
       );
 
       if (validScores.length === 0) continue;
@@ -609,7 +609,7 @@ function processNarrativePatterns(dataset: any, currentWeek: number) {
 
     const netAdvantage = Object.values(positionalAnalysis).reduce(
       (sum: number, data: any) => sum + data.advantageVsLeague,
-      0
+      0,
     );
 
     results.push({
@@ -784,13 +784,13 @@ async function collectContext() {
     console.log(`   • Luck/schedule: ${context.luckAndSchedule.length} teams`);
     console.log(`   • Scatter data: ${context.scatterData.overall.length} teams`);
     console.log(
-      `   • Narrative patterns: ${context.narrativePatterns.length} teams (14 pattern types)`
+      `   • Narrative patterns: ${context.narrativePatterns.length} teams (14 pattern types)`,
     );
     console.log(
-      `   • Transactions: ${context.transactions.thisWeek?.length || 0} this week, ${context.transactions.seasonTop?.length || 0} season top`
+      `   • Transactions: ${context.transactions.thisWeek?.length || 0} this week, ${context.transactions.seasonTop?.length || 0} season top`,
     );
     console.log(
-      `   • Start/Sit: ${context.startSit.thisWeekBest?.length || 0} best, ${context.startSit.thisWeekWorst?.length || 0} worst\n`
+      `   • Start/Sit: ${context.startSit.thisWeekBest?.length || 0} best, ${context.startSit.thisWeekWorst?.length || 0} worst\n`,
     );
   } catch (error) {
     console.error('\n❌ Failed to collect context:', error);

@@ -40,7 +40,7 @@ async function loadPrecomputedData() {
       console.log('✅ Loaded precomputed analytics data from server');
       if (precomputedMetadata) {
         console.log(
-          `📊 Generated: ${new Date(precomputedMetadata.timestamp || 0).toLocaleString()}`
+          `📊 Generated: ${new Date(precomputedMetadata.timestamp || 0).toLocaleString()}`,
         );
         console.log(`⚡ Generation time: ${precomputedMetadata.generationTime}ms`);
         console.log(`🏈 Players: ${precomputedMetadata.playerCount}`);

@@ -3,7 +3,7 @@ import { computeWeeklyRollups, getCurrentWeek } from '@/lib/api-replacements';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { leagueId: string; season: string } }
+  { params }: { params: { leagueId: string; season: string } },
 ) {
   try {
     const { leagueId, season } = params;
@@ -46,7 +46,7 @@ export async function GET(
           console.warn(`Failed to compute rollup for week ${week}:`, error);
           return null;
         }
-      })
+      }),
     );
 
     // Filter out failed computations
@@ -77,7 +77,7 @@ export async function GET(
         error: 'Failed to compute rollups',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

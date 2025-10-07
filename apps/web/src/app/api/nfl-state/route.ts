@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const weekMs = 7 * 24 * 60 * 60 * 1000;
     const calculatedWeek = Math.max(
       1,
-      Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1)
+      Math.min(18, Math.floor((now.getTime() - seasonStart.getTime()) / weekMs) + 1),
     );
 
     const fallbackState = {

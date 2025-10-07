@@ -65,7 +65,7 @@ export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promi
           // Debug logging for Drake Maye specifically
           if (t.starters.includes('11564')) {
             console.log(
-              `[buildFacts] Week ${week}: Drake Maye (11564) started by roster ${t.rosterId}`
+              `[buildFacts] Week ${week}: Drake Maye (11564) started by roster ${t.rosterId}`,
             );
             console.log(`[buildFacts] Drake Maye points: ${playerPoints['11564'] || 'N/A'}`);
           }
@@ -80,7 +80,7 @@ export async function buildFacts(leagueId: string, seasonWeeks: number[]): Promi
             // Debug Drake Maye specifically
             if (String(pid) === '11564' && points > 0) {
               console.log(
-                `[buildFacts] Week ${week}: Drake Maye (${pid}) points set to ${points} for roster ${t.rosterId}`
+                `[buildFacts] Week ${week}: Drake Maye (${pid}) points set to ${points} for roster ${t.rosterId}`,
               );
             }
           }

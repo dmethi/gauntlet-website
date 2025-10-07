@@ -168,18 +168,18 @@ export default function Week3Preview2025() {
 
   if (loading) {
     return (
-      <div className='px-2 md:px-4 py-6'>
-        <PageHeader title='Week 3 Preview — 2025' subtitle='Loading...' />
-        <div className='text-sm text-muted-foreground'>Fetching week 3 preview data...</div>
+      <div className="px-2 md:px-4 py-6">
+        <PageHeader title="Week 3 Preview — 2025" subtitle="Loading..." />
+        <div className="text-sm text-muted-foreground">Fetching week 3 preview data...</div>
       </div>
     );
   }
 
   if (!data?.ok || !data.data) {
     return (
-      <div className='px-2 md:px-4 py-6'>
-        <PageHeader title='Week 3 Preview — 2025' subtitle='Error' />
-        <div className='text-sm text-red-600'>Failed to load week 3 preview data.</div>
+      <div className="px-2 md:px-4 py-6">
+        <PageHeader title="Week 3 Preview — 2025" subtitle="Error" />
+        <div className="text-sm text-red-600">Failed to load week 3 preview data.</div>
       </div>
     );
   }
@@ -193,7 +193,8 @@ export default function Week3Preview2025() {
       .flatMap(m => [m.teamA, m.teamB])
       .filter(
         (team, index, arr) =>
-          arr.findIndex(t => t.rosterId === team.rosterId && t.leagueId === team.leagueId) === index
+          arr.findIndex(t => t.rosterId === team.rosterId && t.leagueId === team.leagueId) ===
+          index,
       );
 
     // Highest Scorers (by current projected points)
@@ -263,53 +264,53 @@ export default function Week3Preview2025() {
   const leagueOdds = getLeagueOddsSnapshot();
 
   return (
-    <div className='px-2 md:px-4 py-6 space-y-6'>
-      <PageHeader title='Week 3 Preview — 2025' subtitle='Where vibes harden into trajectories' />
+    <div className="px-2 md:px-4 py-6 space-y-6">
+      <PageHeader title="Week 3 Preview — 2025" subtitle="Where vibes harden into trajectories" />
 
       {/* Overview */}
-      <div className='space-y-4'>
-        <h2 className='text-lg font-semibold'>The Overview</h2>
-        <p className='text-sm leading-relaxed'>{WEEK3_NARRATIVES.overview}</p>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">The Overview</h2>
+        <p className="text-sm leading-relaxed">{WEEK3_NARRATIVES.overview}</p>
       </div>
 
-      <hr className='border-border' />
+      <hr className="border-border" />
 
       {/* NFC Matchups */}
-      <div className='space-y-6'>
-        <h2 className='text-lg font-semibold'>NFC Matchups</h2>
+      <div className="space-y-6">
+        <h2 className="text-lg font-semibold">NFC Matchups</h2>
         {data.data.matchups
           .filter(m => getConference(m.leagueName) === 'NFC')
           .map(matchup => (
-            <div key={`${matchup.leagueId}-${matchup.matchupId}`} className='p-3 space-y-3'>
+            <div key={`${matchup.leagueId}-${matchup.matchupId}`} className="p-3 space-y-3">
               {/* Matchup Header */}
-              <div className='rounded-md bg-gauntlet-crimson/10 px-3 py-2'>
-                <div className='sm:hidden'>
-                  <div className='flex items-center justify-between text-base font-semibold mb-1'>
-                    <span className='truncate flex-1 mr-2'>{matchup.teamA.teamName}</span>
-                    <span className='text-right font-mono'>
+              <div className="rounded-md bg-gauntlet-crimson/10 px-3 py-2">
+                <div className="sm:hidden">
+                  <div className="flex items-center justify-between text-base font-semibold mb-1">
+                    <span className="truncate flex-1 mr-2">{matchup.teamA.teamName}</span>
+                    <span className="text-right font-mono">
                       {matchup.teamA.projectedPoints.toFixed(1)}
                     </span>
                   </div>
-                  <div className='flex items-center justify-between text-base font-semibold'>
-                    <span className='truncate flex-1 mr-2'>{matchup.teamB.teamName}</span>
-                    <span className='text-right font-mono'>
+                  <div className="flex items-center justify-between text-base font-semibold">
+                    <span className="truncate flex-1 mr-2">{matchup.teamB.teamName}</span>
+                    <span className="text-right font-mono">
                       {matchup.teamB.projectedPoints.toFixed(1)}
                     </span>
                   </div>
                 </div>
-                <div className='hidden sm:flex items-center justify-between text-base font-semibold'>
-                  <div className='truncate max-w-[45%]'>
+                <div className="hidden sm:flex items-center justify-between text-base font-semibold">
+                  <div className="truncate max-w-[45%]">
                     {matchup.teamA.teamName} ({matchup.teamA.projectedPoints.toFixed(1)})
                   </div>
-                  <div className='text-muted-foreground px-2'>vs</div>
-                  <div className='truncate text-right max-w-[45%]'>
+                  <div className="text-muted-foreground px-2">vs</div>
+                  <div className="truncate text-right max-w-[45%]">
                     {matchup.teamB.teamName} ({matchup.teamB.projectedPoints.toFixed(1)})
                   </div>
                 </div>
               </div>
 
               {/* Records and Rankings */}
-              <div className='flex items-center gap-2 text-xs'>
+              <div className="flex items-center gap-2 text-xs">
                 <span>
                   Records: {matchup.teamA.record.wins}-{matchup.teamA.record.losses} vs{' '}
                   {matchup.teamB.record.wins}-{matchup.teamB.record.losses}
@@ -323,7 +324,7 @@ export default function Week3Preview2025() {
 
               {/* Betting Info */}
               {matchup.bettingOdds && (
-                <div className='text-xs text-muted-foreground'>
+                <div className="text-xs text-muted-foreground">
                   Spread:{' '}
                   {matchup.bettingOdds.favorite === 'teamA'
                     ? matchup.teamA.teamName
@@ -335,20 +336,20 @@ export default function Week3Preview2025() {
               )}
 
               {/* Matchup Narrative */}
-              <div className='text-sm leading-relaxed'>
+              <div className="text-sm leading-relaxed">
                 {(WEEK3_NARRATIVES.matchups as any)[matchup.teamA.teamName]?.narrative ||
                   (WEEK3_NARRATIVES.matchups as any)[matchup.teamB.teamName]?.narrative || (
                     <em>Matchup preview: Analysis of key players and game flow coming soon...</em>
                   )}
               </div>
 
-              <hr className='border-border' />
+              <hr className="border-border" />
 
               {/* Player Boxscores */}
-              <div className='grid grid-cols-2 gap-4'>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className='text-xs font-semibold mb-1'>{matchup.teamA.teamName}</div>
-                  <div className='space-y-1'>
+                  <div className="text-xs font-semibold mb-1">{matchup.teamA.teamName}</div>
+                  <div className="space-y-1">
                     {matchup.teamA.starters.slice(0, 9).map((playerId, idx) => {
                       // Find which time window this player is in
                       let playerWindow = 'BYE';
@@ -365,14 +366,14 @@ export default function Week3Preview2025() {
                       });
 
                       return (
-                        <div key={idx} className='flex items-center justify-between text-xs'>
-                          <div className='truncate flex-1'>
-                            <span className='text-muted-foreground mr-1'>POS</span>
+                        <div key={idx} className="flex items-center justify-between text-xs">
+                          <div className="truncate flex-1">
+                            <span className="text-muted-foreground mr-1">POS</span>
                             Player {idx + 1}
                           </div>
-                          <div className='text-right flex items-center gap-1'>
-                            <span className='font-medium'>{playerProj.toFixed(1)}</span>
-                            <span className='text-xs text-muted-foreground'>({playerWindow})</span>
+                          <div className="text-right flex items-center gap-1">
+                            <span className="font-medium">{playerProj.toFixed(1)}</span>
+                            <span className="text-xs text-muted-foreground">({playerWindow})</span>
                           </div>
                         </div>
                       );
@@ -381,8 +382,8 @@ export default function Week3Preview2025() {
                 </div>
 
                 <div>
-                  <div className='text-xs font-semibold mb-1'>{matchup.teamB.teamName}</div>
-                  <div className='space-y-1'>
+                  <div className="text-xs font-semibold mb-1">{matchup.teamB.teamName}</div>
+                  <div className="space-y-1">
                     {matchup.teamB.starters.slice(0, 9).map((playerId, idx) => {
                       // Find which time window this player is in
                       let playerWindow = 'BYE';
@@ -399,14 +400,14 @@ export default function Week3Preview2025() {
                       });
 
                       return (
-                        <div key={idx} className='flex items-center justify-between text-xs'>
-                          <div className='truncate flex-1'>
-                            <span className='text-muted-foreground mr-1'>POS</span>
+                        <div key={idx} className="flex items-center justify-between text-xs">
+                          <div className="truncate flex-1">
+                            <span className="text-muted-foreground mr-1">POS</span>
                             Player {idx + 1}
                           </div>
-                          <div className='text-right flex items-center gap-1'>
-                            <span className='font-medium'>{playerProj.toFixed(1)}</span>
-                            <span className='text-xs text-muted-foreground'>({playerWindow})</span>
+                          <div className="text-right flex items-center gap-1">
+                            <span className="font-medium">{playerProj.toFixed(1)}</span>
+                            <span className="text-xs text-muted-foreground">({playerWindow})</span>
                           </div>
                         </div>
                       );
@@ -415,46 +416,46 @@ export default function Week3Preview2025() {
                 </div>
               </div>
 
-              <hr className='border-border' />
+              <hr className="border-border" />
             </div>
           ))}
       </div>
 
       {/* AFC Matchups */}
-      <div className='space-y-6'>
-        <h2 className='text-lg font-semibold'>AFC Matchups</h2>
+      <div className="space-y-6">
+        <h2 className="text-lg font-semibold">AFC Matchups</h2>
         {data.data.matchups
           .filter(m => getConference(m.leagueName) === 'AFC')
           .map(matchup => (
-            <div key={`${matchup.leagueId}-${matchup.matchupId}`} className='p-3 space-y-3'>
+            <div key={`${matchup.leagueId}-${matchup.matchupId}`} className="p-3 space-y-3">
               {/* Same structure as NFC */}
-              <div className='rounded-md bg-gauntlet-crimson/10 px-3 py-2'>
-                <div className='sm:hidden'>
-                  <div className='flex items-center justify-between text-base font-semibold mb-1'>
-                    <span className='truncate flex-1 mr-2'>{matchup.teamA.teamName}</span>
-                    <span className='text-right font-mono'>
+              <div className="rounded-md bg-gauntlet-crimson/10 px-3 py-2">
+                <div className="sm:hidden">
+                  <div className="flex items-center justify-between text-base font-semibold mb-1">
+                    <span className="truncate flex-1 mr-2">{matchup.teamA.teamName}</span>
+                    <span className="text-right font-mono">
                       {matchup.teamA.projectedPoints.toFixed(1)}
                     </span>
                   </div>
-                  <div className='flex items-center justify-between text-base font-semibold'>
-                    <span className='truncate flex-1 mr-2'>{matchup.teamB.teamName}</span>
-                    <span className='text-right font-mono'>
+                  <div className="flex items-center justify-between text-base font-semibold">
+                    <span className="truncate flex-1 mr-2">{matchup.teamB.teamName}</span>
+                    <span className="text-right font-mono">
                       {matchup.teamB.projectedPoints.toFixed(1)}
                     </span>
                   </div>
                 </div>
-                <div className='hidden sm:flex items-center justify-between text-base font-semibold'>
-                  <div className='truncate max-w-[45%]'>
+                <div className="hidden sm:flex items-center justify-between text-base font-semibold">
+                  <div className="truncate max-w-[45%]">
                     {matchup.teamA.teamName} ({matchup.teamA.projectedPoints.toFixed(1)})
                   </div>
-                  <div className='text-muted-foreground px-2'>vs</div>
-                  <div className='truncate text-right max-w-[45%]'>
+                  <div className="text-muted-foreground px-2">vs</div>
+                  <div className="truncate text-right max-w-[45%]">
                     {matchup.teamB.teamName} ({matchup.teamB.projectedPoints.toFixed(1)})
                   </div>
                 </div>
               </div>
 
-              <div className='flex items-center gap-2 text-xs'>
+              <div className="flex items-center gap-2 text-xs">
                 <span>
                   Records: {matchup.teamA.record.wins}-{matchup.teamA.record.losses} vs{' '}
                   {matchup.teamB.record.wins}-{matchup.teamB.record.losses}
@@ -468,7 +469,7 @@ export default function Week3Preview2025() {
 
               {/* Betting Info */}
               {matchup.bettingOdds && (
-                <div className='text-xs text-muted-foreground'>
+                <div className="text-xs text-muted-foreground">
                   Spread:{' '}
                   {matchup.bettingOdds.favorite === 'teamA'
                     ? matchup.teamA.teamName
@@ -479,48 +480,48 @@ export default function Week3Preview2025() {
                 </div>
               )}
 
-              <div className='text-sm leading-relaxed'>
+              <div className="text-sm leading-relaxed">
                 <em>Matchup preview: Analysis of key players and game flow coming soon...</em>
               </div>
 
-              <hr className='border-border' />
+              <hr className="border-border" />
 
               {/* Same boxscore structure */}
-              <div className='grid grid-cols-2 gap-4'>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className='text-xs font-semibold mb-1'>{matchup.teamA.teamName}</div>
-                  <div className='space-y-1 text-xs'>
-                    <div className='text-muted-foreground'>Starters with time windows...</div>
+                  <div className="text-xs font-semibold mb-1">{matchup.teamA.teamName}</div>
+                  <div className="space-y-1 text-xs">
+                    <div className="text-muted-foreground">Starters with time windows...</div>
                   </div>
                 </div>
                 <div>
-                  <div className='text-xs font-semibold mb-1'>{matchup.teamB.teamName}</div>
-                  <div className='space-y-1 text-xs'>
-                    <div className='text-muted-foreground'>Starters with time windows...</div>
+                  <div className="text-xs font-semibold mb-1">{matchup.teamB.teamName}</div>
+                  <div className="space-y-1 text-xs">
+                    <div className="text-muted-foreground">Starters with time windows...</div>
                   </div>
                 </div>
               </div>
 
-              <hr className='border-border' />
+              <hr className="border-border" />
             </div>
           ))}
       </div>
 
       {/* League Odds Snapshot */}
-      <div className='space-y-6'>
-        <h2 className='text-lg font-semibold'>League Odds Snapshot</h2>
+      <div className="space-y-6">
+        <h2 className="text-lg font-semibold">League Odds Snapshot</h2>
 
-        <div className='grid md:grid-cols-3 gap-6'>
+        <div className="grid md:grid-cols-3 gap-6">
           {/* Highest Scorers */}
-          <div className='space-y-2'>
-            <h3 className='text-md font-semibold'>Highest Scorers</h3>
-            <div className='space-y-1 text-sm'>
+          <div className="space-y-2">
+            <h3 className="text-md font-semibold">Highest Scorers</h3>
+            <div className="space-y-1 text-sm">
               {leagueOdds.highestScorers.map((team, idx) => (
-                <div key={team.rosterId} className='flex items-center justify-between'>
-                  <div className='truncate'>
+                <div key={team.rosterId} className="flex items-center justify-between">
+                  <div className="truncate">
                     #{idx + 1} {team.teamName}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {team.projectedPoints.toFixed(1)} pts
                   </div>
                 </div>
@@ -529,15 +530,15 @@ export default function Week3Preview2025() {
           </div>
 
           {/* Lowest Scorers */}
-          <div className='space-y-2'>
-            <h3 className='text-md font-semibold'>Lowest Scorers</h3>
-            <div className='space-y-1 text-sm'>
+          <div className="space-y-2">
+            <h3 className="text-md font-semibold">Lowest Scorers</h3>
+            <div className="space-y-1 text-sm">
               {leagueOdds.lowestScorers.map((team, idx) => (
-                <div key={team.rosterId} className='flex items-center justify-between'>
-                  <div className='truncate'>
+                <div key={team.rosterId} className="flex items-center justify-between">
+                  <div className="truncate">
                     #{idx + 1} {team.teamName}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {team.projectedPoints.toFixed(1)} pts
                   </div>
                 </div>
@@ -546,15 +547,15 @@ export default function Week3Preview2025() {
           </div>
 
           {/* Closest Matchups */}
-          <div className='space-y-2'>
-            <h3 className='text-md font-semibold'>Closest Matchups</h3>
-            <div className='space-y-1 text-sm'>
+          <div className="space-y-2">
+            <h3 className="text-md font-semibold">Closest Matchups</h3>
+            <div className="space-y-1 text-sm">
               {leagueOdds.closestMatchups.map((matchup, idx) => (
-                <div key={idx} className='flex items-center justify-between'>
-                  <div className='truncate'>
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="truncate">
                     #{idx + 1} {matchup.team1} vs {matchup.team2}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {matchup.margin.toFixed(1)} pt margin
                   </div>
                 </div>
@@ -563,15 +564,15 @@ export default function Week3Preview2025() {
           </div>
 
           {/* Biggest Blowouts */}
-          <div className='space-y-2'>
-            <h3 className='text-md font-semibold'>Biggest Blowouts</h3>
-            <div className='space-y-1 text-sm'>
+          <div className="space-y-2">
+            <h3 className="text-md font-semibold">Biggest Blowouts</h3>
+            <div className="space-y-1 text-sm">
               {leagueOdds.biggestBlowouts.map((matchup, idx) => (
-                <div key={idx} className='flex items-center justify-between'>
-                  <div className='truncate'>
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="truncate">
                     #{idx + 1} {matchup.team1} vs {matchup.team2}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {matchup.margin.toFixed(1)} pt margin
                   </div>
                 </div>
@@ -580,15 +581,15 @@ export default function Week3Preview2025() {
           </div>
 
           {/* Highest Scoring Matchups */}
-          <div className='space-y-2'>
-            <h3 className='text-md font-semibold'>Highest Scoring</h3>
-            <div className='space-y-1 text-sm'>
+          <div className="space-y-2">
+            <h3 className="text-md font-semibold">Highest Scoring</h3>
+            <div className="space-y-1 text-sm">
               {leagueOdds.highestScoringMatchups.map((matchup, idx) => (
-                <div key={idx} className='flex items-center justify-between'>
-                  <div className='truncate'>
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="truncate">
                     #{idx + 1} {matchup.team1} vs {matchup.team2}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {matchup.total.toFixed(1)} pts total
                   </div>
                 </div>
@@ -597,15 +598,15 @@ export default function Week3Preview2025() {
           </div>
 
           {/* Lowest Scoring Matchups */}
-          <div className='space-y-2'>
-            <h3 className='text-md font-semibold'>Lowest Scoring</h3>
-            <div className='space-y-1 text-sm'>
+          <div className="space-y-2">
+            <h3 className="text-md font-semibold">Lowest Scoring</h3>
+            <div className="space-y-1 text-sm">
               {leagueOdds.lowestScoringMatchups.map((matchup, idx) => (
-                <div key={idx} className='flex items-center justify-between'>
-                  <div className='truncate'>
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="truncate">
                     #{idx + 1} {matchup.team1} vs {matchup.team2}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {matchup.total.toFixed(1)} pts total
                   </div>
                 </div>
@@ -615,21 +616,21 @@ export default function Week3Preview2025() {
         </div>
       </div>
 
-      <hr className='border-border' />
+      <hr className="border-border" />
 
       {/* NFL Game Windows Summary */}
-      <div className='space-y-4'>
-        <h2 className='text-lg font-semibold'>NFL Game Windows</h2>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">NFL Game Windows</h2>
         {data.data.gameWindows.map((window, idx) => (
-          <div key={idx} className='space-y-2'>
-            <h3 className='text-md font-medium'>{window.name}</h3>
-            <div className='grid md:grid-cols-2 gap-2 text-sm'>
+          <div key={idx} className="space-y-2">
+            <h3 className="text-md font-medium">{window.name}</h3>
+            <div className="grid md:grid-cols-2 gap-2 text-sm">
               {window.games.map((game, gameIdx) => (
-                <div key={gameIdx} className='bg-gauntlet-gold/10 px-3 py-2 rounded'>
-                  <div className='font-medium'>
+                <div key={gameIdx} className="bg-gauntlet-gold/10 px-3 py-2 rounded">
+                  <div className="font-medium">
                     {game.awayTeam} @ {game.homeTeam}
                   </div>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className="text-xs text-muted-foreground">
                     {game.awayAbbrev} @ {game.homeAbbrev} •{' '}
                     {new Date(game.startTime).toLocaleString()}
                   </div>
@@ -641,8 +642,8 @@ export default function Week3Preview2025() {
       </div>
 
       {/* Closing Note */}
-      <div className='mt-8 text-sm leading-relaxed'>
-        <div className='font-semibold mb-1'>Closing Note</div>
+      <div className="mt-8 text-sm leading-relaxed">
+        <div className="font-semibold mb-1">Closing Note</div>
         Week 3 looks like the league's first inflection point. Will undefeateds hold serve? Will any
         0–2s crawl out of the pit? The Scribe will be here, logging receipts, roasting benches, and
         reminding you that Vegas odds mean nothing when Josh Allen decides to either save or ruin

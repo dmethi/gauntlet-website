@@ -219,16 +219,16 @@ interface ApiResponse {
 
 function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
   const items = (rows || []).slice(0, 9);
-  if (!items.length) return <div className='text-xs text-muted-foreground'>No starters</div>;
+  if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
-    <div className='space-y-1'>
+    <div className="space-y-1">
       {items.map(p => (
-        <div key={p.playerId} className='flex items-center justify-between text-xs'>
-          <div className='truncate'>
-            <span className='text-muted-foreground mr-1'>{p.position}</span>
+        <div key={p.playerId} className="flex items-center justify-between text-xs">
+          <div className="truncate">
+            <span className="text-muted-foreground mr-1">{p.position}</span>
             {p.name}
           </div>
-          <div className='font-medium'>{p.points.toFixed(1)}</div>
+          <div className="font-medium">{p.points.toFixed(1)}</div>
         </div>
       ))}
     </div>
@@ -272,74 +272,74 @@ export default function Week2Report2025() {
   }, []);
 
   return (
-    <div className='px-2 md:px-4 py-6 space-y-6 overflow-x-hidden'>
-      <PageHeader title='Week 2 Report — 2025' subtitle='AFC + NFC' />
+    <div className="px-2 md:px-4 py-6 space-y-6 overflow-x-hidden">
+      <PageHeader title="Week 2 Report — 2025" subtitle="AFC + NFC" />
 
       {/* User's Intro Section */}
-      <div className='text-sm leading-relaxed space-y-3'>
-        <h2 className='text-lg font-semibold'>Commissioner Introduction</h2>
-        <div className='whitespace-pre-wrap'>{EDITOR_INTRO}</div>
+      <div className="text-sm leading-relaxed space-y-3">
+        <h2 className="text-lg font-semibold">Commissioner Introduction</h2>
+        <div className="whitespace-pre-wrap">{EDITOR_INTRO}</div>
       </div>
 
       {/* Scribe Introduction */}
-      <div className='text-sm leading-relaxed'>
-        <div className='font-semibold mb-1'>Scribe Overview</div>
+      <div className="text-sm leading-relaxed">
+        <div className="font-semibold mb-1">Scribe Overview</div>
         <div>{WEEK2_NARRATIVE.assistant_intro}</div>
-        <div className='mt-2'>{WEEK2_COMBINED_OVERVIEW}</div>
+        <div className="mt-2">{WEEK2_COMBINED_OVERVIEW}</div>
       </div>
 
       {/* Scribe Note about missing charts */}
-      <Callout by='Scribe' tone='info' title='Technical Difficulties'>
+      <Callout by="Scribe" tone="info" title="Technical Difficulties">
         {WEEK2_NARRATIVE.scribe_note}
       </Callout>
 
       {/* Matchup Recaps */}
-      <h2 className='text-lg font-semibold'>Matchup Recaps</h2>
+      <h2 className="text-lg font-semibold">Matchup Recaps</h2>
       {data?.ok && data.data ? (
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {augmentedLeagues.map(l => (
-            <div key={l.leagueId} className='space-y-4'>
-              <div className='flex items-center gap-2'>
-                <Badge variant='outline'>{getConference(l.leagueName)}</Badge>
+            <div key={l.leagueId} className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{getConference(l.leagueName)}</Badge>
               </div>
 
-              <div className='space-y-6'>
+              <div className="space-y-6">
                 {l.matchups.map(m => (
-                  <div key={`${l.leagueId}-${m.matchupId}`} className='p-3 space-y-3'>
-                    <div className='rounded-md bg-gauntlet-crimson/10 px-3 py-2'>
+                  <div key={`${l.leagueId}-${m.matchupId}`} className="p-3 space-y-3">
+                    <div className="rounded-md bg-gauntlet-crimson/10 px-3 py-2">
                       {/* Mobile-first stacked layout */}
-                      <div className='sm:hidden'>
-                        <div className='flex items-center justify-between text-base font-semibold mb-1'>
-                          <span className='truncate flex-1 mr-2'>
+                      <div className="sm:hidden">
+                        <div className="flex items-center justify-between text-base font-semibold mb-1">
+                          <span className="truncate flex-1 mr-2">
                             {m.teamAName || `Team ${m.rosterAId}`}
                           </span>
-                          <span className='text-right font-mono'>{m.pointsA.toFixed(2)}</span>
+                          <span className="text-right font-mono">{m.pointsA.toFixed(2)}</span>
                         </div>
-                        <div className='flex items-center justify-between text-base font-semibold'>
-                          <span className='truncate flex-1 mr-2'>
+                        <div className="flex items-center justify-between text-base font-semibold">
+                          <span className="truncate flex-1 mr-2">
                             {m.teamBName || `Team ${m.rosterBId}`}
                           </span>
-                          <span className='text-right font-mono'>{m.pointsB.toFixed(2)}</span>
+                          <span className="text-right font-mono">{m.pointsB.toFixed(2)}</span>
                         </div>
                       </div>
 
                       {/* Desktop horizontal layout */}
-                      <div className='hidden sm:flex items-center justify-between text-base font-semibold'>
-                        <div className='truncate max-w-[45%]'>
+                      <div className="hidden sm:flex items-center justify-between text-base font-semibold">
+                        <div className="truncate max-w-[45%]">
                           {m.teamAName || `Team ${m.rosterAId}`} ({m.pointsA.toFixed(2)})
                         </div>
-                        <div className='text-muted-foreground px-2'>vs</div>
-                        <div className='truncate text-right max-w-[45%]'>
+                        <div className="text-muted-foreground px-2">vs</div>
+                        <div className="truncate text-right max-w-[45%]">
                           {m.teamBName || `Team ${m.rosterBId}`} ({m.pointsB.toFixed(2)})
                         </div>
                       </div>
                     </div>
 
-                    <div className='flex items-center gap-2 text-xxs'>
+                    <div className="flex items-center gap-2 text-xxs">
                       {/* Derby badges can be added here as needed */}
                     </div>
 
-                    <div className='text-xs text-muted-foreground'>
+                    <div className="text-xs text-muted-foreground">
                       Combined: {m.combinedPoints.toFixed(1)} • Margin: {m.margin.toFixed(1)}
                       {m.excitementMetrics ? (
                         <>
@@ -354,9 +354,9 @@ export default function Week2Report2025() {
 
                     {/* Matchup recap text */}
                     {m.narrativeRecap ? (
-                      <div className='text-sm leading-relaxed'>{m.narrativeRecap}</div>
+                      <div className="text-sm leading-relaxed">{m.narrativeRecap}</div>
                     ) : (
-                      <div className='text-sm text-muted-foreground italic'>
+                      <div className="text-sm text-muted-foreground italic">
                         Matchup recap not found - check team name matching
                       </div>
                     )}
@@ -379,39 +379,39 @@ export default function Week2Report2025() {
                       });
 
                       return hit ? (
-                        <Callout by='Commissioner' tone='spice' title='Commissioner Note'>
+                        <Callout by="Commissioner" tone="spice" title="Commissioner Note">
                           {callouts[hit]}
                         </Callout>
                       ) : null;
                     })()}
 
                     {/* Box scores */}
-                    <hr className='border-border' />
-                    <div className='grid grid-cols-2 gap-4'>
+                    <hr className="border-border" />
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className='text-xs font-semibold mb-1'>
+                        <div className="text-xs font-semibold mb-1">
                           {m.teamAName || `Team ${m.rosterAId}`}
                         </div>
                         <MiniBoxscore rows={m.boxscoreA} />
                       </div>
                       <div>
-                        <div className='text-xs font-semibold mb-1'>
+                        <div className="text-xs font-semibold mb-1">
                           {m.teamBName || `Team ${m.rosterBId}`}
                         </div>
                         <MiniBoxscore rows={m.boxscoreB} />
                       </div>
                     </div>
-                    <hr className='border-border' />
+                    <hr className="border-border" />
                   </div>
                 ))}
               </div>
-              <hr className='border-border' />
+              <hr className="border-border" />
             </div>
           ))}
 
           {/* Power Rankings */}
-          <h2 className='text-lg font-semibold'>Power Rankings</h2>
-          <div className='space-y-2 text-sm'>
+          <h2 className="text-lg font-semibold">Power Rankings</h2>
+          <div className="space-y-2 text-sm">
             {((data.data.powerRankings || []) as any[]).map((p: any) => {
               const val = p.normalized as number;
               const min = 80;
@@ -440,10 +440,10 @@ export default function Week2Report2025() {
               return (
                 <div
                   key={`${p.leagueId}-${p.rosterId}`}
-                  className='flex items-center justify-between rounded px-2 py-1'
+                  className="flex items-center justify-between rounded px-2 py-1"
                   style={{ backgroundColor: bg }}
                 >
-                  <div className='truncate'>
+                  <div className="truncate">
                     #{p.rank} {p.name}
                     {p.deltaLabel && (
                       <span
@@ -458,42 +458,42 @@ export default function Week2Report2025() {
                         ({p.deltaLabel})
                       </span>
                     )}
-                    <Badge variant='outline' className='ml-2 text-xs'>
+                    <Badge variant="outline" className="ml-2 text-xs">
                       {data?.data?.leagues?.find(l => l.leagueId === p.leagueId)?.leagueName}
                     </Badge>
                     {Number.isFinite(p.wins) && Number.isFinite(p.losses) ? (
-                      <span className='text-muted-foreground ml-2 text-xs'>
+                      <span className="text-muted-foreground ml-2 text-xs">
                         ({p.wins}-{p.losses})
                       </span>
                     ) : null}
                   </div>
-                  <div className='ml-2 text-xs text-muted-foreground'>{val}</div>
+                  <div className="ml-2 text-xs text-muted-foreground">{val}</div>
                 </div>
               );
             })}
           </div>
-          <hr className='border-border' />
+          <hr className="border-border" />
 
           {/* League-by-League Power Rankings */}
-          <h2 className='text-lg font-semibold'>League Power Rankings</h2>
-          <div className='space-y-4'>
+          <h2 className="text-lg font-semibold">League Power Rankings</h2>
+          <div className="space-y-4">
             {data?.data?.leagues?.map(l => {
               const leagueRanks = ((data?.data?.powerRankings || []) as any[]).filter(
-                (p: any) => p.leagueId === l.leagueId
+                (p: any) => p.leagueId === l.leagueId,
               );
               return (
-                <div key={l.leagueId} className='mb-4'>
-                  <h3 className='text-md font-semibold'>{getConference(l.leagueName)}</h3>
-                  <div className='space-y-1 text-sm'>
+                <div key={l.leagueId} className="mb-4">
+                  <h3 className="text-md font-semibold">{getConference(l.leagueName)}</h3>
+                  <div className="space-y-1 text-sm">
                     {leagueRanks.map(p => (
                       <div
                         key={p.rosterId}
-                        className='flex items-center justify-between rounded px-2 py-1'
+                        className="flex items-center justify-between rounded px-2 py-1"
                       >
-                        <div className='truncate'>
+                        <div className="truncate">
                           #{p.rank} {p.name}
                         </div>
-                        <div className='ml-2 text-xs text-muted-foreground'>{p.normalized}</div>
+                        <div className="ml-2 text-xs text-muted-foreground">{p.normalized}</div>
                       </div>
                     ))}
                   </div>
@@ -501,35 +501,35 @@ export default function Week2Report2025() {
               );
             })}
           </div>
-          <hr className='border-border' />
+          <hr className="border-border" />
 
           {/* Divisional Standings */}
-          <h2 className='text-lg font-semibold'>Divisional Standings</h2>
-          <div className='space-y-6'>
+          <h2 className="text-lg font-semibold">Divisional Standings</h2>
+          <div className="space-y-6">
             {data?.data?.standings?.map(s => (
-              <div key={s.leagueId} className='space-y-2'>
-                <div className='flex items-center gap-2'>
-                  <Badge variant='outline'>{getConference(s.leagueName)}</Badge>
+              <div key={s.leagueId} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">{getConference(s.leagueName)}</Badge>
                 </div>
-                <div className='grid md:grid-cols-3 gap-4'>
+                <div className="grid md:grid-cols-3 gap-4">
                   {Object.entries(s.divisions || {}).map(([divName, teams]: any) => (
-                    <div key={divName} className='space-y-2'>
-                      <div className='text-sm font-semibold'>{divName}</div>
-                      <div className='space-y-1 text-xs'>
+                    <div key={divName} className="space-y-2">
+                      <div className="text-sm font-semibold">{divName}</div>
+                      <div className="space-y-1 text-xs">
                         {(teams as any[]).map(t => (
-                          <div key={t.rosterId} className='flex items-center justify-between'>
-                            <div className='truncate'>
+                          <div key={t.rosterId} className="flex items-center justify-between">
+                            <div className="truncate">
                               {t.teamName || t.name}
-                              <span className='text-xs text-muted-foreground ml-2'>
+                              <span className="text-xs text-muted-foreground ml-2">
                                 PR #
                                 {((data?.data?.powerRankings || []) as any[]).find(
                                   (p: any) =>
                                     p.leagueId === s.leagueId &&
-                                    String(p.rosterId) === String(t.rosterId)
+                                    String(p.rosterId) === String(t.rosterId),
                                 )?.rank ?? '-'}
                               </span>
                             </div>
-                            <div className='ml-2'>
+                            <div className="ml-2">
                               {t.wins}-{t.losses} • {t.points.toFixed(1)} pts
                             </div>
                           </div>
@@ -538,35 +538,35 @@ export default function Week2Report2025() {
                     </div>
                   ))}
                 </div>
-                <hr className='border-border' />
+                <hr className="border-border" />
               </div>
             ))}
           </div>
 
           {/* Upcoming Matchups */}
-          <h2 className='text-lg font-semibold'>
+          <h2 className="text-lg font-semibold">
             Upcoming Matchups (Week {Number((data.data as any).week) + 1})
           </h2>
-          <div className='space-y-4'>
+          <div className="space-y-4">
             {Object.entries((data.data as any).upcoming || {}).map(([leagueId, pairs]: any) => (
-              <div key={leagueId} className='space-y-2'>
-                <div className='flex items-center gap-2'>
-                  <Badge variant='outline'>
+              <div key={leagueId} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">
                     {getConference(
                       (data.data?.leagues || []).find(l => l.leagueId === leagueId)?.leagueName ||
-                        leagueId
+                        leagueId,
                     )}
                   </Badge>
                 </div>
-                <div className='grid md:grid-cols-2 gap-2 text-sm'>
+                <div className="grid md:grid-cols-2 gap-2 text-sm">
                   {(pairs as any[]).map(p => (
                     <div
                       key={`${leagueId}-${p.matchupId}`}
-                      className='flex items-center justify-start gap-2'
+                      className="flex items-center justify-start gap-2"
                     >
-                      <div className='truncate'>{p.teamAName}</div>
-                      <div className='text-muted-foreground'>vs</div>
-                      <div className='truncate'>{p.teamBName}</div>
+                      <div className="truncate">{p.teamAName}</div>
+                      <div className="text-muted-foreground">vs</div>
+                      <div className="truncate">{p.teamBName}</div>
                     </div>
                   ))}
                 </div>
@@ -578,14 +578,14 @@ export default function Week2Report2025() {
 
           {/* Closing Note */}
           {WEEK2_NARRATIVE.closing_note ? (
-            <div className='mt-8 text-sm leading-relaxed'>
-              <div className='font-semibold mb-1'>Closing Note</div>
+            <div className="mt-8 text-sm leading-relaxed">
+              <div className="font-semibold mb-1">Closing Note</div>
               {WEEK2_NARRATIVE.closing_note}
             </div>
           ) : null}
         </div>
       ) : (
-        <div className='text-sm text-muted-foreground'>No data available</div>
+        <div className="text-sm text-muted-foreground">No data available</div>
       )}
     </div>
   );

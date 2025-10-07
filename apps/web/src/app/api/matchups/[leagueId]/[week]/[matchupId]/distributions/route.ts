@@ -3,7 +3,7 @@ import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/mode
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { leagueId: string; week: string; matchupId: string } }
+  { params }: { params: { leagueId: string; week: string; matchupId: string } },
 ) {
   try {
     const { leagueId, week, matchupId } = params;
@@ -15,7 +15,7 @@ export async function GET(
       `${request.nextUrl.origin}/api/matchups/${leagueId}/${weekNumber}/${matchupIdNumber}`,
       {
         headers: { 'User-Agent': 'Gauntlet-Website/1.0.0' },
-      }
+      },
     );
 
     if (!matchupResponse.ok) {
@@ -51,7 +51,7 @@ export async function GET(
       team1Players,
       team2Players,
       10000,
-      0
+      0,
     );
 
     if (!simulation.team1Scores || !simulation.team2Scores) {
@@ -94,7 +94,7 @@ export async function GET(
         error: 'Failed to generate distribution data',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

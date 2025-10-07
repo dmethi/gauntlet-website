@@ -48,7 +48,7 @@ interface MatchupDetails {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { leagueId: string; week: string; matchupId: string } }
+  { params }: { params: { leagueId: string; week: string; matchupId: string } },
 ) {
   try {
     const { leagueId, week, matchupId } = params;

@@ -137,15 +137,15 @@ function LeagueTransactionsContent() {
           if (t.adds && Array.isArray(t.adds)) {
             t.adds.forEach(a =>
               a.players?.forEach(p =>
-                idToPlayer.set(p.id, { name: p.fullName, position: p.position })
-              )
+                idToPlayer.set(p.id, { name: p.fullName, position: p.position }),
+              ),
             );
           }
           if (t.drops && Array.isArray(t.drops)) {
             t.drops.forEach(d =>
               d.players?.forEach(p =>
-                idToPlayer.set(p.id, { name: p.fullName, position: p.position })
-              )
+                idToPlayer.set(p.id, { name: p.fullName, position: p.position }),
+              ),
             );
           }
         });
@@ -222,14 +222,14 @@ function LeagueTransactionsContent() {
             const addPairs: Array<{ rosterId: number; playerId: string }> = [];
             if (t.adds && Array.isArray(t.adds)) {
               t.adds.forEach(a =>
-                a.players?.forEach(p => addPairs.push({ rosterId: a.rosterId, playerId: p.id }))
+                a.players?.forEach(p => addPairs.push({ rosterId: a.rosterId, playerId: p.id })),
               );
             }
 
             const dropPairs: Array<{ rosterId: number; playerId: string }> = [];
             if (t.drops && Array.isArray(t.drops)) {
               t.drops.forEach(d =>
-                d.players?.forEach(p => dropPairs.push({ rosterId: d.rosterId, playerId: p.id }))
+                d.players?.forEach(p => dropPairs.push({ rosterId: d.rosterId, playerId: p.id })),
               );
             }
 
@@ -264,7 +264,7 @@ function LeagueTransactionsContent() {
                     rosterId,
                     ':',
                     starters?.size || 0,
-                    'players'
+                    'players',
                   );
                   if (starters && starters.has(playerId)) {
                     const pts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
@@ -437,7 +437,7 @@ function LeagueTransactionsContent() {
               .reduce(
                 (s, p) =>
                   s + (p.afterDrop?.selfHarmWeighted || 0) + (p.afterDrop?.oppHarmWeighted || 0),
-                0
+                0,
               );
             const score = contribution - penalties;
             console.log('Transaction scoring:', { contribution, penalties, score });
@@ -456,7 +456,7 @@ function LeagueTransactionsContent() {
               'players:',
               playersOut.length,
               'score:',
-              score
+              score,
             );
             graded.push(gradedTxn);
           }
@@ -572,7 +572,7 @@ function LeagueTransactionsContent() {
             .map(x => x + x)
             .join('')
         : h,
-      16
+      16,
     );
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
@@ -648,36 +648,36 @@ function LeagueTransactionsContent() {
 
   return (
     <TooltipProvider>
-      <Container className='py-8'>
-        <div className='flex items-start justify-between mb-6'>
+      <Container className="py-8">
+        <div className="flex items-start justify-between mb-6">
           <PageHeader
-            title='Transactions'
+            title="Transactions"
             subtitle={`${league?.name || 'League'} - Transaction feed with grades`}
           />
         </div>
 
-        <div className='mb-3 flex items-center gap-2 flex-wrap'>
-          <div className='text-sm text-muted-foreground'>Position:</div>
+        <div className="mb-3 flex items-center gap-2 flex-wrap">
+          <div className="text-sm text-muted-foreground">Position:</div>
           {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
             <Button
               key={p}
-              size='sm'
+              size="sm"
               variant={pos === p ? 'default' : 'outline'}
               onClick={() => {
                 setPos(p);
                 setCurrentPage(0);
               }}
-              className='h-7 px-2'
+              className="h-7 px-2"
             >
               {p}
             </Button>
           ))}
-          <label className='ml-4 text-sm text-muted-foreground' htmlFor='team-filter'>
+          <label className="ml-4 text-sm text-muted-foreground" htmlFor="team-filter">
             Team:
           </label>
           <select
-            id='team-filter'
-            className='border border-border rounded px-2 py-1 bg-background text-sm max-w-xs'
+            id="team-filter"
+            className="border border-border rounded px-2 py-1 bg-background text-sm max-w-xs"
             value={team === 'ALL' ? 'ALL' : String(team)}
             onChange={e => {
               const v = e.target.value;
@@ -685,7 +685,7 @@ function LeagueTransactionsContent() {
               setCurrentPage(0);
             }}
           >
-            <option value='ALL'>ALL</option>
+            <option value="ALL">ALL</option>
             {(league?.rosters || []).map(r => (
               <option key={r.id} value={String(r.id)}>
                 {r.owner?.metadata?.team_name ||
@@ -695,45 +695,45 @@ function LeagueTransactionsContent() {
               </option>
             ))}
           </select>
-          <div className='ml-4 text-sm text-muted-foreground'>Type:</div>
+          <div className="ml-4 text-sm text-muted-foreground">Type:</div>
           {['ALL', 'free_agent', 'waiver', 'trade'].map(t => (
             <Button
               key={t}
-              size='sm'
+              size="sm"
               variant={type === t ? 'default' : 'outline'}
               onClick={() => {
                 setType(t);
                 setCurrentPage(0);
               }}
-              className='h-7 px-2'
+              className="h-7 px-2"
             >
               {t === 'ALL' ? 'ALL' : t.replace('_', ' ')}
             </Button>
           ))}
-          <label className='ml-4 text-sm text-muted-foreground' htmlFor='txn-sort'>
+          <label className="ml-4 text-sm text-muted-foreground" htmlFor="txn-sort">
             Sort:
           </label>
           <select
-            id='txn-sort'
-            className='border border-border rounded px-2 py-1 bg-background text-sm'
+            id="txn-sort"
+            className="border border-border rounded px-2 py-1 bg-background text-sm"
             value={sort}
             onChange={e => setSort(e.target.value as any)}
           >
-            <option value='date_desc'>Most Recent</option>
-            <option value='score_desc'>Score (best)</option>
-            <option value='score_asc'>Score (worst)</option>
+            <option value="date_desc">Most Recent</option>
+            <option value="score_desc">Score (best)</option>
+            <option value="score_asc">Score (worst)</option>
           </select>
-          <div className='ml-4 text-sm text-muted-foreground'>View:</div>
+          <div className="ml-4 text-sm text-muted-foreground">View:</div>
           {(['paged', 'all'] as const).map(v => (
             <Button
               key={v}
-              size='sm'
+              size="sm"
               variant={view === v ? 'default' : 'outline'}
               onClick={() => {
                 setView(v);
                 setCurrentPage(0);
               }}
-              className='h-7 px-2'
+              className="h-7 px-2"
             >
               {v === 'paged' ? 'Paged' : 'Show all'}
             </Button>
@@ -741,35 +741,35 @@ function LeagueTransactionsContent() {
         </div>
 
         {factsLoading ? (
-          <div className='flex flex-col items-center justify-center py-12'>
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4'></div>
-            <div className='text-sm text-muted-foreground'>Loading matchup data...</div>
-            <div className='text-xs text-muted-foreground mt-1'>
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+            <div className="text-sm text-muted-foreground">Loading matchup data...</div>
+            <div className="text-xs text-muted-foreground mt-1">
               Fetching 17 weeks of lineup data
             </div>
           </div>
         ) : factsError ? (
-          <div className='text-sm text-red-500'>Error loading matchup data: {factsError}</div>
+          <div className="text-sm text-red-500">Error loading matchup data: {factsError}</div>
         ) : loading ? (
-          <div className='flex flex-col items-center justify-center py-12'>
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4'></div>
-            <div className='text-sm text-muted-foreground'>Computing transaction grades...</div>
-            <div className='text-xs text-muted-foreground mt-1'>
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+            <div className="text-sm text-muted-foreground">Computing transaction grades...</div>
+            <div className="text-xs text-muted-foreground mt-1">
               Calculating VORP for all transactions
             </div>
           </div>
         ) : rows.length === 0 ? (
-          <div className='text-sm text-muted-foreground'>No transactions found.</div>
+          <div className="text-sm text-muted-foreground">No transactions found.</div>
         ) : (
-          <div className='overflow-x-auto rounded-md border border-border bg-card'>
+          <div className="overflow-x-auto rounded-md border border-border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Date</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Players</TableHead>
-                  <TableHead className='text-right'>Grade</TableHead>
-                  <TableHead className='text-right'>Score</TableHead>
+                  <TableHead className="text-right">Grade</TableHead>
+                  <TableHead className="text-right">Score</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -777,10 +777,10 @@ function LeagueTransactionsContent() {
                   <TableRow key={t.id}>
                     <TableCell>{new Date(t.createdAt).toLocaleString()}</TableCell>
                     <TableCell>
-                      <div className='flex flex-col'>
+                      <div className="flex flex-col">
                         <div>{t.type.replace('_', ' ')}</div>
                         {!!(t.rosterIds && t.rosterIds.length) && (
-                          <div className='text-xs text-muted-foreground'>
+                          <div className="text-xs text-muted-foreground">
                             {(t.rosterIds || [])
                               .map(rid => rosterMap.get(Number(rid)) || `Team ${rid}`)
                               .join(' • ')}
@@ -789,7 +789,7 @@ function LeagueTransactionsContent() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className='flex flex-col gap-1'>
+                      <div className="flex flex-col gap-1">
                         {t.type === 'trade'
                           ? // For trades, show which team got which player with unidirectional arrows
                             (() => {
@@ -799,7 +799,7 @@ function LeagueTransactionsContent() {
                                 // Fallback to old logic if raw transaction not found
                                 const addedPlayers = t.players.filter(p => p.role === 'add');
                                 return addedPlayers.map(p => (
-                                  <div key={p.playerId} className='text-sm text-muted-foreground'>
+                                  <div key={p.playerId} className="text-sm text-muted-foreground">
                                     {p.name} ({p.position}) • Trade
                                   </div>
                                 ));
@@ -812,38 +812,38 @@ function LeagueTransactionsContent() {
                                     rosterMap.get(Number(addGroup.rosterId)) ||
                                     `Team ${addGroup.rosterId}`;
                                   return (
-                                    <div key={player.id} className='text-sm text-muted-foreground'>
+                                    <div key={player.id} className="text-sm text-muted-foreground">
                                       {player.fullName} ({player.position}) → {teamName}
                                     </div>
                                   );
-                                })
+                                }),
                               );
                             })()
                           : // For non-trades, show traditional format with team context
                             t.players.map(p => (
-                              <div key={p.playerId} className='text-sm text-muted-foreground'>
+                              <div key={p.playerId} className="text-sm text-muted-foreground">
                                 {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
                               </div>
                             ))}
                       </div>
                     </TableCell>
-                    <TableCell className='text-right'>
+                    <TableCell className="text-right">
                       <Button
-                        variant='ghost'
-                        size='sm'
-                        className='h-6 px-2'
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2"
                         onClick={() => setSelected(t)}
                       >
                         <Badge>{t.grade}</Badge>
                       </Button>
                     </TableCell>
-                    <TableCell className='text-right'>
+                    <TableCell className="text-right">
                       {(() => {
                         const bg = getDivergingBg(t.score / (scoreRange || 1));
                         const fg = getTextColorForBg(bg);
                         return (
                           <span
-                            className='px-2 py-0.5 rounded'
+                            className="px-2 py-0.5 rounded"
                             style={{ backgroundColor: bg, color: fg }}
                           >
                             {t.score.toFixed(2)}
@@ -858,10 +858,10 @@ function LeagueTransactionsContent() {
           </div>
         )}
         {view === 'paged' && hasMorePages && (
-          <div className='mt-4 flex justify-center'>
+          <div className="mt-4 flex justify-center">
             <Button
-              variant='outline'
-              size='sm'
+              variant="outline"
+              size="sm"
               onClick={() => setCurrentPage(p => p + 1)}
               disabled={loading || !leagueId}
             >
@@ -872,26 +872,26 @@ function LeagueTransactionsContent() {
       </Container>
 
       <Dialog open={!!selected} onOpenChange={open => !open && setSelected(null)}>
-        <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Transaction Details</DialogTitle>
           </DialogHeader>
           {selected ? (
-            <div className='text-sm space-y-4'>
-              <div className='flex items-center gap-2'>
+            <div className="text-sm space-y-4">
+              <div className="flex items-center gap-2">
                 <Badge>{selected.grade}</Badge>
                 {(() => {
                   const bg = getDivergingBg(selected.score / (scoreRange || 1));
                   const fg = getTextColorForBg(bg);
                   return (
-                    <span className='px-1.5 rounded' style={{ backgroundColor: bg, color: fg }}>
+                    <span className="px-1.5 rounded" style={{ backgroundColor: bg, color: fg }}>
                       Score: {selected.score.toFixed(2)}
                     </span>
                   );
                 })()}
               </div>
-              <div className='text-muted-foreground'>
-                <div className='flex flex-col gap-1'>
+              <div className="text-muted-foreground">
+                <div className="flex flex-col gap-1">
                   <div>
                     {new Date(selected.createdAt).toLocaleString()} •{' '}
                     {selected.type.replace('_', ' ')}
@@ -905,14 +905,14 @@ function LeagueTransactionsContent() {
                     else if (m === 11) weekLabel = 'Week 9-13';
                     else if (m === 12) weekLabel = 'Week 14-17 (Playoffs)';
                     else if (m === 1) weekLabel = 'Week 18+ (Postseason)';
-                    return <div className='text-xs'>Transaction timing: {weekLabel}</div>;
+                    return <div className="text-xs">Transaction timing: {weekLabel}</div>;
                   })()}
                 </div>
               </div>
 
               {/* Score Breakdown */}
-              <div className='bg-muted/30 rounded-lg p-3 space-y-2'>
-                <h3 className='font-semibold text-base'>Score Breakdown</h3>
+              <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+                <h3 className="font-semibold text-base">Score Breakdown</h3>
                 {(() => {
                   const contribution = selected.players
                     .filter(p => p.role === 'add' && p.forYou)
@@ -926,32 +926,32 @@ function LeagueTransactionsContent() {
                   const totalPenalties = selfHarm + oppHarm;
 
                   return (
-                    <div className='grid grid-cols-1 md:grid-cols-4 gap-3 text-xs'>
-                      <div className='text-center'>
-                        <div className='font-medium text-green-600'>Contribution</div>
-                        <div className='text-lg font-bold'>+{contribution.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                      <div className="text-center">
+                        <div className="font-medium text-green-600">Contribution</div>
+                        <div className="text-lg font-bold">+{contribution.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           Playoff-weighted VORP when started
                         </div>
                       </div>
-                      <div className='text-center'>
-                        <div className='font-medium text-red-600'>Self-Harm</div>
-                        <div className='text-lg font-bold'>-{selfHarm.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                      <div className="text-center">
+                        <div className="font-medium text-red-600">Self-Harm</div>
+                        <div className="text-lg font-bold">-{selfHarm.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           Points lost vs your best starter
                         </div>
                       </div>
-                      <div className='text-center'>
-                        <div className='font-medium text-orange-600'>Opponent-Harm</div>
-                        <div className='text-lg font-bold'>-{oppHarm.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                      <div className="text-center">
+                        <div className="font-medium text-orange-600">Opponent-Harm</div>
+                        <div className="text-lg font-bold">-{oppHarm.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           Points above replacement by any opponent
                         </div>
                       </div>
-                      <div className='text-center border-l border-border pl-3'>
-                        <div className='font-medium'>Final Score</div>
-                        <div className='text-lg font-bold'>{selected.score.toFixed(1)}</div>
-                        <div className='text-muted-foreground'>
+                      <div className="text-center border-l border-border pl-3">
+                        <div className="font-medium">Final Score</div>
+                        <div className="text-lg font-bold">{selected.score.toFixed(1)}</div>
+                        <div className="text-muted-foreground">
                           {contribution.toFixed(1)} - {totalPenalties.toFixed(1)}
                         </div>
                       </div>
@@ -961,30 +961,30 @@ function LeagueTransactionsContent() {
               </div>
 
               {/* Player Details */}
-              <div className='space-y-3'>
-                <h3 className='font-semibold text-base'>Player Details</h3>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-base">Player Details</h3>
                 {selected.players.map(p => (
-                  <div key={p.playerId} className='border border-border rounded p-3'>
-                    <div className='flex items-center justify-between mb-2'>
-                      <div className='font-medium'>
+                  <div key={p.playerId} className="border border-border rounded p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-medium">
                         {p.name} ({p.position})
                       </div>
                       <Badge variant={p.role === 'add' ? 'default' : 'secondary'}>
                         {p.role === 'add' ? 'Added' : 'Dropped'}
                       </Badge>
                     </div>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <div className='text-xs uppercase tracking-wide text-muted-foreground mb-2'>
+                        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                           For You (Contribution)
                         </div>
-                        <div className='space-y-1 text-muted-foreground'>
+                        <div className="space-y-1 text-muted-foreground">
                           {p.role === 'add' && p.forYou ? (
                             <>
-                              <div className='flex justify-between'>
+                              <div className="flex justify-between">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span className='cursor-help underline decoration-dotted'>
+                                    <span className="cursor-help underline decoration-dotted">
                                       Starts
                                     </span>
                                   </TooltipTrigger>
@@ -994,10 +994,10 @@ function LeagueTransactionsContent() {
                                 </Tooltip>
                                 <span>{p.forYou.starts}</span>
                               </div>
-                              <div className='flex justify-between'>
+                              <div className="flex justify-between">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span className='cursor-help underline decoration-dotted'>
+                                    <span className="cursor-help underline decoration-dotted">
                                       Raw Points
                                     </span>
                                   </TooltipTrigger>
@@ -1007,10 +1007,10 @@ function LeagueTransactionsContent() {
                                 </Tooltip>
                                 <span>{p.forYou.points.toFixed(1)}</span>
                               </div>
-                              <div className='flex justify-between font-medium'>
+                              <div className="flex justify-between font-medium">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span className='cursor-help underline decoration-dotted'>
+                                    <span className="cursor-help underline decoration-dotted">
                                       Weighted Points
                                     </span>
                                   </TooltipTrigger>
@@ -1018,33 +1018,33 @@ function LeagueTransactionsContent() {
                                     Playoff-weighted VORP (points minus position replacement level)
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className='text-green-600'>
+                                <span className="text-green-600">
                                   +{p.forYou.weightedPoints.toFixed(1)}
                                 </span>
                               </div>
                             </>
                           ) : (
-                            <div className='text-xs text-muted-foreground italic'>
+                            <div className="text-xs text-muted-foreground italic">
                               No starts for you
                             </div>
                           )}
                         </div>
                       </div>
                       <div>
-                        <div className='text-xs uppercase tracking-wide text-muted-foreground mb-2'>
+                        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                           After Drop (Penalties)
                         </div>
-                        <div className='space-y-1 text-muted-foreground'>
+                        <div className="space-y-1 text-muted-foreground">
                           {p.role === 'drop' && p.afterDrop ? (
                             <>
-                              <div className='flex justify-between'>
-                                <span className='text-xs'>Raw self-harm</span>
+                              <div className="flex justify-between">
+                                <span className="text-xs">Raw self-harm</span>
                                 <span>{p.afterDrop.selfHarm.toFixed(1)}</span>
                               </div>
-                              <div className='flex justify-between'>
+                              <div className="flex justify-between">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span className='cursor-help underline decoration-dotted text-xs'>
+                                    <span className="cursor-help underline decoration-dotted text-xs">
                                       Weighted self-harm
                                     </span>
                                   </TooltipTrigger>
@@ -1053,18 +1053,18 @@ function LeagueTransactionsContent() {
                                     would have displaced your worst starter
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className='text-red-600'>
+                                <span className="text-red-600">
                                   -{p.afterDrop.selfHarmWeighted.toFixed(1)}
                                 </span>
                               </div>
-                              <div className='flex justify-between'>
-                                <span className='text-xs'>Raw opp-harm</span>
+                              <div className="flex justify-between">
+                                <span className="text-xs">Raw opp-harm</span>
                                 <span>{p.afterDrop.oppHarm.toFixed(1)}</span>
                               </div>
-                              <div className='flex justify-between font-medium'>
+                              <div className="flex justify-between font-medium">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span className='cursor-help underline decoration-dotted text-xs'>
+                                    <span className="cursor-help underline decoration-dotted text-xs">
                                       Weighted opp-harm
                                     </span>
                                   </TooltipTrigger>
@@ -1073,13 +1073,13 @@ function LeagueTransactionsContent() {
                                     started this player
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className='text-orange-600'>
+                                <span className="text-orange-600">
                                   -{p.afterDrop.oppHarmWeighted.toFixed(1)}
                                 </span>
                               </div>
                             </>
                           ) : (
-                            <div className='text-xs text-muted-foreground italic'>
+                            <div className="text-xs text-muted-foreground italic">
                               No harm counted
                             </div>
                           )}
@@ -1089,26 +1089,26 @@ function LeagueTransactionsContent() {
 
                     {/* Weekly Points Breakdown */}
                     {p.weeklyPoints && p.weeklyPoints.length > 0 && (
-                      <div className='mt-3 border-t pt-3'>
-                        <div className='text-xs uppercase tracking-wide text-muted-foreground mb-2'>
+                      <div className="mt-3 border-t pt-3">
+                        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                           Weekly Points After Transaction
                         </div>
-                        <div className='grid grid-cols-2 md:grid-cols-4 gap-2 text-xs'>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                           {p.weeklyPoints.map(wp => (
                             <div
                               key={wp.week}
                               className={`p-2 rounded border ${wp.started ? 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800' : 'bg-muted/20'}`}
                             >
-                              <div className='font-medium'>Week {wp.week}</div>
-                              <div className='flex justify-between'>
+                              <div className="font-medium">Week {wp.week}</div>
+                              <div className="flex justify-between">
                                 <span>Points:</span>
                                 <span>{wp.points.toFixed(1)}</span>
                               </div>
-                              <div className='flex justify-between'>
+                              <div className="flex justify-between">
                                 <span>Weight:</span>
                                 <span>{wp.weight}x</span>
                               </div>
-                              <div className='flex justify-between'>
+                              <div className="flex justify-between">
                                 <span>{p.role === 'add' ? 'Started:' : 'Opp started:'}:</span>
                                 <span>{wp.started ? '✓' : '✗'}</span>
                               </div>
@@ -1122,9 +1122,9 @@ function LeagueTransactionsContent() {
               </div>
 
               {/* Methodology */}
-              <div className='bg-muted/20 rounded-lg p-3 text-xs space-y-2'>
-                <h4 className='font-semibold'>Scoring Methodology</h4>
-                <ul className='space-y-1 text-muted-foreground'>
+              <div className="bg-muted/20 rounded-lg p-3 text-xs space-y-2">
+                <h4 className="font-semibold">Scoring Methodology</h4>
+                <ul className="space-y-1 text-muted-foreground">
                   <li>
                     • <strong>Contribution:</strong> VORP (Value Over Replacement Player) when you
                     started the added player, with playoff weights (1.3x wk15, 1.6x wk16, 2.0x wk17)
@@ -1158,8 +1158,8 @@ export default function LeagueTransactionsPage() {
   return (
     <Suspense
       fallback={
-        <Container className='py-8'>
-          <PageHeader title='Loading...' subtitle='Fetching transactions...' />
+        <Container className="py-8">
+          <PageHeader title="Loading..." subtitle="Fetching transactions..." />
         </Container>
       }
     >

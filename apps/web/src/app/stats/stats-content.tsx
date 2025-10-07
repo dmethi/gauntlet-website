@@ -34,7 +34,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
         label: `${t.teamInfo.teamName} (${t.teamInfo.leagueName})`,
         team: t,
       })),
-    [allTeamEntries]
+    [allTeamEntries],
   );
 
   const [selectedTeamKey] = useState<string>(searchParams.team || teamOptions[0]?.key || '');
@@ -49,7 +49,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
       | 'trends'
       | 'scatter'
       | 'transactions'
-      | 'start-sit') || 'team'
+      | 'start-sit') || 'team',
   );
 
   const [selectedWeek, setSelectedWeek] = useState<string>(searchParams.week || 'season');
@@ -59,7 +59,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
     week => {
       // Only include weeks that have some non-zero scores
       return allTeamEntries.some(([, t]) => t.teamScores.find(d => d.week === week && d.value > 0));
-    }
+    },
   );
 
   const selectedTeam = teamOptions.find(opt => opt.key === selectedTeamKey);
@@ -67,10 +67,10 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
 
   if (!selectedTeam) {
     return (
-      <div className='space-y-6'>
+      <div className="space-y-6">
         <Card>
-          <CardContent className='py-8'>
-            <div className='text-center text-muted-foreground'>
+          <CardContent className="py-8">
+            <div className="text-center text-muted-foreground">
               No teams available or selected team not found.
             </div>
           </CardContent>
@@ -86,7 +86,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
   const toWeek = Math.max(...validWeeks, Math.min(dataset.weekRange.to, dataset.currentWeek - 1)); // Exclude current week if it's incomplete
 
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <Tabs
         value={currentView}
         onValueChange={v =>
@@ -98,21 +98,21 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
               | 'trends'
               | 'scatter'
               | 'transactions'
-              | 'start-sit'
+              | 'start-sit',
           )
         }
       >
         <TabsList>
-          <TabsTrigger value='team'>Team Analysis</TabsTrigger>
-          <TabsTrigger value='league'>League View</TabsTrigger>
-          <TabsTrigger value='schedule'>Schedule Analysis</TabsTrigger>
-          <TabsTrigger value='trends'>Performance Trends</TabsTrigger>
-          <TabsTrigger value='scatter'>Scatter Analysis</TabsTrigger>
-          <TabsTrigger value='transactions'>Transaction Analysis</TabsTrigger>
-          <TabsTrigger value='start-sit'>Start/Sit Efficiency</TabsTrigger>
+          <TabsTrigger value="team">Team Analysis</TabsTrigger>
+          <TabsTrigger value="league">League View</TabsTrigger>
+          <TabsTrigger value="schedule">Schedule Analysis</TabsTrigger>
+          <TabsTrigger value="trends">Performance Trends</TabsTrigger>
+          <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
+          <TabsTrigger value="transactions">Transaction Analysis</TabsTrigger>
+          <TabsTrigger value="start-sit">Start/Sit Efficiency</TabsTrigger>
         </TabsList>
 
-        <TabsContent value='team'>
+        <TabsContent value="team">
           <TeamView
             allTeamEntries={allTeamEntries}
             positionsMap={positionsMap}
@@ -123,7 +123,7 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
           />
         </TabsContent>
 
-        <TabsContent value='league'>
+        <TabsContent value="league">
           <LeagueView
             selectedWeek={selectedWeek}
             allTeamEntries={allTeamEntries}
@@ -136,11 +136,11 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
           />
         </TabsContent>
 
-        <TabsContent value='schedule'>
+        <TabsContent value="schedule">
           <ScheduleAnalysis allTeamEntries={allTeamEntries} dataset={dataset} />
         </TabsContent>
 
-        <TabsContent value='trends'>
+        <TabsContent value="trends">
           <TrendsView
             allTeamEntries={allTeamEntries}
             positionsMap={positionsMap}
@@ -148,15 +148,15 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
           />
         </TabsContent>
 
-        <TabsContent value='scatter'>
+        <TabsContent value="scatter">
           <ScatterAnalysis allTeamEntries={allTeamEntries} positionsMap={positionsMap} />
         </TabsContent>
 
-        <TabsContent value='transactions'>
-          <TransactionAnalysis key='transaction-analysis' />
+        <TabsContent value="transactions">
+          <TransactionAnalysis key="transaction-analysis" />
         </TabsContent>
 
-        <TabsContent value='start-sit'>
+        <TabsContent value="start-sit">
           <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} />
         </TabsContent>
       </Tabs>

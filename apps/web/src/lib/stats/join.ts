@@ -73,7 +73,7 @@ export function buildTeamInfoMap({
  */
 export function buildRosterLeagueMap(
   leagues: Array<{ id: string }>,
-  rosters: Map<string, SleeperRoster[]>
+  rosters: Map<string, SleeperRoster[]>,
 ): Map<string, string> {
   const rosterLeagueMap = new Map<string, string>();
 

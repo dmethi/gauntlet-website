@@ -127,7 +127,7 @@ function buildAlternativesPool(
   rosterSlot: string,
   selectedPlayer: PlayerProjection,
   allProjections: Map<string, PlayerProjection>,
-  playerPositions: Map<string, string>
+  playerPositions: Map<string, string>,
 ): AlternativePlayer[] {
   const alternatives: AlternativePlayer[] = [];
 
@@ -179,7 +179,7 @@ function analyzePositionDecision(
   week: number,
   rosterSlot: string,
   selectedPlayer: PlayerProjection,
-  alternatives: AlternativePlayer[]
+  alternatives: AlternativePlayer[],
 ): PositionDecision {
   const allOptions = [
     {
@@ -191,7 +191,7 @@ function analyzePositionDecision(
   ];
 
   const optimalPlayer = allOptions.reduce((best, current) =>
-    current.adjustedActualPoints > (best as any).adjustedActualPoints ? current : best
+    current.adjustedActualPoints > (best as any).adjustedActualPoints ? current : best,
   ) as PositionDecision['optimalPlayer'];
 
   const decisionCorrect = (optimalPlayer as any).playerId === selectedPlayer.playerId;
@@ -204,7 +204,7 @@ function analyzePositionDecision(
         : 0;
 
   const riskyAlternatives = alternatives.filter(
-    alt => alt.projectedPoints > selectedPlayer.projectedPoints
+    alt => alt.projectedPoints > selectedPlayer.projectedPoints,
   );
   const isRiskyDecision = riskyAlternatives.length > 0;
 
@@ -213,7 +213,7 @@ function analyzePositionDecision(
 
   if (isRiskyDecision) {
     const bestProjectedAlternative = riskyAlternatives.reduce((best, current) =>
-      current.projectedPoints > best.projectedPoints ? current : best
+      current.projectedPoints > best.projectedPoints ? current : best,
     );
     projectionDifferential =
       bestProjectedAlternative.projectedPoints - selectedPlayer.projectedPoints;
@@ -283,7 +283,7 @@ function deduplicateManagerDecisions(managerDecisions: PositionDecision[]): Posi
         } as any;
       } else {
         const nextBest = otherAlternatives.reduce((best, current) =>
-          current.adjustedActualPoints > best.adjustedActualPoints ? current : best
+          current.adjustedActualPoints > best.adjustedActualPoints ? current : best,
         );
 
         const newPointsLeft = nextBest.adjustedActualPoints - decision.selectedPlayer.actualPoints;
@@ -389,7 +389,7 @@ function getManagerRosterContext(decisions: PositionDecision[]): any[] {
   }
 
   return result.sort((a, b) =>
-    a.managerName !== b.managerName ? a.managerName.localeCompare(b.managerName) : a.week - b.week
+    a.managerName !== b.managerName ? a.managerName.localeCompare(b.managerName) : a.week - b.week,
   );
 }
 
@@ -592,7 +592,7 @@ export async function analyzeStartSitEfficiency(options?: {
             rosterSlot,
             selectedProjection,
             allProjections,
-            playerPositions
+            playerPositions,
           );
 
           if (alternatives.length === 0) continue;
@@ -604,7 +604,7 @@ export async function analyzeStartSitEfficiency(options?: {
             week,
             rosterSlot,
             selectedProjection,
-            alternatives
+            alternatives,
           );
           managerDecisions.push(decision);
         }

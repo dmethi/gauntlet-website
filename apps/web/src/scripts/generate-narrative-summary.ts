@@ -141,7 +141,7 @@ function generateNarrativeSummary() {
           ? Math.round(
               (t.trajectory.weeklyScores.reduce((sum: number, v: number) => sum + v, 0) /
                 t.trajectory.weeklyScores.length) *
-                10
+                10,
             ) / 10
           : 0,
       })),
@@ -275,7 +275,7 @@ function generateNarrativeSummary() {
             return sum + avg;
           }, 0) /
             teamSummaries.length) *
-            10
+            10,
         ) / 10,
       totalTeams: teamSummaries.length,
     },

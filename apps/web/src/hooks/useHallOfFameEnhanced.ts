@@ -269,7 +269,7 @@ export function useHallOfFameEnhanced() {
             seasonalData,
             'longestLosingStreak',
             'highest',
-            5
+            5,
           ),
           mostBlowouts: findSeasonalRecords(seasonalData, 'blowoutWins', 'highest', 5),
           strongestSchedule: findSeasonalRecords(seasonalData, 'scheduleStrength', 'highest', 5),
@@ -351,7 +351,7 @@ export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
             seasonalData,
             'longestLosingStreak',
             'highest',
-            5
+            5,
           ),
           mostBlowouts: findSeasonalRecords(seasonalData, 'blowoutWins', 'highest', 5),
           strongestSchedule: findSeasonalRecords(seasonalData, 'scheduleStrength', 'highest', 5),
@@ -367,7 +367,7 @@ export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
 
       allData.weeklyRecords.forEach((records, category) => {
         const teamCategoryRecords = records.filter(
-          r => r.teamId === rosterId && r.leagueId === leagueId
+          r => r.teamId === rosterId && r.leagueId === leagueId,
         );
         if (teamCategoryRecords.length > 0) {
           teamRecords.set(category, teamCategoryRecords);
@@ -377,20 +377,20 @@ export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
       // Find team's rolling windows
       const teamWindows = {
         threeWeek: allData.rollingWindows.threeWeek.highest.filter(
-          w => w.rosterId === rosterId && w.leagueId === leagueId
+          w => w.rosterId === rosterId && w.leagueId === leagueId,
         ),
         fiveWeek: allData.rollingWindows.fiveWeek.highest.filter(
-          w => w.rosterId === rosterId && w.leagueId === leagueId
+          w => w.rosterId === rosterId && w.leagueId === leagueId,
         ),
       };
 
       // Find team's streaks
       const teamStreaks = {
         winStreaks: allData.streaks.winStreaks.filter(
-          s => s.rosterId === rosterId && s.leagueId === leagueId
+          s => s.rosterId === rosterId && s.leagueId === leagueId,
         ),
         lossStreaks: allData.streaks.lossStreaks.filter(
-          s => s.rosterId === rosterId && s.leagueId === leagueId
+          s => s.rosterId === rosterId && s.leagueId === leagueId,
         ),
         hotStreaks: [], // Removed per requirements
         coldStreaks: [], // Removed per requirements
@@ -398,7 +398,7 @@ export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
 
       // Find team's seasonal records
       const teamSeasonal = allData.seasonal.mostWins.filter(
-        s => s.rosterId === rosterId && s.leagueId === leagueId
+        s => s.rosterId === rosterId && s.leagueId === leagueId,
       );
 
       return {
@@ -426,7 +426,7 @@ export function useLeagueHallOfFameEnhanced(leagueId: string) {
       const currentSeason = new Date().getFullYear().toString();
       const leagueMatchups = await hallOfFameDataService.getLeagueSeasonMatchups(
         leagueId,
-        currentSeason
+        currentSeason,
       );
 
       // Calculate all records for this league
@@ -469,7 +469,7 @@ export function useCategoryRecords(
   categoryId: string,
   scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime',
   leagueId?: string,
-  season?: string
+  season?: string,
 ) {
   return useQuery({
     queryKey: ['hall-of-fame-category', categoryId, scope, leagueId, season],

@@ -71,7 +71,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       matchupPromises.push(
         fetchSleeperData<SleeperMatchup[]>(`league/${leagueId}/matchups/${week}`)
           .then(matchups => ({ week, matchups }))
-          .catch(() => ({ week, matchups: [] }))
+          .catch(() => ({ week, matchups: [] })),
       );
     }
 
@@ -86,7 +86,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       if (teamMatchup) {
         // Find opponent
         const opponentMatchup = weekMatchups.find(
-          m => m.matchup_id === teamMatchup.matchup_id && m.roster_id !== rosterId
+          m => m.matchup_id === teamMatchup.matchup_id && m.roster_id !== rosterId,
         );
 
         const teamPoints = teamMatchup.points || 0;

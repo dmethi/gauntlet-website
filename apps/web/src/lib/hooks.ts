@@ -111,33 +111,33 @@ export function useLeagueData() {
       // Calculate total points from matchups (unchanged)
       const totalPoints = (roster.matchups || []).reduce(
         (sum: number, matchup: Matchup) => sum + matchup.points,
-        0
+        0,
       );
 
       // Use authoritative record data from RosterWeekAggregate
       // Filter to regular season weeks (we'll use dynamic playoff start if available)
       const playoffStart = Number(league?.playoff_week_start ?? 15);
       const regularSeasonAggregates = (aggregates || []).filter(
-        agg => agg.week >= 1 && agg.week < playoffStart
+        agg => agg.week >= 1 && agg.week < playoffStart,
       );
 
       const wins = (regularSeasonAggregates || []).reduce(
         (count: number, agg: RosterWeekAggregate) => count + (agg.won ? 1 : 0),
-        0
+        0,
       );
       const losses = (regularSeasonAggregates || []).reduce(
         (count: number, agg: RosterWeekAggregate) => count + (agg.won === false ? 1 : 0),
-        0
+        0,
       );
 
       // Calculate cumulative expected wins and luck from aggregates
       const totalExpectedWins = (regularSeasonAggregates || []).reduce(
         (sum: number, agg: RosterWeekAggregate) => sum + (agg.expectedWins || 0),
-        0
+        0,
       );
       const totalLuck = (regularSeasonAggregates || []).reduce(
         (sum: number, agg: RosterWeekAggregate) => sum + (agg.luck || 0),
-        0
+        0,
       );
 
       return {
@@ -185,7 +185,7 @@ export function useLeagueData() {
     return Array.from({ length: 18 }, (_, week) => {
       const weekNumber = week + 1;
       const weekMatchups = (league.rosters || []).flatMap((r: Roster) =>
-        (r.matchups || []).filter((m: Matchup) => m.week === weekNumber)
+        (r.matchups || []).filter((m: Matchup) => m.week === weekNumber),
       );
       const totalPoints = weekMatchups.reduce((sum: number, m: Matchup) => sum + m.points, 0);
       const averagePoints = weekMatchups.length > 0 ? totalPoints / weekMatchups.length : 0;
@@ -243,31 +243,31 @@ export function useLeagueDataById(leagueId?: string) {
       // Calculate total points from matchups (unchanged)
       const totalPoints = (roster.matchups || []).reduce(
         (sum: number, matchup: Matchup) => sum + matchup.points,
-        0
+        0,
       );
 
       // Use authoritative record data from RosterWeekAggregate
       // Filter to regular season weeks (we'll use dynamic playoff start if available)
       const playoffStart = Number(league?.playoff_week_start ?? 15);
       const regularSeasonAggregates = (aggregates || []).filter(
-        agg => agg.week >= 1 && agg.week < playoffStart
+        agg => agg.week >= 1 && agg.week < playoffStart,
       );
 
       const wins = (regularSeasonAggregates || []).reduce(
         (count: number, agg: RosterWeekAggregate) => count + (agg.won ? 1 : 0),
-        0
+        0,
       );
 
       const losses = regularSeasonAggregates.length - wins;
 
       const expectedWins = (regularSeasonAggregates || []).reduce(
         (sum: number, agg: RosterWeekAggregate) => sum + (agg.expectedWins ?? 0),
-        0
+        0,
       );
 
       const luckRating = (regularSeasonAggregates || []).reduce(
         (sum: number, agg: RosterWeekAggregate) => sum + (agg.luck ?? 0),
-        0
+        0,
       );
 
       const name =
@@ -509,7 +509,7 @@ export function useWeekRollups<T = unknown>(leagueId: string, season: string, we
 export function useSeasonSuperlatives<T = unknown>(
   leagueId: string,
   season: string,
-  opts?: { category?: string; limit?: number; offset?: number }
+  opts?: { category?: string; limit?: number; offset?: number },
 ) {
   const params = new URLSearchParams();
   if (opts?.category) params.set('category', opts.category);

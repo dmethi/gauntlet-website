@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     if (!Array.isArray(team1Starters) || !Array.isArray(team2Starters)) {
       return NextResponse.json(
         { error: 'team1Starters and team2Starters must be arrays of player IDs' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         error: 'Failed to calculate win probability',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

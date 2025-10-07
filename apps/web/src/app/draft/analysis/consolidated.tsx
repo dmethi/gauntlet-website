@@ -107,38 +107,38 @@ export default function DraftAnalysisPage() {
   };
 
   return (
-    <div className='relative'>
+    <div className="relative">
       {/* Fixed Header */}
-      <div className='sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40'>
-        <div className='flex items-center justify-between p-4'>
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40">
+        <div className="flex items-center justify-between p-4">
           <div>
-            <h1 className='text-2xl font-bold font-geizer'>Draft Analysis Report</h1>
-            <p className='text-sm text-muted-foreground'>
+            <h1 className="text-2xl font-bold font-geizer">Draft Analysis Report</h1>
+            <p className="text-sm text-muted-foreground">
               Complete analysis of {draft1.name} vs {draft2.name}
             </p>
           </div>
-          <Button onClick={regenerateDrafts} className='flex items-center gap-2'>
-            <Shuffle className='h-4 w-4' />
+          <Button onClick={regenerateDrafts} className="flex items-center gap-2">
+            <Shuffle className="h-4 w-4" />
             Generate New Drafts
           </Button>
         </div>
 
         {/* Sticky Navigation */}
-        <div className='flex items-center gap-2 px-4 pb-2'>
+        <div className="flex items-center gap-2 px-4 pb-2">
           {sections.map(section => {
             const Icon = section.icon;
             return (
               <Button
                 key={section.id}
                 variant={activeSection === section.id ? 'default' : 'ghost'}
-                size='sm'
-                className='flex items-center gap-2'
+                size="sm"
+                className="flex items-center gap-2"
                 onClick={() => {
                   setActiveSection(section.id);
                   document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                <Icon className='h-4 w-4' />
+                <Icon className="h-4 w-4" />
                 {section.label}
               </Button>
             );
@@ -148,10 +148,10 @@ export default function DraftAnalysisPage() {
 
       {/* Loading State */}
       {(!analytics || !managerAnalytics) && (
-        <div className='flex items-center justify-center py-12'>
-          <div className='text-center'>
-            <div className='animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">
               {!analytics ? 'Generating league analytics...' : 'Analyzing manager behavior...'}
             </p>
           </div>
@@ -160,41 +160,41 @@ export default function DraftAnalysisPage() {
 
       {/* Main Content */}
       {analytics && managerAnalytics && (
-        <div className='space-y-0'>
+        <div className="space-y-0">
           {/* 🏈 League-Level Analysis Section */}
-          <section id='league' className='py-12 px-4 bg-background'>
-            <div className='max-w-7xl mx-auto space-y-8'>
-              <div className='text-center'>
-                <h2 className='text-3xl font-bold mb-2'>🏈 League-Level Analysis</h2>
-                <p className='text-muted-foreground max-w-2xl mx-auto'>
+          <section id="league" className="py-12 px-4 bg-background">
+            <div className="max-w-7xl mx-auto space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2">🏈 League-Level Analysis</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
                   Market dynamics, position valuations, and cross-league price differences
                 </p>
               </div>
 
               {/* Market Overview Cards */}
-              <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className='text-lg flex items-center gap-2'>
+                    <CardTitle className="text-lg flex items-center gap-2">
                       Market Concentration
                       <InfoTooltip
-                        title='Market Concentration'
-                        description='Gini coefficient measures spending inequality - how much money went to star players vs depth players.'
+                        title="Market Concentration"
+                        description="Gini coefficient measures spending inequality - how much money went to star players vs depth players."
                         interpretation="Higher values = more 'stars and scrubs' approach."
                       />
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className='space-y-2'>
-                      <div className='flex justify-between'>
-                        <span className='text-sm text-muted-foreground'>AFC</span>
-                        <span className='font-medium'>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">AFC</span>
+                        <span className="font-medium">
                           {analytics.market_shape.league_A.gini_prices}
                         </span>
                       </div>
-                      <div className='flex justify-between'>
-                        <span className='text-sm text-muted-foreground'>NFC</span>
-                        <span className='font-medium'>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">NFC</span>
+                        <span className="font-medium">
                           {analytics.market_shape.league_B.gini_prices}
                         </span>
                       </div>
@@ -204,26 +204,26 @@ export default function DraftAnalysisPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className='text-lg flex items-center gap-2'>
+                    <CardTitle className="text-lg flex items-center gap-2">
                       Nomination Effects
                       <InfoTooltip
-                        title='Nomination Effects'
-                        description='How draft position affects player prices.'
-                        interpretation='Negative values = early picks cost more.'
+                        title="Nomination Effects"
+                        description="How draft position affects player prices."
+                        interpretation="Negative values = early picks cost more."
                       />
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className='space-y-2'>
-                      <div className='flex justify-between'>
-                        <span className='text-sm text-muted-foreground'>AFC β/10</span>
-                        <span className='font-medium'>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">AFC β/10</span>
+                        <span className="font-medium">
                           ${analytics.nomination_effects.league_A.beta_per_10_picks}
                         </span>
                       </div>
-                      <div className='flex justify-between'>
-                        <span className='text-sm text-muted-foreground'>NFC β/10</span>
-                        <span className='font-medium'>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">NFC β/10</span>
+                        <span className="font-medium">
                           ${analytics.nomination_effects.league_B.beta_per_10_picks}
                         </span>
                       </div>
@@ -233,22 +233,22 @@ export default function DraftAnalysisPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className='text-lg flex items-center gap-2'>
+                    <CardTitle className="text-lg flex items-center gap-2">
                       Cross-League Agreement
                       <InfoTooltip
-                        title='Rank Correlation'
-                        description='How similarly both leagues valued players.'
-                        interpretation='1.0 = perfect agreement, 0.0 = no agreement.'
+                        title="Rank Correlation"
+                        description="How similarly both leagues valued players."
+                        interpretation="1.0 = perfect agreement, 0.0 = no agreement."
                       />
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className='flex items-center justify-center h-16'>
-                      <div className='text-center'>
-                        <div className='text-2xl font-bold'>
+                    <div className="flex items-center justify-center h-16">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold">
                           {analytics.spearman_rank_correlation.toFixed(2)}
                         </div>
-                        <div className='text-xs text-muted-foreground'>Spearman ρ</div>
+                        <div className="text-xs text-muted-foreground">Spearman ρ</div>
                       </div>
                     </div>
                   </CardContent>
@@ -268,10 +268,10 @@ export default function DraftAnalysisPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Position</TableHead>
-                        <TableHead className='text-right'>AFC Avg</TableHead>
-                        <TableHead className='text-right'>NFC Avg</TableHead>
-                        <TableHead className='text-right'>Difference</TableHead>
-                        <TableHead className='text-right'>% Difference</TableHead>
+                        <TableHead className="text-right">AFC Avg</TableHead>
+                        <TableHead className="text-right">NFC Avg</TableHead>
+                        <TableHead className="text-right">Difference</TableHead>
+                        <TableHead className="text-right">% Difference</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -283,14 +283,14 @@ export default function DraftAnalysisPage() {
                         return (
                           <TableRow key={pos.pos}>
                             <TableCell>
-                              <Badge variant='outline' className={getPositionColor(pos.pos)}>
+                              <Badge variant="outline" className={getPositionColor(pos.pos)}>
                                 {pos.pos}
                               </Badge>
                             </TableCell>
-                            <TableCell className='text-right font-medium'>
+                            <TableCell className="text-right font-medium">
                               ${pos.avg_raw_A}
                             </TableCell>
-                            <TableCell className='text-right font-medium'>
+                            <TableCell className="text-right font-medium">
                               ${pos.avg_raw_B}
                             </TableCell>
                             <TableCell
@@ -333,11 +333,11 @@ export default function DraftAnalysisPage() {
           </section>
 
           {/* 👥 Manager-Level Analysis Section */}
-          <section id='managers' className='py-12 px-4 bg-muted/20'>
-            <div className='max-w-7xl mx-auto space-y-8'>
-              <div className='text-center'>
-                <h2 className='text-3xl font-bold mb-2'>👥 Manager-Level Analysis</h2>
-                <p className='text-muted-foreground max-w-2xl mx-auto'>
+          <section id="managers" className="py-12 px-4 bg-muted/20">
+            <div className="max-w-7xl mx-auto space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2">👥 Manager-Level Analysis</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
                   Individual spending behavior, build types, and strategic patterns
                 </p>
               </div>
@@ -348,55 +348,55 @@ export default function DraftAnalysisPage() {
           </section>
 
           {/* 🏆 Team Directory Section */}
-          <section id='teams' className='py-12 px-4 bg-background'>
-            <div className='max-w-7xl mx-auto space-y-8'>
-              <div className='text-center'>
-                <h2 className='text-3xl font-bold mb-2'>🏆 Team Directory</h2>
-                <p className='text-muted-foreground max-w-2xl mx-auto'>
+          <section id="teams" className="py-12 px-4 bg-background">
+            <div className="max-w-7xl mx-auto space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2">🏆 Team Directory</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
                   Complete roster breakdown organized by league and division
                 </p>
               </div>
 
-              <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* AFC Teams */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className='flex items-center gap-2'>
-                      <Trophy className='h-5 w-5 text-red-600' />
+                    <CardTitle className="flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-red-600" />
                       AFC Teams ({draft1.name})
                     </CardTitle>
                     <CardDescription>All teams from the AFC draft</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className='grid grid-cols-1 gap-4'>
+                    <div className="grid grid-cols-1 gap-4">
                       {draft1.teams.map(team => (
-                        <div key={team.teamId} className='border rounded-lg p-4'>
-                          <div className='flex justify-between items-center mb-3'>
-                            <h4 className='font-semibold text-lg'>{team.teamName}</h4>
-                            <div className='text-right'>
-                              <div className='font-bold'>${team.totalSpent}</div>
-                              <div className='text-xs text-muted-foreground'>
+                        <div key={team.teamId} className="border rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <h4 className="font-semibold text-lg">{team.teamName}</h4>
+                            <div className="text-right">
+                              <div className="font-bold">${team.totalSpent}</div>
+                              <div className="text-xs text-muted-foreground">
                                 {team.picks.length} picks
                               </div>
                             </div>
                           </div>
-                          <div className='grid grid-cols-3 gap-1 text-xs'>
+                          <div className="grid grid-cols-3 gap-1 text-xs">
                             {team.picks.slice(0, 6).map(pick => (
                               <div
                                 key={pick.pickNumber}
-                                className='flex items-center justify-between bg-muted/30 rounded p-1'
+                                className="flex items-center justify-between bg-muted/30 rounded p-1"
                               >
-                                <div className='flex items-center gap-1'>
-                                  <Badge variant='outline' className='text-[10px] px-1'>
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="outline" className="text-[10px] px-1">
                                     {pick.player.position}
                                   </Badge>
-                                  <span className='truncate'>{pick.player.name.split(' ')[0]}</span>
+                                  <span className="truncate">{pick.player.name.split(' ')[0]}</span>
                                 </div>
                                 <span>${pick.actualPrice}</span>
                               </div>
                             ))}
                             {team.picks.length > 6 && (
-                              <div className='text-center text-muted-foreground col-span-3 py-1'>
+                              <div className="text-center text-muted-foreground col-span-3 py-1">
                                 +{team.picks.length - 6} more players
                               </div>
                             )}
@@ -410,42 +410,42 @@ export default function DraftAnalysisPage() {
                 {/* NFC Teams */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className='flex items-center gap-2'>
-                      <Trophy className='h-5 w-5 text-blue-600' />
+                    <CardTitle className="flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-blue-600" />
                       NFC Teams ({draft2.name})
                     </CardTitle>
                     <CardDescription>All teams from the NFC draft</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className='grid grid-cols-1 gap-4'>
+                    <div className="grid grid-cols-1 gap-4">
                       {draft2.teams.map(team => (
-                        <div key={team.teamId} className='border rounded-lg p-4'>
-                          <div className='flex justify-between items-center mb-3'>
-                            <h4 className='font-semibold text-lg'>{team.teamName}</h4>
-                            <div className='text-right'>
-                              <div className='font-bold'>${team.totalSpent}</div>
-                              <div className='text-xs text-muted-foreground'>
+                        <div key={team.teamId} className="border rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <h4 className="font-semibold text-lg">{team.teamName}</h4>
+                            <div className="text-right">
+                              <div className="font-bold">${team.totalSpent}</div>
+                              <div className="text-xs text-muted-foreground">
                                 {team.picks.length} picks
                               </div>
                             </div>
                           </div>
-                          <div className='grid grid-cols-3 gap-1 text-xs'>
+                          <div className="grid grid-cols-3 gap-1 text-xs">
                             {team.picks.slice(0, 6).map(pick => (
                               <div
                                 key={pick.pickNumber}
-                                className='flex items-center justify-between bg-muted/30 rounded p-1'
+                                className="flex items-center justify-between bg-muted/30 rounded p-1"
                               >
-                                <div className='flex items-center gap-1'>
-                                  <Badge variant='outline' className='text-[10px] px-1'>
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="outline" className="text-[10px] px-1">
                                     {pick.player.position}
                                   </Badge>
-                                  <span className='truncate'>{pick.player.name.split(' ')[0]}</span>
+                                  <span className="truncate">{pick.player.name.split(' ')[0]}</span>
                                 </div>
                                 <span>${pick.actualPrice}</span>
                               </div>
                             ))}
                             {team.picks.length > 6 && (
-                              <div className='text-center text-muted-foreground col-span-3 py-1'>
+                              <div className="text-center text-muted-foreground col-span-3 py-1">
                                 +{team.picks.length - 6} more players
                               </div>
                             )}
@@ -460,19 +460,19 @@ export default function DraftAnalysisPage() {
           </section>
 
           {/* 📋 Complete Draft Data Section */}
-          <section id='data' className='py-12 px-4 bg-muted/20'>
-            <div className='max-w-7xl mx-auto space-y-8'>
-              <div className='text-center'>
-                <h2 className='text-3xl font-bold mb-2'>📋 Complete Draft Data</h2>
-                <p className='text-muted-foreground max-w-2xl mx-auto'>
+          <section id="data" className="py-12 px-4 bg-muted/20">
+            <div className="max-w-7xl mx-auto space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2">📋 Complete Draft Data</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
                   Comprehensive table of all picks with filtering and search capabilities
                 </p>
               </div>
 
               <Card>
                 <CardHeader>
-                  <CardTitle className='flex items-center gap-2'>
-                    <Filter className='h-5 w-5' />
+                  <CardTitle className="flex items-center gap-2">
+                    <Filter className="h-5 w-5" />
                     All Draft Picks
                   </CardTitle>
                   <CardDescription>
@@ -483,58 +483,58 @@ export default function DraftAnalysisPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className='space-y-4'>
+                  <div className="space-y-4">
                     {/* Filter Controls */}
-                    <div className='flex flex-wrap gap-4 items-center'>
-                      <div className='flex items-center gap-2'>
+                    <div className="flex flex-wrap gap-4 items-center">
+                      <div className="flex items-center gap-2">
                         <Label>League:</Label>
-                        <Select defaultValue='all'>
-                          <SelectTrigger className='w-32'>
+                        <Select defaultValue="all">
+                          <SelectTrigger className="w-32">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value='all'>All</SelectItem>
-                            <SelectItem value='afc'>AFC</SelectItem>
-                            <SelectItem value='nfc'>NFC</SelectItem>
+                            <SelectItem value="all">All</SelectItem>
+                            <SelectItem value="afc">AFC</SelectItem>
+                            <SelectItem value="nfc">NFC</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
 
-                      <div className='flex items-center gap-2'>
+                      <div className="flex items-center gap-2">
                         <Label>Position:</Label>
-                        <Select defaultValue='all'>
-                          <SelectTrigger className='w-24'>
+                        <Select defaultValue="all">
+                          <SelectTrigger className="w-24">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value='all'>All</SelectItem>
-                            <SelectItem value='QB'>QB</SelectItem>
-                            <SelectItem value='RB'>RB</SelectItem>
-                            <SelectItem value='WR'>WR</SelectItem>
-                            <SelectItem value='TE'>TE</SelectItem>
-                            <SelectItem value='DEF'>DEF</SelectItem>
+                            <SelectItem value="all">All</SelectItem>
+                            <SelectItem value="QB">QB</SelectItem>
+                            <SelectItem value="RB">RB</SelectItem>
+                            <SelectItem value="WR">WR</SelectItem>
+                            <SelectItem value="TE">TE</SelectItem>
+                            <SelectItem value="DEF">DEF</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
 
-                      <div className='flex items-center gap-2'>
-                        <Checkbox id='starters-only' />
-                        <Label htmlFor='starters-only'>Starters Only</Label>
+                      <div className="flex items-center gap-2">
+                        <Checkbox id="starters-only" />
+                        <Label htmlFor="starters-only">Starters Only</Label>
                       </div>
                     </div>
 
                     {/* Draft Picks Table */}
-                    <div className='rounded-md border max-h-96 overflow-auto'>
+                    <div className="rounded-md border max-h-96 overflow-auto">
                       <Table>
-                        <TableHeader className='sticky top-0 bg-background'>
+                        <TableHeader className="sticky top-0 bg-background">
                           <TableRow>
                             <TableHead>Player</TableHead>
                             <TableHead>Pos</TableHead>
                             <TableHead>League</TableHead>
                             <TableHead>Manager</TableHead>
-                            <TableHead className='text-right'>Price</TableHead>
-                            <TableHead className='text-right'>AAV</TableHead>
-                            <TableHead className='text-right'>Value</TableHead>
+                            <TableHead className="text-right">Price</TableHead>
+                            <TableHead className="text-right">AAV</TableHead>
+                            <TableHead className="text-right">Value</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -544,21 +544,21 @@ export default function DraftAnalysisPage() {
                                 ...pick,
                                 league: teamIndex < draft1.teams.length ? 'AFC' : 'NFC',
                                 teamName: team.teamName,
-                              }))
+                              })),
                             )
                             .sort((a, b) => b.player.aav - a.player.aav)
                             .slice(0, 100)
                             .map((pick, _index) => (
                               <TableRow key={`${pick.league}-${pick.pickNumber}`}>
                                 <TableCell>
-                                  <div className='font-medium'>{pick.player.name}</div>
-                                  <div className='text-xs text-muted-foreground'>
+                                  <div className="font-medium">{pick.player.name}</div>
+                                  <div className="text-xs text-muted-foreground">
                                     {pick.player.team}
                                   </div>
                                 </TableCell>
                                 <TableCell>
                                   <Badge
-                                    variant='outline'
+                                    variant="outline"
                                     className={getPositionColor(pick.player.position)}
                                   >
                                     {pick.player.position}
@@ -569,11 +569,11 @@ export default function DraftAnalysisPage() {
                                     {pick.league}
                                   </Badge>
                                 </TableCell>
-                                <TableCell className='text-sm'>{pick.teamName}</TableCell>
-                                <TableCell className='text-right font-mono'>
+                                <TableCell className="text-sm">{pick.teamName}</TableCell>
+                                <TableCell className="text-right font-mono">
                                   ${pick.actualPrice}
                                 </TableCell>
-                                <TableCell className='text-right font-mono text-muted-foreground'>
+                                <TableCell className="text-right font-mono text-muted-foreground">
                                   ${pick.player.aav}
                                 </TableCell>
                                 <TableCell
@@ -588,7 +588,7 @@ export default function DraftAnalysisPage() {
                       </Table>
                     </div>
 
-                    <div className='text-sm text-muted-foreground text-center py-2'>
+                    <div className="text-sm text-muted-foreground text-center py-2">
                       Showing top 100 picks by AAV. Use filters to explore specific subsets.
                     </div>
                   </div>

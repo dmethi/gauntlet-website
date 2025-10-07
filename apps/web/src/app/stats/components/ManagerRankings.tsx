@@ -65,17 +65,17 @@ export function ManagerRankings({
 
   if (allTeams.size === 0) {
     return (
-      <Card className='mb-6'>
+      <Card className="mb-6">
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <TrendingUp className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
             Manager Rankings by Net VORP
           </CardTitle>
           <CardDescription>Loading team data...</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='flex items-center justify-center h-32'>
-            <div className='text-muted-foreground'>Loading manager data...</div>
+          <div className="flex items-center justify-center h-32">
+            <div className="text-muted-foreground">Loading manager data...</div>
           </div>
         </CardContent>
       </Card>
@@ -84,10 +84,10 @@ export function ManagerRankings({
 
   return (
     <>
-      <Card className='mb-6'>
+      <Card className="mb-6">
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <TrendingUp className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
             Manager Rankings by Net Cost-Adjusted VORP
           </CardTitle>
           <CardDescription>
@@ -96,28 +96,28 @@ export function ManagerRankings({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='overflow-x-auto'>
-            <table className='w-full'>
+          <div className="overflow-x-auto">
+            <table className="w-full">
               <thead>
-                <tr className='border-b'>
-                  <th className='text-left p-2 font-semibold'>Rank</th>
-                  <th className='text-left p-2 font-semibold'>Manager</th>
-                  <th className='text-right p-2 font-semibold'>Net Adj. VORP</th>
-                  <th className='text-right p-2 font-semibold'>Positive</th>
-                  <th className='text-right p-2 font-semibold'>Negative</th>
-                  <th className='text-right p-2 font-semibold'>Total</th>
-                  <th className='text-right p-2 font-semibold'>Success Rate</th>
+                <tr className="border-b">
+                  <th className="text-left p-2 font-semibold">Rank</th>
+                  <th className="text-left p-2 font-semibold">Manager</th>
+                  <th className="text-right p-2 font-semibold">Net Adj. VORP</th>
+                  <th className="text-right p-2 font-semibold">Positive</th>
+                  <th className="text-right p-2 font-semibold">Negative</th>
+                  <th className="text-right p-2 font-semibold">Total</th>
+                  <th className="text-right p-2 font-semibold">Success Rate</th>
                 </tr>
               </thead>
               <tbody>
                 {managerStats.map((manager, index) => (
                   <tr
                     key={manager.teamName}
-                    className='border-b hover:bg-muted/50 cursor-pointer'
+                    className="border-b hover:bg-muted/50 cursor-pointer"
                     onClick={() => setSelectedManager(manager.teamName)}
                   >
-                    <td className='p-2 font-medium'>#{index + 1}</td>
-                    <td className='p-2 font-medium text-blue-600 hover:text-blue-800'>
+                    <td className="p-2 font-medium">#{index + 1}</td>
+                    <td className="p-2 font-medium text-blue-600 hover:text-blue-800">
                       {manager.teamName}
                     </td>
                     <td
@@ -126,14 +126,14 @@ export function ManagerRankings({
                       {manager.netVORP >= 0 ? '+' : ''}
                       {manager.netVORP.toFixed(1)}
                     </td>
-                    <td className='p-2 text-right text-green-600 font-medium'>
+                    <td className="p-2 text-right text-green-600 font-medium">
                       {manager.positiveTransactions}
                     </td>
-                    <td className='p-2 text-right text-red-600 font-medium'>
+                    <td className="p-2 text-right text-red-600 font-medium">
                       {manager.negativeTransactions}
                     </td>
-                    <td className='p-2 text-right'>{manager.totalTransactions}</td>
-                    <td className='p-2 text-right'>
+                    <td className="p-2 text-right">{manager.totalTransactions}</td>
+                    <td className="p-2 text-right">
                       {manager.totalTransactions > 0
                         ? `${((manager.positiveTransactions / manager.totalTransactions) * 100).toFixed(0)}%`
                         : '-'}

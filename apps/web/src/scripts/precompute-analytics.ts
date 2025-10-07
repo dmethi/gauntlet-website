@@ -51,7 +51,7 @@ async function precomputeAnalytics() {
     console.log(`✅ Generated drafts: ${draft1.name} vs ${draft2.name}`);
     console.log(`   - Teams per draft: ${draft1.teams.length}`);
     console.log(
-      `   - Total players: ${draft1.teams.reduce((sum, team) => sum + team.picks.length, 0) + draft2.teams.reduce((sum, team) => sum + team.picks.length, 0)}`
+      `   - Total players: ${draft1.teams.reduce((sum, team) => sum + team.picks.length, 0) + draft2.teams.reduce((sum, team) => sum + team.picks.length, 0)}`,
     );
 
     // Step 2: Generate league analytics
@@ -60,7 +60,7 @@ async function precomputeAnalytics() {
     console.log('✅ League analytics computed');
     console.log(`   - Position metrics: ${analytics.position_inflation.length}`);
     console.log(
-      `   - Player comparisons: ${analytics.consensus_players.length + analytics.divergent_players.length}`
+      `   - Player comparisons: ${analytics.consensus_players.length + analytics.divergent_players.length}`,
     );
     console.log(`   - Rank correlation: ${analytics.spearman_rank_correlation.toFixed(3)}`);
 
@@ -71,10 +71,10 @@ async function precomputeAnalytics() {
     console.log(`   - Manager profiles: ${managerAnalytics.profiles.length}`);
     console.log(`   - Build type clusters: ${managerAnalytics.cluster_summary.length}`);
     console.log(
-      `   - High similarity pairs: ${managerAnalytics.twins_summary.high_similarity_pairs}`
+      `   - High similarity pairs: ${managerAnalytics.twins_summary.high_similarity_pairs}`,
     );
     console.log(
-      `   - Avg cross-league similarity: ${managerAnalytics.twins_summary.avg_similarity.toFixed(3)}`
+      `   - Avg cross-league similarity: ${managerAnalytics.twins_summary.avg_similarity.toFixed(3)}`,
     );
 
     // Step 4: Calculate metadata
@@ -126,17 +126,17 @@ async function precomputeAnalytics() {
 
     writeFileSync(
       join(dataDir, 'league-analytics.json'),
-      JSON.stringify(precomputedData.analytics, null, 2)
+      JSON.stringify(precomputedData.analytics, null, 2),
     );
 
     writeFileSync(
       join(dataDir, 'manager-analytics.json'),
-      JSON.stringify(precomputedData.managerAnalytics, null, 2)
+      JSON.stringify(precomputedData.managerAnalytics, null, 2),
     );
 
     writeFileSync(
       join(dataDir, 'metadata.json'),
-      JSON.stringify(precomputedData.metadata, null, 2)
+      JSON.stringify(precomputedData.metadata, null, 2),
     );
 
     // Step 8: Summary
@@ -148,11 +148,11 @@ async function precomputeAnalytics() {
     console.log(`📦  Data size: ${fileSizeKB.toLocaleString()}KB`);
     console.log(`🏈  Players analyzed: ${totalPlayers.toLocaleString()}`);
     console.log(
-      `💰  Total draft value: $${(totalSpendDraft1 + totalSpendDraft2).toLocaleString()}`
+      `💰  Total draft value: $${(totalSpendDraft1 + totalSpendDraft2).toLocaleString()}`,
     );
     console.log(`🏆  Build types identified: ${managerAnalytics.cluster_summary.length}`);
     console.log(
-      `🔗  Manager similarities computed: ${(managerAnalytics.profiles.length * (managerAnalytics.profiles.length - 1)) / 2}`
+      `🔗  Manager similarities computed: ${(managerAnalytics.profiles.length * (managerAnalytics.profiles.length - 1)) / 2}`,
     );
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('\n📁 Files created:');

@@ -102,25 +102,25 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2 font-geizer tracking-wide'>
-            <Crown className='h-5 w-5 text-amber-500' />
+          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
+            <Crown className="h-5 w-5 text-amber-500" />
             League-Wide Odds
-            <Badge variant='outline'>Week {week}</Badge>
+            <Badge variant="outline">Week {week}</Badge>
           </CardTitle>
           <CardDescription>
             Simulating all matchups to find the week&apos;s most likely outcomes
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='space-y-6'>
+          <div className="space-y-6">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className='space-y-3'>
-                <Skeleton className='h-6 w-48' />
-                <div className='space-y-2'>
+              <div key={i} className="space-y-3">
+                <Skeleton className="h-6 w-48" />
+                <div className="space-y-2">
                   {[1, 2, 3].map(j => (
-                    <div key={j} className='flex items-center justify-between'>
-                      <Skeleton className='h-4 w-32' />
-                      <Skeleton className='h-4 w-16' />
+                    <div key={j} className="flex items-center justify-between">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-4 w-16" />
                     </div>
                   ))}
                 </div>
@@ -136,15 +136,15 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2 font-geizer tracking-wide text-red-600'>
-            <AlertCircle className='h-5 w-5' />
+          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide text-red-600">
+            <AlertCircle className="h-5 w-5" />
             League-Wide Odds Error
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className='text-muted-foreground mb-4'>{error}</p>
-          <Button onClick={() => fetchOdds()} variant='outline' size='sm'>
-            <RefreshCw className='h-4 w-4 mr-2' />
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={() => fetchOdds()} variant="outline" size="sm">
+            <RefreshCw className="h-4 w-4 mr-2" />
             Retry
           </Button>
         </CardContent>
@@ -159,75 +159,75 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
   return (
     <Card className={className}>
       <CardHeader>
-        <div className='flex items-center justify-between'>
+        <div className="flex items-center justify-between">
           <div>
-            <CardTitle className='flex items-center gap-2 font-geizer tracking-wide'>
-              <Crown className='h-5 w-5 text-amber-500' />
+            <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
+              <Crown className="h-5 w-5 text-amber-500" />
               League-Wide Odds
-              <Badge variant='outline'>Week {week}</Badge>
+              <Badge variant="outline">Week {week}</Badge>
             </CardTitle>
-            <CardDescription className='font-avenir'>
+            <CardDescription className="font-avenir">
               Monte Carlo predictions across all Gauntlet matchups
             </CardDescription>
           </div>
-          <Button onClick={() => fetchOdds(false)} variant='ghost' size='sm' disabled={loading}>
+          <Button onClick={() => fetchOdds(false)} variant="ghost" size="sm" disabled={loading}>
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
       </CardHeader>
 
       <CardContent>
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {/* Highest Scorer Table */}
           <div>
-            <div className='flex items-center gap-2 mb-4'>
-              <TrendingUp className='h-5 w-5 text-green-600' />
-              <h3 className='text-lg font-semibold text-green-700 dark:text-green-400'>
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="h-5 w-5 text-green-600" />
+              <h3 className="text-lg font-semibold text-green-700 dark:text-green-400">
                 Highest Scorer Odds
               </h3>
             </div>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-sm'>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className='border-b border-muted'>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Team</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                  <tr className="border-b border-muted">
+                    <th className="text-left py-2 font-medium text-muted-foreground">Rank</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">Team</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">League</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Projection
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Range</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Range</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Probability
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Odds</th>
                   </tr>
                 </thead>
                 <tbody>
                   {odds.highestScorer.map((team, index) => (
-                    <tr key={team.teamId} className='border-b border-muted/50 hover:bg-muted/30'>
-                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
-                      <td className='py-2 font-medium'>{team.teamName}</td>
-                      <td className='py-2'>
-                        <Badge className={getLeagueBadgeColor(team.leagueId)} variant='secondary'>
+                    <tr key={team.teamId} className="border-b border-muted/50 hover:bg-muted/30">
+                      <td className="py-2 text-muted-foreground">#{index + 1}</td>
+                      <td className="py-2 font-medium">{team.teamName}</td>
+                      <td className="py-2">
+                        <Badge className={getLeagueBadgeColor(team.leagueId)} variant="secondary">
                           {getLeagueShortName(team.leagueId)}
                         </Badge>
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {team.projectedRange?.p50?.toFixed(1) || team.totalProjection.toFixed(1)}{' '}
                         pts
                       </td>
-                      <td className='py-2 text-right text-xs text-muted-foreground font-mono'>
+                      <td className="py-2 text-right text-xs text-muted-foreground font-mono">
                         {team.projectedRange?.p10?.toFixed(0) || '0'}-
                         {team.projectedRange?.p90?.toFixed(0) || '0'}
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(team.probability * 100).toFixed(1)}%
                       </td>
-                      <td className='py-2 text-right'>
+                      <td className="py-2 text-right">
                         <Badge
-                          variant='outline'
-                          className='font-mono text-xs'
+                          variant="outline"
+                          className="font-mono text-xs"
                           style={{ backgroundColor: `${team.color}20`, borderColor: team.color }}
                         >
                           {team.odds}
@@ -242,54 +242,54 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
 
           {/* Lowest Scorer Table */}
           <div>
-            <div className='flex items-center gap-2 mb-4'>
-              <TrendingDown className='h-5 w-5 text-red-600' />
-              <h3 className='text-lg font-semibold text-red-700 dark:text-red-400'>
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingDown className="h-5 w-5 text-red-600" />
+              <h3 className="text-lg font-semibold text-red-700 dark:text-red-400">
                 Lowest Scorer Odds
               </h3>
             </div>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-sm'>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className='border-b border-muted'>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Team</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                  <tr className="border-b border-muted">
+                    <th className="text-left py-2 font-medium text-muted-foreground">Rank</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">Team</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">League</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Projection
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Range</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Range</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Probability
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Odds</th>
                   </tr>
                 </thead>
                 <tbody>
                   {odds.lowestScorer.map((team, index) => (
-                    <tr key={team.teamId} className='border-b border-muted/50 hover:bg-muted/30'>
-                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
-                      <td className='py-2 font-medium'>{team.teamName}</td>
-                      <td className='py-2'>
-                        <Badge className={getLeagueBadgeColor(team.leagueId)} variant='secondary'>
+                    <tr key={team.teamId} className="border-b border-muted/50 hover:bg-muted/30">
+                      <td className="py-2 text-muted-foreground">#{index + 1}</td>
+                      <td className="py-2 font-medium">{team.teamName}</td>
+                      <td className="py-2">
+                        <Badge className={getLeagueBadgeColor(team.leagueId)} variant="secondary">
                           {getLeagueShortName(team.leagueId)}
                         </Badge>
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {team.projectedRange?.p50?.toFixed(1) || team.totalProjection.toFixed(1)}{' '}
                         pts
                       </td>
-                      <td className='py-2 text-right text-xs text-muted-foreground font-mono'>
+                      <td className="py-2 text-right text-xs text-muted-foreground font-mono">
                         {team.projectedRange?.p10?.toFixed(0) || '0'}-
                         {team.projectedRange?.p90?.toFixed(0) || '0'}
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(team.probability * 100).toFixed(1)}%
                       </td>
-                      <td className='py-2 text-right'>
+                      <td className="py-2 text-right">
                         <Badge
-                          variant='outline'
-                          className='font-mono text-xs'
+                          variant="outline"
+                          className="font-mono text-xs"
                           style={{ backgroundColor: `${team.color}20`, borderColor: team.color }}
                         >
                           {team.odds}
@@ -304,58 +304,58 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
 
           {/* Closest Matchups Table */}
           <div>
-            <div className='flex items-center gap-2 mb-4'>
-              <Target className='h-5 w-5 text-orange-600' />
-              <h3 className='text-lg font-semibold text-orange-700 dark:text-orange-400'>
+            <div className="flex items-center gap-2 mb-4">
+              <Target className="h-5 w-5 text-orange-600" />
+              <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-400">
                 Closest Matchups
               </h3>
             </div>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-sm'>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className='border-b border-muted'>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Margin</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                  <tr className="border-b border-muted">
+                    <th className="text-left py-2 font-medium text-muted-foreground">Rank</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">Matchup</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">League</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Margin</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Probability
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Odds</th>
                   </tr>
                 </thead>
                 <tbody>
                   {odds.closestMatchup.map((matchup, index) => (
                     <tr
                       key={`${matchup.matchupId}-${matchup.team1.leagueId}`}
-                      className='border-b border-muted/50 hover:bg-muted/30'
+                      className="border-b border-muted/50 hover:bg-muted/30"
                     >
-                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
-                      <td className='py-2'>
-                        <div className='font-medium'>
+                      <td className="py-2 text-muted-foreground">#{index + 1}</td>
+                      <td className="py-2">
+                        <div className="font-medium">
                           {matchup.team1.name}
-                          <span className='text-xs text-muted-foreground mx-1'>vs</span>
+                          <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
                         </div>
                       </td>
-                      <td className='py-2'>
+                      <td className="py-2">
                         <Badge
                           className={getLeagueBadgeColor(matchup.team1.leagueId)}
-                          variant='secondary'
+                          variant="secondary"
                         >
                           {getLeagueShortName(matchup.team1.leagueId)}
                         </Badge>
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {matchup.projectedMargin?.toFixed(1) || '0'} pts
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(matchup.probability * 100).toFixed(1)}%
                       </td>
-                      <td className='py-2 text-right'>
+                      <td className="py-2 text-right">
                         <Badge
-                          variant='outline'
-                          className='font-mono text-xs'
+                          variant="outline"
+                          className="font-mono text-xs"
                           style={{
                             backgroundColor: `${matchup.color}20`,
                             borderColor: matchup.color,
@@ -373,58 +373,58 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
 
           {/* Biggest Blowout Table */}
           <div>
-            <div className='flex items-center gap-2 mb-4'>
-              <Zap className='h-5 w-5 text-purple-600' />
-              <h3 className='text-lg font-semibold text-purple-700 dark:text-purple-400'>
+            <div className="flex items-center gap-2 mb-4">
+              <Zap className="h-5 w-5 text-purple-600" />
+              <h3 className="text-lg font-semibold text-purple-700 dark:text-purple-400">
                 Biggest Blowouts
               </h3>
             </div>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-sm'>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className='border-b border-muted'>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Margin</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                  <tr className="border-b border-muted">
+                    <th className="text-left py-2 font-medium text-muted-foreground">Rank</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">Matchup</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">League</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Margin</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Probability
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Odds</th>
                   </tr>
                 </thead>
                 <tbody>
                   {odds.biggestBlowout.map((matchup, index) => (
                     <tr
                       key={`${matchup.matchupId}-${matchup.team1.leagueId}`}
-                      className='border-b border-muted/50 hover:bg-muted/30'
+                      className="border-b border-muted/50 hover:bg-muted/30"
                     >
-                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
-                      <td className='py-2'>
-                        <div className='font-medium'>
+                      <td className="py-2 text-muted-foreground">#{index + 1}</td>
+                      <td className="py-2">
+                        <div className="font-medium">
                           {matchup.team1.name}
-                          <span className='text-xs text-muted-foreground mx-1'>vs</span>
+                          <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
                         </div>
                       </td>
-                      <td className='py-2'>
+                      <td className="py-2">
                         <Badge
                           className={getLeagueBadgeColor(matchup.team1.leagueId)}
-                          variant='secondary'
+                          variant="secondary"
                         >
                           {getLeagueShortName(matchup.team1.leagueId)}
                         </Badge>
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {matchup.projectedMargin?.toFixed(1) || '0'} pts
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(matchup.probability * 100).toFixed(1)}%
                       </td>
-                      <td className='py-2 text-right'>
+                      <td className="py-2 text-right">
                         <Badge
-                          variant='outline'
-                          className='font-mono text-xs'
+                          variant="outline"
+                          className="font-mono text-xs"
                           style={{
                             backgroundColor: `${matchup.color}20`,
                             borderColor: matchup.color,
@@ -442,60 +442,60 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
 
           {/* Highest Scoring Matchup Table */}
           <div>
-            <div className='flex items-center gap-2 mb-4'>
-              <TrendingUp className='h-5 w-5 text-green-600' />
-              <h3 className='text-lg font-semibold text-green-700 dark:text-green-400'>
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="h-5 w-5 text-green-600" />
+              <h3 className="text-lg font-semibold text-green-700 dark:text-green-400">
                 Highest Scoring Matchup
               </h3>
             </div>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-sm'>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className='border-b border-muted'>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                  <tr className="border-b border-muted">
+                    <th className="text-left py-2 font-medium text-muted-foreground">Rank</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">Matchup</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">League</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Total Points
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Probability
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Odds</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(odds.highestScoringMatchup || []).map((matchup, index) => (
                     <tr
                       key={`${matchup.matchupId}-${matchup.team1.leagueId}-highest`}
-                      className='border-b border-muted/50 hover:bg-muted/30'
+                      className="border-b border-muted/50 hover:bg-muted/30"
                     >
-                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
-                      <td className='py-2'>
-                        <div className='font-medium'>
+                      <td className="py-2 text-muted-foreground">#{index + 1}</td>
+                      <td className="py-2">
+                        <div className="font-medium">
                           {matchup.team1.name}
-                          <span className='text-xs text-muted-foreground mx-1'>vs</span>
+                          <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
                         </div>
                       </td>
-                      <td className='py-2'>
+                      <td className="py-2">
                         <Badge
                           className={getLeagueBadgeColor(matchup.team1.leagueId)}
-                          variant='secondary'
+                          variant="secondary"
                         >
                           {getLeagueShortName(matchup.team1.leagueId)}
                         </Badge>
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(matchup.probability * 100).toFixed(1)}%
                       </td>
-                      <td className='py-2 text-right'>
+                      <td className="py-2 text-right">
                         <Badge
-                          variant='outline'
-                          className='font-mono text-xs'
+                          variant="outline"
+                          className="font-mono text-xs"
                           style={{
                             backgroundColor: `${matchup.color}20`,
                             borderColor: matchup.color,
@@ -513,60 +513,60 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
 
           {/* Lowest Scoring Matchup Table */}
           <div>
-            <div className='flex items-center gap-2 mb-4'>
-              <TrendingDown className='h-5 w-5 text-orange-600' />
-              <h3 className='text-lg font-semibold text-orange-700 dark:text-orange-400'>
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingDown className="h-5 w-5 text-orange-600" />
+              <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-400">
                 Lowest Scoring Matchup
               </h3>
             </div>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-sm'>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className='border-b border-muted'>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Rank</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>Matchup</th>
-                    <th className='text-left py-2 font-medium text-muted-foreground'>League</th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                  <tr className="border-b border-muted">
+                    <th className="text-left py-2 font-medium text-muted-foreground">Rank</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">Matchup</th>
+                    <th className="text-left py-2 font-medium text-muted-foreground">League</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Total Points
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>
+                    <th className="text-right py-2 font-medium text-muted-foreground">
                       Probability
                     </th>
-                    <th className='text-right py-2 font-medium text-muted-foreground'>Odds</th>
+                    <th className="text-right py-2 font-medium text-muted-foreground">Odds</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(odds.lowestScoringMatchup || []).map((matchup, index) => (
                     <tr
                       key={`${matchup.matchupId}-${matchup.team1.leagueId}-lowest`}
-                      className='border-b border-muted/50 hover:bg-muted/30'
+                      className="border-b border-muted/50 hover:bg-muted/30"
                     >
-                      <td className='py-2 text-muted-foreground'>#{index + 1}</td>
-                      <td className='py-2'>
-                        <div className='font-medium'>
+                      <td className="py-2 text-muted-foreground">#{index + 1}</td>
+                      <td className="py-2">
+                        <div className="font-medium">
                           {matchup.team1.name}
-                          <span className='text-xs text-muted-foreground mx-1'>vs</span>
+                          <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
                         </div>
                       </td>
-                      <td className='py-2'>
+                      <td className="py-2">
                         <Badge
                           className={getLeagueBadgeColor(matchup.team1.leagueId)}
-                          variant='secondary'
+                          variant="secondary"
                         >
                           {getLeagueShortName(matchup.team1.leagueId)}
                         </Badge>
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts
                       </td>
-                      <td className='py-2 text-right font-mono'>
+                      <td className="py-2 text-right font-mono">
                         {(matchup.probability * 100).toFixed(1)}%
                       </td>
-                      <td className='py-2 text-right'>
+                      <td className="py-2 text-right">
                         <Badge
-                          variant='outline'
-                          className='font-mono text-xs'
+                          variant="outline"
+                          className="font-mono text-xs"
                           style={{
                             backgroundColor: `${matchup.color}20`,
                             borderColor: matchup.color,
@@ -584,8 +584,8 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
         </div>
 
         {/* Footer */}
-        <div className='mt-4 pt-4 border-t border-muted text-center'>
-          <p className='text-xs text-muted-foreground'>
+        <div className="mt-4 pt-4 border-t border-muted text-center">
+          <p className="text-xs text-muted-foreground">
             Updated: {new Date(odds.lastUpdated).toLocaleTimeString()} • Based on Monte Carlo
             simulations of all active rosters
           </p>

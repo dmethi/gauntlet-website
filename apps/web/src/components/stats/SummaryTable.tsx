@@ -33,32 +33,32 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
   const sortedData = [...data].sort((a, b) => b.windowTotal - a.windowTotal);
 
   return (
-    <div className='rounded-md border'>
+    <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Team</TableHead>
-            <TableHead className='text-right'>Total</TableHead>
-            <TableHead className='text-right'>Opp Total</TableHead>
-            <TableHead className='text-right'>Diff</TableHead>
-            <TableHead className='text-right'>Avg Δ</TableHead>
-            <TableHead className='text-right'>Median Δ</TableHead>
-            <TableHead className='text-center'>Rank (24)</TableHead>
-            {showLeagueRank && <TableHead className='text-center'>Rank (Lg)</TableHead>}
+            <TableHead className="text-right">Total</TableHead>
+            <TableHead className="text-right">Opp Total</TableHead>
+            <TableHead className="text-right">Diff</TableHead>
+            <TableHead className="text-right">Avg Δ</TableHead>
+            <TableHead className="text-right">Median Δ</TableHead>
+            <TableHead className="text-center">Rank (24)</TableHead>
+            {showLeagueRank && <TableHead className="text-center">Rank (Lg)</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
           {sortedData.map((row, index) => (
             <TableRow key={row.teamName}>
-              <TableCell className='font-medium'>{row.teamName}</TableCell>
-              <TableCell className='text-right font-mono'>{row.windowTotal.toFixed(1)}</TableCell>
-              <TableCell className='text-right font-mono'>{row.oppTotal.toFixed(1)}</TableCell>
+              <TableCell className="font-medium">{row.teamName}</TableCell>
+              <TableCell className="text-right font-mono">{row.windowTotal.toFixed(1)}</TableCell>
+              <TableCell className="text-right font-mono">{row.oppTotal.toFixed(1)}</TableCell>
               <TableCell
                 className={cn(
                   'text-right font-mono',
                   row.diff > 0
                     ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
+                    : 'text-red-600 dark:text-red-400',
                 )}
               >
                 {row.diff > 0 ? '+' : ''}
@@ -69,7 +69,7 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
                   'text-right font-mono',
                   row.avgDelta > 0
                     ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
+                    : 'text-red-600 dark:text-red-400',
                 )}
               >
                 {row.avgDelta > 0 ? '+' : ''}
@@ -80,22 +80,22 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
                   'text-right font-mono',
                   row.medianDelta > 0
                     ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
+                    : 'text-red-600 dark:text-red-400',
                 )}
               >
                 {row.medianDelta > 0 ? '+' : ''}
                 {row.medianDelta.toFixed(1)}
               </TableCell>
-              <TableCell className='text-center'>
+              <TableCell className="text-center">
                 <Badge
                   variant={row.rank24 <= 4 ? 'default' : row.rank24 <= 12 ? 'secondary' : 'outline'}
-                  className='min-w-[2.5rem] justify-center'
+                  className="min-w-[2.5rem] justify-center"
                 >
                   {row.rank24}
                 </Badge>
               </TableCell>
               {showLeagueRank && (
-                <TableCell className='text-center'>
+                <TableCell className="text-center">
                   <Badge
                     variant={
                       row.rankLeague <= 2
@@ -104,7 +104,7 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
                           ? 'secondary'
                           : 'outline'
                     }
-                    className='min-w-[2.5rem] justify-center'
+                    className="min-w-[2.5rem] justify-center"
                   >
                     {row.rankLeague}
                   </Badge>

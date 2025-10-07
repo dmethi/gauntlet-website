@@ -90,7 +90,7 @@ class SimulationCache {
     this.enforceSizeLimit();
 
     console.log(
-      `📦 [CACHE] Stored simulation for ${leagueId}-W${week}-M${matchupId}, TTL: ${ttl / 1000}s`
+      `📦 [CACHE] Stored simulation for ${leagueId}-W${week}-M${matchupId}, TTL: ${ttl / 1000}s`,
     );
   }
 

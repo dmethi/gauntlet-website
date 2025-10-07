@@ -69,7 +69,7 @@ export interface ProcessedMatchup {
  */
 export function calculateHallOfFameRecords(
   matchups: ProcessedMatchup[],
-  categories: HallOfFameCategory[] = HALL_OF_FAME_CATEGORIES
+  categories: HallOfFameCategory[] = HALL_OF_FAME_CATEGORIES,
 ): Map<string, HallOfFameRecord[]> {
   const recordsByCategory = new Map<string, HallOfFameRecord[]>();
 

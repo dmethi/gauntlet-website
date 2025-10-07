@@ -11,7 +11,7 @@ interface PlayerBreakdownProps {
 
 export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) {
   if (players.length === 0) {
-    return <div className='text-xs text-muted-foreground py-2 px-4'>No players</div>;
+    return <div className="text-xs text-muted-foreground py-2 px-4">No players</div>;
   }
 
   // Get relevant stats for this position
@@ -27,7 +27,7 @@ export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) 
           'pass_cmp',
           'pass_att',
           'rush_yd',
-          'rush_td'
+          'rush_td',
         );
         break;
       case 'RB':
@@ -70,23 +70,23 @@ export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) 
   }
 
   return (
-    <div className='space-y-2 py-2 px-4 bg-muted/10 border-t'>
+    <div className="space-y-2 py-2 px-4 bg-muted/10 border-t">
       {players.map((player, idx) => {
         const relevantStats = getRelevantStats(player.stats);
 
         return (
-          <div key={player.playerId} className='flex items-center justify-between text-xs'>
-            <div className='flex items-center gap-2'>
-              <span className='font-medium'>{player.name}</span>
-              <span className='text-muted-foreground'>({player.team})</span>
-              <span className='font-mono font-bold' style={{ color: colors.core.regalGold }}>
+          <div key={player.playerId} className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <span className="font-medium">{player.name}</span>
+              <span className="text-muted-foreground">({player.team})</span>
+              <span className="font-mono font-bold" style={{ color: colors.core.regalGold }}>
                 {player.fantasyPoints.toFixed(1)}
               </span>
             </div>
 
-            <div className='flex items-center gap-3 text-xs'>
+            <div className="flex items-center gap-3 text-xs">
               {relevantStats.map(statKey => (
-                <span key={statKey} className='font-mono'>
+                <span key={statKey} className="font-mono">
                   {formatStatKey(statKey)}: <strong>{player.stats[statKey]}</strong>
                 </span>
               ))}

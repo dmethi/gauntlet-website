@@ -54,7 +54,7 @@ export async function GET(request: NextRequest, { params }: { params: { leagueId
         error: 'Failed to fetch transactions',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

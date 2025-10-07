@@ -8,7 +8,7 @@ import {
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { leagueId: string; season: string } }
+  { params }: { params: { leagueId: string; season: string } },
 ) {
   try {
     const { leagueId, season } = params;
@@ -36,7 +36,7 @@ export async function GET(
           console.warn(`Failed to compute rollup for week ${week}:`, error);
           return null;
         }
-      })
+      }),
     );
 
     const validRollups = rollups.filter(r => r !== null);
@@ -63,7 +63,7 @@ export async function GET(
       highestScore: (() => {
         const best = allRosterAggregates.reduce(
           (max, agg) => (agg.points > max.points ? agg : max),
-          { points: -1, rosterId: 0, week: 0 }
+          { points: -1, rosterId: 0, week: 0 },
         );
 
         return {
@@ -80,7 +80,7 @@ export async function GET(
       lowestScore: (() => {
         const worst = allRosterAggregates.reduce(
           (min, agg) => (agg.points < min.points && agg.points > 0 ? agg : min),
-          { points: Infinity, rosterId: 0, week: 0 }
+          { points: Infinity, rosterId: 0, week: 0 },
         );
 
         return {
@@ -105,7 +105,7 @@ export async function GET(
             week: 0,
             rosterAId: 0,
             rosterBId: 0,
-          }
+          },
         );
 
         const winner = biggest.pointsA > biggest.pointsB ? biggest.rosterAId : biggest.rosterBId;
@@ -135,7 +135,7 @@ export async function GET(
             week: 0,
             rosterAId: 0,
             rosterBId: 0,
-          }
+          },
         );
 
         const winner = closest.pointsA > closest.pointsB ? closest.rosterAId : closest.rosterBId;
@@ -205,7 +205,7 @@ export async function GET(
         error: 'Failed to compute superlatives',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

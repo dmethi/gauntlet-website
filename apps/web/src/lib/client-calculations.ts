@@ -69,7 +69,7 @@ function calculateLuck(won: boolean, expectedWins: number): number {
 export function calculateTeamStats(
   rosters: any[],
   matchupsByWeek: Map<number, any[]>,
-  users: any[]
+  users: any[],
 ): TeamSeasonStats[] {
   const teamStats: Map<number, TeamSeasonStats> = new Map();
   const userMap = new Map(users.map(u => [u.user_id, u]));
@@ -160,7 +160,7 @@ export function calculateTeamStats(
 export function calculatePositionalScoring(
   matchupsByWeek: Map<number, any[]>,
   playerStats: Map<string, any>,
-  rosterId: number
+  rosterId: number,
 ): PositionalScoring[] {
   const positionTotals: Map<
     string,
@@ -192,7 +192,7 @@ export function calculatePositionalScoring(
       const isOurTeam = matchup.roster_id === rosterId;
       const matchupGroup = matchupGroups.get(matchup.matchup_id) || [];
       const isOpponent = matchupGroup.some(
-        m => m.roster_id === rosterId && m.roster_id !== matchup.roster_id
+        m => m.roster_id === rosterId && m.roster_id !== matchup.roster_id,
       );
 
       // Process each starter's points by position
@@ -228,7 +228,7 @@ export function calculatePositionalScoring(
   const numTeams = new Set(
     Array.from(matchupsByWeek.values())
       .flat()
-      .map(m => m.roster_id)
+      .map(m => m.roster_id),
   ).size;
 
   return validPositions.map(position => {

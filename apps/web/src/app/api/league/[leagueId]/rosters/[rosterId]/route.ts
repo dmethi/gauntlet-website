@@ -8,7 +8,7 @@ import {
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { leagueId: string; rosterId: string } }
+  { params }: { params: { leagueId: string; rosterId: string } },
 ) {
   try {
     const { leagueId, rosterId } = params;
@@ -38,7 +38,7 @@ export async function GET(
     // Fetch matchups for all weeks to get full season data
     const weeks = Array.from({ length: Math.min(currentWeek, 18) }, (_, i) => i + 1);
     const allMatchups = await Promise.all(
-      weeks.map(week => getMatchupsByWeek(leagueId, week).catch(() => []))
+      weeks.map(week => getMatchupsByWeek(leagueId, week).catch(() => [])),
     );
 
     // Process matchup history for this roster
@@ -56,7 +56,7 @@ export async function GET(
       const rosterMatchup = weekMatchups.find(m => m.rosterId === rosterIdNumber);
       if (rosterMatchup) {
         const opponent = weekMatchups.find(
-          m => m.matchupId === rosterMatchup.matchupId && m.rosterId !== rosterIdNumber
+          m => m.matchupId === rosterMatchup.matchupId && m.rosterId !== rosterIdNumber,
         );
 
         const rosterPoints = rosterMatchup.points || 0;
@@ -144,7 +144,7 @@ export async function GET(
         error: 'Failed to fetch roster',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -115,7 +115,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
   }, [allTeamEntries]);
 
   return (
-    <div className='space-y-8'>
+    <div className="space-y-8">
       {/* Power Rankings Evolution */}
       <Card>
         <CardHeader>
@@ -126,24 +126,24 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='overflow-auto rounded-md border'>
-            <table className='w-full text-xs'>
-              <thead className='bg-muted/50'>
+          <div className="overflow-auto rounded-md border">
+            <table className="w-full text-xs">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className='sticky left-0 z-10 bg-muted px-3 py-3 text-left font-semibold min-w-[140px]'>
+                  <th className="sticky left-0 z-10 bg-muted px-3 py-3 text-left font-semibold min-w-[140px]">
                     Team
                   </th>
                   {Array.from({ length: dataset.currentWeek - 1 }, (_, i) => i + 1).map(week => (
                     <th
                       key={week}
-                      className='px-3 py-3 text-center font-semibold min-w-[50px]'
+                      className="px-3 py-3 text-center font-semibold min-w-[50px]"
                       style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
                     >
                       W{week}
                     </th>
                   ))}
                   <th
-                    className='px-3 py-3 text-center font-semibold min-w-[80px]'
+                    className="px-3 py-3 text-center font-semibold min-w-[80px]"
                     style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
                   >
                     Weekly Trend
@@ -167,7 +167,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                   const calculateZScore = (values: number[]): number[] => {
                     const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
                     const stdDev = Math.sqrt(
-                      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length
+                      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length,
                     );
                     return stdDev === 0
                       ? values.map(() => 0)
@@ -287,14 +287,14 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                       const aRecentRank = a[1].weeklyRanks[a[1].weeklyRanks.length - 1] || 999;
                       const bRecentRank = b[1].weeklyRanks[b[1].weeklyRanks.length - 1] || 999;
                       return aRecentRank - bRecentRank;
-                    }
+                    },
                   );
 
                   return sortedPowerTeams.map(([teamKey, data]) => (
-                    <tr key={teamKey} className='border-t hover:bg-muted/10'>
-                      <td className='sticky left-0 z-10 bg-background border-r px-3 py-2'>
-                        <div className='font-medium'>{data.teamInfo.teamName}</div>
-                        <div className='text-xs text-muted-foreground'>
+                    <tr key={teamKey} className="border-t hover:bg-muted/10">
+                      <td className="sticky left-0 z-10 bg-background border-r px-3 py-2">
+                        <div className="font-medium">{data.teamInfo.teamName}</div>
+                        <div className="text-xs text-muted-foreground">
                           {data.teamInfo.leagueName}
                         </div>
                       </td>
@@ -303,16 +303,16 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                           const weekRank = data.weeklyRanks[weekIndex];
                           const weekScore = data.weeklyScores[weekIndex];
                           return (
-                            <td key={weekIndex} className='px-1 py-2 text-center border-r'>
+                            <td key={weekIndex} className="px-1 py-2 text-center border-r">
                               {weekRank ? (
                                 <div
-                                  className='rounded-md p-2 transition-colors'
+                                  className="rounded-md p-2 transition-colors"
                                   style={{
                                     backgroundColor: getRankColor(weekRank, 24),
                                   }}
                                 >
                                   <div
-                                    className='font-mono font-bold text-xs'
+                                    className="font-mono font-bold text-xs"
                                     style={{
                                       color: getTextColor(getRankColor(weekRank, 24)),
                                     }}
@@ -320,7 +320,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                     #{weekRank}
                                   </div>
                                   <div
-                                    className='font-mono text-xs mt-1'
+                                    className="font-mono text-xs mt-1"
                                     style={{
                                       color: getTextColor(getRankColor(weekRank, 24)),
                                     }}
@@ -329,15 +329,15 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                   </div>
                                 </div>
                               ) : (
-                                <div className='text-xs text-muted-foreground'>—</div>
+                                <div className="text-xs text-muted-foreground">—</div>
                               )}
                             </td>
                           );
-                        }
+                        },
                       )}
-                      <td className='px-3 py-2 text-center'>
-                        <div className='w-16 h-8'>
-                          <ResponsiveContainer width='100%' height='100%'>
+                      <td className="px-3 py-2 text-center">
+                        <div className="w-16 h-8">
+                          <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                               data={(() => {
                                 // Get actual weekly data with correct week numbers using teamKey
@@ -353,8 +353,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                               })()}
                             >
                               <Line
-                                type='monotone'
-                                dataKey='score'
+                                type="monotone"
+                                dataKey="score"
                                 stroke={colors.core.regalGold}
                                 strokeWidth={2}
                                 dot={false}
@@ -385,9 +385,9 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
             </table>
           </div>
 
-          <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-            <h4 className='font-semibold mb-2'>Power Rankings Formula</h4>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground'>
+          <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+            <h4 className="font-semibold mb-2">Power Rankings Formula</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground">
               <div>
                 <p>
                   <strong>Components:</strong> 50% Avg Points + 30% Expected Wins + 20% Rolling
@@ -401,7 +401,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                 </p>
               </div>
             </div>
-            <div className='mt-2'>
+            <div className="mt-2">
               <p>
                 <strong>Score Range:</strong> ~70-130, where higher = stronger team. Accounts for
                 consistency, recent form, and opponent strength.
@@ -421,24 +421,24 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='overflow-auto rounded-md border'>
-            <table className='w-full text-xs'>
-              <thead className='bg-muted/50'>
+          <div className="overflow-auto rounded-md border">
+            <table className="w-full text-xs">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className='sticky left-0 z-10 bg-muted px-3 py-3 text-left font-semibold min-w-[140px]'>
+                  <th className="sticky left-0 z-10 bg-muted px-3 py-3 text-left font-semibold min-w-[140px]">
                     Team
                   </th>
                   {Array.from({ length: dataset.currentWeek - 1 }, (_, i) => i + 1).map(week => (
                     <th
                       key={week}
-                      className='px-3 py-3 text-center font-semibold min-w-[50px]'
+                      className="px-3 py-3 text-center font-semibold min-w-[50px]"
                       style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
                     >
                       W{week}
                     </th>
                   ))}
                   <th
-                    className='px-3 py-3 text-center font-semibold min-w-[80px]'
+                    className="px-3 py-3 text-center font-semibold min-w-[80px]"
                     style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
                   >
                     Weekly Trend
@@ -511,10 +511,10 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                   });
 
                   return sortedTeams.map(([teamKey, data]) => (
-                    <tr key={teamKey} className='border-t hover:bg-muted/10'>
-                      <td className='sticky left-0 z-10 bg-background border-r px-3 py-2'>
-                        <div className='font-medium'>{data.teamInfo.teamName}</div>
-                        <div className='text-xs text-muted-foreground'>
+                    <tr key={teamKey} className="border-t hover:bg-muted/10">
+                      <td className="sticky left-0 z-10 bg-background border-r px-3 py-2">
+                        <div className="font-medium">{data.teamInfo.teamName}</div>
+                        <div className="text-xs text-muted-foreground">
                           {data.teamInfo.leagueName}
                         </div>
                       </td>
@@ -523,16 +523,16 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                           const weekRank = data.weeklyRanks[weekIndex];
                           const weekScore = data.weeklyScores[weekIndex];
                           return (
-                            <td key={weekIndex} className='px-1 py-2 text-center border-r'>
+                            <td key={weekIndex} className="px-1 py-2 text-center border-r">
                               {weekRank ? (
                                 <div
-                                  className='rounded-md p-2 transition-colors'
+                                  className="rounded-md p-2 transition-colors"
                                   style={{
                                     backgroundColor: getRankColor(weekRank, 24),
                                   }}
                                 >
                                   <div
-                                    className='font-mono font-bold text-xs'
+                                    className="font-mono font-bold text-xs"
                                     style={{
                                       color: getTextColor(getRankColor(weekRank, 24)),
                                     }}
@@ -540,7 +540,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                     #{weekRank}
                                   </div>
                                   <div
-                                    className='font-mono text-xs mt-1'
+                                    className="font-mono text-xs mt-1"
                                     style={{
                                       color: getTextColor(getRankColor(weekRank, 24)),
                                     }}
@@ -549,15 +549,15 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                   </div>
                                 </div>
                               ) : (
-                                <div className='text-xs text-muted-foreground'>—</div>
+                                <div className="text-xs text-muted-foreground">—</div>
                               )}
                             </td>
                           );
-                        }
+                        },
                       )}
-                      <td className='px-3 py-2 text-center'>
-                        <div className='w-16 h-8'>
-                          <ResponsiveContainer width='100%' height='100%'>
+                      <td className="px-3 py-2 text-center">
+                        <div className="w-16 h-8">
+                          <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                               data={(() => {
                                 // Get actual weekly data with correct week numbers using teamKey
@@ -573,8 +573,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                               })()}
                             >
                               <Line
-                                type='monotone'
-                                dataKey='score'
+                                type="monotone"
+                                dataKey="score"
                                 stroke={colors.core.regalGold}
                                 strokeWidth={2}
                                 dot={false}
@@ -605,9 +605,9 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
             </table>
           </div>
 
-          <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-            <h4 className='font-semibold mb-2'>How to Read the Trends</h4>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground'>
+          <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+            <h4 className="font-semibold mb-2">How to Read the Trends</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground">
               <div>
                 <p>
                   <strong>Colors:</strong> Green = top performance, Red = bottom performance
@@ -636,24 +636,24 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='overflow-auto rounded-md border'>
-              <table className='w-full text-xs'>
-                <thead className='bg-muted/50'>
+            <div className="overflow-auto rounded-md border">
+              <table className="w-full text-xs">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className='sticky left-0 z-10 bg-muted px-3 py-3 text-left font-semibold min-w-[140px]'>
+                    <th className="sticky left-0 z-10 bg-muted px-3 py-3 text-left font-semibold min-w-[140px]">
                       Team
                     </th>
                     {Array.from({ length: dataset.currentWeek - 1 }, (_, i) => i + 1).map(week => (
                       <th
                         key={week}
-                        className='px-3 py-3 text-center font-semibold min-w-[50px]'
+                        className="px-3 py-3 text-center font-semibold min-w-[50px]"
                         style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
                       >
                         W{week}
                       </th>
                     ))}
                     <th
-                      className='px-3 py-3 text-center font-semibold min-w-[60px]'
+                      className="px-3 py-3 text-center font-semibold min-w-[60px]"
                       style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
                     >
                       Trend
@@ -767,10 +767,10 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                     });
 
                     return sortedPosTeams.map(([teamKey, data]) => (
-                      <tr key={teamKey} className='border-t hover:bg-muted/10'>
-                        <td className='sticky left-0 z-10 bg-background border-r px-3 py-2'>
-                          <div className='font-medium'>{data.teamInfo.teamName}</div>
-                          <div className='text-xs text-muted-foreground'>
+                      <tr key={teamKey} className="border-t hover:bg-muted/10">
+                        <td className="sticky left-0 z-10 bg-background border-r px-3 py-2">
+                          <div className="font-medium">{data.teamInfo.teamName}</div>
+                          <div className="text-xs text-muted-foreground">
                             {data.teamInfo.leagueName}
                           </div>
                         </td>
@@ -779,16 +779,16 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                             const weekRank = data.weeklyRanks[weekIndex];
                             const weekScore = data.weeklyScores[weekIndex];
                             return (
-                              <td key={weekIndex} className='px-1 py-2 text-center border-r'>
+                              <td key={weekIndex} className="px-1 py-2 text-center border-r">
                                 {weekRank ? (
                                   <div
-                                    className='rounded-md p-2 transition-colors'
+                                    className="rounded-md p-2 transition-colors"
                                     style={{
                                       backgroundColor: getRankColor(weekRank, 24),
                                     }}
                                   >
                                     <div
-                                      className='font-mono font-bold text-xs'
+                                      className="font-mono font-bold text-xs"
                                       style={{
                                         color: getTextColor(getRankColor(weekRank, 24)),
                                       }}
@@ -796,7 +796,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                       #{weekRank}
                                     </div>
                                     <div
-                                      className='font-mono text-xs mt-1'
+                                      className="font-mono text-xs mt-1"
                                       style={{
                                         color: getTextColor(getRankColor(weekRank, 24)),
                                       }}
@@ -805,15 +805,15 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className='text-xs text-muted-foreground'>—</div>
+                                  <div className="text-xs text-muted-foreground">—</div>
                                 )}
                               </td>
                             );
-                          }
+                          },
                         )}
-                        <td className='px-3 py-2 text-center'>
-                          <div className='w-16 h-8'>
-                            <ResponsiveContainer width='100%' height='100%'>
+                        <td className="px-3 py-2 text-center">
+                          <div className="w-16 h-8">
+                            <ResponsiveContainer width="100%" height="100%">
                               <LineChart
                                 data={data.weeklyScores.map((score, index) => ({
                                   week: index + 1,
@@ -821,8 +821,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                 }))}
                               >
                                 <Line
-                                  type='monotone'
-                                  dataKey='score'
+                                  type="monotone"
+                                  dataKey="score"
                                   stroke={colors.core.regalGold}
                                   strokeWidth={2}
                                   dot={false}
@@ -853,9 +853,9 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
               </table>
             </div>
 
-            <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-              <h4 className='font-semibold mb-2'>How to Read {position} Trends</h4>
-              <div className='text-muted-foreground'>
+            <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+              <h4 className="font-semibold mb-2">How to Read {position} Trends</h4>
+              <div className="text-muted-foreground">
                 <p>
                   <strong>Colors:</strong> Green = top {position} performance, Red = bottom{' '}
                   {position} performance
@@ -879,8 +879,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='h-96'>
-            <ResponsiveContainer width='100%' height='100%'>
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={(() => {
                   // Calculate consistency metrics for each team
@@ -902,8 +902,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                       const stdDev = Math.sqrt(
                         weeklyScores.reduce(
                           (sum, score) => sum + Math.pow(score - meanValue, 2),
-                          0
-                        ) / weeklyScores.length
+                          0,
+                        ) / weeklyScores.length,
                       );
 
                       return {
@@ -930,9 +930,9 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                 margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
               >
                 <XAxis
-                  dataKey='teamName'
+                  dataKey="teamName"
                   angle={-45}
-                  textAnchor='end'
+                  textAnchor="end"
                   height={80}
                   interval={0}
                   tick={{ fontSize: 10 }}
@@ -949,7 +949,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                       const data = payload[0].payload;
                       return (
                         <div
-                          className='p-4 rounded-lg shadow-xl border min-w-[320px]'
+                          className="p-4 rounded-lg shadow-xl border min-w-[320px]"
                           style={{
                             backgroundColor: colors.core.charcoalSteel,
                             borderColor: colors.core.regalGold,
@@ -957,21 +957,21 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                           }}
                         >
                           <div
-                            className='font-bold text-lg mb-1'
+                            className="font-bold text-lg mb-1"
                             style={{ color: colors.core.regalGold }}
                           >
                             {data.teamName}
                           </div>
-                          <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+                          <div className="text-xs text-gray-300 mb-3">{data.leagueName}</div>
 
-                          <div className='space-y-3 text-sm'>
-                            <div className='grid grid-cols-2 gap-4'>
+                          <div className="space-y-3 text-sm">
+                            <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <div className='font-semibold'>Consistency Score</div>
-                                <div className='text-lg font-bold'>
+                                <div className="font-semibold">Consistency Score</div>
+                                <div className="text-lg font-bold">
                                   {data.consistency.toFixed(1)}/100
                                 </div>
-                                <div className='text-xs text-gray-400'>
+                                <div className="text-xs text-gray-400">
                                   {data.stdDev < 15
                                     ? '🎯 Very Steady'
                                     : data.stdDev < 25
@@ -980,30 +980,30 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                 </div>
                               </div>
                               <div>
-                                <div className='font-semibold'>Score Range</div>
-                                <div className='text-lg font-bold'>{data.range.toFixed(1)}</div>
-                                <div className='text-xs text-gray-400'>
+                                <div className="font-semibold">Score Range</div>
+                                <div className="text-lg font-bold">{data.range.toFixed(1)}</div>
+                                <div className="text-xs text-gray-400">
                                   {data.min.toFixed(1)} - {data.max.toFixed(1)}
                                 </div>
                               </div>
                             </div>
 
-                            <div className='border-t border-gray-600 pt-2'>
-                              <div className='grid grid-cols-2 gap-3 text-xs'>
+                            <div className="border-t border-gray-600 pt-2">
+                              <div className="grid grid-cols-2 gap-3 text-xs">
                                 <div>
                                   Median:{' '}
-                                  <span className='font-semibold'>{data.median.toFixed(1)}</span>
+                                  <span className="font-semibold">{data.median.toFixed(1)}</span>
                                 </div>
                                 <div>
                                   Mean:{' '}
-                                  <span className='font-semibold'>{data.mean.toFixed(1)}</span>
+                                  <span className="font-semibold">{data.mean.toFixed(1)}</span>
                                 </div>
                                 <div>
                                   Std Dev:{' '}
-                                  <span className='font-semibold'>{data.stdDev.toFixed(1)}</span>
+                                  <span className="font-semibold">{data.stdDev.toFixed(1)}</span>
                                 </div>
                                 <div>
-                                  Games: <span className='font-semibold'>{data.gamesPlayed}</span>
+                                  Games: <span className="font-semibold">{data.gamesPlayed}</span>
                                 </div>
                               </div>
                             </div>
@@ -1015,7 +1015,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                   }}
                 />
 
-                <Bar dataKey='consistency'>
+                <Bar dataKey="consistency">
                   {(() => {
                     const data = allTeamEntries
                       .map(([teamKey, team]) => {
@@ -1027,8 +1027,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                         const stdDev = Math.sqrt(
                           weeklyScores.reduce(
                             (sum, score) => sum + Math.pow(score - meanValue, 2),
-                            0
-                          ) / weeklyScores.length
+                            0,
+                          ) / weeklyScores.length,
                         );
                         return { teamKey, consistency: 100 - Math.min(stdDev * 3, 100) };
                       })
@@ -1045,19 +1045,19 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
             </ResponsiveContainer>
           </div>
 
-          <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-            <h4 className='font-semibold mb-2'>How to Read Consistency</h4>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+          <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+            <h4 className="font-semibold mb-2">How to Read Consistency</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
               <div>
-                <span className='font-semibold'>🎯 Steady Teams:</span> Low standard deviation
+                <span className="font-semibold">🎯 Steady Teams:</span> Low standard deviation
                 (&lt;15), narrow score ranges. Reliable for playoffs.
               </div>
               <div>
-                <span className='font-semibold'>📊 Average Teams:</span> Medium volatility (15-25
+                <span className="font-semibold">📊 Average Teams:</span> Medium volatility (15-25
                 std dev). Some variance but predictable.
               </div>
               <div>
-                <span className='font-semibold'>🎲 Volatile Teams:</span> High volatility (&gt;25
+                <span className="font-semibold">🎲 Volatile Teams:</span> High volatility (&gt;25
                 std dev). Boom-or-bust potential.
               </div>
             </div>
@@ -1076,8 +1076,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='h-80'>
-              <ResponsiveContainer width='100%' height='100%'>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={(() => {
                     const posData = positionsMap.get(position);
@@ -1101,8 +1101,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                         const stdDev = Math.sqrt(
                           weeklyPosScores.reduce(
                             (sum, score) => sum + Math.pow(score - meanValue, 2),
-                            0
-                          ) / weeklyPosScores.length
+                            0,
+                          ) / weeklyPosScores.length,
                         );
 
                         return {
@@ -1129,9 +1129,9 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                   margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
                 >
                   <XAxis
-                    dataKey='teamName'
+                    dataKey="teamName"
                     angle={-45}
-                    textAnchor='end'
+                    textAnchor="end"
                     height={80}
                     interval={0}
                     tick={{ fontSize: 10 }}
@@ -1152,7 +1152,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                         const data = payload[0].payload;
                         return (
                           <div
-                            className='p-4 rounded-lg shadow-xl border min-w-[320px]'
+                            className="p-4 rounded-lg shadow-xl border min-w-[320px]"
                             style={{
                               backgroundColor: colors.core.charcoalSteel,
                               borderColor: colors.core.regalGold,
@@ -1160,21 +1160,21 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                             }}
                           >
                             <div
-                              className='font-bold text-lg mb-1'
+                              className="font-bold text-lg mb-1"
                               style={{ color: colors.core.regalGold }}
                             >
                               {data.teamName}
                             </div>
-                            <div className='text-xs text-gray-300 mb-3'>{data.leagueName}</div>
+                            <div className="text-xs text-gray-300 mb-3">{data.leagueName}</div>
 
-                            <div className='space-y-3 text-sm'>
-                              <div className='grid grid-cols-2 gap-4'>
+                            <div className="space-y-3 text-sm">
+                              <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                  <div className='font-semibold'>{position} Consistency</div>
-                                  <div className='text-lg font-bold'>
+                                  <div className="font-semibold">{position} Consistency</div>
+                                  <div className="text-lg font-bold">
                                     {data.consistency.toFixed(1)}/100
                                   </div>
-                                  <div className='text-xs text-gray-400'>
+                                  <div className="text-xs text-gray-400">
                                     {data.stdDev < 8
                                       ? '🎯 Very Steady'
                                       : data.stdDev < 15
@@ -1183,30 +1183,30 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                                   </div>
                                 </div>
                                 <div>
-                                  <div className='font-semibold'>{position} Range</div>
-                                  <div className='text-lg font-bold'>{data.range.toFixed(1)}</div>
-                                  <div className='text-xs text-gray-400'>
+                                  <div className="font-semibold">{position} Range</div>
+                                  <div className="text-lg font-bold">{data.range.toFixed(1)}</div>
+                                  <div className="text-xs text-gray-400">
                                     {data.min.toFixed(1)} - {data.max.toFixed(1)}
                                   </div>
                                 </div>
                               </div>
 
-                              <div className='border-t border-gray-600 pt-2'>
-                                <div className='grid grid-cols-2 gap-3 text-xs'>
+                              <div className="border-t border-gray-600 pt-2">
+                                <div className="grid grid-cols-2 gap-3 text-xs">
                                   <div>
                                     Median:{' '}
-                                    <span className='font-semibold'>{data.median.toFixed(1)}</span>
+                                    <span className="font-semibold">{data.median.toFixed(1)}</span>
                                   </div>
                                   <div>
                                     Mean:{' '}
-                                    <span className='font-semibold'>{data.mean.toFixed(1)}</span>
+                                    <span className="font-semibold">{data.mean.toFixed(1)}</span>
                                   </div>
                                   <div>
                                     Std Dev:{' '}
-                                    <span className='font-semibold'>{data.stdDev.toFixed(1)}</span>
+                                    <span className="font-semibold">{data.stdDev.toFixed(1)}</span>
                                   </div>
                                   <div>
-                                    Games: <span className='font-semibold'>{data.gamesPlayed}</span>
+                                    Games: <span className="font-semibold">{data.gamesPlayed}</span>
                                   </div>
                                 </div>
                               </div>
@@ -1218,7 +1218,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                     }}
                   />
 
-                  <Bar dataKey='consistency'>
+                  <Bar dataKey="consistency">
                     {(() => {
                       const posData = positionsMap.get(position);
                       const posTeamsMap = new Map(posData?.teams || []);
@@ -1233,8 +1233,8 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                           const stdDev = Math.sqrt(
                             weeklyPosScores.reduce(
                               (sum, score) => sum + Math.pow(score - meanValue, 2),
-                              0
-                            ) / weeklyPosScores.length
+                              0,
+                            ) / weeklyPosScores.length,
                           );
                           return { teamKey, consistency: 100 - Math.min(stdDev * 4, 100) };
                         })
@@ -1260,19 +1260,19 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
               </ResponsiveContainer>
             </div>
 
-            <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-              <h4 className='font-semibold mb-2'>{position} Consistency Guide</h4>
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+            <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+              <h4 className="font-semibold mb-2">{position} Consistency Guide</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
                 <div>
-                  <span className='font-semibold'>🎯 Steady {position}:</span> Low week-to-week
+                  <span className="font-semibold">🎯 Steady {position}:</span> Low week-to-week
                   variance. Reliable production.
                 </div>
                 <div>
-                  <span className='font-semibold'>📊 Average {position}:</span> Some volatility but
+                  <span className="font-semibold">📊 Average {position}:</span> Some volatility but
                   generally predictable.
                 </div>
                 <div>
-                  <span className='font-semibold'>🎲 Volatile {position}:</span> High variance.
+                  <span className="font-semibold">🎲 Volatile {position}:</span> High variance.
                   Boom-or-bust potential.
                 </div>
               </div>
@@ -1291,7 +1291,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='h-[800px]'>
+          <div className="h-[800px]">
             {(() => {
               // 1) Build chartData BEFORE the JSX:
               const helpers = {
@@ -1309,7 +1309,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                   const mean = samples.reduce((s, v) => s + v, 0) / n;
                   const std =
                     Math.sqrt(
-                      samples.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, n - 1)
+                      samples.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, n - 1),
                     ) || 1e-6;
                   const h = Math.max(1e-6, 1.06 * std * Math.pow(n, -1 / 5));
                   const inv = 1 / (Math.sqrt(2 * Math.PI) * h);
@@ -1317,7 +1317,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                   return xs.map(x => {
                     const s = samples.reduce(
                       (acc, v) => acc + Math.exp(-((x - v) ** 2) / twoH2),
-                      0
+                      0,
                     );
                     return [x, (inv * s) / n] as [number, number];
                   });
@@ -1379,7 +1379,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                     typeof t.max === 'number' &&
                     !isNaN(t.max) &&
                     typeof t.pad === 'number' &&
-                    !isNaN(t.pad)
+                    !isNaN(t.pad),
                 );
 
                 if (validData.length > 0) {
@@ -1411,24 +1411,24 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
               }
 
               return (
-                <RidgePlot data={chartData} domain={xDomain} height={800} title='Weekly Scores' />
+                <RidgePlot data={chartData} domain={xDomain} height={800} title="Weekly Scores" />
               );
             })()}
           </div>
 
-          <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-            <h4 className='font-semibold mb-2'>Ridge Plot Guide</h4>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+          <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+            <h4 className="font-semibold mb-2">Ridge Plot Guide</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
               <div>
-                <span className='font-semibold'>🎯 Narrow Ridge:</span> Tall, thin curve =
+                <span className="font-semibold">🎯 Narrow Ridge:</span> Tall, thin curve =
                 consistent scoring week-to-week.
               </div>
               <div>
-                <span className='font-semibold'>🌊 Wide Ridge:</span> Flat, spread curve = volatile
+                <span className="font-semibold">🌊 Wide Ridge:</span> Flat, spread curve = volatile
                 performance with high variance.
               </div>
               <div>
-                <span className='font-semibold'>📍 Median Line:</span> Dashed line shows typical
+                <span className="font-semibold">📍 Median Line:</span> Dashed line shows typical
                 weekly performance.
               </div>
             </div>
@@ -1447,7 +1447,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='h-[700px]'>
+            <div className="h-[700px]">
               {(() => {
                 const posData = positionsMap.get(position);
                 const posTeamsMap = new Map(posData?.teams || []);
@@ -1468,7 +1468,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                     const mean = samples.reduce((s, v) => s + v, 0) / n;
                     const std =
                       Math.sqrt(
-                        samples.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, n - 1)
+                        samples.reduce((s, v) => s + (v - mean) ** 2, 0) / Math.max(1, n - 1),
                       ) || 1e-6;
                     const h = Math.max(1e-6, 1.06 * std * Math.pow(n, -1 / 5));
                     const inv = 1 / (Math.sqrt(2 * Math.PI) * h);
@@ -1476,7 +1476,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                     return xs.map(x => {
                       const s = samples.reduce(
                         (acc, v) => acc + Math.exp(-((x - v) ** 2) / twoH2),
-                        0
+                        0,
                       );
                       return [x, (inv * s) / n] as [number, number];
                     });
@@ -1539,7 +1539,7 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                       typeof t.max === 'number' &&
                       !isNaN(t.max) &&
                       typeof t.pad === 'number' &&
-                      !isNaN(t.pad)
+                      !isNaN(t.pad),
                   );
 
                   if (validPosData.length > 0) {
@@ -1581,19 +1581,19 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
               })()}
             </div>
 
-            <div className='mt-4 p-3 bg-muted/20 rounded-md text-xs'>
-              <h4 className='font-semibold mb-2'>{position} Ridge Plot Guide</h4>
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground'>
+            <div className="mt-4 p-3 bg-muted/20 rounded-md text-xs">
+              <h4 className="font-semibold mb-2">{position} Ridge Plot Guide</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
                 <div>
-                  <span className='font-semibold'>🎯 Narrow Ridge:</span> Tall, thin curve =
+                  <span className="font-semibold">🎯 Narrow Ridge:</span> Tall, thin curve =
                   consistent {position} scoring.
                 </div>
                 <div>
-                  <span className='font-semibold'>🌊 Wide Ridge:</span> Flat, spread curve =
+                  <span className="font-semibold">🌊 Wide Ridge:</span> Flat, spread curve =
                   volatile {position} performance.
                 </div>
                 <div>
-                  <span className='font-semibold'>📍 Median Line:</span> Dashed line shows typical{' '}
+                  <span className="font-semibold">📍 Median Line:</span> Dashed line shows typical{' '}
                   {position} performance.
                 </div>
               </div>

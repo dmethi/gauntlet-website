@@ -23,27 +23,27 @@ async function auditHallOfFameData() {
 
     // Analyze matchup data quality
     const matchupsWithTeamNames = allMatchups.filter(
-      m => m.teamName && m.teamName !== `Team ${m.rosterId}`
+      m => m.teamName && m.teamName !== `Team ${m.rosterId}`,
     );
     const matchupsWithPlayerData = allMatchups.filter(m => m.playerData && m.playerData.size > 0);
     const matchupsWithWinProb = allMatchups.filter(
-      m => m.winProbSamples && m.winProbSamples.length > 0
+      m => m.winProbSamples && m.winProbSamples.length > 0,
     );
     const matchupsWithPlayerStats = allMatchups.filter(
-      m => m.playerStats && m.playerStats.size > 0
+      m => m.playerStats && m.playerStats.size > 0,
     );
 
     console.log(
-      `  - With proper team names: ${matchupsWithTeamNames.length} (${((matchupsWithTeamNames.length / allMatchups.length) * 100).toFixed(1)}%)`
+      `  - With proper team names: ${matchupsWithTeamNames.length} (${((matchupsWithTeamNames.length / allMatchups.length) * 100).toFixed(1)}%)`,
     );
     console.log(
-      `  - With player data: ${matchupsWithPlayerData.length} (${((matchupsWithPlayerData.length / allMatchups.length) * 100).toFixed(1)}%)`
+      `  - With player data: ${matchupsWithPlayerData.length} (${((matchupsWithPlayerData.length / allMatchups.length) * 100).toFixed(1)}%)`,
     );
     console.log(
-      `  - With win probability: ${matchupsWithWinProb.length} (${((matchupsWithWinProb.length / allMatchups.length) * 100).toFixed(1)}%)`
+      `  - With win probability: ${matchupsWithWinProb.length} (${((matchupsWithWinProb.length / allMatchups.length) * 100).toFixed(1)}%)`,
     );
     console.log(
-      `  - With player stats: ${matchupsWithPlayerStats.length} (${((matchupsWithPlayerStats.length / allMatchups.length) * 100).toFixed(1)}%)`
+      `  - With player stats: ${matchupsWithPlayerStats.length} (${((matchupsWithPlayerStats.length / allMatchups.length) * 100).toFixed(1)}%)`,
     );
 
     // Sample matchup to see structure
@@ -146,7 +146,7 @@ async function auditHallOfFameData() {
         c.id.includes('_rb_') ||
         c.id.includes('_wr_') ||
         c.id.includes('_te_') ||
-        c.id.includes('_def_')
+        c.id.includes('_def_'),
     );
 
     console.log(`\n📊 Positional categories (${positionalCategories.length} total):`);
@@ -172,7 +172,7 @@ async function auditHallOfFameData() {
 
     // Check player stats categories
     const playerStatsCategories = allCategories.filter(
-      c => c.id.includes('passing') || c.id.includes('rushing') || c.id.includes('receiving')
+      c => c.id.includes('passing') || c.id.includes('rushing') || c.id.includes('receiving'),
     );
 
     console.log(`\n📊 Player stats categories (${playerStatsCategories.length} total):`);

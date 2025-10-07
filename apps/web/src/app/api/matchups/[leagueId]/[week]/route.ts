@@ -48,7 +48,7 @@ function resolveTeamName(roster: any, owner: any): string {
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { leagueId: string; week: string } }
+  { params }: { params: { leagueId: string; week: string } },
 ) {
   try {
     const leagueId = params.leagueId;
@@ -77,7 +77,7 @@ export async function GET(
           '[MATCHUPS API] counts: rosters=%d users=%d matchups=%d',
           Array.isArray(rosters) ? rosters.length : -1,
           Array.isArray(users) ? users.length : -1,
-          Array.isArray(matchups) ? matchups.length : -1
+          Array.isArray(matchups) ? matchups.length : -1,
         );
         const sample = (matchups as any[])[0];
         if (sample) {
@@ -159,13 +159,13 @@ export async function GET(
           ownerName: owner?.displayName || owner?.username || 'Unknown',
           points: Number(m?.points || 0),
           projectedPoints: Number(
-            starters.reduce((s: number, pid: string) => s + projectionOf(pid), 0)
+            starters.reduce((s: number, pid: string) => s + projectionOf(pid), 0),
           ),
           players: (m?.players || []) as string[],
           starters,
           owner,
           playerProjections: Object.fromEntries(
-            ((m?.players || []) as string[]).map(pid => [pid, projectionOf(pid)])
+            ((m?.players || []) as string[]).map(pid => [pid, projectionOf(pid)]),
           ),
           starterProjections: Object.fromEntries(starters.map(pid => [pid, projectionOf(pid)])),
           starterActualPoints, // Add actual points for each starter

@@ -48,23 +48,23 @@ const CustomTooltip = ({ active, payload, label, leagueAName, leagueBName }: any
     // const deltaColor = delta >= 0 ? colors.diverging.positive : colors.diverging.negative;
 
     return (
-      <div className='p-3 rounded-lg border bg-surface border-border text-offWhite'>
-        <p className='font-semibold mb-2'>{position} Position</p>
+      <div className="p-3 rounded-lg border bg-surface border-border text-offWhite">
+        <p className="font-semibold mb-2">{position} Position</p>
         {payload.map((entry: any, index: number) => (
-          <div key={index} className='flex items-center gap-2 mb-1'>
-            <div className='w-3 h-3 rounded-sm' style={{ backgroundColor: entry.color }} />
-            <span className='text-sm'>
+          <div key={index} className="flex items-center gap-2 mb-1">
+            <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }} />
+            <span className="text-sm">
               {entry.dataKey.includes('_A') ? leagueAName : leagueBName}:
-              <strong className='ml-1'>${entry.value}</strong>
+              <strong className="ml-1">${entry.value}</strong>
             </span>
           </div>
         ))}
-        <div className='mt-2 pt-2 border-t border-border'>
-          <p className='text-sm'>
+        <div className="mt-2 pt-2 border-t border-border">
+          <p className="text-sm">
             Market Share: <strong>{leagueAName}</strong> {(shareA * 100).toFixed(1)}% |
-            <strong className='ml-1'>{leagueBName}</strong> {(shareB * 100).toFixed(1)}%
+            <strong className="ml-1">{leagueBName}</strong> {(shareB * 100).toFixed(1)}%
           </p>
-          <p className='text-sm'>
+          <p className="text-sm">
             Price Difference:{' '}
             <strong className={delta >= 0 ? 'text-green-600' : 'text-red-600'}>{deltaText}</strong>
           </p>
@@ -84,8 +84,8 @@ export const PositionInflationChart: React.FC<PositionInflationChartProps> = ({
   const chartData = transformDataForRecharts(data);
 
   return (
-    <div className='w-full h-96'>
-      <ResponsiveContainer width='100%' height='100%'>
+    <div className="w-full h-96">
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
           margin={{
@@ -95,9 +95,9 @@ export const PositionInflationChart: React.FC<PositionInflationChartProps> = ({
             bottom: 60,
           }}
         >
-          <CartesianGrid strokeDasharray='3 3' stroke={semanticColors.border} opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke={semanticColors.border} opacity={0.3} />
           <XAxis
-            dataKey='position'
+            dataKey="position"
             axisLine={{ stroke: semanticColors.border }}
             tickLine={{ stroke: semanticColors.border }}
             tick={{ fill: colors.core.offWhite, fontSize: 12 }}
@@ -126,7 +126,7 @@ export const PositionInflationChart: React.FC<PositionInflationChartProps> = ({
                 radius={[2, 2, 0, 0]}
                 animationBegin={0}
                 animationDuration={800}
-                animationEasing='ease-out'
+                animationEasing="ease-out"
               />
               <Bar
                 dataKey={`${posData.pos}_B`}
@@ -135,7 +135,7 @@ export const PositionInflationChart: React.FC<PositionInflationChartProps> = ({
                 radius={[2, 2, 0, 0]}
                 animationBegin={400}
                 animationDuration={800}
-                animationEasing='ease-out'
+                animationEasing="ease-out"
               />
             </React.Fragment>
           ))}

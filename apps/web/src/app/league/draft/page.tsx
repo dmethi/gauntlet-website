@@ -142,7 +142,7 @@ export default function DraftPage() {
             .map(x => x + x)
             .join('')
         : h,
-      16
+      16,
     );
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
@@ -244,27 +244,27 @@ export default function DraftPage() {
 
   if (loading) {
     return (
-      <Container className='py-8'>
-        <PageHeader title='Draft' subtitle='Loading…' />
+      <Container className="py-8">
+        <PageHeader title="Draft" subtitle="Loading…" />
       </Container>
     );
   }
 
   return (
-    <Container className='py-8'>
-      <div className='flex items-start justify-between mb-6'>
+    <Container className="py-8">
+      <div className="flex items-start justify-between mb-6">
         <PageHeader
           title={league ? `${league.name} — Draft` : 'Draft'}
           subtitle={league ? `Season ${league.season}` : ''}
         />
-        <div className='flex gap-2'>
-          <Link href='/draft/analysis'>
-            <Button variant='default' size='sm'>
+        <div className="flex gap-2">
+          <Link href="/draft/analysis">
+            <Button variant="default" size="sm">
               Mock Draft Analysis
             </Button>
           </Link>
-          <Link href='/league/overview'>
-            <Button variant='outline' size='sm'>
+          <Link href="/league/overview">
+            <Button variant="outline" size="sm">
               Back to Overview
             </Button>
           </Link>
@@ -272,15 +272,15 @@ export default function DraftPage() {
       </div>
 
       <TooltipProvider>
-        <Card className='mb-6'>
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className='text-base'>
+            <CardTitle className="text-base">
               {draft ? (
-                <div className='flex items-center gap-3'>
+                <div className="flex items-center gap-3">
                   <span>Draft Type: {draft.type.toUpperCase()}</span>
-                  <Badge variant='secondary'>{draft.status}</Badge>
+                  <Badge variant="secondary">{draft.status}</Badge>
                   {draft.slotToRosterId?.length ? (
-                    <Badge variant='outline'>{draft.slotToRosterId.length} Teams</Badge>
+                    <Badge variant="outline">{draft.slotToRosterId.length} Teams</Badge>
                   ) : null}
                 </div>
               ) : (
@@ -289,72 +289,72 @@ export default function DraftPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue='by-round' className='w-full'>
+            <Tabs defaultValue="by-round" className="w-full">
               <TabsList>
-                <TabsTrigger value='by-round'>Pick by Pick</TabsTrigger>
-                <TabsTrigger value='by-team'>Team by Team</TabsTrigger>
-                <TabsTrigger value='all-picks'>All Picks</TabsTrigger>
+                <TabsTrigger value="by-round">Pick by Pick</TabsTrigger>
+                <TabsTrigger value="by-team">Team by Team</TabsTrigger>
+                <TabsTrigger value="all-picks">All Picks</TabsTrigger>
               </TabsList>
 
-              <TabsContent value='by-round' className='pt-4'>
-                <div className='mb-3 flex items-center gap-4 flex-wrap'>
-                  <div className='text-sm text-muted-foreground'>Position:</div>
-                  <div className='flex items-center gap-1' aria-label='Position filter'>
+              <TabsContent value="by-round" className="pt-4">
+                <div className="mb-3 flex items-center gap-4 flex-wrap">
+                  <div className="text-sm text-muted-foreground">Position:</div>
+                  <div className="flex items-center gap-1" aria-label="Position filter">
                     {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
                       <Button
                         key={p}
-                        size='sm'
+                        size="sm"
                         variant={positionFilter === p ? 'default' : 'outline'}
                         onClick={() => setPositionFilter(p)}
                         aria-pressed={positionFilter === p}
-                        className='h-7 px-2'
+                        className="h-7 px-2"
                       >
                         {p}
                       </Button>
                     ))}
                   </div>
-                  <label className='text-sm text-muted-foreground' htmlFor='view-mode-1'>
+                  <label className="text-sm text-muted-foreground" htmlFor="view-mode-1">
                     View:
                   </label>
                   <select
-                    id='view-mode-1'
-                    className='border border-border rounded px-2 py-1 bg-background text-sm'
+                    id="view-mode-1"
+                    className="border border-border rounded px-2 py-1 bg-background text-sm"
                     value={viewMode}
                     onChange={e => setViewMode(e.target.value as 'regular' | 'playoffs')}
                   >
-                    <option value='regular'>Regular Season</option>
-                    <option value='playoffs'>Playoffs</option>
+                    <option value="regular">Regular Season</option>
+                    <option value="playoffs">Playoffs</option>
                   </select>
-                  <label className='text-sm text-muted-foreground' htmlFor='sort-mode-1'>
+                  <label className="text-sm text-muted-foreground" htmlFor="sort-mode-1">
                     Sort:
                   </label>
                   <select
-                    id='sort-mode-1'
-                    className='border border-border rounded px-2 py-1 bg-background text-sm'
+                    id="sort-mode-1"
+                    className="border border-border rounded px-2 py-1 bg-background text-sm"
                     value={sortMode}
                     onChange={e => setSortMode(e.target.value as any)}
                   >
-                    <option value='default'>Default</option>
-                    <option value='score_desc'>Score (best)</option>
-                    <option value='score_asc'>Score (worst)</option>
-                    <option value='vorp_desc'>VORP (best)</option>
-                    <option value='vorp_asc'>VORP (worst)</option>
-                    <option value='playoffs_desc'>Playoff Pts (best)</option>
-                    <option value='playoffs_asc'>Playoff Pts (worst)</option>
-                    <option value='ppg_desc'>PPG (best)</option>
-                    <option value='ppg_asc'>PPG (worst)</option>
-                    <option value='pps_desc'>PPS (best)</option>
-                    <option value='pps_asc'>PPS (worst)</option>
-                    <option value='zppg_desc'>zPPG (best)</option>
-                    <option value='zppg_asc'>zPPG (worst)</option>
-                    <option value='zpps_desc'>zPPS (best)</option>
-                    <option value='zpps_asc'>zPPS (worst)</option>
+                    <option value="default">Default</option>
+                    <option value="score_desc">Score (best)</option>
+                    <option value="score_asc">Score (worst)</option>
+                    <option value="vorp_desc">VORP (best)</option>
+                    <option value="vorp_asc">VORP (worst)</option>
+                    <option value="playoffs_desc">Playoff Pts (best)</option>
+                    <option value="playoffs_asc">Playoff Pts (worst)</option>
+                    <option value="ppg_desc">PPG (best)</option>
+                    <option value="ppg_asc">PPG (worst)</option>
+                    <option value="pps_desc">PPS (best)</option>
+                    <option value="pps_asc">PPS (worst)</option>
+                    <option value="zppg_desc">zPPG (best)</option>
+                    <option value="zppg_asc">zPPG (worst)</option>
+                    <option value="zpps_desc">zPPS (best)</option>
+                    <option value="zpps_asc">zPPS (worst)</option>
                   </select>
                 </div>
                 {!picks.length ? (
-                  <div className='text-sm text-muted-foreground'>No picks found.</div>
+                  <div className="text-sm text-muted-foreground">No picks found.</div>
                 ) : (
-                  <div className='space-y-6'>
+                  <div className="space-y-6">
                     {rounds.map(round => {
                       let roundPicks = picks.filter(p => p.round === round);
                       if (sortMode === 'score_desc')
@@ -369,58 +369,58 @@ export default function DraftPage() {
                         roundPicks = [...roundPicks].sort(
                           (a: any, b: any) =>
                             (b.playoffsContribution?.totalLeaguePoints ?? 0) -
-                            (a.playoffsContribution?.totalLeaguePoints ?? 0)
+                            (a.playoffsContribution?.totalLeaguePoints ?? 0),
                         );
                       if (sortMode === 'playoffs_asc')
                         roundPicks = [...roundPicks].sort(
                           (a: any, b: any) =>
                             (a.playoffsContribution?.totalLeaguePoints ?? 0) -
-                            (b.playoffsContribution?.totalLeaguePoints ?? 0)
+                            (b.playoffsContribution?.totalLeaguePoints ?? 0),
                         );
                       if (sortMode === 'ppg_desc')
                         roundPicks = [...roundPicks].sort(
-                          (a: any, b: any) => (b.ppg ?? -Infinity) - (a.ppg ?? -Infinity)
+                          (a: any, b: any) => (b.ppg ?? -Infinity) - (a.ppg ?? -Infinity),
                         );
                       if (sortMode === 'ppg_asc')
                         roundPicks = [...roundPicks].sort(
-                          (a: any, b: any) => (a.ppg ?? Infinity) - (b.ppg ?? Infinity)
+                          (a: any, b: any) => (a.ppg ?? Infinity) - (b.ppg ?? Infinity),
                         );
                       if (sortMode === 'pps_desc')
                         roundPicks = [...roundPicks].sort(
-                          (a: any, b: any) => (b.pps ?? -Infinity) - (a.pps ?? -Infinity)
+                          (a: any, b: any) => (b.pps ?? -Infinity) - (a.pps ?? -Infinity),
                         );
                       if (sortMode === 'pps_asc')
                         roundPicks = [...roundPicks].sort(
-                          (a: any, b: any) => (a.pps ?? Infinity) - (b.pps ?? Infinity)
+                          (a: any, b: any) => (a.pps ?? Infinity) - (b.pps ?? Infinity),
                         );
                       if (sortMode === 'zppg_desc')
                         roundPicks = [...roundPicks].sort(
                           (a, b) =>
                             ((b as any).breakdown?.zPpg ?? -Infinity) -
-                            ((a as any).breakdown?.zPpg ?? -Infinity)
+                            ((a as any).breakdown?.zPpg ?? -Infinity),
                         );
                       if (sortMode === 'zppg_asc')
                         roundPicks = [...roundPicks].sort(
                           (a, b) =>
                             ((a as any).breakdown?.zPpg ?? Infinity) -
-                            ((b as any).breakdown?.zPpg ?? Infinity)
+                            ((b as any).breakdown?.zPpg ?? Infinity),
                         );
                       if (sortMode === 'zpps_desc')
                         roundPicks = [...roundPicks].sort(
                           (a, b) =>
                             ((b as any).breakdown?.zPps ?? -Infinity) -
-                            ((a as any).breakdown?.zPps ?? -Infinity)
+                            ((a as any).breakdown?.zPps ?? -Infinity),
                         );
                       if (sortMode === 'zpps_asc')
                         roundPicks = [...roundPicks].sort(
                           (a, b) =>
                             ((a as any).breakdown?.zPps ?? Infinity) -
-                            ((b as any).breakdown?.zPps ?? Infinity)
+                            ((b as any).breakdown?.zPps ?? Infinity),
                         );
                       return (
-                        <div key={round} className='space-y-2'>
-                          <h3 className='text-lg font-semibold'>Round {round}</h3>
-                          <div className='overflow-x-auto rounded-md border border-border bg-card'>
+                        <div key={round} className="space-y-2">
+                          <h3 className="text-lg font-semibold">Round {round}</h3>
+                          <div className="overflow-x-auto rounded-md border border-border bg-card">
                             <Table>
                               <TableHeader>
                                 <TableRow>
@@ -432,7 +432,7 @@ export default function DraftPage() {
                                   <TableHead>NFL</TableHead>
                                   <TableHead>Owner</TableHead>
                                   <TableHead>Notes</TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>Starts</span>
@@ -442,7 +442,7 @@ export default function DraftPage() {
                                       </TooltipContent>
                                     </Tooltip>
                                   </TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>Start Pts</span>
@@ -452,7 +452,7 @@ export default function DraftPage() {
                                       </TooltipContent>
                                     </Tooltip>
                                   </TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>Total Pts</span>
@@ -462,7 +462,7 @@ export default function DraftPage() {
                                       </TooltipContent>
                                     </Tooltip>
                                   </TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>Pos Rank</span>
@@ -473,7 +473,7 @@ export default function DraftPage() {
                                       </TooltipContent>
                                     </Tooltip>
                                   </TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>Grade</span>
@@ -484,7 +484,7 @@ export default function DraftPage() {
                                       </TooltipContent>
                                     </Tooltip>
                                   </TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>Score</span>
@@ -494,7 +494,7 @@ export default function DraftPage() {
                                       </TooltipContent>
                                     </Tooltip>
                                   </TableHead>
-                                  <TableHead className='text-right'>
+                                  <TableHead className="text-right">
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <span>VORP</span>
@@ -515,57 +515,57 @@ export default function DraftPage() {
                                   return (
                                     <TableRow
                                       key={`${round}-${p.pickNo}-${p.player.id}`}
-                                      className='hover:bg-muted/50'
+                                      className="hover:bg-muted/50"
                                     >
                                       <TableCell>{p.pickNo}</TableCell>
                                       <TableCell>
                                         {round}.{pickInRound}
                                       </TableCell>
-                                      <TableCell className='font-medium'>{p.rosterName}</TableCell>
+                                      <TableCell className="font-medium">{p.rosterName}</TableCell>
                                       <TableCell>{p.player.name}</TableCell>
                                       <TableCell>{p.player.position || '-'}</TableCell>
                                       <TableCell>{p.player.team || '-'}</TableCell>
                                       <TableCell>{p.ownerName}</TableCell>
                                       <TableCell>
-                                        <div className='flex items-center gap-2'>
+                                        <div className="flex items-center gap-2">
                                           {p.isKeeper ? (
-                                            <Badge variant='outline'>Keeper</Badge>
+                                            <Badge variant="outline">Keeper</Badge>
                                           ) : null}
                                           {p.transactions.length > 0 ? (
                                             <Dialog>
                                               <DialogTrigger asChild>
                                                 <Button
-                                                  variant='ghost'
-                                                  size='sm'
-                                                  className='h-6 px-2 text-xs'
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  className="h-6 px-2 text-xs"
                                                 >
                                                   Txns ({p.transactions.length})
                                                 </Button>
                                               </DialogTrigger>
-                                              <DialogContent className='max-w-2xl'>
+                                              <DialogContent className="max-w-2xl">
                                                 <DialogHeader>
                                                   <DialogTitle>
                                                     Transactions for {p.player.name}
                                                   </DialogTitle>
                                                 </DialogHeader>
-                                                <div className='space-y-2 text-sm'>
+                                                <div className="space-y-2 text-sm">
                                                   {p.transactions.map(t => (
                                                     <div
                                                       key={t.id}
-                                                      className='flex items-start justify-between gap-4 border-b border-border pb-2'
+                                                      className="flex items-start justify-between gap-4 border-b border-border pb-2"
                                                     >
                                                       <div>
-                                                        <div className='font-medium'>
+                                                        <div className="font-medium">
                                                           {t.type.replace('_', ' ')}
                                                         </div>
-                                                        <div className='text-muted-foreground'>
+                                                        <div className="text-muted-foreground">
                                                           {new Date(t.createdAt).toLocaleString()}
                                                         </div>
                                                       </div>
-                                                      <div className='text-right'>
+                                                      <div className="text-right">
                                                         {t.addedTo.length ? (
                                                           <div>
-                                                            <span className='text-muted-foreground'>
+                                                            <span className="text-muted-foreground">
                                                               Added to:{' '}
                                                             </span>
                                                             {t.addedTo.map(x => x.name).join(', ')}
@@ -573,7 +573,7 @@ export default function DraftPage() {
                                                         ) : null}
                                                         {t.droppedFrom.length ? (
                                                           <div>
-                                                            <span className='text-muted-foreground'>
+                                                            <span className="text-muted-foreground">
                                                               Dropped from:{' '}
                                                             </span>
                                                             {t.droppedFrom
@@ -603,13 +603,13 @@ export default function DraftPage() {
                                         const s = sRaw ?? fallback;
                                         return (
                                           <>
-                                            <TableCell className='text-right'>
+                                            <TableCell className="text-right">
                                               {Number(s.starts || 0)}
                                             </TableCell>
-                                            <TableCell className='text-right'>
+                                            <TableCell className="text-right">
                                               {Number(s.startPoints || 0).toFixed(1)}
                                             </TableCell>
-                                            <TableCell className='text-right'>
+                                            <TableCell className="text-right">
                                               {Number(s.totalLeaguePoints || 0).toFixed(1)}
                                             </TableCell>
                                           </>
@@ -623,18 +623,18 @@ export default function DraftPage() {
                                           viewMode === 'playoffs' ? playoffRank : regularRank;
                                         const pos = (p.player.position || 'UNK').toUpperCase();
                                         const maxRank = (resp?.data?.picks ?? []).filter(
-                                          x => (x.player.position || 'UNK').toUpperCase() === pos
+                                          x => (x.player.position || 'UNK').toUpperCase() === pos,
                                         ).length;
                                         if (!rank || !maxRank) {
-                                          return <TableCell className='text-right'>-</TableCell>;
+                                          return <TableCell className="text-right">-</TableCell>;
                                         }
                                         const goodness = 1 - (rank - 1) / Math.max(1, maxRank - 1);
                                         const bg = getDivergingBg(goodness * 2 - 1);
                                         const fg = getTextColorForBg(bg);
                                         return (
-                                          <TableCell className='text-right'>
+                                          <TableCell className="text-right">
                                             <span
-                                              className='px-2 py-0.5 rounded'
+                                              className="px-2 py-0.5 rounded"
                                               style={{ backgroundColor: bg, color: fg }}
                                             >
                                               #{rank}
@@ -642,11 +642,11 @@ export default function DraftPage() {
                                           </TableCell>
                                         );
                                       })()}
-                                      <TableCell className='text-right'>
+                                      <TableCell className="text-right">
                                         <Button
-                                          variant='ghost'
-                                          size='sm'
-                                          className='h-6 px-2'
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-6 px-2"
                                           onClick={() => setSelected(p)}
                                         >
                                           <Badge>{p.grade}</Badge>
@@ -657,9 +657,9 @@ export default function DraftPage() {
                                         const bg = getDivergingBg(norm);
                                         const fg = getTextColorForBg(bg);
                                         return (
-                                          <TableCell className='text-right'>
+                                          <TableCell className="text-right">
                                             <span
-                                              className='px-2 py-0.5 rounded'
+                                              className="px-2 py-0.5 rounded"
                                               style={{ backgroundColor: bg, color: fg }}
                                             >
                                               {p.gradeScore.toFixed(2)}
@@ -673,9 +673,9 @@ export default function DraftPage() {
                                         const bg = getDivergingBg(norm);
                                         const fg = getTextColorForBg(bg);
                                         return (
-                                          <TableCell className='text-right'>
+                                          <TableCell className="text-right">
                                             <span
-                                              className='px-2 py-0.5 rounded'
+                                              className="px-2 py-0.5 rounded"
                                               style={{ backgroundColor: bg, color: fg }}
                                             >
                                               {typeof p.vorp === 'number' ? p.vorp.toFixed(1) : '—'}
@@ -696,61 +696,61 @@ export default function DraftPage() {
                 )}
               </TabsContent>
 
-              <TabsContent value='all-picks' className='pt-4'>
-                <div className='mb-3 flex items-center gap-4 flex-wrap'>
-                  <div className='text-sm text-muted-foreground'>Position:</div>
-                  <div className='flex items-center gap-1' aria-label='Position filter'>
+              <TabsContent value="all-picks" className="pt-4">
+                <div className="mb-3 flex items-center gap-4 flex-wrap">
+                  <div className="text-sm text-muted-foreground">Position:</div>
+                  <div className="flex items-center gap-1" aria-label="Position filter">
                     {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
                       <Button
                         key={p}
-                        size='sm'
+                        size="sm"
                         variant={positionFilter === p ? 'default' : 'outline'}
                         onClick={() => setPositionFilter(p)}
                         aria-pressed={positionFilter === p}
-                        className='h-7 px-2'
+                        className="h-7 px-2"
                       >
                         {p}
                       </Button>
                     ))}
                   </div>
-                  <label className='text-sm text-muted-foreground' htmlFor='view-mode-3'>
+                  <label className="text-sm text-muted-foreground" htmlFor="view-mode-3">
                     View:
                   </label>
                   <select
-                    id='view-mode-3'
-                    className='border border-border rounded px-2 py-1 bg-background text-sm'
+                    id="view-mode-3"
+                    className="border border-border rounded px-2 py-1 bg-background text-sm"
                     value={viewMode}
                     onChange={e => setViewMode(e.target.value as 'regular' | 'playoffs')}
                   >
-                    <option value='regular'>Regular Season</option>
-                    <option value='playoffs'>Playoffs</option>
+                    <option value="regular">Regular Season</option>
+                    <option value="playoffs">Playoffs</option>
                   </select>
-                  <label className='text-sm text-muted-foreground' htmlFor='sort-mode-3'>
+                  <label className="text-sm text-muted-foreground" htmlFor="sort-mode-3">
                     Sort:
                   </label>
                   <select
-                    id='sort-mode-3'
-                    className='border border-border rounded px-2 py-1 bg-background text-sm'
+                    id="sort-mode-3"
+                    className="border border-border rounded px-2 py-1 bg-background text-sm"
                     value={sortMode}
                     onChange={e => setSortMode(e.target.value as any)}
                   >
-                    <option value='default'>Default</option>
-                    <option value='score_desc'>Score (best)</option>
-                    <option value='score_asc'>Score (worst)</option>
-                    <option value='vorp_desc'>VORP (best)</option>
-                    <option value='vorp_asc'>VORP (worst)</option>
-                    <option value='playoffs_desc'>Playoff Pts (best)</option>
-                    <option value='playoffs_asc'>Playoff Pts (worst)</option>
-                    <option value='ppg_desc'>PPG (best)</option>
-                    <option value='ppg_asc'>PPG (worst)</option>
-                    <option value='pps_desc'>PPS (best)</option>
-                    <option value='pps_asc'>PPS (worst)</option>
+                    <option value="default">Default</option>
+                    <option value="score_desc">Score (best)</option>
+                    <option value="score_asc">Score (worst)</option>
+                    <option value="vorp_desc">VORP (best)</option>
+                    <option value="vorp_asc">VORP (worst)</option>
+                    <option value="playoffs_desc">Playoff Pts (best)</option>
+                    <option value="playoffs_asc">Playoff Pts (worst)</option>
+                    <option value="ppg_desc">PPG (best)</option>
+                    <option value="ppg_asc">PPG (worst)</option>
+                    <option value="pps_desc">PPS (best)</option>
+                    <option value="pps_asc">PPS (worst)</option>
                   </select>
                 </div>
                 {!picks.length ? (
-                  <div className='text-sm text-muted-foreground'>No picks found.</div>
+                  <div className="text-sm text-muted-foreground">No picks found.</div>
                 ) : (
-                  <div className='overflow-x-auto rounded-md border border-border bg-card'>
+                  <div className="overflow-x-auto rounded-md border border-border bg-card">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -760,7 +760,7 @@ export default function DraftPage() {
                           <TableHead>Player</TableHead>
                           <TableHead>Pos</TableHead>
                           <TableHead>NFL</TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>Starts</span>
@@ -770,7 +770,7 @@ export default function DraftPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>Start Pts</span>
@@ -780,7 +780,7 @@ export default function DraftPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>Total Pts</span>
@@ -790,7 +790,7 @@ export default function DraftPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>Pos Rank</span>
@@ -801,7 +801,7 @@ export default function DraftPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>Grade</span>
@@ -812,7 +812,7 @@ export default function DraftPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>Score</span>
@@ -822,7 +822,7 @@ export default function DraftPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TableHead>
-                          <TableHead className='text-right'>
+                          <TableHead className="text-right">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>VORP</span>
@@ -850,53 +850,53 @@ export default function DraftPage() {
                             rows.sort(
                               (a: any, b: any) =>
                                 (b.playoffsContribution?.totalLeaguePoints ?? 0) -
-                                (a.playoffsContribution?.totalLeaguePoints ?? 0)
+                                (a.playoffsContribution?.totalLeaguePoints ?? 0),
                             );
                           if (sortMode === 'playoffs_asc')
                             rows.sort(
                               (a: any, b: any) =>
                                 (a.playoffsContribution?.totalLeaguePoints ?? 0) -
-                                (b.playoffsContribution?.totalLeaguePoints ?? 0)
+                                (b.playoffsContribution?.totalLeaguePoints ?? 0),
                             );
                           if (sortMode === 'ppg_desc')
                             rows.sort(
-                              (a: any, b: any) => (b.ppg ?? -Infinity) - (a.ppg ?? -Infinity)
+                              (a: any, b: any) => (b.ppg ?? -Infinity) - (a.ppg ?? -Infinity),
                             );
                           if (sortMode === 'ppg_asc')
                             rows.sort(
-                              (a: any, b: any) => (a.ppg ?? Infinity) - (b.ppg ?? Infinity)
+                              (a: any, b: any) => (a.ppg ?? Infinity) - (b.ppg ?? Infinity),
                             );
                           if (sortMode === 'pps_desc')
                             rows.sort(
-                              (a: any, b: any) => (b.pps ?? -Infinity) - (a.pps ?? -Infinity)
+                              (a: any, b: any) => (b.pps ?? -Infinity) - (a.pps ?? -Infinity),
                             );
                           if (sortMode === 'pps_asc')
                             rows.sort(
-                              (a: any, b: any) => (a.pps ?? Infinity) - (b.pps ?? Infinity)
+                              (a: any, b: any) => (a.pps ?? Infinity) - (b.pps ?? Infinity),
                             );
                           if (sortMode === 'zppg_desc')
                             rows.sort(
                               (a, b) =>
                                 ((b as any).breakdown?.zPpg ?? -Infinity) -
-                                ((a as any).breakdown?.zPpg ?? -Infinity)
+                                ((a as any).breakdown?.zPpg ?? -Infinity),
                             );
                           if (sortMode === 'zppg_asc')
                             rows.sort(
                               (a, b) =>
                                 ((a as any).breakdown?.zPpg ?? Infinity) -
-                                ((b as any).breakdown?.zPpg ?? Infinity)
+                                ((b as any).breakdown?.zPpg ?? Infinity),
                             );
                           if (sortMode === 'zpps_desc')
                             rows.sort(
                               (a, b) =>
                                 ((b as any).breakdown?.zPps ?? -Infinity) -
-                                ((a as any).breakdown?.zPps ?? -Infinity)
+                                ((a as any).breakdown?.zPps ?? -Infinity),
                             );
                           if (sortMode === 'zpps_asc')
                             rows.sort(
                               (a, b) =>
                                 ((a as any).breakdown?.zPps ?? Infinity) -
-                                ((b as any).breakdown?.zPps ?? Infinity)
+                                ((b as any).breakdown?.zPps ?? Infinity),
                             );
                           return rows.map(p => {
                             const teamsCount = draft?.slotToRosterId?.length || 0;
@@ -914,7 +914,7 @@ export default function DraftPage() {
                             };
                             const pos = (p.player.position || 'UNK').toUpperCase();
                             const maxRank = (resp?.data?.picks ?? []).filter(
-                              x => (x.player.position || 'UNK').toUpperCase() === pos
+                              x => (x.player.position || 'UNK').toUpperCase() === pos,
                             ).length;
                             const regularRank = p.contribution.positionalRank ?? null;
                             const playoffRank = playoffPosRankByPlayerId.get(p.player.id) ?? null;
@@ -926,7 +926,7 @@ export default function DraftPage() {
                               const fg = getTextColorForBg(bg);
                               return (
                                 <span
-                                  className='px-2 py-0.5 rounded'
+                                  className="px-2 py-0.5 rounded"
                                   style={{ backgroundColor: bg, color: fg }}
                                 >
                                   #{rank}
@@ -938,7 +938,7 @@ export default function DraftPage() {
                               const fg = getTextColorForBg(bg);
                               return (
                                 <span
-                                  className='px-2 py-0.5 rounded'
+                                  className="px-2 py-0.5 rounded"
                                   style={{ backgroundColor: bg, color: fg }}
                                 >
                                   {p.gradeScore.toFixed(2)}
@@ -951,7 +951,7 @@ export default function DraftPage() {
                               const fg = getTextColorForBg(bg);
                               return (
                                 <span
-                                  className='px-2 py-0.5 rounded'
+                                  className="px-2 py-0.5 rounded"
                                   style={{ backgroundColor: bg, color: fg }}
                                 >
                                   {typeof p.vorp === 'number' ? p.vorp.toFixed(1) : '—'}
@@ -961,38 +961,38 @@ export default function DraftPage() {
                             return (
                               <TableRow
                                 key={`all-${p.pickNo}-${p.player.id}`}
-                                className='hover:bg-muted/50'
+                                className="hover:bg-muted/50"
                               >
                                 <TableCell>{p.pickNo}</TableCell>
                                 <TableCell>
                                   {p.round}.{pickInRound}
                                 </TableCell>
-                                <TableCell className='font-medium'>{p.rosterName}</TableCell>
+                                <TableCell className="font-medium">{p.rosterName}</TableCell>
                                 <TableCell>{p.player.name}</TableCell>
                                 <TableCell>{p.player.position || '-'}</TableCell>
                                 <TableCell>{p.player.team || '-'}</TableCell>
-                                <TableCell className='text-right'>
+                                <TableCell className="text-right">
                                   {Number(s.starts || 0)}
                                 </TableCell>
-                                <TableCell className='text-right'>
+                                <TableCell className="text-right">
                                   {Number(s.startPoints || 0).toFixed(1)}
                                 </TableCell>
-                                <TableCell className='text-right'>
+                                <TableCell className="text-right">
                                   {Number(s.totalLeaguePoints || 0).toFixed(1)}
                                 </TableCell>
-                                <TableCell className='text-right'>{rankCell}</TableCell>
-                                <TableCell className='text-right'>
+                                <TableCell className="text-right">{rankCell}</TableCell>
+                                <TableCell className="text-right">
                                   <Button
-                                    variant='ghost'
-                                    size='sm'
-                                    className='h-6 px-2'
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 px-2"
                                     onClick={() => setSelected(p)}
                                   >
                                     <Badge>{p.grade}</Badge>
                                   </Button>
                                 </TableCell>
-                                <TableCell className='text-right'>{scoreCell}</TableCell>
-                                <TableCell className='text-right'>{vorpCell}</TableCell>
+                                <TableCell className="text-right">{scoreCell}</TableCell>
+                                <TableCell className="text-right">{vorpCell}</TableCell>
                               </TableRow>
                             );
                           });
@@ -1003,61 +1003,61 @@ export default function DraftPage() {
                 )}
               </TabsContent>
 
-              <TabsContent value='by-team' className='pt-4'>
-                <div className='mb-3 flex items-center gap-4 flex-wrap'>
-                  <div className='text-sm text-muted-foreground'>Position:</div>
-                  <div className='flex items-center gap-1' aria-label='Position filter'>
+              <TabsContent value="by-team" className="pt-4">
+                <div className="mb-3 flex items-center gap-4 flex-wrap">
+                  <div className="text-sm text-muted-foreground">Position:</div>
+                  <div className="flex items-center gap-1" aria-label="Position filter">
                     {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
                       <Button
                         key={p}
-                        size='sm'
+                        size="sm"
                         variant={positionFilter === p ? 'default' : 'outline'}
                         onClick={() => setPositionFilter(p)}
                         aria-pressed={positionFilter === p}
-                        className='h-7 px-2'
+                        className="h-7 px-2"
                       >
                         {p}
                       </Button>
                     ))}
                   </div>
-                  <label className='text-sm text-muted-foreground' htmlFor='view-mode-2'>
+                  <label className="text-sm text-muted-foreground" htmlFor="view-mode-2">
                     View:
                   </label>
                   <select
-                    id='view-mode-2'
-                    className='border border-border rounded px-2 py-1 bg-background text-sm'
+                    id="view-mode-2"
+                    className="border border-border rounded px-2 py-1 bg-background text-sm"
                     value={viewMode}
                     onChange={e => setViewMode(e.target.value as 'regular' | 'playoffs')}
                   >
-                    <option value='regular'>Regular Season</option>
-                    <option value='playoffs'>Playoffs</option>
+                    <option value="regular">Regular Season</option>
+                    <option value="playoffs">Playoffs</option>
                   </select>
-                  <label className='text-sm text-muted-foreground' htmlFor='sort-mode-2'>
+                  <label className="text-sm text-muted-foreground" htmlFor="sort-mode-2">
                     Sort:
                   </label>
                   <select
-                    id='sort-mode-2'
-                    className='border border-border rounded px-2 py-1 bg-background text-sm'
+                    id="sort-mode-2"
+                    className="border border-border rounded px-2 py-1 bg-background text-sm"
                     value={sortMode}
                     onChange={e => setSortMode(e.target.value as any)}
                   >
-                    <option value='default'>Default</option>
-                    <option value='score_desc'>Score (best)</option>
-                    <option value='score_asc'>Score (worst)</option>
-                    <option value='vorp_desc'>VORP (best)</option>
-                    <option value='vorp_asc'>VORP (worst)</option>
-                    <option value='playoffs_desc'>Playoff Pts (best)</option>
-                    <option value='playoffs_asc'>Playoff Pts (worst)</option>
-                    <option value='ppg_desc'>PPG (best)</option>
-                    <option value='ppg_asc'>PPG (worst)</option>
-                    <option value='pps_desc'>PPS (best)</option>
-                    <option value='pps_asc'>PPS (worst)</option>
+                    <option value="default">Default</option>
+                    <option value="score_desc">Score (best)</option>
+                    <option value="score_asc">Score (worst)</option>
+                    <option value="vorp_desc">VORP (best)</option>
+                    <option value="vorp_asc">VORP (worst)</option>
+                    <option value="playoffs_desc">Playoff Pts (best)</option>
+                    <option value="playoffs_asc">Playoff Pts (worst)</option>
+                    <option value="ppg_desc">PPG (best)</option>
+                    <option value="ppg_asc">PPG (worst)</option>
+                    <option value="pps_desc">PPS (best)</option>
+                    <option value="pps_asc">PPS (worst)</option>
                   </select>
                 </div>
                 {!picks.length ? (
-                  <div className='text-sm text-muted-foreground'>No picks found.</div>
+                  <div className="text-sm text-muted-foreground">No picks found.</div>
                 ) : (
-                  <div className='grid grid-cols-1 gap-4'>
+                  <div className="grid grid-cols-1 gap-4">
                     {teamsByRoster.map(([rosterId, team]) => {
                       let teamPicks = picks.filter(p => p.rosterId === rosterId);
                       if (sortMode === 'score_desc')
@@ -1072,67 +1072,67 @@ export default function DraftPage() {
                         teamPicks = [...teamPicks].sort(
                           (a: any, b: any) =>
                             (b.playoffsContribution?.totalLeaguePoints ?? 0) -
-                            (a.playoffsContribution?.totalLeaguePoints ?? 0)
+                            (a.playoffsContribution?.totalLeaguePoints ?? 0),
                         );
                       if (sortMode === 'playoffs_asc')
                         teamPicks = [...teamPicks].sort(
                           (a: any, b: any) =>
                             (a.playoffsContribution?.totalLeaguePoints ?? 0) -
-                            (b.playoffsContribution?.totalLeaguePoints ?? 0)
+                            (b.playoffsContribution?.totalLeaguePoints ?? 0),
                         );
                       if (sortMode === 'ppg_desc')
                         teamPicks = [...teamPicks].sort(
-                          (a: any, b: any) => (b.ppg ?? -Infinity) - (a.ppg ?? -Infinity)
+                          (a: any, b: any) => (b.ppg ?? -Infinity) - (a.ppg ?? -Infinity),
                         );
                       if (sortMode === 'ppg_asc')
                         teamPicks = [...teamPicks].sort(
-                          (a: any, b: any) => (a.ppg ?? Infinity) - (b.ppg ?? Infinity)
+                          (a: any, b: any) => (a.ppg ?? Infinity) - (b.ppg ?? Infinity),
                         );
                       if (sortMode === 'pps_desc')
                         teamPicks = [...teamPicks].sort(
-                          (a: any, b: any) => (b.pps ?? -Infinity) - (a.pps ?? -Infinity)
+                          (a: any, b: any) => (b.pps ?? -Infinity) - (a.pps ?? -Infinity),
                         );
                       if (sortMode === 'pps_asc')
                         teamPicks = [...teamPicks].sort(
-                          (a: any, b: any) => (a.pps ?? Infinity) - (b.pps ?? Infinity)
+                          (a: any, b: any) => (a.pps ?? Infinity) - (b.pps ?? Infinity),
                         );
                       if (sortMode === 'zppg_desc')
                         teamPicks = [...teamPicks].sort(
                           (a, b) =>
                             ((b as any).breakdown?.zPpg ?? -Infinity) -
-                            ((a as any).breakdown?.zPpg ?? -Infinity)
+                            ((a as any).breakdown?.zPpg ?? -Infinity),
                         );
                       if (sortMode === 'zppg_asc')
                         teamPicks = [...teamPicks].sort(
                           (a, b) =>
                             ((a as any).breakdown?.zPpg ?? Infinity) -
-                            ((b as any).breakdown?.zPpg ?? Infinity)
+                            ((b as any).breakdown?.zPpg ?? Infinity),
                         );
                       if (sortMode === 'zpps_desc')
                         teamPicks = [...teamPicks].sort(
                           (a, b) =>
                             ((b as any).breakdown?.zPps ?? -Infinity) -
-                            ((a as any).breakdown?.zPps ?? -Infinity)
+                            ((a as any).breakdown?.zPps ?? -Infinity),
                         );
                       if (sortMode === 'zpps_asc')
                         teamPicks = [...teamPicks].sort(
                           (a, b) =>
                             ((a as any).breakdown?.zPps ?? Infinity) -
-                            ((b as any).breakdown?.zPps ?? Infinity)
+                            ((b as any).breakdown?.zPps ?? Infinity),
                         );
                       const teamsCount = draft?.slotToRosterId?.length || 0;
                       return (
                         <Card key={rosterId}>
                           <CardHeader>
-                            <CardTitle className='text-base'>
-                              <div className='flex items-center justify-between'>
-                                <span className='font-medium'>{team.name}</span>
-                                <Badge variant='secondary'>{team.owner}</Badge>
+                            <CardTitle className="text-base">
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium">{team.name}</span>
+                                <Badge variant="secondary">{team.owner}</Badge>
                               </div>
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <div className='overflow-x-auto rounded-md border border-border bg-card'>
+                            <div className="overflow-x-auto rounded-md border border-border bg-card">
                               <Table>
                                 <TableHeader>
                                   <TableRow>
@@ -1142,7 +1142,7 @@ export default function DraftPage() {
                                     <TableHead>Pos</TableHead>
                                     <TableHead>NFL</TableHead>
                                     <TableHead>Notes</TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>Starts</span>
@@ -1152,7 +1152,7 @@ export default function DraftPage() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>Start Pts</span>
@@ -1162,7 +1162,7 @@ export default function DraftPage() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>Total Pts</span>
@@ -1172,7 +1172,7 @@ export default function DraftPage() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>Pos Rank</span>
@@ -1183,7 +1183,7 @@ export default function DraftPage() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>Grade</span>
@@ -1194,7 +1194,7 @@ export default function DraftPage() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>Score</span>
@@ -1204,7 +1204,7 @@ export default function DraftPage() {
                                         </TooltipContent>
                                       </Tooltip>
                                     </TableHead>
-                                    <TableHead className='text-right'>
+                                    <TableHead className="text-right">
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <span>VORP</span>
@@ -1224,7 +1224,7 @@ export default function DraftPage() {
                                     return (
                                       <TableRow
                                         key={`${p.rosterId}-${p.pickNo}`}
-                                        className='hover:bg-muted/50'
+                                        className="hover:bg-muted/50"
                                       >
                                         <TableCell>
                                           {p.round}.{pickInRound}
@@ -1234,45 +1234,45 @@ export default function DraftPage() {
                                         <TableCell>{p.player.position || '-'}</TableCell>
                                         <TableCell>{p.player.team || '-'}</TableCell>
                                         <TableCell>
-                                          <div className='flex items-center gap-2'>
+                                          <div className="flex items-center gap-2">
                                             {p.isKeeper ? (
-                                              <Badge variant='outline'>Keeper</Badge>
+                                              <Badge variant="outline">Keeper</Badge>
                                             ) : null}
                                             {p.transactions.length > 0 ? (
                                               <Dialog>
                                                 <DialogTrigger asChild>
                                                   <Button
-                                                    variant='ghost'
-                                                    size='sm'
-                                                    className='h-6 px-2 text-xs'
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-6 px-2 text-xs"
                                                   >
                                                     Txns ({p.transactions.length})
                                                   </Button>
                                                 </DialogTrigger>
-                                                <DialogContent className='max-w-2xl'>
+                                                <DialogContent className="max-w-2xl">
                                                   <DialogHeader>
                                                     <DialogTitle>
                                                       Transactions for {p.player.name}
                                                     </DialogTitle>
                                                   </DialogHeader>
-                                                  <div className='space-y-2 text-sm'>
+                                                  <div className="space-y-2 text-sm">
                                                     {p.transactions.map(t => (
                                                       <div
                                                         key={t.id}
-                                                        className='flex items-start justify-between gap-4 border-b border-border pb-2'
+                                                        className="flex items-start justify-between gap-4 border-b border-border pb-2"
                                                       >
                                                         <div>
-                                                          <div className='font-medium'>
+                                                          <div className="font-medium">
                                                             {t.type}
                                                           </div>
-                                                          <div className='text-muted-foreground'>
+                                                          <div className="text-muted-foreground">
                                                             {new Date(t.createdAt).toLocaleString()}
                                                           </div>
                                                         </div>
-                                                        <div className='text-right'>
+                                                        <div className="text-right">
                                                           {t.addedTo.length ? (
                                                             <div>
-                                                              <span className='text-muted-foreground'>
+                                                              <span className="text-muted-foreground">
                                                                 Added to:{' '}
                                                               </span>
                                                               {t.addedTo.join(', ')}
@@ -1280,7 +1280,7 @@ export default function DraftPage() {
                                                           ) : null}
                                                           {t.droppedFrom.length ? (
                                                             <div>
-                                                              <span className='text-muted-foreground'>
+                                                              <span className="text-muted-foreground">
                                                                 Dropped from:{' '}
                                                               </span>
                                                               {t.droppedFrom.join(', ')}
@@ -1308,13 +1308,13 @@ export default function DraftPage() {
                                           const s = sRaw ?? fallback;
                                           return (
                                             <>
-                                              <TableCell className='text-right'>
+                                              <TableCell className="text-right">
                                                 {Number(s.starts || 0)}
                                               </TableCell>
-                                              <TableCell className='text-right'>
+                                              <TableCell className="text-right">
                                                 {Number(s.startPoints || 0).toFixed(1)}
                                               </TableCell>
-                                              <TableCell className='text-right'>
+                                              <TableCell className="text-right">
                                                 {Number(s.totalLeaguePoints || 0).toFixed(1)}
                                               </TableCell>
                                             </>
@@ -1328,19 +1328,19 @@ export default function DraftPage() {
                                             viewMode === 'playoffs' ? playoffRank : regularRank;
                                           const pos = (p.player.position || 'UNK').toUpperCase();
                                           const maxRank = (resp?.data?.picks ?? []).filter(
-                                            x => (x.player.position || 'UNK').toUpperCase() === pos
+                                            x => (x.player.position || 'UNK').toUpperCase() === pos,
                                           ).length;
                                           if (!rank || !maxRank) {
-                                            return <TableCell className='text-right'>-</TableCell>;
+                                            return <TableCell className="text-right">-</TableCell>;
                                           }
                                           const goodness =
                                             1 - (rank - 1) / Math.max(1, maxRank - 1);
                                           const bg = getDivergingBg(goodness * 2 - 1);
                                           const fg = getTextColorForBg(bg);
                                           return (
-                                            <TableCell className='text-right'>
+                                            <TableCell className="text-right">
                                               <span
-                                                className='px-2 py-0.5 rounded'
+                                                className="px-2 py-0.5 rounded"
                                                 style={{ backgroundColor: bg, color: fg }}
                                               >
                                                 #{rank}
@@ -1348,11 +1348,11 @@ export default function DraftPage() {
                                             </TableCell>
                                           );
                                         })()}
-                                        <TableCell className='text-right'>
+                                        <TableCell className="text-right">
                                           <Button
-                                            variant='ghost'
-                                            size='sm'
-                                            className='h-6 px-2'
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-6 px-2"
                                             onClick={() => setSelected(p)}
                                           >
                                             <Badge>{p.grade}</Badge>
@@ -1363,9 +1363,9 @@ export default function DraftPage() {
                                           const bg = getDivergingBg(norm);
                                           const fg = getTextColorForBg(bg);
                                           return (
-                                            <TableCell className='text-right'>
+                                            <TableCell className="text-right">
                                               <span
-                                                className='px-2 py-0.5 rounded'
+                                                className="px-2 py-0.5 rounded"
                                                 style={{ backgroundColor: bg, color: fg }}
                                               >
                                                 {p.gradeScore.toFixed(2)}
@@ -1379,9 +1379,9 @@ export default function DraftPage() {
                                           const bg = getDivergingBg(norm);
                                           const fg = getTextColorForBg(bg);
                                           return (
-                                            <TableCell className='text-right'>
+                                            <TableCell className="text-right">
                                               <span
-                                                className='px-2 py-0.5 rounded'
+                                                className="px-2 py-0.5 rounded"
                                                 style={{ backgroundColor: bg, color: fg }}
                                               >
                                                 {typeof p.vorp === 'number'
@@ -1411,7 +1411,7 @@ export default function DraftPage() {
 
       {/* Pick Details Modal */}
       <Dialog open={!!selected} onOpenChange={open => !open && setSelected(null)}>
-        <DialogContent className='max-w-xl'>
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>
               {selected
@@ -1420,16 +1420,16 @@ export default function DraftPage() {
             </DialogTitle>
           </DialogHeader>
           {selected ? (
-            <div className='text-sm space-y-2'>
-              <div className='flex items-center gap-2'>
-                <span className='font-medium'>{selected.rosterName}</span>
+            <div className="text-sm space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{selected.rosterName}</span>
                 <Badge>{selected.grade}</Badge>
                 {(() => {
                   const norm = selected.gradeScore / (scoreRange || 1);
                   const bg = getDivergingBg(norm);
                   const fg = getTextColorForBg(bg);
                   return (
-                    <span className='px-1.5 rounded' style={{ backgroundColor: bg, color: fg }}>
+                    <span className="px-1.5 rounded" style={{ backgroundColor: bg, color: fg }}>
                       z={selected.gradeScore.toFixed(2)}
                     </span>
                   );
@@ -1443,19 +1443,19 @@ export default function DraftPage() {
                   const bg = getDivergingBg(norm);
                   const fg = getTextColorForBg(bg);
                   return (
-                    <span className='px-1.5 rounded' style={{ backgroundColor: bg, color: fg }}>
+                    <span className="px-1.5 rounded" style={{ backgroundColor: bg, color: fg }}>
                       {v.toFixed(2)}
                     </span>
                   );
                 })()}
                 {selected.breakdown?.baselinePoints != null && (
-                  <span className='text-muted-foreground'>
+                  <span className="text-muted-foreground">
                     {' '}
                     (baseline {selected.breakdown.baselinePoints.toFixed(1)})
                   </span>
                 )}
               </div>
-              <div className='grid grid-cols-2 gap-2'>
+              <div className="grid grid-cols-2 gap-2">
                 <div>z(VORP): {selected.breakdown?.zVorp?.toFixed(2) ?? '—'}</div>
                 <div>z(StartPts): {selected.breakdown?.zStartPoints?.toFixed(2) ?? '—'}</div>
                 <div>z(Starts): {selected.breakdown?.zStarts?.toFixed(2) ?? '—'}</div>
@@ -1466,7 +1466,7 @@ export default function DraftPage() {
                 </div>
                 <div>Penalty: {selected.breakdown?.dropPenalty?.toFixed(2) ?? '—'}</div>
               </div>
-              <div className='mt-2'>
+              <div className="mt-2">
                 Regular season: {selected.contribution.starts} starts •{' '}
                 {selected.contribution.startPoints.toFixed(1)} start pts •{' '}
                 {selected.contribution.totalLeaguePoints.toFixed(1)} total pts

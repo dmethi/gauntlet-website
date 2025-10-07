@@ -74,7 +74,7 @@ async function fetchSleeperData<T>(endpoint: string): Promise<T> {
 async function getRosterMatchups(
   leagueId: string,
   rosterIds: number[],
-  weeks: number
+  weeks: number,
 ): Promise<Map<number, Array<{ week: number; points: number; matchupId: number }>>> {
   const rosterMatchups = new Map<
     number,
@@ -87,10 +87,10 @@ async function getRosterMatchups(
   // Fetch all weeks in parallel
   const promises = Array.from({ length: weeks }, (_, i) => i + 1).map(week =>
     fetchSleeperData<Array<{ roster_id: number; points: number; matchup_id: number }>>(
-      `league/${leagueId}/matchups/${week}`
+      `league/${leagueId}/matchups/${week}`,
     )
       .then(matchups => ({ week, matchups }))
-      .catch(() => ({ week, matchups: [] }))
+      .catch(() => ({ week, matchups: [] })),
   );
 
   const results = await Promise.all(promises);

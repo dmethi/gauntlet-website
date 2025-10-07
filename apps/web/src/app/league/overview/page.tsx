@@ -29,21 +29,21 @@ const LeagueOverviewLoader = () => (
     speed={2}
     width={1200}
     height={800}
-    viewBox='0 0 1200 800'
-    backgroundColor='#f3f3f3'
-    foregroundColor='#ecebeb'
+    viewBox="0 0 1200 800"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
   >
     {/* Title and Subtitle */}
-    <rect x='16' y='32' rx='3' ry='3' width='300' height='36' />
-    <rect x='16' y='72' rx='3' ry='3' width='150' height='20' />
+    <rect x="16" y="32" rx="3" ry="3" width="300" height="36" />
+    <rect x="16" y="72" rx="3" ry="3" width="150" height="20" />
 
     {/* Team Rankings Table */}
-    <rect x='16' y='128' rx='3' ry='3' width='200' height='28' />
-    <rect x='16' y='168' rx='8' ry='8' width='1168' height='400' />
+    <rect x="16" y="128" rx="3" ry="3" width="200" height="28" />
+    <rect x="16" y="168" rx="8" ry="8" width="1168" height="400" />
 
     {/* League Scoring Trends Chart */}
-    <rect x='16' y='600' rx='3' ry='3' width='250' height='28' />
-    <rect x='16' y='640' rx='8' ry='8' width='1168' height='150' />
+    <rect x="16" y="600" rx="3" ry="3" width="250" height="28" />
+    <rect x="16" y="640" rx="8" ry="8" width="1168" height="150" />
   </ContentLoader>
 );
 
@@ -54,10 +54,10 @@ function LeagueOverviewContent() {
 
   // Use the new client-side calculation hook
   const { league, loading, teamStats, weeklyAverages } = useLeagueOverviewClient(
-    leagueIdParam || undefined
+    leagueIdParam || undefined,
   );
   const [sortKey, setSortKey] = useState<'team' | 'record' | 'points' | 'expectedWins' | 'luck'>(
-    'points'
+    'points',
   );
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
@@ -113,12 +113,12 @@ function LeagueOverviewContent() {
 
   if (loading) {
     return (
-      <Container className='py-8'>
+      <Container className="py-8">
         <LeagueOverviewLoader />
-        <div className='mt-8'>
+        <div className="mt-8">
           <ChartContainer
-            title='League Scoring Trends'
-            description='Average points by week'
+            title="League Scoring Trends"
+            description="Average points by week"
             height={384}
           >
             <ChartSkeleton height={320} />
@@ -130,10 +130,10 @@ function LeagueOverviewContent() {
 
   if (!league) {
     return (
-      <div className='flex items-center justify-center h-[80vh]'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold text-card-foreground mb-2'>League Not Found</h2>
-          <p className='text-muted-foreground'>No league data available for the 2023 season.</p>
+      <div className="flex items-center justify-center h-[80vh]">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-card-foreground mb-2">League Not Found</h2>
+          <p className="text-muted-foreground">No league data available for the 2023 season.</p>
         </div>
       </div>
     );
@@ -152,91 +152,91 @@ function LeagueOverviewContent() {
   };
 
   return (
-    <Container className='py-8'>
-      <div className='mb-8'>
+    <Container className="py-8">
+      <div className="mb-8">
         <PageHeader title={league.name} subtitle={`Season ${league.season}`} />
       </div>
 
-      <div className='mb-8'>
-        <h2 className='mb-4 text-2xl font-bold'>Team Rankings</h2>
-        <div className='overflow-x-auto rounded-md border border-border bg-card'>
+      <div className="mb-8">
+        <h2 className="mb-4 text-2xl font-bold">Team Rankings</h2>
+        <div className="overflow-x-auto rounded-md border border-border bg-card">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className='w-[60px]'>Rank</TableHead>
+                <TableHead className="w-[60px]">Rank</TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
                     onClick={() => onSort('team')}
-                    aria-label='Sort by Team'
+                    aria-label="Sort by Team"
                   >
                     <span>Team</span>
                     {sortKey === 'team' &&
                       (sortDir === 'asc' ? (
-                        <ChevronUp className='h-3 w-3' />
+                        <ChevronUp className="h-3 w-3" />
                       ) : (
-                        <ChevronDown className='h-3 w-3' />
+                        <ChevronDown className="h-3 w-3" />
                       ))}
                   </button>
                 </TableHead>
-                <TableHead className='w-[80px]'>Division</TableHead>
+                <TableHead className="w-[80px]">Division</TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
                     onClick={() => onSort('record')}
-                    aria-label='Sort by Record'
+                    aria-label="Sort by Record"
                   >
                     <span>Record</span>
                     {sortKey === 'record' &&
                       (sortDir === 'asc' ? (
-                        <ChevronUp className='h-3 w-3' />
+                        <ChevronUp className="h-3 w-3" />
                       ) : (
-                        <ChevronDown className='h-3 w-3' />
+                        <ChevronDown className="h-3 w-3" />
                       ))}
                   </button>
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
                     onClick={() => onSort('points')}
-                    aria-label='Sort by Points For'
+                    aria-label="Sort by Points For"
                   >
                     <span>Points For</span>
                     {sortKey === 'points' &&
                       (sortDir === 'asc' ? (
-                        <ChevronUp className='h-3 w-3' />
+                        <ChevronUp className="h-3 w-3" />
                       ) : (
-                        <ChevronDown className='h-3 w-3' />
+                        <ChevronDown className="h-3 w-3" />
                       ))}
                   </button>
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
                     onClick={() => onSort('expectedWins')}
-                    aria-label='Sort by Expected Wins'
+                    aria-label="Sort by Expected Wins"
                   >
                     <span>Expected Wins</span>
                     {sortKey === 'expectedWins' &&
                       (sortDir === 'asc' ? (
-                        <ChevronUp className='h-3 w-3' />
+                        <ChevronUp className="h-3 w-3" />
                       ) : (
-                        <ChevronDown className='h-3 w-3' />
+                        <ChevronDown className="h-3 w-3" />
                       ))}
                   </button>
                 </TableHead>
                 <TableHead>
                   <button
-                    className='flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none'
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
                     onClick={() => onSort('luck')}
-                    aria-label='Sort by Luck'
+                    aria-label="Sort by Luck"
                   >
                     <span>Luck</span>
                     {sortKey === 'luck' &&
                       (sortDir === 'asc' ? (
-                        <ChevronUp className='h-3 w-3' />
+                        <ChevronUp className="h-3 w-3" />
                       ) : (
-                        <ChevronDown className='h-3 w-3' />
+                        <ChevronDown className="h-3 w-3" />
                       ))}
                   </button>
                 </TableHead>
@@ -246,20 +246,20 @@ function LeagueOverviewContent() {
               {sortedTeamStats.map(team => (
                 <TableRow
                   key={team.id}
-                  className='group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none'
+                  className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
                   onClick={() => {
                     router.push(`/team/${team.id}`);
                   }}
                 >
                   <TableCell>{team.canonicalRank}</TableCell>
-                  <TableCell className='font-medium'>{team.name}</TableCell>
+                  <TableCell className="font-medium">{team.name}</TableCell>
                   <TableCell>
-                    <Badge variant='outline' className='text-xs'>
+                    <Badge variant="outline" className="text-xs">
                       {getDivisionName(team.division)}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant='secondary'>
+                    <Badge variant="secondary">
                       {team.wins}-{team.losses}
                     </Badge>
                   </TableCell>
@@ -273,16 +273,16 @@ function LeagueOverviewContent() {
         </div>
       </div>
 
-      <div className='mt-12'>
+      <div className="mt-12">
         <LeagueChart data={weeklyAverages} />
       </div>
 
       {/* Recent Transactions */}
-      <div className='mt-12'>
-        <div className='flex items-center justify-between mb-3'>
-          <h2 className='text-2xl font-bold'>Recent Transactions</h2>
+      <div className="mt-12">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-2xl font-bold">Recent Transactions</h2>
           <Link href={`/league/transactions?leagueId=${league.id}`}>
-            <Button size='sm' variant='outline'>
+            <Button size="sm" variant="outline">
               View All
             </Button>
           </Link>
@@ -326,7 +326,7 @@ function RecentTransactionsWidget({ league }: { league: any }) {
   }, [league?.id]);
 
   if (loading) {
-    return <div className='text-sm text-muted-foreground'>Loading…</div>;
+    return <div className="text-sm text-muted-foreground">Loading…</div>;
   }
 
   // Create mapping from both unique roster IDs and original Sleeper IDs (1-12)
@@ -361,14 +361,14 @@ function RecentTransactionsWidget({ league }: { league: any }) {
         player: p.fullName,
         rosterId: a.rosterId,
         label: `${p.fullName} to ${rosterName(a.rosterId)}`,
-      }))
+      })),
     );
     const rawDrops = (t.drops || []).flatMap((d: any) =>
       d.players.map((p: any) => ({
         player: p.fullName,
         rosterId: d.rosterId,
         label: `${p.fullName} from ${rosterName(d.rosterId)}`,
-      }))
+      })),
     );
 
     // For trades, detect and fix duplicate players appearing on both sides
@@ -442,7 +442,7 @@ function RecentTransactionsWidget({ league }: { league: any }) {
       {hasMore && !showAll && (
         <button
           onClick={() => setShowAll(true)}
-          className='w-full mt-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors'
+          className="w-full mt-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
         >
           Show all {adapted.length} transactions
         </button>
@@ -450,7 +450,7 @@ function RecentTransactionsWidget({ league }: { league: any }) {
       {showAll && (
         <button
           onClick={() => setShowAll(false)}
-          className='w-full mt-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors'
+          className="w-full mt-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
         >
           Show less
         </button>

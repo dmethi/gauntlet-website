@@ -258,7 +258,7 @@ export function inferStarters(teamPicks: any[]) {
 
   // Fill FLEX spots with highest remaining RB/WR/TE
   const flexEligible = sortedPicks.filter(
-    pick => ['RB', 'WR', 'TE'].includes(pick.player.position) && !starters.includes(pick)
+    pick => ['RB', 'WR', 'TE'].includes(pick.player.position) && !starters.includes(pick),
   );
 
   for (let i = 0; i < requirements.FLEX && i < flexEligible.length; i++) {
@@ -352,7 +352,7 @@ function calculatePlayerOverlap(draft1: MockDraft, draft2: MockDraft): PlayerOve
   // Define copycat threshold (40%+ shared players)
   const copycatThreshold = 40;
   const copycatPairs = allOverlaps.filter(
-    overlap => overlap.overlap_percentage >= copycatThreshold
+    overlap => overlap.overlap_percentage >= copycatThreshold,
   );
 
   // Identify maverick managers (those with low average overlap with others)
@@ -371,7 +371,7 @@ function calculatePlayerOverlap(draft1: MockDraft, draft2: MockDraft): PlayerOve
     const managerOverlaps = allOverlaps.filter(
       overlap =>
         (isLeagueA && overlap.manager_a === manager.teamName) ||
-        (!isLeagueA && overlap.manager_b === manager.teamName)
+        (!isLeagueA && overlap.manager_b === manager.teamName),
     );
 
     const avgOverlapWithOthers =
@@ -383,7 +383,7 @@ function calculatePlayerOverlap(draft1: MockDraft, draft2: MockDraft): PlayerOve
     // Calculate unique picks percentage (lower means more overlapping with others)
     const totalPossibleOverlaps = managerOverlaps.length;
     const highOverlapCount = managerOverlaps.filter(
-      overlap => overlap.overlap_percentage > avgOverlapPercentage
+      overlap => overlap.overlap_percentage > avgOverlapPercentage,
     ).length;
     const uniquePicksPercentage =
       totalPossibleOverlaps > 0
@@ -477,7 +477,7 @@ function calculatePlayerLevelAnalytics(draft1: MockDraft, draft2: MockDraft): Pl
         const prices = posByPosition.get(pos) || [];
         const mean = prices.reduce((sum, p) => sum + p, 0) / prices.length;
         const std = Math.sqrt(
-          prices.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / prices.length
+          prices.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / prices.length,
         );
 
         const z = std > 0 ? (pick.actualPrice - mean) / std : 0;
@@ -927,7 +927,7 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
       const patience_score = 1 - (patienceQ[0] + patienceQ[1]);
       const time_to_first_30 = teamPicks.findIndex(pick => pick.actualPrice >= 30) + 1 || null;
       const last_starter_index = Math.max(
-        ...starters.map(pick => teamPicks.findIndex(p => p === pick) + 1)
+        ...starters.map(pick => teamPicks.findIndex(p => p === pick) + 1),
       );
 
       const avg_starter_nom_index =
@@ -937,7 +937,7 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
         bench.length > 0
           ? bench.reduce(
               (sum, benchPlayer) => sum + (teamPicks.findIndex(p => p === benchPlayer) + 1),
-              0
+              0,
             ) / bench.length
           : 0;
 
@@ -1016,7 +1016,7 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
   const featureMatrix = profiles.map(p => p.feature_vector);
   const means = featureMatrix[0].map(
     (_, colIndex) =>
-      featureMatrix.reduce((sum, row) => sum + row[colIndex], 0) / featureMatrix.length
+      featureMatrix.reduce((sum, row) => sum + row[colIndex], 0) / featureMatrix.length,
   );
   const stds = featureMatrix[0].map((_, colIndex) => {
     const mean = means[colIndex];
@@ -1028,7 +1028,7 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
 
   profiles.forEach(profile => {
     profile.feature_vector = profile.feature_vector.map((val, index) =>
-      stds[index] > 0 ? (val - means[index]) / stds[index] : 0
+      stds[index] > 0 ? (val - means[index]) / stds[index] : 0,
     );
   });
 
@@ -1247,7 +1247,7 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
         pctQB: Number(p.spend_shares.pctQB.toFixed(3)),
         pctRB: Number(p.spend_shares.pctRB.toFixed(3)),
         pctWR: Number(p.spend_shares.pctWR.toFixed(3)),
-      }))
+      })),
     );
 
     // Aggregates by cluster id
@@ -1294,7 +1294,7 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
       byLabel.set(c.cluster_label, (byLabel.get(c.cluster_label) || 0) + c.count);
     });
     console.log(
-      'Label totals across all clusters (duplicates expected if label heuristics overlap):'
+      'Label totals across all clusters (duplicates expected if label heuristics overlap):',
     );
     console.table(Array.from(byLabel.entries()).map(([label, total]) => ({ label, total })));
     console.groupEnd();
