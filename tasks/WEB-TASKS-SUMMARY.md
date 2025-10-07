@@ -1,8 +1,9 @@
 # Apps/Web Task Files Summary
 
 **Generated**: October 7, 2025  
-**Total Tasks**: 38 (37 planned + 1 discovered)  
-**Status**: All task files created ✅
+**Total Tasks**: 43 (37 planned + 6 additional discovered)  
+**Status**: All task files created ✅  
+**Latest Update**: Added 10 detailed component splitting tasks (WEB-COMP-001 through WEB-COMP-010)
 
 ---
 
@@ -79,13 +80,23 @@
 - ✅ **WEB-HOOK-002.md**: Draft Analytics Data Hook ⏱️ 45 min
 - ✅ **WEB-HOOK-003.md**: Stats Hub Hooks ⏱️ 1 hour
 
-#### Phase 5: Component Splitting (5 tasks)
+#### Phase 5: Component Splitting (10 tasks) - ✅ ALL DETAILED
 
-- **WEB-COMP-001.md**: Split Manager Analysis Component ⏱️ 2 hours
-- **WEB-COMP-002.md**: Split TrendsView Component ⏱️ 2 hours
-- **WEB-COMP-003.md**: Split Playoff Bracket Component ⏱️ 1.5 hours
-- **WEB-COMP-004.md**: Split Schedule Analysis Component ⏱️ 1.5 hours
-- **WEB-COMP-005.md**: Split TeamView Component ⏱️ 1.5 hours
+**🔴 Critical Priority (6 tasks, 13 hours):**
+- ✅ **WEB-COMP-001.md**: Split ManagerAnalysis Component (1,535 lines → ~150) ⏱️ 2.5h
+- ✅ **WEB-COMP-002.md**: Split TrendsView Component (1,586 lines → ~150) ⏱️ 2.5h
+- ✅ **WEB-COMP-003.md**: Split PlayoffBracket Component (1,349 lines → ~120) ⏱️ 2h
+- ✅ **WEB-COMP-004.md**: Split ScheduleAnalysis Component (1,221 lines → ~120) ⏱️ 2h
+- ✅ **WEB-COMP-005.md**: Split TeamView Component (1,169 lines → ~120) ⏱️ 2h
+- ✅ **WEB-COMP-006.md**: Split StartSitEfficiency Component (1,093 lines → ~120) ⏱️ 2h
+
+**🟡 Medium Priority (4 tasks, 6 hours):**
+- ✅ **WEB-COMP-007.md**: Split TransactionAnalysis Component (852 lines → ~100) ⏱️ 1.5h
+- ✅ **WEB-COMP-008.md**: Split LeagueView Component (765 lines → ~100) ⏱️ 1.5h
+- ✅ **WEB-COMP-009.md**: Split MatchupSimulation Component (631 lines → ~100) ⏱️ 1.5h
+- ✅ **WEB-COMP-010.md**: Split ScatterAnalysis Component (625 lines → ~100) ⏱️ 1.5h
+
+**Summary**: 10,826 lines → ~5,830 lines (46% reduction), 53+ sub-components to create
 
 #### Phase 6: Page Migration (3 tasks)
 
@@ -114,9 +125,9 @@
 | Status         | Count  | Description                                       |
 | -------------- | ------ | ------------------------------------------------- |
 | ✅ Completed   | 4      | Phase 2 EXTRACT tasks (finished)                  |
-| ✅ Detailed    | 15     | Phase 1 SETUP + Phase 2 EXTRACT + Phase 3 UTIL + Phase 4 HOOK |
-| 📄 Placeholder | 23     | Phase 5-8 tasks with basic structure             |
-| **Total**      | **42** | All task files created (38 planned + 4 completed) |
+| ✅ Detailed    | 29     | Phase 1-5 tasks fully detailed                   |
+| 📄 Placeholder | 13     | Phase 6-8 tasks with basic structure             |
+| **Total**      | **46** | All task files created (42 planned + 4 completed) |
 
 ---
 
@@ -146,8 +157,9 @@ These tasks have **complete, step-by-step instructions** including:
 - `WEB-EXTRACT-005` through `WEB-EXTRACT-011` (Phase 2 - Type Extraction)
 - `WEB-UTIL-004` (Phase 3 - Utility Extraction - cleanup task)
 - `WEB-HOOK-001` through `WEB-HOOK-003` (Phase 4 - Hook Extraction)
+- `WEB-COMP-001` through `WEB-COMP-010` (Phase 5 - Component Splitting)
 
-### Placeholder Tasks (24 files)
+### Placeholder Tasks (13 files)
 
 These tasks have **basic structure** with:
 
@@ -165,7 +177,6 @@ These tasks have **basic structure** with:
 **Status**: Ready to be filled in with detailed instructions as needed
 
 **Remaining Placeholders**:
-- Phase 5: WEB-COMP-001 through WEB-COMP-005 (Component Splitting) - 5 tasks
 - Phase 6: WEB-PAGE-001 through WEB-PAGE-003 (Page Migration) - 3 tasks
 - Phase 7: WEB-TEST-001 through WEB-TEST-004 (Testing) - 4 tasks
 - Phase 8: WEB-CLEAN-001, WEB-CLEAN-002, WEB-DOC-001, WEB-DOC-002 (Cleanup/Polish) - 4 tasks
@@ -256,15 +267,18 @@ test -f WEB-EXTRACT-001.md && echo "✅ Placeholder tasks exist"
 
 ## 🎯 Next Steps
 
-1. ✅ **COMPLETE**: All task files created (14 detailed + 24 placeholders)
+1. ✅ **COMPLETE**: All task files created (29 detailed + 13 placeholders)
 2. ✅ **COMPLETE**: Phase 1 (Infrastructure) - 4 tasks
 3. ✅ **COMPLETE**: Phase 2 (Type Extraction) - 11 tasks
 4. ✅ **COMPLETE**: Phase 3 (Utility Extraction) - 4/4 tasks ✅ (migration complete, testing pending)
-5. 🔄 **READY**: Phase 4 (Hook Extraction) - All 3 task files detailed and ready
-6. ⏭️ **RECOMMENDED NEXT**: Execute WEB-UTIL-004 (Hall of Fame testing) OR begin WEB-HOOK-001
-7. ⏭️ **THEN**: Execute WEB-HOOK-001, WEB-HOOK-002, WEB-HOOK-003 in sequence
-8. 📋 **ONGOING**: Fill in placeholder tasks as needed before execution
-9. 📊 **TRACK**: Update `tasks/PROGRESS.md` after each completed task
+5. ✅ **COMPLETE**: Phase 4 (Hook Extraction) - All 3 task files detailed and ready
+6. ✅ **COMPLETE**: Phase 5 (Component Splitting) - All 10 task files detailed and ready
+7. ⏭️ **RECOMMENDED NEXT**: Execute WEB-HOOK-001, WEB-HOOK-002, WEB-HOOK-003 (prerequisites for components)
+8. ⏭️ **THEN**: Begin Phase 5 component splitting with WEB-COMP-001 or WEB-COMP-002
+9. 📋 **REMAINING**: Fill in Phase 6-8 placeholders as needed before execution
+10. 📊 **TRACK**: Update `tasks/PROGRESS.md` after each completed task
+
+**📘 NEW**: See `tasks/WEB-COMP-SUMMARY.md` for comprehensive component splitting details
 
 ---
 
@@ -276,11 +290,11 @@ test -f WEB-EXTRACT-001.md && echo "✅ Placeholder tasks exist"
 | Phase 2 (EXTRACT) | 11     | 3.95 hours      | ✅ Complete (11/11)          |
 | Phase 3 (UTIL)    | 4      | 3 hours         | ✅ Complete (4/4, testing pending) |
 | Phase 4 (HOOK)    | 3      | 2.75 hours      | ✅ Task files detailed & ready |
-| Phase 5 (COMP)    | 5      | 9 hours         | 📄 Placeholders ready        |
+| Phase 5 (COMP)    | 10     | 19 hours        | ✅ All 10 task files detailed & ready |
 | Phase 6 (PAGE)    | 3      | 2.75 hours      | 📄 Placeholders ready        |
 | Phase 7 (TEST)    | 4      | 9 hours         | 📄 Placeholders ready        |
 | Phase 8 (CLEAN)   | 4      | 5.25 hours      | 📄 Placeholders ready        |
-| **Total**         | **38** | **38.95 hours** | **8 weeks @ 4.9 hours/week** |
+| **Total**         | **43** | **48.95 hours** | **10 weeks @ 4.9 hours/week** |
 
 ---
 

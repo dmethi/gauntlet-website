@@ -67,6 +67,7 @@ export default [
         },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
+      'no-unused-vars': 'off', // Disable base rule as it conflicts with @typescript-eslint/no-unused-vars
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

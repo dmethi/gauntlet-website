@@ -31,7 +31,7 @@ import {
   getPrecomputedManagerAnalytics,
 } from '@/lib/precomputed-data-loader';
 import { PositionalCurvesChart } from '@/components/charts/positional-curves-chart';
-import { ManagerAnalysis } from '@/components/manager-analysis';
+import { ManagerAnalysis } from '@/features/draft-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import { BarChart3, Filter, Shuffle, Trophy, Users } from 'lucide-react';
 

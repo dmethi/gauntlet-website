@@ -56,3 +56,6 @@ export type {
   DraftAnalyticsOptions,
   DraftAnalyticsResult,
 } from './hooks';
+
+// Component exports
+export { ManagerAnalysis } from './components';
