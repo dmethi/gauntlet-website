@@ -9,7 +9,9 @@
 
 ## Objective
 
-Extract cross-feature type definitions from `lib/hooks.ts` to a new `shared/types/api.ts` file, creating a centralized location for shared API response types used across multiple features.
+Extract cross-feature type definitions from `lib/hooks.ts` to a new
+`shared/types/api.ts` file, creating a centralized location for shared API
+response types used across multiple features.
 
 ---
 
@@ -42,7 +44,7 @@ Create the file with this content:
 ```typescript
 /**
  * Shared API Types
- * 
+ *
  * Type definitions for API responses and data structures shared across multiple features.
  * These types extend or wrap types from @gauntlet/types for frontend-specific needs.
  */
@@ -73,7 +75,7 @@ export interface WeeklyMetric {
 
 /**
  * Extended roster information with matchup history
- * 
+ *
  * Extends FantasyTeam from @gauntlet/types with frontend-specific fields
  */
 export interface Roster extends FantasyTeam {
@@ -143,7 +145,7 @@ Add to `src/shared/types/index.ts`:
 ```typescript
 /**
  * Shared Types
- * 
+ *
  * Exports all shared type definitions used across multiple features.
  */
 
@@ -161,7 +163,13 @@ export type {
 At the top of `lib/hooks.ts` (around line 6), add:
 
 ```typescript
-import type { Matchup, WeeklyMetric, Roster, TeamStats, LeagueData } from '@/shared/types';
+import type {
+  Matchup,
+  WeeklyMetric,
+  Roster,
+  TeamStats,
+  LeagueData,
+} from '@/shared/types';
 ```
 
 Then remove the inline interface definitions (lines 8-75 approximately):
@@ -175,7 +183,8 @@ export interface TeamStats { ... }
 interface LeagueData extends League { ... }
 ```
 
-**Note**: Keep the `export` keyword on `TeamStats` if it's exported, otherwise import/export it from `@/shared/types`.
+**Note**: Keep the `export` keyword on `TeamStats` if it's exported, otherwise
+import/export it from `@/shared/types`.
 
 ### 5. Verify TypeScript compilation
 
@@ -262,9 +271,11 @@ Expected outcome: ~70 lines removed from hooks.ts, centralized in shared types.
 
 ### Why This Matters
 
-- **Cross-Feature Reusability**: These types are used by multiple features (stats, matchups, hall-of-fame)
+- **Cross-Feature Reusability**: These types are used by multiple features
+  (stats, matchups, hall-of-fame)
 - **Cleaner Hooks File**: Separates types from hook logic (~70 lines removed)
-- **Shared Location**: Establishes `shared/types/` pattern for cross-feature types
+- **Shared Location**: Establishes `shared/types/` pattern for cross-feature
+  types
 - **Better Organization**: Types grouped with other shared code
 
 ### Interfaces Being Moved
@@ -278,15 +289,18 @@ Expected outcome: ~70 lines removed from hooks.ts, centralized in shared types.
 ### Design Decision: Why `shared/types/` vs Feature Types?
 
 These types go in `shared/types/` because:
+
 - ✅ Used by multiple features (matchups, stats, hall-of-fame, transactions)
 - ✅ Represent core data structures from API responses
 - ✅ Not specific to any single feature domain
 
-Types like `ManagerAnalysisProps` went in `features/draft-analysis/types.ts` because:
+Types like `ManagerAnalysisProps` went in `features/draft-analysis/types.ts`
+because:
+
 - They're specific to one feature
 - They represent feature-specific domain models
 
 ---
 
-**Estimated Context Usage**: 70 lines read, 150 lines written (including documentation), 20 min total
-
+**Estimated Context Usage**: 70 lines read, 150 lines written (including
+documentation), 20 min total

@@ -16,6 +16,7 @@
 ## Context Needed
 
 **Read these files**:
+
 1. TBD
 
 **Total Context**: ~XXX lines
@@ -73,4 +74,3 @@ I'm working on WEB-TEST-003. Please read the task file and execute the steps.
 ---
 
 **Estimated Context Usage**: XXX lines read, XXX lines written, 2 hours total
-

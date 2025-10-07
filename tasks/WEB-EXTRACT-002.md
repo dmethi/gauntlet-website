@@ -9,7 +9,9 @@
 
 ## Objective
 
-Extract 13 type definitions from `lib/manager-analytics.ts` (1,346 lines) and consolidate them into `features/draft-analysis/types.ts`, creating a comprehensive type definition file for all draft analysis functionality.
+Extract 13 type definitions from `lib/manager-analytics.ts` (1,346 lines) and
+consolidate them into `features/draft-analysis/types.ts`, creating a
+comprehensive type definition file for all draft analysis functionality.
 
 ---
 
@@ -17,8 +19,10 @@ Extract 13 type definitions from `lib/manager-analytics.ts` (1,346 lines) and co
 
 **Read these files** (specific sections only):
 
-1. `apps/web/src/lib/manager-analytics.ts` (lines 8-200) - All export interface declarations
-2. `apps/web/src/features/draft-analysis/types.ts` (all) - Existing types from WEB-EXTRACT-001
+1. `apps/web/src/lib/manager-analytics.ts` (lines 8-200) - All export interface
+   declarations
+2. `apps/web/src/features/draft-analysis/types.ts` (all) - Existing types from
+   WEB-EXTRACT-001
 
 **Total Context**: ~200 lines to read
 
@@ -33,7 +37,7 @@ Replace the entire contents of `src/features/draft-analysis/types.ts` with:
 ```typescript
 /**
  * Draft Analysis Feature Types
- * 
+ *
  * Comprehensive type definitions for manager analysis components and logic.
  * Extracted from components/manager-analysis.tsx and lib/manager-analytics.ts
  * for better separation of concerns and type reusability.
@@ -274,14 +278,14 @@ Replace contents with:
 ```typescript
 /**
  * Draft Analysis Feature
- * 
+ *
  * Exports all types for draft analysis components and logic.
  */
 
 export type {
   // Component Props
   ManagerAnalysisProps,
-  
+
   // Manager Metrics
   ManagerSpendShares,
   ManagerConcentration,
@@ -290,14 +294,14 @@ export type {
   ManagerCluster,
   ManagerOutlierFlags,
   ManagerProfile,
-  
+
   // Player Analysis
   PlayerOverlap,
   PlayerOverlapAnalytics,
   PlayerAnalysis,
   DraftPickRow,
   PlayerLevelAnalytics,
-  
+
   // Top-Level Analytics
   ManagerAnalytics,
 } from './types';
@@ -305,7 +309,8 @@ export type {
 
 ### 3. Update `lib/manager-analytics.ts` to re-export from feature types
 
-At the top of `lib/manager-analytics.ts` (after the eslint disable comment, around line 6), add:
+At the top of `lib/manager-analytics.ts` (after the eslint disable comment,
+around line 6), add:
 
 ```typescript
 // Re-export types from centralized location
@@ -339,7 +344,8 @@ pnpm tsc --noEmit
 
 ## Acceptance Criteria
 
-- [ ] All 13 interfaces moved from `lib/manager-analytics.ts` to `features/draft-analysis/types.ts`
+- [ ] All 13 interfaces moved from `lib/manager-analytics.ts` to
+      `features/draft-analysis/types.ts`
 - [ ] `lib/manager-analytics.ts` re-exports types from feature directory
 - [ ] Original interface definitions removed from `lib/manager-analytics.ts`
 - [ ] Barrel export in `features/draft-analysis/index.ts` includes all types
@@ -401,7 +407,8 @@ Expected outcome: ~190 lines removed from manager-analytics.ts, centralized in f
 
 **Blocks**: WEB-UTIL-003 (Manager Analytics Calculations)  
 **Blocked By**: WEB-EXTRACT-001 (Manager Analysis Types)  
-**Related**: WEB-COMP-001 (Split Manager Analysis Component), WEB-HOOK-002 (Draft Analytics Data Hook)
+**Related**: WEB-COMP-001 (Split Manager Analysis Component), WEB-HOOK-002
+(Draft Analytics Data Hook)
 
 ---
 
@@ -411,7 +418,8 @@ Expected outcome: ~190 lines removed from manager-analytics.ts, centralized in f
 
 - **Major Cleanup**: Removes ~190 lines of type definitions from logic file
 - **Single Source of Truth**: All draft analysis types in one location
-- **Better IntelliSense**: IDEs can provide better autocomplete from centralized types
+- **Better IntelliSense**: IDEs can provide better autocomplete from centralized
+  types
 - **Test Friendliness**: Test files can import types from feature directory
 - **Backwards Compatible**: Re-exports maintain existing import paths
 
@@ -431,9 +439,10 @@ Expected outcome: ~190 lines removed from manager-analytics.ts, centralized in f
 12. ManagerProfile (16 fields)
 13. ManagerAnalytics (4 fields)
 
-**Total**: 14 interfaces in final types.ts (includes ManagerAnalysisProps from EXTRACT-001)
+**Total**: 14 interfaces in final types.ts (includes ManagerAnalysisProps from
+EXTRACT-001)
 
 ---
 
-**Estimated Context Usage**: 200 lines read, 400 lines written (including documentation), 25 min total
-
+**Estimated Context Usage**: 200 lines read, 400 lines written (including
+documentation), 25 min total

@@ -97,10 +97,7 @@ console.log(`Updated Win%: ${(result.team1WinPct * 100).toFixed(1)}%`);
 ### With Metrics Collection
 
 ```typescript
-import {
-  simulateMatchupProbabilityFromPlayers,
-  createMetrics,
-} from '@gauntlet/sim-engine';
+import { simulateMatchupProbabilityFromPlayers, createMetrics } from '@gauntlet/sim-engine';
 
 const metrics = createMetrics();
 
@@ -115,10 +112,7 @@ const result = await simulateMatchupProbabilityFromPlayers(
 
 const summary = metrics.getSummary();
 console.log('Simulation time:', summary.timers['simulation.matchup.duration']);
-console.log(
-  'Cache hits:',
-  summary.counters['variance.position_distribution.cache_hit']
-);
+console.log('Cache hits:', summary.counters['variance.position_distribution.cache_hit']);
 ```
 
 ---
@@ -248,6 +242,7 @@ async function prewarmVarianceData(): Promise<void>;
 Pre-warm variance data caches during application startup to avoid first-request latency.
 
 **Example:**
+
 ```typescript
 import { prewarmVarianceData } from '@gauntlet/sim-engine';
 
@@ -255,7 +250,7 @@ async function startServer() {
   console.log('Warming variance data...');
   await prewarmVarianceData();
   console.log('✅ Variance data ready');
-  
+
   // Start server
   app.listen(3000);
 }
@@ -268,9 +263,7 @@ async function startServer() {
 #### `validateSchemaVersion`
 
 ```typescript
-function validateSchemaVersion(
-  dataSchemaVersion: number
-): SchemaValidation;
+function validateSchemaVersion(dataSchemaVersion: number): SchemaValidation;
 ```
 
 Validate schema version compatibility for variance data.
@@ -483,6 +476,7 @@ MIT © Gauntlet Fantasy Football
 8. Open a Pull Request
 
 **Coding Standards:**
+
 - ✅ Use arrow functions only (no `function` declarations)
 - ✅ Add JSDoc documentation for all exported functions
 - ✅ Maintain 80%+ test coverage
@@ -506,4 +500,3 @@ For questions or issues:
 - **Sleeper API** for player stats and projections
 - **Historical Data** (2022-2024 seasons) for variance models
 - **Monte Carlo Methods** for simulation accuracy
-

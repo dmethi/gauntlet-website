@@ -31,7 +31,8 @@
 - [x] **OBSERVABILITY-602**: Add Metrics Collection ⏱️ 40 min
 - [x] **RESILIENCE-601**: Add Retry Logic with Exponential Backoff ⏱️ 50 min
 - [x] **SIM-601**: Add ESLint and Prettier Configuration (sim-engine) ⏱️ 30 min
-- [x] **SIM-602**: Convert All Functions to Arrow Functions (sim-engine) ⏱️ 45 min
+- [x] **SIM-602**: Convert All Functions to Arrow Functions (sim-engine) ⏱️ 45
+      min
 - [x] **SIM-603**: Add Barrel Exports (index.ts) (sim-engine) ⏱️ 20 min
 - [x] **SIM-604**: Add JSDoc to All Exported Functions (sim-engine) ⏱️ 45 min
 - [x] **SIM-605**: Add Comprehensive Test Suite (sim-engine) ⏱️ 2 hours
@@ -72,23 +73,23 @@ _Ready to begin_
 
 ## 📊 Progress by Category
 
-| Category            | Total  | Completed | In Progress | Remaining |
-| ------------------- | ------ | --------- | ----------- | --------- |
-| **SETUP**           | 13     | 7         | 0           | 6         |
-| **EXTRACT**         | 16     | 4         | 0           | 12        |
-| **UTIL**            | 16     | 0         | 0           | 16        |
-| **HOOK**            | 11     | 0         | 0           | 11        |
-| **COMP**            | 15     | 0         | 0           | 15        |
-| **TEST**            | 11     | 3         | 0           | 8         |
-| **PAGE**            | 3      | 0         | 0           | 3         |
-| **CLEAN**           | 9      | 5         | 0           | 4         |
-| **REFACTOR**        | 4      | 3         | 0           | 1         |
-| **OBSERVABILITY**   | 4      | 4         | 0           | 0         |
-| **RESILIENCE**      | 5      | 1         | 0           | 4         |
-| **DATA_MANAGEMENT** | 3      | 3         | 0           | 0         |
-| **DOCUMENTATION**   | 4      | 2         | 0           | 2         |
-| **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **119** | **36**   | **0**       | **83**    |
+| Category            | Total   | Completed | In Progress | Remaining |
+| ------------------- | ------- | --------- | ----------- | --------- |
+| **SETUP**           | 13      | 7         | 0           | 6         |
+| **EXTRACT**         | 16      | 4         | 0           | 12        |
+| **UTIL**            | 16      | 0         | 0           | 16        |
+| **HOOK**            | 11      | 0         | 0           | 11        |
+| **COMP**            | 15      | 0         | 0           | 15        |
+| **TEST**            | 11      | 3         | 0           | 8         |
+| **PAGE**            | 3       | 0         | 0           | 3         |
+| **CLEAN**           | 9       | 5         | 0           | 4         |
+| **REFACTOR**        | 4       | 3         | 0           | 1         |
+| **OBSERVABILITY**   | 4       | 4         | 0           | 0         |
+| **RESILIENCE**      | 5       | 1         | 0           | 4         |
+| **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
+| **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
+| **SECURITY**        | 1       | 0         | 0           | 1         |
+| **Total**           | **119** | **36**    | **0**       | **83**    |
 
 ---
 
@@ -154,7 +155,8 @@ background jobs package.
 
 ### Apps/Web: Enterprise Readiness (WEB-SETUP-001 to WEB-DOC-002)
 
-**Goal**: Transform apps/web from functional-but-monolithic to enterprise-ready Next.js application.
+**Goal**: Transform apps/web from functional-but-monolithic to enterprise-ready
+Next.js application.
 
 **Current State** (from ENTERPRISE_READINESS_ASSESSMENT.md):
 
@@ -173,7 +175,8 @@ background jobs package.
 
 - ✅ 80%+ test coverage with comprehensive test suite
 - ✅ 100% code quality automation (ESLint + Prettier)
-- ✅ Feature-based architecture (draft-analysis, matchups, stats, hall-of-fame, transactions, start-sit)
+- ✅ Feature-based architecture (draft-analysis, matchups, stats, hall-of-fame,
+  transactions, start-sit)
 - ✅ All files <300 lines
 - ✅ Component patterns (memo, forwardRef, sub-components)
 - ✅ Complete separation of concerns (types, utils, hooks, components)
@@ -182,12 +185,14 @@ background jobs package.
 - 📊 **Enterprise Score: 9.0/10**
 
 **Total Effort**: ~40 hours across 35 focused tasks (8 weeks @ 5 hours/week)  
-**See**: `apps/web/ENTERPRISE_READINESS_ASSESSMENT.md` for detailed execution plan
+**See**: `apps/web/ENTERPRISE_READINESS_ASSESSMENT.md` for detailed execution
+plan
 
 #### Phase 1: Infrastructure (Week 1) ✅ COMPLETE
 
 - [x] **WEB-SETUP-001**: Testing Infrastructure Setup ⏱️ 1 hour [CRITICAL] ✅
-- [x] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) ⏱️ 45 min [CRITICAL] ✅
+- [x] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) ⏱️ 45 min
+      [CRITICAL] ✅
 - [x] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour [CRITICAL] ✅
 - [x] **WEB-SETUP-004**: Create Feature Folder Structure ⏱️ 30 min [HIGH] ✅
 
@@ -213,11 +218,16 @@ background jobs package.
 
 #### Phase 5: Component Splitting (Week 3-5) 🟢 BIG IMPACT
 
-- [ ] **WEB-COMP-001**: Split Manager Analysis Component (1,624 lines) ⏱️ 2 hours [HIGH]
-- [ ] **WEB-COMP-002**: Split TrendsView Component (1,606 lines) ⏱️ 2 hours [MEDIUM]
-- [ ] **WEB-COMP-003**: Split Playoff Bracket Component (1,400 lines) ⏱️ 1.5 hours [MEDIUM]
-- [ ] **WEB-COMP-004**: Split Schedule Analysis Component (1,243 lines) ⏱️ 1.5 hours [MEDIUM]
-- [ ] **WEB-COMP-005**: Split TeamView Component (1,198 lines) ⏱️ 1.5 hours [MEDIUM]
+- [ ] **WEB-COMP-001**: Split Manager Analysis Component (1,624 lines) ⏱️ 2
+      hours [HIGH]
+- [ ] **WEB-COMP-002**: Split TrendsView Component (1,606 lines) ⏱️ 2 hours
+      [MEDIUM]
+- [ ] **WEB-COMP-003**: Split Playoff Bracket Component (1,400 lines) ⏱️ 1.5
+      hours [MEDIUM]
+- [ ] **WEB-COMP-004**: Split Schedule Analysis Component (1,243 lines) ⏱️ 1.5
+      hours [MEDIUM]
+- [ ] **WEB-COMP-005**: Split TeamView Component (1,198 lines) ⏱️ 1.5 hours
+      [MEDIUM]
 
 #### Phase 6: Page Migration (Week 4-5) 🟢 INTEGRATION
 
@@ -298,7 +308,8 @@ package.
 
 #### Phase 5: Data Management (2 hours) ✅ COMPLETE
 
-- [x] **SIM-611**: Create Weekly Variance Update Job ⏱️ 1 hour [HIGH] 🔥 **KEY FEATURE** ✅
+- [x] **SIM-611**: Create Weekly Variance Update Job ⏱️ 1 hour [HIGH] 🔥 **KEY
+      FEATURE** ✅
 - [x] **SIM-612**: Add Variance Data Versioning ⏱️ 30 min [MEDIUM] ✅
 - [x] **SIM-613**: Optimize Variance Data Loading ⏱️ 30 min [MEDIUM] ✅
 
@@ -314,25 +325,35 @@ package.
 ### October 7, 2025 (Latest)
 
 - ✅ **WEB-EXTRACT-002**: Manager Analytics Logic Types
-  - Extracted all 13 interface definitions from `lib/manager-analytics.ts` (lines 8-229)
-  - Consolidated into `features/draft-analysis/types.ts` alongside existing ManagerAnalysisProps
-  - Updated `features/draft-analysis/index.ts` barrel export with all 14 types organized by category
+  - Extracted all 13 interface definitions from `lib/manager-analytics.ts`
+    (lines 8-229)
+  - Consolidated into `features/draft-analysis/types.ts` alongside existing
+    ManagerAnalysisProps
+  - Updated `features/draft-analysis/index.ts` barrel export with all 14 types
+    organized by category
   - Added type import in `lib/manager-analytics.ts` for internal usage
-  - Added type re-export in `lib/manager-analytics.ts` for backwards compatibility
+  - Added type re-export in `lib/manager-analytics.ts` for backwards
+    compatibility
   - Removed original 13 interface definitions from manager-analytics.ts
-  - File size reduced: 1,346 lines → 1,155 lines (191 lines saved, 14.2% reduction)
-  - Types file verification: 14 interfaces confirmed (13 from manager-analytics + 1 from manager-analysis)
+  - File size reduced: 1,346 lines → 1,155 lines (191 lines saved, 14.2%
+    reduction)
+  - Types file verification: 14 interfaces confirmed (13 from
+    manager-analytics + 1 from manager-analysis)
   - All 6 tests passing (no breaking changes)
   - TypeScript compilation passes with 0 errors
   - All imports resolve correctly
   - **Phase 2 Progress**: Type Extraction 2/4 complete (50%)
-  - **Outcome**: Centralized all draft analysis types, major cleanup of manager-analytics.ts
-  - **Next Steps**: WEB-EXTRACT-003 (Hooks Types) - extract types from lib/hooks.ts
+  - **Outcome**: Centralized all draft analysis types, major cleanup of
+    manager-analytics.ts
+  - **Next Steps**: WEB-EXTRACT-003 (Hooks Types) - extract types from
+    lib/hooks.ts
 
 - ✅ **WEB-EXTRACT-001**: Manager Analysis Types
-  - Created `features/draft-analysis/types.ts` with ManagerAnalysisProps interface
+  - Created `features/draft-analysis/types.ts` with ManagerAnalysisProps
+    interface
   - Created barrel export `features/draft-analysis/index.ts`
-  - Updated `components/manager-analysis.tsx` to import from `@/features/draft-analysis`
+  - Updated `components/manager-analysis.tsx` to import from
+    `@/features/draft-analysis`
   - Removed inline interface definition (lines 46-48)
   - Added comprehensive JSDoc documentation to types file
   - All 6 tests passing (no breaking changes)
@@ -340,142 +361,226 @@ package.
   - All imports resolve correctly
   - **Phase 2 Progress**: Type Extraction 1/4 complete (25%)
   - **Outcome**: Established type extraction pattern for draft-analysis feature
-  - **Next Steps**: WEB-EXTRACT-002 (Manager Analytics Logic Types) - extract 13 more interfaces to same types.ts file
+  - **Next Steps**: WEB-EXTRACT-002 (Manager Analytics Logic Types) - extract 13
+    more interfaces to same types.ts file
 
 - ✅ **WEB-SETUP-004**: Create Feature Folder Structure
-  - Created `features/` directory with 6 feature subdirectories: draft-analysis, matchups, stats, hall-of-fame, transactions, start-sit
-  - Created `shared/` directory with proper subdirectories: components/, hooks/, utils/, types/, atoms/
+  - Created `features/` directory with 6 feature subdirectories: draft-analysis,
+    matchups, stats, hall-of-fame, transactions, start-sit
+  - Created `shared/` directory with proper subdirectories: components/, hooks/,
+    utils/, types/, atoms/
   - Each feature has components/, hooks/, utils/ subdirectories
   - Created empty index.ts and types.ts files for each feature
-  - Created barrel export files in shared/components/{layouts/, charts/, primitives/}
-  - Created barrel export files in shared/utils/{formatting/, colors/, calculations/}
-  - Added placeholder comments to all 6 feature-level index.ts files with TODO markers
+  - Created barrel export files in shared/components/{layouts/, charts/,
+    primitives/}
+  - Created barrel export files in shared/utils/{formatting/, colors/,
+    calculations/}
+  - Added placeholder comments to all 6 feature-level index.ts files with TODO
+    markers
   - Added .gitkeep files to preserve empty directories in git
   - All 41 TypeScript files created successfully
   - TypeScript compilation passes with 0 errors
   - All 6 tests passing (no breaking changes)
   - **Phase 1 Complete**: Infrastructure 4/4 complete (100%) ✅
-  - **Outcome**: Feature-based folder structure enables incremental migration from flat structure
-  - **Next Steps**: WEB-EXTRACT-001 (Manager Analysis Types) - begin type extraction phase
+  - **Outcome**: Feature-based folder structure enables incremental migration
+    from flat structure
+  - **Next Steps**: WEB-EXTRACT-001 (Manager Analysis Types) - begin type
+    extraction phase
 
 - ✅ **WEB-SETUP-003**: Test Utilities and Factories
   - Created test directory structure (`src/test/factories/`, `src/test/utils/`)
-  - Created React Query test wrapper (`test-wrapper.tsx`) with `createWrapper()` and `renderWithProviders()` functions
-  - Created TeamFactory with `generateTeam()` and `generateMultiple()` using `SleeperRoster` type from `@gauntlet/types`
-  - Created MatchupFactory with `generateMatchup()` and `generateMatchupPair()` with explicit `TestMatchup` interface
-  - Created ManagerFactory with `generateProfile()` and `generateMultiple()` using `ManagerProfile` from manager-analytics
-  - Created mock API client utilities: `createMockAPIClient()` and `mockFetch()` with proper `RequestInfo | URL` typing
-  - Created barrel export (`test/index.ts`) exporting all factories and utilities
-  - Created example test (`team.test.ts`) with 3 passing tests validating factory functionality
-  - Fixed TypeScript errors: Used `SleeperRoster` instead of `FantasyTeam`, added required settings fields (waiver_position, waiver_budget_used, total_moves)
-  - Fixed fetch mock typing: Properly handles `RequestInfo | URL` parameter types
+  - Created React Query test wrapper (`test-wrapper.tsx`) with `createWrapper()`
+    and `renderWithProviders()` functions
+  - Created TeamFactory with `generateTeam()` and `generateMultiple()` using
+    `SleeperRoster` type from `@gauntlet/types`
+  - Created MatchupFactory with `generateMatchup()` and `generateMatchupPair()`
+    with explicit `TestMatchup` interface
+  - Created ManagerFactory with `generateProfile()` and `generateMultiple()`
+    using `ManagerProfile` from manager-analytics
+  - Created mock API client utilities: `createMockAPIClient()` and `mockFetch()`
+    with proper `RequestInfo | URL` typing
+  - Created barrel export (`test/index.ts`) exporting all factories and
+    utilities
+  - Created example test (`team.test.ts`) with 3 passing tests validating
+    factory functionality
+  - Fixed TypeScript errors: Used `SleeperRoster` instead of `FantasyTeam`,
+    added required settings fields (waiver_position, waiver_budget_used,
+    total_moves)
+  - Fixed fetch mock typing: Properly handles `RequestInfo | URL` parameter
+    types
   - All 6 tests passing (3 new factory tests + 3 existing utils tests)
   - TypeScript compilation passes with 0 errors
   - ESLint passes with 0 errors
   - Code formatted with Prettier
   - **Phase 1 Progress**: Infrastructure 3/4 complete (75%)
-  - **Outcome**: Test utilities enable efficient, consistent test writing across all components and utilities
-  - **Next Steps**: WEB-SETUP-004 (Feature Folder Structure), then type extraction tasks
+  - **Outcome**: Test utilities enable efficient, consistent test writing across
+    all components and utilities
+  - **Next Steps**: WEB-SETUP-004 (Feature Folder Structure), then type
+    extraction tasks
 
 - ✅ **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier)
-  - Installed ESLint 8.57.1 with TypeScript support (@typescript-eslint/parser@8.38.0, @typescript-eslint/eslint-plugin@8.38.0)
-  - Installed Prettier 3.6.2 with ESLint integration (eslint-config-prettier@9.1.0, eslint-plugin-prettier@5.2.1)
-  - Installed React ESLint plugins (eslint-plugin-react@7.36.1, eslint-plugin-react-hooks@4.6.2)
+  - Installed ESLint 8.57.1 with TypeScript support
+    (@typescript-eslint/parser@8.38.0, @typescript-eslint/eslint-plugin@8.38.0)
+  - Installed Prettier 3.6.2 with ESLint integration
+    (eslint-config-prettier@9.1.0, eslint-plugin-prettier@5.2.1)
+  - Installed React ESLint plugins (eslint-plugin-react@7.36.1,
+    eslint-plugin-react-hooks@4.6.2)
   - Created `eslint.config.mjs` with flat config format (ESLint 9+ compatible)
-  - Configured arrow function enforcement: `prefer-arrow-callback`, `func-style` (CODING_CONVENTIONS.MD compliance)
-  - Configured TypeScript rules: `explicit-function-return-type` (warn), `no-explicit-any` (warn), `no-unused-vars` (error)
-  - Configured import organization: `sort-imports` rule for consistent import ordering
-  - Configured React rules: `react-in-jsx-scope` (off for Next.js), `react-hooks/rules-of-hooks` (error)
-  - Added browser globals (window, document, fetch, localStorage) and testing globals (describe, it, expect, vi)
-  - Created `.prettierrc` with project style: single quotes, 100 char width, trailing commas, arrow parens avoid
-  - Created `.prettierignore` excluding build outputs (.next/, dist/), data files, and generated files
-  - Created `.eslintignore` excluding build outputs, generated files, and data files
-  - Updated package.json with 4 new scripts: `lint`, `lint:fix`, `format`, `format:check`
+  - Configured arrow function enforcement: `prefer-arrow-callback`, `func-style`
+    (CODING_CONVENTIONS.MD compliance)
+  - Configured TypeScript rules: `explicit-function-return-type` (warn),
+    `no-explicit-any` (warn), `no-unused-vars` (error)
+  - Configured import organization: `sort-imports` rule for consistent import
+    ordering
+  - Configured React rules: `react-in-jsx-scope` (off for Next.js),
+    `react-hooks/rules-of-hooks` (error)
+  - Added browser globals (window, document, fetch, localStorage) and testing
+    globals (describe, it, expect, vi)
+  - Created `.prettierrc` with project style: single quotes, 100 char width,
+    trailing commas, arrow parens avoid
+  - Created `.prettierignore` excluding build outputs (.next/, dist/), data
+    files, and generated files
+  - Created `.eslintignore` excluding build outputs, generated files, and data
+    files
+  - Updated package.json with 4 new scripts: `lint`, `lint:fix`, `format`,
+    `format:check`
   - Replaced `next lint` with `eslint . --max-warnings=0` for strict enforcement
-  - Ran `pnpm format` successfully - formatted 198 files (ENTERPRISE_READINESS_ASSESSMENT.md, 50+ TypeScript files)
-  - Initial lint check reveals 718 errors and 1,384 warnings (expected - will be fixed in WEB-CLEAN-002)
-  - Common violations: `func-style` (regular functions), `explicit-function-return-type` (missing return types), `no-explicit-any` (any usage)
+  - Ran `pnpm format` successfully - formatted 198 files
+    (ENTERPRISE_READINESS_ASSESSMENT.md, 50+ TypeScript files)
+  - Initial lint check reveals 718 errors and 1,384 warnings (expected - will be
+    fixed in WEB-CLEAN-002)
+  - Common violations: `func-style` (regular functions),
+    `explicit-function-return-type` (missing return types), `no-explicit-any`
+    (any usage)
   - Format check passes: all files now use Prettier code style
   - TypeScript compilation passes with 0 errors
   - **Phase 1 Progress**: Infrastructure 2/4 complete (50%)
-  - **Outcome**: Code quality automation enforces CODING_CONVENTIONS.MD standards, enables automated style checks in CI/CD
-  - **Next Steps**: WEB-SETUP-003 (Test Utilities), then WEB-CLEAN-002 (Fix ESLint Violations)
+  - **Outcome**: Code quality automation enforces CODING_CONVENTIONS.MD
+    standards, enables automated style checks in CI/CD
+  - **Next Steps**: WEB-SETUP-003 (Test Utilities), then WEB-CLEAN-002 (Fix
+    ESLint Violations)
 
 - ✅ **WEB-SETUP-001**: Testing Infrastructure Setup
-  - Installed Vitest 3.2.4, @vitest/ui, @vitest/coverage-v8 (v8 coverage provider)
-  - Installed @testing-library/react 14.0.0, @testing-library/jest-dom 6.1.5, @testing-library/user-event 14.5.1
+  - Installed Vitest 3.2.4, @vitest/ui, @vitest/coverage-v8 (v8 coverage
+    provider)
+  - Installed @testing-library/react 14.0.0, @testing-library/jest-dom 6.1.5,
+    @testing-library/user-event 14.5.1
   - Installed happy-dom 12.10.3 for Next.js-compatible test environment
   - Installed @vitejs/plugin-react for React component testing support
-  - Created `vitest.config.ts` with happy-dom environment, path aliases (@/*), and 80% coverage thresholds
-  - Created `src/test/setup.ts` with React Testing Library cleanup, Next.js router mocks, and environment variables
-  - Added 4 test scripts to package.json: `test`, `test:watch`, `test:ui`, `test:coverage`
-  - Created sample test `src/lib/utils.test.ts` with 3 passing tests for the `cn()` utility function
-  - Updated `tsconfig.json` to add vitest/globals and @testing-library/jest-dom types
-  - Updated `tsconfig.json` to exclude test files (**/*.test.ts, **/*.test.tsx, **/*.spec.ts, **/*.spec.tsx) from build
-  - Configured coverage exclusions: node_modules, src/test, dist, .next, src/components/ui (shadcn)
+  - Created `vitest.config.ts` with happy-dom environment, path aliases (@/\*),
+    and 80% coverage thresholds
+  - Created `src/test/setup.ts` with React Testing Library cleanup, Next.js
+    router mocks, and environment variables
+  - Added 4 test scripts to package.json: `test`, `test:watch`, `test:ui`,
+    `test:coverage`
+  - Created sample test `src/lib/utils.test.ts` with 3 passing tests for the
+    `cn()` utility function
+  - Updated `tsconfig.json` to add vitest/globals and @testing-library/jest-dom
+    types
+  - Updated `tsconfig.json` to exclude test files (**/\*.test.ts, **/_.test.tsx,
+    \*\*/_.spec.ts, \*_/_.spec.tsx) from build
+  - Configured coverage exclusions: node_modules, src/test, dist, .next,
+    src/components/ui (shadcn)
   - All 3 tests passing in 529ms
   - TypeScript compilation passes with 0 errors
-  - Coverage infrastructure working (thresholds fail as expected - only 1 test file exists)
+  - Coverage infrastructure working (thresholds fail as expected - only 1 test
+    file exists)
   - **Phase 1 Progress**: Infrastructure 1/4 complete (25%)
-  - **Outcome**: Testing infrastructure foundation enables TDD and comprehensive test coverage
-  - **Next Steps**: WEB-SETUP-002 (ESLint/Prettier), WEB-SETUP-003 (Test Utilities)
+  - **Outcome**: Testing infrastructure foundation enables TDD and comprehensive
+    test coverage
+  - **Next Steps**: WEB-SETUP-002 (ESLint/Prettier), WEB-SETUP-003 (Test
+    Utilities)
 
 ### October 6, 2025 (Earlier)
 
 - ✅ **SIM-612**: Add Variance Data Versioning
-  - Added DataQualityMetrics interface to `@gauntlet/types` (totalPlayers, playersWithVariance, outlierRemovalCount, positionsWithVariance)
-  - Updated VarianceData interface with version, schemaVersion, season, weeksCovered, dataQuality fields
-  - Created `schema-version.ts` with validation logic (CURRENT_SCHEMA_VERSION=2, MIN_SUPPORTED_SCHEMA_VERSION=1)
-  - Implemented `validateSchemaVersion()` function checking compatibility, migration requirements, and warnings
-  - Implemented `getSchemaMigrationGuidance()` providing upgrade instructions (v1 → v2)
-  - Updated variance-data.json to schema v2 format (version: "1.0.0", schemaVersion: 2, season: 2024, weeksCovered array, dataQuality object)
-  - Added version validation on variance-loader.ts module load with error/migration checks
-  - Enhanced `getDataInfo()` to return version, schemaVersion, season, weeksCovered, dataQuality metadata
+  - Added DataQualityMetrics interface to `@gauntlet/types` (totalPlayers,
+    playersWithVariance, outlierRemovalCount, positionsWithVariance)
+  - Updated VarianceData interface with version, schemaVersion, season,
+    weeksCovered, dataQuality fields
+  - Created `schema-version.ts` with validation logic (CURRENT_SCHEMA_VERSION=2,
+    MIN_SUPPORTED_SCHEMA_VERSION=1)
+  - Implemented `validateSchemaVersion()` function checking compatibility,
+    migration requirements, and warnings
+  - Implemented `getSchemaMigrationGuidance()` providing upgrade instructions
+    (v1 → v2)
+  - Updated variance-data.json to schema v2 format (version: "1.0.0",
+    schemaVersion: 2, season: 2024, weeksCovered array, dataQuality object)
+  - Added version validation on variance-loader.ts module load with
+    error/migration checks
+  - Enhanced `getDataInfo()` to return version, schemaVersion, season,
+    weeksCovered, dataQuality metadata
   - Updated variance update job to write season and positionsWithVariance fields
-  - Exported schema version utilities from barrel file (validateSchemaVersion, getSchemaMigrationGuidance, CURRENT_SCHEMA_VERSION, MIN_SUPPORTED_SCHEMA_VERSION, SchemaValidation type)
+  - Exported schema version utilities from barrel file (validateSchemaVersion,
+    getSchemaMigrationGuidance, CURRENT_SCHEMA_VERSION,
+    MIN_SUPPORTED_SCHEMA_VERSION, SchemaValidation type)
   - Created 7 comprehensive schema version tests (all passing)
   - All 119 tests passing with 0 failures
   - TypeScript compilation passes with 0 errors
   - **Phase 5 Progress**: Data Management 2/3 complete (67%)
-  - **Outcome**: Schema versioning enables safe data format evolution and quality tracking
+  - **Outcome**: Schema versioning enables safe data format evolution and
+    quality tracking
 
 - ✅ **SIM-613**: Optimize Variance Data Loading
-  - Implemented lazy initialization (no module-load overhead, loads on first use)
-  - Created `ensureInitialized()` async function with initialization promise caching to prevent race conditions
-  - Implemented parallel data loading in `initializeCachesAsync()` using Promise.all for position, player, projection error indexes
-  - Built pre-computed lookup map `projectionErrorIndex` (Map<playerId, ProjectionErrorRecord[]>) for O(1) player outcome access
-  - Sorted projection errors by season/week desc during index build for optimal retrieval
-  - Updated `getPositionDistribution()` with lazy loading via `ensureInitialized()` call
-  - Updated `getPlayerOutcomes()` to use pre-built index (projectionErrorIndex.get(playerId).slice(0, 16)) instead of filter operation
-  - Added `prewarmVarianceData()` export function for optional startup pre-warming
+  - Implemented lazy initialization (no module-load overhead, loads on first
+    use)
+  - Created `ensureInitialized()` async function with initialization promise
+    caching to prevent race conditions
+  - Implemented parallel data loading in `initializeCachesAsync()` using
+    Promise.all for position, player, projection error indexes
+  - Built pre-computed lookup map `projectionErrorIndex` (Map<playerId,
+    ProjectionErrorRecord[]>) for O(1) player outcome access
+  - Sorted projection errors by season/week desc during index build for optimal
+    retrieval
+  - Updated `getPositionDistribution()` with lazy loading via
+    `ensureInitialized()` call
+  - Updated `getPlayerOutcomes()` to use pre-built index
+    (projectionErrorIndex.get(playerId).slice(0, 16)) instead of filter
+    operation
+  - Added `prewarmVarianceData()` export function for optional startup
+    pre-warming
   - Enhanced `getDataInfo()` to include `initialized: boolean` status field
   - Logged initialization metrics: duration, memory usage, index sizes
-  - Created 5 performance benchmark tests (cold start <100ms, position lookup <10ms, player lookup <50ms, memory <60MB, concurrent requests <50ms)
+  - Created 5 performance benchmark tests (cold start <100ms, position lookup
+    <10ms, player lookup <50ms, memory <60MB, concurrent requests <50ms)
   - All 124 tests passing (119 existing + 5 new benchmark tests)
-  - **Actual Performance**: Initialization in 2ms, memory usage 17.47MB (well under targets!)
+  - **Actual Performance**: Initialization in 2ms, memory usage 17.47MB (well
+    under targets!)
   - TypeScript compilation passes with 0 errors
   - **Phase 5 Complete**: Data Management phase finished! ✅
-  - **Outcome**: Optimized data loading delivers <100ms cold start and <50MB memory usage
+  - **Outcome**: Optimized data loading delivers <100ms cold start and <50MB
+    memory usage
 
 - ✅ **SIM-614**: Create Comprehensive README
   - Created 500+ line README.md with 8 major sections
-  - **Features Section**: Monte Carlo simulations, variance models, live game support, performance, type safety, logging, metrics
+  - **Features Section**: Monte Carlo simulations, variance models, live game
+    support, performance, type safety, logging, metrics
   - **Installation Section**: Package installation with peer dependencies
-  - **Quick Start**: 3 comprehensive examples (pre-game simulation, live game simulation, metrics collection)
+  - **Quick Start**: 3 comprehensive examples (pre-game simulation, live game
+    simulation, metrics collection)
   - **API Reference**: Complete documentation for 15+ exported functions
-    - Core functions: simulateMatchupProbabilityFromPlayers, buildSamplingContext, samplePlayerScoreFromContext
-    - Variance functions: getPositionDistribution, getPlayerOutcomes, getDataInfo, prewarmVarianceData
+    - Core functions: simulateMatchupProbabilityFromPlayers,
+      buildSamplingContext, samplePlayerScoreFromContext
+    - Variance functions: getPositionDistribution, getPlayerOutcomes,
+      getDataInfo, prewarmVarianceData
     - Schema functions: validateSchemaVersion
-    - Safe wrappers: simulateMatchupProbabilitySafe, buildSamplingContextSafe, getPositionDistributionSafe, getPlayerOutcomesSafe
-  - **Variance Models Section**: Data sources (2022-2024), position variance table, sampling strategy, progressive weighting
-  - **Performance Section**: Benchmarks (<100ms cold start, <10ms lookups, <50MB memory), optimization tips
+    - Safe wrappers: simulateMatchupProbabilitySafe, buildSamplingContextSafe,
+      getPositionDistributionSafe, getPlayerOutcomesSafe
+  - **Variance Models Section**: Data sources (2022-2024), position variance
+    table, sampling strategy, progressive weighting
+  - **Performance Section**: Benchmarks (<100ms cold start, <10ms lookups, <50MB
+    memory), optimization tips
   - **Testing Section**: Commands for running tests, coverage (85%+), watch mode
-  - **Development Section**: Setup commands, project structure tree, build/lint/format scripts
-  - **Updating Variance Models**: Manual update instructions, automated schedule (Tuesday 3am ET), GitHub Actions workflow
-  - **Contributing Section**: Fork workflow, coding standards (arrow functions, JSDoc, 80%+ coverage)
+  - **Development Section**: Setup commands, project structure tree,
+    build/lint/format scripts
+  - **Updating Variance Models**: Manual update instructions, automated schedule
+    (Tuesday 3am ET), GitHub Actions workflow
+  - **Contributing Section**: Fork workflow, coding standards (arrow functions,
+    JSDoc, 80%+ coverage)
   - All code examples are copy-paste functional
   - **Phase 6 Progress**: Documentation 1/2 complete (50%)
-  - **Outcome**: Enterprise-ready documentation enables easy adoption and contribution
+  - **Outcome**: Enterprise-ready documentation enables easy adoption and
+    contribution
 
 - ✅ **SIM-615**: Add Package Quality Badges
   - Added 6 quality badges to README header using shields.io

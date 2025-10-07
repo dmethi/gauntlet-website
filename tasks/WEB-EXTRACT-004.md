@@ -9,7 +9,10 @@
 
 ## Objective
 
-Extract and consolidate type definitions from 3 large stats components (`TrendsView.tsx`, `TeamView.tsx`, `ScheduleAnalysis.tsx`) into a centralized `features/stats/types.ts` file, eliminating duplicate type definitions and improving maintainability.
+Extract and consolidate type definitions from 3 large stats components
+(`TrendsView.tsx`, `TeamView.tsx`, `ScheduleAnalysis.tsx`) into a centralized
+`features/stats/types.ts` file, eliminating duplicate type definitions and
+improving maintainability.
 
 ---
 
@@ -17,9 +20,12 @@ Extract and consolidate type definitions from 3 large stats components (`TrendsV
 
 **Read these files** (specific sections only):
 
-1. `apps/web/src/app/stats/components/TrendsView.tsx` (lines 26-85) - 8 interface definitions
-2. `apps/web/src/app/stats/components/TeamView.tsx` (lines 23-65) - 7 interface definitions  
-3. `apps/web/src/app/stats/components/ScheduleAnalysis.tsx` (lines 28-47) - 4 interface definitions
+1. `apps/web/src/app/stats/components/TrendsView.tsx` (lines 26-85) - 8
+   interface definitions
+2. `apps/web/src/app/stats/components/TeamView.tsx` (lines 23-65) - 7 interface
+   definitions
+3. `apps/web/src/app/stats/components/ScheduleAnalysis.tsx` (lines 28-47) - 4
+   interface definitions
 
 **Total Context**: ~100 lines to read
 
@@ -43,7 +49,7 @@ Create the file with this content:
 ```typescript
 /**
  * Stats Feature Types
- * 
+ *
  * Type definitions for stats hub components (TrendsView, TeamView, ScheduleAnalysis).
  * Consolidates duplicate types and creates a single source of truth.
  */
@@ -161,7 +167,7 @@ Add to `src/features/stats/index.ts`:
 ```typescript
 /**
  * Stats Feature
- * 
+ *
  * Exports all types for stats hub components.
  */
 
@@ -173,12 +179,12 @@ export type {
   PlayerScore,
   PositionalTeamData,
   PositionData,
-  
+
   // Component Props
   TrendsViewProps,
   TeamViewProps,
   ScheduleAnalysisProps,
-  
+
   // Analysis Types
   PowerRankingTeam,
   RidgeTeamData,
@@ -187,7 +193,8 @@ export type {
 
 ### 4. Update `TrendsView.tsx` to use centralized types
 
-At the top of `apps/web/src/app/stats/components/TrendsView.tsx` (around line 20), add:
+At the top of `apps/web/src/app/stats/components/TrendsView.tsx` (around line
+20), add:
 
 ```typescript
 import type {
@@ -218,7 +225,8 @@ interface RidgeTeamData { ... }
 
 ### 5. Update `TeamView.tsx` to use centralized types
 
-At the top of `apps/web/src/app/stats/components/TeamView.tsx` (around line 18), add:
+At the top of `apps/web/src/app/stats/components/TeamView.tsx` (around line 18),
+add:
 
 ```typescript
 import type {
@@ -247,7 +255,8 @@ interface TeamViewProps { ... }
 
 ### 6. Update `ScheduleAnalysis.tsx` to use centralized types
 
-At the top of `apps/web/src/app/stats/components/ScheduleAnalysis.tsx` (around line 23), add:
+At the top of `apps/web/src/app/stats/components/ScheduleAnalysis.tsx` (around
+line 23), add:
 
 ```typescript
 import type {
@@ -355,7 +364,8 @@ Expected outcome: ~100 lines removed across 3 components, types centralized in f
 
 ## Related Tasks
 
-**Blocks**: WEB-COMP-002, WEB-COMP-004, WEB-COMP-005 (component splitting tasks)  
+**Blocks**: WEB-COMP-002, WEB-COMP-004, WEB-COMP-005 (component splitting
+tasks)  
 **Blocked By**: WEB-SETUP-004 (Feature Folder Structure)  
 **Related**: WEB-HOOK-003 (Stats Hub Hooks), WEB-PAGE-002 (Migrate Stats Pages)
 
@@ -365,7 +375,8 @@ Expected outcome: ~100 lines removed across 3 components, types centralized in f
 
 ### Why This Matters
 
-- **Eliminates Duplication**: `TeamInfo`, `TeamScore`, and `TeamData` are defined in all 3 files
+- **Eliminates Duplication**: `TeamInfo`, `TeamScore`, and `TeamData` are
+  defined in all 3 files
 - **Single Source of Truth**: Changes to shared types only need to happen once
 - **Feature Organization**: Establishes `features/stats/` pattern for stats hub
 - **Cleaner Components**: ~30-40 lines removed from each component file
@@ -374,18 +385,22 @@ Expected outcome: ~100 lines removed across 3 components, types centralized in f
 ### Type Consolidation Details
 
 **Duplicate Types** (appear in multiple files):
-- `TeamInfo` - Appears in all 3 components (TrendsView, TeamView, ScheduleAnalysis)
+
+- `TeamInfo` - Appears in all 3 components (TrendsView, TeamView,
+  ScheduleAnalysis)
 - `TeamScore` - Appears in all 3 components
 - `TeamData` - Appears in all 3 components
 - `PositionalTeamData` - Appears in TrendsView and TeamView
 - `PositionData` - Appears in TrendsView and TeamView
 
 **Unique Types** (component-specific):
+
 - `PowerRankingTeam` - Only in TrendsView
 - `RidgeTeamData` - Only in TrendsView
 - `PlayerScore` - Only in TeamView
 
 **Component Props** (component-specific but should be centralized):
+
 - `TrendsViewProps` - TrendsView component
 - `TeamViewProps` - TeamView component
 - `ScheduleAnalysisProps` - ScheduleAnalysis component
@@ -400,5 +415,5 @@ Expected outcome: ~100 lines removed across 3 components, types centralized in f
 
 ---
 
-**Estimated Context Usage**: 100 lines read, 250 lines written (including documentation), 30 min total
-
+**Estimated Context Usage**: 100 lines read, 250 lines written (including
+documentation), 30 min total
