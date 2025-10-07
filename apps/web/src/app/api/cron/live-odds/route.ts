@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+/**
+ * Vercel Cron endpoint for live odds snapshots
+ *
+ * Executes the live snapshot script directly in the API route
+ * Called every 10 minutes during NFL game windows
+ *
+ * Vercel Cron is more reliable than GitHub Actions for scheduled tasks
+ *
+ * @see apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts
+ */
+export async function GET(request: NextRequest) {
+  // Verify the request is from Vercel Cron
+  const authHeader = request.headers.get('authorization');
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const startTime = Date.now();
+
+  try {
+    console.log('🏈 [CRON] Starting live odds snapshot...');
+
+    // Dynamic import to avoid bundling server code unnecessarily
+    const { runLiveSnapshot } = await import('./snapshot-runner');
+
+    const result = await runLiveSnapshot();
+    const duration = Date.now() - startTime;
+
+    console.log('✅ [CRON] Live odds snapshot completed:', {
+      duration: `${duration}ms`,
+      saved: result.savedCount,
+      skipped: result.skippedCount,
+      failed: result.failedCount,
+      totalProcessed: result.totalProcessed,
+    });
+
+    return NextResponse.json({
+      success: true,
+      duration,
+      ...result,
+      triggeredAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    console.error('❌ [CRON] Live odds snapshot failed:', error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        duration,
+        triggeredAt: new Date().toISOString(),
+      },
+      { status: 500 },
+    );
+  }
+}
+
+// Optionally allow manual triggers
+export async function POST(request: NextRequest) {
+  return GET(request);
+}
+
+// Set max duration for Vercel serverless function
+export const maxDuration = 60; // 60 seconds
+export const dynamic = 'force-dynamic'; // Don't cache this route

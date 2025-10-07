@@ -4,6 +4,18 @@
   "description": "Background jobs for Gauntlet - live odds capture and historical tracking",
   "private": true,
   "type": "module",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "exports": {
+    "./src/lib": {
+      "types": "./src/lib/index.ts",
+      "default": "./src/lib/index.ts"
+    },
+    "./src/lib/*": {
+      "types": "./src/lib/*.ts",
+      "default": "./src/lib/*.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "postinstall": "prisma generate --schema=prisma/schema-historical.prisma",
