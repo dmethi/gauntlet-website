@@ -1,10 +1,11 @@
 # Refactoring Progress Tracker
 
-**Last Updated**: October 6, 2025  
+**Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 35.7% (30/84 tasks)  
+**Overall Progress**: 26.1% (31/119 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
-**Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅
+**Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
+**Apps/Web Progress**: 2.9% (1/35 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -12,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (30)
+#### ✅ Completed (31)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -44,16 +45,16 @@
 - [x] **SIM-613**: Optimize Variance Data Loading ⏱️ 30 min
 - [x] **SIM-614**: Create Comprehensive README ⏱️ 45 min
 - [x] **SIM-615**: Add Package Quality Badges ⏱️ 15 min
+- [x] **WEB-SETUP-001**: Testing Infrastructure Setup ⏱️ 1 hour
 
 #### 🔄 In Progress (0)
 
 _Ready to begin_
 
-#### ⏭️ Up Next (3)
+#### ⏭️ Up Next (2)
 
-- [ ] **SETUP-001**: Testing Infrastructure [HIGH PRIORITY]
-- [ ] **SETUP-002**: Test Utilities [HIGH PRIORITY]
-- [ ] **EXTRACT-001**: Manager Analysis Types [QUICK WIN]
+- [ ] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) [HIGH PRIORITY]
+- [ ] **WEB-SETUP-003**: Test Utilities and Factories [HIGH PRIORITY]
 
 #### 📋 Queued (5)
 
@@ -69,20 +70,21 @@ _Ready to begin_
 
 | Category            | Total  | Completed | In Progress | Remaining |
 | ------------------- | ------ | --------- | ----------- | --------- |
-| **SETUP**           | 9      | 3         | 0           | 6         |
-| **EXTRACT**         | 12     | 2         | 0           | 10        |
-| **UTIL**            | 12     | 0         | 0           | 12        |
-| **HOOK**            | 8      | 0         | 0           | 8         |
-| **COMP**            | 10     | 0         | 0           | 10        |
-| **TEST**            | 7      | 3         | 0           | 4         |
-| **CLEAN**           | 7      | 5         | 0           | 2         |
+| **SETUP**           | 13     | 4         | 0           | 9         |
+| **EXTRACT**         | 16     | 2         | 0           | 14        |
+| **UTIL**            | 16     | 0         | 0           | 16        |
+| **HOOK**            | 11     | 0         | 0           | 11        |
+| **COMP**            | 15     | 0         | 0           | 15        |
+| **TEST**            | 11     | 3         | 0           | 8         |
+| **PAGE**            | 3      | 0         | 0           | 3         |
+| **CLEAN**           | 9      | 5         | 0           | 4         |
 | **REFACTOR**        | 4      | 3         | 0           | 1         |
 | **OBSERVABILITY**   | 4      | 4         | 0           | 0         |
 | **RESILIENCE**      | 5      | 1         | 0           | 4         |
 | **DATA_MANAGEMENT** | 3      | 3         | 0           | 0         |
-| **DOCUMENTATION**   | 2      | 2         | 0           | 0         |
+| **DOCUMENTATION**   | 4      | 2         | 0           | 2         |
 | **SECURITY**        | 1      | 0         | 0           | 1         |
-| **Total**           | **84** | **30**    | **0**       | **54**    |
+| **Total**           | **119** | **31**   | **0**       | **88**    |
 
 ---
 
@@ -146,16 +148,92 @@ background jobs package.
 - [x] **EXTRACT-602**: Extract Snapshot Validation ✅ (45 min)
 - [x] **TEST-601**: Add Comprehensive Tests ✅ (2 hours)
 
-### Apps/Web Components (EXTRACT-001, UTIL-001, etc.)
+### Apps/Web: Enterprise Readiness (WEB-SETUP-001 to WEB-DOC-002)
 
-- [ ] **SETUP-001**: Testing Infrastructure
-- [ ] **SETUP-002**: Test Utilities
-- [ ] **EXTRACT-001**: Manager Analysis Types
-- [ ] **UTIL-001**: Manager Analysis Formatting Utils
-- [ ] **UTIL-002**: Manager Analysis Colors Utils
-- [ ] **HOOK-001**: Manager Analysis Sorting Hook
-- [ ] **HOOK-002**: Manager Analysis Filtering Hook
-- [ ] **COMP-001**: Split Manager Analysis Component
+**Goal**: Transform apps/web from functional-but-monolithic to enterprise-ready Next.js application.
+
+**Current State** (from ENTERPRISE_READINESS_ASSESSMENT.md):
+
+- ✅ Strong domain functionality (fantasy football features work)
+- ✅ Central type usage from `@gauntlet/types`
+- ✅ Path aliases configured (`@/*`)
+- ❌ Zero test coverage (0%)
+- ❌ No ESLint/Prettier configuration
+- ❌ Mega-files (2,805 lines max, 10+ files >1,000 lines)
+- ❌ Flat file organization (no feature-based structure)
+- ❌ No component patterns (no memo, no separation of concerns)
+- ❌ Heavy eslint-disable abuse (100+ suppressions)
+- 📊 **Enterprise Score: 3.5/10**
+
+**Target State**:
+
+- ✅ 80%+ test coverage with comprehensive test suite
+- ✅ 100% code quality automation (ESLint + Prettier)
+- ✅ Feature-based architecture (draft-analysis, matchups, stats, hall-of-fame, transactions, start-sit)
+- ✅ All files <300 lines
+- ✅ Component patterns (memo, forwardRef, sub-components)
+- ✅ Complete separation of concerns (types, utils, hooks, components)
+- ✅ Barrel exports everywhere
+- ✅ Zero ESLint violations
+- 📊 **Enterprise Score: 9.0/10**
+
+**Total Effort**: ~40 hours across 35 focused tasks (8 weeks @ 5 hours/week)  
+**See**: `apps/web/ENTERPRISE_READINESS_ASSESSMENT.md` for detailed execution plan
+
+#### Phase 1: Infrastructure (Week 1) 🔴 CRITICAL
+
+- [x] **WEB-SETUP-001**: Testing Infrastructure Setup ⏱️ 1 hour [CRITICAL] ✅
+- [ ] **WEB-SETUP-002**: Code Quality Automation (ESLint/Prettier) ⏱️ 45 min [CRITICAL]
+- [ ] **WEB-SETUP-003**: Test Utilities and Factories ⏱️ 1 hour [CRITICAL]
+- [ ] **WEB-SETUP-004**: Create Feature Folder Structure ⏱️ 30 min [HIGH]
+
+#### Phase 2: Type Extraction (Week 1-2) ⚠️ QUICK WINS
+
+- [ ] **WEB-EXTRACT-001**: Manager Analysis Types ⏱️ 20 min [HIGH]
+- [ ] **WEB-EXTRACT-002**: Manager Analytics Logic Types ⏱️ 25 min [HIGH]
+- [ ] **WEB-EXTRACT-003**: Hooks Types ⏱️ 20 min [MEDIUM]
+- [ ] **WEB-EXTRACT-004**: Stats Component Types ⏱️ 30 min [MEDIUM]
+
+#### Phase 3: Utility Extraction (Week 2) 🟡 FOUNDATION
+
+- [ ] **WEB-UTIL-001**: Formatting Utilities ⏱️ 40 min [MEDIUM]
+- [ ] **WEB-UTIL-002**: Color Utilities ⏱️ 35 min [MEDIUM]
+- [ ] **WEB-UTIL-003**: Manager Analytics Calculations ⏱️ 1 hour [MEDIUM]
+- [ ] **WEB-UTIL-004**: Hall of Fame Utilities ⏱️ 45 min [MEDIUM]
+
+#### Phase 4: Hook Extraction (Week 3) 🟡 PREPARATION
+
+- [ ] **WEB-HOOK-001**: Manager Sorting and Filtering ⏱️ 1 hour [MEDIUM]
+- [ ] **WEB-HOOK-002**: Draft Analytics Data Hook ⏱️ 45 min [MEDIUM]
+- [ ] **WEB-HOOK-003**: Stats Hub Hooks ⏱️ 1 hour [MEDIUM]
+
+#### Phase 5: Component Splitting (Week 3-5) 🟢 BIG IMPACT
+
+- [ ] **WEB-COMP-001**: Split Manager Analysis Component (1,624 lines) ⏱️ 2 hours [HIGH]
+- [ ] **WEB-COMP-002**: Split TrendsView Component (1,606 lines) ⏱️ 2 hours [MEDIUM]
+- [ ] **WEB-COMP-003**: Split Playoff Bracket Component (1,400 lines) ⏱️ 1.5 hours [MEDIUM]
+- [ ] **WEB-COMP-004**: Split Schedule Analysis Component (1,243 lines) ⏱️ 1.5 hours [MEDIUM]
+- [ ] **WEB-COMP-005**: Split TeamView Component (1,198 lines) ⏱️ 1.5 hours [MEDIUM]
+
+#### Phase 6: Page Migration (Week 4-5) 🟢 INTEGRATION
+
+- [ ] **WEB-PAGE-001**: Migrate Draft Analysis Pages ⏱️ 1 hour [MEDIUM]
+- [ ] **WEB-PAGE-002**: Migrate Stats Pages ⏱️ 1 hour [MEDIUM]
+- [ ] **WEB-PAGE-003**: Migrate Matchup Pages ⏱️ 45 min [MEDIUM]
+
+#### Phase 7: Testing (Week 5-6) 🔴 VALIDATION
+
+- [ ] **WEB-TEST-001**: Component Tests (Critical Paths) ⏱️ 3 hours [CRITICAL]
+- [ ] **WEB-TEST-002**: Hook Tests ⏱️ 2 hours [CRITICAL]
+- [ ] **WEB-TEST-003**: Utility Tests ⏱️ 2 hours [CRITICAL]
+- [ ] **WEB-TEST-004**: Integration Tests (API Routes) ⏱️ 2 hours [HIGH]
+
+#### Phase 8: Cleanup & Polish (Week 7-8) 🟢 PRODUCTION
+
+- [ ] **WEB-CLEAN-001**: Remove Deprecated Files ⏱️ 30 min [LOW]
+- [ ] **WEB-CLEAN-002**: Fix ESLint Violations ⏱️ 2 hours [HIGH]
+- [ ] **WEB-DOC-001**: Add JSDoc Documentation ⏱️ 2 hours [LOW]
+- [ ] **WEB-DOC-002**: Create Feature READMEs ⏱️ 1 hour [LOW]
 
 ### Apps/Sim-Engine: Enterprise Readiness (SIM-601 to SIM-615)
 
@@ -229,7 +307,28 @@ package.
 
 ## 🎉 Recent Completions
 
-### October 6, 2025 (Latest)
+### October 7, 2025 (Latest)
+
+- ✅ **WEB-SETUP-001**: Testing Infrastructure Setup
+  - Installed Vitest 3.2.4, @vitest/ui, @vitest/coverage-v8 (v8 coverage provider)
+  - Installed @testing-library/react 14.0.0, @testing-library/jest-dom 6.1.5, @testing-library/user-event 14.5.1
+  - Installed happy-dom 12.10.3 for Next.js-compatible test environment
+  - Installed @vitejs/plugin-react for React component testing support
+  - Created `vitest.config.ts` with happy-dom environment, path aliases (@/*), and 80% coverage thresholds
+  - Created `src/test/setup.ts` with React Testing Library cleanup, Next.js router mocks, and environment variables
+  - Added 4 test scripts to package.json: `test`, `test:watch`, `test:ui`, `test:coverage`
+  - Created sample test `src/lib/utils.test.ts` with 3 passing tests for the `cn()` utility function
+  - Updated `tsconfig.json` to add vitest/globals and @testing-library/jest-dom types
+  - Updated `tsconfig.json` to exclude test files (**/*.test.ts, **/*.test.tsx, **/*.spec.ts, **/*.spec.tsx) from build
+  - Configured coverage exclusions: node_modules, src/test, dist, .next, src/components/ui (shadcn)
+  - All 3 tests passing in 529ms
+  - TypeScript compilation passes with 0 errors
+  - Coverage infrastructure working (thresholds fail as expected - only 1 test file exists)
+  - **Phase 1 Progress**: Infrastructure 1/4 complete (25%)
+  - **Outcome**: Testing infrastructure foundation enables TDD and comprehensive test coverage
+  - **Next Steps**: WEB-SETUP-002 (ESLint/Prettier), WEB-SETUP-003 (Test Utilities)
+
+### October 6, 2025 (Earlier)
 
 - ✅ **SIM-612**: Add Variance Data Versioning
   - Added DataQualityMetrics interface to `@gauntlet/types` (totalPlayers, playersWithVariance, outlierRemovalCount, positionsWithVariance)
