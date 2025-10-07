@@ -4,6 +4,9 @@
   "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
+  "git": {
+    "deploymentEnabled": false
+  },
   "functions": {
     "src/app/api/**/route.{js,ts}": {
       "maxDuration": 30
