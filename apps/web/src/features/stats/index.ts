@@ -1,7 +1,7 @@
 /**
  * Stats Feature
  *
- * Exports all types for stats hub components.
+ * Exports all types and hooks for stats hub components.
  */
 
 export type {
@@ -22,3 +22,15 @@ export type {
   PowerRankingTeam,
   RidgeTeamData,
 } from './types';
+
+// Hook Exports
+export {
+  useLeagueStats,
+  useSeasonAggregates,
+  useWeekStats,
+  useSuperlatives,
+  type LeagueStatsResult,
+  type SeasonAggregatesOptions,
+  type WeekStatsOptions,
+  type SuperlativesOptions,
+} from './hooks';

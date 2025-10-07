@@ -4,20 +4,31 @@
  * Provides environment-aware logging:
  * - Development: Pretty-printed, colorized logs
  * - Production: JSON logs for log aggregation
+ * - Next.js: Synchronous logging (no worker threads)
  */
 
 import pino from 'pino';
 
 /**
+ * Check if running in Next.js webpack environment
+ * This prevents worker thread issues with pino-pretty in bundled code
+ */
+const isNextJsEnvironment =
+  typeof process !== 'undefined' &&
+  (process.env.NEXT_RUNTIME === 'nodejs' || process.env.__NEXT_PROCESSED_ENV === 'true');
+
+/**
  * Structured logger with environment-aware configuration.
  *
- * - Development: Pretty-printed, colorized logs
+ * - Development (standalone): Pretty-printed, colorized logs
+ * - Next.js: Synchronous console-based logging
  * - Production: JSON logs for log aggregation
  */
 export const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
+  // Disable transport in Next.js to avoid worker thread issues
   transport:
-    process.env.NODE_ENV !== 'production'
+    !isNextJsEnvironment && process.env.NODE_ENV !== 'production'
       ? {
           target: 'pino-pretty',
           options: {

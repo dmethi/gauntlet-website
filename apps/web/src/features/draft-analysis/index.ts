@@ -45,7 +45,7 @@ export type {
 } from './types';
 
 // Hook exports
-export { useManagerFiltering, useManagerSorting } from './hooks';
+export { useManagerFiltering, useManagerSorting, useDraftAnalytics } from './hooks';
 
 export type {
   ManagerFilterOptions,
@@ -53,4 +53,6 @@ export type {
   SortDirection,
   SortConfig,
   ManagerSortingResult,
+  DraftAnalyticsOptions,
+  DraftAnalyticsResult,
 } from './hooks';

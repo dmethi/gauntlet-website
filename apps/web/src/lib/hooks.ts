@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentWeek } from '@gauntlet/lib';
+import { useSeasonAggregates as useSeasonalAggregatesImport } from '@/features/stats/hooks';
 import type {
   LeagueData,
   LeagueTransactionsResponse,
@@ -38,128 +39,8 @@ const getLeagueData = async (): Promise<LeagueData> => {
   return res.json();
 };
 
-export function useLeagueData() {
-  const { data: league, isLoading: loading } = useQuery<LeagueData>({
-    queryKey: ['leagueData'],
-    queryFn: getLeagueData,
-  });
-
-  // Fetch seasonal aggregates for authoritative record data
-  const leagueId = league?.id ? String(league.id) : undefined;
-  const season = league?.season ? String(league.season) : undefined;
-  const { data: seasonal } = useSeasonalAggregates(leagueId, season);
-
-  const teamStats = useMemo(() => {
-    if (!league || !seasonal?.ok) return [];
-
-    // Create a map of roster aggregates for easier lookup
-    const rosterAggregates = new Map<number, RosterWeekAggregate[]>();
-    seasonal.data.rosterWeekAggregates.forEach(agg => {
-      if (!rosterAggregates.has(agg.rosterId)) {
-        rosterAggregates.set(agg.rosterId, []);
-      }
-      rosterAggregates.get(agg.rosterId)!.push(agg);
-    });
-
-    const teams = (league.rosters || []).map((roster: Roster) => {
-      const aggregates = rosterAggregates.get(Number(roster.id)) || [];
-
-      // Calculate total points from matchups (unchanged)
-      const totalPoints = (roster.matchups || []).reduce(
-        (sum: number, matchup: Matchup) => sum + matchup.points,
-        0,
-      );
-
-      // Use authoritative record data from RosterWeekAggregate
-      // Filter to regular season weeks (we'll use dynamic playoff start if available)
-      const playoffStart = Number(league?.playoff_week_start ?? 15);
-      const regularSeasonAggregates = (aggregates || []).filter(
-        agg => agg.week >= 1 && agg.week < playoffStart,
-      );
-
-      const wins = (regularSeasonAggregates || []).reduce(
-        (count: number, agg: RosterWeekAggregate) => count + (agg.won ? 1 : 0),
-        0,
-      );
-      const losses = (regularSeasonAggregates || []).reduce(
-        (count: number, agg: RosterWeekAggregate) => count + (agg.won === false ? 1 : 0),
-        0,
-      );
-
-      // Calculate cumulative expected wins and luck from aggregates
-      const totalExpectedWins = (regularSeasonAggregates || []).reduce(
-        (sum: number, agg: RosterWeekAggregate) => sum + (agg.expectedWins || 0),
-        0,
-      );
-      const totalLuck = (regularSeasonAggregates || []).reduce(
-        (sum: number, agg: RosterWeekAggregate) => sum + (agg.luck || 0),
-        0,
-      );
-
-      return {
-        id: roster.id,
-        name:
-          roster.owner?.metadata?.team_name ||
-          roster.owner?.displayName ||
-          roster.owner?.username ||
-          `Team ${roster.id}`,
-        owner: roster.owner?.displayName || roster.owner?.username || 'Unknown',
-        wins,
-        losses,
-        totalPoints,
-        expectedWins: totalExpectedWins,
-        luckRating: totalLuck,
-      };
-    });
-
-    return teams
-      .map(team => {
-        // Calculate win percentage for ranking
-        const totalGames = team.wins + team.losses;
-        const winPercentage = totalGames > 0 ? team.wins / totalGames : 0;
-        return {
-          ...team,
-          winPercentage,
-        };
-      })
-      .sort((a, b) => {
-        // Sort by win percentage first (descending), then by total points as tiebreaker
-        if (a.winPercentage !== b.winPercentage) {
-          return b.winPercentage - a.winPercentage;
-        }
-        return b.totalPoints - a.totalPoints;
-      })
-      .map((team, index) => ({
-        ...team,
-        canonicalRank: index + 1, // Stable rank based on record + points tiebreaker
-      }))
-      .sort((a, b) => b.totalPoints - a.totalPoints) as TeamStats[]; // Default sort by points for display
-  }, [league, seasonal]);
-
-  const weeklyAverages = useMemo(() => {
-    if (!league) return [];
-    return Array.from({ length: 18 }, (_, week) => {
-      const weekNumber = week + 1;
-      const weekMatchups = (league.rosters || []).flatMap((r: Roster) =>
-        (r.matchups || []).filter((m: Matchup) => m.week === weekNumber),
-      );
-      const totalPoints = weekMatchups.reduce((sum: number, m: Matchup) => sum + m.points, 0);
-      const averagePoints = weekMatchups.length > 0 ? totalPoints / weekMatchups.length : 0;
-      return {
-        week: weekNumber,
-        averagePoints,
-      };
-    }).filter(w => w.averagePoints > 0);
-  }, [league]);
-
-  return {
-    league,
-    loading: loading || !seasonal, // Loading if either query is loading or seasonal data not available
-    teamStats,
-    weeklyAverages,
-    seasonal: seasonal?.data,
-  };
-}
+// useLeagueData moved to @/features/stats/hooks/useLeagueStats.ts
+// Re-exported at bottom of file for backwards compatibility
 
 // Hook for fetching league data by specific league ID
 const getLeagueDataById = async (leagueId: string): Promise<LeagueData> => {
@@ -179,7 +60,7 @@ export function useLeagueDataById(leagueId?: string) {
 
   // Fetch seasonal aggregates for authoritative record data
   const season = league?.season ? String(league.season) : undefined;
-  const { data: seasonal } = useSeasonalAggregates(leagueId, season);
+  const { data: seasonal } = useSeasonalAggregatesImport(leagueId, season);
 
   const teamStats = useMemo(() => {
     if (!league || !seasonal?.ok) return [];
@@ -299,18 +180,8 @@ export function useTeamData(teamId: string) {
   return { team, loading, error };
 }
 
-// Rollups hooks
-export function useSeasonalAggregates(leagueId?: string, season?: string) {
-  return useQuery<SeasonalAggregatesResponse>({
-    queryKey: ['seasonal', leagueId, season],
-    queryFn: async () => {
-      const res = await fetch(`/api/rollups/${leagueId}/${season}`);
-      if (!res.ok) throw new Error('Failed to fetch seasonal aggregates');
-      return res.json();
-    },
-    enabled: Boolean(leagueId && season),
-  });
-}
+// useSeasonalAggregates moved to @/features/stats/hooks/useSeasonAggregates.ts
+// Re-exported at bottom of file for backwards compatibility
 
 export function useRosterDetails(leagueId?: string, rosterId?: number) {
   return useQuery<RosterDetailsResponse>({
@@ -364,40 +235,9 @@ export function usePlayoffBracket(leagueId?: string) {
   });
 }
 
-export function useWeekRollups<T = unknown>(leagueId: string, season: string, week?: number) {
-  const targetWeek = week ?? getCurrentWeek();
-  return useQuery<WeekRollupsResponse<T>>({
-    queryKey: ['rollups', leagueId, season, targetWeek],
-    queryFn: async () => {
-      const res = await fetch(`/api/rollups/${leagueId}/${season}/weeks/${targetWeek}`);
-      if (!res.ok) throw new Error('Failed to fetch week rollups');
-      return res.json();
-    },
-    enabled: Boolean(leagueId && season),
-  });
-}
-
-export function useSeasonSuperlatives<T = unknown>(
-  leagueId: string,
-  season: string,
-  opts?: { category?: string; limit?: number; offset?: number },
-) {
-  const params = new URLSearchParams();
-  if (opts?.category) params.set('category', opts.category);
-  if (opts?.limit != null) params.set('limit', String(opts.limit));
-  if (opts?.offset != null) params.set('offset', String(opts.offset));
-  const qs = params.toString();
-  return useQuery<SuperlativesResponse<T>>({
-    queryKey: ['superlatives', leagueId, season, qs],
-    queryFn: async () => {
-      const url = `/api/rollups/${leagueId}/${season}/superlatives${qs ? `?${qs}` : ''}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Failed to fetch superlatives');
-      return res.json();
-    },
-    enabled: Boolean(leagueId && season),
-  });
-}
+// useWeekRollups moved to @/features/stats/hooks/useWeekStats.ts
+// useSeasonSuperlatives moved to @/features/stats/hooks/useSuperlatives.ts
+// Re-exported at bottom of file for backwards compatibility
 
 // Matchups hook
 export function useMatchups(leagueId: string, week: number) {
@@ -519,3 +359,12 @@ export function usePlayerStatsSingle(playerId: string, season: string, week: num
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
+
+// Re-export stats hooks for backwards compatibility
+export { useLeagueStats as useLeagueData } from '@/features/stats/hooks';
+export {
+  useSeasonAggregates,
+  useSeasonAggregates as useSeasonalAggregates, // Old name for backwards compatibility
+} from '@/features/stats/hooks';
+export { useWeekStats as useWeekRollups } from '@/features/stats/hooks';
+export { useSuperlatives as useSeasonSuperlatives } from '@/features/stats/hooks';

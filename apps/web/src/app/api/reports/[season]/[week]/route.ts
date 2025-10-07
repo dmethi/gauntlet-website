@@ -331,29 +331,47 @@ async function handleStaticReportData(staticData: any, season: string, week: num
         ...m,
         // Add player names to boxscores
         boxscoreA:
-          m.boxscoreA?.map((player: any) => ({
-            playerId: player.playerId,
-            name:
-              staticData.playerNames?.[player.playerId]?.full_name ||
-              staticData.playerNames?.[player.playerId]?.first_name +
-                ' ' +
-                staticData.playerNames?.[player.playerId]?.last_name ||
-              `Player ${player.playerId}`,
-            position: staticData.playerNames?.[player.playerId]?.position || 'FLEX',
-            points: player.points || 0,
-          })) || [],
+          m.boxscoreA?.map((player: any) => {
+            // Ensure position is valid for sim-engine validation
+            // Valid positions: QB, RB, WR, TE, K, DEF, DST
+            let position = staticData.playerNames?.[player.playerId]?.position;
+            if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+              position = 'RB';
+            }
+
+            return {
+              playerId: player.playerId,
+              name:
+                staticData.playerNames?.[player.playerId]?.full_name ||
+                staticData.playerNames?.[player.playerId]?.first_name +
+                  ' ' +
+                  staticData.playerNames?.[player.playerId]?.last_name ||
+                `Player ${player.playerId}`,
+              position,
+              points: player.points || 0,
+            };
+          }) || [],
         boxscoreB:
-          m.boxscoreB?.map((player: any) => ({
-            playerId: player.playerId,
-            name:
-              staticData.playerNames?.[player.playerId]?.full_name ||
-              staticData.playerNames?.[player.playerId]?.first_name +
-                ' ' +
-                staticData.playerNames?.[player.playerId]?.last_name ||
-              `Player ${player.playerId}`,
-            position: staticData.playerNames?.[player.playerId]?.position || 'FLEX',
-            points: player.points || 0,
-          })) || [],
+          m.boxscoreB?.map((player: any) => {
+            // Ensure position is valid for sim-engine validation
+            // Valid positions: QB, RB, WR, TE, K, DEF, DST
+            let position = staticData.playerNames?.[player.playerId]?.position;
+            if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+              position = 'RB';
+            }
+
+            return {
+              playerId: player.playerId,
+              name:
+                staticData.playerNames?.[player.playerId]?.full_name ||
+                staticData.playerNames?.[player.playerId]?.first_name +
+                  ' ' +
+                  staticData.playerNames?.[player.playerId]?.last_name ||
+                `Player ${player.playerId}`,
+              position,
+              points: player.points || 0,
+            };
+          }) || [],
         // Add enhanced data
         combinedPoints: m.pointsA + m.pointsB,
         margin: Math.abs(m.pointsA - m.pointsB),

@@ -121,10 +121,19 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
             const p = playersMap[id] || {};
             // starters_points uses array indices as keys, not player IDs
             const currentScore = Number(pts?.[index.toString()] || 0);
+
+            // Ensure position is valid for sim-engine validation
+            // Valid positions: QB, RB, WR, TE, K, DEF, DST
+            let position = p.position;
+            if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+              // Default to RB for flex positions or unknown players (most common flex position)
+              position = 'RB';
+            }
+
             return {
               id,
               name: p.full_name || id,
-              position: p.position || 'FLEX',
+              position,
               projection: projOf(id),
               currentScore,
               nflTeam: p.team || undefined,

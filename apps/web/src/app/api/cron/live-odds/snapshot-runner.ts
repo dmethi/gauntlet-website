@@ -67,15 +67,25 @@ const captureIndividualMatchup = async (
     const sim = data.simulation;
 
     const toDebugPlayers = (players: SimulationPlayer[]): DebugPlayer[] =>
-      players.map(p => ({
-        name: p.name || p.playerName || p.id,
-        position: p.position || 'FLEX',
-        nflTeam: p.nflTeam || '',
-        currentScore: p.currentScore,
-        remainingProjection: p.projection,
-        fullProjection: p.fullProjection || p.projection,
-        gameState: p.gameState,
-      }));
+      players.map(p => {
+        // Ensure position is valid for sim-engine validation
+        // Valid positions: QB, RB, WR, TE, K, DEF, DST
+        let position = p.position;
+        if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+          // Default to RB for flex positions or unknown players
+          position = 'RB';
+        }
+
+        return {
+          name: p.name || p.playerName || p.id,
+          position,
+          nflTeam: p.nflTeam || '',
+          currentScore: p.currentScore,
+          remainingProjection: p.projection,
+          fullProjection: p.fullProjection || p.projection,
+          gameState: p.gameState,
+        };
+      });
 
     const team1Players = toDebugPlayers(sim.teams?.[0]?.players || []);
     const team2Players = toDebugPlayers(sim.teams?.[1]?.players || []);

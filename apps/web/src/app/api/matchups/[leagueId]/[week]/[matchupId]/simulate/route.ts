@@ -186,10 +186,18 @@ function toLineupPlayersWithMinutes(
       }
     }
 
+    // Ensure position is valid for sim-engine validation
+    // Valid positions: QB, RB, WR, TE, K, DEF, DST
+    let position = p.position;
+    if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+      // Default to RB for flex positions or unknown players (most common flex position)
+      position = 'RB';
+    }
+
     return {
       id,
       name: p.full_name || id,
-      position: p.position || 'FLEX',
+      position,
       projection: remainingProjection, // This is the key change - adjusted based on actual time
       currentScore: Number(currentScore),
       nflTeam: nflTeam,

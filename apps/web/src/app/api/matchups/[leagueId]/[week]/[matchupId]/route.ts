@@ -75,10 +75,19 @@ export async function GET(
       const starterPlayers: PlayerDetails[] = starters.map((playerId: string, index: number) => {
         const player = playersData[playerId] || {};
         const actualPoints = Number(starterPoints[index.toString()] || 0);
+
+        // Ensure position is valid for sim-engine validation
+        // Valid positions: QB, RB, WR, TE, K, DEF, DST
+        let position = player.position;
+        if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+          // Default to RB for flex positions or unknown players
+          position = 'RB';
+        }
+
         return {
           id: playerId,
           name: player.full_name || playerId,
-          position: player.position || 'FLEX',
+          position,
           team: player.team || '',
           points: actualPoints,
           projectedPoints: projectionOf(playerId),
@@ -90,10 +99,19 @@ export async function GET(
       // Build bench players
       const benchPlayers: PlayerDetails[] = bench.map((playerId: string) => {
         const player = playersData[playerId] || {};
+
+        // Ensure position is valid for sim-engine validation
+        // Valid positions: QB, RB, WR, TE, K, DEF, DST
+        let position = player.position;
+        if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+          // Default to RB for flex positions or unknown players
+          position = 'RB';
+        }
+
         return {
           id: playerId,
           name: player.full_name || playerId,
-          position: player.position || 'FLEX',
+          position,
           team: player.team || '',
           points: 0, // Bench players don't have points in current week
           projectedPoints: projectionOf(playerId),

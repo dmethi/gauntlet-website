@@ -32,19 +32,37 @@ export async function GET(
     const [teamA, teamB] = teams;
 
     // Extract player projections for simulation (convert to LineupPlayer format)
-    const team1Players = teamA.starters.map((player: any) => ({
-      id: player.id,
-      name: player.name || 'Unknown Player',
-      position: player.position,
-      projection: player.projectedPoints || 0,
-    }));
+    const team1Players = teamA.starters.map((player: any) => {
+      // Ensure position is valid for sim-engine validation
+      // Valid positions: QB, RB, WR, TE, K, DEF, DST
+      let position = player.position;
+      if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+        position = 'RB';
+      }
 
-    const team2Players = teamB.starters.map((player: any) => ({
-      id: player.id,
-      name: player.name || 'Unknown Player',
-      position: player.position,
-      projection: player.projectedPoints || 0,
-    }));
+      return {
+        id: player.id,
+        name: player.name || 'Unknown Player',
+        position,
+        projection: player.projectedPoints || 0,
+      };
+    });
+
+    const team2Players = teamB.starters.map((player: any) => {
+      // Ensure position is valid for sim-engine validation
+      // Valid positions: QB, RB, WR, TE, K, DEF, DST
+      let position = player.position;
+      if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+        position = 'RB';
+      }
+
+      return {
+        id: player.id,
+        name: player.name || 'Unknown Player',
+        position,
+        projection: player.projectedPoints || 0,
+      };
+    });
 
     // Run simulation to get team distributions
     const simulation = await simulateMatchupProbabilityFromPlayers(

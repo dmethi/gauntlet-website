@@ -13,20 +13,20 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { TrackedPosition, rank, median } from '@/shared/utils/stats';
+import { median, rank, TrackedPosition } from '@/shared/utils/stats';
 import { colors } from '../../../../../../brand/colors';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { RidgePlot } from './RidgePlot';
 import type { PlainStatsDataset } from '@/shared/utils/stats';
 import type {
-  TeamInfo,
-  TeamScore,
-  TeamData,
   PositionalTeamData,
   PositionData,
-  TrendsViewProps,
   PowerRankingTeam,
   RidgeTeamData,
+  TeamData,
+  TeamInfo,
+  TeamScore,
+  TrendsViewProps,
 } from '@/features/stats';
 
 // Helper function for mean calculation
@@ -237,96 +237,129 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
                     },
                   );
 
-                  return sortedPowerTeams.map(([teamKey, data]) => (
-                    <tr key={teamKey} className="border-t hover:bg-muted/10">
-                      <td className="sticky left-0 z-10 bg-background border-r px-3 py-2">
-                        <div className="font-medium">{data.teamInfo.teamName}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {data.teamInfo.leagueName}
-                        </div>
-                      </td>
-                      {Array.from({ length: dataset.currentWeek - 1 }, (_, i) => i).map(
-                        weekIndex => {
-                          const weekRank = data.weeklyRanks[weekIndex];
-                          const weekScore = data.weeklyScores[weekIndex];
-                          return (
-                            <td key={weekIndex} className="px-1 py-2 text-center border-r">
-                              {weekRank ? (
-                                <div
-                                  className="rounded-md p-2 transition-colors"
-                                  style={{
-                                    backgroundColor: getRankColor(weekRank, 24),
-                                  }}
-                                >
-                                  <div
-                                    className="font-mono font-bold text-xs"
-                                    style={{
-                                      color: getTextColor(getRankColor(weekRank, 24)),
-                                    }}
-                                  >
-                                    #{weekRank}
-                                  </div>
-                                  <div
-                                    className="font-mono text-xs mt-1"
-                                    style={{
-                                      color: getTextColor(getRankColor(weekRank, 24)),
-                                    }}
-                                  >
-                                    {weekScore?.toFixed(2)}
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="text-xs text-muted-foreground">—</div>
-                              )}
-                            </td>
-                          );
-                        },
-                      )}
-                      <td className="px-3 py-2 text-center">
-                        <div className="w-16 h-8">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart
-                              data={(() => {
-                                // Get actual weekly data with correct week numbers using teamKey
-                                const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
-                                if (!teamData) return [];
+                  return sortedPowerTeams.map(([teamKey, data]) => {
+                    // Calculate team record and total points from allTeamEntries
+                    const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
+                    let wins = 0;
+                    let losses = 0;
+                    let ties = 0;
+                    let totalPoints = 0;
 
-                                return teamData.teamScores
-                                  .filter(d => d.value > 0)
-                                  .map(d => ({
-                                    week: d.week,
-                                    score: d.value,
-                                  }));
-                              })()}
-                            >
-                              <Line
-                                type="monotone"
-                                dataKey="score"
-                                stroke={colors.core.regalGold}
-                                strokeWidth={2}
-                                dot={false}
-                              />
-                              <Tooltip
-                                contentStyle={{
-                                  backgroundColor: 'rgba(0,0,0,0.8)',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  color: 'white',
-                                  fontSize: '11px',
-                                  padding: '4px 8px',
-                                }}
-                                formatter={(value, _name) => [
-                                  `${Number(value).toFixed(1)} pts`,
-                                  'Score',
-                                ]}
-                                labelFormatter={week => `Week ${week}`}
-                              />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </td>
-                    </tr>
-                  ));
+                    if (teamData) {
+                      // Calculate record by comparing team vs opponent scores
+                      teamData.teamScores.forEach((teamScore, index) => {
+                        const oppScore = teamData.opponentScores[index];
+                        if (teamScore.value > 0 && oppScore) {
+                          totalPoints += teamScore.value;
+                          if (teamScore.value > oppScore.value) {
+                            wins++;
+                          } else if (teamScore.value < oppScore.value) {
+                            losses++;
+                          } else {
+                            ties++;
+                          }
+                        }
+                      });
+                    }
+
+                    const recordText = ties > 0 ? `${wins}-${losses}-${ties}` : `${wins}-${losses}`;
+
+                    return (
+                      <tr key={teamKey} className="border-t hover:bg-muted/10">
+                        <td className="sticky left-0 z-10 bg-background border-r px-3 py-2">
+                          <div className="font-medium">{data.teamInfo.teamName}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {data.teamInfo.leagueName}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            <span className="font-mono">{recordText}</span>
+                            {' • '}
+                            <span className="font-mono">{totalPoints.toFixed(1)} pts</span>
+                          </div>
+                        </td>
+                        {Array.from({ length: dataset.currentWeek - 1 }, (_, i) => i).map(
+                          weekIndex => {
+                            const weekRank = data.weeklyRanks[weekIndex];
+                            const weekScore = data.weeklyScores[weekIndex];
+                            return (
+                              <td key={weekIndex} className="px-1 py-2 text-center border-r">
+                                {weekRank ? (
+                                  <div
+                                    className="rounded-md p-2 transition-colors"
+                                    style={{
+                                      backgroundColor: getRankColor(weekRank, 24),
+                                    }}
+                                  >
+                                    <div
+                                      className="font-mono font-bold text-xs"
+                                      style={{
+                                        color: getTextColor(getRankColor(weekRank, 24)),
+                                      }}
+                                    >
+                                      #{weekRank}
+                                    </div>
+                                    <div
+                                      className="font-mono text-xs mt-1"
+                                      style={{
+                                        color: getTextColor(getRankColor(weekRank, 24)),
+                                      }}
+                                    >
+                                      {weekScore?.toFixed(2)}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="text-xs text-muted-foreground">—</div>
+                                )}
+                              </td>
+                            );
+                          },
+                        )}
+                        <td className="px-3 py-2 text-center">
+                          <div className="w-16 h-8">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <LineChart
+                                data={(() => {
+                                  // Get actual weekly data with correct week numbers using teamKey
+                                  const teamData = allTeamEntries.find(([k]) => k === teamKey)?.[1];
+                                  if (!teamData) return [];
+
+                                  return teamData.teamScores
+                                    .filter(d => d.value > 0)
+                                    .map(d => ({
+                                      week: d.week,
+                                      score: d.value,
+                                    }));
+                                })()}
+                              >
+                                <Line
+                                  type="monotone"
+                                  dataKey="score"
+                                  stroke={colors.core.regalGold}
+                                  strokeWidth={2}
+                                  dot={false}
+                                />
+                                <Tooltip
+                                  contentStyle={{
+                                    backgroundColor: 'rgba(0,0,0,0.8)',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    color: 'white',
+                                    fontSize: '11px',
+                                    padding: '4px 8px',
+                                  }}
+                                  formatter={(value, _name) => [
+                                    `${Number(value).toFixed(1)} pts`,
+                                    'Score',
+                                  ]}
+                                  labelFormatter={week => `Week ${week}`}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  });
                 })()}
               </tbody>
             </table>
