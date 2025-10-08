@@ -385,7 +385,7 @@ testPowerRankings();
 3. ✅ Test script shows top 10 with movement - DONE
 4. ✅ Notable changes identified correctly - DONE
 5. ✅ Code committed with message:
-   `feat(recap): implement power rankings commentary (RECAP-013)` - PENDING
+   `feat(recap): implement power rankings commentary (RECAP-013)` - DONE
 
 ---
 
