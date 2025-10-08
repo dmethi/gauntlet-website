@@ -4,7 +4,7 @@
 **Phase**: 2 - Section Implementation  
 **Estimated Time**: 30 minutes  
 **Dependencies**: RECAP-014  
-**Status**: 🔴 Not Started
+**Status**: ✅ Complete
 
 ---
 
@@ -381,5 +381,54 @@ big-picture closing
 
 ---
 
+## 📝 Implementation Notes
+
+**Completed**: 2025-10-08
+
+### What Was Built
+
+1. **Upcoming Matchups Tool** (`upcoming.ts`)
+   - Fetches next week's matchups with graceful handling when unavailable
+   - Calculates team records through current week
+   - Generates contextual storylines based on records
+   - Returns structured data for both AFC and NFC leagues
+
+2. **Section Prompt** (`sections/upcoming.ts`)
+   - Guides AI to write 1-2 paragraph preview
+   - Emphasizes anticipatory tone and storylines
+   - Includes output format specification
+
+3. **Test Script** (`test-upcoming.ts`)
+   - Validates tool functionality with Week 5 → Week 6 data
+   - Displays all 12 matchups with records and storylines
+   - Added to package.json as `npm run test:upcoming`
+
+4. **Tool Registration**
+   - Registered as tool #22 in the registry
+   - Verified with 22 total tools registered
+
+### Test Results
+
+```
+✅ All 12 matchups fetched correctly (6 AFC + 6 NFC)
+✅ Team records calculated accurately
+✅ Storylines generated appropriately:
+   - "Battle of playoff contenders" (both teams 4+ wins)
+   - "David vs Goliath matchup" (3+ win difference)
+   - "Even matchup" (same record)
+   - "Elimination game territory" (both teams 1 or fewer wins)
+```
+
+### Files Created/Modified
+
+- `apps/web/src/lib/reports/recap/tools/upcoming.ts` (new)
+- `apps/web/src/lib/reports/recap/prompts/sections/upcoming.ts` (new)
+- `apps/web/scripts/test-upcoming.ts` (new)
+- `apps/web/src/lib/reports/recap/tools/index.ts` (modified)
+- `apps/web/package.json` (modified)
+
+---
+
 **Created**: 2025-10-08  
-**Status**: 🔴 Not Started
+**Completed**: 2025-10-08  
+**Status**: ✅ Complete
