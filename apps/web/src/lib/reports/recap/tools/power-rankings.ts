@@ -28,8 +28,12 @@ interface PowerRankingsResult {
 const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
   // Fetch all matchups up to the given week for both leagues
   const [afcMatchups, nfcMatchups, afcRosters, nfcRosters] = await Promise.all([
-    Promise.all(Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, i + 1))),
-    Promise.all(Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, i + 1))),
+    Promise.all(
+      Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, i + 1)),
+    ),
+    Promise.all(
+      Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, i + 1)),
+    ),
     sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
     sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
   ]);
@@ -47,7 +51,7 @@ const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
       if (!team) return;
 
       const opponent = weekMatchups.find(
-        m => m.matchup_id === team.matchup_id && m.roster_id !== rosterId
+        m => m.matchup_id === team.matchup_id && m.roster_id !== rosterId,
       );
       if (!opponent) return;
 
@@ -149,7 +153,7 @@ export const fetchPowerRankingsTool: ReportTool<PowerRankingsArgs, PowerRankings
     if (previousRankings.length > 0) {
       currentRankings.forEach(current => {
         const previous = previousRankings.find(
-          p => p.leagueId === current.leagueId && p.rosterId === current.rosterId
+          p => p.leagueId === current.leagueId && p.rosterId === current.rosterId,
         );
         if (previous) {
           current.previousRank = previous.rank;
@@ -168,13 +172,13 @@ export const fetchPowerRankingsTool: ReportTool<PowerRankingsArgs, PowerRankings
     }
 
     // Identify notable changes
-    const biggestRiser = currentRankings
-      .filter(r => r.movement > 0)
-      .sort((a, b) => b.movement - a.movement)[0] || null;
+    const biggestRiser =
+      currentRankings.filter(r => r.movement > 0).sort((a, b) => b.movement - a.movement)[0] ||
+      null;
 
-    const biggestFaller = currentRankings
-      .filter(r => r.movement < 0)
-      .sort((a, b) => a.movement - b.movement)[0] || null;
+    const biggestFaller =
+      currentRankings.filter(r => r.movement < 0).sort((a, b) => a.movement - b.movement)[0] ||
+      null;
 
     const topThree = currentRankings.slice(0, 3);
 
@@ -194,4 +198,3 @@ export const fetchPowerRankingsTool: ReportTool<PowerRankingsArgs, PowerRankings
     };
   },
 };
-

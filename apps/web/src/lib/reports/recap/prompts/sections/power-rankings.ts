@@ -1,6 +1,6 @@
 /**
  * Power Rankings Section Prompt
- * 
+ *
  * Instructs the AI to generate commentary on power rankings movement
  * and notable changes from week to week.
  */
@@ -41,4 +41,3 @@ Return a JSON object with:
 
 Call the tool and write the narrative.
 `;
-

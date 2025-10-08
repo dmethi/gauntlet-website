@@ -19,10 +19,9 @@ const testPowerRankings = async (): Promise<void> => {
     console.log('='.repeat(80));
     result.rankings.slice(0, 10).forEach(ranking => {
       const arrow = ranking.movement > 0 ? '↑' : ranking.movement < 0 ? '↓' : '→';
-      const moveText =
-        ranking.movement !== 0 ? ` (${arrow}${Math.abs(ranking.movement)})` : '';
+      const moveText = ranking.movement !== 0 ? ` (${arrow}${Math.abs(ranking.movement)})` : '';
       console.log(
-        `   #${ranking.rank}${moveText.padEnd(6)} ${ranking.teamName.padEnd(25)} (${ranking.league}) - ${ranking.record}, ${ranking.pointsFor} PF`
+        `   #${ranking.rank}${moveText.padEnd(6)} ${ranking.teamName.padEnd(25)} (${ranking.league}) - ${ranking.record}, ${ranking.pointsFor} PF`,
       );
     });
 
@@ -30,37 +29,35 @@ const testPowerRankings = async (): Promise<void> => {
 
     if (result.changes.biggestRiser) {
       console.log(
-        `\n📈 Biggest Riser: ${result.changes.biggestRiser.teamName} (${result.changes.biggestRiser.league})`
+        `\n📈 Biggest Riser: ${result.changes.biggestRiser.teamName} (${result.changes.biggestRiser.league})`,
       );
       console.log(
-        `   Moved ↑${result.changes.biggestRiser.movement} spots: #${result.changes.biggestRiser.previousRank} → #${result.changes.biggestRiser.rank}`
+        `   Moved ↑${result.changes.biggestRiser.movement} spots: #${result.changes.biggestRiser.previousRank} → #${result.changes.biggestRiser.rank}`,
       );
       console.log(
-        `   Record: ${result.changes.biggestRiser.record}, ${result.changes.biggestRiser.pointsFor} PF`
+        `   Record: ${result.changes.biggestRiser.record}, ${result.changes.biggestRiser.pointsFor} PF`,
       );
     }
 
     if (result.changes.biggestFaller) {
       console.log(
-        `\n📉 Biggest Faller: ${result.changes.biggestFaller.teamName} (${result.changes.biggestFaller.league})`
+        `\n📉 Biggest Faller: ${result.changes.biggestFaller.teamName} (${result.changes.biggestFaller.league})`,
       );
       console.log(
-        `   Moved ↓${Math.abs(result.changes.biggestFaller.movement)} spots: #${result.changes.biggestFaller.previousRank} → #${result.changes.biggestFaller.rank}`
+        `   Moved ↓${Math.abs(result.changes.biggestFaller.movement)} spots: #${result.changes.biggestFaller.previousRank} → #${result.changes.biggestFaller.rank}`,
       );
       console.log(
-        `   Record: ${result.changes.biggestFaller.record}, ${result.changes.biggestFaller.pointsFor} PF`
+        `   Record: ${result.changes.biggestFaller.record}, ${result.changes.biggestFaller.pointsFor} PF`,
       );
     }
 
-    console.log(
-      `\n⚡ Notable Changes (3+ spots): ${result.changes.notableChanges.length} teams`
-    );
+    console.log(`\n⚡ Notable Changes (3+ spots): ${result.changes.notableChanges.length} teams`);
     if (result.changes.notableChanges.length > 0) {
       console.log('='.repeat(80));
       result.changes.notableChanges.forEach(change => {
         const arrow = change.movement > 0 ? '↑' : '↓';
         console.log(
-          `   ${change.teamName.padEnd(25)} (${change.league}): ${arrow}${Math.abs(change.movement)} to #${change.rank} (${change.record})`
+          `   ${change.teamName.padEnd(25)} (${change.league}): ${arrow}${Math.abs(change.movement)} to #${change.rank} (${change.record})`,
         );
       });
     }
@@ -80,4 +77,3 @@ const testPowerRankings = async (): Promise<void> => {
 };
 
 testPowerRankings();
-
