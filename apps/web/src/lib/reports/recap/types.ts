@@ -553,3 +553,35 @@ export interface RankingChange {
   topThree: PowerRanking[];
   notableChanges: PowerRanking[]; // Moved 3+ spots
 }
+
+// ============================================================================
+// STANDINGS TYPES (RECAP-014)
+// ============================================================================
+
+/**
+ * Individual team standing entry.
+ * Includes record, points, and playoff seeding.
+ */
+export interface StandingsEntry {
+  rank: number;
+  rosterId: number;
+  teamName: string;
+  ownerName: string;
+  wins: number;
+  losses: number;
+  ties: number;
+  winPct: number;
+  pointsFor: number;
+  pointsAgainst: number;
+  playoffSeed: number | null; // 1-6 for playoff teams, null for others
+  division: number | null; // Division number (1, 2, 3)
+}
+
+/**
+ * League standings with playoff picture.
+ */
+export interface Standings {
+  league: 'AFC' | 'NFC';
+  entries: StandingsEntry[];
+  playoffLine: number; // Number of teams that make playoffs (typically 6)
+}

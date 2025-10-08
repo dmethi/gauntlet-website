@@ -29,6 +29,7 @@ import {
   calculateBadBeatLossesTool,
 } from './hall-of-shame';
 import { fetchPowerRankingsTool } from './power-rankings';
+import { fetchStandingsTool } from './standings';
 
 /**
  * Register all available tools with the registry.
@@ -67,8 +68,11 @@ export const registerAllTools = (): void => {
   // Power Rankings Tools (RECAP-013)
   toolRegistry.register(fetchPowerRankingsTool);
 
+  // Standings Tools (RECAP-014)
+  toolRegistry.register(fetchStandingsTool);
+
   // TODO: Register additional tools as they are implemented
-  // - Standings tools
+  // - Upcoming matchups preview tools
   // - etc.
 };
 
