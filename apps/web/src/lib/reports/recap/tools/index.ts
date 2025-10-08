@@ -23,6 +23,11 @@ import {
   calculateBiggestBlowoutTool,
   calculateTopPositionPerformersTool,
 } from './hall-of-fame';
+import {
+  calculateLowestTeamScoreTool,
+  calculateBiggestBustsTool,
+  calculateBadBeatLossesTool,
+} from './hall-of-shame';
 
 /**
  * Register all available tools with the registry.
@@ -53,8 +58,12 @@ export const registerAllTools = (): void => {
   toolRegistry.register(calculateBiggestBlowoutTool);
   toolRegistry.register(calculateTopPositionPerformersTool);
 
+  // Hall of Shame Tools (RECAP-012)
+  toolRegistry.register(calculateLowestTeamScoreTool);
+  toolRegistry.register(calculateBiggestBustsTool);
+  toolRegistry.register(calculateBadBeatLossesTool);
+
   // TODO: Register additional tools as they are implemented
-  // - Hall of Shame tools
   // - Power rankings tools
   // - etc.
 };
