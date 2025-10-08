@@ -521,3 +521,35 @@ export interface KeyPlayerPerformance {
   projected: number;
   overUnder: number;
 }
+
+// ============================================================================
+// POWER RANKINGS TYPES (RECAP-013)
+// ============================================================================
+
+/**
+ * Power ranking for a single team.
+ * Includes current rank, previous rank, and movement tracking.
+ */
+export interface PowerRanking {
+  rank: number;
+  previousRank: number;
+  movement: number; // Positive = moved up, negative = moved down
+  rosterId: number;
+  leagueId: string;
+  teamName: string;
+  ownerName: string;
+  record: string; // e.g., "4-1"
+  pointsFor: number;
+  league: 'AFC' | 'NFC';
+}
+
+/**
+ * Notable changes in power rankings.
+ * Highlights biggest movers and top teams.
+ */
+export interface RankingChange {
+  biggestRiser: PowerRanking | null;
+  biggestFaller: PowerRanking | null;
+  topThree: PowerRanking[];
+  notableChanges: PowerRanking[]; // Moved 3+ spots
+}

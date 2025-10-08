@@ -60,4 +60,3 @@ Return a JSON object with:
 
 Start by calling the tools to get the data, then write your narrative.
 `;
-

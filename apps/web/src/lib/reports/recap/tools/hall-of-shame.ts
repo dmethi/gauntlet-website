@@ -258,9 +258,7 @@ export const calculateBadBeatLossesTool: ReportTool<BadBeatLossesArgs, BadBeatLo
 
       for (let i = 0; i < matchups.length; i++) {
         const team = matchups[i];
-        const opponent = matchups.find(
-          (m, idx) => idx !== i && m.matchup_id === team.matchup_id,
-        );
+        const opponent = matchups.find((m, idx) => idx !== i && m.matchup_id === team.matchup_id);
 
         if (!opponent) continue;
 
@@ -302,4 +300,3 @@ export const calculateBadBeatLossesTool: ReportTool<BadBeatLossesArgs, BadBeatLo
     };
   },
 };
-

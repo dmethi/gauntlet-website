@@ -29,6 +29,7 @@
     "test:batch-matchups": "tsx scripts/test-batch-matchup-narratives.ts",
     "test:hall-of-fame": "tsx scripts/test-hall-of-fame.ts",
     "test:hall-of-shame": "tsx scripts/test-hall-of-shame.ts",
+    "test:power-rankings": "tsx scripts/test-power-rankings.ts",
     "generate:usernames": "tsx scripts/generate-username-mapping.ts",
     "check:week5-data": "tsx scripts/check-week5-game-flow-data.ts",
     "precompute": "npx tsx src/scripts/precompute-analytics.ts",

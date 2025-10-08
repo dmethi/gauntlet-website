@@ -49,7 +49,9 @@ const testHallOfShame = async (): Promise<void> => {
     });
 
     if (busts.length === 0) {
-      console.log('   ℹ️  Note: No significant busts found (may indicate need for real projections)');
+      console.log(
+        '   ℹ️  Note: No significant busts found (may indicate need for real projections)',
+      );
     }
 
     // Test 3: Bad Beat Losses
@@ -92,4 +94,3 @@ const testHallOfShame = async (): Promise<void> => {
 
 // Run the test
 testHallOfShame();
-
