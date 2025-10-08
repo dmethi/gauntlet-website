@@ -9,7 +9,9 @@
 
 ## Objective
 
-Break down `playoff-bracket.tsx` (1,349 lines) into maintainable sub-components with proper separation of concerns for playoff bracket visualization and toilet bowl bracket.
+Break down `playoff-bracket.tsx` (1,349 lines) into maintainable sub-components
+with proper separation of concerns for playoff bracket visualization and toilet
+bowl bracket.
 
 ---
 
@@ -18,6 +20,7 @@ Break down `playoff-bracket.tsx` (1,349 lines) into maintainable sub-components 
 **File**: `apps/web/src/components/playoff-bracket.tsx`  
 **Lines**: 1,349 lines  
 **Issues**:
+
 - Monolithic component combining regular playoffs and toilet bowl
 - Complex matchup rendering logic repeated multiple times
 - Helper functions defined inline
@@ -25,6 +28,7 @@ Break down `playoff-bracket.tsx` (1,349 lines) into maintainable sub-components 
 - No memoization for team cards
 
 **Component Structure**:
+
 - Matchup component (lines 18-122) - Individual matchup rendering
 - Main PlayoffBracket component (lines 1225-1349) - Container with layout
 - Bracket generation logic (lines 200-1200) - Complex conditional rendering
@@ -104,7 +108,9 @@ export const isMatchupComplete = (matchup: PlayoffMatchup): boolean => {
 /**
  * Generate bracket layout for responsive display
  */
-export const calculateBracketLayout = (roundCount: number): {
+export const calculateBracketLayout = (
+  roundCount: number
+): {
   spacing: string;
   width: string;
 } => {

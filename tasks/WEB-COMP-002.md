@@ -9,7 +9,9 @@
 
 ## Objective
 
-Break down `TrendsView.tsx` (1,586 lines) into maintainable sub-components with proper separation of concerns, following the factory pattern and arrow function standards.
+Break down `TrendsView.tsx` (1,586 lines) into maintainable sub-components with
+proper separation of concerns, following the factory pattern and arrow function
+standards.
 
 ---
 
@@ -18,6 +20,7 @@ Break down `TrendsView.tsx` (1,586 lines) into maintainable sub-components with 
 **File**: `apps/web/src/app/stats/components/TrendsView.tsx`  
 **Lines**: 1,586 lines  
 **Issues**:
+
 - Monolithic component with 7 distinct visualization sections
 - Complex data calculations inline (300+ lines)
 - Repeated chart configuration patterns
@@ -25,20 +28,29 @@ Break down `TrendsView.tsx` (1,586 lines) into maintainable sub-components with 
 - Difficult to test individual visualizations
 
 **Component Structure** (identified sections):
-1. **Power Rankings Evolution** (lines 67-396) - Week-over-week power ranking heatmap
-2. **Weekly Performance Trends** (lines 397-611) - Team scoring trends line chart
+
+1. **Power Rankings Evolution** (lines 67-396) - Week-over-week power ranking
+   heatmap
+2. **Weekly Performance Trends** (lines 397-611) - Team scoring trends line
+   chart
 3. **Position Performance Trends** (lines 612-854) - Position-specific trends
-4. **Team Consistency Analysis** (lines 855-1051) - Consistency scores and distribution
-5. **Position Consistency Analysis** (lines 1052-1266) - Position-specific consistency
-6. **Team Scoring Distribution** (lines 1267-1422) - Ridge plots for score distribution
-7. **Position Scoring Distribution** (lines 1423-1586) - Position-specific distributions
+4. **Team Consistency Analysis** (lines 855-1051) - Consistency scores and
+   distribution
+5. **Position Consistency Analysis** (lines 1052-1266) - Position-specific
+   consistency
+6. **Team Scoring Distribution** (lines 1267-1422) - Ridge plots for score
+   distribution
+7. **Position Scoring Distribution** (lines 1423-1586) - Position-specific
+   distributions
 
 ---
 
 ## Context Needed
 
 **Read these files**:
-1. `apps/web/src/app/stats/components/TrendsView.tsx` (lines 1-65, 67-100, 397-420)
+
+1. `apps/web/src/app/stats/components/TrendsView.tsx` (lines 1-65, 67-100,
+   397-420)
 2. `apps/web/src/features/stats/types.ts` (all lines)
 3. `apps/web/src/shared/utils/colors/index.ts` (all lines)
 
@@ -126,14 +138,14 @@ export const calculatePowerRanking = (
  */
 export const calculateConsistencyScore = (scores: number[]): number => {
   if (scores.length === 0) return 0;
-  
+
   const avg = mean(scores);
   if (avg === 0) return 0;
-  
+
   const variance = mean(scores.map(s => Math.pow(s - avg, 2)));
   const stdDev = Math.sqrt(variance);
   const coefficientOfVariation = stdDev / avg;
-  
+
   // Convert to 0-100 scale (lower CV = higher consistency)
   return Math.max(0, Math.min(100, 100 * (1 - coefficientOfVariation)));
 };
@@ -149,18 +161,18 @@ export const calculateRollingAverage = (
   windowSize: number = 3
 ): number[] => {
   const rollingAvg: number[] = [];
-  
+
   for (let i = 0; i < scores.length; i++) {
     const window = scores.slice(Math.max(0, i - windowSize + 1), i + 1);
     const validScores = window.filter(s => s.value > 0);
-    
+
     if (validScores.length > 0) {
       rollingAvg.push(mean(validScores.map(s => s.value)));
     } else {
       rollingAvg.push(0);
     }
   }
-  
+
   return rollingAvg;
 };
 
@@ -186,7 +198,7 @@ export const groupIntoTiers = <T extends { rank: number }>(
   teams: T[]
 ): Map<string, T[]> => {
   const tiers = new Map<string, T[]>();
-  
+
   teams.forEach(team => {
     let tierName: string;
     if (team.rank <= 6) {
@@ -198,13 +210,13 @@ export const groupIntoTiers = <T extends { rank: number }>(
     } else {
       tierName = 'Struggling (19-24)';
     }
-    
+
     if (!tiers.has(tierName)) {
       tiers.set(tierName, []);
     }
     tiers.get(tierName)!.push(team);
   });
-  
+
   return tiers;
 };
 ```
@@ -263,7 +275,7 @@ describe('TrendsView Utils', () => {
         { rank: 15, name: 'Team C' },
         { rank: 24, name: 'Team D' },
       ];
-      
+
       const tiers = groupIntoTiers(teams);
       expect(tiers.size).toBe(4);
       expect(tiers.get('Elite (Top 6)')).toHaveLength(1);
@@ -425,7 +437,8 @@ PowerRankingsEvolution.displayName = 'PowerRankingsEvolution';
 
 ### Step 4: Create Remaining Sub-Components (70 min)
 
-Due to space constraints, I'll provide the structure. Each component should follow the pattern above:
+Due to space constraints, I'll provide the structure. Each component should
+follow the pattern above:
 
 1. **WeeklyPerformanceTrends.tsx** (~150 lines)
    - Extract lines 397-611 from original
@@ -655,14 +668,16 @@ Please:
 
 ## Notes
 
-- **Recharts Performance**: Using `memo()` is critical for chart components to prevent unnecessary re-renders
+- **Recharts Performance**: Using `memo()` is critical for chart components to
+  prevent unnecessary re-renders
 - **Testing Charts**: Use snapshot tests for Recharts components
 - **Visual Testing**: Compare screenshots of all 7 charts before/after
-- **Data Flow**: All data calculations should be in utility functions for testability
+- **Data Flow**: All data calculations should be in utility functions for
+  testability
 
 ---
 
 **Estimated Total Time**: 2.5 hours  
-**Actual Time**: ___ (fill in after completion)  
-**Completed By**: ___ (fill in after completion)  
-**Completion Date**: ___ (fill in after completion)
+**Actual Time**: **\_ (fill in after completion)  
+**Completed By**: \_** (fill in after completion)  
+**Completion Date**: \_\_\_ (fill in after completion)

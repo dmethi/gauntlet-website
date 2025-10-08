@@ -9,7 +9,8 @@
 
 ## Objective
 
-Break down `ScatterAnalysis.tsx` (625 lines) into maintainable sub-components for scatter plot visualizations of team performance metrics.
+Break down `ScatterAnalysis.tsx` (625 lines) into maintainable sub-components
+for scatter plot visualizations of team performance metrics.
 
 ---
 
@@ -18,6 +19,7 @@ Break down `ScatterAnalysis.tsx` (625 lines) into maintainable sub-components fo
 **File**: `apps/web/src/app/stats/components/ScatterAnalysis.tsx`  
 **Lines**: 625 lines  
 **Issues**:
+
 - Single component with multiple scatter plot variations
 - Chart configuration repeated
 - Axis/tooltip logic inline
@@ -52,6 +54,7 @@ apps/web/src/features/stats/components/
 ### Step 1: Extract Chart Utilities (15 min)
 
 Create `utils.ts` with:
+
 - `prepareScatterData()` - Format data for Recharts
 - `calculateQuadrants()` - Divide plot into quadrants
 - `formatAxisLabel()` - Axis formatting
@@ -61,6 +64,7 @@ Create `utils.ts` with:
 ### Step 2: Create ScatterPlotBase Component (25 min)
 
 Reusable scatter plot component with:
+
 - Configurable axes
 - Quadrant lines
 - Trend line option
@@ -133,4 +137,3 @@ Please:
 ---
 
 **Estimated Total Time**: 1.5 hours
-

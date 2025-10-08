@@ -9,7 +9,10 @@
 
 ## Objective
 
-Extract React Query data fetching logic for draft analytics from pages into a reusable custom hook: `useDraftAnalytics`. This hook will encapsulate API calls, data processing with `generateManagerAnalytics`, loading states, and error handling, making draft analysis pages cleaner and more maintainable.
+Extract React Query data fetching logic for draft analytics from pages into a
+reusable custom hook: `useDraftAnalytics`. This hook will encapsulate API calls,
+data processing with `generateManagerAnalytics`, loading states, and error
+handling, making draft analysis pages cleaner and more maintainable.
 
 ---
 
@@ -17,8 +20,10 @@ Extract React Query data fetching logic for draft analytics from pages into a re
 
 **Read these files** (with specific line ranges):
 
-1. `apps/web/src/app/draft/analysis/page.tsx` (lines 1-100) - Data fetching pattern
-2. `apps/web/src/lib/manager-analytics.ts` (lines 52-60) - generateManagerAnalytics function signature
+1. `apps/web/src/app/draft/analysis/page.tsx` (lines 1-100) - Data fetching
+   pattern
+2. `apps/web/src/lib/manager-analytics.ts` (lines 52-60) -
+   generateManagerAnalytics function signature
 3. `apps/web/src/features/draft-analysis/types.ts` (ManagerAnalytics type)
 
 **Total Context**: ~150 lines
@@ -31,7 +36,7 @@ Extract React Query data fetching logic for draft analytics from pages into a re
 
 Create `apps/web/src/features/draft-analysis/hooks/useDraftAnalytics.ts`:
 
-```typescript
+````typescript
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { generateManagerAnalytics } from '@/lib/manager-analytics';
 import type { ManagerAnalytics } from '../types';
@@ -43,7 +48,8 @@ export interface DraftAnalyticsOptions {
   gcTime?: number;
 }
 
-export interface DraftAnalyticsResult extends UseQueryResult<ManagerAnalytics, Error> {
+export interface DraftAnalyticsResult
+  extends UseQueryResult<ManagerAnalytics, Error> {
   analytics: ManagerAnalytics | undefined;
   isLoading: boolean;
   isError: boolean;
@@ -73,7 +79,7 @@ export interface DraftAnalyticsResult extends UseQueryResult<ManagerAnalytics, E
 export const useDraftAnalytics = (
   draft1: MockDraft | undefined,
   draft2: MockDraft | undefined,
-  options: DraftAnalyticsOptions = {},
+  options: DraftAnalyticsOptions = {}
 ): DraftAnalyticsResult => {
   const {
     enabled = true,
@@ -105,7 +111,7 @@ export const useDraftAnalytics = (
     refetch: queryResult.refetch,
   };
 };
-```
+````
 
 ### 2. Update Hooks Barrel Export
 
@@ -271,7 +277,8 @@ export {
 
 ### 5. Example Usage in Draft Analysis Page
 
-Example of how pages should use the hook (for reference, don't implement unless requested):
+Example of how pages should use the hook (for reference, don't implement unless
+requested):
 
 ```typescript
 'use client';
@@ -372,7 +379,8 @@ Follow CODING_CONVENTIONS.MD:
 ## Related Tasks
 
 **Blocks**: WEB-PAGE-001 (Draft Analysis Pages)  
-**Blocked By**: WEB-UTIL-003 (Manager Analytics Calculations), WEB-EXTRACT-002 (Manager Analytics Types), WEB-EXTRACT-011 (Draft Analytics Types)  
+**Blocked By**: WEB-UTIL-003 (Manager Analytics Calculations), WEB-EXTRACT-002
+(Manager Analytics Types), WEB-EXTRACT-011 (Draft Analytics Types)  
 **Related**: WEB-HOOK-001 (Manager Sorting/Filtering), WEB-TEST-002 (Hook Tests)
 
 ---
@@ -382,9 +390,12 @@ Follow CODING_CONVENTIONS.MD:
 ### Why This Matters
 
 - **Separation of Concerns**: Data fetching separated from UI presentation
-- **Reusability**: Hook can be used in multiple pages (analysis, reports, comparisons)
-- **Testability**: Data fetching logic can be tested independently with mocked Query Client
-- **Cache Management**: React Query handles caching, preventing redundant calculations
+- **Reusability**: Hook can be used in multiple pages (analysis, reports,
+  comparisons)
+- **Testability**: Data fetching logic can be tested independently with mocked
+  Query Client
+- **Cache Management**: React Query handles caching, preventing redundant
+  calculations
 - **Type Safety**: Full TypeScript typing with explicit return types
 
 ### React Query Strategy
@@ -405,6 +416,7 @@ Follow CODING_CONVENTIONS.MD:
 ### Migration Pattern
 
 This follows React Query best practices:
+
 1. Encapsulate data fetching in custom hook
 2. Return both raw query result and convenience fields
 3. Provide sensible defaults for cache configuration

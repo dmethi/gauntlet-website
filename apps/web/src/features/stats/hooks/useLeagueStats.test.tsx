@@ -19,7 +19,7 @@ describe('useLeagueStats', () => {
   });
 
   it('should fetch and compute team stats', async () => {
-    global.fetch = vi.fn((url) => {
+    global.fetch = vi.fn(url => {
       if (url === '/api/league/overview') {
         return Promise.resolve({
           ok: true,
@@ -31,7 +31,11 @@ describe('useLeagueStats', () => {
               rosters: [
                 {
                   id: '1',
-                  owner: { displayName: 'Team 1', username: 'team1', metadata: { team_name: 'Team One' } },
+                  owner: {
+                    displayName: 'Team 1',
+                    username: 'team1',
+                    metadata: { team_name: 'Team One' },
+                  },
                   matchups: [{ week: 1, points: 100, projected: 95, result: 'W' }],
                 },
               ],
@@ -80,7 +84,7 @@ describe('useLeagueStats', () => {
   });
 
   it('should calculate win percentage correctly', async () => {
-    global.fetch = vi.fn((url) => {
+    global.fetch = vi.fn(url => {
       if (url === '/api/league/overview') {
         return Promise.resolve({
           ok: true,
@@ -92,7 +96,11 @@ describe('useLeagueStats', () => {
               rosters: [
                 {
                   id: '1',
-                  owner: { displayName: 'Team 1', username: 'team1', metadata: { team_name: 'Team 1' } },
+                  owner: {
+                    displayName: 'Team 1',
+                    username: 'team1',
+                    metadata: { team_name: 'Team 1' },
+                  },
                   matchups: [
                     { week: 1, points: 100, projected: 95, result: 'W' },
                     { week: 2, points: 90, projected: 95, result: 'L' },
@@ -134,7 +142,7 @@ describe('useLeagueStats', () => {
   });
 
   it('should compute weekly averages', async () => {
-    global.fetch = vi.fn((url) => {
+    global.fetch = vi.fn(url => {
       if (url === '/api/league/overview') {
         return Promise.resolve({
           ok: true,
@@ -146,7 +154,11 @@ describe('useLeagueStats', () => {
               rosters: [
                 {
                   id: '1',
-                  owner: { displayName: 'Team 1', username: 'team1', metadata: { team_name: 'Team 1' } },
+                  owner: {
+                    displayName: 'Team 1',
+                    username: 'team1',
+                    metadata: { team_name: 'Team 1' },
+                  },
                   matchups: [
                     { week: 1, points: 100, projected: 95, result: 'W' },
                     { week: 1, points: 90, projected: 95, result: 'L' },
@@ -185,7 +197,7 @@ describe('useLeagueStats', () => {
   });
 
   it('should handle missing owner metadata', async () => {
-    global.fetch = vi.fn((url) => {
+    global.fetch = vi.fn(url => {
       if (url === '/api/league/overview') {
         return Promise.resolve({
           ok: true,
@@ -230,4 +242,3 @@ describe('useLeagueStats', () => {
     expect(result.current.teamStats[0].name).toBe('User5');
   });
 });
-

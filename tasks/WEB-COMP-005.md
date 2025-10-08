@@ -9,7 +9,9 @@
 
 ## Objective
 
-Break down `TeamView.tsx` (1,169 lines) into maintainable sub-components for individual team analysis, including positional breakdowns, weekly performance, and player contributions.
+Break down `TeamView.tsx` (1,169 lines) into maintainable sub-components for
+individual team analysis, including positional breakdowns, weekly performance,
+and player contributions.
 
 ---
 
@@ -18,6 +20,7 @@ Break down `TeamView.tsx` (1,169 lines) into maintainable sub-components for ind
 **File**: `apps/web/src/app/stats/components/TeamView.tsx`  
 **Lines**: 1,169 lines  
 **Issues**:
+
 - Single component handling all team detail views
 - Position-specific analysis repeated
 - Player contribution calculations inline
@@ -57,6 +60,7 @@ apps/web/src/features/stats/components/
 ### Step 1: Extract Team Analysis Utilities (25 min)
 
 Create `utils.ts` with:
+
 - `calculateTeamTotals()` - Aggregate team stats
 - `calculatePositionalBreakdown()` - Per-position contributions
 - `calculatePlayerContributions()` - Individual player impact
@@ -67,6 +71,7 @@ Create `utils.ts` with:
 ### Step 2: Create TeamSummaryCard (20 min)
 
 Overview card showing:
+
 - Total points (season and average)
 - Record and rank
 - Consistency score
@@ -76,6 +81,7 @@ Overview card showing:
 ### Step 3: Create PositionalBreakdown Component (25 min)
 
 Position-by-position analysis:
+
 - Points by position
 - Average per week
 - Position rank in league

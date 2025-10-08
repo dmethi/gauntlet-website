@@ -9,7 +9,8 @@
 
 ## Objective
 
-Break down `ScheduleAnalysis.tsx` (1,221 lines) into maintainable sub-components focusing on schedule strength, expected wins, and matchup difficulty analysis.
+Break down `ScheduleAnalysis.tsx` (1,221 lines) into maintainable sub-components
+focusing on schedule strength, expected wins, and matchup difficulty analysis.
 
 ---
 
@@ -18,6 +19,7 @@ Break down `ScheduleAnalysis.tsx` (1,221 lines) into maintainable sub-components
 **File**: `apps/web/src/app/stats/components/ScheduleAnalysis.tsx`  
 **Lines**: 1,221 lines  
 **Issues**:
+
 - Single large component with multiple analysis sections
 - Complex schedule calculations inline
 - Repeated table/chart patterns
@@ -55,6 +57,7 @@ apps/web/src/features/stats/components/
 ### Step 1: Extract Schedule Calculation Utilities (30 min)
 
 Create `utils.ts` with functions:
+
 - `calculateStrengthOfSchedule()` - SOS based on opponent records
 - `calculateExpectedWins()` - Win probability based on projections
 - `calculateWeeklyDifficulty()` - Per-week opponent difficulty
@@ -64,6 +67,7 @@ Create `utils.ts` with functions:
 ### Step 2: Create ScheduleStrengthTable Component (25 min)
 
 Display teams ranked by strength of schedule (SOS), showing:
+
 - Opponent win percentage
 - Average points faced
 - Difficulty rating
@@ -72,6 +76,7 @@ Display teams ranked by strength of schedule (SOS), showing:
 ### Step 3: Create ExpectedWinsTable Component (25 min)
 
 Compare expected wins (based on projections) vs actual record:
+
 - Expected wins calculation
 - Actual wins
 - Luck index (difference)

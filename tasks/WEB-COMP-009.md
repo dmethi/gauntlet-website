@@ -9,7 +9,8 @@
 
 ## Objective
 
-Break down `matchup-simulation.tsx` (631 lines) into maintainable sub-components for Monte Carlo simulation results and win probability analysis.
+Break down `matchup-simulation.tsx` (631 lines) into maintainable sub-components
+for Monte Carlo simulation results and win probability analysis.
 
 ---
 
@@ -18,6 +19,7 @@ Break down `matchup-simulation.tsx` (631 lines) into maintainable sub-components
 **File**: `apps/web/src/components/matchup-simulation.tsx`  
 **Lines**: 631 lines  
 **Issues**:
+
 - Single component displaying simulation results
 - Win probability visualization inline
 - Score distribution charts mixed with summary stats
@@ -52,6 +54,7 @@ apps/web/src/features/matchups/components/
 ### Step 1: Extract Simulation Utilities (15 min)
 
 Create `utils.ts` with:
+
 - `formatWinProbability()` - Format percentages
 - `calculateConfidenceInterval()` - 95% CI from distribution
 - `formatScoreRange()` - Expected score ranges
@@ -123,4 +126,3 @@ Please:
 ---
 
 **Estimated Total Time**: 1.5 hours
-

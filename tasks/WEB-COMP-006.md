@@ -9,7 +9,9 @@
 
 ## Objective
 
-Break down `start-sit-efficiency.tsx` (1,093 lines) into maintainable sub-components for analyzing lineup decisions, bench opportunities, and manager efficiency.
+Break down `start-sit-efficiency.tsx` (1,093 lines) into maintainable
+sub-components for analyzing lineup decisions, bench opportunities, and manager
+efficiency.
 
 ---
 
@@ -18,6 +20,7 @@ Break down `start-sit-efficiency.tsx` (1,093 lines) into maintainable sub-compon
 **File**: `apps/web/src/components/start-sit-efficiency.tsx`  
 **Lines**: 1,093 lines  
 **Issues**:
+
 - Monolithic component with manager selection and multiple analysis tables
 - Decision efficiency calculations inline
 - Repeated table patterns for different metrics
@@ -57,6 +60,7 @@ apps/web/src/features/start-sit/components/
 ### Step 1: Extract Efficiency Calculation Utilities (25 min)
 
 Create `utils.ts` with:
+
 - `calculateEfficiencyScore()` - Overall decision quality
 - `calculateMissedPoints()` - Points left on bench
 - `calculateOptimalLineup()` - Best possible lineup
@@ -81,10 +85,18 @@ export const calculateMissedOpportunities = (
   bench: Player[]
 ): MissedOpportunity[] => {
   return bench
-    .filter(b => lineup.some(l => b.position === l.position && b.points > l.points))
+    .filter(b =>
+      lineup.some(l => b.position === l.position && b.points > l.points)
+    )
     .map(player => ({
       player,
-      pointsLost: player.points - Math.max(...lineup.filter(l => l.position === player.position).map(l => l.points)),
+      pointsLost:
+        player.points -
+        Math.max(
+          ...lineup
+            .filter(l => l.position === player.position)
+            .map(l => l.points)
+        ),
     }))
     .sort((a, b) => b.pointsLost - a.pointsLost);
 };
@@ -93,6 +105,7 @@ export const calculateMissedOpportunities = (
 ### Step 2: Create ManagerSelector Component (15 min)
 
 Dropdown for selecting which manager to analyze:
+
 - Manager list
 - Current selection
 - Stats preview on hover
@@ -170,4 +183,3 @@ Please:
 ---
 
 **Estimated Total Time**: 1.5 hours
-

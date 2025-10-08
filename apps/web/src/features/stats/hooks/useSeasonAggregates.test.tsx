@@ -29,9 +29,7 @@ describe('useSeasonAggregates', () => {
               rosterWeekAggregates: [
                 { rosterId: 1, week: 1, won: true, expectedWins: 0.7, luck: 0.3 },
               ],
-              leagueWeekSummaries: [
-                { week: 1, averagePoints: 100, medianPoints: 95 },
-              ],
+              leagueWeekSummaries: [{ week: 1, averagePoints: 100, medianPoints: 95 }],
             },
           }),
       }),
@@ -98,4 +96,3 @@ describe('useSeasonAggregates', () => {
     expect(result.current.error).toBeTruthy();
   });
 });
-

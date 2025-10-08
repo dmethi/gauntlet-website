@@ -1,6 +1,7 @@
 # Railway Cron Setup (Free Alternative to Vercel)
 
-Railway offers cron jobs on their **free tier** with better reliability than GitHub Actions.
+Railway offers cron jobs on their **free tier** with better reliability than
+GitHub Actions.
 
 ## Why Railway?
 
@@ -33,6 +34,7 @@ railway link
 Railway will call your Vercel API endpoint:
 
 Create `railway.json`:
+
 ```json
 {
   "build": {
@@ -46,27 +48,30 @@ Create `railway.json`:
 ```
 
 Create `scripts/railway-cron.js`:
+
 ```javascript
 const fetch = require('node-fetch');
 
-const CRON_URL = process.env.VERCEL_CRON_URL || 'https://gauntlet-website.vercel.app/api/cron/live-odds';
+const CRON_URL =
+  process.env.VERCEL_CRON_URL ||
+  'https://gauntlet-website.vercel.app/api/cron/live-odds';
 const CRON_SECRET = process.env.CRON_SECRET;
 const CHECK_INTERVAL = 10 * 60 * 1000; // 10 minutes
 
 async function runSnapshot() {
   try {
     console.log(`[${new Date().toISOString()}] Triggering snapshot...`);
-    
+
     const response = await fetch(CRON_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${CRON_SECRET}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${CRON_SECRET}`,
+        'Content-Type': 'application/json',
+      },
     });
 
     const result = await response.json();
-    
+
     if (response.ok) {
       console.log('✅ Snapshot completed:', result);
     } else {
@@ -83,26 +88,25 @@ setInterval(async () => {
   const hour = now.getUTCHours();
   const day = now.getUTCDay();
   const month = now.getUTCMonth();
-  
+
   // Only run during NFL season (Sep-Feb) and game windows
   const isNFLSeason = month >= 8 || month <= 1;
-  
+
   if (!isNFLSeason) {
     console.log('⏸️  Off-season, skipping...');
     return;
   }
-  
+
   // Check if it's a game window
-  const isGameWindow = (
+  const isGameWindow =
     // Thursday Night: Friday 00:00-05:59 UTC
     (day === 5 && hour >= 0 && hour <= 5) ||
     // Sunday: Sunday 17:00-23:59 + Monday 00:00-05:59 UTC
     (day === 0 && hour >= 17) ||
     (day === 1 && hour <= 5) ||
     // Monday Night: Tuesday 00:00-05:59 UTC
-    (day === 2 && hour >= 0 && hour <= 5)
-  );
-  
+    (day === 2 && hour >= 0 && hour <= 5);
+
   if (isGameWindow) {
     await runSnapshot();
   } else {
@@ -142,14 +146,17 @@ Free webhook-based cron service:
    - Sunday: `0,10,20,30,40,50 17-23 * * 0` + `0,10,20,30,40,50 0-5 * * 1`
    - Monday: `0,10,20,30,40,50 0-5 * * 2`
 4. Set URL: `https://gauntlet-website.vercel.app/api/cron/live-odds`
-5. Add header: `Authorization: Bearer CPjSCzFeMLiPbkACQw0p9t9GZgKG3lHjr6TKIQLIo9U=`
+5. Add header:
+   `Authorization: Bearer CPjSCzFeMLiPbkACQw0p9t9GZgKG3lHjr6TKIQLIo9U=`
 
-**Pros**: 
+**Pros**:
+
 - Completely free
 - Very reliable
 - Simple setup
 
 **Cons**:
+
 - External dependency
 - Less control
 
@@ -162,13 +169,13 @@ Make GitHub Actions more reliable by adding redundant schedules:
 ```yaml
 crons:
   # Monday Night: Run every 5 min (instead of 10) for redundancy
-  - cron: "*/5 0-5 * 9-12,1-2 2"
-  
+  - cron: '*/5 0-5 * 9-12,1-2 2'
+
   # Also add offset schedules (2 min after each 10 min mark)
-  - cron: "2,12,22,32,42,52 0-5 * 9-12,1-2 2"
-  
+  - cron: '2,12,22,32,42,52 0-5 * 9-12,1-2 2'
+
   # And 5 min after
-  - cron: "5,15,25,35,45,55 0-5 * 9-12,1-2 2"
+  - cron: '5,15,25,35,45,55 0-5 * 9-12,1-2 2'
 ```
 
 This way, even if 50% of runs fail, you still get good coverage.
@@ -191,6 +198,7 @@ Serverless queue/cron service:
 ## Recommended: Railway (Best Free Option)
 
 Railway gives you:
+
 - ✅ FREE (500 hours/month)
 - ✅ 95%+ reliability (vs 5-10% with GitHub Actions)
 - ✅ Simple setup (5 minutes)

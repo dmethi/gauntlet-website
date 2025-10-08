@@ -1,0 +1,222 @@
+{
+  "generatedAt": "2025-10-08T04:49:54.159Z",
+  "season": "2025",
+  "users": [
+    {
+      "userId": "995028071054962688",
+      "displayName": "no14n",
+      "realName": "Nolan",
+      "teamName": "2 Dolla Balla$",
+      "leagueId": "1263744209295245312",
+      "rosterId": 1,
+      "record": "2-3"
+    },
+    {
+      "userId": "966232564337795072",
+      "displayName": "nkjchamp",
+      "realName": "Neil",
+      "teamName": "lol jerry jones",
+      "leagueId": "1263744209295245312",
+      "rosterId": 2,
+      "record": "3-2"
+    },
+    {
+      "userId": "609438920781922304",
+      "displayName": "NielGetsCarried",
+      "realName": "Arpit & Yash",
+      "teamName": "Unknown Team",
+      "leagueId": "1263744209295245312",
+      "rosterId": 3,
+      "record": "2-3"
+    },
+    {
+      "userId": "607761805204353024",
+      "displayName": "hunterzogg",
+      "realName": "Hunter",
+      "teamName": "The Golden Age",
+      "leagueId": "1263744209295245312",
+      "rosterId": 4,
+      "record": "3-2"
+    },
+    {
+      "userId": "465677200167792640",
+      "displayName": "anantjindani",
+      "realName": "Anant",
+      "teamName": "Quonspiracy Theorists",
+      "leagueId": "1263744209295245312",
+      "rosterId": 5,
+      "record": "2-3"
+    },
+    {
+      "userId": "741351466845032448",
+      "displayName": "lazy9669",
+      "realName": "Adam",
+      "teamName": "Nacua Matata",
+      "leagueId": "1263744209295245312",
+      "rosterId": 6,
+      "record": "3-2"
+    },
+    {
+      "userId": "467418900405940224",
+      "displayName": "benweinfeld",
+      "realName": "Ben",
+      "teamName": "Unknown Team",
+      "leagueId": "1263744209295245312",
+      "rosterId": 7,
+      "record": "3-2"
+    },
+    {
+      "userId": "1263995877333143552",
+      "displayName": "dparikh3",
+      "realName": "Darshan and Kyle",
+      "teamName": "Dr Patel Parikh MD MBA",
+      "leagueId": "1263744209295245312",
+      "rosterId": 8,
+      "record": "2-3"
+    },
+    {
+      "userId": "1266795542072004608",
+      "displayName": "achak7",
+      "realName": "Akhil",
+      "teamName": "Unknown Team",
+      "leagueId": "1263744209295245312",
+      "rosterId": 9,
+      "record": "2-3"
+    },
+    {
+      "userId": "76727144243675136",
+      "displayName": "kanzelm3",
+      "realName": "Joel",
+      "teamName": "To Infinity and Bijan",
+      "leagueId": "1263744209295245312",
+      "rosterId": 10,
+      "record": "4-1"
+    },
+    {
+      "userId": "465595022805299200",
+      "displayName": "scboom5",
+      "realName": "Shivang",
+      "teamName": "Unknown Team",
+      "leagueId": "1263744209295245312",
+      "rosterId": 11,
+      "record": "3-2"
+    },
+    {
+      "userId": "605917814917775360",
+      "displayName": "vchak",
+      "realName": "Vinny",
+      "teamName": "Unknown Team",
+      "leagueId": "1263744209295245312",
+      "rosterId": 12,
+      "record": "1-4"
+    },
+    {
+      "userId": "740437631598542848",
+      "displayName": "ziyanp22",
+      "realName": "Ziyan",
+      "teamName": "Unknown Team",
+      "leagueId": "1263740549504962561",
+      "rosterId": 1,
+      "record": "3-2"
+    },
+    {
+      "userId": "465307317622009856",
+      "displayName": "dmethi",
+      "realName": "Dhruv",
+      "teamName": "Mach 10",
+      "leagueId": "1263740549504962561",
+      "rosterId": 2,
+      "record": "3-2"
+    },
+    {
+      "userId": "1263755907355910144",
+      "displayName": "vayyala",
+      "realName": "Vinay",
+      "teamName": "Unknown Team",
+      "leagueId": "1263740549504962561",
+      "rosterId": 3,
+      "record": "1-4"
+    },
+    {
+      "userId": "992549633387802624",
+      "displayName": "Akill13",
+      "realName": "Akhil C",
+      "teamName": "DJ Herbussy ",
+      "leagueId": "1263740549504962561",
+      "rosterId": 4,
+      "record": "4-1"
+    },
+    {
+      "userId": "997672881821728768",
+      "displayName": "arnavmehta",
+      "realName": "Arnav",
+      "teamName": "Dont go Chasing Saquon",
+      "leagueId": "1263740549504962561",
+      "rosterId": 5,
+      "record": "0-5"
+    },
+    {
+      "userId": "470015968022622208",
+      "displayName": "RithikP",
+      "realName": "Rithik and Varun",
+      "teamName": "The zoo",
+      "leagueId": "1263740549504962561",
+      "rosterId": 6,
+      "record": "1-4"
+    },
+    {
+      "userId": "872649248540438528",
+      "displayName": "lurski",
+      "realName": "Alex",
+      "teamName": "Jaxson Dart-Njigba",
+      "leagueId": "1263740549504962561",
+      "rosterId": 7,
+      "record": "1-4"
+    },
+    {
+      "userId": "997901394822676480",
+      "displayName": "jr212121",
+      "realName": "Josh",
+      "teamName": "C&G^2",
+      "leagueId": "1263740549504962561",
+      "rosterId": 8,
+      "record": "3-2"
+    },
+    {
+      "userId": "465708038221721600",
+      "displayName": "Bego60",
+      "realName": "Jeffrey",
+      "teamName": "Marginal Returns",
+      "leagueId": "1263740549504962561",
+      "rosterId": 9,
+      "record": "5-0"
+    },
+    {
+      "userId": "465620438987304960",
+      "displayName": "YouSmellLikeDaal",
+      "realName": "Aman",
+      "teamName": "Saint Brown Does Mahomes",
+      "leagueId": "1263740549504962561",
+      "rosterId": 10,
+      "record": "3-2"
+    },
+    {
+      "userId": "850586744742068224",
+      "displayName": "lukebowsh",
+      "realName": "Luke",
+      "teamName": "Unknown Team",
+      "leagueId": "1263740549504962561",
+      "rosterId": 11,
+      "record": "2-3"
+    },
+    {
+      "userId": "1124100311251046400",
+      "displayName": "cescott25",
+      "realName": "Christian",
+      "teamName": "Unknown Team",
+      "leagueId": "1263740549504962561",
+      "rosterId": 12,
+      "record": "4-1"
+    }
+  ]
+}

@@ -9,7 +9,9 @@
 
 ## Objective
 
-Break down `manager-analysis.tsx` (1,535 lines) into maintainable sub-components with proper separation of concerns, following the factory pattern and arrow function standards.
+Break down `manager-analysis.tsx` (1,535 lines) into maintainable sub-components
+with proper separation of concerns, following the factory pattern and arrow
+function standards.
 
 ---
 
@@ -18,6 +20,7 @@ Break down `manager-analysis.tsx` (1,535 lines) into maintainable sub-components
 **File**: `apps/web/src/components/manager-analysis.tsx`  
 **Lines**: 1,535 lines  
 **Issues**:
+
 - Monolithic component with 6 distinct sections
 - Helper functions defined inline (200+ lines)
 - Complex table rendering logic repeated
@@ -25,21 +28,30 @@ Break down `manager-analysis.tsx` (1,535 lines) into maintainable sub-components
 - Hard to test individual sections
 
 **Component Structure** (identified sections):
-1. **Concentration Metrics Table** (lines 243-482) - Gini coefficient and top N% spending
-2. **Player Overlap Analysis** (lines 483-587) - Cross-league player selection patterns
-3. **Player Overlap by Count** (lines 588-675) - Manager pairs grouped by shared players
+
+1. **Concentration Metrics Table** (lines 243-482) - Gini coefficient and top N%
+   spending
+2. **Player Overlap Analysis** (lines 483-587) - Cross-league player selection
+   patterns
+3. **Player Overlap by Count** (lines 588-675) - Manager pairs grouped by shared
+   players
 4. **Cross-League Price Differences** (lines 676-929) - Draft price comparisons
-5. **Positional Allocation Heatmap** (lines 930-1186) - Position spending heatmap
-6. **Detailed Performance Metrics** (lines 1187-1535) - Advanced analytics tables
+5. **Positional Allocation Heatmap** (lines 930-1186) - Position spending
+   heatmap
+6. **Detailed Performance Metrics** (lines 1187-1535) - Advanced analytics
+   tables
 
 ---
 
 ## Context Needed
 
 **Read these files**:
-1. `apps/web/src/components/manager-analysis.tsx` (lines 1-100, 230-250, 483-500, 930-950)
+
+1. `apps/web/src/components/manager-analysis.tsx` (lines 1-100, 230-250,
+   483-500, 930-950)
 2. `apps/web/src/features/draft-analysis/types.ts` (all lines)
-3. `apps/web/src/features/draft-analysis/hooks/useManagerFiltering.ts` (all lines)
+3. `apps/web/src/features/draft-analysis/hooks/useManagerFiltering.ts` (all
+   lines)
 4. `apps/web/src/features/draft-analysis/hooks/useManagerSorting.ts` (all lines)
 
 **Total Context**: ~400 lines
@@ -107,13 +119,19 @@ import { dataVizColors } from '../../../../../../../brand/colors';
  * @param min - Minimum value in dataset
  * @returns CSS color string from brand color palette
  */
-export const getHeatmapColor = (value: number, max: number, min: number): string => {
+export const getHeatmapColor = (
+  value: number,
+  max: number,
+  min: number
+): string => {
   if (max === min) return dataVizColors.intensity[2];
 
   const normalized = (value - min) / (max - min);
   const intensity = Math.max(0, Math.min(1, normalized));
 
-  const colorIndex = Math.floor(intensity * (dataVizColors.intensity.length - 1));
+  const colorIndex = Math.floor(
+    intensity * (dataVizColors.intensity.length - 1)
+  );
   return dataVizColors.intensity[colorIndex];
 };
 
@@ -127,7 +145,9 @@ export const getHeatmapColor = (value: number, max: number, min: number): string
 const calculateLuminance = (r: number, g: number, b: number): number => {
   const [rs, gs, bs] = [r, g, b].map(val => {
     const sRGB = val / 255;
-    return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
+    return sRGB <= 0.03928
+      ? sRGB / 12.92
+      : Math.pow((sRGB + 0.055) / 1.055, 2.4);
   });
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 };
@@ -139,7 +159,9 @@ const calculateLuminance = (r: number, g: number, b: number): number => {
  */
 const parseRgb = (color: string): { r: number; g: number; b: number } => {
   // Handle rgba() format
-  const rgbaMatch = color.match(/rgba\\((\\d+),\\s*(\\d+),\\s*(\\d+),\\s*[\\d.]+\\)/);
+  const rgbaMatch = color.match(
+    /rgba\\((\\d+),\\s*(\\d+),\\s*(\\d+),\\s*[\\d.]+\\)/
+  );
   if (rgbaMatch) {
     return {
       r: parseInt(rgbaMatch[1]),
@@ -161,9 +183,15 @@ const parseRgb = (color: string): { r: number; g: number; b: number } => {
   // Handle hex format
   if (color.startsWith('#')) {
     const hex = color.slice(1);
-    const num = parseInt(hex.length === 3 
-      ? hex.split('').map(c => c + c).join('')
-      : hex, 16);
+    const num = parseInt(
+      hex.length === 3
+        ? hex
+            .split('')
+            .map(c => c + c)
+            .join('')
+        : hex,
+      16
+    );
     return {
       r: (num >> 16) & 255,
       g: (num >> 8) & 255,
@@ -254,7 +282,8 @@ export const formatPercentage = (value: number): string => {
 };
 ```
 
-Create test file `features/draft-analysis/components/ManagerAnalysis/utils.test.ts`:
+Create test file
+`features/draft-analysis/components/ManagerAnalysis/utils.test.ts`:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -314,7 +343,8 @@ describe('ManagerAnalysis Utils', () => {
 
 ### Step 3: Create ConcentrationMetricsTable Component (30 min)
 
-Create `features/draft-analysis/components/ManagerAnalysis/ConcentrationMetricsTable.tsx`:
+Create
+`features/draft-analysis/components/ManagerAnalysis/ConcentrationMetricsTable.tsx`:
 
 ```typescript
 'use client';
@@ -580,7 +610,8 @@ ConcentrationMetricsTable.displayName = 'ConcentrationMetricsTable';
 
 ### Step 4: Create Remaining Sub-Components (60 min)
 
-Due to space constraints, I'll provide the structure. Each component should follow the pattern above:
+Due to space constraints, I'll provide the structure. Each component should
+follow the pattern above:
 
 1. **PlayerOverlapAnalysis.tsx** (~150 lines)
    - Extract lines 483-587 from original
@@ -601,7 +632,8 @@ Due to space constraints, I'll provide the structure. Each component should foll
 4. **PositionalAllocationHeatmap.tsx** (~180 lines)
    - Extract lines 930-1186 from original
    - Use `memo()` for performance
-   - Props: `profiles: ManagerProfile[], sortBy: string, onSortChange: (value: string) => void`
+   - Props:
+     `profiles: ManagerProfile[], sortBy: string, onSortChange: (value: string) => void`
 
 5. **DetailedPerformanceMetrics.tsx** (~250 lines)
    - Extract lines 1187-1535 from original
@@ -738,7 +770,7 @@ describe('ManagerAnalysis', () => {
   it('renders all sub-components', () => {
     const analytics = mockManagerAnalytics();
     render(<ManagerAnalysis analytics={analytics} />);
-    
+
     expect(screen.getByText('Concentration Metrics')).toBeInTheDocument();
     expect(screen.getByText('Player Overlap Analysis')).toBeInTheDocument();
   });
@@ -838,14 +870,16 @@ Please:
 
 ## Notes
 
-- **Performance**: Using `memo()` on sub-components prevents unnecessary re-renders when parent state changes
+- **Performance**: Using `memo()` on sub-components prevents unnecessary
+  re-renders when parent state changes
 - **Testing Strategy**: Test utils in isolation, test components with mock data
-- **Visual Testing**: Compare screenshots before/after to ensure identical appearance
+- **Visual Testing**: Compare screenshots before/after to ensure identical
+  appearance
 - **Future Enhancement**: Add Storybook stories for each sub-component
 
 ---
 
 **Estimated Total Time**: 2.5 hours  
-**Actual Time**: ___ (fill in after completion)  
-**Completed By**: ___ (fill in after completion)  
-**Completion Date**: ___ (fill in after completion)
+**Actual Time**: **\_ (fill in after completion)  
+**Completed By**: \_** (fill in after completion)  
+**Completion Date**: \_\_\_ (fill in after completion)

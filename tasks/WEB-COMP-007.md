@@ -9,7 +9,8 @@
 
 ## Objective
 
-Break down `TransactionAnalysis.tsx` (852 lines) into maintainable sub-components for analyzing adds, drops, trades, and waiver activity.
+Break down `TransactionAnalysis.tsx` (852 lines) into maintainable
+sub-components for analyzing adds, drops, trades, and waiver activity.
 
 ---
 
@@ -18,6 +19,7 @@ Break down `TransactionAnalysis.tsx` (852 lines) into maintainable sub-component
 **File**: `apps/web/src/app/stats/components/TransactionAnalysis.tsx`  
 **Lines**: 852 lines  
 **Issues**:
+
 - Single component handling all transaction types
 - Transaction grading logic inline
 - Repeated table patterns
@@ -55,6 +57,7 @@ apps/web/src/features/transactions/components/
 ### Step 1: Extract Transaction Utilities (20 min)
 
 Create `utils.ts` with:
+
 - `gradeTransaction()` - Evaluate add/drop quality
 - `calculatePointsImpact()` - Points gained/lost
 - `analyzeWaiverEfficiency()` - Waiver priority usage
@@ -65,6 +68,7 @@ Create `utils.ts` with:
 ### Step 2: Create Summary Component (15 min)
 
 Transaction overview showing:
+
 - Total transactions by type
 - Most active managers
 - Best/worst moves
@@ -132,4 +136,3 @@ Please:
 ---
 
 **Estimated Total Time**: 1.5 hours
-

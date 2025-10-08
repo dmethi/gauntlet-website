@@ -109,4 +109,3 @@ describe('useWeekStats', () => {
     expect(result.current.error).toBeTruthy();
   });
 });
-

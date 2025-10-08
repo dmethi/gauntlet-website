@@ -9,7 +9,8 @@
 
 ## Objective
 
-Break down `LeagueView.tsx` (765 lines) into maintainable sub-components for league-wide standings, statistics, and rankings.
+Break down `LeagueView.tsx` (765 lines) into maintainable sub-components for
+league-wide standings, statistics, and rankings.
 
 ---
 
@@ -18,6 +19,7 @@ Break down `LeagueView.tsx` (765 lines) into maintainable sub-components for lea
 **File**: `apps/web/src/app/stats/components/LeagueView.tsx`  
 **Lines**: 765 lines  
 **Issues**:
+
 - League standings and multiple stat tables in one component
 - Ranking calculations inline
 - Repeated table patterns
@@ -52,6 +54,7 @@ apps/web/src/features/stats/components/
 ### Step 1: Extract League Utilities (20 min)
 
 Create `utils.ts` with:
+
 - `calculateStandings()` - Win/loss records and rankings
 - `calculateLeagueLeaders()` - Top performers by category
 - `calculatePointsRankings()` - Points for/against
@@ -117,4 +120,3 @@ Please:
 ---
 
 **Estimated Total Time**: 1.5 hours
-

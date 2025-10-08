@@ -3,7 +3,8 @@
 **Generated**: October 7, 2025  
 **Total Tasks**: 43 (37 planned + 6 additional discovered)  
 **Status**: All task files created ✅  
-**Latest Update**: Added 10 detailed component splitting tasks (WEB-COMP-001 through WEB-COMP-010)
+**Latest Update**: Added 10 detailed component splitting tasks (WEB-COMP-001
+through WEB-COMP-010)
 
 ---
 
@@ -72,7 +73,8 @@
 - ✅ **WEB-UTIL-001.md**: Formatting Utilities ⏱️ 40 min (completed)
 - ✅ **WEB-UTIL-002.md**: Color Utilities ⏱️ 35 min (completed)
 - ✅ **WEB-UTIL-003.md**: Manager Analytics Calculations ⏱️ 1 hour (completed)
-- ✅ **WEB-UTIL-004.md**: Hall of Fame Utilities - Cleanup & Testing ⏱️ 45 min (migration complete, testing remaining)
+- ✅ **WEB-UTIL-004.md**: Hall of Fame Utilities - Cleanup & Testing ⏱️ 45 min
+  (migration complete, testing remaining)
 
 #### Phase 4: Hook Extraction (3 tasks) - ✅ DETAILED
 
@@ -83,20 +85,31 @@
 #### Phase 5: Component Splitting (10 tasks) - ✅ ALL DETAILED
 
 **🔴 Critical Priority (6 tasks, 13 hours):**
-- ✅ **WEB-COMP-001.md**: Split ManagerAnalysis Component (1,535 lines → ~150) ⏱️ 2.5h
-- ✅ **WEB-COMP-002.md**: Split TrendsView Component (1,586 lines → ~150) ⏱️ 2.5h
-- ✅ **WEB-COMP-003.md**: Split PlayoffBracket Component (1,349 lines → ~120) ⏱️ 2h
-- ✅ **WEB-COMP-004.md**: Split ScheduleAnalysis Component (1,221 lines → ~120) ⏱️ 2h
+
+- ✅ **WEB-COMP-001.md**: Split ManagerAnalysis Component (1,535 lines → ~150)
+  ⏱️ 2.5h
+- ✅ **WEB-COMP-002.md**: Split TrendsView Component (1,586 lines → ~150) ⏱️
+  2.5h
+- ✅ **WEB-COMP-003.md**: Split PlayoffBracket Component (1,349 lines → ~120) ⏱️
+  2h
+- ✅ **WEB-COMP-004.md**: Split ScheduleAnalysis Component (1,221 lines → ~120)
+  ⏱️ 2h
 - ✅ **WEB-COMP-005.md**: Split TeamView Component (1,169 lines → ~120) ⏱️ 2h
-- ✅ **WEB-COMP-006.md**: Split StartSitEfficiency Component (1,093 lines → ~120) ⏱️ 2h
+- ✅ **WEB-COMP-006.md**: Split StartSitEfficiency Component (1,093 lines →
+  ~120) ⏱️ 2h
 
 **🟡 Medium Priority (4 tasks, 6 hours):**
-- ✅ **WEB-COMP-007.md**: Split TransactionAnalysis Component (852 lines → ~100) ⏱️ 1.5h
-- ✅ **WEB-COMP-008.md**: Split LeagueView Component (765 lines → ~100) ⏱️ 1.5h
-- ✅ **WEB-COMP-009.md**: Split MatchupSimulation Component (631 lines → ~100) ⏱️ 1.5h
-- ✅ **WEB-COMP-010.md**: Split ScatterAnalysis Component (625 lines → ~100) ⏱️ 1.5h
 
-**Summary**: 10,826 lines → ~5,830 lines (46% reduction), 53+ sub-components to create
+- ✅ **WEB-COMP-007.md**: Split TransactionAnalysis Component (852 lines → ~100)
+  ⏱️ 1.5h
+- ✅ **WEB-COMP-008.md**: Split LeagueView Component (765 lines → ~100) ⏱️ 1.5h
+- ✅ **WEB-COMP-009.md**: Split MatchupSimulation Component (631 lines → ~100)
+  ⏱️ 1.5h
+- ✅ **WEB-COMP-010.md**: Split ScatterAnalysis Component (625 lines → ~100) ⏱️
+  1.5h
+
+**Summary**: 10,826 lines → ~5,830 lines (46% reduction), 53+ sub-components to
+create
 
 #### Phase 6: Page Migration (3 tasks)
 
@@ -125,8 +138,8 @@
 | Status         | Count  | Description                                       |
 | -------------- | ------ | ------------------------------------------------- |
 | ✅ Completed   | 4      | Phase 2 EXTRACT tasks (finished)                  |
-| ✅ Detailed    | 29     | Phase 1-5 tasks fully detailed                   |
-| 📄 Placeholder | 13     | Phase 6-8 tasks with basic structure             |
+| ✅ Detailed    | 29     | Phase 1-5 tasks fully detailed                    |
+| 📄 Placeholder | 13     | Phase 6-8 tasks with basic structure              |
 | **Total**      | **46** | All task files created (42 planned + 4 completed) |
 
 ---
@@ -177,9 +190,11 @@ These tasks have **basic structure** with:
 **Status**: Ready to be filled in with detailed instructions as needed
 
 **Remaining Placeholders**:
+
 - Phase 6: WEB-PAGE-001 through WEB-PAGE-003 (Page Migration) - 3 tasks
 - Phase 7: WEB-TEST-001 through WEB-TEST-004 (Testing) - 4 tasks
-- Phase 8: WEB-CLEAN-001, WEB-CLEAN-002, WEB-DOC-001, WEB-DOC-002 (Cleanup/Polish) - 4 tasks
+- Phase 8: WEB-CLEAN-001, WEB-CLEAN-002, WEB-DOC-001, WEB-DOC-002
+  (Cleanup/Polish) - 4 tasks
 - WEB-MISC: Miscellaneous tasks - 1 file (exact number of tasks TBD)
 
 ---
@@ -270,31 +285,37 @@ test -f WEB-EXTRACT-001.md && echo "✅ Placeholder tasks exist"
 1. ✅ **COMPLETE**: All task files created (29 detailed + 13 placeholders)
 2. ✅ **COMPLETE**: Phase 1 (Infrastructure) - 4 tasks
 3. ✅ **COMPLETE**: Phase 2 (Type Extraction) - 11 tasks
-4. ✅ **COMPLETE**: Phase 3 (Utility Extraction) - 4/4 tasks ✅ (migration complete, testing pending)
-5. ✅ **COMPLETE**: Phase 4 (Hook Extraction) - All 3 task files detailed and ready
-6. ✅ **COMPLETE**: Phase 5 (Component Splitting) - All 10 task files detailed and ready
-7. ⏭️ **RECOMMENDED NEXT**: Execute WEB-HOOK-001, WEB-HOOK-002, WEB-HOOK-003 (prerequisites for components)
-8. ⏭️ **THEN**: Begin Phase 5 component splitting with WEB-COMP-001 or WEB-COMP-002
+4. ✅ **COMPLETE**: Phase 3 (Utility Extraction) - 4/4 tasks ✅ (migration
+   complete, testing pending)
+5. ✅ **COMPLETE**: Phase 4 (Hook Extraction) - All 3 task files detailed and
+   ready
+6. ✅ **COMPLETE**: Phase 5 (Component Splitting) - All 10 task files detailed
+   and ready
+7. ⏭️ **RECOMMENDED NEXT**: Execute WEB-HOOK-001, WEB-HOOK-002, WEB-HOOK-003
+   (prerequisites for components)
+8. ⏭️ **THEN**: Begin Phase 5 component splitting with WEB-COMP-001 or
+   WEB-COMP-002
 9. 📋 **REMAINING**: Fill in Phase 6-8 placeholders as needed before execution
 10. 📊 **TRACK**: Update `tasks/PROGRESS.md` after each completed task
 
-**📘 NEW**: See `tasks/WEB-COMP-SUMMARY.md` for comprehensive component splitting details
+**📘 NEW**: See `tasks/WEB-COMP-SUMMARY.md` for comprehensive component
+splitting details
 
 ---
 
 ## 📈 Estimated Timeline
 
-| Phase             | Tasks  | Total Time      | Status                       |
-| ----------------- | ------ | --------------- | ---------------------------- |
-| Phase 1 (SETUP)   | 4      | 3.25 hours      | ✅ Complete (4/4)            |
-| Phase 2 (EXTRACT) | 11     | 3.95 hours      | ✅ Complete (11/11)          |
-| Phase 3 (UTIL)    | 4      | 3 hours         | ✅ Complete (4/4, testing pending) |
-| Phase 4 (HOOK)    | 3      | 2.75 hours      | ✅ Task files detailed & ready |
+| Phase             | Tasks  | Total Time      | Status                                |
+| ----------------- | ------ | --------------- | ------------------------------------- |
+| Phase 1 (SETUP)   | 4      | 3.25 hours      | ✅ Complete (4/4)                     |
+| Phase 2 (EXTRACT) | 11     | 3.95 hours      | ✅ Complete (11/11)                   |
+| Phase 3 (UTIL)    | 4      | 3 hours         | ✅ Complete (4/4, testing pending)    |
+| Phase 4 (HOOK)    | 3      | 2.75 hours      | ✅ Task files detailed & ready        |
 | Phase 5 (COMP)    | 10     | 19 hours        | ✅ All 10 task files detailed & ready |
-| Phase 6 (PAGE)    | 3      | 2.75 hours      | 📄 Placeholders ready        |
-| Phase 7 (TEST)    | 4      | 9 hours         | 📄 Placeholders ready        |
-| Phase 8 (CLEAN)   | 4      | 5.25 hours      | 📄 Placeholders ready        |
-| **Total**         | **43** | **48.95 hours** | **10 weeks @ 4.9 hours/week** |
+| Phase 6 (PAGE)    | 3      | 2.75 hours      | 📄 Placeholders ready                 |
+| Phase 7 (TEST)    | 4      | 9 hours         | 📄 Placeholders ready                 |
+| Phase 8 (CLEAN)   | 4      | 5.25 hours      | 📄 Placeholders ready                 |
+| **Total**         | **43** | **48.95 hours** | **10 weeks @ 4.9 hours/week**         |
 
 ---
 

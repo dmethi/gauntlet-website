@@ -69,9 +69,7 @@ describe('useSuperlatives', () => {
     );
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('category=highest_score'),
-      );
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('category=highest_score'));
       expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('limit=10'));
       expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('offset=5'));
     });
@@ -144,12 +142,9 @@ describe('useSuperlatives', () => {
     });
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/superlatives'),
-      );
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/superlatives'));
       // Should not have query string
       expect(global.fetch).toHaveBeenCalledWith(expect.not.stringContaining('?'));
     });
   });
 });
-

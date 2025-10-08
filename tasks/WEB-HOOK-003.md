@@ -9,7 +9,11 @@
 
 ## Objective
 
-Extract stats-related data fetching hooks from centralized `lib/hooks.ts` (726 lines) into feature-specific hooks in `features/stats/hooks/`. This includes moving 4 stats-specific hooks (`useLeagueData`, `useSeasonalAggregates`, `useWeekRollups`, `useSeasonSuperlatives`) to reduce the centralized hooks file and improve feature co-location.
+Extract stats-related data fetching hooks from centralized `lib/hooks.ts` (726
+lines) into feature-specific hooks in `features/stats/hooks/`. This includes
+moving 4 stats-specific hooks (`useLeagueData`, `useSeasonalAggregates`,
+`useWeekRollups`, `useSeasonSuperlatives`) to reduce the centralized hooks file
+and improve feature co-location.
 
 ---
 
@@ -31,7 +35,7 @@ Extract stats-related data fetching hooks from centralized `lib/hooks.ts` (726 l
 
 Create `apps/web/src/features/stats/hooks/useLeagueStats.ts`:
 
-```typescript
+````typescript
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { LeagueData, Roster, Matchup, TeamStats } from '@/shared/types';
@@ -68,7 +72,12 @@ export interface LeagueStatsResult {
  * ```
  */
 export const useLeagueStats = (): LeagueStatsResult => {
-  const { data: league, isLoading, isError, error } = useQuery<LeagueData>({
+  const {
+    data: league,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<LeagueData>({
     queryKey: ['leagueData'],
     queryFn: getLeagueData,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -81,7 +90,7 @@ export const useLeagueStats = (): LeagueStatsResult => {
     return (league.rosters || []).map((roster: Roster) => {
       const totalPoints = (roster.matchups || []).reduce(
         (sum: number, matchup: Matchup) => sum + matchup.points,
-        0,
+        0
       );
 
       const wins = roster.settings?.wins || 0;
@@ -106,13 +115,13 @@ export const useLeagueStats = (): LeagueStatsResult => {
     error,
   };
 };
-```
+````
 
 ### 2. Create useSeasonAggregates Hook
 
 Create `apps/web/src/features/stats/hooks/useSeasonAggregates.ts`:
 
-```typescript
+````typescript
 import { useQuery } from '@tanstack/react-query';
 import type { SeasonalAggregatesResponse } from '@/shared/types';
 
@@ -140,7 +149,7 @@ export interface SeasonAggregatesOptions {
 export const useSeasonAggregates = (
   leagueId?: string,
   season?: string,
-  options?: SeasonAggregatesOptions,
+  options?: SeasonAggregatesOptions
 ) => {
   const { enabled = true } = options || {};
 
@@ -156,13 +165,13 @@ export const useSeasonAggregates = (
     gcTime: 60 * 60 * 1000, // 1 hour
   });
 };
-```
+````
 
 ### 3. Create useWeekStats Hook
 
 Create `apps/web/src/features/stats/hooks/useWeekStats.ts`:
 
-```typescript
+````typescript
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentWeek } from '@gauntlet/lib';
 import type { WeekRollupsResponse } from '@/shared/types';
@@ -192,7 +201,7 @@ export interface WeekStatsOptions {
 export const useWeekStats = <T = unknown>(
   leagueId: string,
   season: string,
-  options?: WeekStatsOptions,
+  options?: WeekStatsOptions
 ) => {
   const { week, enabled = true } = options || {};
   const targetWeek = week ?? getCurrentWeek();
@@ -200,7 +209,9 @@ export const useWeekStats = <T = unknown>(
   return useQuery<WeekRollupsResponse<T>>({
     queryKey: ['rollups', leagueId, season, targetWeek],
     queryFn: async (): Promise<WeekRollupsResponse<T>> => {
-      const res = await fetch(`/api/stats/${leagueId}/${season}/week/${targetWeek}`);
+      const res = await fetch(
+        `/api/stats/${leagueId}/${season}/week/${targetWeek}`
+      );
       if (!res.ok) throw new Error('Failed to fetch week rollups');
       return res.json();
     },
@@ -209,13 +220,13 @@ export const useWeekStats = <T = unknown>(
     gcTime: 15 * 60 * 1000, // 15 minutes
   });
 };
-```
+````
 
 ### 4. Create useSuperlatives Hook
 
 Create `apps/web/src/features/stats/hooks/useSuperlatives.ts`:
 
-```typescript
+````typescript
 import { useQuery } from '@tanstack/react-query';
 import type { SuperlativesResponse } from '@/shared/types';
 
@@ -249,7 +260,7 @@ export interface SuperlativesOptions {
 export const useSuperlatives = <T = unknown>(
   leagueId: string,
   season: string,
-  options?: SuperlativesOptions,
+  options?: SuperlativesOptions
 ) => {
   const { category, limit, offset, enabled = true } = options || {};
 
@@ -273,7 +284,7 @@ export const useSuperlatives = <T = unknown>(
     gcTime: 60 * 60 * 1000, // 1 hour
   });
 };
-```
+````
 
 ### 5. Create Hooks Barrel Export
 
@@ -355,7 +366,9 @@ describe('useLeagueStats', () => {
 });
 ```
 
-Similarly create tests for `useSeasonAggregates.test.ts`, `useWeekStats.test.ts`, and `useSuperlatives.test.ts` following the same pattern.
+Similarly create tests for `useSeasonAggregates.test.ts`,
+`useWeekStats.test.ts`, and `useSuperlatives.test.ts` following the same
+pattern.
 
 ### 8. Update Feature Barrel Export
 
@@ -393,7 +406,8 @@ pnpm lint
 
 ## Acceptance Criteria
 
-- [ ] 4 stats hooks created (`useLeagueStats`, `useSeasonAggregates`, `useWeekStats`, `useSuperlatives`)
+- [ ] 4 stats hooks created (`useLeagueStats`, `useSeasonAggregates`,
+      `useWeekStats`, `useSuperlatives`)
 - [ ] All hooks properly handle loading, error, and success states
 - [ ] Hooks use appropriate cache strategies (2-15 min stale times)
 - [ ] Backwards compatibility maintained in `lib/hooks.ts` with re-exports
@@ -468,9 +482,13 @@ Follow CODING_CONVENTIONS.MD:
 
 ## Related Tasks
 
-**Blocks**: WEB-COMP-002 (TrendsView Component Splitting), WEB-COMP-004 (ScheduleAnalysis Component Splitting), WEB-COMP-005 (TeamView Component Splitting)  
-**Blocked By**: WEB-EXTRACT-003 (Hooks Types), WEB-EXTRACT-004 (Stats Component Types)  
-**Related**: WEB-HOOK-001 (Manager Sorting/Filtering), WEB-HOOK-002 (Draft Analytics Data Hook), WEB-TEST-002 (Hook Tests)
+**Blocks**: WEB-COMP-002 (TrendsView Component Splitting), WEB-COMP-004
+(ScheduleAnalysis Component Splitting), WEB-COMP-005 (TeamView Component
+Splitting)  
+**Blocked By**: WEB-EXTRACT-003 (Hooks Types), WEB-EXTRACT-004 (Stats Component
+Types)  
+**Related**: WEB-HOOK-001 (Manager Sorting/Filtering), WEB-HOOK-002 (Draft
+Analytics Data Hook), WEB-TEST-002 (Hook Tests)
 
 ---
 
@@ -502,6 +520,7 @@ Follow CODING_CONVENTIONS.MD:
 ### Migration Pattern
 
 This follows the established pattern:
+
 1. Extract hooks to feature directory
 2. Add comprehensive tests
 3. Maintain backwards compatibility with re-exports
