@@ -30,6 +30,7 @@ import {
 } from './hall-of-shame';
 import { fetchPowerRankingsTool } from './power-rankings';
 import { fetchStandingsTool } from './standings';
+import { fetchNextWeekMatchupsTool } from './upcoming';
 
 /**
  * Register all available tools with the registry.
@@ -71,9 +72,8 @@ export const registerAllTools = (): void => {
   // Standings Tools (RECAP-014)
   toolRegistry.register(fetchStandingsTool);
 
-  // TODO: Register additional tools as they are implemented
-  // - Upcoming matchups preview tools
-  // - etc.
+  // Upcoming Matchups Tools (RECAP-015)
+  toolRegistry.register(fetchNextWeekMatchupsTool);
 };
 
 // Auto-register tools on module import
