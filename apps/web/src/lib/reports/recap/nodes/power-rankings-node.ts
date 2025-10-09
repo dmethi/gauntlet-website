@@ -43,17 +43,17 @@ export const powerRankingsNode = async (
     // Pre-fetch power rankings data
     console.log('   📦 Pre-fetching power rankings data...');
 
-    const rankingsData = await fetchPowerRankingsTool.execute({ week });
+    const rankingsData = await fetchPowerRankingsTool.execute({ currentWeek: week });
 
     // Validate tool result
     if (!rankingsData || typeof rankingsData !== 'object') {
       throw new Error(`Power rankings tool returned invalid data: ${JSON.stringify(rankingsData)}`);
     }
 
-    const tiers = rankingsData.tiers || [];
-    const biggestRiser = rankingsData.biggestRiser || null;
-    const biggestFaller = rankingsData.biggestFaller || null;
-    const notableChanges = rankingsData.notableChanges || [];
+    const tiers = rankingsData.changes.tiers || [];
+    const biggestRiser = rankingsData.changes.biggestRiser || null;
+    const biggestFaller = rankingsData.changes.biggestFaller || null;
+    const notableChanges = rankingsData.changes.notableChanges || [];
 
     console.log('   ✅ Rankings fetched successfully');
     console.log(`      • ${tiers.length} tiers identified`);

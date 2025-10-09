@@ -10,9 +10,9 @@ import { join } from 'path';
 import { Annotation, END, START, StateGraph } from '@langchain/langgraph';
 import { batchMatchupNarrativesNode } from '../src/lib/reports/recap/nodes/batch-matchup-narratives-node';
 import type {
-  RecapReportState,
-  MatchupNarrative,
   BatchProgress,
+  MatchupNarrative,
+  RecapReportState,
 } from '../src/lib/reports/recap/state';
 
 // Clear any existing GEMINI_API_KEY to avoid shell environment conflicts
@@ -100,12 +100,15 @@ const testBatchProcessing = async (): Promise<void> => {
       );
       console.log(`\n📝 Average Word Count: ${avgWords} words`);
 
-      // Calculate avg excitement
-      const avgExcitement = Math.round(
-        validNarratives.reduce((sum, n) => sum + n.metadata.excitementScore, 0) /
-          validNarratives.length,
+      // Show excitement level distribution
+      const excitementLevels = validNarratives.reduce(
+        (acc, n) => {
+          acc[n.metadata.excitementLevel] = (acc[n.metadata.excitementLevel] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
       );
-      console.log(`🎉 Average Excitement Score: ${avgExcitement}/100`);
+      console.log(`🎉 Excitement Distribution:`, excitementLevels);
     }
 
     // Show all failed matchups if any

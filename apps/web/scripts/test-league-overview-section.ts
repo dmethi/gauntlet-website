@@ -46,8 +46,11 @@ const testLeagueOverview = async (): Promise<void> => {
       `\nGame Distribution: ${summaryStats.closeGames} close games (≤10 pts), ` +
         `${summaryStats.blowouts} blowouts (≥30 pts)`,
     );
+    const competitiveRatio = Math.round(
+      (summaryStats.closeGames / summaryStats.totalMatchups) * 100,
+    );
     console.log(
-      `Competitive ratio: ${summaryStats.competitiveRatio}% of games were decided by 10 points or less`,
+      `Competitive ratio: ${competitiveRatio}% of games were decided by 10 points or less`,
     );
 
     console.log('\n' + '='.repeat(60));

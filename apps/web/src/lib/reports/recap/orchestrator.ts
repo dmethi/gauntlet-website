@@ -39,29 +39,26 @@ const RecapStateAnnotation = Annotation.Root({
   tokensUsed: Annotation<number | undefined>,
 
   // Errors array with reducer to handle concurrent updates from parallel nodes
-  errors: Annotation<string[], (prev: string[], update: string[]) => string[]>({
-    reducer: (prev, update) => [...prev, ...update],
+  errors: Annotation<string[]>({
+    reducer: (prev: string[], update: string[]) => [...prev, ...update],
     default: () => [],
   }),
 
   // Section-level metadata with custom merge logic for concurrent updates
-  sectionMetadata: Annotation<
-    {
-      leagueOverview?: SectionMetadata;
-      matchupNarratives?: SectionMetadata;
-      hallOfFame?: SectionMetadata;
-      hallOfShame?: SectionMetadata;
-      powerRankings?: SectionMetadata;
-      standings?: SectionMetadata;
-      upcoming?: SectionMetadata;
-      closing?: SectionMetadata;
-    },
-    (
-      prev: Record<string, SectionMetadata>,
-      update: Record<string, SectionMetadata>,
-    ) => Record<string, SectionMetadata>
-  >({
-    reducer: (prev, update) => ({ ...prev, ...update }),
+  sectionMetadata: Annotation<{
+    leagueOverview?: SectionMetadata;
+    matchupNarratives?: SectionMetadata;
+    hallOfFame?: SectionMetadata;
+    hallOfShame?: SectionMetadata;
+    powerRankings?: SectionMetadata;
+    standings?: SectionMetadata;
+    upcoming?: SectionMetadata;
+    closing?: SectionMetadata;
+  }>({
+    reducer: (prev: Record<string, SectionMetadata>, update: Record<string, SectionMetadata>) => ({
+      ...prev,
+      ...update,
+    }),
     default: () => ({}),
   }),
 

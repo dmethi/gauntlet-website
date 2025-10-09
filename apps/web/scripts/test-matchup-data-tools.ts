@@ -49,12 +49,12 @@ const testMatchupDataTools = async (): Promise<void> => {
     console.log('-'.repeat(60));
     const rosters = await fetchMatchupRostersTool.execute({
       leagueId: testParams.leagueId,
-      rosterId1: boxScore.team1.rosterId,
-      rosterId2: boxScore.team2.rosterId,
+      week: testParams.week,
+      matchupId: testParams.matchupId,
     });
     console.log('✅ Roster Information Retrieved');
-    console.log(`   Team 1: ${rosters.team1.teamName} (${rosters.team1.ownerName})`);
-    console.log(`   Team 2: ${rosters.team2.teamName} (${rosters.team2.ownerName})`);
+    console.log(`   Team 1: ${rosters.team1.teamName} (${rosters.team1.owner})`);
+    console.log(`   Team 2: ${rosters.team2.teamName} (${rosters.team2.owner})`);
 
     // Test 3: Scoring Breakdown
     console.log('\n🎯 Test 3: fetch_matchup_scoring_breakdown');
@@ -75,8 +75,8 @@ const testMatchupDataTools = async (): Promise<void> => {
     console.log('-'.repeat(60));
     const projections = await fetchPreGameProjectionsTool.execute(testParams);
     console.log('✅ Pre-game Projections Retrieved');
-    console.log(`   Team 1 Projected: ${projections.team1Projected} pts`);
-    console.log(`   Team 2 Projected: ${projections.team2Projected} pts`);
+    console.log(`   Team 1 Projected: ${projections.team1.projected} pts`);
+    console.log(`   Team 2 Projected: ${projections.team2.projected} pts`);
     console.log(`   Projected Margin: ${projections.projectedMargin} pts`);
 
     // Test 5: Projection vs Actual

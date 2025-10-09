@@ -5,7 +5,7 @@
  * Supports backwards compatibility for reports generated before RECAP-019.
  */
 
-import type { WeeklyRecapReport } from '../types';
+import type { WeeklyRecapReport, MatchupNarrativeSection } from '../types';
 
 interface LegacyReport {
   season: string;
@@ -33,35 +33,63 @@ interface LegacyReport {
  */
 export const transformLegacyReport = (legacy: LegacyReport): WeeklyRecapReport => {
   const { season, week, lastUpdated, leagues = [] } = legacy;
+  const now = new Date().toISOString();
 
   // Extract all matchups
   const allMatchups = leagues.flatMap(league =>
     league.matchups.map(m => ({
       league: league.leagueName,
+      leagueId: league.leagueId,
       matchup: m,
     })),
   );
 
+  // Calculate basic stats
+  const allScores = allMatchups.flatMap(m => [m.matchup.pointsA, m.matchup.pointsB]);
+  const totalPoints = allScores.reduce((sum, score) => sum + score, 0);
+  const averageScore = allScores.length > 0 ? totalPoints / allScores.length : 0;
+  const highestScore = allScores.length > 0 ? Math.max(...allScores) : 0;
+  const lowestScore = allScores.length > 0 ? Math.min(...allScores) : 0;
+
   // Build matchup narratives from raw data
-  const matchupNarratives = allMatchups.map(({ league, matchup }) => ({
-    matchupId: `${league}-${matchup.matchupId}`,
-    league,
-    teams: {
-      team1: matchup.teamAName,
-      team2: matchup.teamBName,
+  const matchupNarratives: MatchupNarrativeSection[] = allMatchups.map(
+    ({ league, leagueId, matchup }) => {
+      const team1Score = matchup.pointsA;
+      const team2Score = matchup.pointsB;
+      const winner = team1Score > team2Score ? 'team1' : 'team2';
+      const margin = Math.abs(team1Score - team2Score);
+
+      return {
+        matchupId: `${league.toLowerCase()}-${week}-${matchup.matchupId}`,
+        narrative: `${matchup.teamAName} faced off against ${matchup.teamBName}, with ${winner === 'team1' ? matchup.teamAName : matchup.teamBName} winning ${Math.max(team1Score, team2Score).toFixed(1)} - ${Math.min(team1Score, team2Score).toFixed(1)}. This legacy report has limited narrative details.`,
+        boxScore: {
+          team1: {
+            teamName: matchup.teamAName,
+            rosterId: 0,
+            leagueId,
+            score: team1Score,
+            record: '0-0', // Legacy reports don't have record data
+            topPerformers: [],
+          },
+          team2: {
+            teamName: matchup.teamBName,
+            rosterId: 0,
+            leagueId,
+            score: team2Score,
+            record: '0-0', // Legacy reports don't have record data
+            topPerformers: [],
+          },
+          finalScore: {
+            team1: team1Score,
+            team2: team2Score,
+          },
+          winner,
+          margin,
+        },
+        generatedAt: now,
+      };
     },
-    score: {
-      team1: matchup.pointsA,
-      team2: matchup.pointsB,
-    },
-    winner: matchup.pointsA > matchup.pointsB ? matchup.teamAName : matchup.teamBName,
-    narrative: {
-      headline: `${matchup.teamAName} vs ${matchup.teamBName}`,
-      summary: `${matchup.pointsA > matchup.pointsB ? matchup.teamAName : matchup.teamBName} defeated ${matchup.pointsA > matchup.pointsB ? matchup.teamBName : matchup.teamAName} with a final score of ${Math.max(matchup.pointsA, matchup.pointsB).toFixed(2)} - ${Math.min(matchup.pointsA, matchup.pointsB).toFixed(2)}.`,
-      keyMoments: [],
-      playerSpotlight: null,
-    },
-  }));
+  );
 
   // Create transformed report
   const report: WeeklyRecapReport = {
@@ -69,50 +97,97 @@ export const transformLegacyReport = (legacy: LegacyReport): WeeklyRecapReport =
       season: parseInt(season, 10),
       week,
       generatedAt: lastUpdated,
+      generationTime: 0,
+      tokensUsed: 0,
       status: 'success',
       version: '1.0-legacy',
-      dataSource: 'legacy-migration',
       errors: [],
     },
     sections: {
       leagueOverview: {
-        headline: `Week ${week} Overview`,
-        summary: `Legacy report from Week ${week} of the ${season} season. This report was generated using the old format and has been automatically transformed for display.`,
+        narrative: `Week ${week} featured ${allMatchups.length} matchups across both conferences. This is a legacy report that has been automatically transformed for display in the new format.`,
         stats: {
           totalGames: allMatchups.length,
-          avgScore: 0,
-          highestScore: Math.max(
-            ...allMatchups.map(m => Math.max(m.matchup.pointsA, m.matchup.pointsB)),
-          ),
-          lowestScore: Math.min(
-            ...allMatchups.map(m => Math.min(m.matchup.pointsA, m.matchup.pointsB)),
-          ),
+          totalPoints,
+          averageScore,
+          highestScore,
+          lowestScore,
           blowouts: 0,
           closeGames: 0,
         },
-        narrative: `Week ${week} featured ${allMatchups.length} matchups across both conferences.`,
-      },
-      hallOfFame: {
-        winners: [],
-        narrative: 'Hall of Fame data not available for legacy reports.',
-      },
-      hallOfShame: {
-        losers: [],
-        narrative: 'Hall of Shame data not available for legacy reports.',
-      },
-      powerRankings: {
-        commentary: 'Power Rankings not available for legacy reports.',
-        tiers: [],
-      },
-      standings: {
-        commentary: 'Detailed standings not available for legacy reports.',
-        conferences: [],
+        generatedAt: now,
       },
       matchupNarratives,
+      hallOfFame: {
+        narrative:
+          'Hall of Fame data is not available for legacy reports. This report was generated before the Hall of Fame section was implemented.',
+        highlights: {
+          topTeamScore: {
+            teamName: 'N/A',
+            score: highestScore,
+            leagueId: '',
+            rosterId: 0,
+          },
+          biggestBlowout: {
+            winner: 'N/A',
+            loser: 'N/A',
+            margin: 0,
+            matchupId: '',
+          },
+          topPerformers: {
+            QB: [],
+            RB: [],
+            WR: [],
+            TE: [],
+            K: [],
+            DEF: [],
+          },
+        },
+        generatedAt: now,
+      },
+      hallOfShame: {
+        narrative:
+          'Hall of Shame data is not available for legacy reports. This report was generated before the Hall of Shame section was implemented.',
+        lowlights: {
+          lowestTeamScore: {
+            teamName: 'N/A',
+            score: lowestScore,
+            leagueId: '',
+            rosterId: 0,
+          },
+          biggestBusts: [],
+          badBeatLosses: [],
+        },
+        generatedAt: now,
+      },
+      powerRankings: {
+        narrative:
+          'Power Rankings are not available for legacy reports. This report was generated before the Power Rankings section was implemented.',
+        rankings: [],
+        generatedAt: now,
+      },
+      standings: {
+        narrative:
+          'Detailed standings are not available for legacy reports. This report was generated before the Standings section was implemented.',
+        standings: {
+          afc: [],
+          nfc: [],
+        },
+        playoffPicture: {
+          clinched: [],
+          inHunt: [],
+          eliminated: [],
+        },
+        generatedAt: now,
+      },
+      upcoming: {
+        narrative: 'Upcoming matchups preview is not available for legacy reports.',
+        matchups: [],
+        generatedAt: now,
+      },
       closing: {
-        weekRecap: `Week ${week} of the ${season} season is complete. This is a legacy report that has been automatically transformed for display in the new format.`,
-        lookAhead: null,
-        finalThoughts: 'This report was generated before the narrative system was implemented.',
+        narrative: `Week ${week} of the ${season} season is complete. This is a legacy report that has been automatically transformed for display in the new format. For full narrative details, please view newer reports generated with the current system.`,
+        generatedAt: now,
       },
     },
   };

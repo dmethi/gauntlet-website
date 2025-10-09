@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadRecapReport } from '@/lib/reports/recap/utils/report-loader';
 
 const GAUNTLET_LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },
@@ -9,7 +10,7 @@ const GAUNTLET_LEAGUES = [
 
 // Calculate power rankings using the official formula:
 // Power Rank = 0.5 * z(AvgPtsToDate) + 0.3 * z(ExpectedWinsCum) + 0.2 * z(RollingAvg3)
-async function calculatePowerRankings(week: number) {
+const calculatePowerRankings = async (week: number) => {
   const allRankings: any[] = [];
 
   for (const league of GAUNTLET_LEAGUES) {
@@ -114,10 +115,10 @@ async function calculatePowerRankings(week: number) {
   }
 
   return allRankings;
-}
+};
 
 // Calculate standings with real Sleeper data
-async function calculateStandings(week: number) {
+const calculateStandings = async (_week: number) => {
   const standings: any[] = [];
 
   for (const league of GAUNTLET_LEAGUES) {
@@ -209,10 +210,10 @@ async function calculateStandings(week: number) {
   }
 
   return standings;
-}
+};
 
 // Calculate upcoming matchups for next week
-async function calculateUpcomingMatchups(nextWeek: number) {
+const calculateUpcomingMatchups = async (nextWeek: number) => {
   const upcomingMatchups: Record<string, any[]> = {};
 
   for (const league of GAUNTLET_LEAGUES) {
@@ -285,10 +286,10 @@ async function calculateUpcomingMatchups(nextWeek: number) {
   }
 
   return upcomingMatchups;
-}
+};
 
 // Load static report data if available - Vercel-friendly approach
-function loadStaticReportData(season: string, week: number) {
+const loadStaticReportData = (season: string, week: number) => {
   try {
     // Try multiple path strategies for Vercel compatibility
     const possiblePaths = [
@@ -316,10 +317,10 @@ function loadStaticReportData(season: string, week: number) {
     console.error(`❌ Error loading static report data:`, error);
   }
   return null;
-}
+};
 
 // Handle static report data
-async function handleStaticReportData(staticData: any, season: string, week: number) {
+const handleStaticReportData = async (staticData: any, season: string, week: number) => {
   // Use default narratives for now (can be enhanced later)
   const parsed = getDefaultNarratives();
 
@@ -427,9 +428,9 @@ async function handleStaticReportData(staticData: any, season: string, week: num
       message: 'Enhanced with time series, player names, and standings',
     },
   });
-}
+};
 
-function getDefaultNarratives() {
+const getDefaultNarratives = () => {
   return {
     scribeIntro:
       "I am the Gauntlet Scribe — Dhruv brings the raw takes, I weaponize them. Expect receipts, rivalry, and the occasional fine. If you love a line, he'll say it was his. If you hate one, that was me.",
@@ -441,25 +442,37 @@ function getDefaultNarratives() {
     myIntro: '',
     callouts: {},
   };
-}
+};
 
-export async function GET(
+export const GET = async (
   _req: NextRequest,
   { params }: { params: { season: string; week: string } },
-) {
+) => {
   const week = parseInt(params.week, 10);
-  const season = params.season;
+  const season = parseInt(params.season, 10);
 
   if (!Number.isFinite(week) || week < 1 || week > 18) {
     return NextResponse.json({ ok: false, error: 'Invalid week' }, { status: 400 });
   }
 
   try {
+    // First, try to load the report using the report-loader (handles both new format and legacy)
+    const weeklyReport = await loadRecapReport(season, week);
+
+    if (weeklyReport) {
+      // Return the new narrative format
+      return NextResponse.json({
+        ok: true,
+        report: weeklyReport,
+        dataSource: 'weekly-recap-report',
+      });
+    }
+
     // Try to load static report data as fallback
-    const staticData = loadStaticReportData(season, week);
+    const staticData = loadStaticReportData(params.season, week);
 
     if (staticData) {
-      return handleStaticReportData(staticData, season, week);
+      return handleStaticReportData(staticData, params.season, week);
     }
     // --- Load and parse week1 report template for narratives ---
     const templatePath = path.join(process.cwd(), 'week1_report_template.md');
@@ -469,7 +482,7 @@ export async function GET(
     const jsonOverridePath = path.join(process.cwd(), 'apps/web/data/report-week1.json');
     const jsonOverrideExists = fs.existsSync(jsonOverridePath);
 
-    function parseTemplate(md: string) {
+    const parseTemplate = (md: string) => {
       const lines = md.split(/\r?\n/);
       let scribeIntro = '';
       let nfcOverview = '';
@@ -491,7 +504,7 @@ export async function GET(
       const readBullets = () => {
         const out: string[] = [];
         while (i < lines.length && lines[i].trim().startsWith('-')) {
-          out.push(lines[i].replace(/^\-\s*/, '').trim());
+          out.push(lines[i].replace(/^-\s*/, '').trim());
           i++;
         }
         while (i < lines.length && lines[i].trim() === '') i++;
@@ -558,7 +571,7 @@ export async function GET(
       parseMatchupsInto(itemsAFC);
 
       return { scribeIntro, nfcOverview, afcOverview, itemsNFC, itemsAFC };
-    }
+    };
 
     type JsonMatchup = { matchup: string; recap: string; odds_and_ends?: string[] };
     type JsonNarratives = {
@@ -570,7 +583,7 @@ export async function GET(
       callouts?: Record<string, string>;
     };
 
-    function parseJsonOverride(obj: JsonNarratives) {
+    const parseJsonOverride = (obj: JsonNarratives) => {
       const extractTeams = (line: string) => {
         const vsIdx = line.toLowerCase().indexOf(' vs ');
         if (vsIdx === -1) return { a: line.trim(), b: '' };
@@ -598,7 +611,7 @@ export async function GET(
         myIntro: (obj.my_intro || '').trim(),
         callouts: obj.callouts || {},
       } as any;
-    }
+    };
 
     const parsed = jsonOverrideExists
       ? parseJsonOverride(JSON.parse(fs.readFileSync(jsonOverridePath, 'utf8')) as JsonNarratives)
@@ -1050,4 +1063,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

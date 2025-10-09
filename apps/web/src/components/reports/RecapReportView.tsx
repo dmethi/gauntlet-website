@@ -308,7 +308,7 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
                           <div key={pidx} className="flex items-center justify-between text-xs">
                             <span className="truncate">
                               <span className="text-muted-foreground mr-1">{player.position}</span>
-                              {player.name}
+                              {player.playerName}
                             </span>
                             <span className="font-medium">{player.points.toFixed(1)}</span>
                           </div>
@@ -324,7 +324,7 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
                           <div key={pidx} className="flex items-center justify-between text-xs">
                             <span className="truncate">
                               <span className="text-muted-foreground mr-1">{player.position}</span>
-                              {player.name}
+                              {player.playerName}
                             </span>
                             <span className="font-medium">{player.points.toFixed(1)}</span>
                           </div>
@@ -479,9 +479,9 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
       {sections.standings && (
         <section className="space-y-4">
           <h2 className="text-2xl font-geizer font-bold">Standings</h2>
-          {sections.standings.commentary && (
+          {sections.standings.narrative && (
             <div className="prose prose-sm max-w-none dark:prose-invert mb-4">
-              <p className="whitespace-pre-wrap leading-relaxed">{sections.standings.commentary}</p>
+              <p className="whitespace-pre-wrap leading-relaxed">{sections.standings.narrative}</p>
             </div>
           )}
           {/* Check if we have standingsData with divisions (new format) or flat standings (old format) */}
@@ -490,11 +490,11 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
               {(report as any).standingsData.map((league: any) => (
                 <div key={league.leagueId} className="space-y-3">
                   <h3 className="font-semibold">{league.leagueName}</h3>
-                  {Object.entries(league.divisions).map(([divName, teams]: [string, any[]]) => (
+                  {Object.entries(league.divisions).map(([divName, teams]) => (
                     <div key={divName} className="space-y-2">
                       <h4 className="text-sm font-medium text-muted-foreground">{divName}</h4>
                       <div className="space-y-1">
-                        {teams.map((team: any) => (
+                        {(teams as any[]).map((team: any) => (
                           <div key={team.rosterId} className="flex items-center justify-between">
                             <div className="truncate text-xs">
                               {team.teamName || team.name}
@@ -534,15 +534,8 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
                         >
                           <div className="truncate">
                             <span className="font-medium">{team.teamName}</span>
-                            {team.clinched && (
-                              <Badge variant="outline" className="ml-2 text-xs">
-                                {team.clinched}
-                              </Badge>
-                            )}
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            {team.wins}-{team.losses}
-                          </div>
+                          <div className="text-sm text-muted-foreground">{team.record}</div>
                         </div>
                       ))}
                     </div>
@@ -567,15 +560,16 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
                 <CardContent className="pt-4">
                   <div className="flex items-center justify-between text-sm">
                     <div className="truncate">
-                      <div className="font-semibold">{matchup.team1Name}</div>
-                      <div className="text-xs text-muted-foreground">{matchup.team1Record}</div>
+                      <div className="font-semibold">{matchup.team1}</div>
                     </div>
                     <div className="text-muted-foreground px-4">vs</div>
                     <div className="truncate text-right">
-                      <div className="font-semibold">{matchup.team2Name}</div>
-                      <div className="text-xs text-muted-foreground">{matchup.team2Record}</div>
+                      <div className="font-semibold">{matchup.team2}</div>
                     </div>
                   </div>
+                  {matchup.storyline && (
+                    <div className="text-xs text-muted-foreground mt-2">{matchup.storyline}</div>
+                  )}
                 </CardContent>
               </Card>
             ))}

@@ -159,8 +159,12 @@ export const powerRankingsSchema = z.object({
       rank: z.number().int().min(1),
       previousRank: z.number().int().min(1).optional(),
       teamName: z.string(),
+      leagueId: z.string(),
+      rosterId: z.number().int(),
       record: z.string(),
       points: z.number(),
+      tier: z.number().int().optional(),
+      powerScore: z.number().optional(),
       movement: z.enum(['up', 'down', 'same']),
       movementAmount: z.number().int().optional(),
     }),
@@ -282,7 +286,10 @@ export const validateSection = (
 
   const schema = schemas[sectionName];
   if (!schema) {
-    return { success: false, errors: [{ message: 'Unknown section', path: [] } as z.ZodIssue] };
+    return {
+      success: false,
+      errors: [{ code: 'custom' as const, message: 'Unknown section', path: [] }],
+    };
   }
 
   const result = schema.safeParse(data);

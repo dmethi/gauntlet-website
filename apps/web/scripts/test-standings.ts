@@ -13,7 +13,7 @@ const testStandings = async (): Promise<void> => {
     console.log('='.repeat(80));
     console.log('AFC STANDINGS');
     console.log('='.repeat(80));
-    result.afc.entries.forEach(entry => {
+    result.afc.allTeams.forEach(entry => {
       const seed = entry.playoffSeed ? `[${entry.playoffSeed}] ` : '    ';
       const record =
         entry.ties > 0
@@ -28,7 +28,7 @@ const testStandings = async (): Promise<void> => {
     console.log('\n' + '='.repeat(80));
     console.log('NFC STANDINGS');
     console.log('='.repeat(80));
-    result.nfc.entries.forEach(entry => {
+    result.nfc.allTeams.forEach(entry => {
       const seed = entry.playoffSeed ? `[${entry.playoffSeed}] ` : '    ';
       const record =
         entry.ties > 0

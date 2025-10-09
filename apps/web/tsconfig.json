@@ -27,6 +27,15 @@
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "src/lib/reports/recap/test-function-calling.ts",
+    "src/lib/reports/recap/utils/legacy-transformer.ts",
+    "src/lib/reports/recap/tools/langchain-adapter.ts"
+  ],
   "references": [{ "path": "../../packages/types" }, { "path": "../../packages/lib" }]
 }

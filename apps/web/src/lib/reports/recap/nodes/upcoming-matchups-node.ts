@@ -43,17 +43,21 @@ export const upcomingMatchupsNode = async (
     // Pre-fetch upcoming matchups data
     console.log('   📦 Pre-fetching next week matchups...');
 
-    const upcomingData = await fetchNextWeekMatchupsTool.execute({ week });
+    const upcomingData = await fetchNextWeekMatchupsTool.execute({ currentWeek: week });
 
-    if (!upcomingData.matchups || upcomingData.matchups.length === 0) {
+    const allMatchups = [...upcomingData.afc, ...upcomingData.nfc];
+
+    if (!upcomingData.available || allMatchups.length === 0) {
       console.log('   ⚠️  Next week matchups not available yet');
       return {
-        upcoming: `Week ${week + 1} matchups will be announced soon. Check back for the preview!`,
+        upcoming:
+          upcomingData.message ||
+          `Week ${week + 1} matchups will be announced soon. Check back for the preview!`,
       };
     }
 
     console.log('   ✅ Matchups fetched successfully');
-    console.log(`      • ${upcomingData.matchups.length} matchups scheduled`);
+    console.log(`      • ${allMatchups.length} matchups scheduled`);
 
     // Create Gemini client
     const geminiClient = createGeminiClient();
@@ -64,27 +68,23 @@ Week ${week + 1} Upcoming Matchups:
 
 ## AFC Matchups
 
-${upcomingData.matchups
+${allMatchups
   .filter(m => m.league === 'AFC')
   .map(
-    m => `### ${m.team1.name} (${m.team1.record}) vs ${m.team2.name} (${m.team2.record})
-- **Managers**: ${m.team1.manager} vs ${m.team2.manager}
-- **Storyline**: ${m.storyline || 'Standard matchup'}
-${m.playoffImplications ? `- **Stakes**: ${m.playoffImplications}` : ''}
-${m.keyFactors && m.keyFactors.length > 0 ? `- **Watch For**: ${m.keyFactors.join(', ')}` : ''}`,
+    m => `### ${m.team1.teamName} (${m.team1.record}) vs ${m.team2.teamName} (${m.team2.record})
+- **Managers**: ${m.team1.ownerName} vs ${m.team2.ownerName}
+- **Storyline**: ${m.storyline || 'Standard matchup'}`,
   )
   .join('\n\n')}
 
 ## NFC Matchups
 
-${upcomingData.matchups
+${allMatchups
   .filter(m => m.league === 'NFC')
   .map(
-    m => `### ${m.team1.name} (${m.team1.record}) vs ${m.team2.name} (${m.team2.record})
-- **Managers**: ${m.team1.manager} vs ${m.team2.manager}
-- **Storyline**: ${m.storyline || 'Standard matchup'}
-${m.playoffImplications ? `- **Stakes**: ${m.playoffImplications}` : ''}
-${m.keyFactors && m.keyFactors.length > 0 ? `- **Watch For**: ${m.keyFactors.join(', ')}` : ''}`,
+    m => `### ${m.team1.teamName} (${m.team1.record}) vs ${m.team2.teamName} (${m.team2.record})
+- **Managers**: ${m.team1.ownerName} vs ${m.team2.ownerName}
+- **Storyline**: ${m.storyline || 'Standard matchup'}`,
   )
   .join('\n\n')}
 

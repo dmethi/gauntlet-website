@@ -1,1038 +1,258 @@
-# Gauntlet Fantasy Football - Comprehensive Development Rules
+# Gauntlet Fantasy Football - Development Rules
 
-This is a Next.js fantasy football platform for "The Gauntlet" league system with unique multi-league architecture. These rules encode all learned patterns, strategies, and domain knowledge for efficient development.
+You are an expert in TypeScript, React, Next.js, and fantasy football domain modeling for a unique multi-league system.
 
-## 🎯 Type System Standards
+## 🎯 Core Architecture
 
-### Central Type Definitions (MANDATORY)
-**ALWAYS import domain types from `@gauntlet/types`:**
-
-```typescript
-// ✅ CORRECT: Import from central package
-import type { 
-  SleeperLeague, 
-  SleeperRoster, 
-  SleeperMatchup,
-  SleeperUser,
-  SleeperPlayer,
-  PlayerStats,
-  NFLState,
-} from '@gauntlet/types';
-
-// ❌ WRONG: Redefining types locally
-interface SleeperLeague { ... }
-interface SleeperRoster { ... }
-```
-
-**Central Types Available:**
-- **Sleeper API Types** (`@gauntlet/types`):
-  - Core: `SleeperLeague`, `SleeperRoster`, `SleeperUser`, `SleeperMatchup`, `SleeperPlayer`
-  - Stats: `PlayerStats` (100+ stat fields), `NFLState`
-  - Draft: `SleeperDraft`, `SleeperDraftPick`, `SleeperTradedPick`
-  - Transactions: `SleeperTransaction`, `SleeperPlayoffMatchup`
-  - Multi-league keys: `TeamKey`, `MatchupKey`, `PlayerWeekKey`
-  - Type literals: `LeagueStatus`, `TransactionType`, `NFLPosition`, `RosterPosition`
-
-- **Simulation & Variance Types** (`@gauntlet/types`):
-  - Lineup: `LineupPlayer`, `Lineup`
-  - Results: `MatchupResult`, `MatchupSimulationResult`, `ScoreDistribution`, `ImpliedOdds`
-  - Variance: `PositionVarianceRecord`, `PlayerVarianceRecord`, `ProjectionErrorRecord`, `VarianceData`
-  - Sampling: `SamplingContext`
-
-- **Analytics & Stats Types** (`@gauntlet/types`):
-  - Position Tracking: `TrackedPosition`, `PositionPoints`
-  - Note: Most analytics types remain as local implementations due to domain-specific requirements
-
-- **Server & Metrics Types** (`@gauntlet/types`):
-  - API Client: `GauntletAPIOptions`, `LeagueOddsResponse`, `MatchupSimulationResponse`
-  - Snapshot: `CompleteSnapshot`, `PreviousSnapshot`, `ValidationResult`
-  - Metrics: `Metrics`, `MetricsSummary`
-  - Database: `ModelStats`
-
-**When to Define Local Types:**
-- ✅ Component-specific props (e.g., `ButtonProps`, `ModalProps`)
-- ✅ Route-specific request/response shapes (API transformations)
-- ✅ UI-only state management types (view-specific state)
-- ✅ Temporary transformation types (internal to a single function/file)
-
-**When to Use Central Types:**
-- ✅ Sleeper API responses (all endpoints)
-- ✅ Cross-app domain models (shared between web/server/sim-engine)
-- ✅ Analytics data structures (used in multiple features)
-
-**Migration Complete:**
-- ❌ `apps/web/src/lib/sleeper/types.ts` - **DELETED** (use `@gauntlet/types`)
-- ✅ All apps (web, server, sim-engine) now use centralized types
-- ✅ **Phase 1**: 25+ Sleeper API type duplicates eliminated
-- ✅ **Phase 2**: 11 simulation/variance type duplicates eliminated  
-- ✅ **Phase 3**: 2 position tracking types centralized (most analytics types remain local)
-- ✅ Types re-exported from sim-engine for backwards compatibility
-
-## ⚡ Function Patterns & Coding Standards
-
-### MANDATORY: Arrow Functions Over Classes
-**ALWAYS use arrow functions and factory patterns. NEVER use classes or regular function declarations:**
-
-```typescript
-// ✅ CORRECT: Arrow function factory pattern
-export const createMetrics = (): Metrics => {
-  const counters = new Map<string, number>();
-  const timers = new Map<string, number[]>();
-
-  return {
-    increment: (metric: string, value = 1): void => {
-      const current = counters.get(metric) || 0;
-      counters.set(metric, current + value);
-    },
-    getSummary: (): MetricsSummary => {
-      return { counters: Object.fromEntries(counters), timers: {...} };
-    }
-  };
-};
-
-// ✅ CORRECT: Standalone arrow functions
-export const calculateScore = (player: Player): number => {
-  return player.stats.reduce((sum, stat) => sum + stat.points, 0);
-};
-
-// ✅ CORRECT: Arrow function API client factory
-export const createAPIClient = (options: ClientOptions = {}): APIClient => {
-  const baseUrl = options.baseUrl || 'https://api.example.com';
-  
-  return {
-    fetchData: async (id: string): Promise<Data> => {
-      const response = await fetch(`${baseUrl}/data/${id}`);
-      return response.json();
-    }
-  };
-};
-
-// ❌ WRONG: Class-based approach
-export class Metrics {
-  private counters = new Map();
-  increment(metric: string): void { ... }
-}
-
-// ❌ WRONG: Regular function declaration
-export function calculateScore(player: Player): number {
-  return player.stats.reduce((sum, stat) => sum + stat.points, 0);
-}
-
-// ❌ WRONG: Traditional function expression
-export const calculateScore = function(player: Player): number {
-  return player.stats.reduce((sum, stat) => sum + stat.points, 0);
-};
-```
-
-### Why Arrow Functions & Factory Pattern?
-
-**Benefits:**
-- ✅ **Consistent code style** across entire codebase
-- ✅ **Lexical `this` binding** eliminates context bugs
-- ✅ **Closure-based state** more functional and composable
-- ✅ **Better tree-shaking** for unused exports
-- ✅ **TypeScript inference** works better with arrow functions
-- ✅ **Testability** factory pattern enables easy mocking
-
-**Factory Pattern for Stateful Objects:**
-```typescript
-// ✅ Use factory pattern when you need instance state
-export const createLogger = (context: string) => {
-  const startTime = Date.now();
-  
-  return {
-    log: (message: string): void => {
-      console.log(`[${context}] ${message} (${Date.now() - startTime}ms)`);
-    },
-    reset: (): void => {
-      startTime = Date.now();
-    }
-  };
-};
-
-const logger = createLogger('API');
-logger.log('Fetching data'); // [API] Fetching data (123ms)
-```
-
-### Function Naming Conventions
-- **Factory functions**: `create*` prefix (e.g., `createMetrics`, `createAPIClient`)
-- **Utility functions**: Descriptive verbs (e.g., `calculateScore`, `formatDate`, `validateInput`)
-- **Predicates**: `is*` or `has*` prefix (e.g., `isValidEmail`, `hasPermission`)
-- **Async functions**: No special prefix, type return as `Promise<T>`
-
-### Converting Classes to Factory Pattern
-
-**Before (Class):**
-```typescript
-export class APIClient {
-  private baseUrl: string;
-  
-  constructor(options: Options) {
-    this.baseUrl = options.baseUrl || 'default';
-  }
-  
-  async fetch(id: string): Promise<Data> {
-    return await fetch(`${this.baseUrl}/${id}`).then(r => r.json());
-  }
-}
-
-const client = new APIClient({ baseUrl: 'https://api.com' });
-```
-
-**After (Factory):**
-```typescript
-export const createAPIClient = (options: Options = {}): APIClient => {
-  const baseUrl = options.baseUrl || 'default';
-  
-  return {
-    fetch: async (id: string): Promise<Data> => {
-      return await fetch(`${baseUrl}/${id}`).then(r => r.json());
-    }
-  };
-};
-
-const client = createAPIClient({ baseUrl: 'https://api.com' });
-```
-
-### Migration Status
-- ✅ **apps/server**: 100% arrow functions (all 11 functions converted)
-- ✅ **Metrics utility**: Factory pattern with closure-based state
-- ⏳ **apps/web**: Migration in progress (see REFACTOR-601)
-
-## 🗂️ Shared Utilities Structure (MANDATORY)
-
-### ⚠️ ALWAYS Check Shared Utilities Before Building Custom Functions
-
-**Before writing any utility function, check if it already exists in the shared utilities structure!**
-
-### Shared Utilities Directory (`apps/web/src/shared/utils/`)
-
-```
-shared/utils/
-├── stats/                    # Statistical calculations & analysis
-│   ├── compose.ts           # Data composition utilities
-│   ├── join.ts              # Data joining utilities  
-│   ├── medians.ts           # Statistical functions (median, mean, stddev, percentile)
-│   ├── positional-advantages.ts  # Position advantage calculations
-│   ├── positions.ts         # Position-specific utilities
-│   ├── ranks.ts             # Ranking calculations
-│   ├── teams.ts             # Team data utilities
-│   └── index.ts             # Barrel export
-│
-├── calculations/             # Client-side calculations
-│   └── index.ts             # Team stats, positional scoring, calculation cache
-│
-└── colors/                   # Color utilities (if needed in future)
-    └── ...
-```
-
-### ✅ CORRECT: Using Shared Utilities
-
-```typescript
-// ✅ Import from shared utils
-import { median, mean, rank, percentile } from '@/shared/utils/stats';
-import { calculateTeamStats, calculationCache } from '@/shared/utils/calculations';
-
-// Use the existing functions
-const teamMedian = median(teamScores);
-const teamRank = rank(allTeamScores);
-const stats = calculateTeamStats(matchups, rosters);
-```
-
-### ❌ WRONG: Reimplementing Existing Functions
-
-```typescript
-// ❌ DON'T reimplement median calculation
-const median = (values: number[]): number => {
-  const sorted = [...values].sort((a, b) => a - b);
-  // ... this already exists in @/shared/utils/stats!
-};
-
-// ❌ DON'T reimplement ranking logic
-const rank = (values: number[]): number[] => {
-  // ... this already exists in @/shared/utils/stats!
-};
-```
-
-### Feature-Specific Utilities (`apps/web/src/features/*/utils/`)
-
-**When utilities are specific to ONE feature, place them in that feature's utils directory:**
-
-```
-features/
-├── draft-analysis/utils/
-│   ├── analytics.ts          # Draft analytics calculations
-│   ├── calculations.ts       # Manager-specific calculations
-│   └── index.ts
-│
-├── transactions/utils/
-│   ├── facts.ts              # Transaction fact building
-│   └── index.ts
-│
-├── start-sit/utils/
-│   ├── analysis.ts           # Start/sit efficiency analysis
-│   └── index.ts
-│
-├── reports/utils/
-│   ├── narratives.ts         # Narrative generation
-│   └── index.ts
-│
-└── stats/utils/              # Stats hub specific utilities
-    └── ...
-```
-
-### Decision Tree: Where to Place a New Utility?
-
-**Ask these questions:**
-
-1. **Is it used by 3+ features?** → `shared/utils/` (shared utility)
-2. **Is it used by 1-2 features in the same domain?** → Primary feature's `utils/` directory
-3. **Is it domain-specific logic?** → Feature-specific `utils/` directory
-4. **Is it a generic helper (not fantasy football specific)?** → Check if it belongs in a package or lib
-
-### ✅ CORRECT Pattern: Building New Shared Utilities
-
-```typescript
-// 1. Check if function exists first
-import { median } from '@/shared/utils/stats'; // Already exists!
-
-// 2. If not found, add to appropriate shared directory
-// File: apps/web/src/shared/utils/stats/variance.ts
-export const calculateVariance = (values: number[]): number => {
-  const avg = mean(values);
-  const squaredDiffs = values.map(val => Math.pow(val - avg, 2));
-  return mean(squaredDiffs);
-};
-
-// 3. Export from barrel file
-// File: apps/web/src/shared/utils/stats/index.ts
-export * from './variance';
-
-// 4. Import in your feature
-import { calculateVariance } from '@/shared/utils/stats';
-```
-
-### Available Shared Functions Reference
-
-**Statistics (`@/shared/utils/stats`):**
-- `median(values)` - Calculate median
-- `mean(values)` - Calculate mean/average  
-- `standardDeviation(values)` - Calculate standard deviation
-- `percentile(values, p)` - Calculate percentile
-- `rank(values)` - Rank values (1 = highest)
-- `percentileRank(values)` - Get percentile ranks
-- `rankWithinLeagues(values, leagueMap)` - Multi-league ranking
-
-**Data Composition (`@/shared/utils/stats`):**
-- `buildStatsDataset(config)` - Build complete stats dataset
-- `serializeStatsDataset(dataset)` - Serialize for client
-- `buildTeamInfoMap(config)` - Build team info mapping
-- `buildRosterLeagueMap(leagues, rosters)` - Roster to league mapping
-
-**Position Analysis (`@/shared/utils/stats`):**
-- `getStarterPositionPoints(config)` - Calculate position points
-- `aggregatePositionPoints(weekly, range)` - Aggregate across weeks
-- `calculatePositionalMedians(dataset, range)` - Position medians
-- `calculateAllPositionalAdvantages(dataset, range)` - All team advantages
-- `getTeamPositionalSummary(dataset, teamKey, range)` - Team summary
-- `getPositionSummaries(dataset, range)` - Position-by-position summaries
-
-**Team Analysis (`@/shared/utils/stats`):**
-- `getTeamAndOpponentPoints(config)` - Extract team/opponent points
-- `aggregateTeamPoints(weekly, range)` - Aggregate across weeks
-
-**Client Calculations (`@/shared/utils/calculations`):**
-- `calculateTeamStats(matchups, rosters, ...)` - Team season stats
-- `calculatePositionalScoring(matchups, players, ...)` - Position scoring
-- `calculationCache` - Shared calculation cache instance
-
-### Migration Complete (Phase 3: Utility Extraction)
-
-**Completed Tasks:**
-- ✅ **WEB-UTIL-005**: Stats utilities relocated to `shared/utils/stats/`
-- ✅ **WEB-UTIL-006**: Transaction & start-sit utilities to feature directories
-- ✅ **WEB-UTIL-007**: Draft analytics, calculations, narratives organized
-
-**Results:**
-- 12 utility files relocated (~3,200 lines)
-- 30+ files updated with new imports
-- Clean separation of shared vs feature-specific code
-- Foundation for enterprise-ready architecture
-
-### Best Practices
-
-1. **Always check shared utilities first** before writing new utility functions
-2. **Import from barrel exports** (`@/shared/utils/stats` not `@/shared/utils/stats/medians`)
-3. **Add tests** for new shared utilities (in adjacent `.test.ts` file)
-4. **Document complex functions** with JSDoc comments
-5. **Export from barrel** when adding new utilities to shared directories
-
-## 🏗️ Critical Architecture Patterns
-
-### Multi-League System Foundation
-⚠️ **CRITICAL**: This system manages TWO separate Sleeper leagues as one umbrella competition:
-- **AFC League**: `1263744209295245312` (12 teams)
-- **NFC League**: `1263740549504962561` (12 teams)
-- **Total**: 24 teams competing across both leagues
-
-### ⚠️ Multi-League Data Conflicts (CRITICAL BUG PATTERNS)
-When aggregating data across leagues, you MUST avoid these patterns:
-
-```typescript
-// ❌ WRONG: Creates 6 groups of 4 teams instead of 12 groups of 2 teams
-const allMatchups = [...afcMatchups, ...nfcMatchups];
-const grouped = groupBy(allMatchups, m => m.matchup_id);
-
-// ✅ CORRECT: Process leagues separately, then combine results
-const afcResults = processLeagueMatchups(afcMatchups);
-const nfcResults = processLeagueMatchups(nfcMatchups);
-const combined = [...afcResults, ...nfcResults];
-
-// ✅ CORRECT: Use composite keys for uniqueness
-const teamKey = `${leagueId}-${roster_id}`;
-const matchupKey = `${leagueId}-${week}-${matchup_id}`;
-```
-
-**Key Principles:**
+**Multi-League System (CRITICAL)**
+- TWO separate Sleeper leagues: AFC (12 teams) + NFC (12 teams) = 24 teams total
 - Matchup IDs are NOT unique across leagues (both use 1-6)
-- Roster IDs are only unique within a league
-- Always validate 24-team totals, never assume 12-team counts
-- Process leagues individually, then aggregate results
+- Roster IDs only unique within a league
+- ALWAYS process leagues separately, then combine results
+- Use composite keys: `${leagueId}-${rosterId}`, `${leagueId}-${week}-${matchupId}`
 
-## 🚀 Development Methodology (Proven Efficient Patterns)
+**Type System**
+- Import ALL domain types from `@gauntlet/types` central package
+- NEVER redefine types locally (SleeperLeague, SleeperRoster, SleeperMatchup, etc.)
+- Local types ONLY for: component props, UI state, route-specific transforms
+- Explicit return types on all exported functions
 
-### Data-First Development Workflow
-This approach has proven most effective for complex fantasy features:
+**Function Patterns**
+- Arrow functions ONLY - no classes, no regular function declarations
+- Factory pattern for stateful objects: `createService()`, `createMetrics()`, `createLogger()`
+- Closure-based state over class properties
+- Named exports (no default exports)
 
-```typescript
-// ✅ PHASE 1: Data Strategy & Validation (Use debug scripts)
-// 1. Write temporary debug script to understand data structure
-const debugScript = `
-  const data = await fetch('/api/sleeper/...');
-  console.log('Data structure:', data);
-  // Validate multi-league aggregation works correctly
-  // Test edge cases and error conditions
-`;
+**Sleeper API Client**
+- Use unified client from `@/lib/sleeper/unified-client`
+- NEVER direct fetch calls to Sleeper API
+- Client handles caching, error handling, rate limiting
 
-// 2. Build core data functions with proper error handling
-const fetchAndTransformData = async () => {
-  // Handle all error states upfront
-  // Use composite keys for multi-league uniqueness  
-  // Apply league-specific scoring calculations
-};
-
-// 3. Test with actual API calls, verify outputs
-// ✅ PHASE 2: UI Implementation (After data works)
-// 4. Build UI components that consume the validated data structure
-// 5. Add loading states and error boundaries
-// 6. Clean up debug scripts after feature is complete
+**File Organization**
+```
+/shared/          # Cross-feature utilities, components, hooks
+/features/        # Feature-based modules (draft-analysis, matchups, stats, etc.)
+  /[feature]/
+    /components/
+    /hooks/
+    /utils/
+    types.ts
+    index.ts
+/lib/             # Infrastructure only (API clients, constants)
+/components/ui/   # shadcn primitives
+/app/             # Next.js routes - minimal logic, import from features
 ```
 
-### Effective Development Patterns
+## 🏢 Enterprise Hygiene (TWO-TIER SYSTEM)
 
-#### ✅ DO: Proven High-Efficiency Approaches
-1. **Debug Scripts First**: Create temporary validation scripts before building features
-2. **Parallel API Calls**: Always use `Promise.all()` for multiple fetches
-3. **Precomputation for Heavy Analytics**: Run `npm run precompute:real` for expensive calculations
-4. **Direct API over Database**: Sleeper API calls are free, database queries are expensive
-5. **Graceful Fallback Chains**: Precomputed → Live API → Archived data patterns
-6. **Type-Safe Composite Keys**: Define multi-league keys upfront to prevent ID conflicts
-7. **Incremental Feature Building**: Small, testable pieces that work independently
-8. **Domain-Specific Optimizations**: Fantasy football calculations over generic approaches
-
-#### ❌ AVOID: Patterns That Create Technical Debt  
-1. **UI-First Development**: Building components before understanding data requirements
-2. **Sequential API Calls**: Slow loading when parallel fetching is possible
-3. **Database-Heavy Approaches**: Expensive queries when free API calls are available
-4. **Generic Implementations**: Ignoring fantasy football domain-specific optimizations
-5. **Monolithic Features**: Large, complex implementations that are hard to debug
-6. **Assumption-Driven Development**: Not validating multi-league data uniqueness
-7. **Late Error Handling**: Adding error boundaries after implementation vs. upfront
-8. **No Debugging Infrastructure**: Building without validation and testing scripts
-
-### Development Sequence Template
-For new fantasy features, follow this proven sequence:
-
+### Tier 1: Hard Blocks (MUST FIX)
+Run before completing ANY task:
 ```bash
-# 1. Create debug script to understand data
-touch debug-new-feature.js
-# Validate API responses, data structure, edge cases
-
-# 2. Implement core data functions  
-# - Error handling upfront
-# - Multi-league safety patterns
-# - League-specific calculations
-
-# 3. Test data functions thoroughly
-# - Multiple weeks/leagues  
-# - Edge cases and error states
-# - Performance with realistic data volumes
-
-# 4. Build UI components
-# - Loading states with skeleton UI
-# - Error boundaries with retry mechanisms
-# - Responsive design with proper styling
-
-# 5. Integration and cleanup
-# - Remove debug scripts
-# - Add to precomputation if heavy analytics
-# - Update documentation
+npm run build        # MUST PASS - no exceptions
+npx tsc --noEmit     # Must pass - zero type errors
+npm test             # Must pass if tests exist
 ```
 
-## 📡 Sleeper API Strategy & Data Fetching
+**Cannot proceed if:**
+- Build fails
+- Type errors exist
+- Existing tests fail
+- File exceeds 800 lines (requires split or justification)
 
-### 🎯 MANDATORY: Use Unified Sleeper Client
-**Migration Complete (11/11)!** Always use the unified client for all Sleeper API interactions:
+### Tier 2: Tech Debt Review (PRESENT & DECIDE)
 
-```typescript
-// ✅ CORRECT: Use unified client
-import { sleeperClient, createStatsClient, PlayerStats } from '@/lib/sleeper/unified-client';
+**After Tier 1 passes, scan for and present:**
 
-// For general API calls (replaces sleeper-direct.ts - DELETED)
-const league = await sleeperClient.fetchLeague(leagueId);
-const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
+🔴 **Critical Issues (Strongly Recommend Fixing):**
+- Files >700 lines
+- Multiple console.log (>5 in a file)
+- Redefined central types from `@gauntlet/types`
+- Missing tests for new utilities (>100 lines)
+- `eslint-disable` comments
 
-// For stats/analytics (replaces sleeper/client.ts - DELETED)
-const statsClient = createStatsClient();
-const playerStats = await statsClient.fetchWeeklyPlayerStats(week);
+⚠️ **Recommendations (Consider Addressing):**
+- Files 400-700 lines (consider splitting if logical)
+- Few console.log (<5) - suggest DEBUG pattern
+- Components without `memo()`
+- Missing JSDoc on exported functions
+- No tests for small code (<50 lines)
 
-// Types available (replaces sleeper-stats-service.ts - DELETED)
-const stats: PlayerStats = await statsClient.fetchWeeklyPlayerStats(week);
+💡 **Suggestions (Nice to Have):**
+- Component patterns (displayName, prop types)
+- Documentation improvements
+- Minor refactoring opportunities
 
-// ❌ WRONG: Direct API calls or legacy imports
-const response = await fetch(`https://api.sleeper.app/v1/league/${id}`);
-import { getLeague } from '@/lib/sleeper-direct'; // File deleted!
+**Present findings to user, let them decide what to fix.**
+
+**Document accepted tech debt in commit:**
+```
+Tech Debt Notes:
+- Accepted: matchup-data.ts is 775 lines
+  Rationale: Cohesive domain logic, logically grouped
+- Accepted: 5 console.logs for debugging
+  Rationale: Will convert to logger in cleanup pass
 ```
 
-### Unified Client Configurations
-The unified client provides 4 pre-configured strategies:
+## 📏 File Size Guidelines
+
+| Type | Recommended | Warning | Critical |
+|------|-------------|---------|----------|
+| Components | 300 | 500 | 800+ |
+| Pages | 200 | 400 | 600+ |
+| Utils/Logic | 400 | 700 | 1000+ |
+| Types | 200 | 400 | 600+ |
+
+## 🔍 Logging Standards
+
+**NEVER use console.log in production code**
+
+✅ **Options:**
+- Environment-based DEBUG: `if (process.env.SLEEPER_DEBUG === '1') console.log(...)`
+- Logger factory: `import { createLogger } from '@/lib/logger'`
+- Error boundaries for React errors
+- Return error states for UI
+
+❌ **Exception:** Debug scripts can use console.log, but MUST be deleted before completion
+
+## 🧩 Component Patterns
 
 ```typescript
-import { 
-  createDirectClient,    // Replaces sleeper-direct.ts (graceful errors)
-  createStatsClient,     // Replaces sleeper/client.ts (throws errors)  
-  createDraftClient,     // For draft operations (rate limited)
-  createServiceClient    // Replaces sleeper-stats-service.ts (cached)
-} from '@/lib/sleeper/unified-client';
-```
+// Use memo, readonly props, destructure inside body
+import { memo } from 'react';
 
-### 🏆 Migration Complete: Why We Unified
-
-**Problem Solved:** Before unification, we had 4+ separate Sleeper API clients:
-- `sleeper-direct.ts` (general usage, graceful errors)
-- `sleeper/client.ts` (stats hub, throws errors)  
-- `sleeper-draft-fetcher.ts` (draft operations, rate limited)
-- `sleeper-stats-service.ts` (cached stats, memory storage)
-
-**Issues Fixed:**
-- ❌ **Inconsistent error handling** - some threw, some returned null
-- ❌ **Duplicated API calls** - same endpoints implemented 4+ times  
-- ❌ **Different caching strategies** - memory vs none vs headers-based
-- ❌ **Maintenance burden** - changes required updating multiple files
-- ❌ **No smart caching** - 11K+ players fetched multiple times
-
-**Benefits Achieved:**
-- ✅ **100% Data Integrity** - Validated across 40+ tests, 8,622 projections, 11,400 players
-- ✅ **Smart Caching** - 1 week cache for massive static endpoints (players)
-- ✅ **Consistent Error Handling** - Configurable strategies per use case  
-- ✅ **Performance Optimized** - Same/better response times with caching
-- ✅ **Single Source of Truth** - One client to rule them all
-- ✅ **Complex Systems Preserved** - 10K-20K Monte Carlo simulations work identically
-
-**Deleted Legacy Files:**
-```typescript
-// ❌ These files are deleted and imports will fail:
-import { getLeague } from '@/lib/sleeper-direct'; // DELETED
-import { fetchLeague } from '@/lib/sleeper/client'; // DELETED  
-import { sleeperStatsService } from '@/lib/sleeper-stats-service'; // DELETED
-```
-
-### Data Fetching Strategy by Endpoint
-
-- **Projections**: `GET /projections/nfl/{season}/{week}` - Use for simulations and predictions
-- **Stats**: `GET /stats/nfl/regular/{season}/{week}` - Use for actual performance analysis
-- **Players**: `GET /players/nfl` - **Cache for 1 week** (11K+ players, mostly static data)
-- **League-Specific Calculations**: Always apply league scoring settings to raw projections
-- **Time-Based Adjustments**: Decay projections based on game progress for live scenarios
-
-### Caching Strategy by Data Type
-```typescript
-// ✅ CORRECT: Cache based on data volatility
-const players = await client.fetchAllPlayers(); // 1 week cache - static data
-const stats = await client.fetchWeeklyPlayerStats(week); // 1 hour cache - semi-static
-const matchups = await client.fetchMatchups(leagueId, week); // No cache - live data
-const nflState = await client.fetchNFLState(); // No cache - live NFL state
-```
-
-### React Query Fetch Strategies
-```typescript
-export const FETCH_STRATEGIES = {
-  // Live scoring data
-  realTime: {
-    staleTime: 0,
-    gcTime: 0,
-    refetchInterval: 10000,
-    cache: 'no-store'
-  },
-  
-  // Roster/lineup data  
-  dynamic: {
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-    refetchOnMount: 'always'
-  },
-  
-  // Player database, historical data
-  static: {
-    staleTime: 24 * 60 * 60 * 1000,
-    gcTime: 7 * 24 * 60 * 60 * 1000,
-    refetchOnMount: false
-  }
-};
-```
-
-## 🎲 Simulation Engine Strategy
-
-### Monte Carlo Simulation Principles
-- **Iterations**: Minimum 10,000 for statistical significance
-- **Variance Source**: Historical projection vs actual performance (2022-2024 data)
-- **Player vs Position Weighting**: 70% player-specific, 30% position-level when sufficient history exists
-- **Distribution Sampling**: Direct historical sampling, not assumed normal distributions
-
-### Position Variance Constants (Derived from Historical Data)
-```typescript
-const POSITION_VARIANCE = {
-  K: 0.50,   // Most predictable
-  QB: 0.80,  // Moderate variance  
-  TE: 0.99,  // Highly volatile
-  RB: 0.98,  // Highly volatile
-  WR: 0.98,  // Highly volatile
-  DEF: 0.75  // Moderate-high variance
-};
-```
-
-### Live Simulation Logic
-```typescript
-// ✅ Time-based projection decay for live games
-if (gameState.state === 'post') {
-  remainingProjection = 0;
-} else if (gameState.state === 'in') {
-  const projectionPerMinute = fullProjection / 60;
-  remainingProjection = projectionPerMinute * gameState.minutesRemaining;
+interface TableProps {
+  readonly data: Data[];
+  readonly onSort?: (field: string) => void;
 }
 
-// ✅ Combined actual + simulated remaining scoring
-const finalScore = player.currentScore + simulateRemaining(remainingProjection);
-```
-
-## 📊 Analytics & Stats Methodologies
-
-### Positional Advantage Analysis
-- **Calculation Method**: Team weekly averages vs league-wide medians by position
-- **Metrics**: Absolute advantage, percentage advantage, league rank
-- **Aggregation**: Process each league separately, then combine for 24-team rankings
-- **Time Ranges**: Flexible week ranges for seasonal vs recent form analysis
-
-### Start/Sit Efficiency Analysis
-- **Methodology**: Skill-weighted decision analysis comparing started vs benched players
-- **Weighting**: Position-based skill requirements (QB > RB/WR > TE > K)
-- **Context**: Team-specific replacement levels, not league-wide averages
-- **Metrics**: Decision quality score, missed opportunity points, position-specific efficiency
-
-### Transaction Analysis Strategy
-```typescript
-// ✅ Build comprehensive facts for analysis
-const facts = {
-  weekRosterPlayers: Map<`${week}:${rosterId}`, Set<playerId>>,
-  playerWeekPoints: Map<`${week}:${playerId}`, number>,
-  replacementByWeekPos: Map<`${week}:${position}`, number>
-};
-
-// ✅ Calculate efficiency metrics
-const efficiency = (actualPoints - replacementLevel) / replacementLevel;
-```
-
-## 🎯 Live Scoring & Real-Time Systems
-
-### Live Scoring Update Intervals
-- **Primary Interval**: 10 minutes during NFL games (provides 18 data points per 3-hour game)
-- **Rationale**: Perfect balance between granular trend visualization and API budget conservation
-- **Data Points**: Score progression, win probability changes, momentum tracking
-- **Alternative**: 5-minute intervals for critical matchups (doubles API calls)
-
-### Real-Time Data Patterns
-```typescript
-// ✅ Live scoring data structure
-interface LiveMatchupUpdate {
-  timestamp: string;
-  week: number;
-  matchupId: string;
-  team1Score: number;
-  team2Score: number;
-  team1WinProbability: number;
-  excitementScore: number; // Volatility metric
-  gameState: 'pre' | 'in' | 'post';
-}
-
-// ✅ Time-series storage pattern
-const timeSeriesKey = `${leagueId}-${week}-${matchupId}`;
-const updates = await getMatchupTimeSeries(timeSeriesKey);
-```
-
-### Excitement Metrics Calculation
-- **Volatility Index**: Standard deviation of win probability changes over time
-- **Lead Changes**: Number of times the lead switches during a game
-- **Clutch Performance**: Bonus weighting for 4th quarter and overtime scoring
-- **Momentum Tracking**: Rate of change in scoring differential
-
-## 🎯 League-Specific Scoring Calculations
-
-### Always Use League Scoring Settings
-```typescript
-// ✅ NEVER use generic pts_half_ppr from Sleeper
-// ✅ ALWAYS calculate using league-specific settings
-const calculateLeagueProjection = (rawProjection, scoringSettings) => {
-  let totalPoints = 0;
-  totalPoints += (rawProjection.pass_yd || 0) * (scoringSettings.pass_yd || 0);
-  totalPoints += (rawProjection.rec_yd || 0) * (scoringSettings.rec_yd || 0);
-  totalPoints += (rawProjection.rec || 0) * (scoringSettings.rec || 0); // PPR
-  // ... apply all league-specific rules
-  return totalPoints;
-};
-```
-
-### Scoring Categories Priority Order
-1. **Passing**: Yards, TDs, Interceptions, Completions
-2. **Rushing**: Yards, TDs, Long plays
-3. **Receiving**: Yards, TDs, Receptions (PPR), Long plays
-4. **Defense**: Points allowed, Sacks, Turnovers, TDs
-5. **Kicking**: FG distance tiers, Extra points
-
-## ⚡ Performance Optimization Patterns
-
-### Multi-Layer Caching Architecture
-```typescript
-// ✅ Layer 1: Browser localStorage/sessionStorage (static data)
-const BROWSER_CACHE_KEYS = {
-  PLAYERS: 'gauntlet_players_v1', // 1 week expiry
-  LEAGUE_SETTINGS: 'gauntlet_settings_v1', // Season-long
-  USER_PREFERENCES: 'gauntlet_prefs_v1' // Persistent
-};
-
-// ✅ Layer 2: React Query in-memory cache (dynamic data)
-export const CACHE_STRATEGIES = {
-  LIVE_SCORES: { staleTime: 0, gcTime: 5 * 60 * 1000 }, // 5 min garbage collection
-  MATCHUPS: { staleTime: 30 * 1000, gcTime: 5 * 60 * 1000 }, // 30s stale
-  ROSTERS: { staleTime: 5 * 60 * 1000, gcTime: 30 * 60 * 1000 }, // 5 min stale
-  PLAYERS: { staleTime: 24 * 60 * 60 * 1000, gcTime: 7 * 24 * 60 * 60 * 1000 } // 1 day stale
-};
-
-// ✅ Layer 3: Server-side cache (API layer)
-const SERVER_CACHE_DURATION = {
-  PLAYERS: 7 * 24 * 60 * 60 * 1000, // 1 week - massive static data
-  STATS: 60 * 60 * 1000, // 1 hour - semi-static
-  LIVE_DATA: 0, // No cache - always fresh
-  PROJECTIONS: 60 * 60 * 1000 // 1 hour - updated periodically
-};
-```
-
-### Precomputation Strategy
-- **Heavy Analytics**: Run `npm run precompute:real` for draft analysis, manager analytics
-- **Fallback Pattern**: Precomputed → Live API → Archived data
-- **Cache Duration**: 5 minutes for live data, 1 hour for semi-static, 24 hours for historical
-
-### Parallel Processing
-```typescript
-// ✅ ALWAYS prefer parallel API calls
-const [league1, league2, players, nflState] = await Promise.all([
-  fetchLeague(id1),
-  fetchLeague(id2), 
-  fetchPlayers(),
-  fetchNFLState()
-]);
-
-// ✅ Process multi-week data in parallel
-const weeklyData = await Promise.all(
-  weeks.map(week => fetchMatchups(leagueId, week))
-);
-```
-
-## 🎨 UI & Component Patterns
-
-### Error Handling Components
-```typescript
-// ✅ Graceful error boundaries with retry mechanisms
-const ErrorMessage = ({ error, onRetry }) => (
-  <Card>
-    <CardContent className="text-center">
-      <div className="text-red-600 mb-4">
-        <h3>Analysis Failed</h3>
-        <p>{error}</p>
-      </div>
-      <Button onClick={onRetry}>Retry Analysis</Button>
-    </CardContent>
-  </Card>
-);
-```
-
-### Loading States Pattern
-```typescript
-// ✅ Skeleton UI over spinners, with progress indicators
-const LoadingContent = () => (
-  <div className="space-y-6">
-    <Skeleton className="h-8 w-[250px]" />
-    <div className="space-y-2">
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-[80%]" />
-    </div>
-  </div>
-);
-```
-
-## 🚀 Development Workflow
-
-### Environment-Based Debug Patterns
-```typescript
-const DEBUG = process.env.SLEEPER_DEBUG === '1';
-if (DEBUG) {
-  console.log('[SLEEPER API] Fetching', url, 'with params', params);
-  console.log('[DEBUG] Response:', { status, data: data?.slice(0, 2) });
-}
-```
-
-### API Route Patterns
-```typescript
-// ✅ Structured error responses with debugging info
-return NextResponse.json({
-  error: 'Failed to fetch league data',
-  message: error.message,
-  _meta: {
-    source: 'sleeper_api',
-    responseTime: `${Date.now() - startTime}ms`,
-    fallback: false
-  }
-}, { status: 500 });
-```
-
-### File Organization Strategy (Updated - Feature-Based Architecture)
-
-```
-/shared/                        # Cross-feature shared code
-  /utils/
-    /stats/                     # Statistical utilities (COMPLETED)
-    /calculations/              # Client-side calculations (COMPLETED)
-    /colors/                    # Color utilities (future)
-  /components/                  # Shared components (future)
-  /hooks/                       # Shared hooks (future)
-
-/features/                      # Feature-based organization
-  /draft-analysis/
-    /utils/                     # Draft-specific utilities (COMPLETED)
-  /transactions/
-    /utils/                     # Transaction utilities (COMPLETED)
-  /start-sit/
-    /utils/                     # Start-sit utilities (COMPLETED)
-  /reports/
-    /utils/                     # Report narratives (COMPLETED)
-  /stats/
-    /components/                # Stats hub components
-  /matchups/
-    /components/                # Matchup components
-
-/lib/                           # Infrastructure code only
-  /sleeper/                     # Sleeper API client (unified)
-  constants.ts                  # App-wide constants
-  utils.ts                      # Generic utilities (cn, etc)
-  hooks.ts                      # Shared hooks
-
-/components/
-  /ui/                          # shadcn/ui primitives
-  /charts/                      # Visualization components
-  /stats/                       # Domain analytics components
-
-/app/
-  /api/                         # API routes (minimal logic)
-  /[feature]/                   # Feature pages (use feature exports)
-```
-
-**Migration Status:**
-- ✅ **Phase 3 Complete**: Utility extraction (WEB-UTIL-005 through 007)
-- 🔄 **Phase 4 Next**: Hook extraction (WEB-HOOK-001 through 003)
-- 🔄 **Phase 5 Next**: Component splitting (WEB-COMP-001 through 005)
-
-## 🔧 TypeScript Standards
-
-### Strict Type Safety
-- **No `any` types** - Use proper types from `@gauntlet/types` central package
-- **Arrow functions only** - No classes or regular function declarations (see Function Patterns section)
-- **Central type definitions** - Import from `@gauntlet/types`, never redefine locally
-- **Interface segregation** for large data structures
-- **Discriminated unions** for API response states
-- **Composite key types** for multi-league scenarios
-- **Explicit return types** on all exported functions
-
-### Domain-Specific Types
-```typescript
-// ✅ Always use composite keys for uniqueness
-type TeamKey = `${string}-${number}`; // leagueId-rosterId
-type MatchupKey = `${string}-${number}-${number}`; // leagueId-week-matchupId
-type PlayerWeekKey = `${number}:${string}`; // week:playerId
-
-// ✅ Simulation result interfaces
-interface MatchupSimulation {
-  team1WinPct: number;
-  team2WinPct: number;
-  team1Scores: ScoreDistribution;
-  team2Scores: ScoreDistribution;
-  iterations: number;
-  generatedAt: string;
-}
-```
-
-## 🧪 Testing Philosophy
-
-### Integration Over Unit Tests
-- **Focus**: API-dependent workflows over isolated functions
-- **Mock Strategy**: Use captured JSON fixtures from actual Sleeper responses
-- **Multi-League Testing**: Always test with both AFC and NFC league datasets
-- **Performance Testing**: Validate heavy operations (10K+ simulations, 24-team aggregations)
-
-### Critical Test Scenarios
-1. **Matchup Aggregation**: Verify 12 matchups from 2 leagues, not 6 matchups with 4 teams
-2. **Projection Calculations**: Ensure league scoring settings applied correctly
-3. **Simulation Accuracy**: Monte Carlo results within expected confidence intervals
-4. **Multi-League Rankings**: 24-team vs 12-team league rank calculations
-
-## 📈 Monitoring & Performance
-
-### API Response Headers
-```typescript
-return NextResponse.json(data, {
-  headers: {
-    'X-Response-Time': `${Date.now() - startTime}ms`,
-    'X-Data-Source': 'sleeper_api',
-    'Cache-Control': `public, s-maxage=${cacheSeconds}`
-  }
+export const Table = memo<TableProps>((props) => {
+  const { data, onSort } = props;
+  return <table>{/* JSX */}</table>;
 });
+
+Table.displayName = 'Table';
 ```
 
-### Performance Budgets
-- **API Response Time**: < 2s for simple data, < 10s for heavy analytics
-- **Simulation Time**: < 5s for 10K iterations
-- **Page Load Time**: < 3s for cached data, < 8s for live data
-- **Bundle Size**: Monitor Next.js bundle analyzer for client-side performance
+**Requirements:**
+- Use `memo()` for components with props
+- `readonly` in prop interfaces
+- Set `displayName`
+- Destructure props inside component (not in signature)
+- Extract complex calculations to custom hooks
+- Split at 200-line threshold (component logic, not including JSX)
 
-## 🔄 Code Consolidation Standards
+## 🗂️ Shared Utilities
 
-### Preventing Technical Debt
-**Always consolidate repeated patterns instead of duplicating code:**
+**ALWAYS check before creating new utilities:**
+- `@/shared/utils/stats` - median, mean, rank, percentile, positional analysis
+- `@/shared/utils/calculations` - team stats, positional scoring, cache
+- Feature-specific utils go in `/features/[feature]/utils/`
 
+**Decision tree:**
+- Used by 3+ features → `shared/utils/`
+- Used by 1-2 features → feature-specific `utils/`
+- Domain-specific → feature `utils/`
+
+## ⚡ Data Fetching Patterns
+
+**Parallel Processing**
 ```typescript
-// ✅ CORRECT: Consolidated multi-league utilities
-import { createTeamKey, createMatchupKey } from '@/lib/multi-league/utils';
-const teamKey = createTeamKey(leagueId, rosterId); // `${leagueId}-${rosterId}`
-
-// ❌ WRONG: Repeated composite key generation
-const teamKey = `${leagueId}-${rosterId}`;
-const anotherKey = `${matchup.leagueId}-${matchup.rosterId}`;
+// ALWAYS prefer parallel API calls
+const [league1, league2, players] = await Promise.all([
+  fetchLeague(id1),
+  fetchLeague(id2),
+  fetchPlayers()
+]);
 ```
 
-### Consolidation Checklist
-Before adding new code, check if you're duplicating:
-1. **API calls** - Use unified Sleeper client
-2. **Multi-league logic** - Use shared utilities  
-3. **Error handling** - Use established patterns
-4. **Data transformations** - Extract to shared functions
-5. **UI components** - Check existing components first
+**React Query Strategies**
+- Real-time: `staleTime: 0, refetchInterval: 10000`
+- Dynamic: `staleTime: 5min, refetchOnMount: 'always'`
+- Static: `staleTime: 24h, refetchOnMount: false`
 
-### When to Extract Shared Code
-- **3+ identical patterns** → Extract to utility function
-- **2+ files with similar logic** → Consider consolidation
-- **Complex operations repeated** → Create service class
-- **UI patterns repeated** → Extract to shared component
+## 🎯 Task Completion Workflow
 
+1. **Complete development work**
+2. **Run Tier 1 checks** (build, types, tests) → MUST PASS
+3. **Perform tech debt scan** (file sizes, console.log, tests, types)
+4. **Present Tech Debt Review** to user with categorized findings
+5. **User decides** what to fix vs. accept
+6. **Implement agreed fixes**
+7. **Final verification** - re-run build
+8. **Document** accepted tech debt in commit message
+9. **Delete debug files** before committing
+
+## 🚨 Common Pitfalls
+
+❌ **Multi-League Bugs**
 ```typescript
-// ✅ EXAMPLE: Multi-league aggregation utility
-export function processLeaguesSeparately<T>(
-  leagues: string[],
-  processor: (leagueId: string) => Promise<T[]>
-): Promise<T[]> {
-  return Promise.all(leagues.map(processor)).then(results => results.flat());
-}
+// WRONG: Combines data, then groups (creates 6 groups of 4 teams)
+const all = [...afcMatchups, ...nfcMatchups];
+const grouped = groupBy(all, m => m.matchup_id);
+
+// CORRECT: Process separately, then combine
+const afcResults = processLeague(afcMatchups);
+const nfcResults = processLeague(nfcMatchups);
+const combined = [...afcResults, ...nfcResults];
 ```
 
-## 🎯 Migration Strategy
-
-### Tactical Page-by-Page Migration
-When migrating to unified patterns:
-
-1. **Validate with test suite** - Run validation before migration
-2. **One page at a time** - Never mass-replace across codebase
-3. **Compare outputs** - Ensure identical behavior
-4. **Gradual rollout** - Test in non-critical areas first
-5. **Update imports last** - After confirming functionality
-
-### Migration Priority Order
-1. **Utility functions** (lowest risk)
-2. **API routes** (controlled environment)  
-3. **Non-critical pages** (draft analysis, stats)
-4. **High-traffic pages** (matchups, league overview)
-5. **Core infrastructure** (after full validation)
-
----
-
-## 📋 Quick Reference: Mandatory Standards
-
-### Code Style (NON-NEGOTIABLE)
-1. ✅ **Arrow functions only** - No classes, no regular function declarations
-2. ✅ **Factory pattern** - Use `createX()` for stateful objects with closure-based state
-3. ✅ **Central types** - Always import from `@gauntlet/types`, never redefine locally
-4. ✅ **No `any` types** - Use proper type definitions from central package
-5. ✅ **Explicit return types** - All exported functions must have return type annotations
-
-### Type Import Pattern
+❌ **Type Redefinition**
 ```typescript
-// ✅ ALWAYS: Import types from @gauntlet/types
-import type { 
-  SleeperLeague, 
-  Metrics, 
-  CompleteSnapshot 
-} from '@gauntlet/types';
-
-// ❌ NEVER: Redefine types locally
+// WRONG: Redefining central types
 interface SleeperLeague { ... }
-interface Metrics { ... }
+
+// CORRECT: Import from central package
+import type { SleeperLeague } from '@gauntlet/types';
 ```
 
-### Function Pattern
+❌ **Classes**
 ```typescript
-// ✅ ALWAYS: Arrow function factory
+// WRONG: Class-based
+export class Service { ... }
+
+// CORRECT: Factory pattern with arrow functions
 export const createService = (config: Config): Service => {
   const state = new Map();
   return {
     method: (arg: string): ReturnType => { ... }
   };
 };
-
-// ❌ NEVER: Classes
-export class Service { ... }
-
-// ❌ NEVER: Regular functions
-export function createService() { ... }
 ```
 
-### Multi-League Safety
-```typescript
-// ✅ ALWAYS: Process leagues separately, then combine
-const afcResults = processLeague(afcData);
-const nfcResults = processLeague(nfcData);
-const combined = [...afcResults, ...nfcResults];
+## 📋 Quick Checklist
 
-// ❌ NEVER: Combine first, then process
-const allData = [...afcData, ...nfcData];
-const results = processLeague(allData); // Creates bugs!
-```
+**Before completing any task:**
+- [ ] `npm run build` passes
+- [ ] `npx tsc --noEmit` passes
+- [ ] Tests pass (if exist)
+- [ ] No files >800 lines (or justified)
+- [ ] Tech debt review presented to user
+- [ ] Accepted tech debt documented in commit
+- [ ] Debug files deleted
+- [ ] Types from `@gauntlet/types`
+- [ ] Arrow functions only
+- [ ] Multi-league safety (process separately)
+
+## 📚 Additional Resources
+
+- `CODING_CONVENTIONS.MD` - Detailed examples and patterns
+- `ENTERPRISE_READINESS_ASSESSMENT.md` - Refactoring roadmap
+- `apps/web/ENTERPRISE_READINESS_ASSESSMENT.md` - Web-specific tasks
+
+## 🎯 Philosophy
+
+**Pragmatic Enterprise Readiness:**
+- 🔴 Hard block: Build failures, type errors, critical thresholds
+- ⚠️ Strong recommend: Present to user, they decide
+- 💡 Suggest: Improvements for consideration
+- 🤝 Trust user judgment on ambiguous items
+- 📝 Document rationale for accepted tech debt
+
+**Multi-League Safety First:**
+When in doubt, always process leagues separately then combine. This prevents the most common bug category in this system.
+
+**Target:** 9.0/10 enterprise score (from 3.5/10) through incremental, pragmatic improvements.
 
 ---
 
-This rule set encodes years of domain-specific learning and should be followed religiously to maintain system reliability, performance, and correctness. When in doubt, always process leagues separately then combine results.
+*Last Updated: October 2025*

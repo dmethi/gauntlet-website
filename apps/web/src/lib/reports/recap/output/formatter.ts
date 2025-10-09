@@ -237,7 +237,12 @@ const formatMatchupNarratives = (
         ? {
             leadChanges: data.gameFlow.excitement?.leadChanges || 0,
             biggestLead: data.gameFlow.excitement?.maxComeback || 0,
-            excitementScore: matchup.metadata.excitementScore || 0,
+            excitementScore:
+              matchup.metadata.excitementLevel === 'high'
+                ? 75
+                : matchup.metadata.excitementLevel === 'medium'
+                  ? 50
+                  : 25,
           }
         : undefined,
       // Store time series for win prob/score charts

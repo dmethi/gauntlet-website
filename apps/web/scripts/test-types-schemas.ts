@@ -132,7 +132,15 @@ const testTypesAndSchemas = async () => {
           narrative:
             'Power rankings saw some significant movement this week as teams jockey for playoff position. The top teams maintained their dominance while middle-tier teams fought for separation.',
           rankings: [
-            { rank: 1, teamName: 'Team A', record: '5-0', points: 800, movement: 'same' as const },
+            {
+              rank: 1,
+              teamName: 'Team A',
+              leagueId: '1263744209295245312',
+              rosterId: 1,
+              record: '5-0',
+              points: 800,
+              movement: 'same' as const,
+            },
           ],
           generatedAt: new Date().toISOString(),
         },

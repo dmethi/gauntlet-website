@@ -24,25 +24,29 @@ const buildContextSummary = (state: RecapReportState): string => {
 
   // Matchup narratives summary
   if (state.matchupNarratives && state.matchupNarratives.length > 0) {
-    const avgExcitement = Math.round(
-      state.matchupNarratives.reduce(
-        (sum, m) => sum + (m.metadata?.excitementLevel || 'medium'),
-        0,
-      ) / state.matchupNarratives.length,
+    const excitementCounts = state.matchupNarratives.reduce(
+      (acc, m) => {
+        const level = m.metadata?.excitementLevel || 'medium';
+        acc[level] = (acc[level] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
     );
-    summary += `Matchups: ${state.matchupNarratives.length} games with average excitement score of ${avgExcitement}/100.\n`;
+    summary += `Matchups: ${state.matchupNarratives.length} games (${excitementCounts.high || 0} high-excitement, ${excitementCounts.medium || 0} medium, ${excitementCounts.low || 0} low).\n`;
 
     // Include a few highlights
+    const excitementLevelToNumber = { high: 3, medium: 2, low: 1 };
     const topMatchups = [...state.matchupNarratives]
       .sort(
         (a, b) =>
-          (b.metadata?.excitementLevel || 'medium') - (a.metadata?.excitementLevel || 'medium'),
+          excitementLevelToNumber[b.metadata?.excitementLevel || 'medium'] -
+          excitementLevelToNumber[a.metadata?.excitementLevel || 'medium'],
       )
       .slice(0, 3);
 
     summary += 'Top matchups:\n';
     topMatchups.forEach(m => {
-      summary += `- ${m.metadata.finalScore} (${m.metadata.winner} wins, excitement: ${m.metadata.excitementLevel}/100)\n`;
+      summary += `- ${m.metadata.finalScore} (${m.metadata.winner} wins, excitement: ${m.metadata.excitementLevel})\n`;
     });
     summary += '\n';
   }

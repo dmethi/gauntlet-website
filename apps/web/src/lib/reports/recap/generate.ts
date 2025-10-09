@@ -56,7 +56,7 @@ const extractText = (response: any): string => {
   }
   if (Array.isArray(response.content)) {
     return response.content
-      .map(item => (typeof item === 'string' ? item : 'text' in item ? item.text : ''))
+      .map((item: any) => (typeof item === 'string' ? item : 'text' in item ? item.text : ''))
       .join('');
   }
   return '';

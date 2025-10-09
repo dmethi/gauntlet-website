@@ -8,8 +8,6 @@
 import { HumanMessage } from '@langchain/core/messages';
 import { createGeminiClient } from '../gemini-client';
 import { buildMatchupNarrativePrompt } from '../prompts/sections/matchup-narrative';
-import { toolRegistry } from '../tools/registry';
-import { convertToolsToLangChain } from '../tools/langchain-adapter';
 import { LEAGUE_IDS } from '@/lib/constants';
 import type { RecapReportState, MatchupNarrative } from '../state';
 import {
@@ -117,10 +115,6 @@ export const batchMatchupNarrativesNode = async (
     ...Array.from({ length: 6 }, (_, i) => ({ leagueId: LEAGUE_IDS.NFC, matchupId: i + 1 })),
   ];
 
-  // Get all tools once (will be reused for each matchup)
-  const reportTools = toolRegistry.getAllTools();
-  const langchainTools = convertToolsToLangChain(reportTools);
-
   // Process each matchup sequentially
   for (const matchup of matchups) {
     const { leagueId, matchupId } = matchup;
@@ -132,16 +126,11 @@ export const batchMatchupNarrativesNode = async (
       // Create fresh Gemini client for each matchup (clears context)
       const geminiClient = createGeminiClient();
 
-      // Bind tools to the client
-      const clientWithTools = geminiClient.bind({
-        tools: langchainTools,
-      });
-
       // Build prompt for this specific matchup
-      const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId);
+      const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId, {});
 
       // Invoke Gemini with the prompt
-      const response = await clientWithTools.invoke([
+      const response = await geminiClient.invoke([
         new HumanMessage({
           content: prompt,
         }),
@@ -154,7 +143,7 @@ export const batchMatchupNarrativesNode = async (
       } else if (Array.isArray(response.content)) {
         // Handle structured content
         responseText = response.content
-          .map(item => (typeof item === 'string' ? item : item.text || ''))
+          .map((item: any) => (typeof item === 'string' ? item : item.text || ''))
           .join('');
       }
 
@@ -249,7 +238,7 @@ export const batchMatchupNarrativesNode = async (
         metadata: {
           finalScore: narrativeData.metadata.finalScore,
           winner: narrativeData.metadata.winner,
-          excitementScore: narrativeData.metadata.excitementScore,
+          excitementLevel: narrativeData.metadata.excitementLevel || 'medium',
           keyPlayers: narrativeData.metadata.keyPlayers || [],
           wordCount: narrativeData.metadata.wordCount,
         },
@@ -272,7 +261,7 @@ export const batchMatchupNarrativesNode = async (
         metadata: {
           finalScore: 'N/A',
           winner: 'N/A',
-          excitementScore: 0,
+          excitementLevel: 'low',
           keyPlayers: [],
           wordCount: 0,
           error: true,
