@@ -9,6 +9,7 @@ This directory contains the LangGraph-based orchestration system for generating 
 ### 📋 Phase 3 Progress
 
 #### ✅ Completed
+
 - **RECAP-018**: JSON Report Output
   - Report formatter (state → WeeklyRecapReport)
   - Comprehensive validation with quality scoring
@@ -16,6 +17,7 @@ This directory contains the LangGraph-based orchestration system for generating 
   - Test suite with 100% passing tests
 
 #### ⏳ In Progress
+
 - **RECAP-019**: File System Storage
 - **RECAP-020**: Dynamic Page Generation
 - **RECAP-021**: Homepage Integration

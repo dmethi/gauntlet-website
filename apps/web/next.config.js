@@ -14,12 +14,17 @@ const nextConfig = {
   // Ensure Prisma binaries are included in Vercel deployments
   experimental: {
     outputFileTracingIncludes: {
-      '/api/**/*': [
-        '../server/generated/prisma-historical/**/*',
-        '../server/node_modules/.prisma/client/**/*',
-        '../server/node_modules/@prisma/client/**/*',
+      '/api/cron/live-odds': [
+        '../../server/generated/prisma-historical/**/*',
+      ],
+      '/api/cron/recap-report': [
+        '../../server/generated/prisma-historical/**/*',
       ],
     },
+  },
+  webpack: config => {
+    config.resolve.alias['@'] = path.resolve(__dirname, './src');
+    return config;
   },
 };
 

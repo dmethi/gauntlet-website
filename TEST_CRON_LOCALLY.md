@@ -3,6 +3,7 @@
 ## Quick Test (2 minutes)
 
 ### 1. Start Dev Server
+
 ```bash
 # Terminal 1
 cd apps/web
@@ -12,6 +13,7 @@ pnpm dev
 Wait for: `✓ Ready on http://localhost:3000`
 
 ### 2. Trigger Cron Endpoint
+
 ```bash
 # Terminal 2
 curl -X POST http://localhost:3000/api/cron/live-odds \
@@ -19,15 +21,18 @@ curl -X POST http://localhost:3000/api/cron/live-odds \
   -H "Content-Type: application/json"
 ```
 
-**Without CRON_SECRET (for testing):**
-If you don't have CRON_SECRET set, you can temporarily disable auth check:
+**Without CRON_SECRET (for testing):** If you don't have CRON_SECRET set, you
+can temporarily disable auth check:
+
 ```bash
 # Or just hit it directly (will work in dev if CRON_SECRET is not set)
 curl -X POST http://localhost:3000/api/cron/live-odds
 ```
 
 ### 3. Check Response
+
 Should see:
+
 ```json
 {
   "success": true,
@@ -42,6 +47,7 @@ Should see:
 ```
 
 ### 4. Verify Database
+
 ```bash
 # Terminal 3
 cd apps/server
@@ -49,6 +55,7 @@ npx tsx src/scripts/verify-cron-data.ts
 ```
 
 Should now show:
+
 ```
 📊 Total samples for Week 6: 12
 ✅ Latest sample: [just now]
@@ -58,6 +65,7 @@ Should now show:
 ## Detailed Test Steps
 
 ### Prerequisites
+
 ```bash
 # Check environment variables are set
 echo $DATABASE_URL
@@ -73,6 +81,7 @@ cat ../../.env | grep DATABASE_URL
 ### Full Test Sequence
 
 1. **Clean state (optional):**
+
 ```bash
 # Delete existing Week 6 data to test fresh
 cd apps/server
@@ -86,23 +95,27 @@ p.liveWinProbSample.deleteMany({where: {week: 6}})
 ```
 
 2. **Start dev server:**
+
 ```bash
 cd apps/web
 pnpm dev
 ```
 
 Watch for errors. Should see:
+
 ```
 ✓ Ready on http://localhost:3000
 ```
 
 3. **Hit endpoint (new terminal):**
+
 ```bash
 curl -v -X POST http://localhost:3000/api/cron/live-odds \
   -H "Authorization: Bearer test-secret-123"
 ```
 
 Watch the dev server logs for:
+
 ```
 🏈 [CRON] Starting live odds snapshot...
 ✅ [CRON] Live odds snapshot completed: {
@@ -114,17 +127,20 @@ Watch the dev server logs for:
 ```
 
 4. **Check database:**
+
 ```bash
 cd apps/server
 npx tsx src/scripts/verify-cron-data.ts
 ```
 
 5. **Hit again (test deduplication):**
+
 ```bash
 curl -X POST http://localhost:3000/api/cron/live-odds
 ```
 
 Should see mostly "skipped" since data hasn't changed:
+
 ```json
 {
   "success": true,
@@ -137,6 +153,7 @@ Should see mostly "skipped" since data hasn't changed:
 ## Troubleshooting Local Test
 
 ### Error: "Cannot find module prisma-historical"
+
 ```bash
 # Regenerate Prisma client
 cd apps/server
@@ -144,7 +161,9 @@ npx prisma generate --schema=prisma/schema-historical.prisma
 ```
 
 ### Error: "Connection refused"
+
 Make sure `DATABASE_URL` is set and database is accessible:
+
 ```bash
 # Test connection
 cd apps/server
@@ -159,9 +178,13 @@ p.\$connect()
 ```
 
 ### Error: "401 Unauthorized"
+
 Either:
+
 1. Set `CRON_SECRET` env var
-2. Or temporarily comment out auth check in `apps/web/src/app/api/cron/live-odds/route.ts`:
+2. Or temporarily comment out auth check in
+   `apps/web/src/app/api/cron/live-odds/route.ts`:
+
 ```typescript
 // if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
 //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -169,6 +192,7 @@ Either:
 ```
 
 ### Error: "Module not found: @gauntlet/server"
+
 ```bash
 # Build server package
 cd apps/server
@@ -182,6 +206,7 @@ pnpm turbo build
 ## What Success Looks Like
 
 ### Dev Server Logs:
+
 ```
 🏈 [CRON] Starting live odds snapshot...
 {"level":30,"time":"...","job":"vercel-cron-snapshot","week":6,"event":"job_started"}
@@ -192,6 +217,7 @@ pnpm turbo build
 ```
 
 ### cURL Response:
+
 ```json
 {
   "success": true,
@@ -211,6 +237,7 @@ pnpm turbo build
 ```
 
 ### Verification Script:
+
 ```
 🔍 Verifying Live Odds Cron Job Data Collection
 
@@ -241,14 +268,17 @@ SUMMARY
 ## Performance Check
 
 First run (cold start):
+
 - Expected: 8-12 seconds
 - What's happening: Fetching from Sleeper API, running simulations, saving to DB
 
 Second run (warm):
+
 - Expected: 5-8 seconds
 - What's happening: Mostly skipped (data unchanged), faster
 
 If it takes >30 seconds:
+
 - Check Sleeper API response time
 - Check database connection latency
 - Review simulation settings
@@ -261,5 +291,4 @@ If it takes >30 seconds:
 
 ---
 
-*This test proves the Prisma binary fix works before deploying to Vercel*
-
+_This test proves the Prisma binary fix works before deploying to Vercel_

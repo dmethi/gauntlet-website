@@ -2,50 +2,63 @@
 
 ## 🎯 What You Asked
 
-> "let's debug live odds cron job. occasionally getting this error... also weird pattern of successes and failures -- fails twice consecutively every 30 min... can we query DB and see if the runs are generating data?"
+> "let's debug live odds cron job. occasionally getting this error... also weird
+> pattern of successes and failures -- fails twice consecutively every 30 min...
+> can we query DB and see if the runs are generating data?"
 
 ## 🔍 What I Found
 
 ### Database Check Result
+
 ```
 📊 Total samples for Week 6: 0
 ❌ NO DATA FOUND!
 ```
 
-**ZERO data has been saved.** The cron job hasn't successfully written anything to the database for Week 6.
+**ZERO data has been saved.** The cron job hasn't successfully written anything
+to the database for Week 6.
 
 ### The Error Explained
 
 ```
-PrismaClientInitializationError: Prisma Client could not locate 
+PrismaClientInitializationError: Prisma Client could not locate
 the Query Engine for runtime "rhel-openssl-3.0.x"
 ```
 
-**In plain English:** Vercel (running on AWS Lambda with RHEL Linux) is looking for a database engine file that doesn't exist in your deployment package. It's like trying to run a Windows .exe file on a Mac - wrong format.
+**In plain English:** Vercel (running on AWS Lambda with RHEL Linux) is looking
+for a database engine file that doesn't exist in your deployment package. It's
+like trying to run a Windows .exe file on a Mac - wrong format.
 
 ### The Pattern (2 failures every 30 min)
 
 This happened because:
+
 1. **Cold start** (12:00 AM) → ❌ No binary found → Fails
-2. **Cold start** (12:05 AM) → ❌ Still no binary → Fails  
-3. **Warm container** (12:10 AM) → ✅ Uses cached code → Sometimes works (but still no binary)
+2. **Cold start** (12:05 AM) → ❌ Still no binary → Fails
+3. **Warm container** (12:10 AM) → ✅ Uses cached code → Sometimes works (but
+   still no binary)
 4. **Container expires** (12:30 AM) → Back to step 1
 
-The "occasional successes" were likely partial - the job ran but couldn't save to database, just returned HTTP 200.
+The "occasional successes" were likely partial - the job ran but couldn't save
+to database, just returned HTTP 200.
 
 ## ✅ What I Fixed
 
 ### 1. Added Missing Binaries
+
 **Before:**
+
 ```prisma
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma-historical"
 }
 ```
+
 Only generated 1 binary (for your Mac).
 
 **After:**
+
 ```prisma
 generator client {
   provider      = "prisma-client-js"
@@ -53,13 +66,17 @@ generator client {
   binaryTargets = ["native", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 ```
+
 Now generates 3 binaries:
+
 - Mac (for local dev)
-- RHEL (for Vercel)  ← **This was missing**
+- RHEL (for Vercel) ← **This was missing**
 - Alpine (for Docker if needed)
 
 ### 2. Told Next.js to Include Them
+
 Added config to ensure Vercel's build includes the Prisma files:
+
 ```javascript
 experimental: {
   outputFileTracingIncludes: {
@@ -72,6 +89,7 @@ experimental: {
 ```
 
 ### 3. Verified It Works
+
 ```bash
 ✓ Build succeeds with all binaries
 ✓ Type check passes
@@ -80,24 +98,26 @@ experimental: {
 
 ## 📊 Current State
 
-| Metric | Before Fix | After Fix (Expected) |
-|--------|------------|---------------------|
-| Week 6 samples | 0 | 100+ (after 1 hour) |
-| Cron success rate | ~50% | ~100% |
-| Data freshness | N/A | < 10 min old |
-| Cold start behavior | ❌ Always fails | ✅ Works |
+| Metric              | Before Fix      | After Fix (Expected) |
+| ------------------- | --------------- | -------------------- |
+| Week 6 samples      | 0               | 100+ (after 1 hour)  |
+| Cron success rate   | ~50%            | ~100%                |
+| Data freshness      | N/A             | < 10 min old         |
+| Cold start behavior | ❌ Always fails | ✅ Works             |
 
 ## 🚀 Next Steps
 
 ### For You:
 
 1. **Review the changes:**
+
    ```bash
    git diff apps/server/prisma/schema-historical.prisma
    git diff apps/web/next.config.js
    ```
 
 2. **Deploy:**
+
    ```bash
    git add -A
    git commit -m "fix(prisma): add binary targets for Vercel runtime"
@@ -105,12 +125,14 @@ experimental: {
    ```
 
 3. **Verify (20 minutes after deploy):**
+
    ```bash
    cd apps/server
    npx tsx src/scripts/verify-cron-data.ts
    ```
 
    Should show:
+
    ```
    ✅ System is HEALTHY
       - Data is being collected
@@ -157,11 +179,14 @@ I've created 3 files to help:
 
 ### What This Error Means (ELI5)
 
-Imagine you have a Swiss Army knife (Prisma) with different blades for different tasks:
+Imagine you have a Swiss Army knife (Prisma) with different blades for different
+tasks:
+
 - 🍎 **Mac blade** - works on your laptop
 - 🐧 **Linux blade** - works on Vercel's servers
 
-You only packed the Mac blade, so when Vercel tried to use it... it didn't fit. This fix adds all the blades to your deployment package.
+You only packed the Mac blade, so when Vercel tried to use it... it didn't fit.
+This fix adds all the blades to your deployment package.
 
 ### Why It Was Hard to Catch
 
@@ -169,11 +194,13 @@ You only packed the Mac blade, so when Vercel tried to use it... it didn't fit. 
 - ✅ Build succeeded (just missing a file)
 - ❌ Only failed at runtime in production
 
-This is a **classic serverless gotcha** - environment differences between dev and prod.
+This is a **classic serverless gotcha** - environment differences between dev
+and prod.
 
 ### Prevention
 
 Going forward:
+
 - Always specify `binaryTargets` in Prisma schemas
 - Test database operations in staging before prod
 - Monitor cron jobs with alerting (Sentry/Datadog)
@@ -182,16 +209,20 @@ Going forward:
 ## ❓ FAQ
 
 **Q: Will this break anything?**  
-A: No. We're only adding files that were missing. Existing functionality is unchanged.
+A: No. We're only adding files that were missing. Existing functionality is
+unchanged.
 
 **Q: Do I need to redeploy immediately?**  
-A: Depends on urgency of having live odds data. Games are ongoing, so sooner = more historical data captured.
+A: Depends on urgency of having live odds data. Games are ongoing, so sooner =
+more historical data captured.
 
 **Q: What if it still fails?**  
-A: Very unlikely, but see troubleshooting in `DEPLOY_PRISMA_FIX.md`. Rollback is safe if needed.
+A: Very unlikely, but see troubleshooting in `DEPLOY_PRISMA_FIX.md`. Rollback is
+safe if needed.
 
 **Q: Will old weeks' data appear?**  
-A: No. This only fixes forward data collection. Week 6 will start populating after deploy.
+A: No. This only fixes forward data collection. Week 6 will start populating
+after deploy.
 
 ## 📞 Summary
 
@@ -199,11 +230,10 @@ A: No. This only fixes forward data collection. Week 6 will start populating aft
 ✅ **Fix applied:** Added `binaryTargets` to schema + Next.js config  
 ✅ **Build verified:** No errors, ready to deploy  
 ✅ **Verification ready:** Script to confirm it works  
-📝 **Documentation complete:** 3 guides created  
+📝 **Documentation complete:** 3 guides created
 
 **Status: READY TO DEPLOY** 🚀
 
 ---
 
-*Generated: 2025-10-09 00:30 PST*
-
+_Generated: 2025-10-09 00:30 PST_

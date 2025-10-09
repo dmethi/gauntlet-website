@@ -1,12 +1,17 @@
 #!/usr/bin/env tsx
 /**
  * Test script for Report Output Formatter and Validator
- * 
+ *
  * Usage:
  *   npx tsx scripts/test-report-output.ts
  */
 
-import { formatRecapReport, validateReport, summarizeValidation, isProductionReady } from '../src/lib/reports/recap/output';
+import {
+  formatRecapReport,
+  validateReport,
+  summarizeValidation,
+  isProductionReady,
+} from '../src/lib/reports/recap/output';
 import type { RecapReportState } from '../src/lib/reports/recap/state';
 
 /**
@@ -20,18 +25,26 @@ const createMockState = (): RecapReportState => {
     season: 2025,
     generatedAt: new Date().toISOString(),
     tokensUsed: 45231,
-    leagueOverview: 'Week 5 brought explosive scoring across both leagues with several teams surpassing 130 points. The AFC saw close battles while the NFC featured bigger blowouts.',
-    hallOfFame: 'Rico Dowdle dominated Week 5 with a league-leading 33.9 points. Baker Mayfield and C.J. Stroud both surpassed 27 points at quarterback.',
-    hallOfShame: 'Several teams struggled to reach 90 points this week. The biggest busts came from highly-projected players who failed to deliver.',
-    powerRankings: 'Marginal Returns remains undefeated at 5-0. DJ Herbussy and Nacua Matata continue to dominate their respective leagues with strong performances.',
-    standings: 'AFC playoff race tightens with multiple teams at 3-2. NFC sees Marginal Returns pulling away at 5-0 while several teams fight for wild card spots.',
-    upcoming: 'Week 6 features several key matchups that could shake up the playoff picture. Top teams face tough tests against motivated underdogs.',
-    closing: 'Week 5 showcased the unpredictable nature of fantasy football. As we head into Week 6, the playoff picture is starting to take shape with key matchups ahead.',
+    leagueOverview:
+      'Week 5 brought explosive scoring across both leagues with several teams surpassing 130 points. The AFC saw close battles while the NFC featured bigger blowouts.',
+    hallOfFame:
+      'Rico Dowdle dominated Week 5 with a league-leading 33.9 points. Baker Mayfield and C.J. Stroud both surpassed 27 points at quarterback.',
+    hallOfShame:
+      'Several teams struggled to reach 90 points this week. The biggest busts came from highly-projected players who failed to deliver.',
+    powerRankings:
+      'Marginal Returns remains undefeated at 5-0. DJ Herbussy and Nacua Matata continue to dominate their respective leagues with strong performances.',
+    standings:
+      'AFC playoff race tightens with multiple teams at 3-2. NFC sees Marginal Returns pulling away at 5-0 while several teams fight for wild card spots.',
+    upcoming:
+      'Week 6 features several key matchups that could shake up the playoff picture. Top teams face tough tests against motivated underdogs.',
+    closing:
+      'Week 5 showcased the unpredictable nature of fantasy football. As we head into Week 6, the playoff picture is starting to take shape with key matchups ahead.',
     matchupNarratives: [
       {
         matchupId: 1,
         leagueId: '1263744209295245312',
-        narrative: 'In a thrilling AFC showdown, Team A defeated Team B by a narrow margin. Key performances from star players sealed the victory.',
+        narrative:
+          'In a thrilling AFC showdown, Team A defeated Team B by a narrow margin. Key performances from star players sealed the victory.',
         metadata: {
           finalScore: '125.29 - 91.08',
           winner: 'Team A',
@@ -108,7 +121,7 @@ const createMockState = (): RecapReportState => {
  */
 const testFormatter = () => {
   console.log('\n📝 Testing Report Formatter\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const state = createMockState();
   const report = formatRecapReport(state);
@@ -140,7 +153,7 @@ const testFormatter = () => {
  */
 const testValidator = (report: any) => {
   console.log('\n\n🔍 Testing Report Validator\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const validation = validateReport(report);
 
@@ -181,7 +194,7 @@ const testValidator = (report: any) => {
  */
 const testPartialFailure = () => {
   console.log('\n\n⚠️  Testing Partial Failure Scenario\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const state = createMockState();
 
@@ -212,7 +225,7 @@ const testPartialFailure = () => {
  */
 const testCompleteFailure = () => {
   console.log('\n\n❌ Testing Complete Failure Scenario\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const state: RecapReportState = {
     week: 5,
@@ -274,7 +287,7 @@ const testCompleteFailure = () => {
  */
 const main = () => {
   console.log('\n🧪 Report Output System Test Suite');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   try {
     // Test 1: Successful report formatting
@@ -297,4 +310,3 @@ const main = () => {
 };
 
 main();
-

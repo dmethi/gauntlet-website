@@ -1,8 +1,10 @@
 # Gauntlet Fantasy Football - Detailed Coding Conventions
 
-This document provides detailed examples, explanations, and patterns referenced in `.cursorrules`. Use this as a reference when you need deeper context.
+This document provides detailed examples, explanations, and patterns referenced
+in `.cursorrules`. Use this as a reference when you need deeper context.
 
 ## Table of Contents
+
 - [Type System Deep Dive](#type-system-deep-dive)
 - [Function Patterns Examples](#function-patterns-examples)
 - [Multi-League Architecture](#multi-league-architecture)
@@ -23,9 +25,9 @@ This document provides detailed examples, explanations, and patterns referenced 
 
 ```typescript
 // ✅ CORRECT: Import from central package
-import type { 
-  SleeperLeague, 
-  SleeperRoster, 
+import type {
+  SleeperLeague,
+  SleeperRoster,
   SleeperMatchup,
   SleeperUser,
   SleeperPlayer,
@@ -41,35 +43,43 @@ interface SleeperRoster { ... }
 ### Central Types Available
 
 **Sleeper API Types** (`@gauntlet/types`):
-- Core: `SleeperLeague`, `SleeperRoster`, `SleeperUser`, `SleeperMatchup`, `SleeperPlayer`
+
+- Core: `SleeperLeague`, `SleeperRoster`, `SleeperUser`, `SleeperMatchup`,
+  `SleeperPlayer`
 - Stats: `PlayerStats` (100+ stat fields), `NFLState`
 - Draft: `SleeperDraft`, `SleeperDraftPick`, `SleeperTradedPick`
 - Transactions: `SleeperTransaction`, `SleeperPlayoffMatchup`
 - Multi-league keys: `TeamKey`, `MatchupKey`, `PlayerWeekKey`
-- Type literals: `LeagueStatus`, `TransactionType`, `NFLPosition`, `RosterPosition`
+- Type literals: `LeagueStatus`, `TransactionType`, `NFLPosition`,
+  `RosterPosition`
 
 **Simulation & Variance Types** (`@gauntlet/types`):
+
 - Lineup: `LineupPlayer`, `Lineup`
-- Results: `MatchupResult`, `MatchupSimulationResult`, `ScoreDistribution`, `ImpliedOdds`
-- Variance: `PositionVarianceRecord`, `PlayerVarianceRecord`, `ProjectionErrorRecord`, `VarianceData`
+- Results: `MatchupResult`, `MatchupSimulationResult`, `ScoreDistribution`,
+  `ImpliedOdds`
+- Variance: `PositionVarianceRecord`, `PlayerVarianceRecord`,
+  `ProjectionErrorRecord`, `VarianceData`
 - Sampling: `SamplingContext`
 
 **Server & Metrics Types** (`@gauntlet/types`):
-- API Client: `GauntletAPIOptions`, `LeagueOddsResponse`, `MatchupSimulationResponse`
+
+- API Client: `GauntletAPIOptions`, `LeagueOddsResponse`,
+  `MatchupSimulationResponse`
 - Snapshot: `CompleteSnapshot`, `PreviousSnapshot`, `ValidationResult`
 - Metrics: `Metrics`, `MetricsSummary`
 - Database: `ModelStats`
 
 ### When to Define Local Types
 
-✅ **Component-specific props** (e.g., `ButtonProps`, `ModalProps`)
-✅ **Route-specific request/response shapes** (API transformations)
-✅ **UI-only state management types** (view-specific state)
-✅ **Temporary transformation types** (internal to a single function/file)
+✅ **Component-specific props** (e.g., `ButtonProps`, `ModalProps`) ✅
+**Route-specific request/response shapes** (API transformations) ✅ **UI-only
+state management types** (view-specific state) ✅ **Temporary transformation
+types** (internal to a single function/file)
 
-❌ **Sleeper API responses** (use `@gauntlet/types`)
-❌ **Cross-app domain models** (use `@gauntlet/types`)
-❌ **Analytics data structures** (use `@gauntlet/types` if shared)
+❌ **Sleeper API responses** (use `@gauntlet/types`) ❌ **Cross-app domain
+models** (use `@gauntlet/types`) ❌ **Analytics data structures** (use
+`@gauntlet/types` if shared)
 
 ### Domain-Specific Types
 
@@ -123,7 +133,7 @@ export const calculateScore = (player: Player): number => {
 // ✅ CORRECT: Arrow function API client factory
 export const createAPIClient = (options: ClientOptions = {}): APIClient => {
   const baseUrl = options.baseUrl || 'https://api.example.com';
-  
+
   return {
     fetchData: async (id: string): Promise<Data> => {
       const response = await fetch(`${baseUrl}/data/${id}`);
@@ -147,6 +157,7 @@ export function calculateScore(player: Player): number {
 ### Why Arrow Functions & Factory Pattern?
 
 **Benefits:**
+
 - ✅ **Consistent code style** across entire codebase
 - ✅ **Lexical `this` binding** eliminates context bugs
 - ✅ **Closure-based state** more functional and composable
@@ -157,14 +168,15 @@ export function calculateScore(player: Player): number {
 ### Converting Classes to Factory Pattern
 
 **Before (Class):**
+
 ```typescript
 export class APIClient {
   private baseUrl: string;
-  
+
   constructor(options: Options) {
     this.baseUrl = options.baseUrl || 'default';
   }
-  
+
   async fetch(id: string): Promise<Data> {
     return await fetch(`${this.baseUrl}/${id}`).then(r => r.json());
   }
@@ -174,14 +186,15 @@ const client = new APIClient({ baseUrl: 'https://api.com' });
 ```
 
 **After (Factory):**
+
 ```typescript
 export const createAPIClient = (options: Options = {}): APIClient => {
   const baseUrl = options.baseUrl || 'default';
-  
+
   return {
     fetch: async (id: string): Promise<Data> => {
       return await fetch(`${baseUrl}/${id}`).then(r => r.json());
-    }
+    },
   };
 };
 
@@ -194,7 +207,9 @@ const client = createAPIClient({ baseUrl: 'https://api.com' });
 
 ### Multi-League System Foundation
 
-⚠️ **CRITICAL**: This system manages TWO separate Sleeper leagues as one umbrella competition:
+⚠️ **CRITICAL**: This system manages TWO separate Sleeper leagues as one
+umbrella competition:
+
 - **AFC League**: `1263744209295245312` (12 teams)
 - **NFC League**: `1263740549504962561` (12 teams)
 - **Total**: 24 teams competing across both leagues
@@ -219,6 +234,7 @@ const matchupKey = `${leagueId}-${week}-${matchup_id}`;
 ```
 
 **Key Principles:**
+
 - Matchup IDs are NOT unique across leagues (both use 1-6)
 - Roster IDs are only unique within a league
 - Always validate 24-team totals, never assume 12-team counts
@@ -251,12 +267,14 @@ const response = await fetch(`https://api.sleeper.app/v1/league/${id}`);
 ### Why We Unified
 
 **Problems Solved:**
+
 - ❌ **Inconsistent error handling** - some threw, some returned null
 - ❌ **Duplicated API calls** - same endpoints implemented 4+ times
 - ❌ **Different caching strategies** - memory vs none vs headers-based
 - ❌ **No smart caching** - 11K+ players fetched multiple times
 
 **Benefits:**
+
 - ✅ **100% Data Integrity** - Validated across 40+ tests
 - ✅ **Smart Caching** - 1 week cache for players
 - ✅ **Consistent Error Handling** - Configurable strategies
@@ -280,22 +298,22 @@ export const FETCH_STRATEGIES = {
     staleTime: 0,
     gcTime: 0,
     refetchInterval: 10000,
-    cache: 'no-store'
+    cache: 'no-store',
   },
-  
+
   // Roster/lineup data
   dynamic: {
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    refetchOnMount: 'always'
+    refetchOnMount: 'always',
   },
-  
+
   // Player database, historical data
   static: {
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 7 * 24 * 60 * 60 * 1000,
-    refetchOnMount: false
-  }
+    refetchOnMount: false,
+  },
 };
 ```
 
@@ -342,6 +360,7 @@ export const FETCH_STRATEGIES = {
 ### Shared Utilities Reference
 
 **Statistics (`@/shared/utils/stats`):**
+
 - `median(values)` - Calculate median
 - `mean(values)` - Calculate mean/average
 - `standardDeviation(values)` - Calculate standard deviation
@@ -350,12 +369,14 @@ export const FETCH_STRATEGIES = {
 - `percentileRank(values)` - Get percentile ranks
 
 **Position Analysis (`@/shared/utils/stats`):**
+
 - `getStarterPositionPoints(config)` - Calculate position points
 - `aggregatePositionPoints(weekly, range)` - Aggregate across weeks
 - `calculatePositionalMedians(dataset, range)` - Position medians
 - `calculateAllPositionalAdvantages(dataset, range)` - All team advantages
 
 **Client Calculations (`@/shared/utils/calculations`):**
+
 - `calculateTeamStats(matchups, rosters, ...)` - Team season stats
 - `calculatePositionalScoring(matchups, players, ...)` - Position scoring
 - `calculationCache` - Shared calculation cache instance
@@ -379,14 +400,14 @@ interface ManagerTableProps {
 
 export const ManagerTable = memo<ManagerTableProps>((props) => {
   const { data, onSort, loading = false } = props;
-  
+
   // Extract complex calculations to useMemo
   const sortedData = useMemo(() => {
     return [...data].sort((a, b) => b.score - a.score);
   }, [data]);
-  
+
   // Component logic (max 200 lines)
-  
+
   return (
     <table className="w-full">
       {/* JSX */}
@@ -416,7 +437,7 @@ const useManagerStats = (data: ManagerData[]) => {
 export const ManagerAnalysis = memo((props) => {
   const { data } = props;
   const stats = useManagerStats(data);
-  
+
   return <div>{/* Use stats */}</div>;
 });
 ```
@@ -436,7 +457,7 @@ export const ManagerAnalysis = () => {
 export const ManagerAnalysis = memo((props) => {
   const { data } = props;
   const [filters, setFilters] = useState(defaultFilters);
-  
+
   return (
     <div>
       <ManagerFilters filters={filters} onChange={setFilters} />
@@ -469,7 +490,7 @@ const [league1, league2, players, nflState] = await Promise.all([
   fetchLeague(id1),
   fetchLeague(id2),
   fetchPlayers(),
-  fetchNFLState()
+  fetchNFLState(),
 ]);
 
 // ✅ Process multi-week data in parallel
@@ -516,7 +537,8 @@ const SERVER_CACHE_DURATION = {
 - **Focus**: API-dependent workflows over isolated functions
 - **Mock Strategy**: Use captured JSON fixtures from actual Sleeper responses
 - **Multi-League Testing**: Always test with both AFC and NFC league datasets
-- **Performance Testing**: Validate heavy operations (10K+ simulations, 24-team aggregations)
+- **Performance Testing**: Validate heavy operations (10K+ simulations, 24-team
+  aggregations)
 
 ### Critical Test Scenarios
 
@@ -533,14 +555,14 @@ describe('calculateTeamStats', () => {
     const stats = calculateTeamStats(matchups);
     expect(stats.pointsFor).toBe(120.5);
   });
-  
+
   it('handles empty matchup array', () => {
-    expect(calculateTeamStats([])).toEqual({ 
-      pointsFor: 0, 
-      pointsAgainst: 0 
+    expect(calculateTeamStats([])).toEqual({
+      pointsFor: 0,
+      pointsAgainst: 0,
     });
   });
-  
+
   it('handles multi-league data correctly', () => {
     const afcMatchups = createMockMatchups({ leagueId: 'afc', count: 6 });
     const nfcMatchups = createMockMatchups({ leagueId: 'nfc', count: 6 });
@@ -599,15 +621,18 @@ if (DEBUG) {
 
 ```typescript
 // ✅ Structured error responses
-return NextResponse.json({
-  error: 'Failed to fetch league data',
-  message: error.message,
-  _meta: {
-    source: 'sleeper_api',
-    responseTime: `${Date.now() - startTime}ms`,
-    fallback: false
-  }
-}, { status: 500 });
+return NextResponse.json(
+  {
+    error: 'Failed to fetch league data',
+    message: error.message,
+    _meta: {
+      source: 'sleeper_api',
+      responseTime: `${Date.now() - startTime}ms`,
+      fallback: false,
+    },
+  },
+  { status: 500 }
+);
 ```
 
 ---
@@ -646,24 +671,26 @@ export { PositionChart } from './PositionChart';
 ### Monte Carlo Simulation Principles
 
 - **Iterations**: Minimum 10,000 for statistical significance
-- **Variance Source**: Historical projection vs actual performance (2022-2024 data)
+- **Variance Source**: Historical projection vs actual performance (2022-2024
+  data)
 - **Player vs Position Weighting**: 70% player-specific, 30% position-level
-- **Distribution Sampling**: Direct historical sampling, not assumed normal distributions
+- **Distribution Sampling**: Direct historical sampling, not assumed normal
+  distributions
 
 ### Position Variance Constants
 
 ```typescript
 const POSITION_VARIANCE = {
-  K: 0.50,   // Most predictable
-  QB: 0.80,  // Moderate variance
-  TE: 0.99,  // Highly volatile
-  RB: 0.98,  // Highly volatile
-  WR: 0.98,  // Highly volatile
-  DEF: 0.75  // Moderate-high variance
+  K: 0.5, // Most predictable
+  QB: 0.8, // Moderate variance
+  TE: 0.99, // Highly volatile
+  RB: 0.98, // Highly volatile
+  WR: 0.98, // Highly volatile
+  DEF: 0.75, // Moderate-high variance
 };
 ```
 
 ---
 
-*This document complements the concise `.cursorrules` file with detailed examples and explanations. Last updated: October 2025*
-
+_This document complements the concise `.cursorrules` file with detailed
+examples and explanations. Last updated: October 2025_

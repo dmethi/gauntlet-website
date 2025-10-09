@@ -53,6 +53,7 @@ Each report file follows the `WeeklyRecapReport` type structure:
 ### Via Dynamic Route
 
 Reports are automatically accessible via the dynamic route:
+
 - URL pattern: `/competition/reports/{season}/week-{week}`
 - Example: `/competition/reports/2025/week-5`
 
@@ -79,6 +80,7 @@ Reports are generated automatically via Vercel Cron every Tuesday at 10am ET.
 ## Backups
 
 When a report is regenerated, the previous version is automatically backed up:
+
 - Original: `week-5.json`
 - Backup: `week-5.backup.json`
 
@@ -104,11 +106,13 @@ The `metadata.json` file tracks generation history:
 To test report generation and viewing:
 
 1. **Generate a test report:**
+
    ```bash
    npm run generate-recap -- --week 5 --dry-run
    ```
 
 2. **View in browser:**
+
    ```bash
    npm run dev
    # Visit http://localhost:3000/competition/reports/2025/week-5
@@ -139,8 +143,9 @@ To test report generation and viewing:
 ## File Size
 
 Typical report sizes:
+
 - Small (success): ~50-100KB
-- Medium (with all data): ~150-250KB  
+- Medium (with all data): ~150-250KB
 - Large (detailed narratives): ~300-500KB
 
 ## Retention

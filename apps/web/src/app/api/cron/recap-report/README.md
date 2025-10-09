@@ -50,14 +50,16 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 ## Files
 
 ### `route.ts`
+
 - **Purpose**: Vercel API route handler for cron endpoint
 - **Auth**: Requires `CRON_SECRET` in Authorization header
 - **Timeout**: 5 minutes (300 seconds) for AI generation
-- **Methods**: 
+- **Methods**:
   - `GET` - Called by Vercel Cron
   - `POST` - Manual triggers
 
 ### `runner.ts`
+
 - **Purpose**: Core execution logic for report generation
 - **Dependencies**:
   - `@/lib/reports/recap/integration` - Report generation + storage
@@ -65,6 +67,7 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 - **Returns**: Structured result with status, file path, errors
 
 ### `README.md` (this file)
+
 - **Purpose**: Documentation and troubleshooting guide
 
 ## Configuration
@@ -72,6 +75,7 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 ### Environment Variables
 
 Required in Vercel:
+
 ```bash
 GEMINI_API_KEY=your_gemini_api_key_here
 CRON_SECRET=your_random_secret_here
@@ -114,6 +118,7 @@ Once deployed to Vercel, the cron job runs automatically every Tuesday at 10am E
 ### Manual Trigger (Testing)
 
 #### Option 1: Local Test Script
+
 ```bash
 cd apps/web
 npm run test:cron-recap
@@ -122,6 +127,7 @@ npm run test:cron-recap
 This runs the runner directly without HTTP layer.
 
 #### Option 2: HTTP Request (Local)
+
 ```bash
 # Start dev server
 npm run dev
@@ -132,6 +138,7 @@ curl -X POST http://localhost:3000/api/cron/recap-report \
 ```
 
 #### Option 3: HTTP Request (Production)
+
 ```bash
 curl -X POST https://your-domain.com/api/cron/recap-report \
   -H "Authorization: Bearer $CRON_SECRET"
@@ -140,6 +147,7 @@ curl -X POST https://your-domain.com/api/cron/recap-report \
 ## Response Format
 
 ### Success Response (200)
+
 ```json
 {
   "success": true,
@@ -155,6 +163,7 @@ curl -X POST https://your-domain.com/api/cron/recap-report \
 ```
 
 ### Error Response (500)
+
 ```json
 {
   "success": false,
@@ -165,6 +174,7 @@ curl -X POST https://your-domain.com/api/cron/recap-report \
 ```
 
 ### Unauthorized (401)
+
 ```json
 {
   "error": "Unauthorized"
@@ -174,11 +184,13 @@ curl -X POST https://your-domain.com/api/cron/recap-report \
 ## Output Location
 
 Reports are saved to:
+
 ```
 apps/web/data/reports/recap/{season}/week-{N}.json
 ```
 
 Example:
+
 ```
 apps/web/data/reports/recap/
 ├── 2025/
@@ -191,6 +203,7 @@ apps/web/data/reports/recap/
 ## Viewing Reports
 
 After generation, reports are automatically available at:
+
 ```
 https://your-domain.com/competition/reports/{season}/week-{week}
 ```
@@ -202,6 +215,7 @@ Example: `https://your-domain.com/competition/reports/2025/week-5`
 ### Vercel Dashboard
 
 View cron execution logs in Vercel:
+
 1. Go to your project dashboard
 2. Click "Functions" tab
 3. Find `/api/cron/recap-report`
@@ -228,6 +242,7 @@ View cron execution logs in Vercel:
 **Cause**: Missing or incorrect `CRON_SECRET`
 
 **Solution**:
+
 1. Check Vercel environment variables
 2. Ensure `CRON_SECRET` matches the value in your trigger
 3. Update Authorization header: `Bearer YOUR_SECRET`
@@ -237,6 +252,7 @@ View cron execution logs in Vercel:
 **Cause**: Missing `GEMINI_API_KEY` or API error
 
 **Solution**:
+
 1. Verify `GEMINI_API_KEY` is set in Vercel
 2. Check Gemini API quota/limits
 3. Review error message in response
@@ -247,6 +263,7 @@ View cron execution logs in Vercel:
 **Cause**: AI generation taking too long
 
 **Solution**:
+
 1. This is rare - typical generation is 60-90 seconds
 2. Check Gemini API response times
 3. Consider increasing `maxDuration` in vercel.json (max 300s on Pro plan)
@@ -257,6 +274,7 @@ View cron execution logs in Vercel:
 **Cause**: Cron tried to regenerate existing report
 
 **Solution**:
+
 - This is expected behavior (prevents accidental overwrites)
 - Manually delete existing report if regeneration needed
 - Or modify runner.ts to use `forceRegenerate: true` (not recommended)
@@ -266,6 +284,7 @@ View cron execution logs in Vercel:
 **Cause**: `getCurrentWeek()` returning incorrect week
 
 **Solution**:
+
 1. Check Sleeper API status
 2. Verify season start date in `@gauntlet/lib/utils.ts`
 3. Manually trigger with hardcoded week for testing
@@ -309,9 +328,11 @@ Edit `apps/web/vercel.json`:
 
 ```json
 {
-  "crons": [{
-    "schedule": "0 12 * * 3"  // Wednesday at noon UTC
-  }]
+  "crons": [
+    {
+      "schedule": "0 12 * * 3" // Wednesday at noon UTC
+    }
+  ]
 }
 ```
 
@@ -363,8 +384,8 @@ Cron syntax: `minute hour day month day-of-week`
 ## Support
 
 For issues or questions:
+
 1. Check Vercel function logs
 2. Run local test script with debug output
 3. Review error messages in HTTP response
 4. Check environment variable configuration
-

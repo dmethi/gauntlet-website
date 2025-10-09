@@ -9,6 +9,7 @@ PrismaClientInitializationError: Prisma Client could not locate the Query Engine
 ```
 
 **Symptoms:**
+
 - Pattern of 2 consecutive failures every 30 minutes
 - NO data being saved to database despite successful simulations
 - Cold starts failing, warm invocations succeeding (sometimes)
@@ -21,12 +22,16 @@ PrismaClientInitializationError: Prisma Client could not locate the Query Engine
 
 ## Root Cause
 
-The Prisma schema didn't specify `binaryTargets` for Vercel's serverless environment (AWS Lambda running on `rhel-openssl-3.0.x`). When Next.js bundled the code:
+The Prisma schema didn't specify `binaryTargets` for Vercel's serverless
+environment (AWS Lambda running on `rhel-openssl-3.0.x`). When Next.js bundled
+the code:
+
 1. Only the native (macOS) binary was included
 2. Vercel's runtime couldn't find the Linux-compatible query engine
 3. Cold starts always failed because the engine wasn't available
 
 The intermittent nature was likely due to:
+
 - Some invocations getting cached/warm containers (still failing but faster)
 - Build artifacts sometimes partially succeeding
 - Vercel's retry logic creating the "2 failures every 30 min" pattern
@@ -34,6 +39,7 @@ The intermittent nature was likely due to:
 ## Solution
 
 ### 1. Updated Prisma Schema
+
 **File:** `apps/server/prisma/schema-historical.prisma`
 
 ```prisma
@@ -45,14 +51,17 @@ generator client {
 ```
 
 **Why these targets:**
+
 - `native`: Local development (macOS/Windows)
 - `rhel-openssl-3.0.x`: Vercel's AWS Lambda runtime
 - `linux-musl-openssl-3.0.x`: Alpine Linux containers (future-proofing)
 
 ### 2. Updated Next.js Config
+
 **File:** `apps/web/next.config.js`
 
-Added experimental output file tracing to ensure Prisma binaries are included in Vercel's function bundles:
+Added experimental output file tracing to ensure Prisma binaries are included in
+Vercel's function bundles:
 
 ```javascript
 experimental: {
@@ -66,7 +75,8 @@ experimental: {
 }
 ```
 
-This tells Next.js/Vercel to explicitly include Prisma files when building API routes.
+This tells Next.js/Vercel to explicitly include Prisma files when building API
+routes.
 
 ### 3. Regenerated Prisma Client
 
@@ -76,6 +86,7 @@ npx prisma generate --schema=prisma/schema-historical.prisma
 ```
 
 This downloaded all three query engine binaries:
+
 - `libquery_engine-darwin-arm64.dylib.node` (16MB) - macOS
 - `libquery_engine-rhel-openssl-3.0.x.so.node` (15MB) - Vercel
 - `libquery_engine-linux-musl-openssl-3.0.x.so.node` (15MB) - Alpine
@@ -85,18 +96,21 @@ This downloaded all three query engine binaries:
 ### Pre-Deployment (Local)
 
 1. **Check binaries exist:**
+
 ```bash
 ls -lh apps/server/generated/prisma-historical/*.node
 # Should show 3 binaries
 ```
 
 2. **Build succeeds:**
+
 ```bash
 pnpm turbo build --filter=@gauntlet/web
 # Should complete without errors
 ```
 
 3. **Database query works:**
+
 ```bash
 cd apps/server
 npx tsx -e "import {PrismaClient} from './generated/prisma-historical/index.js'; const p = new PrismaClient(); p.liveWinProbSample.count().then(c => console.log('Count:', c)).finally(() => p.\$disconnect());"
@@ -114,10 +128,11 @@ npx tsx -e "import {PrismaClient} from './generated/prisma-historical/index.js';
    - Should see: `✅ [CRON] Live odds snapshot completed`
 
 3. **Verify database is receiving data:**
+
 ```sql
-SELECT 
-  week, 
-  matchup_id, 
+SELECT
+  week,
+  matchup_id,
   COUNT(*) as sample_count,
   MAX(timestamp) as latest_sample
 FROM "LiveWinProbSample"
@@ -126,11 +141,13 @@ GROUP BY week, matchup_id
 ORDER BY matchup_id;
 ```
 
-Expected: 12 matchups × ~N samples per matchup (where N = number of cron runs since games started)
+Expected: 12 matchups × ~N samples per matchup (where N = number of cron runs
+since games started)
 
 4. **Check for timestamp gaps** (indicates failures):
+
 ```sql
-SELECT 
+SELECT
   timestamp,
   LAG(timestamp) OVER (ORDER BY timestamp DESC) as next_timestamp,
   EXTRACT(EPOCH FROM (LAG(timestamp) OVER (ORDER BY timestamp DESC) - timestamp))/60 as gap_minutes
@@ -165,7 +182,8 @@ If issues persist after deployment:
 
 ## Prevention
 
-- **Always specify `binaryTargets`** when using Prisma in monorepos with serverless deployments
+- **Always specify `binaryTargets`** when using Prisma in monorepos with
+  serverless deployments
 - **Test builds locally** before deploying database-dependent code
 - **Monitor cron jobs** with alerting (e.g., Vercel Monitoring, Sentry)
 - **Add health checks** that verify database connectivity
@@ -191,4 +209,3 @@ If issues persist after deployment:
 **Fixed:** 2025-10-09  
 **Author:** Cursor AI Assistant  
 **Verified:** ✅ Build passes, awaiting production deployment verification
-

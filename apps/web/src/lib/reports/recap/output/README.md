@@ -27,6 +27,7 @@ const report = deserializeReport(json);
 ```
 
 **Features:**
+
 - ✅ Matches existing `report-week5.json` structure exactly
 - ✅ Comprehensive metadata tracking (timing, tokens, status)
 - ✅ Graceful handling of partial failures
@@ -51,6 +52,7 @@ const summary = summarizeValidation(validation);
 ```
 
 **Validation Rules:**
+
 - Week number (1-18)
 - Season year (2024-2030)
 - Narrative minimum length (50 chars per section)
@@ -59,6 +61,7 @@ const summary = summarizeValidation(validation);
 - Matchup count validation (12 total)
 
 **Quality Scoring:**
+
 - Critical errors: -20 points each
 - Major errors: -10 points each
 - Minor errors: -5 points each
@@ -93,6 +96,7 @@ npx tsx scripts/test-report-output.ts
 ```
 
 **Test Scenarios:**
+
 1. ✅ Successful report formatting
 2. ✅ Report validation with warnings
 3. ✅ Partial failure handling
@@ -148,9 +152,9 @@ const state = {
   sectionMetadata: {
     hallOfShame: {
       status: 'failed',
-      error: 'API timeout'
-    }
-  }
+      error: 'API timeout',
+    },
+  },
 };
 
 const report = formatRecapReport(state);
@@ -204,20 +208,20 @@ import { formatRecapReport, validateReport } from './output';
 export const generateRecapReport = async (week: number, season: number) => {
   // 1. Run orchestration
   const state = await runRecapGraph({ week, season });
-  
+
   // 2. Format output
   const report = formatRecapReport(state);
-  
+
   // 3. Validate
   const validation = validateReport(report);
-  
+
   if (!isProductionReady(validation)) {
     console.warn('Report has quality issues:', summarizeValidation(validation));
   }
-  
+
   // 4. Save to file system
   await saveReport(report);
-  
+
   return report;
 };
 ```
@@ -244,4 +248,3 @@ output/
 - [Phase 3 Detailed Tasks](/tasks/RECAP-PHASE-3-DETAILED.md)
 - [Types Documentation](/apps/web/src/lib/reports/recap/types.ts)
 - [State Management](/apps/web/src/lib/reports/recap/state.ts)
-

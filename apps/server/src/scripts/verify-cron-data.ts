@@ -1,13 +1,13 @@
 /**
  * Verify Cron Job Data Collection
- * 
+ *
  * Quick script to check if live odds cron job is successfully saving data.
  * Run after deploying Prisma fix to verify it's working.
- * 
+ *
  * Usage:
  *   cd apps/server
  *   npx tsx src/scripts/verify-cron-data.ts
- * 
+ *
  * Expected output:
  *   - 12 matchups with data for current week
  *   - Recent samples (within last 15 minutes)
@@ -51,10 +51,10 @@ const main = async () => {
     if (latest) {
       const ageMinutes = (Date.now() - latest.timestamp.getTime()) / (1000 * 60);
       const ageStatus = ageMinutes < 15 ? '✅' : ageMinutes < 30 ? '⚠️' : '❌';
-      
+
       console.log(`\n${ageStatus} Latest sample: ${latest.timestamp.toLocaleString()}`);
       console.log(`   Age: ${ageMinutes.toFixed(1)} minutes ago`);
-      
+
       if (ageMinutes > 15) {
         console.log('   ⚠️  Sample is older than expected (cron runs every 10 min)');
       }
@@ -68,7 +68,7 @@ const main = async () => {
     });
 
     console.log(`\n📈 Data by matchup (${matchupCounts.length} matchups):`);
-    
+
     for (const m of matchupCounts.sort((a, b) => a.matchupId - b.matchupId)) {
       const league = m.leagueId.includes('3245') ? 'AFC' : 'NFC';
       console.log(`   ${league} Matchup ${m.matchupId}: ${m._count.id} samples`);
@@ -91,11 +91,12 @@ const main = async () => {
 
     if (recentSamples.length > 1) {
       const gaps: Array<{ from: Date; to: Date; minutes: number }> = [];
-      
+
       for (let i = 0; i < recentSamples.length - 1; i++) {
-        const gapMs = recentSamples[i].timestamp.getTime() - recentSamples[i + 1].timestamp.getTime();
+        const gapMs =
+          recentSamples[i].timestamp.getTime() - recentSamples[i + 1].timestamp.getTime();
         const gapMinutes = gapMs / (1000 * 60);
-        
+
         // Flag gaps > 12 minutes (expected: 10 min + 2 min buffer)
         if (gapMinutes > 12) {
           gaps.push({
@@ -109,8 +110,11 @@ const main = async () => {
       if (gaps.length > 0) {
         console.log(`\n⚠️  Detected ${gaps.length} gaps in recent data (> 12 min):`);
         gaps.forEach((gap, i) => {
-          if (i < 5) { // Show first 5 gaps
-            console.log(`   ${gap.from.toLocaleString()} → ${gap.to.toLocaleString()} (${gap.minutes.toFixed(1)} min)`);
+          if (i < 5) {
+            // Show first 5 gaps
+            console.log(
+              `   ${gap.from.toLocaleString()} → ${gap.to.toLocaleString()} (${gap.minutes.toFixed(1)} min)`
+            );
           }
         });
         if (gaps.length > 5) {
@@ -130,8 +134,13 @@ const main = async () => {
     console.log('\n' + '='.repeat(60));
     console.log('SUMMARY');
     console.log('='.repeat(60));
-    
-    if (totalSamples > 0 && matchupCounts.length >= 10 && latest && (Date.now() - latest.timestamp.getTime()) < 15 * 60 * 1000) {
+
+    if (
+      totalSamples > 0 &&
+      matchupCounts.length >= 10 &&
+      latest &&
+      Date.now() - latest.timestamp.getTime() < 15 * 60 * 1000
+    ) {
       console.log('✅ System is HEALTHY');
       console.log('   - Data is being collected');
       console.log('   - Recent samples exist');
@@ -145,7 +154,6 @@ const main = async () => {
       console.log('   - No data found for current week');
       console.log('   - Likely Prisma initialization or cron job issue');
     }
-
   } catch (error) {
     console.error('\n❌ Error verifying data:', error);
     console.log('\nPossible issues:');
@@ -158,4 +166,3 @@ const main = async () => {
 };
 
 main();
-
