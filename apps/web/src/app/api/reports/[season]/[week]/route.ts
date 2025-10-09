@@ -444,10 +444,14 @@ const getDefaultNarratives = () => {
   };
 };
 
-export const GET = async (
+// Next.js Route Handlers MUST use `export async function` syntax (not arrow functions)
+// This is required for proper serialization during static generation and API route handling
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line func-style
+export async function GET(
   _req: NextRequest,
   { params }: { params: { season: string; week: string } },
-) => {
+) {
   const week = parseInt(params.week, 10);
   const season = parseInt(params.season, 10);
 
@@ -1063,4 +1067,4 @@ export const GET = async (
       { status: 500 },
     );
   }
-};
+}
