@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import StartSitEfficiency from '@/components/start-sit-efficiency';
+import { StartSitEfficiency } from '@/components/start-sit-efficiency';
 import { Card, CardContent } from '@/components/ui/card';
 import type { StartSitData } from '@/features/start-sit/types';
 

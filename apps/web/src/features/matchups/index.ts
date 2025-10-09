@@ -25,7 +25,7 @@ export type {
   MatchupOddsPreviewProps,
   TeamOdds,
   MatchupOdds,
-  LeagueWideOdds,
+  LeagueWideOddsType,
   LeagueWideOddsProps,
   OddsPreview,
 

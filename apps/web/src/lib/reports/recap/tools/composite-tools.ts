@@ -246,8 +246,8 @@ export const fetchMatchupDataTool: ReportTool<
       ],
     );
 
-    // Build game window map from ESPN data (pass week for historical lookups)
-    const gameWindowMap = espnData ? buildGameWindowMap(espnData, args.week) : new Map();
+    // Build game window map from ESPN data (dynamically parsed from game times)
+    const gameWindowMap = espnData ? buildGameWindowMap(espnData) : new Map();
 
     // Helper to get top 3 performers from a team's starters
     const getTopPerformers = (matchup: (typeof afcMatchups)[0]): PlayerPerformance[] => {

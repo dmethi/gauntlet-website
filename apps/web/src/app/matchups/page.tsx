@@ -489,7 +489,7 @@ const TeamRow = ({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) 
   );
 };
 
-export const MatchupsPage = () => {
+export default function MatchupsPage(): JSX.Element {
   return (
     <Suspense
       fallback={
@@ -508,4 +508,4 @@ export const MatchupsPage = () => {
       <MatchupsPageContent />
     </Suspense>
   );
-};
+}
