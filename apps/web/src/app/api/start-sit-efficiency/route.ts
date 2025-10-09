@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { analyzeStartSitEfficiency } from '@/features/start-sit/utils';
 
-export async function GET() {
+export const GET = async () => {
   try {
     const data = await analyzeStartSitEfficiency();
     return NextResponse.json(data);
@@ -15,10 +15,10 @@ export async function GET() {
       { status: 500 },
     );
   }
-}
+};
 
 // Force refresh the analysis (ignores cache)
-export async function POST() {
+export const POST = async () => {
   try {
     console.log('🔄 Force refreshing start/sit efficiency analysis (server-computed)...');
     const data = await analyzeStartSitEfficiency();
@@ -37,4 +37,4 @@ export async function POST() {
       { status: 500 },
     );
   }
-}
+};

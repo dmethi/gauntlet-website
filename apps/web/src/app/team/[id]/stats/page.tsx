@@ -153,7 +153,6 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
         <div className="flex items-center gap-4">
           <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold">
             {avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img src={avatarUrl} alt={`${name} avatar`} className="h-full w-full object-cover" />
             ) : (
               <span>{initials}</span>

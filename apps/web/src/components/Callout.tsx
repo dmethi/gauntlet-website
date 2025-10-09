@@ -15,14 +15,14 @@ const toneStyles: Record<NonNullable<CalloutProps['tone']>, string> = {
   spice: 'border-red-500/30 bg-red-500/10',
 };
 
-export function Callout({
+export const Callout = ({
   by = 'Editor',
   tone = 'info',
   title,
   compact,
   children,
   className,
-}: CalloutProps) {
+}: CalloutProps) => {
   const defaultTitle =
     by === 'Editor' ? '✍️ Editor’s Note' : by === 'Scribe' ? '🪶 Scribe’s Note' : '⚖️ Commish Note';
   const heading = title || defaultTitle;
@@ -33,4 +33,4 @@ export function Callout({
       <div className="leading-relaxed">{children}</div>
     </aside>
   );
-}
+};

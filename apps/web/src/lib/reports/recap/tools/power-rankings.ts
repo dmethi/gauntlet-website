@@ -3,7 +3,6 @@ import { LEAGUE_IDS } from '@/lib/constants';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 import type { PowerRanking, RankingChange, TierSummary } from '../types';
-import type { SleeperMatchup } from '@gauntlet/types';
 
 /**
  * Power Rankings Tool
@@ -65,7 +64,7 @@ const assignDynamicTiers = (rankings: PowerRanking[]): void => {
   // Assign tier numbers with smarter break logic
   let currentTier = 1;
   let tierStart = 0;
-  let forcedBreaks = 0; // Track how many breaks we forced due to tier size
+  let _forcedBreaks = 0; // Track how many breaks we forced due to tier size
 
   for (let i = 0; i < rankings.length; i++) {
     const currentTierSize = i - tierStart;
@@ -89,7 +88,7 @@ const assignDynamicTiers = (rankings: PowerRanking[]): void => {
       if (i === bestBreakIndex) {
         currentTier++;
         tierStart = i + 1;
-        forcedBreaks++;
+        _forcedBreaks++;
       }
     }
     // Check if this is a natural tier break point

@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
-import type { SleeperUser, SleeperRoster, SleeperLeague, SleeperMatchup } from '@gauntlet/types';
+import type { SleeperLeague, SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
 
-async function fetchSleeperData<T>(endpoint: string): Promise<T> {
+const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
   const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
   if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
   return response.json();
-}
+};
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export const GET = async (_req: NextRequest, { params }: { params: { id: string } }) => {
   const teamId = params.id;
 
   try {
@@ -163,4 +163,4 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     console.error('Error fetching team data:', error);
     return NextResponse.json({ error: 'Failed to fetch team data' }, { status: 500 });
   }
-}
+};

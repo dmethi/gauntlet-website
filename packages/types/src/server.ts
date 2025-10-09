@@ -84,7 +84,7 @@ export interface LeagueOddsResponse {
     projectedScore: number;
     rank: number;
   }>;
-  [key: string]: any; // Allow additional fields
+  [key: string]: unknown; // Allow additional fields
 }
 
 /**

@@ -5,7 +5,7 @@ import { sleeperClient } from '@/lib/sleeper/unified-client';
  * Example API route that bypasses database entirely
  * This replaces the expensive DB queries with direct Sleeper API calls
  */
-export async function GET(request: NextRequest, { params }: { params: { leagueId: string } }) {
+export const GET = async (request: NextRequest, { params }: { params: { leagueId: string } }) => {
   console.log(`[API] Fetching league data for ${params.leagueId} WITHOUT database`);
 
   try {
@@ -69,4 +69,4 @@ export async function GET(request: NextRequest, { params }: { params: { leagueId
     console.error('[API] Error fetching from Sleeper:', error);
     return NextResponse.json({ error: 'Failed to fetch league data' }, { status: 500 });
   }
-}
+};

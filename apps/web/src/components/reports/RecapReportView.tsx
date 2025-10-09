@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { PageHeader } from '@gauntlet/ui';
-import { AlertCircle, TrendingUp, Trophy, Award, Skull, Star } from 'lucide-react';
+import { AlertCircle, Award, Skull, Star, TrendingUp, Trophy } from 'lucide-react';
 import type { WeeklyRecapReport } from '@/lib/reports/recap/types';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
@@ -601,7 +601,7 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
                     New Records & Top-10 All-Time
                   </div>
                   <div className="space-y-2">
-                    {(hof.records || hof.highlights?.records)
+                    {(hof?.records || hof?.highlights?.records || [])
                       .slice(0, 50)
                       .map((r: any, idx: number) => (
                         <div

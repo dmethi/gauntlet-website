@@ -8,10 +8,10 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type {
   LeagueData,
-  Roster,
   Matchup,
-  TeamStats,
+  Roster,
   RosterWeekAggregate,
+  TeamStats,
 } from '@/shared/types/api';
 import { useSeasonAggregates } from './useSeasonAggregates';
 

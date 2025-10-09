@@ -4,39 +4,39 @@
 
 import { useQuery } from '@tanstack/react-query';
 import {
-  calculateTeamStats,
   calculatePositionalScoring,
+  calculateTeamStats,
   calculationCache,
-  TeamSeasonStats,
   PositionalScoring,
+  TeamSeasonStats,
 } from '@/shared/utils/calculations';
-import { CACHE_DURATIONS, LEAGUE_IDS, CURRENT_SEASON } from '@/lib/constants';
+import { CACHE_DURATIONS, CURRENT_SEASON, LEAGUE_IDS } from '@/lib/constants';
 import type {
   SleeperLeague,
-  SleeperRoster,
-  SleeperUser,
   SleeperMatchup,
   SleeperPlayer,
+  SleeperRoster,
+  SleeperUser,
 } from '@gauntlet/types';
 
 /**
  * Fetch data directly from Sleeper API
  */
-async function fetchSleeperData<T>(endpoint: string): Promise<T> {
+const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
   const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
   if (!response.ok) {
     throw new Error(`Sleeper API error: ${response.status}`);
   }
   return response.json();
-}
+};
 
 /**
  * Get all matchups for a season
  */
-async function getAllMatchups(
+const getAllMatchups = async (
   leagueId: string,
   weeks: number,
-): Promise<Map<number, SleeperMatchup[]>> {
+): Promise<Map<number, SleeperMatchup[]>> => {
   const matchupsByWeek = new Map<number, SleeperMatchup[]>();
 
   // Fetch all weeks in parallel
@@ -56,12 +56,12 @@ async function getAllMatchups(
   });
 
   return matchupsByWeek;
-}
+};
 
 /**
  * Hook to get team stats with expected wins and luck calculated client-side
  */
-export function useClientTeamStats(leagueId?: string) {
+export const useClientTeamStats = (leagueId?: string) => {
   const effectiveLeagueId = leagueId || LEAGUE_IDS.AFC;
 
   return useQuery({
@@ -98,15 +98,15 @@ export function useClientTeamStats(leagueId?: string) {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook to get positional scoring for a specific team
  */
-export function useClientPositionalScoring(
+export const useClientPositionalScoring = (
   leagueId: string | undefined,
   rosterId: number | undefined,
-) {
+) => {
   return useQuery({
     queryKey: ['client-positional-scoring', leagueId, rosterId],
     queryFn: async (): Promise<PositionalScoring[]> => {
@@ -142,12 +142,12 @@ export function useClientPositionalScoring(
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook to get league-wide weekly averages
  */
-export function useClientWeeklyAverages(leagueId?: string) {
+export const useClientWeeklyAverages = (leagueId?: string) => {
   const effectiveLeagueId = leagueId || LEAGUE_IDS.AFC;
 
   return useQuery({
@@ -188,4 +188,4 @@ export function useClientWeeklyAverages(leagueId?: string) {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};

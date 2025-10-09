@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   calculateHallOfFameRecords,
-  getCategoryInfo,
   formatRecord,
-  getRankEmoji,
   getCategoriesByGroup,
+  getCategoryInfo,
+  getRankEmoji,
   HALL_OF_FAME_CATEGORIES,
 } from './calculations';
-import type { ProcessedMatchup, HallOfFameCategory } from '@/features/hall-of-fame/types';
+import type { HallOfFameCategory, ProcessedMatchup } from '@/features/hall-of-fame/types';
 
 describe('calculations', () => {
   const mockMatchups: ProcessedMatchup[] = [

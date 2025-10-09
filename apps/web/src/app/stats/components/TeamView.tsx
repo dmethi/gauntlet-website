@@ -39,14 +39,14 @@ const getPerformanceColor = (value: number, isPositive: boolean) => {
   return isPositive ? colors.rdylgn[8] : colors.rdylgn[2];
 };
 
-export function TeamView({
+export const TeamView = ({
   allTeamEntries,
   positionsMap,
   dataset,
   fromWeek,
   toWeek,
   availableWeeks,
-}: TeamViewProps) {
+}: TeamViewProps) => {
   // State management
   const [selectedTeamKey, setSelectedTeamKey] = useState<string>(
     allTeamEntries.length > 0 ? allTeamEntries[0][0] : '',
@@ -1166,4 +1166,4 @@ export function TeamView({
       </CardContent>
     </Card>
   );
-}
+};

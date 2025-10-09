@@ -7,10 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 
-export async function GET(
+export const GET = async (
   request: NextRequest,
   { params }: { params: { leagueId: string; week: string } },
-) {
+) => {
   const { leagueId, week } = params;
   const { searchParams } = new URL(request.url);
   const debug = searchParams.has('debug');
@@ -98,4 +98,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

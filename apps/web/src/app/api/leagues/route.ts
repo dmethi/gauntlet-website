@@ -3,7 +3,7 @@ import { getAllLeagues, getRostersByLeague, getUsersByLeague } from '@/lib/api-r
 
 export const runtime = 'nodejs';
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
   const debug = searchParams.has('debug');
 
@@ -70,4 +70,4 @@ export async function GET(request: Request) {
 
     return NextResponse.json(body, { status: 500 });
   }
-}
+};

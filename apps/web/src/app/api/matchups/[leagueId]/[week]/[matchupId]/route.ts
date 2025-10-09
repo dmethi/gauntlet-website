@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 import {
-  type ScoringSettings,
   calculateLeagueProjections,
+  type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
-import type { TeamRoster, PlayerDetails } from '@/features/matchups/types';
+import type { PlayerDetails, TeamRoster } from '@/features/matchups/types';
 
 interface MatchupDetails {
   matchupId: number;
@@ -15,10 +15,10 @@ interface MatchupDetails {
   margin: number;
 }
 
-export async function GET(
+export const GET = async (
   _req: NextRequest,
   { params }: { params: { leagueId: string; week: string; matchupId: string } },
-) {
+) => {
   try {
     const { leagueId, week, matchupId } = params;
     const weekNumber = parseInt(week, 10);
@@ -177,4 +177,4 @@ export async function GET(
     console.error('Error fetching individual matchup:', error);
     return NextResponse.json({ error: 'Failed to fetch matchup details' }, { status: 500 });
   }
-}
+};

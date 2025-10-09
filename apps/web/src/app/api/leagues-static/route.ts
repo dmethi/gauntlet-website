@@ -6,7 +6,7 @@ import { sleeperClient } from '@/lib/sleeper/unified-client';
  * Get all leagues WITHOUT database
  * This replaces the database-dependent /api/leagues route
  */
-export async function GET() {
+export const GET = async () => {
   console.log('[STATIC API] Fetching leagues without database');
 
   try {
@@ -81,4 +81,4 @@ export async function GET() {
     console.error('[STATIC API] Error:', error);
     return NextResponse.json({ error: 'Failed to fetch leagues' }, { status: 500 });
   }
-}
+};

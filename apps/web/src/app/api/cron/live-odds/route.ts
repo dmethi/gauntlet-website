@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *
  * @see apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts
  */
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   // Verify the request is from Vercel Cron
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
@@ -56,12 +56,12 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+};
 
 // Optionally allow manual triggers
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   return GET(request);
-}
+};
 
 // Set max duration for Vercel serverless function
 export const maxDuration = 60; // 60 seconds

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { PageHeader } from '@gauntlet/ui';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileQuestion, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FileQuestion } from 'lucide-react';
 
 const NotFoundPage = () => {
   return (

@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useLeagueStats } from './useLeagueStats';
 import type { ReactNode } from 'react';

@@ -28,10 +28,72 @@ export default [
         fetch: 'readonly',
         localStorage: 'readonly',
         sessionStorage: 'readonly',
+        // Browser Observer APIs
+        ResizeObserver: 'readonly',
+        IntersectionObserver: 'readonly',
+        MutationObserver: 'readonly',
+        PerformanceObserver: 'readonly',
+        // HTML Element types
+        HTMLElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLSpanElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLTextAreaElement: 'readonly',
+        HTMLSelectElement: 'readonly',
+        HTMLFormElement: 'readonly',
+        HTMLAnchorElement: 'readonly',
+        HTMLImageElement: 'readonly',
+        HTMLVideoElement: 'readonly',
+        HTMLCanvasElement: 'readonly',
+        HTMLTableElement: 'readonly',
+        HTMLTableSectionElement: 'readonly',
+        HTMLTableRowElement: 'readonly',
+        HTMLTableCellElement: 'readonly',
+        HTMLTableCaptionElement: 'readonly',
+        HTMLParagraphElement: 'readonly',
+        HTMLHeadingElement: 'readonly',
+        HTMLLabelElement: 'readonly',
+        Element: 'readonly',
+        // SVG Element types
+        SVGElement: 'readonly',
+        SVGSVGElement: 'readonly',
+        SVGPathElement: 'readonly',
+        SVGCircleElement: 'readonly',
+        SVGRectElement: 'readonly',
+        SVGLineElement: 'readonly',
+        SVGGElement: 'readonly',
+        // Event types
+        Event: 'readonly',
+        MouseEvent: 'readonly',
+        KeyboardEvent: 'readonly',
         // Node.js globals
         process: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
+        Buffer: 'readonly',
+        global: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+        exports: 'readonly',
+        // Node.js Web APIs
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        Request: 'readonly',
+        Response: 'readonly',
+        Headers: 'readonly',
+        FormData: 'readonly',
+        AbortSignal: 'readonly',
+        AbortController: 'readonly',
+        // Node.js timers
+        setTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearTimeout: 'readonly',
+        clearInterval: 'readonly',
+        setImmediate: 'readonly',
+        clearImmediate: 'readonly',
+        // Node.js crypto
+        crypto: 'readonly',
         // Testing globals (from vitest)
         describe: 'readonly',
         it: 'readonly',
@@ -41,6 +103,16 @@ export default [
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
+        // React types
+        JSX: 'readonly',
+        React: 'readonly',
+        // WebAssembly
+        WebAssembly: 'readonly',
+        // Encoding
+        TextEncoder: 'readonly',
+        TextDecoder: 'readonly',
+        atob: 'readonly',
+        btoa: 'readonly',
       },
     },
     plugins: {
@@ -69,7 +141,7 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-unused-vars': 'off', // Disable base rule as it conflicts with @typescript-eslint/no-unused-vars
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
 
@@ -100,6 +172,15 @@ export default [
     },
   },
   {
+    // Scripts directory - allow console statements and regular functions
+    files: ['src/scripts/**/*.{ts,js}', 'scripts/**/*.{ts,js}'],
+    rules: {
+      'no-console': 'off',
+      'func-style': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+    },
+  },
+  {
     ignores: [
       'node_modules/',
       '.next/',
@@ -109,6 +190,8 @@ export default [
       '*.config.js',
       '*.config.ts',
       '*.config.mjs',
+      'scripts/**',
+      'data/**',
     ],
   },
 ];

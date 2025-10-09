@@ -11,8 +11,8 @@ interface RidgePlotProps {
   title?: string;
 }
 
-export function RidgePlot({ data, domain, height, title }: RidgePlotProps) {
-  const svgRef = useRef<SVGSVGElement>(null);
+export const RidgePlot = ({ data, domain, height, title }: RidgePlotProps) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredTeam, setHoveredTeam] = useState<any>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -237,4 +237,4 @@ export function RidgePlot({ data, domain, height, title }: RidgePlotProps) {
       )}
     </div>
   );
-}
+};

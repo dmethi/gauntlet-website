@@ -108,7 +108,7 @@ Luke couldn't keep pace despite Omarion Hampton (27.0) and CMC (22.6) combining 
 
 import type { BoxRow } from '@/shared/types/reports';
 
-function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
+const MiniBoxscore = ({ rows }: { rows: BoxRow[] | undefined }) => {
   const items = (rows || []).slice(0, 9);
   if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
@@ -124,7 +124,7 @@ function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
       ))}
     </div>
   );
-}
+};
 
 export default function Week4Report2025() {
   // Use hardcoded data like Week 3 does

@@ -3,7 +3,6 @@ import { LEAGUE_IDS } from '@/lib/constants';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 import type { Standings, StandingsEntry } from '../types';
-import type { SleeperMatchup } from '@gauntlet/types';
 
 /**
  * Standings Tool

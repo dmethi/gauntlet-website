@@ -24,13 +24,13 @@ interface SidebarProps {
   isError?: boolean;
 }
 
-export function Sidebar({
+export const Sidebar = ({
   isMobileOpen = false,
   onMobileToggle,
   teams = [],
   isLoading,
   isError,
-}: SidebarProps) {
+}: SidebarProps) => {
   return (
     <>
       {/* Desktop Sidebar */}
@@ -82,9 +82,9 @@ export function Sidebar({
       </div>
     </>
   );
-}
+};
 
-function SidebarContent({
+const SidebarContent = ({
   teams,
   isLoading,
   isError,
@@ -92,7 +92,7 @@ function SidebarContent({
   teams?: SidebarProps['teams'];
   isLoading?: boolean;
   isError?: boolean;
-}) {
+}) => {
   return (
     <>
       {/* Header */}
@@ -114,10 +114,10 @@ function SidebarContent({
       </nav>
     </>
   );
-}
+};
 
 // Create a separate component that uses useSearchParams
-function SidebarNavigationWithSearchParams({
+const SidebarNavigationWithSearchParams = ({
   onItemClick,
   teams: _teams,
   isLoading: _isLoading,
@@ -127,7 +127,7 @@ function SidebarNavigationWithSearchParams({
   teams?: SidebarProps['teams'];
   isLoading?: boolean;
   isError?: boolean;
-}) {
+}) => {
   const pathname = usePathname();
 
   return (
@@ -204,15 +204,15 @@ function SidebarNavigationWithSearchParams({
       </div>
     </div>
   );
-}
+};
 
 // Wrapper component with Suspense boundary
-function SidebarNavigation(props: {
+const SidebarNavigation = (props: {
   onItemClick?: () => void;
   teams?: SidebarProps['teams'];
   isLoading?: boolean;
   isError?: boolean;
-}) {
+}) => {
   return (
     <Suspense
       fallback={
@@ -228,10 +228,10 @@ function SidebarNavigation(props: {
       <SidebarNavigationWithSearchParams {...props} />
     </Suspense>
   );
-}
+};
 
 // Mobile Menu Button Component
-export function MobileMenuButton({ onClick }: { onClick: () => void }) {
+export const MobileMenuButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <button
       onClick={onClick}
@@ -241,4 +241,4 @@ export function MobileMenuButton({ onClick }: { onClick: () => void }) {
       <Menu className="h-5 w-5 text-foreground" />
     </button>
   );
-}
+};

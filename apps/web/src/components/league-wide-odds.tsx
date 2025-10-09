@@ -7,14 +7,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, Crown, RefreshCw, Target, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type {
-  TeamOdds,
-  MatchupOdds,
-  LeagueWideOdds,
   LeagueWideOddsProps,
+  LeagueWideOddsType,
+  MatchupOdds,
+  TeamOdds,
 } from '@/features/matchups/types';
 
-export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
-  const [odds, setOdds] = useState<LeagueWideOdds | null>(null);
+export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) => {
+  const [odds, setOdds] = useState<LeagueWideOddsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -561,4 +561,4 @@ export function LeagueWideOdds({ week, className = '' }: LeagueWideOddsProps) {
       </CardContent>
     </Card>
   );
-}
+};

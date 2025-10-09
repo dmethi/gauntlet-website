@@ -47,7 +47,7 @@ const LeagueOverviewLoader = () => (
   </ContentLoader>
 );
 
-function LeagueOverviewContent() {
+const LeagueOverviewContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const leagueIdParam = searchParams.get('leagueId');
@@ -291,7 +291,7 @@ function LeagueOverviewContent() {
       </div>
     </Container>
   );
-}
+};
 
 export default function LeagueOverview() {
   return (
@@ -301,7 +301,7 @@ export default function LeagueOverview() {
   );
 }
 
-function RecentTransactionsWidget({ league }: { league: any }) {
+const RecentTransactionsWidget = ({ league }: { league: any }) => {
   const [items, setItems] = useState<any[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
@@ -457,4 +457,4 @@ function RecentTransactionsWidget({ league }: { league: any }) {
       )}
     </div>
   );
-}
+};

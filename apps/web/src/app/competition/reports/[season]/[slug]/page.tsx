@@ -7,7 +7,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { RecapReportView } from '@/components/reports/RecapReportView';
-import { loadRecapReport, getStaticReportParams } from '@/lib/reports/recap/utils/report-loader';
+import { getStaticReportParams, loadRecapReport } from '@/lib/reports/recap/utils/report-loader';
 
 interface PageProps {
   params:

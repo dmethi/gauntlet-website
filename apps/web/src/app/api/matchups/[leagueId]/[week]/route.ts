@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 import {
-  type ScoringSettings,
   calculateLeagueProjections,
+  type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 
 type User = {
@@ -36,7 +36,7 @@ type SleeperMatchup = {
 };
 
 // Helper to resolve a user-facing team name
-function resolveTeamName(roster: any, owner: any): string {
+const resolveTeamName = (roster: any, owner: any): string => {
   const rosterMetaName = ((roster?.metadata as any) || {})?.team_name as string | undefined;
   const ownerMetaName = ((owner?.metadata as any) || {})?.team_name as string | undefined;
   const ownerDisplay = owner?.displayName as string | undefined;
@@ -44,12 +44,12 @@ function resolveTeamName(roster: any, owner: any): string {
   const name = rosterMetaName || ownerMetaName || ownerDisplay || ownerUser;
   if (!name) return `Team ${roster?.rosterId ?? ''}`.trim();
   return String(name);
-}
+};
 
-export async function GET(
+export const GET = async (
   _request: NextRequest,
   { params }: { params: { leagueId: string; week: string } },
-) {
+): Promise<NextResponse> => {
   try {
     const leagueId = params.leagueId;
     const weekNumber = parseInt(params.week, 10);
@@ -194,6 +194,6 @@ export async function GET(
     console.error('matchups route error', error);
     return NextResponse.json({ error: 'Failed to fetch matchups' }, { status: 500 });
   }
-}
+};
 
 export const runtime = 'nodejs';

@@ -46,34 +46,34 @@ const REPORTS = new Map<string, WeeklyReport>([
 /**
  * Get a specific weekly report
  */
-export function getWeeklyReport(season: number, week: number): WeeklyReport | null {
+export const getWeeklyReport = (season: number, week: number): WeeklyReport | null => {
   return REPORTS.get(`${season}-${week}`) || null;
-}
+};
 
 /**
  * Get all reports for a season
  */
-export function getSeasonReports(season: number): WeeklyReport[] {
+export const getSeasonReports = (season: number): WeeklyReport[] => {
   return Array.from(REPORTS.entries())
     .filter(([key]) => key.startsWith(`${season}-`))
     .map(([, report]) => report)
     .sort((a, b) => a.week - b.week);
-}
+};
 
 /**
  * Get latest report
  */
-export function getLatestReport(): WeeklyReport | null {
+export const getLatestReport = (): WeeklyReport | null => {
   const sorted = Array.from(REPORTS.values()).sort((a, b) => {
     if (a.season !== b.season) return b.season - a.season;
     return b.week - a.week;
   });
   return sorted[0] || null;
-}
+};
 
 /**
  * Check if a report exists
  */
-export function hasReport(season: number, week: number): boolean {
+export const hasReport = (season: number, week: number): boolean => {
   return REPORTS.has(`${season}-${week}`);
-}
+};

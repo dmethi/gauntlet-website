@@ -9,12 +9,12 @@ import { sleeperClient } from '@/lib/sleeper/unified-client';
 /**
  * Get current NFL week
  */
-async function getCurrentWeek(): Promise<number> {
+const getCurrentWeek = async (): Promise<number> => {
   const nflState = await sleeperClient.fetchNFLState();
   return nflState.week;
-}
+};
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   const { searchParams } = request.url
     ? new URL(request.url)
     : { searchParams: new URLSearchParams() };
@@ -194,4 +194,4 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+};

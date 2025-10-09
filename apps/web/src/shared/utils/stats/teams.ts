@@ -17,62 +17,26 @@ export interface TeamWeekData {
  * Extract team and opponent points for each week
  * Uses matchup_id to pair opponents within each league separately to avoid ID conflicts
  */
-export function getTeamAndOpponentPoints({
+export const getTeamAndOpponentPoints = ({
   matchups,
 }: {
   matchups: Map<number, Map<string, SleeperMatchup[]>>; // week -> leagueId -> matchups
-}): Map<number, TeamWeekData[]> {
-  console.log('[DEBUG] getTeamAndOpponentPoints: starting with', matchups.size, 'weeks');
+}): Map<number, TeamWeekData[]> => {
   const weeklyTeamData = new Map<number, TeamWeekData[]>();
 
   for (const [week, weekLeagueMatchups] of matchups.entries()) {
-    console.log(
-      '[DEBUG] getTeamAndOpponentPoints: processing week',
-      week,
-      'with',
-      weekLeagueMatchups.size,
-      'leagues',
-    );
     const weekTeamData: TeamWeekData[] = [];
 
     // Process each league separately to avoid matchup_id conflicts
     for (const [leagueId, leagueMatchups] of weekLeagueMatchups.entries()) {
-      console.log(
-        '[DEBUG] getTeamAndOpponentPoints: processing league',
-        leagueId,
-        'with',
-        leagueMatchups.length,
-        'matchups',
-      );
-
       // Group by matchup_id within this league only
       const matchupGroups = new Map<number, SleeperMatchup[]>();
-      console.log(
-        '[DEBUG] getTeamAndOpponentPoints: league',
-        leagueId,
-        'matchup_ids:',
-        leagueMatchups.map(m => m.matchup_id),
-      );
 
       for (const matchup of leagueMatchups) {
         const group = matchupGroups.get(matchup.matchup_id) || [];
         group.push(matchup);
         matchupGroups.set(matchup.matchup_id, group);
       }
-
-      console.log(
-        '[DEBUG] getTeamAndOpponentPoints: league',
-        leagueId,
-        'grouped into',
-        matchupGroups.size,
-        'matchup groups',
-      );
-      console.log(
-        '[DEBUG] getTeamAndOpponentPoints: league',
-        leagueId,
-        'group sizes:',
-        Array.from(matchupGroups.values()).map(g => g.length),
-      );
 
       // Process each matchup pair within this league
       for (const [matchupId, pair] of matchupGroups.entries()) {
@@ -107,47 +71,23 @@ export function getTeamAndOpponentPoints({
             opponentPoints: 0,
             matchupId,
           });
-        } else {
-          console.warn(
-            '[DEBUG] getTeamAndOpponentPoints: unexpected group size',
-            pair.length,
-            'for matchupId',
-            matchupId,
-          );
         }
       }
-
-      console.log(
-        '[DEBUG] getTeamAndOpponentPoints: league',
-        leagueId,
-        'generated',
-        weekTeamData.length - (weekTeamData.length - leagueMatchups.length),
-        'team data entries',
-      );
     }
 
-    console.log(
-      '[DEBUG] getTeamAndOpponentPoints: week',
-      week,
-      'total generated',
-      weekTeamData.length,
-      'team data entries',
-    );
     weeklyTeamData.set(week, weekTeamData);
   }
 
-  console.log('[DEBUG] getTeamAndOpponentPoints: final result', weeklyTeamData.size, 'weeks');
   return weeklyTeamData;
-}
+};
 
 /**
  * Get total team and opponent points across a week range
  */
-export function aggregateTeamPoints(
+export const aggregateTeamPoints = (
   weeklyData: Map<number, TeamWeekData[]>,
   weekRange: { from: number; to: number },
-): Map<string, { teamTotal: number; opponentTotal: number; gamesPlayed: number }> {
-  console.log('[DEBUG] aggregateTeamPoints: starting with', weeklyData.size, 'weeks', weekRange);
+): Map<string, { teamTotal: number; opponentTotal: number; gamesPlayed: number }> => {
   const totals = new Map<
     string,
     { teamTotal: number; opponentTotal: number; gamesPlayed: number }
@@ -155,7 +95,6 @@ export function aggregateTeamPoints(
 
   for (let week = weekRange.from; week <= weekRange.to; week++) {
     const weekData = weeklyData.get(week);
-    console.log('[DEBUG] aggregateTeamPoints: week', week, 'has', weekData?.length || 0, 'entries');
     if (!weekData) continue;
 
     for (const data of weekData) {
@@ -175,6 +114,5 @@ export function aggregateTeamPoints(
     }
   }
 
-  console.log('[DEBUG] aggregateTeamPoints: final totals', totals.size, 'rosters');
   return totals;
-}
+};

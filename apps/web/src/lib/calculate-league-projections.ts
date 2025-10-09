@@ -121,10 +121,10 @@ export interface LeagueProjection {
 /**
  * Calculate fantasy points for a single player using league scoring settings
  */
-export function calculateLeagueProjection(
+export const calculateLeagueProjection = (
   rawProjection: any,
   scoringSettings: ScoringSettings,
-): LeagueProjection {
+): LeagueProjection => {
   const breakdown: Record<string, number> = {};
   let totalPoints = 0;
 
@@ -242,15 +242,15 @@ export function calculateLeagueProjection(
     points: totalPoints,
     breakdown,
   };
-}
+};
 
 /**
  * Calculate projections for multiple players
  */
-export function calculateLeagueProjections(
+export const calculateLeagueProjections = (
   rawProjections: any[],
   scoringSettings: ScoringSettings,
-): Record<string, LeagueProjection> {
+): Record<string, LeagueProjection> => {
   const result: Record<string, LeagueProjection> = {};
 
   for (const rawProjection of rawProjections) {
@@ -261,4 +261,4 @@ export function calculateLeagueProjections(
   }
 
   return result;
-}
+};

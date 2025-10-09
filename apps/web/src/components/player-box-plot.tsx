@@ -26,7 +26,7 @@ interface PlayerBoxPlotProps {
   distribution?: PlayerDistribution; // Optional: pass distribution data directly
 }
 
-export function PlayerBoxPlot({
+export const PlayerBoxPlot = ({
   playerId,
   position,
   projection,
@@ -35,7 +35,7 @@ export function PlayerBoxPlot({
   height = 32,
   maxProjection = 30, // Default fallback, should be passed from parent
   distribution: providedDistribution,
-}: PlayerBoxPlotProps) {
+}: PlayerBoxPlotProps) => {
   const [distribution, setDistribution] = useState<PlayerDistribution | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +50,7 @@ export function PlayerBoxPlot({
     }
 
     // Otherwise, try to fetch it (fallback for backward compatibility)
-    async function fetchPlayerDistribution() {
+    const fetchPlayerDistribution = async () => {
       try {
         setLoading(true);
         const response = await fetch(
@@ -69,7 +69,7 @@ export function PlayerBoxPlot({
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchPlayerDistribution();
   }, [playerId, position, projection, providedDistribution]);
@@ -254,4 +254,4 @@ export function PlayerBoxPlot({
       </Tooltip>
     </TooltipProvider>
   );
-}
+};

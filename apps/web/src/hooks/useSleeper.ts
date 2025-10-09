@@ -2,7 +2,7 @@
  * Custom React Query hooks for Sleeper API data fetching
  */
 
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 // Query strategies for different data types
@@ -43,18 +43,18 @@ export const queryStrategies = {
 /**
  * Fetch wrapper for API calls
  */
-async function fetchAPI<T>(endpoint: string): Promise<T> {
+const fetchAPI = async <T>(endpoint: string): Promise<T> => {
   const response = await fetch(endpoint);
   if (!response.ok) {
     throw new Error(`API error: ${response.status} ${response.statusText}`);
   }
   return response.json();
-}
+};
 
 /**
  * Hook for league overview data
  */
-export function useLeagueOverview(leagueId?: string) {
+export const useLeagueOverview = (leagueId?: string) => {
   const endpoint = leagueId ? `/api/league/overview?leagueId=${leagueId}` : '/api/league/overview';
 
   return useQuery({
@@ -62,12 +62,12 @@ export function useLeagueOverview(leagueId?: string) {
     queryFn: () => fetchAPI(endpoint),
     ...queryStrategies.staleWhileRevalidate,
   });
-}
+};
 
 /**
  * Hook for matchups data with intelligent caching
  */
-export function useMatchups(leagueId: string, week: number, options?: { isLive?: boolean }) {
+export const useMatchups = (leagueId: string, week: number, options?: { isLive?: boolean }) => {
   const { isLive = false } = options || {};
 
   return useQuery({
@@ -82,35 +82,35 @@ export function useMatchups(leagueId: string, week: number, options?: { isLive?:
           staleTime: 60 * 1000, // 1 minute if not live
         }),
   });
-}
+};
 
 /**
  * Hook for NFL state
  */
-export function useNFLState() {
+export const useNFLState = () => {
   return useQuery({
     queryKey: ['nfl-state'],
     queryFn: () => fetchAPI('/api/nfl-state'),
     staleTime: 60 * 1000, // 1 minute
     gcTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 /**
  * Hook for team/roster data
  */
-export function useTeam(teamId: string) {
+export const useTeam = (teamId: string) => {
   return useQuery({
     queryKey: ['team', teamId],
     queryFn: () => fetchAPI(`/api/team/${teamId}`),
     ...queryStrategies.staleWhileRevalidate,
   });
-}
+};
 
 /**
  * Hook for odds data (no caching, always fresh)
  */
-export function useOdds(leagueId: string, week: number, matchupId: number) {
+export const useOdds = (leagueId: string, week: number, matchupId: number) => {
   return useQuery({
     queryKey: ['odds', leagueId, week, matchupId],
     queryFn: () => fetchAPI(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`),
@@ -118,46 +118,46 @@ export function useOdds(leagueId: string, week: number, matchupId: number) {
     gcTime: 0, // No garbage collection
     refetchInterval: false, // Use SSE/WebSocket instead
   });
-}
+};
 
 /**
  * Hook for players data (heavily cached)
  */
-export function usePlayers() {
+export const usePlayers = () => {
   return useQuery({
     queryKey: ['players'],
     queryFn: () => fetchAPI('/api/players'),
     ...queryStrategies.cacheFirst,
   });
-}
+};
 
 /**
  * Hook for transactions
  */
-export function useTransactions(leagueId: string) {
+export const useTransactions = (leagueId: string) => {
   return useQuery({
     queryKey: ['transactions', leagueId],
     queryFn: () => fetchAPI(`/api/league/${leagueId}/transactions`),
     staleTime: 2 * 60 * 1000, // 2 minutes
     refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
   });
-}
+};
 
 /**
  * Hook for draft data
  */
-export function useDraft(leagueId: string) {
+export const useDraft = (leagueId: string) => {
   return useQuery({
     queryKey: ['draft', leagueId],
     queryFn: () => fetchAPI(`/api/league/draft?leagueId=${leagueId}`),
     ...queryStrategies.cacheFirst, // Draft data doesn't change
   });
-}
+};
 
 /**
  * Hook with prefetching for adjacent weeks
  */
-export function useMatchupsWithPrefetch(leagueId: string, week: number) {
+export const useMatchupsWithPrefetch = (leagueId: string, week: number) => {
   const queryClient = useQueryClient();
 
   // Main query
@@ -181,12 +181,12 @@ export function useMatchupsWithPrefetch(leagueId: string, week: number) {
   }, [leagueId, week, queryClient]);
 
   return matchupsQuery;
-}
+};
 
 /**
  * Hook for prefetching on hover
  */
-export function usePrefetch() {
+export const usePrefetch = () => {
   const queryClient = useQueryClient();
 
   const prefetchMatchup = (leagueId: string, week: number, matchupId: number) => {
@@ -209,12 +209,12 @@ export function usePrefetch() {
     prefetchMatchup,
     prefetchTeam,
   };
-}
+};
 
 /**
  * Hook for optimistic updates (e.g., roster changes)
  */
-export function useOptimisticUpdate() {
+export const useOptimisticUpdate = () => {
   const queryClient = useQueryClient();
 
   const updateRoster = useMutation({
@@ -256,12 +256,12 @@ export function useOptimisticUpdate() {
   });
 
   return { updateRoster };
-}
+};
 
 /**
  * Hook for cache statistics (development only)
  */
-export function useCacheStats() {
+export const useCacheStats = () => {
   const queryClient = useQueryClient();
 
   if (process.env.NODE_ENV === 'production') {
@@ -278,4 +278,4 @@ export function useCacheStats() {
     errorQueries: queries.filter(q => q.state.status === 'error').length,
     cacheSize: JSON.stringify(cache).length,
   };
-}
+};

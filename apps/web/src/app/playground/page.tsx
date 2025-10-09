@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 import { colors as brandColors, dataVizColors } from '../../../../../brand/colors';
 
-function Swatch({ label, hex }: { label?: string; hex: string }) {
+const Swatch = ({ label, hex }: { label?: string; hex: string }) => {
   return (
     <div className="flex flex-col items-center gap-2">
       {/* eslint-disable */}
@@ -17,9 +17,9 @@ function Swatch({ label, hex }: { label?: string; hex: string }) {
       </span>
     </div>
   );
-}
+};
 
-export default function Playground() {
+export default function Playground(): JSX.Element {
   return (
     <Container className="py-8">
       <div className="flex items-center justify-between mb-6">

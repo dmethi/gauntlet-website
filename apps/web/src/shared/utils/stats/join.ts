@@ -17,7 +17,7 @@ export interface TeamInfo {
 /**
  * Build team info mapping from rosters and users
  */
-export function buildTeamInfoMap({
+export const buildTeamInfoMap = ({
   leagues,
   rosters,
   users,
@@ -25,7 +25,7 @@ export function buildTeamInfoMap({
   leagues: Array<{ id: string; name: string }>;
   rosters: Map<string, SleeperRoster[]>; // leagueId -> rosters
   users: Map<string, SleeperUser[]>; // leagueId -> users
-}): Map<string, TeamInfo> {
+}): Map<string, TeamInfo> => {
   const teamInfoMap = new Map<string, TeamInfo>();
 
   for (const league of leagues) {
@@ -44,10 +44,10 @@ export function buildTeamInfoMap({
       const teamKey = `${league.id}-${roster.roster_id}`;
 
       // Build avatar URL
-      const getAvatarUrl = (user: SleeperUser | undefined) => {
-        const teamAvatar = (user?.metadata as any)?.avatar;
+      const getAvatarUrl = (user: SleeperUser | undefined): string | undefined => {
+        const teamAvatar = (user?.metadata as Record<string, unknown> | undefined)?.avatar;
         const userAvatar = user?.avatar;
-        const avatar = teamAvatar || userAvatar;
+        const avatar = (teamAvatar as string | undefined) || userAvatar;
         if (!avatar) return undefined;
         if (avatar.startsWith('http')) return avatar;
         return `https://sleepercdn.com/avatars/${avatar}`;
@@ -66,15 +66,15 @@ export function buildTeamInfoMap({
   }
 
   return teamInfoMap;
-}
+};
 
 /**
  * Create a simple roster to league mapping
  */
-export function buildRosterLeagueMap(
+export const buildRosterLeagueMap = (
   leagues: Array<{ id: string }>,
   rosters: Map<string, SleeperRoster[]>,
-): Map<string, string> {
+): Map<string, string> => {
   const rosterLeagueMap = new Map<string, string>();
 
   for (const league of leagues) {
@@ -85,4 +85,4 @@ export function buildRosterLeagueMap(
   }
 
   return rosterLeagueMap;
-}
+};

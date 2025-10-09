@@ -33,14 +33,14 @@ interface ApiResponse {
   error?: string;
 }
 
-function getCurrentWeek(): number {
+const getCurrentWeek = (): number => {
   // Updated to 2025 season
   const seasonStart = new Date('2025-09-04'); // 2025 season start
   const now = new Date();
   const diffTime = now.getTime() - seasonStart.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return Math.min(Math.max(Math.ceil(diffDays / 7), 1), 18);
-}
+};
 
 const fetchChartData = async (leagueId: string, week: number): Promise<ApiResponse> => {
   const response = await fetch(`/api/charts/${leagueId}/${week}`);
@@ -51,7 +51,7 @@ const fetchChartData = async (leagueId: string, week: number): Promise<ApiRespon
   return data;
 };
 
-export default function ChartsPage() {
+export default function ChartsPage(): JSX.Element {
   const [selectedWeek, setSelectedWeek] = useState(getCurrentWeek());
 
   const {
@@ -206,7 +206,7 @@ export default function ChartsPage() {
   );
 }
 
-function ScoreChart({ scores }: { scores: Score[] }) {
+const ScoreChart = ({ scores }: { scores: Score[] }) => {
   if (!scores.length) return <div className="p-4 text-gray-500">No score data</div>;
 
   const maxScore = Math.max(...scores.map(s => s.score));
@@ -239,9 +239,9 @@ function ScoreChart({ scores }: { scores: Score[] }) {
       })}
     </div>
   );
-}
+};
 
-function WinProbChart({ winProbs }: { winProbs: WinProbability[] }) {
+const WinProbChart = ({ winProbs }: { winProbs: WinProbability[] }) => {
   if (!winProbs.length) return <div className="p-4 text-gray-500">No win probability data</div>;
 
   return (
@@ -271,4 +271,4 @@ function WinProbChart({ winProbs }: { winProbs: WinProbability[] }) {
       })}
     </div>
   );
-}
+};

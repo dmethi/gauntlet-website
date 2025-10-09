@@ -4,25 +4,23 @@ import { TeamStats } from '@/lib/hooks';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type {
-  PlayoffMatchup,
-  PlayoffBracket,
-  PlayoffBracketProps,
   BracketTeam,
-  MatchupProps,
   LeagueData,
-  Matchup,
-  Roster,
+  MatchupProps,
   MatchupResult,
+  PlayoffBracketProps,
+  PlayoffMatchup,
+  Roster,
 } from '@/features/playoffs/types';
 
-function Matchup({
+const Matchup = ({
   team1,
   team2,
   matchupLabel,
   isBye = false,
   result,
   isToiletBowl = false,
-}: MatchupProps) {
+}: MatchupProps) => {
   if (isBye && team1) {
     const isDangerBye = matchupLabel.includes('Forced');
 
@@ -145,9 +143,9 @@ function Matchup({
       </div>
     </div>
   );
-}
+};
 
-function BracketColumn({ title, matchups }: { title: string; matchups: JSX.Element[] }) {
+const BracketColumn = ({ title, matchups }: { title: string; matchups: JSX.Element[] }) => {
   return (
     <div className="flex flex-col items-center space-y-6">
       <div className="text-center">
@@ -158,9 +156,9 @@ function BracketColumn({ title, matchups }: { title: string; matchups: JSX.Eleme
       <div className="flex flex-col space-y-4">{matchups}</div>
     </div>
   );
-}
+};
 
-export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracketProps) {
+export const PlayoffBracket = ({ teams, league, playoffBracket }: PlayoffBracketProps) => {
   // Sort teams by canonical rank for seeding
   const sortedTeams = [...teams].sort((a, b) => a.canonicalRank - b.canonicalRank);
 
@@ -1346,4 +1344,4 @@ export function PlayoffBracket({ teams, league, playoffBracket }: PlayoffBracket
       </Card>
     </div>
   );
-}
+};

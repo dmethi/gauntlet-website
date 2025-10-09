@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useHallOfFame } from '@/hooks/useHallOfFame';
-import { formatRecord, getRankEmoji, getCategoryInfo } from '@/features/hall-of-fame/utils';
+import { formatRecord, getCategoryInfo, getRankEmoji } from '@/features/hall-of-fame/utils';
 import { Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, TrendingDown, Zap, Target, Sparkles, Swords } from 'lucide-react';
+import { Sparkles, Swords, Target, TrendingDown, Trophy, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 
@@ -38,7 +38,7 @@ const HallOfFameLoader = () => (
   </ContentLoader>
 );
 
-function getGroupIcon(groupKey: string) {
+const getGroupIcon = (groupKey: string) => {
   switch (groupKey) {
     case 'Score & Margin':
       return <Trophy className="h-5 w-5" />;
@@ -53,20 +53,20 @@ function getGroupIcon(groupKey: string) {
     default:
       return <Trophy className="h-5 w-5" />;
   }
-}
+};
 
-function getLeagueBadgeColor(leagueId: string): string {
+const getLeagueBadgeColor = (leagueId: string): string => {
   // AFC vs NFC coloring
   return leagueId === '1263744209295245312'
     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
     : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-}
+};
 
-function getLeagueShortName(leagueId: string): string {
+const getLeagueShortName = (leagueId: string): string => {
   return leagueId === '1263744209295245312' ? 'AFC' : 'NFC';
-}
+};
 
-function CategoryCard({ categoryId, records }: { categoryId: string; records: any[] }) {
+const CategoryCard = ({ categoryId, records }: { categoryId: string; records: any[] }) => {
   const category = getCategoryInfo(categoryId);
   if (!category || !records || records.length === 0) return null;
 
@@ -162,7 +162,7 @@ function CategoryCard({ categoryId, records }: { categoryId: string; records: an
       </CardContent>
     </Card>
   );
-}
+};
 
 export default function HallOfFamePage() {
   const { data, isLoading, error } = useHallOfFame();

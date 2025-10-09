@@ -25,7 +25,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { getPreGeneratedDrafts } from '@/lib/draft-generator';
 import { DraftAnalytics, generateMockAnalytics } from '@/features/draft-analysis/utils';
-import { ManagerAnalytics, generateManagerAnalytics } from '@/lib/manager-analytics';
+import { generateManagerAnalytics, ManagerAnalytics } from '@/lib/manager-analytics';
 import {
   getPrecomputedAnalytics,
   getPrecomputedManagerAnalytics,
@@ -35,7 +35,7 @@ import { ManagerAnalysis } from '@/features/draft-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import { BarChart3, Filter, Shuffle, Trophy, Users } from 'lucide-react';
 
-export default function DraftAnalysisPage() {
+export default function DraftAnalysisPage(): JSX.Element {
   const [drafts, setDrafts] = useState(() => {
     return getPreGeneratedDrafts();
   });
@@ -55,7 +55,7 @@ export default function DraftAnalysisPage() {
 
   // Load analytics
   useEffect(() => {
-    async function loadAnalytics() {
+    const loadAnalytics = async (): Promise<void> => {
       const precomputedLeagueAnalytics = await getPrecomputedAnalytics();
       const precomputedManagerAnalytics = await getPrecomputedManagerAnalytics();
 
@@ -74,7 +74,7 @@ export default function DraftAnalysisPage() {
         setAnalytics(leagueAnalytics);
         setManagerAnalytics(managerAnalytics);
       }
-    }
+    };
 
     loadAnalytics();
   }, [draft1, draft2]);

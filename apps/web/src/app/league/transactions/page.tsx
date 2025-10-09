@@ -11,8 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { useSearchParams } from 'next/navigation';
 import {
-  Facts,
   buildFacts,
+  Facts,
   firstOwnedWeek,
   lastOwnedWeek,
   playoffWeight,
@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/table';
 import type { GradeTxn, RawTxn } from '@/features/transactions/types';
 
-function LeagueTransactionsContent() {
+const LeagueTransactionsContent = () => {
   const searchParams = useSearchParams();
   const leagueIdParam = searchParams.get('leagueId');
 
@@ -1112,7 +1112,7 @@ function LeagueTransactionsContent() {
       </Dialog>
     </TooltipProvider>
   );
-}
+};
 
 export default function LeagueTransactionsPage() {
   return (

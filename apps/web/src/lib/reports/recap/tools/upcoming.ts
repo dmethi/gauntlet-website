@@ -135,14 +135,14 @@ const buildUpcomingMatchups = async (
       league: leagueName,
       team1: {
         rosterId: matchup.roster_id,
-        teamName: team1Roster?.metadata?.team_name || `Team ${matchup.roster_id}`,
+        teamName: (team1Roster?.metadata?.team_name as string) || `Team ${matchup.roster_id}`,
         ownerName: getRealNameByRoster(leagueId, matchup.roster_id) || 'Unknown',
         record: `${team1Record.wins}-${team1Record.losses}`,
         pointsFor: team1Record.pointsFor,
       },
       team2: {
         rosterId: opponent.roster_id,
-        teamName: team2Roster?.metadata?.team_name || `Team ${opponent.roster_id}`,
+        teamName: (team2Roster?.metadata?.team_name as string) || `Team ${opponent.roster_id}`,
         ownerName: getRealNameByRoster(leagueId, opponent.roster_id) || 'Unknown',
         record: `${team2Record.wins}-${team2Record.losses}`,
         pointsFor: team2Record.pointsFor,

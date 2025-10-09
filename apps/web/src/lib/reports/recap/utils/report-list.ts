@@ -44,7 +44,7 @@ export const getAvailableReports = async (): Promise<ReportListItem[]> => {
   try {
     // Check if reports directory exists
     await fs.access(reportsDir);
-  } catch (error) {
+  } catch {
     console.warn('Reports directory not found:', reportsDir);
     return [];
   }

@@ -5,27 +5,27 @@
 
 import { MockDraft } from './draft-generator';
 import type {
-  ManagerSpendShares,
+  DraftPickRow,
+  ManagerAnalytics,
+  ManagerCluster,
   ManagerConcentration,
+  ManagerOutlierFlags,
   ManagerPacing,
+  ManagerProfile,
+  ManagerSpendShares,
   ManagerTwin,
+  PlayerAnalysis,
+  PlayerLevelAnalytics,
   PlayerOverlap,
   PlayerOverlapAnalytics,
-  PlayerAnalysis,
-  DraftPickRow,
-  PlayerLevelAnalytics,
-  ManagerCluster,
-  ManagerOutlierFlags,
-  ManagerProfile,
-  ManagerAnalytics,
 } from '@/features/draft-analysis/types';
 import {
-  inferStarters,
   calculateGini,
-  cosineSimilarity,
-  kMeansCluster,
-  calculatePlayerOverlap,
   calculatePlayerLevelAnalytics,
+  calculatePlayerOverlap,
+  cosineSimilarity,
+  inferStarters,
+  kMeansCluster,
 } from '@/features/draft-analysis/utils';
 
 // Re-export types for backwards compatibility
@@ -49,7 +49,10 @@ export type {
 export { inferStarters, calculateGini, cosineSimilarity, kMeansCluster };
 
 // Generate comprehensive manager analytics
-export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): ManagerAnalytics {
+export const generateManagerAnalytics = (
+  draft1: MockDraft,
+  draft2: MockDraft,
+): ManagerAnalytics => {
   const profiles: ManagerProfile[] = [];
 
   // Process both leagues
@@ -533,4 +536,4 @@ export function generateManagerAnalytics(draft1: MockDraft, draft2: MockDraft): 
     player_overlap_analytics,
     player_level_analytics,
   };
-}
+};

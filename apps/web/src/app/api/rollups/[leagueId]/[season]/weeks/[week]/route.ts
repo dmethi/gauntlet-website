@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { computeWeeklyRollups } from '@/lib/api-replacements';
 
-export async function GET(
+export const GET = async (
   _request: NextRequest,
   { params }: { params: { leagueId: string; season: string; week: string } },
-) {
+) => {
   try {
     const { leagueId, season, week } = params;
     const weekNumber = parseInt(week, 10);
@@ -37,4 +37,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

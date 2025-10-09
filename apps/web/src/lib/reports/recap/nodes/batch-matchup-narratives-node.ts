@@ -9,17 +9,17 @@ import { HumanMessage } from '@langchain/core/messages';
 import { createGeminiClient } from '../gemini-client';
 import { buildMatchupNarrativePrompt } from '../prompts/sections/matchup-narrative';
 import { LEAGUE_IDS } from '@/lib/constants';
-import type { RecapReportState, MatchupNarrative } from '../state';
+import type { MatchupNarrative, RecapReportState } from '../state';
 import {
+  fetchH2HHistoryTool,
+  fetchKeyPlayerPerformancesTool,
   fetchMatchupBoxScoreTool,
   fetchMatchupRostersTool,
-  fetchScoringBreakdownTool,
+  fetchPositionBreakdownTool,
   fetchPreGameProjectionsTool,
   fetchProjectionVsActualTool,
+  fetchScoringBreakdownTool,
   fetchTeamRecordsTool,
-  fetchH2HHistoryTool,
-  fetchPositionBreakdownTool,
-  fetchKeyPlayerPerformancesTool,
 } from '../tools/matchup-data';
 import { gameFlowTool } from '../tools/game-flow';
 
@@ -212,7 +212,7 @@ export const batchMatchupNarrativesNode = async (
             throw new Error('All extraction methods failed');
           }
         }
-      } catch (parseError) {
+      } catch {
         console.warn('⚠️  Failed to parse JSON response, using raw text');
         // Fallback: treat entire response as narrative
         narrativeData = {

@@ -50,7 +50,7 @@ const HallOfFameLoader = () => (
   </ContentLoader>
 );
 
-function getGroupIcon(groupKey: string) {
+const getGroupIcon = (groupKey: string) => {
   switch (groupKey) {
     case 'Score & Margin':
       return <Trophy className="h-5 w-5" />;
@@ -71,20 +71,20 @@ function getGroupIcon(groupKey: string) {
     default:
       return <Trophy className="h-5 w-5" />;
   }
-}
+};
 
-function getLeagueBadgeColor(leagueId: string): string {
+const getLeagueBadgeColor = (leagueId: string): string => {
   return leagueId === LEAGUE_IDS.AFC
     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
     : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-}
+};
 
-function getLeagueShortName(leagueId: string): string {
+const getLeagueShortName = (leagueId: string): string => {
   return leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC';
-}
+};
 
 // Component for rolling window records
-function RollingWindowCard({ title, windows }: { title: string; windows: any[] }) {
+const RollingWindowCard = ({ title, windows }: { title: string; windows: any[] }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -128,10 +128,10 @@ function RollingWindowCard({ title, windows }: { title: string; windows: any[] }
       </CardContent>
     </Card>
   );
-}
+};
 
 // Component for streak records
-function StreakCard({ title, streaks, type }: { title: string; streaks: any[]; type: string }) {
+const StreakCard = ({ title, streaks, type }: { title: string; streaks: any[]; type: string }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -172,10 +172,10 @@ function StreakCard({ title, streaks, type }: { title: string; streaks: any[]; t
       </CardContent>
     </Card>
   );
-}
+};
 
 // Component for seasonal records
-function SeasonalCard({
+const SeasonalCard = ({
   title,
   records,
   statKey,
@@ -185,7 +185,7 @@ function SeasonalCard({
   records: any[];
   statKey: string;
   formatFn: (value: number) => string;
-}) {
+}) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -224,9 +224,9 @@ function SeasonalCard({
       </CardContent>
     </Card>
   );
-}
+};
 
-export default function EnhancedHallOfFamePage() {
+export default function EnhancedHallOfFamePage(): JSX.Element {
   const { data, isLoading, error } = useHallOfFameEnhanced();
   const [activeTab, setActiveTab] = useState<string>('weekly');
   const [leagueFilter, setLeagueFilter] = useState<string>('all');

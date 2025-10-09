@@ -38,7 +38,7 @@ export interface PositionalScoring {
  * Calculate expected wins for a single week
  * Expected wins = (# of teams you would beat) / (total teams - 1)
  */
-function calculateExpectedWins(yourScore: number, allScores: number[]): number {
+const calculateExpectedWins = (yourScore: number, allScores: number[]): number => {
   const otherScores = allScores.filter(score => score !== yourScore);
   if (otherScores.length === 0) return 0;
 
@@ -53,24 +53,24 @@ function calculateExpectedWins(yourScore: number, allScores: number[]): number {
   // Give half credit for ties (excluding yourself from ties)
   const expectedWins = (beatenTeams + tiedTeams * 0.5) / otherScores.length;
   return expectedWins;
-}
+};
 
 /**
  * Calculate luck rating for a single week
  * Luck = Actual Win (1 or 0) - Expected Wins
  */
-function calculateLuck(won: boolean, expectedWins: number): number {
+const calculateLuck = (won: boolean, expectedWins: number): number => {
   return (won ? 1 : 0) - expectedWins;
-}
+};
 
 /**
  * Process matchups data to calculate expected wins and luck for all teams
  */
-export function calculateTeamStats(
+export const calculateTeamStats = (
   rosters: any[],
   matchupsByWeek: Map<number, any[]>,
   users: any[],
-): TeamSeasonStats[] {
+): TeamSeasonStats[] => {
   const teamStats: Map<number, TeamSeasonStats> = new Map();
   const userMap = new Map(users.map(u => [u.user_id, u]));
 
@@ -152,16 +152,16 @@ export function calculateTeamStats(
   }
 
   return Array.from(teamStats.values());
-}
+};
 
 /**
  * Calculate positional scoring statistics
  */
-export function calculatePositionalScoring(
+export const calculatePositionalScoring = (
   matchupsByWeek: Map<number, any[]>,
   playerStats: Map<string, any>,
   rosterId: number,
-): PositionalScoring[] {
+): PositionalScoring[] => {
   const positionTotals: Map<
     string,
     { team: number; opponent: number; leagueTotal: number; teamCount: number }
@@ -240,7 +240,7 @@ export function calculatePositionalScoring(
       leagueAverage: numTeams > 0 ? totals.leagueTotal / numTeams : 0,
     };
   });
-}
+};
 
 /**
  * Cache helper for client-side calculations

@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { PageHeader } from '@gauntlet/ui';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, RefreshCw, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 
 interface ErrorPageProps {

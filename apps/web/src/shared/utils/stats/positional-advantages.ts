@@ -47,10 +47,10 @@ export interface PositionSummary {
 /**
  * Calculate weekly average positional medians across all teams for each position
  */
-export function calculatePositionalMedians(
+export const calculatePositionalMedians = (
   dataset: PlainStatsDataset,
   weekRange: { from: number; to: number },
-): Record<TrackedPosition, number> {
+): Record<TrackedPosition, number> => {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const medians: Record<TrackedPosition, number> = {} as any;
 
@@ -78,15 +78,15 @@ export function calculatePositionalMedians(
   }
 
   return medians;
-}
+};
 
 /**
  * Calculate positional advantages for all teams
  */
-export function calculateAllPositionalAdvantages(
+export const calculateAllPositionalAdvantages = (
   dataset: PlainStatsDataset,
   weekRange: { from: number; to: number },
-): PositionalAdvantage[] {
+): PositionalAdvantage[] => {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const positionsMap = new Map(dataset.positions);
   const teamsMap = new Map(dataset.teams);
@@ -127,16 +127,16 @@ export function calculateAllPositionalAdvantages(
   }
 
   return advantages;
-}
+};
 
 /**
  * Get positional summary for a specific team
  */
-export function getTeamPositionalSummary(
+export const getTeamPositionalSummary = (
   dataset: PlainStatsDataset,
   teamKey: string,
   weekRange: { from: number; to: number },
-): TeamPositionalSummary | null {
+): TeamPositionalSummary | null => {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const positionsMap = new Map(dataset.positions);
   const teamsMap = new Map(dataset.teams);
@@ -200,15 +200,15 @@ export function getTeamPositionalSummary(
     totalAdvantage,
     averageAdvantage: validPositions > 0 ? totalAdvantage / validPositions : 0,
   };
-}
+};
 
 /**
  * Get position-by-position summaries with team rankings
  */
-export function getPositionSummaries(
+export const getPositionSummaries = (
   dataset: PlainStatsDataset,
   weekRange: { from: number; to: number },
-): PositionSummary[] {
+): PositionSummary[] => {
   const positions: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
   const positionsMap = new Map(dataset.positions);
   const teamsMap = new Map(dataset.teams);
@@ -262,19 +262,19 @@ export function getPositionSummaries(
   }
 
   return summaries;
-}
+};
 
 /**
  * Get top positional advantages and disadvantages across all teams
  */
-export function getTopPositionalAdvantages(
+export const getTopPositionalAdvantages = (
   dataset: PlainStatsDataset,
   weekRange: { from: number; to: number },
   topCount: number = 10,
 ): {
   topAdvantages: PositionalAdvantage[];
   topDisadvantages: PositionalAdvantage[];
-} {
+} => {
   const allAdvantages = calculateAllPositionalAdvantages(dataset, weekRange);
 
   // Sort by advantage (descending for advantages, ascending for disadvantages)
@@ -292,4 +292,4 @@ export function getTopPositionalAdvantages(
     topAdvantages,
     topDisadvantages,
   };
-}
+};

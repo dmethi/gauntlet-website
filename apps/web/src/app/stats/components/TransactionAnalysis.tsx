@@ -31,7 +31,7 @@ import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ManagerRankings } from './ManagerRankings';
 
-export function TransactionAnalysis() {
+export const TransactionAnalysis = () => {
   const [allData, setAllData] = useState<GradeTxn[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState('Initializing...');
@@ -849,4 +849,4 @@ export function TransactionAnalysis() {
       </Dialog>
     </div>
   );
-}
+};

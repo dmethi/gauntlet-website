@@ -6,21 +6,21 @@ import {
   calculateLeagueProjections,
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
-import type { TeamOdds, MatchupOdds, LeagueWideOdds } from '@/features/matchups/types';
+import type { LeagueWideOddsType, MatchupOdds, TeamOdds } from '@/features/matchups/types';
 
 const leagueNames: Record<string, string> = {
   '1263744209295245312': 'Gauntlet AFC',
   '1263740549504962561': 'Gauntlet NFC',
 };
 
-function probToAmerican(prob: number): string {
+const probToAmerican = (prob: number): string => {
   if (prob <= 0) return '+∞';
   if (prob >= 1) return '-∞';
   if (prob >= 0.5) return `${Math.round(-(prob / (1 - prob)) * 100)}`;
   return `+${Math.round(((1 - prob) / prob) * 100)}`;
-}
+};
 
-function probToColor(prob: number, reverse = false): string {
+const probToColor = (prob: number, reverse = false): string => {
   let p = Math.max(0, Math.min(1, prob));
   if (reverse) p = 1 - p;
   if (p < 0.33) {
@@ -35,17 +35,17 @@ function probToColor(prob: number, reverse = false): string {
   }
   const ratio = (p - 0.66) / 0.34;
   return `rgb(0, 255, ${Math.round(128 * ratio)})`;
-}
+};
 
-function sampleScore(mean: number, p10: number, p90: number): number {
+const sampleScore = (mean: number, p10: number, p90: number): number => {
   const std = (p90 - p10) / (2 * 1.28);
   const u1 = Math.random();
   const u2 = Math.random();
   const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
   return mean + z * std;
-}
+};
 
-export async function GET(_req: NextRequest, { params }: { params: { week: string } }) {
+export const GET = async (_req: NextRequest, { params }: { params: { week: string } }) => {
   const week = parseInt(params.week, 10);
   if (!Number.isFinite(week) || week < 1 || week > 18) {
     return NextResponse.json({ error: 'Invalid week' }, { status: 400 });
@@ -193,7 +193,7 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
         highestScoringMatchup: [],
         lowestScoringMatchup: [],
         lastUpdated: new Date().toISOString(),
-      } as LeagueWideOdds);
+      } as LeagueWideOddsType);
     }
 
     // Monte Carlo over team distributions derived from sim-engine means/ranges
@@ -324,7 +324,7 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
     const highestScoringMatchup = toMatchupOdds(pairWinsHighest);
     const lowestScoringMatchup = toMatchupOdds(pairWinsLowest);
 
-    const payload: LeagueWideOdds = {
+    const payload: LeagueWideOddsType = {
       week,
       highestScorer,
       lowestScorer,
@@ -339,6 +339,6 @@ export async function GET(_req: NextRequest, { params }: { params: { week: strin
     console.error('[LEAGUE ODDS] Error:', err);
     return NextResponse.json({ error: 'Failed to calculate odds' }, { status: 500 });
   }
-}
+};
 
 export const runtime = 'nodejs';

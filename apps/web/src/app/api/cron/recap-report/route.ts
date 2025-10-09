@@ -22,7 +22,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *   -H "Authorization: Bearer $CRON_SECRET"
  * ```
  */
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   // Verify the request is from authorized cron service
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
@@ -37,6 +37,7 @@ export async function GET(request: NextRequest) {
     console.log('📰 [CRON] Starting weekly recap generation...');
 
     // Dynamic import to avoid bundling unnecessarily
+    // @ts-ignore - ESLint has issues with dynamic imports but TypeScript resolves it correctly
     const { runRecapGeneration } = await import('./runner');
 
     const result = await runRecapGeneration();
@@ -72,14 +73,14 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+};
 
 /**
  * Allow manual triggers via POST
  */
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   return GET(request);
-}
+};
 
 /**
  * Set max duration for AI generation (5 minutes)

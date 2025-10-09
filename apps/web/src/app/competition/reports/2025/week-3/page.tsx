@@ -230,7 +230,7 @@ const getTimeWindowName = (window: string) => {
 
 import type { BoxRow } from '@/shared/types/reports';
 
-function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
+const MiniBoxscore = ({ rows }: { rows: BoxRow[] | undefined }) => {
   const items = (rows || []).slice(0, 9);
   if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
@@ -246,7 +246,7 @@ function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
       ))}
     </div>
   );
-}
+};
 
 export default function Week3Report2025() {
   // Use hardcoded data like Week 2 does

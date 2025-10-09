@@ -3,14 +3,14 @@ import { TeamInfo } from '../types';
 import { GradeTxn } from '../types';
 import { RawTxn } from '../types';
 
-export async function computeTransactionGradesForStatsHub(
+export const computeTransactionGradesForStatsHub = async (
   transactions: RawTxn[],
   facts: Facts,
   leagueId: string,
   leagueName: string,
   teamsMap: Map<string, TeamInfo>,
   currentNflWeek: number = 3,
-): Promise<GradeTxn[]> {
+): Promise<GradeTxn[]> => {
   if (transactions.length === 0) {
     return [];
   }
@@ -105,7 +105,7 @@ export async function computeTransactionGradesForStatsHub(
   };
 
   // Helper function to process each roster's perspective in a trade
-  async function processTransactionForRoster(
+  const processTransactionForRoster = async (
     t: RawTxn,
     rosterId: number,
     createdAt: string,
@@ -114,7 +114,7 @@ export async function computeTransactionGradesForStatsHub(
     leagueName: string,
     teamsMap: Map<string, TeamInfo>,
     faabCost: number = 0,
-  ): Promise<GradeTxn> {
+  ): Promise<GradeTxn> => {
     const playersOut: GradeTxn['players'] = [];
     let totalAddedVORP = 0;
     let totalDroppedVORP = 0;
@@ -313,7 +313,7 @@ export async function computeTransactionGradesForStatsHub(
       score, // Final cost-adjusted score
       grade: 'N/A', // Will be calculated later
     };
-  }
+  };
 
   // Process each completed transaction
   const validTransactions = transactions.filter(t => t.status === 'complete');
@@ -404,4 +404,4 @@ export async function computeTransactionGradesForStatsHub(
   }
 
   return graded;
-}
+};

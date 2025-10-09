@@ -6,7 +6,7 @@
  */
 
 import { generateWeeklyRecap as generateReport } from './generate';
-import { saveReport, reportExists } from './storage';
+import { reportExists, saveReport } from './storage';
 import type { WeeklyRecapReport } from './types';
 
 // Re-export the simpler report type from generate.ts

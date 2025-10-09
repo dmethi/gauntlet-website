@@ -2,7 +2,7 @@
  * Position-based stats aggregation utilities
  */
 
-import type { SleeperMatchup, PlayerIndex, TrackedPosition, PositionPoints } from '@gauntlet/types';
+import type { PlayerIndex, PositionPoints, SleeperMatchup, TrackedPosition } from '@gauntlet/types';
 
 export const TRACKED_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'DEF'] as const;
 
@@ -13,13 +13,13 @@ export type { TrackedPosition, PositionPoints };
  * Calculate position points for each roster in each week
  * Returns a map of week -> rosterId -> position points
  */
-export function getStarterPositionPoints({
+export const getStarterPositionPoints = ({
   matchups,
   playersIndex,
 }: {
   matchups: Map<number, Map<string, SleeperMatchup[]>>; // week -> leagueId -> matchups
   playersIndex: PlayerIndex;
-}): Map<number, Map<string, PositionPoints>> {
+}): Map<number, Map<string, PositionPoints>> => {
   const weeklyPositionPoints = new Map<number, Map<string, PositionPoints>>();
 
   for (const [week, weekLeagueMatchups] of matchups.entries()) {
@@ -56,15 +56,15 @@ export function getStarterPositionPoints({
   }
 
   return weeklyPositionPoints;
-}
+};
 
 /**
  * Get total position points across a week range
  */
-export function aggregatePositionPoints(
+export const aggregatePositionPoints = (
   weeklyPoints: Map<number, Map<string, PositionPoints>>, // Changed to use teamKey (leagueId-rosterId)
   weekRange: { from: number; to: number },
-): Map<string, PositionPoints> {
+): Map<string, PositionPoints> => {
   const totals = new Map<string, PositionPoints>();
 
   for (let week = weekRange.from; week <= weekRange.to; week++) {
@@ -91,4 +91,4 @@ export function aggregatePositionPoints(
   }
 
   return totals;
-}
+};

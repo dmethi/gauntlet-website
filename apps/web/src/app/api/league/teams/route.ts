@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAllLeagues, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 import { getCurrentLeagues } from '@/config/leagues';
 
-export async function GET() {
+export const GET = async () => {
   try {
     // Get current leagues from config
     const currentLeagues = getCurrentLeagues();
@@ -49,4 +49,4 @@ export async function GET() {
     console.error('Error fetching teams:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-}
+};

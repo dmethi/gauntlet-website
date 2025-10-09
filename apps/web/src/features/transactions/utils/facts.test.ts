@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { playoffWeight, firstOwnedWeek, lastOwnedWeek } from './facts';
+import { describe, expect, it } from 'vitest';
+import { firstOwnedWeek, lastOwnedWeek, playoffWeight } from './facts';
 import type { TransactionFacts } from '@/features/transactions/types';
 
 describe('Transaction Utilities', () => {

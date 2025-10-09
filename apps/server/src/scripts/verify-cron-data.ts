@@ -18,7 +18,7 @@ import { PrismaClient } from '../../generated/prisma-historical/index.js';
 
 const prisma = new PrismaClient();
 
-const main = async () => {
+const main = async (): Promise<void> => {
   console.log('🔍 Verifying Live Odds Cron Job Data Collection\n');
 
   try {

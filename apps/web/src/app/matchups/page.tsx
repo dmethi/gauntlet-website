@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ import { ArrowLeft, Clock, Swords, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { MatchupOddsPreview } from '@/components/matchup-odds-preview';
 import { LeagueWideOdds } from '@/components/league-wide-odds';
-import type { MatchupTeam, MatchupData, LeagueMatchups } from '@/features/matchups/types';
+import type { LeagueMatchups, MatchupData, MatchupTeam } from '@/features/matchups/types';
 
 const LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },
@@ -26,7 +26,7 @@ const LEAGUES = [
 
 const WEEKS = Array.from({ length: 18 }, (_, i) => i + 1);
 
-function MatchupsPageContent() {
+const MatchupsPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -372,9 +372,9 @@ function MatchupsPageContent() {
       </div>
     </div>
   );
-}
+};
 
-function MatchupCard({
+const MatchupCard = ({
   matchup,
   leagueId,
   week,
@@ -382,7 +382,7 @@ function MatchupCard({
   matchup: MatchupData;
   leagueId: string;
   week: number;
-}) {
+}) => {
   const [teamA, teamB] = matchup.teams;
   const isGameActive = !matchup.isComplete;
 
@@ -437,10 +437,10 @@ function MatchupCard({
       </Card>
     </Link>
   );
-}
+};
 
 // Safe avatar component with error handling
-function Avatar({ src, alt, fallback }: { src?: string | null; alt: string; fallback: string }) {
+const Avatar = ({ src, alt, fallback }: { src?: string | null; alt: string; fallback: string }) => {
   const [hasError, setHasError] = useState(false);
 
   if (!src || hasError) {
@@ -460,9 +460,9 @@ function Avatar({ src, alt, fallback }: { src?: string | null; alt: string; fall
       onLoad={() => setHasError(false)}
     />
   );
-}
+};
 
-function TeamRow({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) {
+const TeamRow = ({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) => {
   return (
     <div
       className={`flex items-center justify-between p-2 rounded ${isWinner ? 'bg-green-50 dark:bg-green-950' : ''}`}
@@ -487,9 +487,9 @@ function TeamRow({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) 
       </div>
     </div>
   );
-}
+};
 
-export default function MatchupsPage() {
+export const MatchupsPage = () => {
   return (
     <Suspense
       fallback={
@@ -508,4 +508,4 @@ export default function MatchupsPage() {
       <MatchupsPageContent />
     </Suspense>
   );
-}
+};

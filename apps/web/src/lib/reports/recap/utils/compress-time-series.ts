@@ -12,10 +12,10 @@
  */
 
 import type {
-  LiveMatchupUpdate,
   CompressedGameFlow,
   CompressedGameFlowPoint,
   ExcitementMetrics,
+  LiveMatchupUpdate,
 } from '../types';
 
 /**

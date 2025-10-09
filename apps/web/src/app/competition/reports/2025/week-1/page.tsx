@@ -176,14 +176,14 @@ const EDITOR_CALLOUTS: Record<string, string> = {
 };
 
 import type {
-  SeriesPoint,
-  BoxRow,
-  MatchupView,
   ApiLeague,
   ApiResponse,
+  BoxRow,
+  MatchupView,
+  SeriesPoint,
 } from '@/shared/types/reports';
 
-function WinProbChart({
+const WinProbChart = ({
   series,
   teamAName,
   teamBName,
@@ -191,7 +191,7 @@ function WinProbChart({
   series: SeriesPoint[] | undefined;
   teamAName: string;
   teamBName: string;
-}) {
+}) => {
   const chartColors = useChartColors();
   const data = useMemo(
     () =>
@@ -239,9 +239,9 @@ function WinProbChart({
       </LineChart>
     </div>
   );
-}
+};
 
-function ScoreChart({
+const ScoreChart = ({
   series,
   teamAName,
   teamBName,
@@ -249,7 +249,7 @@ function ScoreChart({
   series: SeriesPoint[] | undefined;
   teamAName: string;
   teamBName: string;
-}) {
+}) => {
   const chartColors = useChartColors();
   const data = useMemo(
     () =>
@@ -299,9 +299,9 @@ function ScoreChart({
       </LineChart>
     </div>
   );
-}
+};
 
-function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
+const MiniBoxscore = ({ rows }: { rows: BoxRow[] | undefined }) => {
   const items = (rows || []).slice(0, 9);
   if (!items.length) return <div className="text-xs text-muted-foreground">No starters</div>;
   return (
@@ -317,7 +317,7 @@ function MiniBoxscore({ rows }: { rows: BoxRow[] | undefined }) {
       ))}
     </div>
   );
-}
+};
 
 export default function Week1Report2025() {
   const [data, setData] = useState<ApiResponse | null>(null);

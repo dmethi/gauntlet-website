@@ -14,10 +14,10 @@ const sizeClasses = {
   xl: 'w-16 h-16',
 };
 
-export function GauntletLogo({ size = 'md', className = '' }: GauntletLogoProps) {
+export const GauntletLogo = ({ size = 'md', className = '' }: GauntletLogoProps) => {
   return (
     <div className={`${sizeClasses[size]} ${className} flex-shrink-0 relative`}>
       <Image src="/gauntlet_logo.svg" alt="The Gauntlet Logo" layout="fill" objectFit="contain" />
     </div>
   );
-}
+};

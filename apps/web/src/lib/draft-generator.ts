@@ -27,6 +27,32 @@ interface DraftContext {
   draftOrder: number[];
 }
 
+interface PlayerComparison {
+  player: Player | null | undefined;
+  draft1:
+    | {
+        team: string;
+        round: number;
+        pick: number;
+        price: number;
+        value: number;
+      }
+    | null
+    | undefined;
+  draft2:
+    | {
+        team: string;
+        round: number;
+        pick: number;
+        price: number;
+        value: number;
+      }
+    | null
+    | undefined;
+  priceDifference: number | null;
+  roundDifference: number | null;
+}
+
 export class DraftGenerator {
   private generateDraftOrder(): number[] {
     // Standard snake draft: 1-12, 12-1, 1-12, etc.
@@ -374,13 +400,13 @@ export class DraftGenerator {
 }
 
 // Export pre-generated drafts
-export function getPreGeneratedDrafts(): [MockDraft, MockDraft] {
+export const getPreGeneratedDrafts = (): [MockDraft, MockDraft] => {
   const generator = new DraftGenerator();
   return generator.generateTwoMockDrafts();
-}
+};
 
 // Utility functions for draft analysis
-export function calculateDraftEfficiency(draft: MockDraft) {
+export const calculateDraftEfficiency = (draft: MockDraft) => {
   const totalValue = draft.teams.reduce((sum, team) => {
     return sum + team.picks.reduce((teamSum, pick) => teamSum + pick.valueOverAAV, 0);
   }, 0);
@@ -400,9 +426,13 @@ export function calculateDraftEfficiency(draft: MockDraft) {
       budgetEfficiency: team.totalSpent / team.budget,
     })),
   };
-}
+};
 
-export function comparePlayerAcquisition(draft1: MockDraft, draft2: MockDraft, playerId: string) {
+export const comparePlayerAcquisition = (
+  draft1: MockDraft,
+  draft2: MockDraft,
+  playerId: string,
+): PlayerComparison => {
   const pick1 = draft1.teams.flatMap(t => t.picks).find(p => p.playerId === playerId);
   const pick2 = draft2.teams.flatMap(t => t.picks).find(p => p.playerId === playerId);
 
@@ -429,4 +459,4 @@ export function comparePlayerAcquisition(draft1: MockDraft, draft2: MockDraft, p
     priceDifference: pick1 && pick2 ? pick2.actualPrice - pick1.actualPrice : null,
     roundDifference: pick1 && pick2 ? pick2.round - pick1.round : null,
   };
-}
+};

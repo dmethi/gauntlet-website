@@ -5,12 +5,12 @@
  */
 
 import {
-  POSITIONAL_THRESHOLDS,
   LUCK_THRESHOLDS,
-  SCATTER_THRESHOLDS,
-  TRANSACTION_THRESHOLDS,
-  START_SIT_THRESHOLDS,
   type NarrativeSeverity,
+  POSITIONAL_THRESHOLDS,
+  SCATTER_THRESHOLDS,
+  START_SIT_THRESHOLDS,
+  TRANSACTION_THRESHOLDS,
 } from '@/config/narrative-thresholds';
 
 // ============================================================================
@@ -110,18 +110,18 @@ export interface Narrative {
 // HELPER FUNCTIONS
 // ============================================================================
 
-function calculateVariance(values: number[]): number {
+const calculateVariance = (values: number[]): number => {
   if (values.length === 0) return 0;
   const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
   const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
   return squaredDiffs.reduce((sum, val) => sum + val, 0) / values.length;
-}
+};
 
 // ============================================================================
 // 1. POSITIONAL TRENDS
 // ============================================================================
 
-export function generatePositionalTrendNarrative(data: PositionalTrendData): Narrative | null {
+export const generatePositionalTrendNarrative = (data: PositionalTrendData): Narrative | null => {
   const rankChange = data.previousWeeks.avgRank - data.currentWeek.rank;
   const pointsChange = data.currentWeek.points - data.previousWeeks.avgPoints;
   const pointsChangePct =
@@ -207,13 +207,13 @@ export function generatePositionalTrendNarrative(data: PositionalTrendData): Nar
   }
 
   return null;
-}
+};
 
 // ============================================================================
 // 2. LUCK ANALYSIS
 // ============================================================================
 
-export function generateLuckNarrative(data: LuckData): Narrative | null {
+export const generateLuckNarrative = (data: LuckData): Narrative | null => {
   const luckRating = data.record.wins - data.record.expectedWins;
   const scheduleEase = 25 - data.schedule.difficultyRank; // Higher = easier
   const totalTeams =
@@ -265,13 +265,13 @@ export function generateLuckNarrative(data: LuckData): Narrative | null {
 
   // Only highlight extreme cases
   return null;
-}
+};
 
 // ============================================================================
 // 3. SCATTER OUTLIERS
 // ============================================================================
 
-export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narrative | null {
+export const generateScatterOutlierNarrative = (data: ScatterOutlierData): Narrative | null => {
   const isOutlier =
     Math.abs(data.zX) > SCATTER_THRESHOLDS.outlierZScore ||
     Math.abs(data.zY) > SCATTER_THRESHOLDS.outlierZScore;
@@ -340,13 +340,13 @@ export function generateScatterOutlierNarrative(data: ScatterOutlierData): Narra
   }
 
   return null;
-}
+};
 
 // ============================================================================
 // 4. TRANSACTION ANALYSIS
 // ============================================================================
 
-export function generateTransactionNarrative(txn: TransactionData): Narrative | null {
+export const generateTransactionNarrative = (txn: TransactionData): Narrative | null => {
   const addedPlayer = txn.players.find(p => p.role === 'add');
   const droppedPlayer = txn.players.find(p => p.role === 'drop');
 
@@ -432,13 +432,13 @@ export function generateTransactionNarrative(txn: TransactionData): Narrative | 
   }
 
   return null;
-}
+};
 
 // ============================================================================
 // 5. START/SIT EFFICIENCY
 // ============================================================================
 
-export function generateStartSitNarrative(decision: StartSitData): Narrative | null {
+export const generateStartSitNarrative = (decision: StartSitData): Narrative | null => {
   const pointsLost = Math.abs(decision.pointDifferential);
 
   // BAD START (started wrong player)
@@ -480,4 +480,4 @@ export function generateStartSitNarrative(decision: StartSitData): Narrative | n
   }
 
   return null;
-}
+};

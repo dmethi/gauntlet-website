@@ -114,12 +114,12 @@ export const buildFacts = async (
   };
 };
 
-function median(arr: number[]): number {
+const median = (arr: number[]): number => {
   if (!arr.length) return 0;
   const a = [...arr].sort((x, y) => x - y);
   const mid = Math.floor(a.length / 2);
   return a.length % 2 === 0 ? (a[mid - 1] + a[mid]) / 2 : a[mid];
-}
+};
 
 export const firstOwnedWeek = (
   facts: TransactionFacts,

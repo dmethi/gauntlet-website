@@ -18,14 +18,14 @@ interface MatchupLinkProps {
   variant?: 'compact' | 'detailed' | 'badge-only';
 }
 
-export function MatchupLink({
+export const MatchupLink = ({
   matchupId,
   week,
   teamA,
   teamB,
   className = '',
   variant = 'compact',
-}: MatchupLinkProps) {
+}: MatchupLinkProps) => {
   const href = `/matchup/${matchupId}?week=${week}`;
 
   if (variant === 'badge-only') {
@@ -82,7 +82,7 @@ export function MatchupLink({
       </div>
     </Link>
   );
-}
+};
 
 interface MatchupData {
   matchupId: number;
@@ -96,7 +96,7 @@ interface MatchupData {
 }
 
 // Utility function to create matchup link props from matchup data
-export function createMatchupLinkProps(matchup: MatchupData, week: number) {
+export const createMatchupLinkProps = (matchup: MatchupData, week: number) => {
   const [teamA, teamB] = matchup.teams || [];
 
   return {
@@ -115,4 +115,4 @@ export function createMatchupLinkProps(matchup: MatchupData, week: number) {
         }
       : undefined,
   };
-}
+};

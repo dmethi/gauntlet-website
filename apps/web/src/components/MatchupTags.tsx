@@ -2,7 +2,7 @@ import React from 'react';
 import { badgeVariants } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-export function VolatilityBadge({ label }: { label: 'Chalk' | 'Balanced' | 'Chaos' }) {
+export const VolatilityBadge = ({ label }: { label: 'Chalk' | 'Balanced' | 'Chaos' }) => {
   const variant =
     label === 'Chaos' ? 'destructive' : label === 'Balanced' ? 'secondary' : 'default';
   const extra = label === 'Chaos' ? 'text-white' : '';
@@ -12,9 +12,9 @@ export function VolatilityBadge({ label }: { label: 'Chalk' | 'Balanced' | 'Chao
       {emoji} {label}
     </span>
   );
-}
+};
 
-export function DerbyBadge({ text }: { text: string }) {
+export const DerbyBadge = ({ text }: { text: string }) => {
   return (
     <span
       className={cn(badgeVariants({ variant: 'secondary' }), 'text-xxs font-geizer tracking-wide')}
@@ -22,11 +22,11 @@ export function DerbyBadge({ text }: { text: string }) {
       🏁 {text}
     </span>
   );
-}
+};
 
 type TipProps = { text: string; title?: string };
 
-export function FineTag({ text, title = 'Scribe Fine' }: TipProps) {
+export const FineTag = ({ text, title = 'Scribe Fine' }: TipProps) => {
   return (
     <span
       className={cn(badgeVariants({ variant: 'default' }), 'text-xxs font-geizer tracking-wide')}
@@ -35,9 +35,9 @@ export function FineTag({ text, title = 'Scribe Fine' }: TipProps) {
       🧾 {title}
     </span>
   );
-}
+};
 
-export function CurseTag({ text, title = 'Gauntlet Curse' }: TipProps) {
+export const CurseTag = ({ text, title = 'Gauntlet Curse' }: TipProps) => {
   return (
     <span
       className={cn(badgeVariants({ variant: 'secondary' }), 'text-xxs font-geizer tracking-wide')}
@@ -46,4 +46,4 @@ export function CurseTag({ text, title = 'Gauntlet Curse' }: TipProps) {
       🔮 {title}
     </span>
   );
-}
+};

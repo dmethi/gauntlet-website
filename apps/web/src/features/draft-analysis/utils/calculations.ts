@@ -6,11 +6,11 @@
  */
 
 import type {
+  DraftPickRow,
+  PlayerAnalysis,
+  PlayerLevelAnalytics,
   PlayerOverlap,
   PlayerOverlapAnalytics,
-  PlayerAnalysis,
-  DraftPickRow,
-  PlayerLevelAnalytics,
 } from '../types';
 import type { MockDraft } from '@/lib/draft-generator';
 
@@ -173,7 +173,7 @@ export const kMeansCluster = (
   const d = data[0].length;
 
   // Initialize centroids randomly
-  let centroids: number[][] = [];
+  const centroids: number[][] = [];
   for (let i = 0; i < k; i++) {
     const centroid: number[] = [];
     for (let j = 0; j < d; j++) {
@@ -185,7 +185,7 @@ export const kMeansCluster = (
     centroids.push(centroid);
   }
 
-  let assignments = new Array(n).fill(0);
+  const assignments = new Array(n).fill(0);
 
   for (let iter = 0; iter < maxIterations; iter++) {
     // Assign points to closest centroid

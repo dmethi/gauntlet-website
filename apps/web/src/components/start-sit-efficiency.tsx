@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,10 +14,9 @@ import {
 } from '@/components/ui/select';
 import { usePlayers } from '@/lib/hooks';
 import type {
-  PositionBreakdown,
-  RosterContext,
-  ManagerEfficiency,
   DecisionDetail,
+  ManagerEfficiency,
+  RosterContext,
   StartSitData,
 } from '@/features/start-sit/types';
 
@@ -139,7 +138,7 @@ const OverallScores = ({ managers }: { managers: ManagerEfficiency[] }) => (
   </div>
 );
 
-const PositionBreakdown = ({
+const PositionBreakdownTable = ({
   managers,
   selectedManagerId,
   setSelectedManagerId,
@@ -963,7 +962,7 @@ const RosterContextView = ({
   );
 };
 
-export default function StartSitEfficiency({ data }: { data: StartSitData }) {
+export const StartSitEfficiency = ({ data }: { data: StartSitData }) => {
   const [selectedManagerId, setSelectedManagerId] = useState<string>(
     data.managerEfficiencies[0]?.managerId || '',
   );
@@ -1034,7 +1033,7 @@ export default function StartSitEfficiency({ data }: { data: StartSitData }) {
         <TabsContent value="positions" className="space-y-6">
           <Card>
             <CardContent className="pt-6">
-              <PositionBreakdown
+              <PositionBreakdownTable
                 managers={data.managerEfficiencies}
                 selectedManagerId={selectedManagerId}
                 setSelectedManagerId={setSelectedManagerId}
@@ -1090,4 +1089,4 @@ export default function StartSitEfficiency({ data }: { data: StartSitData }) {
       </Tabs>
     </div>
   );
-}
+};

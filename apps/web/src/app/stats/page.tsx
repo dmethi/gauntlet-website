@@ -22,7 +22,7 @@ interface CachedData {
   timestamp: number;
 }
 
-async function fetchStatsData(): Promise<PlainStatsDataset & { startSitEfficiency?: any }> {
+const fetchStatsData = async (): Promise<PlainStatsDataset & { startSitEfficiency?: any }> => {
   // Check cache first
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
@@ -60,10 +60,10 @@ async function fetchStatsData(): Promise<PlainStatsDataset & { startSitEfficienc
   }
 
   return data;
-}
+};
 
 // Separate component for search params to avoid SSR issues
-function StatsPageContent({ searchParams }: StatsPageProps) {
+const StatsPageContent = ({ searchParams }: StatsPageProps) => {
   const [dataset, setDataset] = useState<PlainStatsDataset | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -87,9 +87,9 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
 
   useEffect(() => {
     let isMounted = true;
-    let progressInterval: NodeJS.Timeout;
+    let progressInterval: ReturnType<typeof setInterval>;
 
-    async function loadData() {
+    const loadData = async () => {
       try {
         setIsLoading(true);
         setLoadingProgress(0);
@@ -128,7 +128,7 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
           clearInterval(progressInterval);
         }
       }
-    }
+    };
 
     loadData();
 
@@ -177,7 +177,7 @@ function StatsPageContent({ searchParams }: StatsPageProps) {
       </div>
     </div>
   );
-}
+};
 
 export default function StatsPage({ searchParams }: StatsPageProps) {
   return (
@@ -187,7 +187,7 @@ export default function StatsPage({ searchParams }: StatsPageProps) {
   );
 }
 
-function StatsPageSkeleton({ loadingProgress }: { loadingProgress: number }) {
+const StatsPageSkeleton = ({ loadingProgress }: { loadingProgress: number }) => {
   return (
     <div className="space-y-6">
       {/* Loading progress bar */}
@@ -293,4 +293,4 @@ function StatsPageSkeleton({ loadingProgress }: { loadingProgress: number }) {
       </div>
     </div>
   );
-}
+};

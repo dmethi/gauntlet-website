@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  calculateWinProbability,
   getMatchupsByWeek,
   getRostersByLeague,
-  calculateWinProbability,
 } from '@/lib/api-replacements';
 
-export async function GET(
+export const GET = async (
   _request: NextRequest,
   { params }: { params: { leagueId: string; week: string } },
-) {
+) => {
   try {
     const { leagueId, week } = params;
     const weekNumber = parseInt(week, 10);
@@ -90,4 +90,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

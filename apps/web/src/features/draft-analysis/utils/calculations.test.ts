@@ -4,14 +4,14 @@
  * Comprehensive test coverage for all calculation functions extracted from manager-analytics.ts
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  inferStarters,
   calculateGini,
-  cosineSimilarity,
-  kMeansCluster,
-  calculatePlayerOverlap,
   calculatePlayerLevelAnalytics,
+  calculatePlayerOverlap,
+  cosineSimilarity,
+  inferStarters,
+  kMeansCluster,
 } from './calculations';
 import type { MockDraft } from '@/lib/draft-generator';
 

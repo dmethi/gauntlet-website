@@ -6,30 +6,30 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   calculateHallOfFameRecords,
-  HALL_OF_FAME_CATEGORIES,
   getCategoriesByGroup,
-  type ProcessedMatchup,
+  HALL_OF_FAME_CATEGORIES,
   type HallOfFameRecord,
+  type ProcessedMatchup,
 } from '@/features/hall-of-fame/utils';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
 import { calculationCache } from '@/shared/utils/calculations';
-import type { SleeperMatchup, SleeperRoster, SleeperUser, SleeperLeague } from '@gauntlet/types';
+import type { SleeperLeague, SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
 
 /**
  * Fetch data from Sleeper API
  */
-async function fetchSleeperData<T>(endpoint: string): Promise<T> {
+const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
   const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
   if (!response.ok) {
     throw new Error(`Sleeper API error: ${response.status}`);
   }
   return response.json();
-}
+};
 
 /**
  * Get all matchups for a league and season
  */
-async function getLeagueMatchups(leagueId: string, weeks: number): Promise<ProcessedMatchup[]> {
+const getLeagueMatchups = async (leagueId: string, weeks: number): Promise<ProcessedMatchup[]> => {
   // Fetch league, rosters, users, and player data
   const [league, rosters, users, playersData] = await Promise.all([
     fetchSleeperData<SleeperLeague>(`league/${leagueId}`),
@@ -111,12 +111,12 @@ async function getLeagueMatchups(leagueId: string, weeks: number): Promise<Proce
   });
 
   return processedMatchups;
-}
+};
 
 /**
  * Hook to get Hall of Fame records across all leagues
  */
-export function useHallOfFame() {
+export const useHallOfFame = () => {
   return useQuery({
     queryKey: ['hall-of-fame', 'all-leagues'],
     queryFn: async () => {
@@ -151,12 +151,12 @@ export function useHallOfFame() {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook to get Hall of Fame records for a specific league
  */
-export function useLeagueHallOfFame(leagueId: string) {
+export const useLeagueHallOfFame = (leagueId: string) => {
   return useQuery({
     queryKey: ['hall-of-fame', leagueId],
     queryFn: async () => {
@@ -193,12 +193,12 @@ export function useLeagueHallOfFame(leagueId: string) {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook to get Hall of Fame records for a specific team
  */
-export function useTeamHallOfFame(leagueId: string, rosterId: number) {
+export const useTeamHallOfFame = (leagueId: string, rosterId: number) => {
   return useQuery({
     queryKey: ['hall-of-fame', 'team', leagueId, rosterId],
     queryFn: async () => {
@@ -251,4 +251,4 @@ export function useTeamHallOfFame(leagueId: string, rosterId: number) {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};

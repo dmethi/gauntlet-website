@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   try {
     console.log('🏈 [NFL STATE API] Fetching current NFL state from Sleeper...');
 
@@ -56,4 +56,4 @@ export async function GET(request: NextRequest) {
       },
     });
   }
-}
+};

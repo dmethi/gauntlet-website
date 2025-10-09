@@ -1,23 +1,22 @@
 import { NextResponse } from 'next/server';
 import {
+  getAllLeagues,
+  getCurrentWeek,
   getLeagueById,
+  getMatchupsByWeek,
   getRostersByLeague,
   getUsersByLeague,
-  getMatchupsByWeek,
-  getCurrentWeek,
-  getAllLeagues,
 } from '@/lib/api-replacements';
 import { getCurrentLeagues } from '@/config/leagues';
 
 export const runtime = 'nodejs';
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
   const debug = searchParams.has('debug');
   const leagueId = searchParams.get('leagueId');
 
   try {
-    let league;
     let selectedLeagueId = leagueId;
 
     if (!selectedLeagueId) {
@@ -30,7 +29,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch league data from Sleeper API (no database!)
-    league = await getLeagueById(selectedLeagueId);
+    const league = await getLeagueById(selectedLeagueId);
 
     if (!league) {
       return NextResponse.json({ error: 'League not found' }, { status: 404 });
@@ -94,4 +93,4 @@ export async function GET(request: Request) {
       : { error: 'Internal Server Error' };
     return NextResponse.json(body, { status: 500 });
   }
-}
+};

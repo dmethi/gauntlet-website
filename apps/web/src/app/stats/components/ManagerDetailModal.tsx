@@ -16,7 +16,7 @@ interface ManagerDetailModalProps {
   onClose: () => void;
 }
 
-export function ManagerDetailModal({ manager, isOpen, onClose }: ManagerDetailModalProps) {
+export const ManagerDetailModal = ({ manager, isOpen, onClose }: ManagerDetailModalProps) => {
   if (!isOpen) return null;
 
   const positiveTransactions = manager.transactions
@@ -277,4 +277,4 @@ export function ManagerDetailModal({ manager, isOpen, onClose }: ManagerDetailMo
       </div>
     </div>
   );
-}
+};

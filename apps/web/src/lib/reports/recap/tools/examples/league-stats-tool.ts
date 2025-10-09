@@ -46,6 +46,7 @@ export const leagueStatsTool: ReportTool<LeagueStatsArgs, LeagueStatsResult> = {
 
     // Simulate API delay
     await new Promise(resolve => {
+      // eslint-disable-next-line no-undef
       setTimeout(resolve, 100);
     });
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPlayersByIds, getAllPlayers, searchPlayersByName } from '@/data/players-loader';
+import { getAllPlayers, getPlayersByIds, searchPlayersByName } from '@/data/players-loader';
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
     const ids = searchParams.get('ids');
@@ -48,9 +48,9 @@ export async function GET(request: NextRequest) {
     console.error('Error in batch players endpoint:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+};
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();
     const { playerIds } = body;
@@ -71,4 +71,4 @@ export async function POST(request: NextRequest) {
     console.error('Error in POST batch players endpoint:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+};

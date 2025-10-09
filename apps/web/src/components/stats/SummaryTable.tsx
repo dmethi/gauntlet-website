@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { formatNumber, formatDelta } from '@/shared/utils/formatting';
+import { formatDelta, formatNumber } from '@/shared/utils/formatting';
 
 export interface SummaryTableRow {
   teamName: string;
@@ -29,7 +29,7 @@ export interface SummaryTableProps {
   showLeagueRank?: boolean;
 }
 
-export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps) {
+export const SummaryTable = ({ data, showLeagueRank = true }: SummaryTableProps) => {
   // Sort by windowTotal descending
   const sortedData = [...data].sort((a, b) => b.windowTotal - a.windowTotal);
 
@@ -116,4 +116,4 @@ export function SummaryTable({ data, showLeagueRank = true }: SummaryTableProps)
       </Table>
     </div>
   );
-}
+};

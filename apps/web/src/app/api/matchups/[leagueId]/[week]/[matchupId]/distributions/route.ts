@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/models';
 
-export async function GET(
+export const GET = async (
   request: NextRequest,
   { params }: { params: { leagueId: string; week: string; matchupId: string } },
-) {
+) => {
   try {
     const { leagueId, week, matchupId } = params;
     const weekNumber = parseInt(week);
@@ -115,4 +115,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

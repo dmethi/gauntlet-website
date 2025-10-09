@@ -15,7 +15,7 @@ interface NFLGameState {
   gameDescription: string;
 }
 
-async function fetchEspnScoreboard() {
+const fetchEspnScoreboard = async () => {
   try {
     const url = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
     const response = await fetch(url, {
@@ -31,9 +31,9 @@ async function fetchEspnScoreboard() {
     console.warn('Failed to fetch ESPN scoreboard:', error);
     return null;
   }
-}
+};
 
-function normalizeNflTeamAbbreviation(abbreviation?: string): string | undefined {
+const normalizeNflTeamAbbreviation = (abbreviation?: string): string | undefined => {
   if (!abbreviation) return abbreviation;
   // Normalize various provider codes to a consistent set (prefer ESPN/Sleeper modern codes)
   const mapping: Record<string, string> = {
@@ -56,9 +56,9 @@ function normalizeNflTeamAbbreviation(abbreviation?: string): string | undefined
     LA: 'LAR',
   };
   return mapping[abbreviation] || abbreviation;
-}
+};
 
-function parseClockSeconds(clock: unknown): number {
+const parseClockSeconds = (clock: unknown): number => {
   // ESPN generally provides numeric seconds, but be robust to strings like "MM:SS"
   if (typeof clock === 'number') return Math.max(0, clock);
   if (typeof clock === 'string') {
@@ -71,13 +71,13 @@ function parseClockSeconds(clock: unknown): number {
     if (Number.isFinite(asNum)) return Math.max(0, asNum);
   }
   return 0;
-}
+};
 
 /**
  * Build NFL game state map from ESPN scoreboard
  * This gives us the actual minute-by-minute progress of each NFL game
  */
-function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
+const buildNflGameStateMap = (espnData: any): Map<string, NFLGameState> => {
   const gameStates = new Map<string, NFLGameState>();
 
   if (!espnData?.events) return gameStates;
@@ -143,23 +143,23 @@ function buildNflGameStateMap(espnData: any): Map<string, NFLGameState> {
   }
 
   return gameStates;
-}
+};
 
-function buildLiveNflTeamsSet(gameStates: Map<string, NFLGameState>): Set<string> {
+const buildLiveNflTeamsSet = (gameStates: Map<string, NFLGameState>): Set<string> => {
   const set = new Set<string>();
   for (const [team, state] of gameStates.entries()) {
     if (state.state === 'in') set.add(team);
   }
   return set;
-}
+};
 
-function toLineupPlayersWithMinutes(
+const toLineupPlayersWithMinutes = (
   ids: string[],
   leagueProjections: Record<string, any>,
   playersMap: Record<string, any>,
   starterPoints: Record<string, number> | undefined,
   nflGameStates: Map<string, NFLGameState>,
-) {
+) => {
   return (ids || []).map((id, index) => {
     const p = playersMap?.[id] || {};
     const currentScore = starterPoints?.[index.toString()] || 0;
@@ -215,12 +215,12 @@ function toLineupPlayersWithMinutes(
         : null,
     };
   });
-}
+};
 
-export async function GET(
+export const GET = async (
   _req: NextRequest,
   { params }: { params: { leagueId: string; week: string; matchupId: string } },
-) {
+) => {
   try {
     const leagueId = params.leagueId;
     const week = parseInt(params.week, 10);
@@ -380,6 +380,6 @@ export async function GET(
     console.error('[SIMULATE] Error:', err);
     return NextResponse.json({ success: false, error: 'Failed to simulate' }, { status: 500 });
   }
-}
+};
 
 export const runtime = 'nodejs';

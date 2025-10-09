@@ -4,24 +4,24 @@
  */
 
 import { toolRegistry } from './registry';
-import { fetchLeagueDataTool, calculateWeekSummaryStatsTool } from './league-overview';
+import { calculateWeekSummaryStatsTool, fetchLeagueDataTool } from './league-overview';
 import { gameFlowTool } from './game-flow';
 import {
+  fetchH2HHistoryTool,
+  fetchKeyPlayerPerformancesTool,
   fetchMatchupBoxScoreTool,
   fetchMatchupRostersTool,
-  fetchScoringBreakdownTool,
-  fetchPreGameProjectionsTool,
-  fetchProjectionVsActualTool,
-  fetchTeamRecordsTool,
-  fetchH2HHistoryTool,
   fetchPlayoffImplicationsTool,
   fetchPositionBreakdownTool,
-  fetchKeyPlayerPerformancesTool,
+  fetchPreGameProjectionsTool,
+  fetchProjectionVsActualTool,
+  fetchScoringBreakdownTool,
+  fetchTeamRecordsTool,
 } from './matchup-data';
 // Enhanced Hall of Fame/Shame - checks ALL 68 categories
 import {
-  checkAllHistoricalRecordsTool,
   calculateTopPositionPerformersEnhanced,
+  checkAllHistoricalRecordsTool,
 } from './hall-of-fame-enhanced';
 import { fetchPowerRankingsTool } from './power-rankings';
 import { fetchStandingsTool } from './standings';

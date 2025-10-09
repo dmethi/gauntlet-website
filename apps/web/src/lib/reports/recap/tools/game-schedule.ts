@@ -116,7 +116,7 @@ export const buildGameWindowMap = (
 
     // Get the local date/time components
     // ESPN returns ISO strings in UTC, so we need to handle the timezone offset
-    const dateStr = event.date; // e.g., "2025-10-06T17:00Z" for 1pm ET Sunday
+    // const dateStr = event.date; // e.g., "2025-10-06T17:00Z" for 1pm ET Sunday
 
     // Determine game window based on the date string pattern
     let window: GameWindow;

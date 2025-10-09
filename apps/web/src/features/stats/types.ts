@@ -5,7 +5,7 @@
  * Consolidates duplicate types and creates a single source of truth.
  */
 
-import type { TrackedPosition, PlainStatsDataset } from '@/shared/utils/stats';
+import type { PlainStatsDataset, TrackedPosition } from '@/shared/utils/stats';
 
 /**
  * Team identification and display information

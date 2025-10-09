@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  getTransactionsByWeek,
   getAllTransactionsByLeague,
   getCurrentWeek,
+  getTransactionsByWeek,
 } from '@/lib/api-replacements';
 
-export async function GET(request: NextRequest, { params }: { params: { leagueId: string } }) {
+export const GET = async (request: NextRequest, { params }: { params: { leagueId: string } }) => {
   try {
     const { searchParams } = new URL(request.url);
     const leagueId = params.leagueId;
@@ -57,4 +57,4 @@ export async function GET(request: NextRequest, { params }: { params: { leagueId
       { status: 500 },
     );
   }
-}
+};

@@ -50,7 +50,7 @@ interface LeagueViewProps {
   toWeek: number;
 }
 
-export function LeagueView({
+export const LeagueView = ({
   selectedWeek,
   allTeamEntries,
   positionsMap,
@@ -59,7 +59,7 @@ export function LeagueView({
   dataset,
   fromWeek,
   toWeek,
-}: LeagueViewProps) {
+}: LeagueViewProps) => {
   const isSeasonView = selectedWeek === 'season';
   const weekNum = isSeasonView ? null : parseInt(selectedWeek, 10);
 
@@ -762,4 +762,4 @@ export function LeagueView({
       )}
     </div>
   );
-}
+};

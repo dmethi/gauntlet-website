@@ -19,7 +19,7 @@ interface TeamDistribution {
 /**
  * Get team color based on team name
  */
-function getTeamColor(teamName: string): string {
+const getTeamColor = (teamName: string): string => {
   const name = teamName.toLowerCase();
 
   // NFL team-based colors
@@ -72,7 +72,7 @@ function getTeamColor(teamName: string): string {
     hash = ((hash << 5) - hash + teamName.charCodeAt(i)) & 0xffffffff;
   }
   return colors[Math.abs(hash) % colors.length];
-}
+};
 
 interface DistributionData {
   team1: TeamDistribution & { name: string };
@@ -89,13 +89,17 @@ interface TeamDistributionChartProps {
   matchupId: number;
 }
 
-export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistributionChartProps) {
+export const TeamDistributionChart = ({
+  leagueId,
+  week,
+  matchupId,
+}: TeamDistributionChartProps) => {
   const [data, setData] = useState<DistributionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchDistributionData() {
+    const fetchDistributionData = async () => {
       try {
         setLoading(true);
         const response = await fetch(
@@ -114,7 +118,7 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchDistributionData();
   }, [leagueId, week, matchupId]);
@@ -419,4 +423,4 @@ export function TeamDistributionChart({ leagueId, week, matchupId }: TeamDistrib
       </CardContent>
     </Card>
   );
-}
+};

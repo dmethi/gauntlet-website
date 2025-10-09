@@ -131,6 +131,7 @@ export const saveReport = async (
 
     // Serialize report to JSON
     const jsonContent = JSON.stringify(report, null, 2);
+    // eslint-disable-next-line no-undef
     const fileSize = Buffer.byteLength(jsonContent, 'utf8');
 
     // Write to temp file first (atomic write)

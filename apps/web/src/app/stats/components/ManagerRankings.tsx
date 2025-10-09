@@ -6,13 +6,13 @@ import { TrendingUp } from 'lucide-react';
 import type { GradeTxn, TeamInfo } from '../types';
 import { ManagerDetailModal } from './ManagerDetailModal';
 
-export function ManagerRankings({
+export const ManagerRankings = ({
   transactions,
   allTeams,
 }: {
   transactions: GradeTxn[];
   allTeams: Map<string, TeamInfo>;
-}) {
+}) => {
   const [selectedManager, setSelectedManager] = useState<string | null>(null);
 
   const managerStats = useMemo(() => {
@@ -156,4 +156,4 @@ export function ManagerRankings({
       )}
     </>
   );
-}
+};

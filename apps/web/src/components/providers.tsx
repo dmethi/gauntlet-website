@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { useState } from 'react';
 
 // Enhanced React Query configuration for optimal caching
-function makeQueryClient() {
+const makeQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
@@ -25,11 +25,11 @@ function makeQueryClient() {
       },
     },
   });
-}
+};
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
-function getQueryClient() {
+const getQueryClient = () => {
   if (typeof window === 'undefined') {
     // Server: always create a new query client
     return makeQueryClient();
@@ -38,7 +38,7 @@ function getQueryClient() {
     if (!browserQueryClient) browserQueryClient = makeQueryClient();
     return browserQueryClient;
   }
-}
+};
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   const queryClient = getQueryClient();

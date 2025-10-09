@@ -4,7 +4,7 @@ import { getDraftByLeague } from '@/lib/api-replacements';
 // This route needs to be dynamic since it uses query parameters
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   try {
     const leagueId = request.nextUrl.searchParams.get('leagueId');
 
@@ -33,4 +33,4 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+};

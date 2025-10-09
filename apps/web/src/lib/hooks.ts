@@ -51,7 +51,7 @@ const getLeagueDataById = async (leagueId: string): Promise<LeagueData> => {
   return res.json();
 };
 
-export function useLeagueDataById(leagueId?: string) {
+export const useLeagueDataById = (leagueId?: string) => {
   const { data: league, isLoading: loading } = useQuery<LeagueData>({
     queryKey: ['leagueData', leagueId],
     queryFn: () => getLeagueDataById(leagueId!),
@@ -155,7 +155,7 @@ export function useLeagueDataById(leagueId?: string) {
     weeklyAverages,
     seasonal: seasonal?.data,
   };
-}
+};
 
 const getTeamData = async (teamId: string): Promise<Roster> => {
   const res = await fetch(`/api/team/${teamId}`);
@@ -165,7 +165,7 @@ const getTeamData = async (teamId: string): Promise<Roster> => {
   return res.json();
 };
 
-export function useTeamData(teamId: string) {
+export const useTeamData = (teamId: string) => {
   const {
     data: team,
     isLoading: loading,
@@ -178,12 +178,12 @@ export function useTeamData(teamId: string) {
   });
 
   return { team, loading, error };
-}
+};
 
 // useSeasonalAggregates moved to @/features/stats/hooks/useSeasonAggregates.ts
 // Re-exported at bottom of file for backwards compatibility
 
-export function useRosterDetails(leagueId?: string, rosterId?: number) {
+export const useRosterDetails = (leagueId?: string, rosterId?: number) => {
   return useQuery<RosterDetailsResponse>({
     queryKey: ['roster', leagueId, rosterId],
     queryFn: async () => {
@@ -193,9 +193,9 @@ export function useRosterDetails(leagueId?: string, rosterId?: number) {
     },
     enabled: Boolean(leagueId && rosterId),
   });
-}
+};
 
-export function useLeagueTransactions(leagueId?: string) {
+export const useLeagueTransactions = (leagueId?: string) => {
   return useQuery<LeagueTransactionsResponse>({
     queryKey: ['transactions', leagueId],
     queryFn: async () => {
@@ -205,9 +205,9 @@ export function useLeagueTransactions(leagueId?: string) {
     },
     enabled: Boolean(leagueId),
   });
-}
+};
 
-export function usePlayoffBracket(leagueId?: string) {
+export const usePlayoffBracket = (leagueId?: string) => {
   return useQuery<PlayoffBracketResponse>({
     queryKey: ['playoffBracket', leagueId],
     queryFn: async () => {
@@ -233,14 +233,14 @@ export function usePlayoffBracket(leagueId?: string) {
     },
     enabled: Boolean(leagueId),
   });
-}
+};
 
 // useWeekRollups moved to @/features/stats/hooks/useWeekStats.ts
 // useSeasonSuperlatives moved to @/features/stats/hooks/useSuperlatives.ts
 // Re-exported at bottom of file for backwards compatibility
 
 // Matchups hook
-export function useMatchups(leagueId: string, week: number) {
+export const useMatchups = (leagueId: string, week: number) => {
   return useQuery<MatchupsResponse>({
     queryKey: ['matchups', leagueId, week],
     queryFn: async () => {
@@ -264,9 +264,9 @@ export function useMatchups(leagueId: string, week: number) {
     // Note: onError and onSuccess are deprecated in newer versions of React Query
     // Consider using useEffect or error boundaries for error handling
   });
-}
+};
 
-export function useMatchup(leagueId: string, week: number, matchupId: number) {
+export const useMatchup = (leagueId: string, week: number, matchupId: number) => {
   return useQuery<SingleMatchupResponse>({
     queryKey: ['matchup', leagueId, week, matchupId],
     queryFn: async () => {
@@ -277,10 +277,10 @@ export function useMatchup(leagueId: string, week: number, matchupId: number) {
     enabled: Boolean(leagueId && week && matchupId),
     select: data => data,
   });
-}
+};
 
 // Hook for fetching multiple players by IDs
-export function usePlayers(playerIds: string[]) {
+export const usePlayers = (playerIds: string[]) => {
   return useQuery<PlayersResponse>({
     queryKey: ['players', 'batch', playerIds.sort()], // Sort for consistent cache key
     queryFn: async () => {
@@ -304,10 +304,10 @@ export function usePlayers(playerIds: string[]) {
     enabled: playerIds.length > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes - player data doesn't change often
   });
-}
+};
 
 // Hook for fetching a single player
-export function usePlayer(playerId: string) {
+export const usePlayer = (playerId: string) => {
   return useQuery<{ player: PlayerInfo }>({
     queryKey: ['player', playerId],
     queryFn: async () => {
@@ -318,10 +318,10 @@ export function usePlayer(playerId: string) {
     enabled: Boolean(playerId),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}
+};
 
 // Hook for fetching player stats for multiple players
-export function usePlayerStats(playerIds: string[], season: string, week: number) {
+export const usePlayerStats = (playerIds: string[], season: string, week: number) => {
   return useQuery<PlayerStatsResponse>({
     queryKey: ['playerStats', 'batch', playerIds.sort(), season, week],
     queryFn: async () => {
@@ -344,10 +344,10 @@ export function usePlayerStats(playerIds: string[], season: string, week: number
     enabled: playerIds.length > 0 && Boolean(season) && Boolean(week),
     staleTime: 2 * 60 * 1000, // 2 minutes - stats are more dynamic than player info
   });
-}
+};
 
 // Hook for fetching a single player's stats
-export function usePlayerStatsSingle(playerId: string, season: string, week: number) {
+export const usePlayerStatsSingle = (playerId: string, season: string, week: number) => {
   return useQuery<PlayerStats & { playerId: string; week: number; season: string }>({
     queryKey: ['playerStats', playerId, season, week],
     queryFn: async () => {
@@ -358,7 +358,7 @@ export function usePlayerStatsSingle(playerId: string, season: string, week: num
     enabled: Boolean(playerId && season && week),
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
-}
+};
 
 // Re-export stats hooks for backwards compatibility
 export { useLeagueStats as useLeagueData } from '@/features/stats/hooks';

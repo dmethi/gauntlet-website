@@ -7,7 +7,7 @@ interface MainContentProps {
   onMobileMenuToggle?: () => void;
 }
 
-export function MainContent({ children, onMobileMenuToggle }: MainContentProps) {
+export const MainContent = ({ children, onMobileMenuToggle }: MainContentProps) => {
   return (
     <main className="flex-1 overflow-auto bg-background min-w-0 w-full">
       <header className="lg:hidden sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -22,4 +22,4 @@ export function MainContent({ children, onMobileMenuToggle }: MainContentProps) 
       <div className="p-4 sm:p-6 min-w-0 w-full">{children}</div>
     </main>
   );
-}
+};

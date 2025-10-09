@@ -5,7 +5,7 @@
 /**
  * Calculate median of an array of numbers
  */
-export function median(values: number[]): number {
+export const median = (values: number[]): number => {
   if (values.length === 0) return 0;
 
   const sorted = [...values].sort((a, b) => a - b);
@@ -18,22 +18,22 @@ export function median(values: number[]): number {
     // Odd number of values - middle value
     return sorted[mid];
   }
-}
+};
 
 /**
  * Calculate mean (average) of an array of numbers
  */
-export function mean(values: number[]): number {
+export const mean = (values: number[]): number => {
   if (values.length === 0) return 0;
 
   const sum = values.reduce((acc, val) => acc + val, 0);
   return sum / values.length;
-}
+};
 
 /**
  * Calculate standard deviation
  */
-export function standardDeviation(values: number[]): number {
+export const standardDeviation = (values: number[]): number => {
   if (values.length === 0) return 0;
 
   const avg = mean(values);
@@ -41,12 +41,12 @@ export function standardDeviation(values: number[]): number {
   const avgSquaredDiff = mean(squaredDiffs);
 
   return Math.sqrt(avgSquaredDiff);
-}
+};
 
 /**
  * Calculate percentiles
  */
-export function percentile(values: number[], p: number): number {
+export const percentile = (values: number[], p: number): number => {
   if (values.length === 0) return 0;
   if (p < 0 || p > 100) throw new Error('Percentile must be between 0 and 100');
 
@@ -61,4 +61,4 @@ export function percentile(values: number[], p: number): number {
   }
 
   return sorted[lower] * (1 - weight) + sorted[upper] * weight;
-}
+};

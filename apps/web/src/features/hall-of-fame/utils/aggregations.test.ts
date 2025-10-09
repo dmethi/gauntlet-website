@@ -1,15 +1,15 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   calculateRollingWindows,
   calculateSeasonalData,
   calculateStreaks,
+  type EnhancedMatchup,
   findBestRollingWindows,
   findLongestStreaks,
   findSeasonalRecords,
   type RollingWindowData,
   type SeasonalData,
   type StreakData,
-  type EnhancedMatchup,
 } from './aggregations';
 import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
 

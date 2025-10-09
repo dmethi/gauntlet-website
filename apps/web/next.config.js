@@ -6,12 +6,12 @@ const nextConfig = {
   transpilePackages: ['@gauntlet/lib'],
   webpack: (config, { isServer }) => {
     config.resolve.alias['@'] = path.resolve(__dirname, './src');
-    
+
     if (isServer) {
       // Add Prisma plugin to handle monorepo setup
       config.plugins = [...config.plugins, new PrismaPlugin()];
     }
-    
+
     return config;
   },
   eslint: {

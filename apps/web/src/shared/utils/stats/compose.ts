@@ -3,13 +3,13 @@
  */
 
 import { createStatsClient } from '@/lib/sleeper/unified-client';
-import { getStarterPositionPoints, aggregatePositionPoints, TRACKED_POSITIONS } from './positions';
-import { getTeamAndOpponentPoints, aggregateTeamPoints } from './teams';
+import { aggregatePositionPoints, getStarterPositionPoints, TRACKED_POSITIONS } from './positions';
+import { aggregateTeamPoints, getTeamAndOpponentPoints } from './teams';
 import { rank, rankWithinLeagues } from './ranks';
-import { median, mean } from './medians';
-import { buildTeamInfoMap, buildRosterLeagueMap } from './join';
+import { mean, median } from './medians';
+import { buildRosterLeagueMap, buildTeamInfoMap } from './join';
 import type { SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
-import type { TrackedPosition, PositionPoints } from './positions';
+import type { PositionPoints, TrackedPosition } from './positions';
 import type { TeamWeekData } from './teams';
 import type { TeamInfo } from './join';
 
@@ -148,7 +148,7 @@ export interface PlainStatsDataset {
   >;
 }
 
-export async function buildStatsDataset({
+export const buildStatsDataset = async ({
   leagueIds,
   labels,
   weekRange,
@@ -156,9 +156,7 @@ export async function buildStatsDataset({
   leagueIds: string[];
   labels: string[];
   weekRange: { from: number; to: number };
-}): Promise<StatsDataset> {
-  console.log('[DEBUG] buildStatsDataset: starting with', { leagueIds, labels, weekRange });
-
+}): Promise<StatsDataset> => {
   // Create stats client instance
   const statsClient = createStatsClient();
 
@@ -171,12 +169,6 @@ export async function buildStatsDataset({
     from: weekRange.from,
     to: Math.min(weekRange.to, currentWeek),
   };
-  console.log('[DEBUG] buildStatsDataset: NFL state processed', {
-    nflState,
-    stateWeek,
-    currentWeek,
-    actualRange,
-  });
 
   // 2. Fetch league data and players index in parallel
   const [leaguesData, playersIndex] = await Promise.all([
@@ -211,10 +203,8 @@ export async function buildStatsDataset({
     rosters: rostersMap,
     users: usersMap,
   });
-  console.log('[DEBUG] buildStatsDataset: teamInfoMap built', teamInfoMap.size, 'teams');
 
   const rosterLeagueMap = buildRosterLeagueMap(leaguesData, rostersMap);
-  console.log('[DEBUG] buildStatsDataset: rosterLeagueMap built', rosterLeagueMap.size, 'mappings');
 
   // 5. Fetch matchups for all weeks in range - keep leagues separated
   const allMatchups = new Map<number, Map<string, SleeperMatchup[]>>();
@@ -232,7 +222,6 @@ export async function buildStatsDataset({
   }
 
   // 5.5. Fetch weekly player stats for player breakdowns
-  console.log('[DEBUG] buildStatsDataset: fetching weekly player stats');
   const weeklyPlayerStatsMap = new Map<number, Record<string, any>>();
 
   for (let week = actualRange.from; week <= actualRange.to; week++) {
@@ -241,27 +230,11 @@ export async function buildStatsDataset({
   }
 
   // 6. Calculate team and position points
-  console.log(
-    '[DEBUG] buildStatsDataset: calling getTeamAndOpponentPoints with',
-    allMatchups.size,
-    'weeks',
-  );
   const teamWeeklyData = getTeamAndOpponentPoints({ matchups: allMatchups });
-  console.log(
-    '[DEBUG] buildStatsDataset: getTeamAndOpponentPoints returned',
-    teamWeeklyData.size,
-    'weeks',
-  );
 
   const positionWeeklyData = getStarterPositionPoints({ matchups: allMatchups, playersIndex });
-  console.log(
-    '[DEBUG] buildStatsDataset: getStarterPositionPoints returned',
-    positionWeeklyData.size,
-    'weeks',
-  );
 
   // 6.5. Build weekly player breakdowns
-  console.log('[DEBUG] buildStatsDataset: building weekly player breakdowns');
   const weeklyPlayerData = new Map<number, Map<string, WeeklyPlayerData>>();
 
   for (let week = actualRange.from; week <= actualRange.to; week++) {
@@ -313,15 +286,15 @@ export async function buildStatsDataset({
     weeklyPlayerData.set(week, weekPlayerDataMap);
   }
 
-  console.log(
-    '[DEBUG] buildStatsDataset: weekly player data built for',
-    weeklyPlayerData.size,
-    'weeks',
-  );
-
   // 7. Calculate weekly medians and averages
-  const weeklyMedians = new Map<number, any>();
-  const weeklyAverages = new Map<number, any>();
+  const weeklyMedians = new Map<
+    number,
+    { teamScores: number; opponentScores: number; positions: Map<TrackedPosition, number> }
+  >();
+  const weeklyAverages = new Map<
+    number,
+    { teamScores: number; opponentScores: number; positions: Map<TrackedPosition, number> }
+  >();
 
   for (let week = actualRange.from; week <= actualRange.to; week++) {
     const weekTeamData = teamWeeklyData.get(week) || [];
@@ -356,17 +329,7 @@ export async function buildStatsDataset({
   }
 
   // 8. Calculate season aggregates
-  console.log(
-    '[DEBUG] buildStatsDataset: calling aggregateTeamPoints with teamWeeklyData',
-    teamWeeklyData.size,
-    'weeks',
-  );
   const teamSeasonTotals = aggregateTeamPoints(teamWeeklyData, actualRange);
-  console.log(
-    '[DEBUG] buildStatsDataset: aggregateTeamPoints returned',
-    teamSeasonTotals.size,
-    'rosters',
-  );
 
   const positionSeasonTotals = aggregatePositionPoints(positionWeeklyData, actualRange);
 
@@ -391,16 +354,10 @@ export async function buildStatsDataset({
 
   // 10. Build final dataset
   const teams = new Map<string, TeamStatsData>();
-  console.log(
-    '[DEBUG] buildStatsDataset: building teams from teamSeasonTotals',
-    teamSeasonTotals.size,
-    'entries',
-  );
 
   for (const [teamKey, totals] of teamSeasonTotals) {
     const info = teamInfoMap.get(teamKey);
     if (!info) {
-      console.log('[DEBUG] buildStatsDataset: no team info found for teamKey', teamKey);
       continue;
     }
 
@@ -527,17 +484,6 @@ export async function buildStatsDataset({
     });
   }
 
-  console.log('[DEBUG] buildStatsDataset: final dataset built', {
-    currentWeek,
-    currentSeason: nflState.season,
-    leagues: leaguesData.length,
-    weekRange: actualRange,
-    teamsCount: teams.size,
-    positionsCount: positions.size,
-    weeklyMediansCount: weeklyMedians.size,
-    weeklyAveragesCount: weeklyAverages.size,
-  });
-
   return {
     currentWeek,
     currentSeason: nflState.season,
@@ -549,17 +495,12 @@ export async function buildStatsDataset({
     weeklyMedians,
     weeklyAverages,
   };
-}
+};
 
 /**
  * Convert non-serializable Maps in StatsDataset to plain arrays/objects for client props
  */
-export function serializeStatsDataset(ds: StatsDataset): PlainStatsDataset {
-  console.log('[DEBUG] serializeStatsDataset: starting serialization', {
-    teamsCount: ds.teams.size,
-    positionsCount: ds.positions.size,
-  });
-
+export const serializeStatsDataset = (ds: StatsDataset): PlainStatsDataset => {
   const positionsPlain: PlainStatsDataset['positions'] = [];
   for (const [pos, posData] of ds.positions.entries()) {
     const teamsArr: Array<[string, any]> = [];
@@ -576,7 +517,6 @@ export function serializeStatsDataset(ds: StatsDataset): PlainStatsDataset {
   }
 
   const teamsArr: Array<[string, TeamStatsData]> = Array.from(ds.teams.entries());
-  console.log('[DEBUG] serializeStatsDataset: teams array built', teamsArr.length, 'teams');
 
   // Serialize weekly player data
   const weeklyPlayerDataPlain: PlainStatsDataset['weeklyPlayerData'] = {};
@@ -587,12 +527,12 @@ export function serializeStatsDataset(ds: StatsDataset): PlainStatsDataset {
   const weeklyMediansPlain: PlainStatsDataset['weeklyMedians'] = {};
   for (const [week, w] of ds.weeklyMedians.entries()) {
     const posVals: Record<TrackedPosition, number> = {
-      QB: 0 as number,
-      RB: 0 as number,
-      WR: 0 as number,
-      TE: 0 as number,
-      DEF: 0 as number,
-    } as any;
+      QB: 0,
+      RB: 0,
+      WR: 0,
+      TE: 0,
+      DEF: 0,
+    };
     for (const p of TRACKED_POSITIONS) {
       posVals[p] = w.positions.get(p) || 0;
     }
@@ -633,4 +573,4 @@ export function serializeStatsDataset(ds: StatsDataset): PlainStatsDataset {
     weeklyMedians: weeklyMediansPlain,
     weeklyAverages: weeklyAveragesPlain,
   };
-}
+};

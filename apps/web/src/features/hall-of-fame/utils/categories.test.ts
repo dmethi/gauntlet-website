@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   ALL_HALL_OF_FAME_CATEGORIES,
-  WEEKLY_TEAM_CATEGORIES,
-  WEEKLY_MATCHUP_CATEGORIES,
   getCategoriesGrouped,
+  WEEKLY_MATCHUP_CATEGORIES,
+  WEEKLY_TEAM_CATEGORIES,
 } from './categories';
 
 describe('categories', () => {

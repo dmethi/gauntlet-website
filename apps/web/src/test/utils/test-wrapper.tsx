@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render as rtlRender, RenderOptions } from '@testing-library/react';
+import { RenderOptions, render as rtlRender } from '@testing-library/react';
 
 /**
  * Creates a new QueryClient for each test

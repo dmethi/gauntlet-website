@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayerById } from '@/data/players-loader';
 
-export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
+export const GET = async (_request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const playerId = params.id;
 
@@ -24,4 +24,4 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     console.error('Error fetching player:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+};

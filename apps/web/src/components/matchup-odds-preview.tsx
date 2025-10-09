@@ -7,14 +7,14 @@ import { AlertCircle, Zap } from 'lucide-react';
 import type { MatchupOddsData, MatchupOddsPreviewProps } from '@/features/matchups/types';
 import { formatOdds } from '@/shared/utils/formatting';
 
-export function MatchupOddsPreview({
+export const MatchupOddsPreview = ({
   leagueId,
   week,
   matchupId,
   teamAName,
   teamBName,
   className = '',
-}: MatchupOddsPreviewProps) {
+}: MatchupOddsPreviewProps) => {
   const [oddsData, setOddsData] = useState<MatchupOddsData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -138,4 +138,4 @@ export function MatchupOddsPreview({
       </div>
     </div>
   );
-}
+};

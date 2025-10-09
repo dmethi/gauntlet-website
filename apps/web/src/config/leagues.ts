@@ -23,20 +23,20 @@ export const ALL_LEAGUES = [...CURRENT_LEAGUES];
 /**
  * Get league by ID without database
  */
-export function getLeagueConfig(leagueId: string) {
+export const getLeagueConfig = (leagueId: string) => {
   return ALL_LEAGUES.find(l => l.id === leagueId);
-}
+};
 
 /**
  * Get current season leagues
  */
-export function getCurrentLeagues() {
+export const getCurrentLeagues = () => {
   return CURRENT_LEAGUES;
-}
+};
 
 /**
  * Get leagues by season
  */
-export function getLeaguesBySeason(season: number) {
+export const getLeaguesBySeason = (season: number) => {
   return ALL_LEAGUES.filter(l => l.season === season);
-}
+};

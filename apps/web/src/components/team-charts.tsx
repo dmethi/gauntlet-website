@@ -33,7 +33,7 @@ interface TeamChartsProps {
   weeklyData: WeeklyData[];
 }
 
-function useResponsiveContainerMobileFix() {
+const useResponsiveContainerMobileFix = () => {
   useEffect(() => {
     // Recharts ResponsiveContainer sometimes measures width as 0 on initial mount
     // on mobile devices. Trigger a resize after mount and on orientation change.
@@ -45,9 +45,9 @@ function useResponsiveContainerMobileFix() {
       window.removeEventListener('orientationchange', trigger);
     };
   }, []);
-}
+};
 
-function useWindowSizeKey(): number {
+const useWindowSizeKey = (): number => {
   // Fast, zero-deps window size subscription to trigger remount on size changes
   const subscribe = (cb: () => void) => {
     window.addEventListener('resize', cb);
@@ -61,9 +61,9 @@ function useWindowSizeKey(): number {
   const getServerSnapshot = () => 0;
   const width = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   return useMemo(() => width, [width]);
-}
+};
 
-function useElementSize<T extends HTMLElement>() {
+const useElementSize = <T extends HTMLElement>() => {
   const elementRef = useRef<T | null>(null);
   const [size, setSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
@@ -84,12 +84,12 @@ function useElementSize<T extends HTMLElement>() {
   }, []);
 
   return { elementRef, size } as const;
-}
+};
 
-export function TeamPerformanceChart({
+export const TeamPerformanceChart = ({
   weeklyData,
   teamId,
-}: TeamChartsProps & { teamId?: string }) {
+}: TeamChartsProps & { teamId?: string }) => {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
@@ -150,12 +150,12 @@ export function TeamPerformanceChart({
       </div>
     </div>
   );
-}
+};
 
-export function TeamExpectedPerformanceChart({
+export const TeamExpectedPerformanceChart = ({
   weeklyData,
   teamId,
-}: TeamChartsProps & { teamId?: string }) {
+}: TeamChartsProps & { teamId?: string }) => {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
@@ -206,7 +206,7 @@ export function TeamExpectedPerformanceChart({
       </div>
     </div>
   );
-}
+};
 
 // Positional scoring bar chart (Team vs Opponent vs League Avg)
 export interface PositionalScoringRow {
@@ -216,13 +216,13 @@ export interface PositionalScoringRow {
   leagueAverage: number;
 }
 
-export function TeamPositionalBarChart({
+export const TeamPositionalBarChart = ({
   data,
   teamId,
 }: {
   data: PositionalScoringRow[];
   teamId?: string;
-}) {
+}) => {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const chartColors = useChartColors();
@@ -264,7 +264,7 @@ export function TeamPositionalBarChart({
       </div>
     </div>
   );
-}
+};
 
 // Normalized radar (0..1) per position for the selected team
 export interface PositionalNormalizedRow {
@@ -272,7 +272,7 @@ export interface PositionalNormalizedRow {
   value: number; // 0..1
 }
 
-export function TeamPositionalRadarChart({
+export const TeamPositionalRadarChart = ({
   data,
   teamName = 'Team',
   teamId,
@@ -282,7 +282,7 @@ export function TeamPositionalRadarChart({
   teamName?: string;
   teamId?: string;
   comparisons?: Array<{ name: string; color: string; data: PositionalNormalizedRow[] }>;
-}) {
+}) => {
   useResponsiveContainerMobileFix();
   const { elementRef, size } = useElementSize<HTMLDivElement>();
   const { theme } = useTheme();
@@ -341,4 +341,4 @@ export function TeamPositionalRadarChart({
       </div>
     </div>
   );
-}
+};

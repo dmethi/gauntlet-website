@@ -1,15 +1,15 @@
 import { z } from 'zod';
 import type {
-  WeeklyRecapReport,
-  ReportMetadata,
-  LeagueOverviewSection,
-  MatchupNarrativeSection,
+  ClosingCommentarySection,
   HallOfFameSection,
   HallOfShameSection,
+  LeagueOverviewSection,
+  MatchupNarrativeSection,
   PowerRankingsSection,
+  ReportMetadata,
   StandingsSection,
   UpcomingMatchupsSection,
-  ClosingCommentarySection,
+  WeeklyRecapReport,
 } from './types';
 
 /**

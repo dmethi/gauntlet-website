@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatNumber, formatDelta, formatCompact } from './numbers';
+import { describe, expect, it } from 'vitest';
+import { formatCompact, formatDelta, formatNumber } from './numbers';
 
 describe('formatNumber', () => {
   it('formats with default 1 decimal', () => {

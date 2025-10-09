@@ -242,7 +242,7 @@ export interface MatchupOdds {
 /**
  * League-wide odds and probabilities
  */
-export interface LeagueWideOdds {
+export interface LeagueWideOddsType {
   week: number;
   highestScorer: TeamOdds[];
   lowestScorer: TeamOdds[];

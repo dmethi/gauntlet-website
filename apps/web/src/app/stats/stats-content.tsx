@@ -22,7 +22,7 @@ interface StatsContentProps {
   leagues: Array<{ id: string; name: string; season: number }>;
 }
 
-export function StatsContent({ dataset, searchParams }: StatsContentProps) {
+export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
   const teamsMap = useMemo(() => new Map(dataset.teams), [dataset.teams]);
   const allTeamEntries = useMemo(() => Array.from(teamsMap.entries()), [teamsMap]);
 
@@ -162,4 +162,4 @@ export function StatsContent({ dataset, searchParams }: StatsContentProps) {
       </Tabs>
     </div>
   );
-}
+};

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { ManagerProfile } from '../types';
 
 export interface ManagerFilterOptions {

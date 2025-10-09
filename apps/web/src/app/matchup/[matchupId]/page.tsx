@@ -9,8 +9,8 @@ import {
   type PlayerInfo,
   type PlayerStats,
   useMatchup,
-  usePlayerStats,
   usePlayers,
+  usePlayerStats,
 } from '@/lib/hooks';
 import ContentLoader from 'react-content-loader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -59,14 +59,14 @@ interface PlayerRowProps {
   position?: string;
 }
 
-function PlayerRow({
+const PlayerRow = ({
   playerId,
   playerInfo,
   playerStats,
   points,
   isStarter,
   position,
-}: PlayerRowProps) {
+}: PlayerRowProps) => {
   // Use actual player data if available, fallback to player ID
   const displayName = playerInfo?.fullName || `Player ${playerId}`;
   const playerPosition = playerInfo?.position || position || 'UNKNOWN';
@@ -165,7 +165,7 @@ function PlayerRow({
       </td>
     </tr>
   );
-}
+};
 
 interface TeamRosterProps {
   team: {
@@ -183,13 +183,13 @@ interface TeamRosterProps {
   statsLoading?: boolean;
 }
 
-function TeamRoster({
+const TeamRoster = ({
   team,
   isWinner,
   playersData,
   playerStatsData,
   statsLoading,
-}: TeamRosterProps) {
+}: TeamRosterProps) => {
   // Parse the points data
   const startersPointsArray = Array.isArray(team.startersPoints) ? team.startersPoints : [];
   const playersPointsObj = typeof team.playersPoints === 'object' ? team.playersPoints : {};
@@ -291,9 +291,9 @@ function TeamRoster({
       </CardContent>
     </Card>
   );
-}
+};
 
-function MatchupDetailPageContent({ params }: { params: { matchupId: string } }) {
+const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } }) => {
   const searchParams = useSearchParams();
   const week = searchParams.get('week');
   const weekNumber = week ? parseInt(week) : 1;
@@ -935,7 +935,7 @@ function MatchupDetailPageContent({ params }: { params: { matchupId: string } })
       </Tabs>
     </Container>
   );
-}
+};
 
 export default function MatchupDetailPage({ params }: { params: { matchupId: string } }) {
   return (

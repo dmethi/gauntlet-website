@@ -6,10 +6,10 @@ import {
   getUsersByLeague,
 } from '@/lib/api-replacements';
 
-export async function GET(
+export const GET = async (
   _request: NextRequest,
   { params }: { params: { leagueId: string; season: string } },
-) {
+) => {
   try {
     const { leagueId, season } = params;
 
@@ -208,4 +208,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

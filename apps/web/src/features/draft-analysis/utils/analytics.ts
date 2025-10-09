@@ -5,19 +5,19 @@
 
 import { MockDraft } from '@/lib/draft-generator';
 import type {
+  DraftAnalytics,
+  MarketShape,
+  MarketShapePoint,
+  NominationEffect,
+  NominationOrderAnalysis,
+  PlayerComparison,
   PositionInflation,
   PositionQuartile,
   PositionQuartileBreakdown,
-  MarketShapePoint,
-  MarketShape,
   ReplacementCost,
   TierAssignment,
   TierMethod,
   TierShiftCount,
-  NominationEffect,
-  PlayerComparison,
-  NominationOrderAnalysis,
-  DraftAnalytics,
 } from '@/features/draft-analysis/types';
 
 // Re-export for backward compatibility
@@ -38,7 +38,7 @@ export type {
 };
 
 // Mock data generator - matches expected structure
-export function generateMockAnalytics(draft1: MockDraft, draft2: MockDraft): DraftAnalytics {
+export const generateMockAnalytics = (draft1: MockDraft, draft2: MockDraft): DraftAnalytics => {
   // Helper function to calculate position stats using quartile averages
   const getPositionStats = (draft: MockDraft, position: string) => {
     const picks = draft.teams.flatMap(t => t.picks).filter(p => p.player.position === position);
@@ -505,4 +505,4 @@ export function generateMockAnalytics(draft1: MockDraft, draft2: MockDraft): Dra
       .slice(0, 10),
     spearman_rank_correlation: 0.76,
   };
-}
+};

@@ -23,13 +23,13 @@ import { formatOdds } from '@/shared/utils/formatting';
 
 // Inline Score Box Plot Component
 
-function ScoreBoxPlot({
+const ScoreBoxPlot = ({
   scores,
   maxScale,
   teamColor,
   width = 200,
   height = 20,
-}: ScoreBoxPlotProps) {
+}: ScoreBoxPlotProps) => {
   // Calculate percentages based on scale from 0 to maxScale
   const p10Percent = (scores.p10 / maxScale) * 100;
   const p25Percent = ((scores.p10 + scores.median) / 2 / maxScale) * 100; // Approximate P25
@@ -127,7 +127,7 @@ function ScoreBoxPlot({
       </Tooltip>
     </TooltipProvider>
   );
-}
+};
 
 interface MatchupSimulationProps {
   leagueId: string;
@@ -136,12 +136,12 @@ interface MatchupSimulationProps {
   className?: string;
 }
 
-export function MatchupSimulation({
+export const MatchupSimulation = ({
   leagueId,
   week,
   matchupId,
   className = '',
-}: MatchupSimulationProps) {
+}: MatchupSimulationProps) => {
   const [simulationData, setSimulationData] = useState<SimulationData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -628,4 +628,4 @@ export function MatchupSimulation({
       </CardContent>
     </Card>
   );
-}
+};

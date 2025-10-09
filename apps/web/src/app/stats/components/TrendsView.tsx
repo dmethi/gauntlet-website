@@ -35,7 +35,7 @@ const mean = (arr: number[]): number => {
   return arr.reduce((sum, val) => sum + val, 0) / arr.length;
 };
 
-export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsViewProps) {
+export const TrendsView = ({ allTeamEntries, positionsMap, dataset }: TrendsViewProps) => {
   // Calculate league data for sorting (season view for consistency)
   const leagueData = useMemo(() => {
     const teams = allTeamEntries
@@ -1583,4 +1583,4 @@ export function TrendsView({ allTeamEntries, positionsMap, dataset }: TrendsView
       ))}
     </div>
   );
-}
+};

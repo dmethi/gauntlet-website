@@ -66,7 +66,7 @@ export interface SleeperUser {
   avatar?: string;
   metadata?: {
     team_name?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   is_owner?: boolean; // Present in league user responses (commissioner flag)
 }
@@ -96,7 +96,7 @@ export interface SleeperRoster {
     ppts?: number; // Potential points
     ppts_decimal?: number;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   league_id?: string; // Not in API response, but useful for multi-league contexts
   co_owners?: string[]; // User IDs of co-owners
 }
@@ -201,7 +201,7 @@ export interface SleeperDraft {
   start_time?: number;
   draft_order?: Record<string, number> | null; // user_id -> draft slot
   slot_to_roster_id?: Record<string, number>; // draft slot -> roster_id
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -226,7 +226,7 @@ export interface SleeperDraftPick {
     last_name?: string;
     injury_status?: string;
     first_name?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   is_keeper?: boolean | null;
   draft_id: string;
@@ -276,7 +276,7 @@ export interface SleeperTransaction {
     receiver: number; // roster_id
     amount: number;
   }>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

@@ -13,14 +13,14 @@ const data = playersData as unknown as PlayersData;
 const playersById = new Map<string, SleeperPlayer>();
 
 // Initialize index
-function initializePlayersIndex() {
+const initializePlayersIndex = () => {
   for (const [playerId, player] of Object.entries(data.players)) {
     playersById.set(playerId, player);
   }
 
   console.log(`✅ Loaded ${playersById.size} players from static data`);
   console.log(`✅ Data exported at: ${data.exportedAt}`);
-}
+};
 
 // Initialize on module load
 initializePlayersIndex();
@@ -29,21 +29,21 @@ initializePlayersIndex();
  * Get all players data (returns the full object)
  * Replaces: fetchWithCache('https://api.sleeper.app/v1/players/nfl')
  */
-export function getAllPlayers(): Record<string, SleeperPlayer> {
+export const getAllPlayers = (): Record<string, SleeperPlayer> => {
   return data.players;
-}
+};
 
 /**
  * Get a specific player by ID
  */
-export function getPlayerById(playerId: string): SleeperPlayer | undefined {
+export const getPlayerById = (playerId: string): SleeperPlayer | undefined => {
   return playersById.get(playerId);
-}
+};
 
 /**
  * Get multiple players by IDs
  */
-export function getPlayersByIds(playerIds: string[]): Record<string, SleeperPlayer> {
+export const getPlayersByIds = (playerIds: string[]): Record<string, SleeperPlayer> => {
   const result: Record<string, SleeperPlayer> = {};
 
   for (const playerId of playerIds) {
@@ -54,12 +54,12 @@ export function getPlayersByIds(playerIds: string[]): Record<string, SleeperPlay
   }
 
   return result;
-}
+};
 
 /**
  * Search players by name (case-insensitive)
  */
-export function searchPlayersByName(searchTerm: string): SleeperPlayer[] {
+export const searchPlayersByName = (searchTerm: string): SleeperPlayer[] => {
   const term = searchTerm.toLowerCase();
   const results: SleeperPlayer[] = [];
 
@@ -74,12 +74,12 @@ export function searchPlayersByName(searchTerm: string): SleeperPlayer[] {
   }
 
   return results.slice(0, 50); // Limit results for performance
-}
+};
 
 /**
  * Get players by position
  */
-export function getPlayersByPosition(position: string): SleeperPlayer[] {
+export const getPlayersByPosition = (position: string): SleeperPlayer[] => {
   const results: SleeperPlayer[] = [];
 
   for (const player of playersById.values()) {
@@ -89,12 +89,12 @@ export function getPlayersByPosition(position: string): SleeperPlayer[] {
   }
 
   return results;
-}
+};
 
 /**
  * Get players by team
  */
-export function getPlayersByTeam(team: string): SleeperPlayer[] {
+export const getPlayersByTeam = (team: string): SleeperPlayer[] => {
   const results: SleeperPlayer[] = [];
 
   for (const player of playersById.values()) {
@@ -104,14 +104,14 @@ export function getPlayersByTeam(team: string): SleeperPlayer[] {
   }
 
   return results;
-}
+};
 
 /**
  * Get data export info
  */
-export function getPlayersDataInfo() {
+export const getPlayersDataInfo = () => {
   return {
     exportedAt: data.exportedAt,
     totalPlayers: playersById.size,
   };
-}
+};

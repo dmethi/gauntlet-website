@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 // Fetch cached start/sit efficiency data (same logic as the API route)
-async function getStartSitEfficiencyData() {
+const getStartSitEfficiencyData = async () => {
   try {
     const currentDir = process.cwd();
     const projectRoot = currentDir.endsWith('/apps/web') ? currentDir.slice(0, -9) : currentDir;
@@ -45,9 +45,9 @@ async function getStartSitEfficiencyData() {
     console.warn('[Stats] Failed to load start/sit data:', error);
     return null;
   }
-}
+};
 
-export async function GET() {
+export const GET = async () => {
   try {
     // Use existing league configuration
     const leagueIds = CURRENT_LEAGUES.map(l => l.id);
@@ -73,4 +73,4 @@ export async function GET() {
     console.error('[API] /api/stats error:', error);
     return NextResponse.json({ error: 'Failed to load stats data' }, { status: 500 });
   }
-}
+};

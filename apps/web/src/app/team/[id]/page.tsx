@@ -202,7 +202,6 @@ export default function TeamPage({ params }: { params: { id: string } }) {
         <div className="flex items-center gap-4">
           <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold flex-shrink-0">
             {avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatarUrl}
                 alt={`${name} avatar`}

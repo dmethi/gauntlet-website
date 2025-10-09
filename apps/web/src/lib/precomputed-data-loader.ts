@@ -19,9 +19,8 @@ let precomputedMetadata: any | null = null;
 let isLoaded = false;
 
 // Load precomputed data using fetch (client-side compatible)
-async function loadPrecomputedData() {
+const loadPrecomputedData = async (): Promise<void> => {
   if (isLoaded) return;
-
   try {
     // Load all files in parallel
     const [draftsRes, analyticsRes, managerRes, metadataRes] = await Promise.all([
@@ -54,7 +53,7 @@ async function loadPrecomputedData() {
   }
 
   isLoaded = true;
-}
+};
 
 export interface PrecomputedDataStatus {
   available: boolean;
@@ -67,34 +66,34 @@ export interface PrecomputedDataStatus {
 /**
  * Get precomputed drafts data
  */
-export async function getPrecomputedDrafts(): Promise<{
+export const getPrecomputedDrafts = async (): Promise<{
   draft1: MockDraft;
   draft2: MockDraft;
-} | null> {
+} | null> => {
   await loadPrecomputedData();
   return precomputedDrafts;
-}
+};
 
 /**
  * Get precomputed league analytics
  */
-export async function getPrecomputedAnalytics(): Promise<DraftAnalytics | null> {
+export const getPrecomputedAnalytics = async (): Promise<DraftAnalytics | null> => {
   await loadPrecomputedData();
   return precomputedAnalytics;
-}
+};
 
 /**
  * Get precomputed manager analytics
  */
-export async function getPrecomputedManagerAnalytics(): Promise<ManagerAnalytics | null> {
+export const getPrecomputedManagerAnalytics = async (): Promise<ManagerAnalytics | null> => {
   await loadPrecomputedData();
   return precomputedManagerAnalytics;
-}
+};
 
 /**
  * Get precomputed data status and metadata
  */
-export function getPrecomputedDataStatus(): PrecomputedDataStatus {
+export const getPrecomputedDataStatus = (): PrecomputedDataStatus => {
   return {
     available: !!(precomputedDrafts && precomputedAnalytics && precomputedManagerAnalytics),
     timestamp: precomputedMetadata?.timestamp,
@@ -102,12 +101,12 @@ export function getPrecomputedDataStatus(): PrecomputedDataStatus {
     playerCount: precomputedMetadata?.playerCount,
     teamCount: precomputedMetadata?.teamCount,
   };
-}
+};
 
 /**
  * Check if precomputed data is fresh (less than 1 hour old)
  */
-export function isPrecomputedDataFresh(): boolean {
+export const isPrecomputedDataFresh = (): boolean => {
   if (!precomputedMetadata?.timestamp) return false;
 
   const generated = new Date(precomputedMetadata.timestamp);
@@ -115,12 +114,12 @@ export function isPrecomputedDataFresh(): boolean {
   const ageHours = (now.getTime() - generated.getTime()) / (1000 * 60 * 60);
 
   return ageHours < 1; // Consider fresh if less than 1 hour old
-}
+};
 
 /**
  * Get a summary of what data is available
  */
-export function getDataSummary() {
+export const getDataSummary = () => {
   const status = getPrecomputedDataStatus();
 
   if (!status.available) {
@@ -141,7 +140,7 @@ export function getDataSummary() {
     playerCount: status.playerCount,
     teamCount: status.teamCount,
   };
-}
+};
 
 // Development helper - log data status
 if (typeof window === 'undefined') {

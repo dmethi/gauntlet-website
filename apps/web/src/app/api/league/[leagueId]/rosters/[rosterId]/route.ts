@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  getCurrentWeek,
+  getMatchupsByWeek,
   getRostersByLeague,
   getUsersByLeague,
-  getMatchupsByWeek,
-  getCurrentWeek,
 } from '@/lib/api-replacements';
 
-export async function GET(
+export const GET = async (
   _request: NextRequest,
   { params }: { params: { leagueId: string; rosterId: string } },
-) {
+) => {
   try {
     const { leagueId, rosterId } = params;
     const rosterIdNumber = parseInt(rosterId, 10);
@@ -147,4 +147,4 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+};

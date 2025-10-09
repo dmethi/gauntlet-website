@@ -17,7 +17,9 @@ import { vi } from 'vitest';
  * });
  * ```
  */
-export const createMockAPIClient = (overrides = {}) => ({
+export const createMockAPIClient = (
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> => ({
   fetchLeague: vi.fn(),
   fetchRosters: vi.fn(),
   fetchMatchups: vi.fn(),
@@ -46,16 +48,21 @@ export const createMockAPIClient = (overrides = {}) => ({
  * ```
  */
 export const mockFetch = (responses: Record<string, unknown>): void => {
-  global.fetch = vi.fn((input: RequestInfo | URL) => {
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  global.fetch = vi.fn((input: string | URL | Request) => {
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.href
+          : (input as Request).url;
     const response = responses[url] || responses['*'];
 
     return Promise.resolve({
       ok: true,
-      json: async () => response,
-      text: async () => JSON.stringify(response),
+      json: async (): Promise<unknown> => response,
+      text: async (): Promise<string> => JSON.stringify(response),
       status: 200,
       statusText: 'OK',
-    } as Response);
+    } as unknown as Response);
   }) as typeof fetch;
 };

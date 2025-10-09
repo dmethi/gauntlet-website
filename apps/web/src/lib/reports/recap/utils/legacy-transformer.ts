@@ -5,7 +5,7 @@
  * Supports backwards compatibility for reports generated before RECAP-019.
  */
 
-import type { WeeklyRecapReport, MatchupNarrativeSection } from '../types';
+import type { MatchupNarrativeSection, WeeklyRecapReport } from '../types';
 
 interface LegacyReport {
   season: string;

@@ -9,12 +9,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/components/matchup-simulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
-import type { PlayerDetails, TeamRoster, MatchupDetails } from '@/features/matchups/types';
+import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/matchups/types';
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'FLEX', 'K', 'DEF'];
 
 // Safe avatar component with error handling
-function Avatar({
+const Avatar = ({
   src,
   alt,
   fallback,
@@ -24,7 +24,7 @@ function Avatar({
   alt: string;
   fallback: string;
   size?: 'sm' | 'md' | 'lg';
-}) {
+}) => {
   const [hasError, setHasError] = useState(false);
 
   const sizeClasses = {
@@ -52,9 +52,9 @@ function Avatar({
       onLoad={() => setHasError(false)}
     />
   );
-}
+};
 
-export default function MatchupDetailPage() {
+export default function MatchupDetailPage(): JSX.Element {
   const params = useParams();
   const router = useRouter();
   const { leagueId, week, matchupId } = params;
@@ -87,7 +87,7 @@ export default function MatchupDetailPage() {
 
         // Handle simulation data
         let simData = null;
-        let distributions: Record<string, any> = {};
+        const distributions: Record<string, any> = {};
 
         if (simulationResponse.ok) {
           simData = await simulationResponse.json();
@@ -305,7 +305,7 @@ export default function MatchupDetailPage() {
   );
 }
 
-function LoadingSkeleton() {
+const LoadingSkeleton = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -319,9 +319,9 @@ function LoadingSkeleton() {
       </div>
     </div>
   );
-}
+};
 
-function TeamScore({ team, isLeading }: { team: TeamRoster; isLeading: boolean }) {
+const TeamScore = ({ team, isLeading }: { team: TeamRoster; isLeading: boolean }) => {
   const completionPercentage =
     team.projectedPoints > 0 ? Math.min((team.points / team.projectedPoints) * 100, 100) : 0;
 
@@ -354,9 +354,9 @@ function TeamScore({ team, isLeading }: { team: TeamRoster; isLeading: boolean }
       </div>
     </div>
   );
-}
+};
 
-function TeamRosterCard({
+const TeamRosterCard = ({
   team,
   isLeading,
   maxProjection,
@@ -366,7 +366,7 @@ function TeamRosterCard({
   isLeading: boolean;
   maxProjection: number;
   playerDistributions: Record<string, any>;
-}) {
+}) => {
   const sortedStarters = [...team.starters].sort((a, b) => {
     const aIndex = POSITION_ORDER.indexOf(a.position);
     const bIndex = POSITION_ORDER.indexOf(b.position);
@@ -454,9 +454,9 @@ function TeamRosterCard({
       </CardContent>
     </Card>
   );
-}
+};
 
-function PlayerRow({
+const PlayerRow = ({
   player,
   maxProjection: _maxProjection,
   distribution,
@@ -464,7 +464,7 @@ function PlayerRow({
   player: PlayerDetails;
   maxProjection: number;
   distribution?: any;
-}) {
+}) => {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'out':
@@ -531,4 +531,4 @@ function PlayerRow({
       )} */}
     </div>
   );
-}
+};

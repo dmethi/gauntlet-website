@@ -4,12 +4,12 @@
  */
 
 import { sleeperClient } from './sleeper/unified-client';
-import { getCurrentLeagues, getLeagueConfig, ALL_LEAGUES } from '@/config/leagues';
+import { ALL_LEAGUES, getCurrentLeagues, getLeagueConfig } from '@/config/leagues';
 
 /**
  * Replace: prisma.league.findMany()
  */
-export async function getAllLeagues() {
+export const getAllLeagues = async () => {
   const leagues = await Promise.all(
     getCurrentLeagues().map(async config => {
       const sleeperData = await sleeperClient.fetchLeague(config.id);
@@ -22,12 +22,12 @@ export async function getAllLeagues() {
     }),
   );
   return leagues;
-}
+};
 
 /**
  * Replace: prisma.league.findUnique({ where: { id } })
  */
-export async function getLeagueById(leagueId: string) {
+export const getLeagueById = async (leagueId: string) => {
   const config = getLeagueConfig(leagueId);
   if (!config) return null;
 
@@ -38,12 +38,12 @@ export async function getLeagueById(leagueId: string) {
     name: config.name, // Override sleeper name with config name
     season: config.season, // Override sleeper season with config season
   };
-}
+};
 
 /**
  * Replace: prisma.roster.findMany({ where: { leagueId } })
  */
-export async function getRostersByLeague(leagueId: string) {
+export const getRostersByLeague = async (leagueId: string) => {
   console.log(`[DEBUG] getRostersByLeague called with leagueId: ${leagueId}`);
   const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
 
@@ -74,12 +74,12 @@ export async function getRostersByLeague(leagueId: string) {
     pointsFor: r.settings?.fpts || 0,
     pointsAgainst: r.settings?.fpts_against || 0,
   }));
-}
+};
 
 /**
  * Replace: prisma.matchup.findMany({ where: { leagueId, week } })
  */
-export async function getMatchupsByWeek(leagueId: string, week: number) {
+export const getMatchupsByWeek = async (leagueId: string, week: number) => {
   const matchups = await sleeperClient.fetchMatchups(leagueId, week);
   return matchups.map((m: any) => ({
     id: `${leagueId}-${week}-${m.roster_id}`,
@@ -92,12 +92,12 @@ export async function getMatchupsByWeek(leagueId: string, week: number) {
     players: m.players,
     starterPoints: m.starters_points,
   }));
-}
+};
 
 /**
  * Replace: prisma.user.findMany({ where: { leagues: { some: { id: leagueId } } } })
  */
-export async function getUsersByLeague(leagueId: string) {
+export const getUsersByLeague = async (leagueId: string) => {
   const users = await sleeperClient.fetchUsers(leagueId);
   return users.map((u: any) => ({
     id: u.user_id,
@@ -106,13 +106,13 @@ export async function getUsersByLeague(leagueId: string) {
     avatar: u.avatar,
     metadata: u.metadata,
   }));
-}
+};
 
 /**
  * Replace: prisma.player.findUnique({ where: { id } })
  * For player data, we'll fetch from Sleeper's player endpoint or use static data
  */
-export async function getPlayerById(playerId: string) {
+export const getPlayerById = async (playerId: string) => {
   // For now, return basic player info
   // You could cache all players locally or fetch from Sleeper
   return {
@@ -122,12 +122,12 @@ export async function getPlayerById(playerId: string) {
     team: 'Unknown',
     // Add more fields as needed
   };
-}
+};
 
 /**
  * Replace: prisma.transaction.findMany({ where: { leagueId, week } })
  */
-export async function getTransactionsByWeek(leagueId: string, week: number) {
+export const getTransactionsByWeek = async (leagueId: string, week: number) => {
   // Fetch from Sleeper transactions endpoint
   const response = await fetch(
     `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`,
@@ -184,12 +184,12 @@ export async function getTransactionsByWeek(leagueId: string, week: number) {
       settings: t.settings || {},
     };
   });
-}
+};
 
 /**
  * Get ALL transactions across all weeks for a league
  */
-export async function getAllTransactionsByLeague(leagueId: string) {
+export const getAllTransactionsByLeague = async (leagueId: string) => {
   // Import the player data loader for real player names
   const { getPlayerById } = await import('../data/players-loader');
 
@@ -272,20 +272,20 @@ export async function getAllTransactionsByLeague(leagueId: string) {
   allTransactions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return allTransactions;
-}
+};
 
 /**
  * Get current NFL week without database
  */
-export async function getCurrentWeek() {
+export const getCurrentWeek = async () => {
   const nflState = await sleeperClient.fetchNFLState();
   return nflState.week || 1;
-}
+};
 
 /**
  * Replace: prisma.draft.findUnique({ where: { leagueId } })
  */
-export async function getDraftByLeague(leagueId: string) {
+export const getDraftByLeague = async (leagueId: string) => {
   // First get league info to find draft ID
   const league = await sleeperClient.fetchLeague(leagueId);
   if (!league?.draft_id) {
@@ -318,17 +318,22 @@ export async function getDraftByLeague(leagueId: string) {
     metadata: draftInfo.metadata,
     createdAt: new Date(draftInfo.created),
   };
-}
+};
 
 /**
  * Calculate win probability without database
  * This runs the simulation in real-time
  */
-export async function calculateWinProbability(
+export const calculateWinProbability = async (
   team1Starters: string[],
   team2Starters: string[],
   week: number,
-) {
+): Promise<{
+  team1WinPct: number;
+  team2WinPct: number;
+  iterations: number;
+  source: string;
+}> => {
   const projections = await sleeperClient.fetchWeeklyProjections(week, '2025');
 
   // Simple simulation (can be expanded)
@@ -363,13 +368,13 @@ export async function calculateWinProbability(
     iterations,
     source: 'real-time-calculation',
   };
-}
+};
 
 /**
  * Compute weekly rollups from Sleeper API data
  * Replaces the database-heavy compute-weekly-rollups.ts
  */
-export async function computeWeeklyRollups(leagueId: string, week: number) {
+export const computeWeeklyRollups = async (leagueId: string, week: number) => {
   // Fetch all required data from Sleeper API
   const [matchups, league, rosters, users, projections] = await Promise.all([
     getMatchupsByWeek(leagueId, week),
@@ -488,4 +493,4 @@ export async function computeWeeklyRollups(leagueId: string, week: number) {
       computedAt: new Date().toISOString(),
     },
   };
-}
+};

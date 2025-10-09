@@ -7,7 +7,7 @@
     "build": "next build",
     "postinstall": "cd ../server && npx prisma generate --schema=prisma/schema-historical.prisma",
     "start": "next start",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",

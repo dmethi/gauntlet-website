@@ -25,11 +25,11 @@ import type { PlainStatsDataset } from '@/shared/utils/stats';
 import type { ScheduleAnalysisProps, TeamData, TeamInfo, TeamScore } from '@/features/stats';
 
 // Utility function for mean calculation
-function mean(values: number[]): number {
+const mean = (values: number[]): number => {
   return values.length > 0 ? values.reduce((sum, val) => sum + val, 0) / values.length : 0;
-}
+};
 
-export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisProps) {
+export const ScheduleAnalysis = ({ allTeamEntries, dataset }: ScheduleAnalysisProps) => {
   // State for selected team analysis
   const [selectedTeamKey, setSelectedTeamKey] = useState<string>(
     allTeamEntries.length > 0 ? allTeamEntries[0][0] : '',
@@ -1218,4 +1218,4 @@ export function ScheduleAnalysis({ allTeamEntries, dataset }: ScheduleAnalysisPr
       </CardContent>
     </Card>
   );
-}
+};

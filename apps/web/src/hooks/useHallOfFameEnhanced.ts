@@ -7,18 +7,18 @@ import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS } from '@/lib/constants';
 import { hallOfFameDataService } from '@/features/hall-of-fame/hooks/useHallOfFameData';
 import {
-  type RollingWindowData,
-  type SeasonalData,
-  type StreakData,
-  type EnhancedMatchup,
   calculateRollingWindows,
   calculateSeasonalData,
   calculateStreaks,
+  type EnhancedMatchup,
   findBestRollingWindows,
   findLongestStreaks,
   findSeasonalRecords,
+  type RollingWindowData,
+  type SeasonalData,
+  type StreakData,
 } from '@/features/hall-of-fame/utils';
-import { type HallOfFameRecord, calculateHallOfFameRecords } from '@/features/hall-of-fame/utils';
+import { calculateHallOfFameRecords, type HallOfFameRecord } from '@/features/hall-of-fame/utils';
 import { getAllCategories } from '@/features/hall-of-fame/utils';
 
 export interface PositionalDifferenceRecord {
@@ -40,14 +40,16 @@ export interface PositionalDifferenceRecord {
 /**
  * Calculate positional scoring differences for each matchup
  */
-function calculatePositionalDifferences(matchups: EnhancedMatchup[]): {
+const calculatePositionalDifferences = (
+  matchups: EnhancedMatchup[],
+): {
   QB: PositionalDifferenceRecord[];
   RB: PositionalDifferenceRecord[];
   WR: PositionalDifferenceRecord[];
   TE: PositionalDifferenceRecord[];
   K: PositionalDifferenceRecord[];
   DEF: PositionalDifferenceRecord[];
-} {
+} => {
   const positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const;
   const recordsByPosition: Record<string, PositionalDifferenceRecord[]> = {
     QB: [],
@@ -161,7 +163,7 @@ function calculatePositionalDifferences(matchups: EnhancedMatchup[]): {
     K: PositionalDifferenceRecord[];
     DEF: PositionalDifferenceRecord[];
   };
-}
+};
 
 export interface ComprehensiveHallOfFameData {
   // Weekly records
@@ -220,7 +222,7 @@ export interface ComprehensiveHallOfFameData {
 /**
  * Main hook for comprehensive Hall of Fame data
  */
-export function useHallOfFameEnhanced() {
+export const useHallOfFameEnhanced = () => {
   return useQuery({
     queryKey: ['hall-of-fame-enhanced', 'all', 'v2'], // Stable key
     queryFn: async (): Promise<ComprehensiveHallOfFameData> => {
@@ -305,12 +307,12 @@ export function useHallOfFameEnhanced() {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook for team-specific Hall of Fame records
  */
-export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
+export const useTeamHallOfFameEnhanced = (leagueId: string, rosterId: number) => {
   return useQuery({
     queryKey: ['hall-of-fame-enhanced', 'team', leagueId, rosterId],
     queryFn: async () => {
@@ -414,12 +416,12 @@ export function useTeamHallOfFameEnhanced(leagueId: string, rosterId: number) {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook for league-specific Hall of Fame records
  */
-export function useLeagueHallOfFameEnhanced(leagueId: string) {
+export const useLeagueHallOfFameEnhanced = (leagueId: string) => {
   return useQuery({
     queryKey: ['hall-of-fame-enhanced', 'league', leagueId],
     queryFn: async () => {
@@ -461,17 +463,17 @@ export function useLeagueHallOfFameEnhanced(leagueId: string) {
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};
 
 /**
  * Hook to get specific category records with filtering
  */
-export function useCategoryRecords(
+export const useCategoryRecords = (
   categoryId: string,
   scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime',
   leagueId?: string,
   season?: string,
-) {
+) => {
   return useQuery({
     queryKey: ['hall-of-fame-category', categoryId, scope, leagueId, season],
     queryFn: async () => {
@@ -510,4 +512,4 @@ export function useCategoryRecords(
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.ONE_WEEK,
   });
-}
+};

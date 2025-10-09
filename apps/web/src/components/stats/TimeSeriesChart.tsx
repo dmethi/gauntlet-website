@@ -2,15 +2,15 @@
 
 import React from 'react';
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ReferenceLine,
 } from 'recharts';
 
 export interface ChartSeries {
@@ -30,12 +30,12 @@ export interface TimeSeriesChartProps {
   viewMode?: 'raw' | 'rank24' | 'rankLeague';
 }
 
-export function TimeSeriesChart({
+export const TimeSeriesChart = ({
   series,
   overlays,
   height = 300,
   viewMode = 'raw',
-}: TimeSeriesChartProps) {
+}: TimeSeriesChartProps) => {
   // Transform data for Recharts format
   const weeks = new Set<number>();
   series.forEach(s => s.data.forEach(d => weeks.add(d.week)));
@@ -112,4 +112,4 @@ export function TimeSeriesChart({
       </LineChart>
     </ResponsiveContainer>
   );
-}
+};

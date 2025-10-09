@@ -62,25 +62,25 @@ interface ReportsResponse {
   reports: ReportListItem[];
 }
 
-async function fetchLeagues(): Promise<LeaguesResponse> {
+const fetchLeagues = async (): Promise<LeaguesResponse> => {
   const response = await fetch('/api/leagues');
   if (!response.ok) {
     throw new Error('Failed to fetch leagues');
   }
   return response.json();
-}
+};
 
-async function fetchReports(limit?: number): Promise<ReportsResponse> {
+const fetchReports = async (limit?: number): Promise<ReportsResponse> => {
   const url = limit ? `/api/reports/list?limit=${limit}` : '/api/reports/list';
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Failed to fetch reports');
   }
   return response.json();
-}
+};
 
 // Component to display recent reports
-function ReportsSection() {
+const ReportsSection = () => {
   const {
     data: reportsData,
     isLoading,
@@ -218,10 +218,10 @@ function ReportsSection() {
       </CardContent>
     </Card>
   );
-}
+};
 
 // Component to display league standings for both leagues
-function LeagueStandingsSection() {
+const LeagueStandingsSection = () => {
   const afcLeagueId = '1263744209295245312';
   const nfcLeagueId = '1263740549504962561';
 
@@ -447,9 +447,9 @@ function LeagueStandingsSection() {
       </CardContent>
     </Card>
   );
-}
+};
 
-export default function CompetitionPage() {
+export default function CompetitionPage(): JSX.Element {
   const {
     data: leaguesData,
     isLoading,

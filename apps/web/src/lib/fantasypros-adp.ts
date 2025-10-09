@@ -114,7 +114,7 @@ const FANTASYPROS_ADP_CSV = `"Rank","Player","Team","Bye","POS","Yahoo","Sleeper
 "92","Dak Prescott","DAL","10","QB10","83","111","91","95.0","84  +8"`;
 
 // Parse CSV data and populate the map
-function parseADPData() {
+const parseADPData = () => {
   const lines = FANTASYPROS_ADP_CSV.trim().split('\n');
   lines.slice(1).forEach(line => {
     // Skip header
@@ -135,23 +135,23 @@ function parseADPData() {
 
     adpDataMap.set(entry.player, entry);
   });
-}
+};
 
 // Initialize the data
 parseADPData();
 
 // Helper functions for ADP lookups
-export function getADPRank(playerName: string): number | null {
+export const getADPRank = (playerName: string): number | null => {
   const entry = adpDataMap.get(playerName);
   return entry ? entry.rank : null;
-}
+};
 
-export function getADPEntry(playerName: string): FantasyProADPEntry | null {
+export const getADPEntry = (playerName: string): FantasyProADPEntry | null => {
   return adpDataMap.get(playerName) || null;
-}
+};
 
 // Fuzzy matching for player names that might not match exactly
-export function findADPByFuzzyMatch(playerName: string): FantasyProADPEntry | null {
+export const findADPByFuzzyMatch = (playerName: string): FantasyProADPEntry | null => {
   // First try exact match
   let entry = adpDataMap.get(playerName);
   if (entry) return entry;
@@ -178,9 +178,9 @@ export function findADPByFuzzyMatch(playerName: string): FantasyProADPEntry | nu
   }
 
   return null;
-}
+};
 
 // Get all ADP entries for reference
-export function getAllADPData(): FantasyProADPEntry[] {
+export const getAllADPData = (): FantasyProADPEntry[] => {
   return Array.from(adpDataMap.values()).sort((a, b) => a.rank - b.rank);
-}
+};

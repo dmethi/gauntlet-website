@@ -736,7 +736,7 @@ export const TEAM_NAMES = [
 ];
 
 // Utility function to generate random price within X% of AAV
-export function generateRandomPrice(aav: number, variancePercent: number = 10): number {
+export const generateRandomPrice = (aav: number, variancePercent: number = 10): number => {
   // Special handling for very low AAV players to prevent unrealistic pricing
   if (aav <= 3) {
     // For $1-3 players, keep them in the $1-5 range
@@ -750,23 +750,25 @@ export function generateRandomPrice(aav: number, variancePercent: number = 10): 
   const min = Math.max(1, Math.round(aav - variance));
   const max = Math.round(aav + variance);
   return Math.round(Math.random() * (max - min) + min);
-}
+};
 
 // Function to shuffle array
-export function shuffleArray<T>(array: T[]): T[] {
+
+// eslint-disable-next-line prettier/prettier
+export const shuffleArray = <T,>(array: T[]): T[] => {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
-}
+};
 
-export function canAddPlayerToRoster(
+export const canAddPlayerToRoster = (
   roster: DraftPick[],
   player: Player,
   constraints = ROSTER_CONSTRAINTS,
-): boolean {
+): boolean => {
   const positionCounts = {
     QB: roster.filter(p => p.player.position === 'QB').length,
     RB: roster.filter(p => p.player.position === 'RB').length,
@@ -801,4 +803,4 @@ export function canAddPlayerToRoster(
     default:
       return false;
   }
-}
+};

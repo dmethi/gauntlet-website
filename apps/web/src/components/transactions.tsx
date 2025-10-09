@@ -17,7 +17,7 @@ export type TransactionViewModel = {
   waiverBid?: number | null;
 };
 
-function formatTransactionType(type: string) {
+const formatTransactionType = (type: string) => {
   switch (type) {
     case 'free_agent':
       return 'Free Agent';
@@ -28,9 +28,9 @@ function formatTransactionType(type: string) {
     default:
       return type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' ');
   }
-}
+};
 
-export function TransactionList({ items }: { items: TransactionViewModel[] }) {
+export const TransactionList = ({ items }: { items: TransactionViewModel[] }) => {
   if (!items?.length) {
     return <div className="text-sm text-muted-foreground">No transactions found.</div>;
   }
@@ -102,10 +102,10 @@ export function TransactionList({ items }: { items: TransactionViewModel[] }) {
       ))}
     </div>
   );
-}
+};
 
 // Adapter for team page league transactions → view model
-export function TeamTransactionsList({
+export const TeamTransactionsList = ({
   transactions,
   league,
 }: {
@@ -128,7 +128,7 @@ export function TeamTransactionsList({
       };
     }>;
   };
-}) {
+}) => {
   // Create roster ID to team name mapping (with reverse mapping for original IDs)
   const rosterMap = new Map<number, string>();
   if (league?.rosters) {
@@ -179,10 +179,10 @@ export function TeamTransactionsList({
     waiverBid: t.settings?.waiver_bid ?? null,
   }));
   return <TransactionList items={items} />;
-}
+};
 
 // Adapter for player-centric transactions (draft modal) → view model
-export function PlayerTransactionsList({
+export const PlayerTransactionsList = ({
   transactions,
 }: {
   transactions: Array<{
@@ -194,7 +194,7 @@ export function PlayerTransactionsList({
     droppedFrom: Array<{ id: number; name: string }>;
     waiver?: { waiver_bid?: number } | unknown;
   }>;
-}) {
+}) => {
   const items: TransactionViewModel[] = (transactions || []).map(t => ({
     id: t.id,
     type: t.type,
@@ -208,4 +208,4 @@ export function PlayerTransactionsList({
         : null,
   }));
   return <TransactionList items={items} />;
-}
+};

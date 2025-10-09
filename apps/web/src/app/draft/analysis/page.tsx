@@ -23,10 +23,10 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { MockDraft, getPreGeneratedDrafts } from '@/lib/draft-generator';
+import { getPreGeneratedDrafts, MockDraft } from '@/lib/draft-generator';
 import { getRealDrafts } from '@/lib/draft-data-fetcher';
 import { DraftAnalytics, generateMockAnalytics } from '@/features/draft-analysis/utils';
-import { ManagerAnalytics, generateManagerAnalytics, inferStarters } from '@/lib/manager-analytics';
+import { generateManagerAnalytics, inferStarters, ManagerAnalytics } from '@/lib/manager-analytics';
 import {
   getPrecomputedAnalytics,
   getPrecomputedDrafts,
@@ -37,7 +37,7 @@ import { ManagerAnalysis } from '@/features/draft-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import { BarChart3, Filter, Trophy, Users } from 'lucide-react';
 
-export default function DraftAnalysisPage() {
+export default function DraftAnalysisPage(): JSX.Element {
   // All useState hooks must be at the top, before any conditional logic
   const [drafts, setDrafts] = useState<[MockDraft, MockDraft] | null>(null);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(true);
@@ -221,7 +221,7 @@ export default function DraftAnalysisPage() {
 
   // Load draft data and analytics on component mount
   useEffect(() => {
-    async function loadData() {
+    const loadData = async (): Promise<void> => {
       try {
         setIsLoadingDrafts(true);
         setError(null);
@@ -295,7 +295,7 @@ export default function DraftAnalysisPage() {
       } finally {
         setIsLoadingDrafts(false);
       }
-    }
+    };
 
     loadData();
   }, []);

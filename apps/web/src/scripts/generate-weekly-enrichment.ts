@@ -9,11 +9,11 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  generatePositionalTrendNarrative,
   generateLuckNarrative,
+  generatePositionalTrendNarrative,
   generateScatterOutlierNarrative,
-  generateTransactionNarrative,
   generateStartSitNarrative,
+  generateTransactionNarrative,
   type Narrative,
 } from '../features/reports/utils/narratives.js';
 import { NARRATIVE_CONFIG } from '../config/narrative-thresholds.js';

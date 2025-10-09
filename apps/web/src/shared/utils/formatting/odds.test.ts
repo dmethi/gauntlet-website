@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatOdds, formatMoneyline } from './odds';
+import { describe, expect, it } from 'vitest';
+import { formatMoneyline, formatOdds } from './odds';
 
 describe('formatOdds', () => {
   it('formats positive odds with + sign', () => {

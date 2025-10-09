@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatPercentage, formatDecimal } from './percentages';
+import { describe, expect, it } from 'vitest';
+import { formatDecimal, formatPercentage } from './percentages';
 
 describe('formatPercentage', () => {
   it('formats decimal to percentage with default 0 decimals', () => {

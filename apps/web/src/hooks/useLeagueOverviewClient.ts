@@ -60,22 +60,22 @@ interface LeagueOverviewData {
 /**
  * Fetch league data directly from Sleeper API
  */
-async function fetchSleeperData<T>(endpoint: string): Promise<T> {
+const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
   const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
   if (!response.ok) {
     throw new Error(`Sleeper API error: ${response.status}`);
   }
   return response.json();
-}
+};
 
 /**
  * Get all matchups for specific rosters
  */
-async function getRosterMatchups(
+const getRosterMatchups = async (
   leagueId: string,
   rosterIds: number[],
   weeks: number,
-): Promise<Map<number, Array<{ week: number; points: number; matchupId: number }>>> {
+): Promise<Map<number, Array<{ week: number; points: number; matchupId: number }>>> => {
   const rosterMatchups = new Map<
     number,
     Array<{ week: number; points: number; matchupId: number }>
@@ -90,7 +90,10 @@ async function getRosterMatchups(
       `league/${leagueId}/matchups/${week}`,
     )
       .then(matchups => ({ week, matchups }))
-      .catch(() => ({ week, matchups: [] })),
+      .catch(() => ({
+        week,
+        matchups: [] as Array<{ roster_id: number; points: number; matchup_id: number }>,
+      })),
   );
 
   const results = await Promise.all(promises);
@@ -109,12 +112,12 @@ async function getRosterMatchups(
   });
 
   return rosterMatchups;
-}
+};
 
 /**
  * Enhanced hook for league overview with client-side calculations
  */
-export function useLeagueOverviewClient(leagueId?: string): LeagueOverviewData {
+export const useLeagueOverviewClient = (leagueId?: string): LeagueOverviewData => {
   const effectiveLeagueId = leagueId || LEAGUE_IDS.AFC;
 
   // Use our client-side calculation hooks
@@ -219,4 +222,4 @@ export function useLeagueOverviewClient(leagueId?: string): LeagueOverviewData {
     loading: leagueLoading || teamStatsLoading || averagesLoading,
     error: error as Error | undefined,
   };
-}
+};

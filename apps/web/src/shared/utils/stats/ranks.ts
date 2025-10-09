@@ -8,7 +8,7 @@
  * @param values Array of numeric values to rank
  * @returns Array of ranks in same order as input
  */
-export function rank(values: number[]): number[] {
+export const rank = (values: number[]): number[] => {
   // Create array of indices with values
   const indexed = values.map((value, index) => ({ value, index }));
 
@@ -28,12 +28,12 @@ export function rank(values: number[]): number[] {
   }
 
   return ranks;
-}
+};
 
 /**
  * Get percentile rank (0-100) where 100 is best
  */
-export function percentileRank(values: number[]): number[] {
+export const percentileRank = (values: number[]): number[] => {
   const ranks = rank(values);
   const n = values.length;
 
@@ -42,15 +42,15 @@ export function percentileRank(values: number[]): number[] {
     // rank 1 = 100th percentile, rank n = 0th percentile
     return ((n - r + 1) / n) * 100;
   });
-}
+};
 
 /**
  * Rank teams within their leagues
  */
-export function rankWithinLeagues(
+export const rankWithinLeagues = (
   values: Map<string, number>,
   leagueRosterMap: Map<string, string>, // rosterId -> leagueId
-): Map<string, number> {
+): Map<string, number> => {
   // Group by league
   const leagueGroups = new Map<string, { rosterId: string; value: number }[]>();
 
@@ -76,4 +76,4 @@ export function rankWithinLeagues(
   }
 
   return leagueRanks;
-}
+};

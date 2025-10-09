@@ -6,10 +6,10 @@
  */
 
 import type {
-  WeeklyRecapReport,
-  ValidationResult,
   ValidationError,
+  ValidationResult,
   ValidationWarning,
+  WeeklyRecapReport,
 } from '../types';
 
 /**
@@ -231,7 +231,7 @@ const validateHallOfFame = (
 const validateHallOfShame = (
   section: WeeklyRecapReport['sections']['hallOfShame'],
   errors: ValidationError[],
-  warnings: ValidationWarning[],
+  _warnings: ValidationWarning[],
 ): void => {
   if (!section.narrative || section.narrative.length < 50) {
     errors.push({
@@ -312,7 +312,7 @@ const validateStandings = (
 const validateUpcoming = (
   section: WeeklyRecapReport['sections']['upcoming'],
   errors: ValidationError[],
-  warnings: ValidationWarning[],
+  _warnings: ValidationWarning[],
 ): void => {
   if (!section.narrative || section.narrative.length < 50) {
     errors.push({

@@ -3,7 +3,6 @@
  */
 
 import type { ReportTool } from './base';
-import { fetchLeagueDataTool, calculateWeekSummaryStatsTool } from './league-overview';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 import { LEAGUE_IDS } from '@/lib/constants';
 import { getRealNameByRoster } from '@/lib/username-mapping';

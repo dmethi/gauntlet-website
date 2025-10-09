@@ -11,12 +11,12 @@
 
 import { createDraftClient } from './sleeper/unified-client';
 import type {
-  SleeperLeague,
-  SleeperRoster,
-  SleeperUser,
-  SleeperPlayer,
   SleeperDraft,
   SleeperDraftPick,
+  SleeperLeague,
+  SleeperPlayer,
+  SleeperRoster,
+  SleeperUser,
 } from '@gauntlet/types';
 import type { DraftPick, MockDraft, Player, TeamRoster } from './mock-draft-data';
 
@@ -276,9 +276,9 @@ const draftFetcher = new DraftDataFetcher();
 /**
  * Get real drafts using unified Sleeper client
  */
-export async function getRealDrafts(): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
+export const getRealDrafts = async (): Promise<{ draft1: MockDraft; draft2: MockDraft }> => {
   const DRAFT_ID_1 = '1263744210637422592'; // AFC
   const DRAFT_ID_2 = '1263740550494822400'; // NFC
 
   return draftFetcher.fetchRealDrafts(DRAFT_ID_1, DRAFT_ID_2);
-}
+};

@@ -45,7 +45,7 @@ interface ScatterAnalysisProps {
   positionsMap: Map<TrackedPosition, PositionData>;
 }
 
-export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysisProps) {
+export const ScatterAnalysis = ({ allTeamEntries, positionsMap }: ScatterAnalysisProps) => {
   return (
     <div className="space-y-8">
       {/* Overall Team Efficiency */}
@@ -622,4 +622,4 @@ export function ScatterAnalysis({ allTeamEntries, positionsMap }: ScatterAnalysi
       ))}
     </div>
   );
-}
+};

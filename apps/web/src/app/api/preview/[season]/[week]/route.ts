@@ -112,7 +112,7 @@ interface FantasyMatchup {
 }
 
 // Helper to resolve a user-facing team name
-function resolveTeamName(roster: any, owner: any): string {
+const resolveTeamName = (roster: any, owner: any): string => {
   const rosterMetaName = ((roster?.metadata as any) || {})?.team_name as string | undefined;
   const ownerMetaName = ((owner?.metadata as any) || {})?.team_name as string | undefined;
   const ownerDisplay = owner?.displayName as string | undefined;
@@ -120,10 +120,10 @@ function resolveTeamName(roster: any, owner: any): string {
   const name = rosterMetaName || ownerMetaName || ownerDisplay || ownerUser;
   if (!name) return `Team ${roster?.rosterId ?? ''}`.trim();
   return String(name);
-}
+};
 
 // Fetch ESPN scoreboard for NFL games
-async function fetchEspnScoreboard(): Promise<EspnScoreboard> {
+const fetchEspnScoreboard = async (): Promise<EspnScoreboard> => {
   const url = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
   const response = await fetch(url, {
     signal: AbortSignal.timeout(10000),
@@ -134,10 +134,10 @@ async function fetchEspnScoreboard(): Promise<EspnScoreboard> {
   }
   const data = await response.json();
   return data as EspnScoreboard;
-}
+};
 
 // Group NFL games by time windows
-function groupGamesByWindow(events: EspnEvent[]): GameWindow[] {
+const groupGamesByWindow = (events: EspnEvent[]): GameWindow[] => {
   const windows: GameWindow[] = [
     { name: 'Thursday Night', games: [] },
     { name: 'Sunday Noon (1:00 PM ET)', games: [] },
@@ -184,13 +184,15 @@ function groupGamesByWindow(events: EspnEvent[]): GameWindow[] {
   }
 
   return windows;
-}
+};
 
 // Get player's NFL team abbreviation and names from Sleeper API
-async function getPlayerData(season: string): Promise<{
+const getPlayerData = async (
+  season: string,
+): Promise<{
   teamMapping: Map<string, string>;
   playerNames: Map<string, string>;
-}> {
+}> => {
   try {
     const players = await sleeperClient.fetchAllPlayers();
 
@@ -214,12 +216,12 @@ async function getPlayerData(season: string): Promise<{
     console.error('Failed to fetch player data:', error);
     return { teamMapping: new Map(), playerNames: new Map() };
   }
-}
+};
 
-export async function GET(
+export const GET = async (
   _request: NextRequest,
   { params }: { params: { season: string; week: string } },
-) {
+) => {
   try {
     const season = params.season;
     const weekNumber = parseInt(params.week, 10);
@@ -534,6 +536,6 @@ export async function GET(
     console.error('Week preview route error:', error);
     return NextResponse.json({ error: 'Failed to fetch week preview data' }, { status: 500 });
   }
-}
+};
 
 export const runtime = 'nodejs';

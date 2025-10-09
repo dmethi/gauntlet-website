@@ -5,12 +5,11 @@ import {
 } from '@/lib/calculate-league-projections';
 import { CURRENT_LEAGUES } from '@/config/leagues';
 import type {
-  AlternativeSource,
-  PlayerProjection,
   AlternativePlayer,
-  PositionDecision,
-  PositionBreakdownMetrics,
   ManagerEfficiencyDetailed as ManagerEfficiency,
+  PlayerProjection,
+  PositionBreakdownMetrics,
+  PositionDecision,
   StartSitDataDetailed as StartSitData,
 } from '@/features/start-sit/types';
 
@@ -44,16 +43,16 @@ const POSITION_ELIGIBILITY: Record<string, string[]> = {
 
 const ROSTER_POSITIONS = ['QB', 'RB1', 'RB2', 'WR1', 'WR2', 'TE', 'FLEX', 'K', 'DEF'];
 
-function calculateFantasyPoints(stats: any, scoring: ScoringSettings): number {
+const calculateFantasyPoints = (stats: any, scoring: ScoringSettings): number => {
   return calculateLeagueProjection(stats, scoring).points;
-}
+};
 
-function isPlayerEligible(playerPosition: string, rosterSlot: string): boolean {
+const isPlayerEligible = (playerPosition: string, rosterSlot: string): boolean => {
   const eligible = POSITION_ELIGIBILITY[rosterSlot] || [];
   return eligible.includes(playerPosition);
-}
+};
 
-function buildAlternativesPool(
+const buildAlternativesPool = (
   managerRoster: string[],
   managerStarters: string[],
   rosteredPlayers: Set<string>,
@@ -61,7 +60,7 @@ function buildAlternativesPool(
   selectedPlayer: PlayerProjection,
   allProjections: Map<string, PlayerProjection>,
   playerPositions: Map<string, string>,
-): AlternativePlayer[] {
+): AlternativePlayer[] => {
   const alternatives: AlternativePlayer[] = [];
 
   for (const playerId of managerRoster) {
@@ -103,9 +102,9 @@ function buildAlternativesPool(
   }
 
   return alternatives;
-}
+};
 
-function analyzePositionDecision(
+const analyzePositionDecision = (
   managerId: string,
   managerName: string,
   leagueId: string,
@@ -113,7 +112,7 @@ function analyzePositionDecision(
   rosterSlot: string,
   selectedPlayer: PlayerProjection,
   alternatives: AlternativePlayer[],
-): PositionDecision {
+): PositionDecision => {
   const allOptions = [
     {
       ...selectedPlayer,
@@ -170,9 +169,9 @@ function analyzePositionDecision(
     projectionDifferential,
     actualOutcome,
   };
-}
+};
 
-function deduplicateManagerDecisions(managerDecisions: PositionDecision[]): PositionDecision[] {
+const deduplicateManagerDecisions = (managerDecisions: PositionDecision[]): PositionDecision[] => {
   if (managerDecisions.length === 0) return managerDecisions;
 
   const playerPositions = new Map<string, PositionDecision[]>();
@@ -240,25 +239,25 @@ function deduplicateManagerDecisions(managerDecisions: PositionDecision[]): Posi
   }
 
   return adjusted;
-}
+};
 
-function getWorstDecisions(decisions: PositionDecision[], count = 10) {
+const getWorstDecisions = (decisions: PositionDecision[], count = 10) => {
   return decisions
     .filter(d => d.pointsLeft > 0)
     .sort((a, b) => b.pointsLeft - a.pointsLeft)
     .slice(0, count)
     .map(d => ({ ...d, weight: POSITION_WEIGHTS[d.position] || 0.5 }));
-}
+};
 
-function getBestRiskyDecisions(decisions: PositionDecision[], count = 10) {
+const getBestRiskyDecisions = (decisions: PositionDecision[], count = 10) => {
   return decisions
     .filter(d => d.isRiskyDecision && d.actualOutcome > 0)
     .sort((a, b) => b.actualOutcome - a.actualOutcome)
     .slice(0, count)
     .map(d => ({ ...d, weight: POSITION_WEIGHTS[d.position] || 0.5 }));
-}
+};
 
-function getManagerRosterContext(decisions: PositionDecision[]): any[] {
+const getManagerRosterContext = (decisions: PositionDecision[]): any[] => {
   const managerWeeks = new Map<string, Map<number, any>>();
 
   for (const decision of decisions) {
@@ -324,9 +323,9 @@ function getManagerRosterContext(decisions: PositionDecision[]): any[] {
   return result.sort((a, b) =>
     a.managerName !== b.managerName ? a.managerName.localeCompare(b.managerName) : a.week - b.week,
   );
-}
+};
 
-function calculateManagerEfficiency(decisions: PositionDecision[]): ManagerEfficiency[] {
+const calculateManagerEfficiency = (decisions: PositionDecision[]): ManagerEfficiency[] => {
   const managerGroups = new Map<string, PositionDecision[]>();
   for (const decision of decisions) {
     const key = `${decision.leagueId}-${decision.managerId}`;
@@ -414,21 +413,21 @@ function calculateManagerEfficiency(decisions: PositionDecision[]): ManagerEffic
   }
 
   return results.sort((a, b) => b.weightedDecisionScore - a.weightedDecisionScore);
-}
+};
 
-function getRosteredPlayers(matchups: any[]): Set<string> {
+const getRosteredPlayers = (matchups: any[]): Set<string> => {
   const rostered = new Set<string>();
   for (const m of matchups) {
     const players = m.players || [];
     for (const pid of players) rostered.add(String(pid));
   }
   return rostered;
-}
+};
 
-export async function analyzeStartSitEfficiency(options?: {
+export const analyzeStartSitEfficiency = async (options?: {
   season?: string;
   weeks?: number[];
-}): Promise<StartSitData> {
+}): Promise<StartSitData> => {
   const season = options?.season || DEFAULT_SEASON;
 
   // Determine weeks: use provided or default
@@ -580,6 +579,6 @@ export async function analyzeStartSitEfficiency(options?: {
     },
     timestamp: new Date().toISOString(),
   };
-}
+};
 
 export type { StartSitData, ManagerEfficiency, PositionDecision };

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { calculateWinProbability, getCurrentWeek } from '@/lib/api-replacements';
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();
     const { team1Starters, team2Starters, week } = body;
@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+};
 
-export async function GET() {
+export const GET = async () => {
   return NextResponse.json({
     message: 'This endpoint requires POST with team1Starters and team2Starters arrays',
     usage: {
@@ -54,4 +54,4 @@ export async function GET() {
     dbQueries: 0,
     dataSource: 'real-time-calculation',
   });
-}
+};

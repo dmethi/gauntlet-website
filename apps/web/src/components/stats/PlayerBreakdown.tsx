@@ -8,13 +8,13 @@ interface PlayerBreakdownProps {
   position: TrackedPosition;
 }
 
-export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) {
+export const PlayerBreakdownRow = ({ players, position }: PlayerBreakdownProps) => {
   if (players.length === 0) {
     return <div className="text-xs text-muted-foreground py-2 px-4">No players</div>;
   }
 
   // Get relevant stats for this position
-  function getRelevantStats(stats: Record<string, number>) {
+  const getRelevantStats = (stats: Record<string, number>) => {
     const statKeys: string[] = [];
 
     switch (position) {
@@ -42,9 +42,9 @@ export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) 
     }
 
     return statKeys.filter(key => stats[key] != null && stats[key] !== 0);
-  }
+  };
 
-  function formatStatKey(key: string): string {
+  const formatStatKey = (key: string): string => {
     const statLabels: Record<string, string> = {
       pass_yd: 'Pass Yd',
       pass_td: 'Pass TD',
@@ -66,7 +66,7 @@ export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) 
       tkl: 'Tkl',
     };
     return statLabels[key] || key;
-  }
+  };
 
   return (
     <div className="space-y-2 py-2 px-4 bg-muted/10 border-t">
@@ -95,4 +95,4 @@ export function PlayerBreakdownRow({ players, position }: PlayerBreakdownProps) 
       })}
     </div>
   );
-}
+};
