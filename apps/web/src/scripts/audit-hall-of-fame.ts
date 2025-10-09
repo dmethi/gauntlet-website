@@ -6,8 +6,8 @@
 import { hallOfFameDataService } from '../lib/hall-of-fame-data-service';
 import {
   calculateRollingWindows,
-  calculateStreaks,
   calculateSeasonalData,
+  calculateStreaks,
 } from '../lib/hall-of-fame-aggregations';
 import { calculateHallOfFameRecords } from '../lib/hall-of-fame-calculations';
 import { getAllCategories } from '../lib/hall-of-fame-expanded-categories';

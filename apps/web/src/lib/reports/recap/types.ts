@@ -88,6 +88,14 @@ export interface MatchupNarrativeSection {
     biggestLead: number;
     excitementScore: number; // 0-100
   };
+  // Time series data for win probability and score charts
+  timeSeries?: Array<{
+    timestamp: string;
+    team1Score: number;
+    team2Score: number;
+    team1WinProbability: number;
+    gameProgress: number; // 0.0-1.0
+  }>;
   generatedAt: string;
 }
 
@@ -186,8 +194,12 @@ export interface PowerRankingsSection {
     rank: number;
     previousRank?: number;
     teamName: string;
+    leagueId: string;
+    rosterId: number;
     record: string;
     points: number;
+    tier?: number; // Tier number (1 = best)
+    powerScore?: number; // Power ranking score
     movement: 'up' | 'down' | 'same';
     movementAmount?: number;
   }>;
@@ -541,6 +553,21 @@ export interface PowerRanking {
   record: string; // e.g., "4-1"
   pointsFor: number;
   league: 'AFC' | 'NFC';
+  powerScore: number; // Normalized power score (around 100)
+  tier: number; // Tier number (1 = best, dynamically assigned)
+}
+
+/**
+ * Tier summary with team counts and score ranges.
+ * Tiers are dynamically generated based on natural clustering in power scores.
+ */
+export interface TierSummary {
+  tier: number; // Tier number (1 = best)
+  label: string; // AI-generated or generic label (e.g., "Tier 1", "Elite", etc.)
+  teams: PowerRanking[];
+  scoreRange: { min: number; max: number };
+  avgScore: number;
+  teamCount: number;
 }
 
 /**
@@ -552,6 +579,7 @@ export interface RankingChange {
   biggestFaller: PowerRanking | null;
   topThree: PowerRanking[];
   notableChanges: PowerRanking[]; // Moved 3+ spots
+  tiers: TierSummary[]; // Tier breakdown
 }
 
 // ============================================================================

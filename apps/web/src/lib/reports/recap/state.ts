@@ -4,20 +4,35 @@
 export interface MatchupNarrativeMetadata {
   finalScore: string;
   winner: string;
-  excitementScore: number;
+  excitementLevel: 'low' | 'medium' | 'high';
   keyPlayers: string[];
   wordCount: number;
   error?: boolean;
 }
 
 /**
- * A single matchup narrative with its metadata.
+ * A single matchup narrative with its metadata and fetched data.
  */
 export interface MatchupNarrative {
   matchupId: number;
   leagueId: string;
   narrative: string;
   metadata: MatchupNarrativeMetadata;
+
+  // Fetched matchup data (populated during generation for UI rendering)
+  data?: {
+    boxScore?: any; // MatchupBoxScore
+    rosters?: any; // Team rosters with names
+    scoringBreakdown?: any; // Player-by-player scoring
+    projections?: any; // Pre-game projections
+    projectionVsActual?: any; // Projection accuracy
+    records?: any; // Team records entering the week
+    h2hHistory?: any; // Head-to-head history
+    gameFlow?: any; // CompressedGameFlow with time series
+    playoffImplications?: any; // Playoff stakes
+    positionBreakdown?: any; // Scoring by position
+    keyPlayers?: any; // Top 3 performers per team
+  };
 }
 
 /**
@@ -28,6 +43,19 @@ export interface BatchProgress {
   completedMatchups: number;
   currentMatchup?: string;
   failedMatchups: string[];
+}
+
+/**
+ * Section-level metadata tracking.
+ * Tracks timing, tokens, and status for each section.
+ */
+export interface SectionMetadata {
+  startTime?: number; // Timestamp when section started
+  endTime?: number; // Timestamp when section completed
+  duration?: number; // Duration in milliseconds
+  tokensUsed?: number; // Tokens used by this section
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  error?: string; // Error message if failed
 }
 
 /**
@@ -51,10 +79,51 @@ export interface RecapReportState {
   upcoming?: string;
   closing?: string;
 
+  // Structured data for Hall of Fame/Shame (for UI rendering)
+  hallOfFameData?: {
+    recordBreakdowns: any[]; // Historical records that week made
+    topPerformers: any; // Top 5 at each position
+  };
+  hallOfShameData?: {
+    worstTeams: any[]; // Bottom teams by score
+    biggestBusts: any[]; // Biggest disappointments vs projection
+  };
+  powerRankingsData?: {
+    rankings: any[]; // Full rankings with tiers
+    tiers: any[]; // Tier summaries
+    biggestRiser: any;
+    biggestFaller: any;
+    notableChanges: any[];
+  };
+  standingsData?: {
+    afc: {
+      leagueId: string;
+      leagueName: string;
+      divisions: Record<string, any[]>; // Division name -> teams
+    };
+    nfc: {
+      leagueId: string;
+      leagueName: string;
+      divisions: Record<string, any[]>;
+    };
+  };
+
   // Metadata
   generatedAt?: string;
   tokensUsed?: number;
   errors?: string[];
+
+  // Section-level metadata
+  sectionMetadata?: {
+    leagueOverview?: SectionMetadata;
+    matchupNarratives?: SectionMetadata;
+    hallOfFame?: SectionMetadata;
+    hallOfShame?: SectionMetadata;
+    powerRankings?: SectionMetadata;
+    standings?: SectionMetadata;
+    upcoming?: SectionMetadata;
+    closing?: SectionMetadata;
+  };
 
   // Batch processing
   progress?: BatchProgress;

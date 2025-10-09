@@ -18,16 +18,11 @@ import {
   fetchPositionBreakdownTool,
   fetchKeyPlayerPerformancesTool,
 } from './matchup-data';
+// Enhanced Hall of Fame/Shame - checks ALL 68 categories
 import {
-  calculateTopTeamScoreTool,
-  calculateBiggestBlowoutTool,
-  calculateTopPositionPerformersTool,
-} from './hall-of-fame';
-import {
-  calculateLowestTeamScoreTool,
-  calculateBiggestBustsTool,
-  calculateBadBeatLossesTool,
-} from './hall-of-shame';
+  checkAllHistoricalRecordsTool,
+  calculateTopPositionPerformersEnhanced,
+} from './hall-of-fame-enhanced';
 import { fetchPowerRankingsTool } from './power-rankings';
 import { fetchStandingsTool } from './standings';
 import { fetchNextWeekMatchupsTool } from './upcoming';
@@ -56,15 +51,10 @@ export const registerAllTools = (): void => {
   toolRegistry.register(fetchPositionBreakdownTool);
   toolRegistry.register(fetchKeyPlayerPerformancesTool);
 
-  // Hall of Fame Tools (RECAP-011)
-  toolRegistry.register(calculateTopTeamScoreTool);
-  toolRegistry.register(calculateBiggestBlowoutTool);
-  toolRegistry.register(calculateTopPositionPerformersTool);
-
-  // Hall of Shame Tools (RECAP-012)
-  toolRegistry.register(calculateLowestTeamScoreTool);
-  toolRegistry.register(calculateBiggestBustsTool);
-  toolRegistry.register(calculateBadBeatLossesTool);
+  // Enhanced Hall of Fame/Shame Tools (RECAP-011)
+  // Checks ALL 68 categories (fame + shame) instead of hardcoded subset
+  toolRegistry.register(checkAllHistoricalRecordsTool);
+  toolRegistry.register(calculateTopPositionPerformersEnhanced);
 
   // Power Rankings Tools (RECAP-013)
   toolRegistry.register(fetchPowerRankingsTool);
@@ -82,3 +72,30 @@ registerAllTools();
 // Re-export registry for use in other modules
 export { toolRegistry } from './registry';
 export type { ReportTool, ToolContext, ToolExecutionResult } from './base';
+
+// Re-export all tools for direct usage
+export { fetchLeagueDataTool, calculateWeekSummaryStatsTool } from './league-overview';
+export { gameFlowTool } from './game-flow';
+export {
+  fetchMatchupBoxScoreTool,
+  fetchMatchupRostersTool,
+  fetchScoringBreakdownTool,
+  fetchPreGameProjectionsTool,
+  fetchProjectionVsActualTool,
+  fetchTeamRecordsTool,
+  fetchH2HHistoryTool,
+  fetchPlayoffImplicationsTool,
+  fetchPositionBreakdownTool,
+  fetchKeyPlayerPerformancesTool,
+} from './matchup-data';
+export {
+  checkAllHistoricalRecordsTool,
+  calculateTopPositionPerformersEnhanced,
+} from './hall-of-fame-enhanced';
+export { fetchPowerRankingsTool } from './power-rankings';
+export { fetchStandingsTool } from './standings';
+export { fetchNextWeekMatchupsTool } from './upcoming';
+export { fetchHallOfShameTool } from './hall-of-shame';
+
+// Composite tools for simplified usage
+export { fetchLeagueOverviewTool, fetchMatchupDataTool } from './composite-tools';

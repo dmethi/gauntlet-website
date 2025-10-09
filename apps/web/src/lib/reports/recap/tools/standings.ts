@@ -14,10 +14,34 @@ interface StandingsArgs {
   week: number;
 }
 
-interface StandingsResult {
-  afc: Standings;
-  nfc: Standings;
+interface DivisionStandings {
+  name: string;
+  teams: StandingsEntry[];
 }
+
+interface LeagueStandingsWithDivisions {
+  league: 'AFC' | 'NFC';
+  divisions: DivisionStandings[];
+  allTeams: StandingsEntry[]; // Flat list for backward compatibility
+  playoffLine: number;
+}
+
+interface StandingsResult {
+  afc: LeagueStandingsWithDivisions;
+  nfc: LeagueStandingsWithDivisions;
+}
+
+/**
+ * Division name mapping (1 = North, 2 = South, 3 = East).
+ */
+const getDivisionName = (divisionNum: number | null): string => {
+  const divisionNames: Record<number, string> = {
+    1: 'North',
+    2: 'South',
+    3: 'East',
+  };
+  return divisionNum ? divisionNames[divisionNum] || `Division ${divisionNum}` : 'Unknown';
+};
 
 /**
  * Calculate standings for a specific league.
@@ -26,7 +50,7 @@ const calculateStandings = async (
   leagueId: string,
   leagueName: 'AFC' | 'NFC',
   week: number,
-): Promise<Standings> => {
+): Promise<LeagueStandingsWithDivisions> => {
   // Fetch all matchups up to current week
   const matchupsByWeek = await Promise.all(
     Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(leagueId, i + 1)),
@@ -71,10 +95,17 @@ const calculateStandings = async (
     // Get division from roster settings (1, 2, or 3)
     const division = (roster.settings as any)?.division || null;
 
+    // Get team name from owner metadata (where Sleeper stores it)
+    const teamName =
+      roster.owner?.metadata?.team_name ||
+      roster.metadata?.team_name ||
+      roster.owner?.display_name ||
+      `Team ${roster.roster_id}`;
+
     return {
       rank: 0, // Will be set after sorting
       rosterId: roster.roster_id,
-      teamName: roster.metadata?.team_name || `Team ${roster.roster_id}`,
+      teamName,
       ownerName,
       wins,
       losses,
@@ -130,9 +161,31 @@ const calculateStandings = async (
     wildCard.playoffSeed = i + 4; // Seeds 4, 5, 6
   });
 
+  // Group teams by division
+  const divisionGroups: Record<number, StandingsEntry[]> = {
+    1: [],
+    2: [],
+    3: [],
+  };
+
+  standings.forEach(team => {
+    if (team.division && divisionGroups[team.division]) {
+      divisionGroups[team.division].push(team);
+    }
+  });
+
+  // Create division standings array with proper names
+  const divisionStandings: DivisionStandings[] = divisions
+    .map(divNum => ({
+      name: getDivisionName(divNum),
+      teams: divisionGroups[divNum] || [],
+    }))
+    .filter(div => div.teams.length > 0); // Only include divisions with teams
+
   return {
     league: leagueName,
-    entries: standings,
+    divisions: divisionStandings,
+    allTeams: standings, // Keep flat list for backward compatibility
     playoffLine: 6,
   };
 };

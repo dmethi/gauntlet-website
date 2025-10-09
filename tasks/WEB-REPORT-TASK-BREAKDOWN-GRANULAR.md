@@ -1,8 +1,8 @@
 # WEB-REPORT: Granular Task Breakdown
 
 **Total Projects**: 2 (Recap + Preview)  
-**Total Tasks**: ~40 tasks (20 per project)  
-**Estimated Time**: 16-20 hours total
+**Total Tasks**: ~45 tasks (29 recap + 16 preview)  
+**Estimated Time**: 20-24 hours total
 
 ---
 
@@ -42,15 +42,14 @@ Each report follows this lifecycle:
 
 ## 📋 PROJECT 1: Weekly Recap Reports
 
-**Goal**: Generate Tuesday recap reports with game flow, narratives, and
-insights
+**Goal**: Generate Tuesday recap reports with game flow, narratives, and insights. Fully automated via cron job with manual override capability.
 
-**Total Time**: 10-12 hours  
-**Total Tasks**: 22 tasks
+**Total Time**: 14-16 hours  
+**Total Tasks**: 29 tasks
 
 ---
 
-### PHASE 1: Setup & Foundation (3-4 hours)
+### PHASE 1: Setup & Foundation (~3-4 hours)
 
 #### **RECAP-001: LangGraph Initialization** (45 min)
 
@@ -124,7 +123,7 @@ insights
 
 ---
 
-### PHASE 2: Section-by-Section Implementation (6-8 hours)
+### PHASE 2: Section-by-Section Implementation (~6-8 hours)
 
 **Strategy**: Implement sections in dependency order, test each before moving on
 
@@ -289,60 +288,133 @@ insights
 
 ---
 
-### PHASE 3: Report Assembly & UI (2-3 hours)
+### PHASE 3: Complete Automation System (~6-8 hours)
 
-#### **RECAP-017: Orchestration Integration** (1.5 hours)
+**📚 Phase 3 Resources:**
+- **📋 Detailed Tasks:** [`RECAP-PHASE-3-DETAILED.md`](./RECAP-PHASE-3-DETAILED.md) - Full specifications for all 10 tasks
+- **🏗️ Architecture:** [`RECAP-PHASE-3-ARCHITECTURE.md`](./RECAP-PHASE-3-ARCHITECTURE.md) - System design and data flow
+- **🚀 Quick Start:** [`RECAP-PHASE-3-QUICKSTART.md`](./RECAP-PHASE-3-QUICKSTART.md) - Step-by-step implementation guide
 
-- Wire all sections into LangGraph
-- Implement state management
-- Add section ordering logic
-- Handle section failures gracefully
+This phase transforms individual sections into a complete production system with:
+- Full LangGraph orchestration
+- File system storage with backups
+- Dynamic page generation
+- Homepage integration (auto-updates competition page)
+- CLI tool for manual generation
+- Vercel Cron automation (weekly Tuesday runs)
+- Error recovery and monitoring
+- Complete documentation
+
+#### **RECAP-017: Complete Graph Orchestration** (1.5 hours)
+
+- Wire all sections into LangGraph (league overview, matchups, hall of fame/shame, power rankings, standings, upcoming, closing)
+- Implement parallel processing where possible
+- Add section-level error boundaries
+- Track progress metadata (tokens, timing, success/failure)
 - Test full pipeline with Week 5
 
-**Deliverables**:
+---
 
-- Complete orchestration graph
-- Runs all 20 sections sequentially
-- Week 5 test output
+#### **RECAP-018: JSON Report Output** (45 min)
+
+- Format LangGraph state into `WeeklyRecapReport` type
+- Match existing `report-week5.json` structure
+- Add comprehensive metadata (timing, tokens, errors, version)
+- Validate output against schema
+- Handle partial failures gracefully
 
 ---
 
-#### **RECAP-018: JSON Output Generation** (45 min)
+#### **RECAP-019: File System Storage** (1 hour)
 
-- Format all sections into report JSON
-- Match existing report structure (report-week5.json)
-- Add metadata (generation time, tokens used)
-- Validate JSON schema
-
-**Deliverables**:
-
-- `lib/reports/recap/output.ts`
-- Output matches existing format
+- Save reports to `data/reports/recap/{season}/week-{N}.json`
+- Create directory structure automatically
+- Add backup/versioning (keep previous version)
+- Implement atomic writes (temp file → rename)
+- Track generation history metadata
 
 ---
 
-#### **RECAP-019: React UI Component** (1 hour)
+#### **RECAP-020: Dynamic Page Generation** (1.5 hours)
 
-- Create report page component
-- Render all sections
-- Add styling (match Week 5 style)
-- Handle loading/error states
-
-**Deliverables**:
-
-- `app/competition/reports/2025/week-[N]/page.tsx` (template)
-- Matches existing UI style
+- Generate/update Next.js pages at `/competition/reports/{season}/week-{N}`
+- Use dynamic route approach: `[season]/week-[week]/page.tsx`
+- Create loading/error states
+- Add SEO metadata
+- Match existing report styling (Week 5)
 
 ---
 
-### PHASE 4: Audit System (2-3 hours)
+#### **RECAP-021: Homepage Integration** (1 hour)
 
-#### **RECAP-020: Audit Functions** (1 hour)
+- Auto-update `/competition/page.tsx` reports section
+- Auto-update `/competition/reports/page.tsx` feed
+- Data-driven approach (scan file system)
+- Show latest report with badge
+- Sort by date descending
 
-- Implement `validate_scores` function
-- Implement `validate_player_names` function
-- Implement `validate_records` function
-- Implement `detect_hallucinations` function
+---
+
+#### **RECAP-022: CLI Tool** (1 hour)
+
+- Create `scripts/generate-recap.ts` CLI
+- Support `--week`, `--season`, `--force`, `--dry-run` flags
+- Progress indicators with ora/chalk
+- Display summary (tokens, time, status)
+- Add to package.json scripts
+
+---
+
+#### **RECAP-023: Cron Job Setup** (1 hour)
+
+- Create `/api/cron/recap-report/route.ts`
+- Configure Vercel Cron (Tuesday 10am ET)
+- Add authentication with `CRON_SECRET`
+- Implement timeout handling (5 min max)
+- Add success/failure notifications (Slack/email)
+
+---
+
+#### **RECAP-024: Error Recovery System** (1 hour)
+
+- Handle partial failures gracefully
+- Implement retry logic for transient failures
+- Save partial reports with error markers
+- Log detailed error context
+- Alert on critical failures
+
+---
+
+#### **RECAP-025: Monitoring & Logging** (45 min)
+
+- Log all generation attempts with metadata
+- Track success/failure rates
+- Monitor generation time and token usage
+- Store logs in structured format (JSON)
+- Create query/dashboard interface
+
+---
+
+#### **RECAP-026: Documentation & Deployment** (45 min)
+
+- Write comprehensive README
+- Document CLI usage and cron setup
+- Create troubleshooting guide
+- Add architecture diagram
+- Document environment variables
+
+---
+
+### PHASE 4: Audit System (~2-3 hours)
+
+**Note:** Phase 4 can be implemented in parallel with or after Phase 3 completion.
+
+#### **RECAP-027: Audit Functions** (1 hour)
+
+- Implement `validate_scores` function (check against actual matchup data)
+- Implement `validate_player_names` function (check against Sleeper player database)
+- Implement `validate_records` function (check win/loss records)
+- Implement `detect_hallucinations` function (LLM fact-checking)
 - Test with known good/bad narratives
 
 **Deliverables**:
@@ -352,33 +424,34 @@ insights
 
 ---
 
-#### **RECAP-021: Audit-Edit Loop** (1 hour)
+#### **RECAP-028: Audit-Edit Loop** (1 hour)
 
 - Build regeneration logic with error context
-- Implement retry mechanism (max 2×)
-- Add audit result tracking
+- Implement retry mechanism (max 2× per section)
+- Add audit result tracking in report metadata
 - Test with intentionally broken narratives
 
 **Deliverables**:
 
 - `lib/reports/recap/audit/edit-loop.ts`
-- Integration into orchestrator
+- Integration into orchestrator graph
+- Audit metrics in report metadata
 
 ---
 
-#### **RECAP-022: Audit Integration & CLI** (1 hour)
+#### **RECAP-029: Audit Integration & Testing** (1 hour)
 
-- Integrate audit into full pipeline
-- Build CLI script (`npm run generate-recap <week>`)
-- Add progress logging
-- Add audit report output
-- Final end-to-end test
+- Integrate audit into full pipeline (between generation and output)
+- Add audit quality checks to CLI output
+- Create audit report visualization
+- Final end-to-end test with audit enabled
 
 **Deliverables**:
 
-- `scripts/generate-recap.ts`
-- npm script configuration
-- Complete Week 5 test run
+- Audit integrated into orchestrator
+- CLI shows audit results
+- Complete Week 5 test with audit passing
+- Audit quality dashboard (optional)
 
 ---
 
@@ -621,20 +694,30 @@ and odds
 ### Recap Dependencies
 
 ```
+PHASE 1: Setup (serial)
 RECAP-001 → RECAP-002 → RECAP-003 → RECAP-004 → RECAP-005
                                          ↓
-RECAP-006 (can start after 005)
-RECAP-007 (can start after 005)
-RECAP-008 → RECAP-009 → RECAP-010 (serial, matchup pipeline)
-RECAP-011 (parallel with 008-010)
-RECAP-012 (parallel with 008-010)
-RECAP-013 (parallel with 008-010)
-RECAP-014 (parallel with 008-010)
-RECAP-015 (parallel with 008-010)
-RECAP-016 (after all sections done)
+PHASE 2: Sections (mostly parallel)
+RECAP-006 (league overview)
+RECAP-007 (game flow compression)
+RECAP-008 → RECAP-009 → RECAP-010 (matchup narratives - serial)
+RECAP-011 (hall of fame - parallel)
+RECAP-012 (hall of shame - parallel)
+RECAP-013 (power rankings - parallel)
+RECAP-014 (standings - parallel)
+RECAP-015 (upcoming - parallel)
+RECAP-016 (closing - after all sections)
                 ↓
-RECAP-017 → RECAP-018 → RECAP-019 (serial, assembly)
-RECAP-020 → RECAP-021 → RECAP-022 (serial, audit)
+PHASE 3: Automation (serial)
+RECAP-017 (orchestration) → RECAP-018 (JSON output) → 
+RECAP-019 (file storage) → RECAP-020 (page generation) → 
+RECAP-021 (homepage integration) → RECAP-022 (CLI tool) → 
+RECAP-023 (cron setup) → RECAP-024 (error recovery) → 
+RECAP-025 (monitoring) → RECAP-026 (documentation)
+                ↓
+PHASE 4: Audit (can be parallel with Phase 3 or after)
+RECAP-027 (audit functions) → RECAP-028 (edit loop) → 
+RECAP-029 (integration)
 ```
 
 ### Preview Dependencies
@@ -659,23 +742,29 @@ PREVIEW-014 → PREVIEW-015 → PREVIEW-016 (serial, audit)
 
 ## 🎯 Recommended Execution Order
 
-### Week 1: Recap Foundation (5-6 hours)
+### Week 1: Recap Foundation & Sections (8-10 hours)
 
-- Day 1: RECAP-001 through RECAP-005 (setup)
-- Day 2: RECAP-006, RECAP-007 (first sections)
-- Day 3: RECAP-008, RECAP-009, RECAP-010 (matchup pipeline)
+- **Day 1-2**: RECAP-001 through RECAP-005 (setup)
+- **Day 3-4**: RECAP-006, RECAP-007 (data sections)
+- **Day 5-6**: RECAP-008, RECAP-009, RECAP-010 (matchup pipeline)
+- **Day 7**: RECAP-011 through RECAP-016 (remaining sections)
 
-### Week 2: Recap Completion (5-6 hours)
+### Week 2: Recap Automation System (6-8 hours)
 
-- Day 4: RECAP-011 through RECAP-016 (remaining sections)
-- Day 5: RECAP-017, RECAP-018 (assembly)
-- Day 6: RECAP-019, RECAP-020, RECAP-021, RECAP-022 (UI + audit)
+- **Day 8-9**: RECAP-017, RECAP-018, RECAP-019 (orchestration + storage)
+- **Day 10**: RECAP-020, RECAP-021 (page generation + homepage)
+- **Day 11**: RECAP-022, RECAP-023 (CLI + cron)
+- **Day 12**: RECAP-024, RECAP-025, RECAP-026 (error handling + monitoring + docs)
+
+### Week 2-3: Recap Audit System (Optional, 2-3 hours)
+
+- **Day 13**: RECAP-027, RECAP-028, RECAP-029 (audit system)
 
 ### Week 3: Preview System (8-10 hours)
 
-- Day 7: PREVIEW-001 through PREVIEW-004 (setup, fast)
-- Day 8: PREVIEW-005 through PREVIEW-011 (sections)
-- Day 9: PREVIEW-012 through PREVIEW-016 (assembly + audit)
+- **Day 14-15**: PREVIEW-001 through PREVIEW-004 (setup)
+- **Day 16-17**: PREVIEW-005 through PREVIEW-011 (sections)
+- **Day 18-19**: PREVIEW-012 through PREVIEW-016 (assembly + audit)
 
 ---
 
@@ -695,11 +784,20 @@ For each task, ensure:
 
 ## 📈 Progress Tracking
 
-**Recap Progress**: 0/22 tasks (0%)  
-**Preview Progress**: 0/16 tasks (0%)  
-**Overall Progress**: 0/38 tasks (0%)
+**Recap Progress**: 0/29 tasks (0%)  
+- Phase 1 (Setup): 0/5 tasks
+- Phase 2 (Sections): 0/11 tasks  
+- Phase 3 (Automation): 0/10 tasks
+- Phase 4 (Audit): 0/3 tasks
 
-**Estimated Completion**: 3 weeks (part-time), 1 week (full-time)
+**Preview Progress**: 0/16 tasks (0%)  
+
+**Overall Progress**: 0/45 tasks (0%)
+
+**Estimated Completion**: 
+- Part-time (2-3 hrs/day): ~3-4 weeks
+- Full-time (6-8 hrs/day): ~1.5-2 weeks
+- Recap only: ~2-3 weeks part-time, ~1 week full-time
 
 ---
 

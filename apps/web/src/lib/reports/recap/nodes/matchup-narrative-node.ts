@@ -1,25 +1,123 @@
 /**
  * Matchup Narrative Generation Node
- * Uses Gemini with function calling to generate engaging matchup recaps.
+ * Prefetches all matchup data and passes it to Gemini for narrative generation.
  */
 
 import { HumanMessage } from '@langchain/core/messages';
 import { createGeminiClient } from '../gemini-client';
 import { buildMatchupNarrativePrompt } from '../prompts/sections/matchup-narrative';
-import { toolRegistry } from '../tools/registry';
-import { convertToolsToLangChain } from '../tools/langchain-adapter';
+import {
+  fetchH2HHistoryTool,
+  fetchKeyPlayerPerformancesTool,
+  fetchMatchupBoxScoreTool,
+  fetchMatchupRostersTool,
+  fetchPlayoffImplicationsTool,
+  fetchPositionBreakdownTool,
+  fetchPreGameProjectionsTool,
+  fetchProjectionVsActualTool,
+  fetchScoringBreakdownTool,
+  fetchTeamRecordsTool,
+} from '../tools/matchup-data';
+import { gameFlowTool } from '../tools/game-flow';
 import type { RecapReportState } from '../state';
 
 /**
- * Generates a narrative for a single matchup using Gemini and all 11 data tools.
+ * Prefetches all matchup data from the 11 data tools.
+ *
+ * @param leagueId - League ID
+ * @param week - Week number
+ * @param matchupId - Matchup ID
+ * @returns All matchup data bundled together
+ */
+const prefetchMatchupData = async (
+  leagueId: string,
+  week: number,
+  matchupId: number,
+): Promise<{
+  boxScore: Awaited<ReturnType<typeof fetchMatchupBoxScoreTool.execute>>;
+  rosters: Awaited<ReturnType<typeof fetchMatchupRostersTool.execute>>;
+  scoringBreakdown: Awaited<ReturnType<typeof fetchScoringBreakdownTool.execute>>;
+  projections: Awaited<ReturnType<typeof fetchPreGameProjectionsTool.execute>>;
+  projectionVsActual: Awaited<ReturnType<typeof fetchProjectionVsActualTool.execute>>;
+  records: Awaited<ReturnType<typeof fetchTeamRecordsTool.execute>>;
+  h2hHistory: Awaited<ReturnType<typeof fetchH2HHistoryTool.execute>>;
+  gameFlow: Awaited<ReturnType<typeof gameFlowTool.execute>>;
+  playoffImplications: Awaited<ReturnType<typeof fetchPlayoffImplicationsTool.execute>>;
+  positionBreakdown: Awaited<ReturnType<typeof fetchPositionBreakdownTool.execute>>;
+  keyPlayers: Awaited<ReturnType<typeof fetchKeyPlayerPerformancesTool.execute>>;
+}> => {
+  // eslint-disable-next-line no-console
+  console.log('   📥 Prefetching all matchup data...');
+
+  // First, fetch box score to get roster IDs
+  const boxScore = await fetchMatchupBoxScoreTool.execute({ leagueId, week, matchupId });
+
+  // Fetch all remaining data in parallel
+  const [
+    rosters,
+    scoringBreakdown,
+    projections,
+    projectionVsActual,
+    records,
+    h2hHistory,
+    gameFlow,
+    playoffImplications,
+    positionBreakdown,
+    keyPlayers,
+  ] = await Promise.all([
+    fetchMatchupRostersTool.execute({ leagueId, week, matchupId }),
+    fetchScoringBreakdownTool.execute({ leagueId, week, matchupId }),
+    fetchPreGameProjectionsTool.execute({ leagueId, week, matchupId }),
+    fetchProjectionVsActualTool.execute({ leagueId, week, matchupId }),
+    fetchTeamRecordsTool.execute({
+      leagueId,
+      week,
+      rosterId1: boxScore.team1.rosterId,
+      rosterId2: boxScore.team2.rosterId,
+    }),
+    fetchH2HHistoryTool.execute({
+      leagueId,
+      currentWeek: week,
+      rosterId1: boxScore.team1.rosterId,
+      rosterId2: boxScore.team2.rosterId,
+    }),
+    gameFlowTool.execute({ leagueId, week, matchupId }),
+    fetchPlayoffImplicationsTool.execute({
+      leagueId,
+      week,
+      rosterId1: boxScore.team1.rosterId,
+      rosterId2: boxScore.team2.rosterId,
+    }),
+    fetchPositionBreakdownTool.execute({ leagueId, week, matchupId }),
+    fetchKeyPlayerPerformancesTool.execute({ leagueId, week, matchupId }),
+  ]);
+
+  // eslint-disable-next-line no-console
+  console.log('   ✅ All data fetched successfully');
+
+  return {
+    boxScore,
+    rosters,
+    scoringBreakdown,
+    projections,
+    projectionVsActual,
+    records,
+    h2hHistory,
+    gameFlow,
+    playoffImplications,
+    positionBreakdown,
+    keyPlayers,
+  };
+};
+
+/**
+ * Generates a narrative for a single matchup using Gemini with prefetched data.
  *
  * This node:
- * 1. Converts all registered tools to LangChain format
- * 2. Binds them to the Gemini client
- * 3. Sends the prompt to Gemini
- * 4. Gemini calls the tools as needed
- * 5. Gemini generates the narrative
- * 6. Returns the result in state
+ * 1. Prefetches all data from 11 tools
+ * 2. Bundles the data into a structured prompt
+ * 3. Sends to Gemini for narrative generation
+ * 4. Parses and returns the result
  *
  * @param state - Current state (must include week, leagueId, matchupId)
  * @returns Updated state with matchup narrative added
@@ -33,28 +131,24 @@ export const matchupNarrativeNode = async (
     throw new Error('Missing required state for matchup narrative: week, leagueId, or matchupId');
   }
 
+  // eslint-disable-next-line no-console
   console.log(`\n🎬 Generating narrative for Matchup ${matchupId}...`);
 
   try {
-    // Create Gemini client
+    // Prefetch all matchup data
+    const data = await prefetchMatchupData(leagueId, week, matchupId);
+
+    // Create Gemini client (no tool binding needed)
     const geminiClient = createGeminiClient();
 
-    // Get all tools from registry and convert to LangChain format
-    const reportTools = toolRegistry.getAllTools();
-    const langchainTools = convertToolsToLangChain(reportTools);
+    // Build the prompt with all data included
+    const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId, data);
 
-    console.log(`   🔧 Loaded ${langchainTools.length} tools for function calling`);
-
-    // Bind tools to the client
-    const clientWithTools = geminiClient.bind({
-      tools: langchainTools,
-    });
-
-    // Build the prompt
-    const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId);
+    // eslint-disable-next-line no-console
+    console.log('   🤖 Sending to Gemini for narrative generation...');
 
     // Invoke Gemini with the prompt
-    const response = await clientWithTools.invoke([
+    const response = await geminiClient.invoke([
       new HumanMessage({
         content: prompt,
       }),
@@ -67,7 +161,13 @@ export const matchupNarrativeNode = async (
     } else if (Array.isArray(response.content)) {
       // Handle structured content
       responseText = response.content
-        .map(item => (typeof item === 'string' ? item : item.text || ''))
+        .map(item => {
+          if (typeof item === 'string') return item;
+          if (typeof item === 'object' && item !== null && 'text' in item) {
+            return String(item.text);
+          }
+          return '';
+        })
         .join('');
     }
 
@@ -82,7 +182,8 @@ export const matchupNarrativeNode = async (
       const jsonString = jsonMatch ? jsonMatch[1] : responseText;
 
       narrativeData = JSON.parse(jsonString);
-    } catch (parseError) {
+    } catch {
+      // eslint-disable-next-line no-console
       console.warn('⚠️  Failed to parse JSON response, using raw text');
       // Fallback: treat entire response as narrative
       narrativeData = {
@@ -90,15 +191,17 @@ export const matchupNarrativeNode = async (
         metadata: {
           finalScore: 'N/A',
           winner: 'N/A',
-          excitementScore: 0,
+          excitementLevel: 'low',
           keyPlayers: [],
           wordCount: responseText.split(/\s+/).length,
         },
       };
     }
 
+    // eslint-disable-next-line no-console
     console.log(`✅ Narrative generated (${narrativeData.metadata.wordCount} words)`);
-    console.log(`   Excitement Score: ${narrativeData.metadata.excitementScore}/100`);
+    // eslint-disable-next-line no-console
+    console.log(`   Excitement Level: ${narrativeData.metadata.excitementLevel || 'medium'}`);
 
     return {
       matchupNarratives: [
@@ -110,7 +213,7 @@ export const matchupNarrativeNode = async (
           metadata: {
             finalScore: narrativeData.metadata.finalScore,
             winner: narrativeData.metadata.winner,
-            excitementScore: narrativeData.metadata.excitementScore,
+            excitementLevel: narrativeData.metadata.excitementLevel || 'medium',
             keyPlayers: narrativeData.metadata.keyPlayers || [],
             wordCount: narrativeData.metadata.wordCount,
           },
@@ -131,7 +234,7 @@ export const matchupNarrativeNode = async (
           metadata: {
             finalScore: 'N/A',
             winner: 'N/A',
-            excitementScore: 0,
+            excitementLevel: 'low',
             keyPlayers: [],
             wordCount: 0,
             error: true,

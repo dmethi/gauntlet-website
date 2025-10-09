@@ -315,3 +315,57 @@ NFC STANDINGS
 **Created**: 2025-10-08  
 **Status**: ✅ Complete  
 **Completed**: 2025-10-08
+
+---
+
+## 🔍 Audit Summary (2025-10-08)
+
+### Initial Issue Found
+When running `npm run test:standings` on Week 5 data, team names were displaying as "Team X" instead of actual team names like "To Infinity and Bijan", "Nacua Matata", etc.
+
+### Root Cause
+The standings tool was attempting to access `roster.metadata?.team_name`, but Sleeper stores team names in `roster.owner?.metadata?.team_name` (owner metadata, not roster metadata).
+
+### Fix Applied
+Updated the team name extraction logic in `standings.ts`:
+
+```typescript
+// ❌ Before: Only checked roster.metadata
+teamName: roster.metadata?.team_name || `Team ${roster.roster_id}`,
+
+// ✅ After: Properly checks owner.metadata first
+const teamName =
+  roster.owner?.metadata?.team_name ||
+  roster.metadata?.team_name ||
+  roster.owner?.display_name ||
+  `Team ${roster.roster_id}`;
+```
+
+### Validation Results ✅
+All criteria passed:
+- ✅ Team names displaying correctly (e.g., "To Infinity and Bijan", "DJ Herbussy")
+- ✅ Owner names loaded from username mapping (e.g., "Joel", "Akhil V")
+- ✅ Playoff seeds correct: Division winners (1-3) + Wild cards (4-6)
+- ✅ Records calculated accurately (W-L format with ties support)
+- ✅ Tiebreakers applied properly (Win % → Points For)
+- ✅ Division labels showing correctly (Div 1, 2, 3)
+
+### Test Command
+```bash
+npm run test:standings
+```
+
+### Sample Output (Week 5)
+```
+AFC STANDINGS
+[1]  1. To Infinity and Bijan          4-1    (0.800) Div 3  |  608.00 PF
+[4]  2. Nacua Matata                   3-2    (0.600) Div 3  |  602.71 PF
+[2]  3. The Golden Age                 3-2    (0.600) Div 1  |  596.87 PF
+...
+
+NFC STANDINGS
+[1]  1. Marginal Returns               5-0    (1.000) Div 1  |  600.21 PF
+[2]  2. DJ Herbussy                    4-1    (0.800) Div 2  |  610.35 PF
+[4]  3. cescott25                      4-1    (0.800) Div 2  |  560.38 PF
+...
+```

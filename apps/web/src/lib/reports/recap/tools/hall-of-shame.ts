@@ -2,222 +2,112 @@ import { sleeperClient } from '@/lib/sleeper/unified-client';
 import { LEAGUE_IDS } from '@/lib/constants';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
-import type { SleeperMatchup } from '@gauntlet/types';
 
 /**
- * Hall of Shame Tools
- * Tools for identifying the week's worst performances and lowlights.
+ * Hall of Shame Tool
+ * Provides comprehensive data about the week's worst performances including:
+ * - 3-5 worst scoring teams
+ * - Biggest busts across the entire league (projection misses)
+ * - Which teams were affected by those busts
  */
 
-interface LowestTeamScoreArgs {
-  week: number;
-}
-
-interface LowestTeamScoreResult {
-  score: number;
-  rosterId: number;
-  leagueId: string;
-  league: string;
-  teamName: string;
-  ownerName: string;
-  worstPerformers: Array<{
-    name: string;
-    position: string;
-    points: number;
-  }>;
-}
-
-interface BiggestBustsArgs {
-  week: number;
-}
-
-interface BiggestBustsResult {
+interface PlayerPerformance {
+  playerId: string;
   playerName: string;
   position: string;
   projected: number;
   actual: number;
-  difference: number;
-  teamName: string;
-  league: string;
-}
-
-interface BadBeatLossesArgs {
-  week: number;
-}
-
-interface BadBeatLossesResult {
-  avgScore: number;
-  badBeats: Array<{
+  diff: number;
+  started: boolean;
+  ownedBy: {
+    manager: string;
     teamName: string;
-    ownerName: string;
-    score: number;
-    opponentScore: number;
-    margin: number;
-    league: string;
-    aboveAvgBy: number;
-  }>;
+    league: 'AFC' | 'NFC';
+    started: boolean;
+  }[];
+}
+
+interface TeamPerformance {
+  manager: string;
+  teamName: string;
+  totalScore: number;
+  league: 'AFC' | 'NFC';
+  rank: number; // 1 = worst, 2 = 2nd worst, etc.
+}
+
+interface HallOfShameResult {
+  worstTeams: TeamPerformance[]; // 3-5 worst scoring teams
+  biggestBusts: PlayerPerformance[]; // 10-15 biggest projection misses
+  totalTeamsAnalyzed: number;
+  totalPlayersAnalyzed: number;
 }
 
 /**
- * Tool 1: Finds the lowest scoring team of the week across both leagues.
+ * Calculate fantasy points using Gauntlet league scoring
  */
-export const calculateLowestTeamScoreTool: ReportTool<LowestTeamScoreArgs, LowestTeamScoreResult> =
-  {
-    name: 'calculate_lowest_team_score',
-    description: 'Finds the lowest scoring team of the week across both leagues',
+const calculateFantasyPoints = (stats: any): number => {
+  if (!stats) return 0;
 
-    parameters: {
-      type: 'object',
-      properties: {
-        week: {
-          type: 'number',
-          description: 'NFL week number (1-18)',
-        },
-      },
-      required: ['week'],
-    },
+  let points = 0;
 
-    execute: async (args: LowestTeamScoreArgs): Promise<LowestTeamScoreResult> => {
-      // Fetch matchups from both leagues
-      const [afcMatchups, nfcMatchups] = await Promise.all([
-        sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-        sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-      ]);
+  // Passing
+  points += (stats.pass_yd || 0) * 0.04;
+  points += (stats.pass_td || 0) * 4;
+  points += (stats.pass_int || 0) * -1;
+  points += (stats.pass_2pt || 0) * 2;
 
-      const allMatchups = [...afcMatchups, ...nfcMatchups];
+  // Rushing
+  points += (stats.rush_yd || 0) * 0.1;
+  points += (stats.rush_td || 0) * 6;
+  points += (stats.rush_2pt || 0) * 2;
 
-      // Find the lowest score (excluding 0s from byes)
-      let lowestScore = Infinity;
-      let lowestTeam: SleeperMatchup | null = null;
-      let lowestLeagueId = '';
+  // Receiving
+  points += (stats.rec || 0) * 1; // PPR
+  points += (stats.rec_yd || 0) * 0.1;
+  points += (stats.rec_td || 0) * 6;
+  points += (stats.rec_2pt || 0) * 2;
 
-      allMatchups.forEach(matchup => {
-        const score = matchup.points || 0;
-        if (score > 0 && score < lowestScore) {
-          lowestScore = score;
-          lowestTeam = matchup;
-          lowestLeagueId = afcMatchups.includes(matchup) ? LEAGUE_IDS.AFC : LEAGUE_IDS.NFC;
-        }
-      });
+  // Fumbles
+  points += (stats.fum_lost || 0) * -2;
 
-      if (!lowestTeam) {
-        throw new Error('No team scores found');
-      }
+  // Kicking
+  points += (stats.fgm_0_19 || 0) * 3;
+  points += (stats.fgm_20_29 || 0) * 3;
+  points += (stats.fgm_30_39 || 0) * 3;
+  points += (stats.fgm_40_49 || 0) * 4;
+  points += (stats.fgm_50p || 0) * 5;
+  points += (stats.xpm || 0) * 1;
+  points += (stats.fgmiss || 0) * -1;
 
-      // Fetch roster info
-      const rosters = await sleeperClient.fetchRostersWithOwners(lowestLeagueId);
-      const roster = rosters.find(r => r.roster_id === lowestTeam.roster_id);
+  // Defense
+  points += (stats.def_td || 0) * 6;
+  points += (stats.def_st_td || 0) * 6;
+  points += (stats.def_int || 0) * 2;
+  points += (stats.def_fr || 0) * 2;
+  points += (stats.def_sack || 0) * 1;
+  points += (stats.def_safety || 0) * 2;
+  points += (stats.def_block_kick || 0) * 2;
 
-      // Fetch players for scoring breakdown
-      const players = await sleeperClient.fetchAllPlayers();
-      const worstPerformers = (lowestTeam.players || [])
-        .map((playerId: string) => ({
-          playerId,
-          name: players[playerId]
-            ? `${players[playerId].first_name} ${players[playerId].last_name}`
-            : playerId,
-          position: players[playerId]?.position || 'UNKNOWN',
-          points: lowestTeam.players_points?.[playerId] || 0,
-        }))
-        .filter(p => p.points > 0) // Only active players
-        .sort((a, b) => a.points - b.points)
-        .slice(0, 3);
+  // Points allowed (for DST)
+  if (stats.pts_allow !== undefined) {
+    if (stats.pts_allow === 0) points += 10;
+    else if (stats.pts_allow <= 6) points += 7;
+    else if (stats.pts_allow <= 13) points += 4;
+    else if (stats.pts_allow <= 20) points += 1;
+    else if (stats.pts_allow <= 27) points += 0;
+    else if (stats.pts_allow <= 34) points += -1;
+    else points += -4;
+  }
 
-      // Get real name from mapping
-      const ownerName =
-        getRealNameByRoster(lowestLeagueId, lowestTeam.roster_id) ||
-        roster?.metadata?.owner_name ||
-        'Unknown';
-
-      return {
-        score: Math.round(lowestScore * 100) / 100,
-        rosterId: lowestTeam.roster_id,
-        leagueId: lowestLeagueId,
-        league: lowestLeagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
-        teamName: roster?.metadata?.team_name || `Team ${lowestTeam.roster_id}`,
-        ownerName,
-        worstPerformers: worstPerformers.map(p => ({
-          name: p.name,
-          position: p.position,
-          points: Math.round(p.points * 100) / 100,
-        })),
-      };
-    },
-  };
-
-/**
- * Tool 2: Finds the top 3 players who most underperformed their projections.
- * Note: Uses mock projections (actual * 1.2) as placeholder until real projection data is integrated.
- */
-export const calculateBiggestBustsTool: ReportTool<BiggestBustsArgs, BiggestBustsResult[]> = {
-  name: 'calculate_biggest_busts',
-  description: 'Finds the top 3 players who most underperformed their projections',
-
-  parameters: {
-    type: 'object',
-    properties: {
-      week: {
-        type: 'number',
-        description: 'NFL week number (1-18)',
-      },
-    },
-    required: ['week'],
-  },
-
-  execute: async (args: BiggestBustsArgs): Promise<BiggestBustsResult[]> => {
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-    ]);
-
-    const allMatchups = [...afcMatchups, ...nfcMatchups];
-    const players = await sleeperClient.fetchAllPlayers();
-
-    // NOTE: In production, this would fetch actual projections from Sleeper API
-    // For now, we'll use a mock projection (actual * 1.2) as placeholder
-
-    const busts: BiggestBustsResult[] = [];
-
-    for (const matchup of allMatchups) {
-      const leagueId = afcMatchups.includes(matchup) ? LEAGUE_IDS.AFC : LEAGUE_IDS.NFC;
-      const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
-      const roster = rosters.find(r => r.roster_id === matchup.roster_id);
-
-      (matchup.players || []).forEach((playerId: string) => {
-        const player = players[playerId];
-        if (!player) return;
-
-        const actual = matchup.players_points?.[playerId] || 0;
-        // Mock projection: assume they were projected to score 20% more than actual
-        const projected = actual * 1.2;
-        const difference = actual - projected;
-
-        // Only include players who significantly underperformed (>10 pts below)
-        if (difference < -10) {
-          busts.push({
-            playerName: `${player.first_name} ${player.last_name}`,
-            position: player.position,
-            projected: Math.round(projected * 100) / 100,
-            actual: Math.round(actual * 100) / 100,
-            difference: Math.round(difference * 100) / 100,
-            teamName: roster?.metadata?.team_name || `Team ${matchup.roster_id}`,
-            league: leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
-          });
-        }
-      });
-    }
-
-    // Sort by biggest negative difference and take top 3
-    return busts.sort((a, b) => a.difference - b.difference).slice(0, 3);
-  },
+  return Math.round(points * 100) / 100;
 };
 
 /**
- * Tool 3: Finds teams that scored above league average but still lost.
+ * Fetch comprehensive Hall of Shame data for the week's worst performances
  */
-export const calculateBadBeatLossesTool: ReportTool<BadBeatLossesArgs, BadBeatLossesResult> = {
-  name: 'calculate_bad_beat_losses',
-  description: 'Finds teams that scored above league average but still lost',
+export const fetchHallOfShameTool: ReportTool<{ week: number }, HallOfShameResult> = {
+  name: 'fetch_hall_of_shame_data',
+  description: 'Fetches comprehensive data about the weeks worst performances league-wide',
 
   parameters: {
     type: 'object',
@@ -230,73 +120,116 @@ export const calculateBadBeatLossesTool: ReportTool<BadBeatLossesArgs, BadBeatLo
     required: ['week'],
   },
 
-  execute: async (args: BadBeatLossesArgs): Promise<BadBeatLossesResult> => {
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-    ]);
+  execute: async (args: { week: number }): Promise<HallOfShameResult> => {
+    // Fetch all matchups from both leagues
+    const [afcMatchups, nfcMatchups, afcRosters, nfcRosters, players, projections] =
+      await Promise.all([
+        sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
+        sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
+        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
+        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
+        sleeperClient.fetchAllPlayers(),
+        sleeperClient.fetchWeeklyProjections(args.week, '2025'),
+      ]);
 
-    const allMatchups = [...afcMatchups, ...nfcMatchups];
+    // Build roster lookup maps
+    const rosterMap = new Map();
+    [...afcRosters, ...nfcRosters].forEach(r => {
+      const key = `${r.league_id || LEAGUE_IDS.AFC}-${r.roster_id}`;
+      rosterMap.set(key, r);
+    });
 
-    // Calculate league average score
-    const allScores = allMatchups.map(m => m.points || 0).filter(s => s > 0);
-    const avgScore = allScores.reduce((sum, s) => sum + s, 0) / allScores.length;
+    // Find 3-5 worst scoring teams
+    const allMatchups = [
+      ...afcMatchups.map(m => ({ ...m, leagueId: LEAGUE_IDS.AFC, league: 'AFC' as const })),
+      ...nfcMatchups.map(m => ({ ...m, leagueId: LEAGUE_IDS.NFC, league: 'NFC' as const })),
+    ];
 
-    // Find bad beat losses (scored above average but lost)
-    const badBeats: Array<{
-      teamName: string;
-      ownerName: string;
-      score: number;
-      opponentScore: number;
-      margin: number;
-      league: string;
-      aboveAvgBy: number;
-    }> = [];
+    const sortedByScore = [...allMatchups].sort((a, b) => (a.points || 0) - (b.points || 0));
+    const worstTeams: TeamPerformance[] = sortedByScore.slice(0, 5).map((m, idx) => {
+      const rosterKey = `${m.leagueId}-${m.roster_id}`;
+      const roster = rosterMap.get(rosterKey);
+      const manager =
+        getRealNameByRoster(m.leagueId, m.roster_id) ||
+        roster?.owner?.display_name ||
+        `Team ${m.roster_id}`;
+      const teamName = roster?.owner?.metadata?.team_name || manager;
 
-    const processLeague = async (matchups: SleeperMatchup[], leagueId: string): Promise<void> => {
-      const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
+      return {
+        manager,
+        teamName,
+        totalScore: m.points || 0,
+        league: m.league,
+        rank: idx + 1,
+      };
+    });
 
-      for (let i = 0; i < matchups.length; i++) {
-        const team = matchups[i];
-        const opponent = matchups.find((m, idx) => idx !== i && m.matchup_id === team.matchup_id);
+    // Build comprehensive bust list across ALL players
+    const playerBusts = new Map<string, PlayerPerformance>();
 
-        if (!opponent) continue;
+    // Process each matchup to find busts
+    for (const matchup of allMatchups) {
+      const starterIds = new Set(matchup.starters || []);
 
-        const teamScore = team.points || 0;
-        const oppScore = opponent.points || 0;
+      for (const playerId of matchup.starters || []) {
+        if (!playerId) continue;
 
-        // Check if this team lost despite scoring above average
-        if (teamScore > avgScore && teamScore < oppScore) {
-          const roster = rosters.find(r => r.roster_id === team.roster_id);
-          const ownerName =
-            getRealNameByRoster(leagueId, team.roster_id) ||
-            roster?.metadata?.owner_name ||
-            'Unknown';
+        const player = players[playerId];
+        if (!player) continue;
 
-          badBeats.push({
-            teamName: roster?.metadata?.team_name || `Team ${team.roster_id}`,
-            ownerName,
-            score: Math.round(teamScore * 100) / 100,
-            opponentScore: Math.round(oppScore * 100) / 100,
-            margin: Math.round((oppScore - teamScore) * 100) / 100,
-            league: leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
-            aboveAvgBy: Math.round((teamScore - avgScore) * 100) / 100,
+        const projection = projections[playerId];
+        if (!projection) continue;
+
+        const projected = calculateFantasyPoints(projection);
+        const actual = matchup.players_points?.[playerId] || 0;
+        const diff = actual - projected;
+
+        // Only track significant busts (projected 5+, missed by 5+)
+        if (projected < 5 || diff >= -5) continue;
+
+        // Add or update player bust record
+        if (!playerBusts.has(playerId)) {
+          playerBusts.set(playerId, {
+            playerId,
+            playerName: `${player.first_name} ${player.last_name}`,
+            position: player.position,
+            projected,
+            actual,
+            diff,
+            started: starterIds.has(playerId),
+            ownedBy: [],
           });
         }
+
+        // Add ownership info
+        const bustRecord = playerBusts.get(playerId)!;
+        const rosterKey = `${matchup.leagueId}-${matchup.roster_id}`;
+        const roster = rosterMap.get(rosterKey);
+        const manager =
+          getRealNameByRoster((matchup as any).leagueId, matchup.roster_id) ||
+          roster?.owner?.display_name ||
+          `Team ${matchup.roster_id}`;
+        const teamName = roster?.owner?.metadata?.team_name || manager;
+
+        bustRecord.ownedBy.push({
+          manager,
+          teamName,
+          league: (matchup as any).league,
+          started: starterIds.has(playerId),
+        });
       }
-    };
+    }
 
-    await Promise.all([
-      processLeague(afcMatchups, LEAGUE_IDS.AFC),
-      processLeague(nfcMatchups, LEAGUE_IDS.NFC),
-    ]);
-
-    // Sort by most above average
-    const sortedBadBeats = badBeats.sort((a, b) => b.aboveAvgBy - a.aboveAvgBy);
+    // Sort busts by biggest miss and take top 10-15
+    const biggestBusts = Array.from(playerBusts.values())
+      .sort((a, b) => a.diff - b.diff)
+      .slice(0, 15);
 
     return {
-      avgScore: Math.round(avgScore * 100) / 100,
-      badBeats: sortedBadBeats,
+      worstTeams,
+      biggestBusts,
+      totalTeamsAnalyzed: allMatchups.length,
+      totalPlayersAnalyzed: playerBusts.size,
     };
   },
 };

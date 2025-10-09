@@ -386,6 +386,102 @@ testPowerRankings();
 4. ✅ Notable changes identified correctly - DONE
 5. ✅ Code committed with message:
    `feat(recap): implement power rankings commentary (RECAP-013)` - DONE
+6. ✅ **CRITICAL FIX: Algorithm matches Stats Hub** - DONE
+
+---
+
+## 🔧 Post-Implementation Fix (2025-10-08)
+
+### Issue Discovered
+
+**Problem**: Power rankings tool was using a simple "points for" sort algorithm, 
+but the Stats Hub uses an **advanced formula**:
+- **50%** z-score of average points per game
+- **30%** z-score of expected wins (cumulative)
+- **20%** z-score of rolling 3-week average
+
+This caused rankings in the weekly recap to not match what users see in Stats Hub.
+
+### Solution Implemented (FINAL - After 2 Iterations)
+
+Updated `power-rankings.ts` to use the **exact Stats Hub algorithm**:
+
+```typescript
+// Calculate z-scores for normalization
+const zAvgPoints = calculateZScores(avgPointsValues);
+const zExpectedWins = calculateZScores(expectedWinsValues);
+const zRolling3 = calculateZScores(rolling3Values);
+
+// Apply the power ranking formula
+const powerScore = 0.5 * zAvgPoints + 0.3 * zExpectedWins + 0.2 * zRolling3;
+
+// Normalize to Stats Hub scale (do NOT re-normalize, z-scores already have mean=0)
+const normalizedScore = 100 + powerScore * 15;
+```
+
+**Critical fixes**:
+1. **No double normalization** - Stats Hub scales z-scores directly, doesn't re-normalize
+2. **Expected wins calculated league-wide** - Compare against all 24 teams, not just within each league
+
+### Validation Results
+
+✅ **All checks passed** - Rankings now EXACTLY match Stats Hub:
+- **#1 Jeffrey (Team 9, NFC)** - 5-0, jumped ↑10 spots
+- **#2 Akhil V (Team 4, NFC)** - 4-1, jumped ↑7 spots  
+- **#3 Joel (Team 10, AFC)** - 4-1
+- 24 teams ranked correctly (AFC + NFC combined)
+- Movement tracking working (10 teams moved 3+ spots)
+- Biggest riser: Jeffrey (↑10 spots)
+- Biggest faller: Ziyan (↓5 spots)
+
+### Impact
+
+- Rankings now **EXACTLY match** Stats Hub 
+- Jeffrey correctly at #1 (was showing Adam before fix)
+- Expected wins properly calculated league-wide
+- More dramatic movement patterns (max movement: ↑10 spots!)
+- Users see identical rankings in both features
+
+---
+
+## 🎯 Enhancement: Dynamic Tier Clustering (2025-10-08)
+
+### What Was Added
+
+**Gap-based clustering algorithm** that automatically identifies natural tier boundaries:
+
+**Algorithm Features:**
+- Analyzes gaps between consecutive teams' power scores
+- Identifies significant gaps (> mean + 0.25 × stddev)  
+- Forces breaks in oversized tiers (>6 teams)
+- Finds largest gap within oversized tier to create natural split
+- Generates 3-8 tiers dynamically (no hardcoded labels)
+
+**Week 5 Results**: 6 tiers identified
+- Tier 1: 7 teams (112.78-115.37) - Elite
+- Tier 2: 3 teams (109.27-111.67) - Strong middle
+- Tier 3: 4 teams (99.97-107.68) - Solid
+- Tier 4: 5 teams (91.43-98.67) - Middle pack
+- Tier 5: 3 teams (75.27-89.91) - Struggling
+- Tier 6: 2 teams (68.11-73.09) - Bottom
+
+### Prompt Enhancement
+
+Updated commentary prompt to ensure **full tier coverage**:
+- **Paragraph 1**: Top + tier structure
+- **Paragraph 2**: Middle tier movement  
+- **Paragraph 3**: Bottom tier action
+
+**Before**: Commentary focused only on Jeffrey and top 3
+**After**: Commentary covers top, middle (Dhruv, Ben, Christian), and bottom (Vinny, Arnav)
+
+### Benefits
+
+✅ **No hardcoded tiers** - adapts to data naturally
+✅ **Better visualization** - UI can show tier breaks visually
+✅ **More context** - users understand relative team positioning
+✅ **Balanced commentary** - covers all tiers, not just the top
+✅ **Flexible** - works with any number of teams/distribution
 
 ---
 
@@ -398,4 +494,6 @@ narrative)
 
 **Created**: 2025-10-08  
 **Completed**: 2025-10-08  
-**Status**: ✅ Complete
+**Critical Fix Applied**: 2025-10-08  
+**Dynamic Tiers Added**: 2025-10-08  
+**Status**: ✅ Complete, Audited & Enhanced with Dynamic Tier Clustering
