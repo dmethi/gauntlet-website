@@ -303,6 +303,9 @@ importers:
         specifier: ^4.1.12
         version: 4.1.12
     devDependencies:
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^6.17.0
+        version: 6.17.0
       '@testing-library/jest-dom':
         specifier: 6.1.5
         version: 6.1.5(@jest/globals@29.7.0)(@types/jest@29.5.14)(jest@29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@types/node@20.19.9)(typescript@5.8.3)))(vitest@3.2.4(@types/node@20.19.9)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))
@@ -1204,6 +1207,9 @@ packages:
 
   '@prisma/get-platform@5.22.0':
     resolution: {integrity: sha512-pHhpQdr1UPFpt+zFfnPazhulaZYCUqeIcPpJViYoq9R+D/yw4fjE+CtnsnKzPYm0ddUbeXUzjGVGIRVgPDCk4Q==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.17.0':
+    resolution: {integrity: sha512-dtMvb1tPeaw2UQYZT/bWAz2tYXvj3vQUE6L+KbuUa4vxCTMQ5CbTRN3J9JJ4EWwMq4wNFtVz9isKr9pLhqtUEA==}
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -6322,6 +6328,8 @@ snapshots:
   '@prisma/get-platform@5.22.0':
     dependencies:
       '@prisma/debug': 5.22.0
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.17.0': {}
 
   '@radix-ui/number@1.1.1': {}
 
