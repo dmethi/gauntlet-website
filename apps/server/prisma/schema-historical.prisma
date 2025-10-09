@@ -3,8 +3,9 @@
 // Everything else uses Sleeper API directly (see apps/web/src/lib/api-replacements.ts)
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma-historical"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma-historical"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
