@@ -13,6 +13,9 @@
     },
     "src/app/api/cron/live-odds/route.{js,ts}": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/recap-report/route.{js,ts}": {
+      "maxDuration": 300
     }
   }
 }

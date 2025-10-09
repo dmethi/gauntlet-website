@@ -37,6 +37,7 @@
     "test:upcoming": "tsx scripts/test-upcoming.ts",
     "test:closing": "tsx scripts/test-closing-commentary.ts",
     "test:report-list": "tsx scripts/test-report-list.ts",
+    "test:cron-recap": "tsx scripts/test-cron-recap.ts",
     "generate:usernames": "tsx scripts/generate-username-mapping.ts",
     "check:week5-data": "tsx scripts/check-week5-game-flow-data.ts",
     "precompute": "npx tsx src/scripts/precompute-analytics.ts",
