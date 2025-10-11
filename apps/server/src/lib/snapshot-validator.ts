@@ -17,9 +17,14 @@ import type {
 /**
  * Check if snapshot data has changed significantly since the last snapshot
  *
+ * Enhanced logic to reduce noise:
+ * 1. ANY change in actual scores → save (games are happening!)
+ * 2. NO score change + projections changed <10% → skip (just simulation noise)
+ * 3. NO score change + projections changed ≥10% → save (meaningful projection shift)
+ *
  * @param previous - Previous snapshot data from database
  * @param current - Current snapshot data to validate
- * @param threshold - Minimum difference to consider as changed (default: 0.01)
+ * @param threshold - Minimum absolute difference for scores (default: 0.01)
  * @returns True if data has changed significantly, false otherwise
  *
  * @example
@@ -35,23 +40,46 @@ export const hasSignificantChange = (
   current: CompleteSnapshot,
   threshold = 0.01
 ): boolean => {
-  // Compare scores
-  const scoresMatch =
-    Math.abs(previous.currentScoreA - current.team1.currentScore) < threshold &&
-    Math.abs(previous.currentScoreB - current.team2.currentScore) < threshold;
+  // 1. Check if actual scores changed (ANY change in live scores is significant!)
+  const scoreChangedA = Math.abs(previous.currentScoreA - current.team1.currentScore) >= threshold;
+  const scoreChangedB = Math.abs(previous.currentScoreB - current.team2.currentScore) >= threshold;
 
-  // Compare projections
-  const projectionsMatch =
-    Math.abs(previous.projectedFinalA - current.team1.simulatedMean) < threshold &&
-    Math.abs(previous.projectedFinalB - current.team2.simulatedMean) < threshold;
+  if (scoreChangedA || scoreChangedB) {
+    // Scores changed - this is ALWAYS significant (game is happening)
+    return true;
+  }
 
-  // Compare odds
-  const oddsMatch =
-    Math.abs(previous.spread - current.spread) < threshold &&
-    Math.abs(previous.total - current.total) < threshold;
+  // 2. Scores unchanged - check projection changes using percentage threshold
+  // Use 10% of the projection as threshold to filter simulation noise
+  const PROJECTION_THRESHOLD_PCT = 0.1; // 10%
 
-  // Return true if ANY have changed
-  return !scoresMatch || !projectionsMatch || !oddsMatch;
+  const projThresholdA = Math.max(previous.projectedFinalA * PROJECTION_THRESHOLD_PCT, 1.0);
+  const projThresholdB = Math.max(previous.projectedFinalB * PROJECTION_THRESHOLD_PCT, 1.0);
+
+  const projChangedA =
+    Math.abs(previous.projectedFinalA - current.team1.simulatedMean) >= projThresholdA;
+  const projChangedB =
+    Math.abs(previous.projectedFinalB - current.team2.simulatedMean) >= projThresholdB;
+
+  if (projChangedA || projChangedB) {
+    // Projection changed by >10% - might be meaningful (player status change, etc.)
+    return true;
+  }
+
+  // 3. Check win probability changes (>5% swing is meaningful)
+  const WIN_PROB_THRESHOLD = 0.05; // 5%
+  const winProbChangedA =
+    Math.abs(previous.winProbA - current.team1.winProbability) >= WIN_PROB_THRESHOLD;
+  const winProbChangedB =
+    Math.abs(previous.winProbB - current.team2.winProbability) >= WIN_PROB_THRESHOLD;
+
+  if (winProbChangedA || winProbChangedB) {
+    // Win probability shifted significantly
+    return true;
+  }
+
+  // 4. No significant changes detected - skip this snapshot
+  return false;
 };
 
 /**

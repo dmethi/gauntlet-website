@@ -10,6 +10,8 @@ import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/components/matchup-simulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
 import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/matchups/types';
+import { WinProbChart, ScoreChart } from '@/components/matchup-charts';
+import { useMatchupTimeSeries } from '@/features/matchups/hooks';
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'FLEX', 'K', 'DEF'];
 
@@ -64,6 +66,13 @@ export default function MatchupDetailPage(): JSX.Element {
   const [playerDistributions, setPlayerDistributions] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch time series data for charts
+  const { data: timeSeriesData, isLoading: timeSeriesLoading } = useMatchupTimeSeries(
+    Array.isArray(leagueId) ? leagueId[0] : (leagueId as string),
+    parseInt(Array.isArray(week) ? week[0] : (week as string)),
+    parseInt(Array.isArray(matchupId) ? matchupId[0] : (matchupId as string)),
+  );
 
   useEffect(() => {
     const fetchMatchupDetails = async () => {
@@ -284,6 +293,71 @@ export default function MatchupDetailPage(): JSX.Element {
           week={parseInt(Array.isArray(week) ? week[0] : week)}
           matchupId={matchup.matchupId}
         />
+
+        {/* Live Charts - Win Probability & Score Over Time */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Win Probability Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-geizer tracking-wide">
+                Win Probability Over Time
+              </CardTitle>
+              <CardDescription className="font-avenir">
+                How the odds changed throughout the week
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {timeSeriesLoading ? (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground">Loading chart data...</div>
+                </div>
+              ) : timeSeriesData?.series && timeSeriesData.series.length > 0 ? (
+                <WinProbChart
+                  series={timeSeriesData.series}
+                  teamAName={teamA.ownerName}
+                  teamBName={teamB.ownerName}
+                />
+              ) : (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-center text-sm text-muted-foreground px-4">
+                    <p className="mb-2">Live data not yet available</p>
+                    <p className="text-xs">Data is collected during games starting Week 6</p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Score Over Time Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-geizer tracking-wide">Score Over Time</CardTitle>
+              <CardDescription className="font-avenir">
+                How points accumulated during the week
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {timeSeriesLoading ? (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground">Loading chart data...</div>
+                </div>
+              ) : timeSeriesData?.series && timeSeriesData.series.length > 0 ? (
+                <ScoreChart
+                  series={timeSeriesData.series}
+                  teamAName={teamA.ownerName}
+                  teamBName={teamB.ownerName}
+                />
+              ) : (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-center text-sm text-muted-foreground px-4">
+                    <p className="mb-2">Live data not yet available</p>
+                    <p className="text-xs">Data is collected during games starting Week 6</p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Team Rosters */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

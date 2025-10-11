@@ -20,6 +20,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { WinProbChart, ScoreChart } from '@/components/matchup-charts';
+import { useMatchupTimeSeries } from '@/features/matchups/hooks';
 
 const MatchupDetailLoader = () => (
   <ContentLoader
@@ -296,14 +298,22 @@ const TeamRoster = ({
 const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } }) => {
   const searchParams = useSearchParams();
   const week = searchParams.get('week');
+  const leagueIdParam = searchParams.get('leagueId');
   const weekNumber = week ? parseInt(week) : 1;
   const matchupId = parseInt(params.matchupId);
   const { theme } = useTheme(); // Move hook to top level
 
-  // For now, hardcode league ID - this should be dynamic in a real app
-  const leagueId = '997670420490801152';
+  // Get league ID from URL params, fallback to Gauntlet AFC
+  const leagueId = leagueIdParam || '1263744209295245312';
 
   const { data: matchup, isLoading: loading, error } = useMatchup(leagueId, weekNumber, matchupId);
+
+  // Fetch time series data for charts
+  const {
+    data: timeSeriesData,
+    isLoading: timeSeriesLoading,
+    error: timeSeriesError,
+  } = useMatchupTimeSeries(leagueId, weekNumber, matchupId);
 
   // Get all unique player IDs from both teams if matchup data is available
   const allPlayerIds = React.useMemo(() => {
@@ -540,248 +550,58 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
               description="How the odds changed throughout the week"
               height={320}
             >
-              <div className="h-48 relative">
-                <svg className="w-full h-full" viewBox="0 0 320 160">
-                  {/* Y-axis */}
-                  <line
-                    x1="20"
-                    y1="10"
-                    x2="20"
-                    y2="150"
-                    stroke="hsl(var(--border))"
-                    strokeWidth="1"
-                  />
-                  {/* X-axis */}
-                  <line
-                    x1="20"
-                    y1="150"
-                    x2="300"
-                    y2="150"
-                    stroke="hsl(var(--border))"
-                    strokeWidth="1"
-                  />
-
-                  {/* 50% reference line */}
-                  <line
-                    x1="20"
-                    y1="80"
-                    x2="300"
-                    y2="80"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth="1"
-                    strokeDasharray="5,5"
-                  />
-                  <text x="2" y="85" fontSize="10" fill="hsl(var(--muted-foreground))">
-                    50%
-                  </text>
-                  <text x="2" y="25" fontSize="10" fill="hsl(var(--muted-foreground))">
-                    100%
-                  </text>
-                  <text x="2" y="155" fontSize="10" fill="hsl(var(--muted-foreground))">
-                    0%
-                  </text>
-
-                  {/* Win probability line */}
-                  <polyline
-                    points="20,92 40,85 60,110 80,102 100,70 120,118 140,92 160,58 180,98 200,88 220,95 240,62 260,55 280,50 300,55"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="2"
-                    fill="none"
-                    className="drop-shadow-sm"
-                  />
-
-                  {/* Data points */}
-                  <circle cx="20" cy="92" r="3" fill="hsl(var(--primary))" />
-                  <circle cx="160" cy="58" r="3" fill="hsl(var(--primary))" />
-                  <circle cx="300" cy="55" r="3" fill="hsl(var(--primary))" />
-
-                  {/* Time labels */}
-                  <text
-                    x="20"
-                    y="170"
-                    fontSize="10"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="start"
-                  >
-                    Sun 1PM
-                  </text>
-                  <text
-                    x="160"
-                    y="170"
-                    fontSize="10"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="middle"
-                  >
-                    Sun 8PM
-                  </text>
-                  <text
-                    x="300"
-                    y="170"
-                    fontSize="10"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="end"
-                  >
-                    Final
-                  </text>
-                </svg>
-              </div>
-              <div className="flex justify-between text-sm pt-4 border-t">
-                <div className="text-center">
-                  <p className="font-semibold text-primary">80%</p>
-                  <p className="text-muted-foreground text-xs">Peak Win %</p>
+              {timeSeriesLoading ? (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground">Loading chart data...</div>
                 </div>
-                <div className="text-center">
-                  <p className="font-semibold text-primary">4</p>
-                  <p className="text-muted-foreground text-xs">Lead Changes</p>
+              ) : timeSeriesError ? (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground">Unable to load chart data</div>
                 </div>
-                <div className="text-center">
-                  <p className="font-semibold text-primary">15.3</p>
-                  <p className="text-muted-foreground text-xs">Avg Swing</p>
+              ) : timeSeriesData?.series && timeSeriesData.series.length > 0 ? (
+                <WinProbChart
+                  series={timeSeriesData.series}
+                  teamAName={teamA.owner?.displayName || 'Team A'}
+                  teamBName={teamB.owner?.displayName || 'Team B'}
+                />
+              ) : (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-center text-sm text-muted-foreground px-4">
+                    <p className="mb-2">Live data not yet available for this matchup</p>
+                    <p className="text-xs">Data is collected during games starting Week 6</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </ChartContainer>
 
             {/* Score Progression */}
             <ChartContainer
-              title="Score Progression"
+              title="Score Over Time"
               description="How points accumulated during the week"
-              height={380}
+              height={320}
             >
-              <div className="h-48 relative mb-4">
-                <svg className="w-full h-full" viewBox="0 0 380 160">
-                  {/* Y-axis */}
-                  <line
-                    x1="30"
-                    y1="10"
-                    x2="30"
-                    y2="140"
-                    stroke="hsl(var(--border))"
-                    strokeWidth="1"
-                  />
-                  {/* X-axis */}
-                  <line
-                    x1="30"
-                    y1="140"
-                    x2="360"
-                    y2="140"
-                    stroke="hsl(var(--border))"
-                    strokeWidth="1"
-                  />
-
-                  {/* Y-axis labels */}
-                  <text
-                    x="25"
-                    y="15"
-                    fontSize="9"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="end"
-                  >
-                    120
-                  </text>
-                  <text
-                    x="25"
-                    y="45"
-                    fontSize="9"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="end"
-                  >
-                    80
-                  </text>
-                  <text
-                    x="25"
-                    y="75"
-                    fontSize="9"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="end"
-                  >
-                    40
-                  </text>
-                  <text
-                    x="25"
-                    y="105"
-                    fontSize="9"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="end"
-                  >
-                    20
-                  </text>
-                  <text
-                    x="25"
-                    y="143"
-                    fontSize="9"
-                    fill="hsl(var(--muted-foreground))"
-                    textAnchor="end"
-                  >
-                    0
-                  </text>
-
-                  {/* Team A score line */}
-                  <path
-                    d="M30,140 Q60,130 90,110 Q120,95 150,75 Q180,60 210,45 Q240,35 270,28 Q300,22 330,18 Q345,16 360,15"
-                    stroke={teamAColor}
-                    strokeWidth="2.5"
-                    fill="none"
-                    className="drop-shadow-sm"
-                  />
-
-                  {/* Team B score line */}
-                  <path
-                    d="M30,140 Q60,135 90,120 Q120,108 150,98 Q180,90 210,85 Q240,82 270,80 Q300,79 330,78 Q345,78 360,78"
-                    stroke={teamBColor}
-                    strokeWidth="2.5"
-                    fill="none"
-                    className="drop-shadow-sm"
-                  />
-
-                  {/* Data point markers for Team A */}
-                  <circle cx="90" cy="110" r="2" fill={teamAColor} />
-                  <circle cx="210" cy="45" r="2" fill={teamAColor} />
-                  <circle cx="360" cy="15" r="2" fill={teamAColor} />
-                  {/* Data point markers for Team B */}
-                  <circle cx="90" cy="120" r="2" fill={teamBColor} />
-                  <circle cx="210" cy="85" r="2" fill={teamBColor} />
-                  <circle cx="360" cy="78" r="2" fill={teamBColor} />
-
-                  {/* Time labels */}
-                  <text x="90" y="155" fontSize="10" fill="#6b7280" textAnchor="middle">
-                    Sun 1PM
-                  </text>
-                  <text x="210" y="155" fontSize="10" fill="#6b7280" textAnchor="middle">
-                    Sun 4PM
-                  </text>
-                  <text x="300" y="155" fontSize="10" fill="#6b7280" textAnchor="middle">
-                    Sun 8PM
-                  </text>
-                  <text x="360" y="155" fontSize="10" fill="#6b7280" textAnchor="middle">
-                    Mon 8PM
-                  </text>
-                </svg>
-              </div>
-
-              <ChartLegend
-                items={[
-                  { label: teamA.owner?.displayName || 'Team A', color: teamAColor },
-                  { label: teamB.owner?.displayName || 'Team B', color: teamBColor },
-                ]}
-              />
-
-              <div className="grid grid-cols-3 gap-4 text-sm mt-4 pt-4 border-t">
-                <div className="text-center">
-                  <p className="font-semibold text-foreground">Sunday 1PM</p>
-                  <p className="text-muted-foreground text-xs">68% of points</p>
-                  <p className="text-xs text-primary">Most active slot</p>
+              {timeSeriesLoading ? (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground">Loading chart data...</div>
                 </div>
-                <div className="text-center">
-                  <p className="font-semibold text-foreground">Sunday 4PM</p>
-                  <p className="text-muted-foreground text-xs">22% of points</p>
-                  <p className="text-xs text-muted-foreground">Secondary games</p>
+              ) : timeSeriesError ? (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground">Unable to load chart data</div>
                 </div>
-                <div className="text-center">
-                  <p className="font-semibold text-foreground">Mon Night</p>
-                  <p className="text-muted-foreground text-xs">10% of points</p>
-                  <p className="text-xs text-primary">Close finish</p>
+              ) : timeSeriesData?.series && timeSeriesData.series.length > 0 ? (
+                <ScoreChart
+                  series={timeSeriesData.series}
+                  teamAName={teamA.owner?.displayName || 'Team A'}
+                  teamBName={teamB.owner?.displayName || 'Team B'}
+                />
+              ) : (
+                <div className="h-48 flex items-center justify-center">
+                  <div className="text-center text-sm text-muted-foreground px-4">
+                    <p className="mb-2">Live data not yet available for this matchup</p>
+                    <p className="text-xs">Data is collected during games starting Week 6</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </ChartContainer>
           </div>
 
