@@ -302,6 +302,8 @@ export const getMatchupWinProbTimeSeries = async (
 ): Promise<
   Array<{
     timestamp: Date;
+    rosterAId: number;
+    rosterBId: number;
     winProbA: number;
     winProbB: number;
     currentScoreA: number;
@@ -317,6 +319,8 @@ export const getMatchupWinProbTimeSeries = async (
     orderBy: { timestamp: 'asc' },
     select: {
       timestamp: true,
+      rosterAId: true,
+      rosterBId: true,
       winProbA: true,
       winProbB: true,
       currentScoreA: true,

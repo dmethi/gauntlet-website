@@ -12,6 +12,7 @@ import { PlayerBoxPlot } from '@/components/player-box-plot';
 import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/matchups/types';
 import { WinProbChart, ScoreChart } from '@/components/matchup-charts';
 import { useMatchupTimeSeries } from '@/features/matchups/hooks';
+import { SwingPointsDisplay } from '@/features/matchups/components/SwingPointsDisplay';
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'FLEX', 'K', 'DEF'];
 
@@ -358,6 +359,19 @@ export default function MatchupDetailPage(): JSX.Element {
             </CardContent>
           </Card>
         </div>
+
+        {/* Game Swings Section */}
+        {timeSeriesData?.series && timeSeriesData.series.length > 0 && (
+          <SwingPointsDisplay
+            series={timeSeriesData.series}
+            teamAName={teamA.ownerName}
+            teamBName={teamB.ownerName}
+            teamARosterId={teamA.rosterId}
+            teamBRosterId={teamB.rosterId}
+            rosterAIdFromDB={timeSeriesData.metadata?.rosterAId}
+            rosterBIdFromDB={timeSeriesData.metadata?.rosterBId}
+          />
+        )}
 
         {/* Team Rosters */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

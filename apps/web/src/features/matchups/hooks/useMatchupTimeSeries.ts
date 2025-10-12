@@ -25,6 +25,8 @@ interface TimeSeriesResponse {
     matchupId: number;
     sampleCount: number;
     hasData: boolean;
+    rosterAId?: number | null;
+    rosterBId?: number | null;
   };
 }
 
@@ -53,11 +55,7 @@ interface TimeSeriesResponse {
  * }
  * ```
  */
-export const useMatchupTimeSeries = (
-  leagueId: string,
-  week: number,
-  matchupId: number,
-) => {
+export const useMatchupTimeSeries = (leagueId: string, week: number, matchupId: number) => {
   return useQuery<TimeSeriesResponse>({
     queryKey: ['matchup-timeseries', leagueId, week, matchupId],
     queryFn: async () => {
@@ -77,4 +75,3 @@ export const useMatchupTimeSeries = (
     retry: 1,
   });
 };
-

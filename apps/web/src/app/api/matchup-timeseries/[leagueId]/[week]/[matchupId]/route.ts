@@ -25,14 +25,15 @@ export const GET = async (
     const matchupIdNum = parseInt(matchupId);
 
     if (isNaN(weekNum) || isNaN(matchupIdNum)) {
-      return NextResponse.json(
-        { error: 'Invalid week or matchupId parameter' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Invalid week or matchupId parameter' }, { status: 400 });
     }
 
     // Fetch raw time series from database
     const rawData = await getMatchupWinProbTimeSeries(leagueId, weekNum, matchupIdNum);
+
+    // Get roster IDs from first sample (they're constant across all samples)
+    const rosterAId = rawData.length > 0 ? rawData[0].rosterAId : null;
+    const rosterBId = rawData.length > 0 ? rawData[0].rosterBId : null;
 
     // Transform to expected format for charts
     const series = rawData.map(sample => ({
@@ -54,14 +55,12 @@ export const GET = async (
         matchupId: matchupIdNum,
         sampleCount: series.length,
         hasData: series.length > 0,
+        rosterAId,
+        rosterBId,
       },
     });
   } catch (error) {
     console.error('[API] Failed to fetch matchup time series:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch time series data' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Failed to fetch time series data' }, { status: 500 });
   }
 };
-

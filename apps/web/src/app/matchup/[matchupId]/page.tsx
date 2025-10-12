@@ -2,9 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useTheme } from 'next-themes';
-import { getTeamColor } from '@/shared/utils/colors';
-import { ChartContainer, ChartLegend, Container, PageHeader } from '@gauntlet/ui';
+import { ChartContainer, Container, PageHeader } from '@gauntlet/ui';
 import {
   type PlayerInfo,
   type PlayerStats,
@@ -20,8 +18,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { WinProbChart, ScoreChart } from '@/components/matchup-charts';
+import { ScoreChart, WinProbChart } from '@/components/matchup-charts';
 import { useMatchupTimeSeries } from '@/features/matchups/hooks';
+import { SwingPointsDisplay } from '@/features/matchups/components/SwingPointsDisplay';
 
 const MatchupDetailLoader = () => (
   <ContentLoader
@@ -301,7 +300,6 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
   const leagueIdParam = searchParams.get('leagueId');
   const weekNumber = week ? parseInt(week) : 1;
   const matchupId = parseInt(params.matchupId);
-  const { theme } = useTheme(); // Move hook to top level
 
   // Get league ID from URL params, fallback to Gauntlet AFC
   const leagueId = leagueIdParam || '1263744209295245312';
@@ -398,10 +396,6 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
   const winner = matchup.matchup.summary?.winnerRosterId;
   const isTeamAWinner = winner === teamA.rosterId;
   const isTeamBWinner = winner === teamB.rosterId;
-
-  // Get team colors using roster IDs for consistent assignment
-  const teamAColor = getTeamColor(String(teamA.rosterId), theme as 'light' | 'dark');
-  const teamBColor = getTeamColor(String(teamB.rosterId), theme as 'light' | 'dark');
 
   const totalPoints = teamA.points + teamB.points;
   const margin = matchup.matchup.summary?.margin || Math.abs(teamA.points - teamB.points);
@@ -604,6 +598,17 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
               )}
             </ChartContainer>
           </div>
+
+          {/* Game Swings Section */}
+          {timeSeriesData?.series && timeSeriesData.series.length > 0 && (
+            <div className="mt-6">
+              <SwingPointsDisplay
+                series={timeSeriesData.series}
+                teamAName={teamA.owner?.displayName || 'Team A'}
+                teamBName={teamB.owner?.displayName || 'Team B'}
+              />
+            </div>
+          )}
 
           {/* Advanced Analytics */}
           <Card className="mt-6">
