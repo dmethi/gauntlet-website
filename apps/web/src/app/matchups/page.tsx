@@ -15,7 +15,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, Swords, Trophy } from 'lucide-react';
 import Link from 'next/link';
-import { MatchupOddsPreview } from '@/components/matchup-odds-preview';
+import { MatchupOddsPreview } from '@/features/matchups';
 import { LeagueWideOdds } from '@/components/league-wide-odds';
 import type { LeagueMatchups, MatchupData, MatchupTeam } from '@/features/matchups/types';
 

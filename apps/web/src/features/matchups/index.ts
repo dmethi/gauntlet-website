@@ -1,7 +1,15 @@
 /**
  * Matchups Feature
- * Exports all matchup-related types for head-to-head matchups and simulations
+ * Exports all matchup-related types, components, and hooks for head-to-head matchups and simulations
  */
+
+// Export components
+export { MatchupSimulation } from './components';
+export { MatchupOddsPreview } from './components';
+export { SwingPointsDisplay } from './components';
+
+// Export hooks
+export { useMatchupTimeSeries, useMatchupOdds } from './hooks';
 
 // Export types
 export type {
