@@ -5,7 +5,7 @@ import type { PlainStatsDataset } from '@/shared/utils/stats';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StartSitEfficiencyTab from '@/components/stats/StartSitEfficiencyTab';
-import { TransactionAnalysis } from './components/TransactionAnalysis';
+import { TransactionAnalysis } from '@/features/transactions/components/TransactionAnalysis';
 import { LeagueView } from './components/LeagueView';
 import { ScheduleAnalysis } from './components/ScheduleAnalysis';
 import { ScatterAnalysis } from './components/ScatterAnalysis';
@@ -153,7 +153,7 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
         </TabsContent>
 
         <TabsContent value="transactions">
-          <TransactionAnalysis key="transaction-analysis" />
+          <TransactionAnalysis currentWeek={dataset.currentWeek} />
         </TabsContent>
 
         <TabsContent value="start-sit">
