@@ -10,7 +10,7 @@ import { LeagueView } from './components/LeagueView';
 import { ScheduleAnalysis } from './components/ScheduleAnalysis';
 import { ScatterAnalysis } from './components/ScatterAnalysis';
 import { TrendsView } from './components/TrendsView';
-import { TeamView } from './components/TeamView';
+import { TeamView } from '@/features/stats/components/TeamView';
 
 interface StatsContentProps {
   dataset: PlainStatsDataset & { startSitEfficiency?: any };
