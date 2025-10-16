@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
-import { MatchupSimulation } from '@/components/matchup-simulation';
+import { MatchupSimulation } from '@/features/matchups/components/MatchupSimulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
 import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/matchups/types';
 import { ScoreChart, WinProbChart } from '@/components/matchup-charts';

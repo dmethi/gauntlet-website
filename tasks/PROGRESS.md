@@ -2,10 +2,10 @@
 
 **Last Updated**: October 16, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 47.6% (60/126 tasks)  
+**Overall Progress**: 48.4% (61/126 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 71.4% (30/42 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 73.8% (31/42 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (60)
+#### ✅ Completed (61)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -75,6 +75,7 @@
 - [x] **WEB-COMP-006**: Split Start/Sit Efficiency Component ⏱️ 2 hours
 - [x] **WEB-COMP-007**: Split TransactionAnalysis Component ⏱️ 1.5 hours
 - [x] **WEB-COMP-008**: Split LeagueView Component ⏱️ 1.5 hours
+- [x] **WEB-COMP-009**: Split MatchupSimulation Component ⏱️ 1.5 hours
 
 #### 🔄 In Progress (0)
 
@@ -82,7 +83,7 @@ _Ready to begin_
 
 #### ⏭️ Up Next (1)
 
-- [ ] **WEB-COMP-009**: Split ManagerRankings Component
+- [ ] **WEB-COMP-010**: Split MatchupOddsPreview Component
 
 ---
 
@@ -94,7 +95,7 @@ _Ready to begin_
 | **EXTRACT**         | 23      | 13        | 0           | 10        |
 | **UTIL**            | 16      | 4         | 0           | 12        |
 | **HOOK**            | 11      | 3         | 0           | 8         |
-| **COMP**            | 15      | 8         | 0           | 7         |
+| **COMP**            | 15      | 9         | 0           | 6         |
 | **TEST**            | 11      | 4         | 0           | 7         |
 | **PAGE**            | 3       | 0         | 0           | 3         |
 | **CLEAN**           | 9       | 5         | 0           | 4         |
@@ -104,7 +105,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
 | **SECURITY**        | 1       | 0         | 0           | 1         |
-| **Total**           | **126** | **60**    | **0**       | **66**    |
+| **Total**           | **126** | **61**    | **0**       | **65**    |
 
 ---
 
@@ -347,6 +348,36 @@ package.
 ## 🎉 Recent Completions
 
 ### October 16, 2025 (Latest)
+
+- ✅ **WEB-COMP-009**: Split MatchupSimulation Component ⏱️ 1.5 hours
+  - Split monolithic matchup-simulation.tsx (631 lines) into a properly structured feature module
+  - Created `features/matchups/components/MatchupSimulation/` directory with focused sub-components:
+    - `MatchupSimulation.tsx` - Main orchestrator component (~180 lines)
+    - `SimulationSummary.tsx` - Win probabilities and implied odds display
+    - `ScoreRangesDisplay.tsx` - Score projections with box plot visualizations
+    - `ScoreBoxPlot.tsx` - Box plot component for score distributions
+    - `WinMarginCalculator.tsx` - Interactive margin slider with probability calculations
+    - `OverUnderDisplay.tsx` - Over/under probabilities display
+    - `NFLGameContext.tsx` - NFL game progress transparency section
+    - `SimulationStats.tsx` - Summary statistics display
+    - `utils.ts` + `utils.test.ts` - Pure utility functions (7 functions, 68 tests)
+  - Extracted simulation calculation utilities:
+    - `formatWinProbability()` - Format probabilities as percentages
+    - `calculateWinProbFromSpread()` - Calculate win probabilities at different spreads
+    - `getOverUnderDisplay()` - Calculate over/under probabilities
+    - `getWinProbColor()` - Color coding for probability display
+    - `formatMargin()` - Format margin for display
+    - `probToMoneyline()` - Convert probabilities to moneyline odds
+  - All sub-components use `memo()` for optimal performance
+  - Comprehensive test coverage: 68 tests covering all utilities
+  - Updated `app/matchups/[leagueId]/[week]/[matchupId]/page.tsx` to import from feature location
+  - Deleted old `components/matchup-simulation.tsx` file
+  - **Outcome**: Simulation display follows enterprise architecture with clear separation of concerns
+  - Tests: 68 utility tests (100% utility coverage)
+  - Build: ✅ Production build successful
+  - Types: ✅ Zero type errors
+  - Lint: ✅ All files formatted correctly
+  - **Impact**: Main component reduced from 631 lines to ~180 lines (71% reduction)
 
 - ✅ **WEB-COMP-008**: Split LeagueView Component ⏱️ 1.5 hours
   - Split LeagueView.tsx (765 lines) into a maintainable feature module with
