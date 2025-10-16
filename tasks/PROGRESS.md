@@ -347,30 +347,38 @@ package.
 
 ### October 16, 2025 (Latest)
 
-- ✅ **WEB-COMP-007**: Split TransactionAnalysis Component ⏱️ 1.5 hours
+- ✅ **WEB-COMP-007**: Split TransactionAnalysis Component + Fix Week Bug ⏱️ 1.5 hours
   - Split monolithic TransactionAnalysis.tsx (852 lines) into a properly structured feature module
+  - **Fixed Critical Bug**: Removed hardcoded week 4 limit, now dynamically uses current NFL week from stats dataset
   - Created `features/transactions/components/TransactionAnalysis/` directory with sub-components:
-    - `TransactionAnalysis.tsx` - Main orchestrator component (~200 lines)
+    - `TransactionAnalysis.tsx` - Main orchestrator component (~200 lines, now accepts `currentWeek` prop)
     - `TransactionSummary.tsx` - Stats overview card
     - `TransactionFilters.tsx` - Filter and sort controls
     - `TransactionTable.tsx` - Transaction list table
     - `TransactionDetailsDialog.tsx` - Modal with transaction breakdown
-    - `useTransactionAnalysisModel.ts` - Custom hook for data loading
+    - `useTransactionAnalysisModel.ts` - Custom hook accepting `currentNflWeek` parameter
     - `utils.ts` + `utils.test.ts` - Pure utility functions (11 functions, 27 tests)
+    - `TransactionAnalysis.test.tsx` - Component integration tests
   - Extracted transaction grading logic:
     - `assignLetterGrades()` - Calculate letter grades from score distribution
     - `filterTransactions()` - Multi-criteria filtering
     - `sortTransactions()` - Sort by score, grade, or date
     - `calculateScoreBreakdown()` - Analyze contribution/harm components
     - `calculateTransactionStats()` - Count positive/negative/neutral transactions
+  - Bug fix details:
+    - Removed separate `/api/nfl-state` API call (was defaulting to week 4)
+    - Changed hook to accept `currentNflWeek` as parameter instead of fetching it
+    - Updated component to pass `dataset.currentWeek` from stats hub
+    - Now consistent with other stats hub features (TeamView, TrendsView, etc.)
   - Created comprehensive test suite with 27 passing tests covering all utilities
-  - Updated `app/stats/stats-content.tsx` to import from feature location
+  - Updated `app/stats/stats-content.tsx` to pass `dataset.currentWeek` prop
   - Deleted old `app/stats/components/TransactionAnalysis.tsx` file
-  - **Outcome**: Transaction analysis now follows enterprise architecture with clear separation of concerns and comprehensive test coverage
+  - **Outcome**: Transaction analysis now follows enterprise architecture with clear separation of concerns, comprehensive test coverage, and dynamic week support
   - Tests: 27 utility tests pass (100% utility coverage)
   - Build: ✅ Production build successful
   - Types: ✅ Zero type errors
   - Lint: ✅ All files formatted correctly
+  - **Impact**: Transactions now analyzed dynamically through current week (not limited to week 4)
 
 ### October 7, 2025
 
