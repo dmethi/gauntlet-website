@@ -7,12 +7,13 @@
 
 import type { WeeklyRecapReport } from '../types';
 import type { RecapReportState } from '../state';
+import { getMatchupWinProbTimeSeries } from '@gauntlet/server';
 
 /**
  * Format the orchestration state into final WeeklyRecapReport structure.
  * Matches the existing report-week5.json format exactly.
  */
-export const formatRecapReport = (state: RecapReportState): WeeklyRecapReport => {
+export const formatRecapReport = async (state: RecapReportState): Promise<WeeklyRecapReport> => {
   const startTime = state.sectionMetadata?.leagueOverview?.startTime || Date.now();
   const endTime = Date.now();
   const generationTime = endTime - startTime;
@@ -26,7 +27,9 @@ export const formatRecapReport = (state: RecapReportState): WeeklyRecapReport =>
   // Collect all errors from sections
   const errors = collectErrors(state);
 
-  // Build the report structure
+  // Build the report structure (formatMatchupNarratives is now async)
+  const matchupNarratives = await formatMatchupNarratives(state);
+
   const report: WeeklyRecapReport = {
     metadata: {
       week: state.week,
@@ -40,7 +43,7 @@ export const formatRecapReport = (state: RecapReportState): WeeklyRecapReport =>
     },
     sections: {
       leagueOverview: formatLeagueOverviewSection(state),
-      matchupNarratives: formatMatchupNarratives(state),
+      matchupNarratives,
       hallOfFame: formatHallOfFameSection(state),
       hallOfShame: formatHallOfShameSection(state),
       powerRankings: formatPowerRankingsSection(state),
@@ -48,6 +51,10 @@ export const formatRecapReport = (state: RecapReportState): WeeklyRecapReport =>
       upcoming: formatUpcomingSection(state),
       closing: formatClosingSection(state),
     },
+    // Add top-level standingsData for UI (Week 5 format: array [afc, nfc])
+    standingsData: state.standingsData
+      ? [state.standingsData.afc, state.standingsData.nfc]
+      : undefined,
   };
 
   return report;
@@ -132,13 +139,13 @@ const formatLeagueOverviewSection = (
   return {
     narrative,
     stats: {
-      totalGames: 12, // 24 teams, 12 matchups per week
-      totalPoints: 0, // To be calculated by tool
-      averageScore: 0,
-      highestScore: 0,
-      lowestScore: 0,
-      blowouts: 0,
-      closeGames: 0,
+      totalGames: state.leagueOverviewData?.totalMatchups || 12, // Default to 12 (24 teams, 12 matchups)
+      totalPoints: state.leagueOverviewData?.totalPoints || 0,
+      averageScore: state.leagueOverviewData?.averageScore || 0,
+      highestScore: state.leagueOverviewData?.highestScore || 0,
+      lowestScore: state.leagueOverviewData?.lowestScore || 0,
+      blowouts: state.leagueOverviewData?.blowouts || 0,
+      closeGames: state.leagueOverviewData?.closeGames || 0,
     },
     generatedAt: metadata?.endTime
       ? new Date(metadata.endTime).toISOString()
@@ -150,112 +157,132 @@ const formatLeagueOverviewSection = (
  * Format Matchup Narratives sections.
  * Uses fetched data from matchup.data to populate boxScore and other fields.
  */
-const formatMatchupNarratives = (
+const formatMatchupNarratives = async (
   state: RecapReportState,
-): WeeklyRecapReport['sections']['matchupNarratives'] => {
+): Promise<WeeklyRecapReport['sections']['matchupNarratives']> => {
   if (!state.matchupNarratives || state.matchupNarratives.length === 0) {
     return [];
   }
 
-  return state.matchupNarratives.map(matchup => {
-    const data = matchup.data;
+  // Process all matchups in parallel
+  return Promise.all(
+    state.matchupNarratives.map(async matchup => {
+      const data = matchup.data;
 
-    // Format team records
-    const formatRecord = (record: any) => {
-      if (!record) return '';
-      return `${record.wins}-${record.losses}${record.ties > 0 ? `-${record.ties}` : ''}`;
-    };
+      // Format team records
+      const formatRecord = (record: any) => {
+        if (!record) return '';
+        return `${record.wins}-${record.losses}${record.ties > 0 ? `-${record.ties}` : ''}`;
+      };
 
-    // Build boxScore from fetched data
-    const boxScore = data
-      ? {
-          team1: {
-            teamName: data.rosters?.team1?.teamName || '',
-            rosterId: data.boxScore?.team1?.rosterId || 0,
-            leagueId: matchup.leagueId,
-            score: data.boxScore?.team1?.score || 0,
-            record: formatRecord(data.records?.team1),
-            topPerformers: (data.scoringBreakdown?.team1 || []).map((p: any) => ({
-              playerId: p.playerId,
-              name: p.playerName,
-              position: p.position,
-              points: p.points,
-            })),
-          },
-          team2: {
-            teamName: data.rosters?.team2?.teamName || '',
-            rosterId: data.boxScore?.team2?.rosterId || 0,
-            leagueId: matchup.leagueId,
-            score: data.boxScore?.team2?.score || 0,
-            record: formatRecord(data.records?.team2),
-            topPerformers: (data.scoringBreakdown?.team2 || []).map((p: any) => ({
-              playerId: p.playerId,
-              name: p.playerName,
-              position: p.position,
-              points: p.points,
-            })),
-          },
-          finalScore: {
-            team1: data.boxScore?.team1?.score || 0,
-            team2: data.boxScore?.team2?.score || 0,
-          },
-          winner: data.boxScore?.winner || 'team1',
-          margin: data.boxScore?.margin || 0,
-        }
-      : {
-          // Fallback empty structure if no data
-          team1: {
-            teamName: '',
-            rosterId: 0,
-            leagueId: matchup.leagueId,
-            score: 0,
-            record: '',
-            topPerformers: [],
-          },
-          team2: {
-            teamName: '',
-            rosterId: 0,
-            leagueId: matchup.leagueId,
-            score: 0,
-            record: '',
-            topPerformers: [],
-          },
-          finalScore: {
-            team1: 0,
-            team2: 0,
-          },
-          winner: 'team1' as const,
-          margin: 0,
-        };
-
-    return {
-      matchupId: `${matchup.leagueId}-${state.week}-${matchup.matchupId}`,
-      narrative: matchup.narrative,
-      boxScore,
-      // Add game flow data if available for charts
-      gameFlow: data?.gameFlow
+      // Build boxScore from fetched data
+      const boxScore = data
         ? {
-            leadChanges: data.gameFlow.excitement?.leadChanges || 0,
-            biggestLead: data.gameFlow.excitement?.maxComeback || 0,
-            excitementScore:
-              matchup.metadata.excitementLevel === 'high'
-                ? 75
-                : matchup.metadata.excitementLevel === 'medium'
-                  ? 50
-                  : 25,
+            team1: {
+              teamName: data.rosters?.team1?.teamName || '',
+              rosterId: data.boxScore?.team1?.rosterId || 0,
+              leagueId: matchup.leagueId,
+              score: data.boxScore?.team1?.score || 0,
+              record: formatRecord(data.records?.team1),
+              topPerformers: (data.scoringBreakdown?.team1 || []).map((p: any) => ({
+                playerId: p.playerId,
+                playerName: p.playerName,
+                position: p.position,
+                points: p.points,
+              })),
+            },
+            team2: {
+              teamName: data.rosters?.team2?.teamName || '',
+              rosterId: data.boxScore?.team2?.rosterId || 0,
+              leagueId: matchup.leagueId,
+              score: data.boxScore?.team2?.score || 0,
+              record: formatRecord(data.records?.team2),
+              topPerformers: (data.scoringBreakdown?.team2 || []).map((p: any) => ({
+                playerId: p.playerId,
+                playerName: p.playerName,
+                position: p.position,
+                points: p.points,
+              })),
+            },
+            finalScore: {
+              team1: data.boxScore?.team1?.score || 0,
+              team2: data.boxScore?.team2?.score || 0,
+            },
+            winner: data.boxScore?.winner || 'team1',
+            margin: data.boxScore?.margin || 0,
           }
-        : undefined,
-      // Store time series for win prob/score charts
-      timeSeries: data?.gameFlow?.keyMoments?.map((moment: any) => ({
-        timestamp: moment.timestamp,
-        team1Score: moment.teamAScore,
-        team2Score: moment.teamBScore,
-        team1WinProbability: moment.teamAWinProbability,
-        gameProgress: moment.gameProgress,
-      })),
-      generatedAt: matchup.metadata?.error ? new Date().toISOString() : new Date().toISOString(),
-    };
-  });
+        : {
+            // Fallback empty structure if no data
+            team1: {
+              teamName: '',
+              rosterId: 0,
+              leagueId: matchup.leagueId,
+              score: 0,
+              record: '',
+              topPerformers: [],
+            },
+            team2: {
+              teamName: '',
+              rosterId: 0,
+              leagueId: matchup.leagueId,
+              score: 0,
+              record: '',
+              topPerformers: [],
+            },
+            finalScore: {
+              team1: 0,
+              team2: 0,
+            },
+            winner: 'team1' as const,
+            margin: 0,
+          };
+
+      return {
+        matchupId: `${matchup.leagueId}-${state.week}-${matchup.matchupId}`,
+        narrative: matchup.narrative,
+        boxScore,
+        // Add game flow data if available for charts
+        gameFlow: data?.gameFlow
+          ? {
+              leadChanges: data.gameFlow.excitement?.leadChanges || 0,
+              biggestLead: data.gameFlow.excitement?.maxComeback || 0,
+              excitementScore:
+                matchup.metadata.excitementLevel === 'high'
+                  ? 75
+                  : matchup.metadata.excitementLevel === 'medium'
+                    ? 50
+                    : 25,
+            }
+          : undefined,
+        // Fetch FULL time series from database for charts (not compressed keyMoments)
+        timeSeries: await (async () => {
+          try {
+            const rawTimeSeries = await getMatchupWinProbTimeSeries(
+              matchup.leagueId,
+              state.week,
+              matchup.matchupId,
+            );
+
+            // Transform to chart format
+            return rawTimeSeries.map(sample => ({
+              timestamp: sample.timestamp.toISOString(),
+              team1Score: sample.currentScoreA,
+              team2Score: sample.currentScoreB,
+              team1WinProbability: sample.winProbA,
+              gameProgress: sample.gameProgress,
+            }));
+          } catch (error) {
+            console.warn(
+              `Failed to fetch timeSeries for ${matchup.leagueId}-${matchup.matchupId}:`,
+              error,
+            );
+            return [];
+          }
+        })(),
+        generatedAt: matchup.metadata?.error ? new Date().toISOString() : new Date().toISOString(),
+      };
+    }),
+  );
 };
 
 /**

@@ -1,16 +1,38 @@
 /**
  * Integration Module: Report Generation + Storage
  *
- * Combines the report generation (generate.ts) with file system storage (storage/).
+ * Combines the report generation (orchestrator.ts) with file system storage (storage/).
  * Provides a simple API for generating and saving reports in one step.
  */
 
-import { generateWeeklyRecap as generateReport } from './generate';
+import { generateRecapReport } from './orchestrator';
+import { formatRecapReport } from './output/formatter';
 import { reportExists, saveReport } from './storage';
 import type { WeeklyRecapReport } from './types';
 
-// Re-export the simpler report type from generate.ts
-export type { WeeklyRecapReport as SimpleRecapReport } from './generate';
+/**
+ * Clean narrative content by removing JSON code block wrappers.
+ * AI sometimes wraps responses in ```json blocks - this extracts the actual content.
+ */
+const cleanNarrative = (text: string): string => {
+  if (!text) return text;
+
+  // Check if wrapped in JSON code block
+  const jsonBlockMatch = text.match(/^```json\s*\n?([\s\S]*?)\n?```$/);
+  if (jsonBlockMatch) {
+    try {
+      // Extract and parse the JSON
+      const jsonContent = JSON.parse(jsonBlockMatch[1]);
+      // Return the narrative field if it exists
+      return jsonContent.narrative || text;
+    } catch {
+      // If parsing fails, return original
+      return text;
+    }
+  }
+
+  return text;
+};
 
 /**
  * Options for generating and saving a recap report.
@@ -76,109 +98,62 @@ export const generateAndSave = async (
       }
     }
 
-    // Generate the report
+    // Generate the report using orchestrator
     console.log(`\n📰 Generating recap report for Week ${week}, ${season} season...\n`);
-    const report = await generateReport(week, season);
+    const reportState = await generateRecapReport(week, season);
 
-    // Convert simple report to full WeeklyRecapReport format for storage
-    // Note: The current generate.ts returns a simplified format
-    // We'll store it as-is with metadata wrapper
-    const fullReport: Partial<WeeklyRecapReport> = {
-      metadata: {
-        week,
-        season,
-        generatedAt: report.generatedAt,
-        generationTime: Date.now() - startTime,
-        tokensUsed: 0, // Not tracked in current generate.ts
-        version: '1.0.0',
-        status: report.errors.length === 0 ? 'success' : 'partial',
-        errors: report.errors.length > 0 ? report.errors : undefined,
-      },
+    // Format the state into final WeeklyRecapReport structure with all data (now async to fetch full timeSeries)
+    let fullReport = await formatRecapReport(reportState);
+
+    // Clean narratives to remove JSON code block wrappers
+    fullReport = {
+      ...fullReport,
       sections: {
+        ...fullReport.sections,
         leagueOverview: {
-          narrative: report.leagueOverview,
-          stats: {
-            totalGames: 12,
-            totalPoints: 0,
-            averageScore: 0,
-            highestScore: 0,
-            lowestScore: 0,
-            blowouts: 0,
-            closeGames: 0,
-          },
-          generatedAt: report.generatedAt,
+          ...fullReport.sections.leagueOverview,
+          narrative: cleanNarrative(fullReport.sections.leagueOverview.narrative),
         },
-        matchupNarratives: report.matchupNarratives.map(m => ({
-          matchupId: m.matchupId,
-          narrative: m.narrative,
-          boxScore: {
-            team1: {
-              teamName: '',
-              rosterId: 0,
-              leagueId: m.league,
-              score: 0,
-              record: '',
-              topPerformers: [],
-            },
-            team2: {
-              teamName: '',
-              rosterId: 0,
-              leagueId: m.league,
-              score: 0,
-              record: '',
-              topPerformers: [],
-            },
-            finalScore: { team1: 0, team2: 0 },
-            winner: 'team1',
-            margin: 0,
-          },
-          generatedAt: report.generatedAt,
+        matchupNarratives: fullReport.sections.matchupNarratives.map(m => ({
+          ...m,
+          narrative: cleanNarrative(m.narrative),
         })),
-        hallOfFame: {
-          narrative: report.hallOfFame,
-          highlights: {
-            topTeamScore: { teamName: '', score: 0, leagueId: '', rosterId: 0 },
-            biggestBlowout: { winner: '', loser: '', margin: 0, matchupId: '' },
-            topPerformers: {
-              QB: [],
-              RB: [],
-              WR: [],
-              TE: [],
-              K: [],
-              DEF: [],
-            },
-          },
-          generatedAt: report.generatedAt,
-        },
-        hallOfShame: {
-          narrative: report.hallOfShame,
-          lowlights: {
-            lowestTeamScore: { teamName: '', score: 0, leagueId: '', rosterId: 0 },
-            biggestBusts: [],
-            badBeatLosses: [],
-          },
-          generatedAt: report.generatedAt,
-        },
-        powerRankings: {
-          narrative: report.powerRankings,
-          rankings: [],
-          generatedAt: report.generatedAt,
-        },
-        standings: {
-          narrative: report.standings,
-          standings: { afc: [], nfc: [] },
-          playoffPicture: { clinched: [], inHunt: [], eliminated: [] },
-          generatedAt: report.generatedAt,
-        },
-        upcoming: {
-          narrative: '',
-          matchups: [],
-          generatedAt: report.generatedAt,
-        },
-        closing: {
-          narrative: report.closing,
-          generatedAt: report.generatedAt,
-        },
+        hallOfFame: fullReport.sections.hallOfFame
+          ? {
+              ...fullReport.sections.hallOfFame,
+              narrative: cleanNarrative(fullReport.sections.hallOfFame.narrative),
+            }
+          : fullReport.sections.hallOfFame,
+        hallOfShame: fullReport.sections.hallOfShame
+          ? {
+              ...fullReport.sections.hallOfShame,
+              narrative: cleanNarrative(fullReport.sections.hallOfShame.narrative),
+            }
+          : fullReport.sections.hallOfShame,
+        powerRankings: fullReport.sections.powerRankings
+          ? {
+              ...fullReport.sections.powerRankings,
+              narrative: cleanNarrative(fullReport.sections.powerRankings.narrative),
+            }
+          : fullReport.sections.powerRankings,
+        standings: fullReport.sections.standings
+          ? {
+              ...fullReport.sections.standings,
+              narrative: cleanNarrative(fullReport.sections.standings.narrative),
+            }
+          : fullReport.sections.standings,
+        upcoming: fullReport.sections.upcoming
+          ? {
+              ...fullReport.sections.upcoming,
+              narrative: cleanNarrative(fullReport.sections.upcoming.narrative),
+            }
+          : fullReport.sections.upcoming,
+        closing: fullReport.sections.closing
+          ? {
+              ...fullReport.sections.closing,
+              narrative: cleanNarrative(fullReport.sections.closing.narrative),
+            }
+          : fullReport.sections.closing,
       },
     };
 
@@ -197,7 +172,7 @@ export const generateAndSave = async (
           success: false,
           week,
           season,
-          report,
+          report: fullReport,
           saved: false,
           error: `Generation succeeded but save failed: ${saveResult.error}`,
           duration: Date.now() - startTime,
@@ -221,12 +196,12 @@ export const generateAndSave = async (
       success: true,
       week,
       season,
-      report,
+      report: fullReport,
       saved: saveToFile,
       filePath,
       backupCreated,
       duration,
-      tokensUsed: 0, // Not tracked yet
+      tokensUsed: fullReport.metadata.tokensUsed,
     };
   } catch (error) {
     const duration = Date.now() - startTime;

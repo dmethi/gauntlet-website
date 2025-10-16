@@ -83,17 +83,16 @@ describe('validateLineupPlayer', () => {
     expect(errors).toHaveLength(0);
   });
 
-  it('should fail for negative currentScore', () => {
+  it('should allow negative currentScore (e.g., for defenses)', () => {
     const player: LineupPlayer = {
-      id: '4866',
-      position: 'QB',
-      projection: 24.5,
-      currentScore: -5,
+      id: 'SF',
+      position: 'DEF',
+      projection: 4.0,
+      currentScore: -0.2,
     };
 
     const errors = validateLineupPlayer(player);
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0]).toContain('currentScore');
+    expect(errors).toHaveLength(0);
   });
 });
 

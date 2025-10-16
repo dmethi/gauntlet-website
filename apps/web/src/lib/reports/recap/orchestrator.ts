@@ -34,6 +34,13 @@ const RecapStateAnnotation = Annotation.Root({
   upcoming: Annotation<string | undefined>,
   closing: Annotation<string | undefined>,
 
+  // Enriched data for UI rendering
+  leagueOverviewData: Annotation<any>,
+  hallOfFameData: Annotation<any>,
+  hallOfShameData: Annotation<any>,
+  powerRankingsData: Annotation<any>,
+  standingsData: Annotation<any>,
+
   // Metadata
   generatedAt: Annotation<string | undefined>,
   tokensUsed: Annotation<number | undefined>,

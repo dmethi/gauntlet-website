@@ -28,6 +28,12 @@ export interface WeeklyRecapReport {
     upcoming: UpcomingMatchupsSection;
     closing: ClosingCommentarySection;
   };
+  // Top-level enriched data for UI (Week 5 format compatibility)
+  standingsData?: Array<{
+    leagueId: string;
+    leagueName: string;
+    divisions: Record<string, any[]>;
+  }>;
 }
 
 /**

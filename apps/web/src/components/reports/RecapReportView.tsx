@@ -14,7 +14,7 @@ import { PageHeader } from '@gauntlet/ui';
 import { AlertCircle, Award, Skull, Star, TrendingUp, Trophy } from 'lucide-react';
 import type { WeeklyRecapReport } from '@/lib/reports/recap/types';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import { WinProbChart, ScoreChart } from '@/components/matchup-charts';
+import { ScoreChart, WinProbChart } from '@/components/matchup-charts';
 
 interface RecapReportViewProps {
   report: WeeklyRecapReport;
@@ -34,7 +34,7 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
       />
 
       {/* Status Banner */}
-      {metadata.status !== 'success' && (
+      {/* {metadata.status !== 'success' && (
         <Alert variant={metadata.status === 'partial' ? 'default' : 'destructive'}>
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>
@@ -53,7 +53,7 @@ export const RecapReportView = ({ report }: RecapReportViewProps) => {
             )}
           </AlertDescription>
         </Alert>
-      )}
+      )} */}
 
       {/* League Overview */}
       {sections.leagueOverview && (

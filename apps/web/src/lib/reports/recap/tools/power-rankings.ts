@@ -67,46 +67,39 @@ const assignDynamicTiers = (rankings: PowerRanking[]): void => {
   let _forcedBreaks = 0; // Track how many breaks we forced due to tier size
 
   for (let i = 0; i < rankings.length; i++) {
-    const currentTierSize = i - tierStart;
+    // Assign current tier first
+    rankings[i].tier = currentTier;
 
-    // FORCE a tier break if current tier is getting too large (>6 teams)
-    // Find the largest gap within the potential oversized tier
-    if (currentTierSize > 6 && i < rankings.length - 1) {
-      // Find the largest gap in the current tier to split there
-      let bestBreakIndex = tierStart + 3; // Default: split around middle
-      let largestGapInTier = 0;
+    const currentTierSize = i - tierStart + 1; // Include current team in size
 
-      for (let j = tierStart + 2; j <= i; j++) {
-        const gapHere = gaps.find(g => g.index === j);
-        if (gapHere && gapHere.gap > largestGapInTier) {
-          largestGapInTier = gapHere.gap;
-          bestBreakIndex = j;
-        }
-      }
-
-      // Create forced break at the largest gap found
-      if (i === bestBreakIndex) {
+    // After assigning tier, check if we should create a break AFTER this team
+    if (i < rankings.length - 1) {
+      // FORCE a tier break if current tier is getting too large (>6 teams)
+      if (currentTierSize > 6) {
         currentTier++;
         tierStart = i + 1;
         _forcedBreaks++;
       }
-    }
-    // Check if this is a natural tier break point
-    else if (tierBreaks.includes(i)) {
-      // Create tier break if:
-      // 1. Current tier has at least 2 teams, AND
-      // 2. The gap is significant
-      const gapAtThisPoint = gaps.find(g => g.index === i);
-      const isLargeGap = gapAtThisPoint && gapAtThisPoint.gap > meanGap + 0.5 * stdDevGap;
-      const isSignificantGap = gapAtThisPoint && gapAtThisPoint.gap > significantGapThreshold;
+      // Check if there's a natural tier break AFTER this team (gap from i to i+1)
+      else if (tierBreaks.includes(i)) {
+        const gapAfterThisTeam = gaps.find(g => g.index === i);
+        const isLargeGap = gapAfterThisTeam && gapAfterThisTeam.gap > meanGap + 0.5 * stdDevGap;
+        const isExceptionalGap =
+          gapAfterThisTeam && gapAfterThisTeam.gap > meanGap + 1.0 * stdDevGap;
+        const isSignificantGap = gapAfterThisTeam && gapAfterThisTeam.gap > significantGapThreshold;
 
-      if (currentTierSize >= 2 && (isLargeGap || isSignificantGap)) {
-        currentTier++;
-        tierStart = i + 1;
+        // Create tier break if:
+        // 1. Current tier has at least 2 teams AND gap is significant, OR
+        // 2. Gap is exceptional (allows single-team tiers for dominant teams)
+        const shouldBreak =
+          (currentTierSize >= 2 && (isLargeGap || isSignificantGap)) || isExceptionalGap;
+
+        if (shouldBreak) {
+          currentTier++;
+          tierStart = i + 1;
+        }
       }
     }
-
-    rankings[i].tier = currentTier;
   }
 };
 

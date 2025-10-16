@@ -10,7 +10,7 @@ import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/components/matchup-simulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
 import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/matchups/types';
-import { WinProbChart, ScoreChart } from '@/components/matchup-charts';
+import { ScoreChart, WinProbChart } from '@/components/matchup-charts';
 import { useMatchupTimeSeries } from '@/features/matchups/hooks';
 import { SwingPointsDisplay } from '@/features/matchups/components/SwingPointsDisplay';
 

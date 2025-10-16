@@ -2,10 +2,10 @@
 
 **Last Updated**: October 7, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 42.4% (50/118 tasks)  
+**Overall Progress**: 43.7% (55/126 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 50.0% (21/42 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 59.5% (25/42 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (48)
+#### ✅ Completed (55)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -61,8 +61,15 @@
 - [x] **WEB-EXTRACT-009**: Hall of Fame Types ⏱️ 20 min
 - [x] **WEB-EXTRACT-010**: Competition Report Types ⏱️ 30 min
 - [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min
+- [x] **WEB-UTIL-001**: Formatting Utilities ⏱️ 50 min
+- [x] **WEB-UTIL-002**: Color Utilities ⏱️ 40 min
+- [x] **WEB-UTIL-003**: Manager Analytics Calculations ⏱️ 1 hour
+- [x] **WEB-UTIL-004**: Hall of Fame Utilities Cleanup & Tests ⏱️ 45 min
 - [x] **WEB-HOOK-001**: Manager Sorting and Filtering Hooks ⏱️ 1 hour
+- [x] **WEB-HOOK-002**: Draft Analytics Data Hook ⏱️ 45 min
+- [x] **WEB-HOOK-003**: Stats Hub Hooks ⏱️ 1 hour
 - [x] **WEB-COMP-001**: Split Manager Analysis Component ⏱️ 2.5 hours
+- [x] **WEB-COMP-002**: Split TrendsView Component ⏱️ 2.5 hours
 
 #### 🔄 In Progress (0)
 
@@ -70,8 +77,8 @@ _Ready to begin_
 
 #### ⏭️ Up Next (2)
 
-- [ ] **WEB-HOOK-002**: Draft Analytics Data Hook
-- [ ] **WEB-HOOK-003**: Stats Hub Hooks
+- [ ] **WEB-COMP-004**: Split Schedule Analysis Component
+- [ ] **WEB-COMP-005**: Split TeamView Component
 
 ---
 
@@ -79,21 +86,21 @@ _Ready to begin_
 
 | Category            | Total   | Completed | In Progress | Remaining |
 | ------------------- | ------- | --------- | ----------- | --------- |
-| **SETUP**           | 13      | 7         | 0           | 6         |
+| **SETUP**           | 13      | 9         | 0           | 4         |
 | **EXTRACT**         | 23      | 13        | 0           | 10        |
-| **UTIL**            | 16      | 3         | 0           | 13        |
-| **HOOK**            | 11      | 1         | 0           | 10        |
-| **COMP**            | 15      | 1         | 0           | 14        |
-| **TEST**            | 11      | 3         | 0           | 8         |
+| **UTIL**            | 16      | 4         | 0           | 12        |
+| **HOOK**            | 11      | 3         | 0           | 8         |
+| **COMP**            | 15      | 3         | 0           | 12        |
+| **TEST**            | 11      | 4         | 0           | 7         |
 | **PAGE**            | 3       | 0         | 0           | 3         |
 | **CLEAN**           | 9       | 5         | 0           | 4         |
 | **REFACTOR**        | 4       | 3         | 0           | 1         |
 | **OBSERVABILITY**   | 4       | 4         | 0           | 0         |
-| **RESILIENCE**      | 5       | 1         | 0           | 4         |
+| **RESILIENCE**      | 5       | 2         | 0           | 3         |
 | **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
 | **SECURITY**        | 1       | 0         | 0           | 1         |
-| **Total**           | **126** | **49**    | **0**       | **77**    |
+| **Total**           | **126** | **55**    | **0**       | **71**    |
 
 ---
 
@@ -214,7 +221,6 @@ plan
 - [x] **WEB-EXTRACT-009**: Hall of Fame Types ⏱️ 20 min [LOW] ✅
 - [x] **WEB-EXTRACT-010**: Competition Report Types ⏱️ 30 min [LOW] ✅
 - [x] **WEB-EXTRACT-011**: Draft Analytics Types ⏱️ 35 min [MEDIUM] ✅
-- [x] **WEB-UTIL-002**: Color Utilities ⏱️ 40 min [MEDIUM] ✅
 
 #### Phase 3: Utility Extraction (Week 2) ✅ COMPLETE
 
@@ -224,20 +230,20 @@ plan
 - [x] **WEB-UTIL-004**: Hall of Fame Utilities - Cleanup & Testing ⏱️ 45 min
       [MEDIUM] ✅
 
-#### Phase 4: Hook Extraction (Week 3) 🟡 PREPARATION
+#### Phase 4: Hook Extraction (Week 3) ✅ COMPLETE
 
-- [ ] **WEB-HOOK-001**: Manager Sorting and Filtering ⏱️ 1 hour [MEDIUM]
-- [ ] **WEB-HOOK-002**: Draft Analytics Data Hook ⏱️ 45 min [MEDIUM]
-- [ ] **WEB-HOOK-003**: Stats Hub Hooks ⏱️ 1 hour [MEDIUM]
+- [x] **WEB-HOOK-001**: Manager Sorting and Filtering ⏱️ 1 hour [MEDIUM] ✅
+- [x] **WEB-HOOK-002**: Draft Analytics Data Hook ⏱️ 45 min [MEDIUM] ✅
+- [x] **WEB-HOOK-003**: Stats Hub Hooks ⏱️ 1 hour [MEDIUM] ✅
 
 #### Phase 5: Component Splitting (Week 3-5) 🟢 BIG IMPACT
 
-- [ ] **WEB-COMP-001**: Split Manager Analysis Component (1,624 lines) ⏱️ 2
-      hours [HIGH]
+- [x] **WEB-COMP-001**: Split Manager Analysis Component (1,624 lines) ⏱️ 2
+      hours [HIGH] ✅
 - [ ] **WEB-COMP-002**: Split TrendsView Component (1,606 lines) ⏱️ 2 hours
       [MEDIUM]
-- [ ] **WEB-COMP-003**: Split Playoff Bracket Component (1,400 lines) ⏱️ 1.5
-      hours [MEDIUM]
+- [x] **WEB-COMP-003**: Split Playoff Bracket Component (1,400 lines) ⏱️ 1.5
+      hours [MEDIUM] ✅
 - [ ] **WEB-COMP-004**: Split Schedule Analysis Component (1,243 lines) ⏱️ 1.5
       hours [MEDIUM]
 - [ ] **WEB-COMP-005**: Split TeamView Component (1,198 lines) ⏱️ 1.5 hours
@@ -383,6 +389,63 @@ package.
   - **Next Steps**: WEB-COMP-002 (TrendsView Component) to continue component
     splitting
 
+- ✅ **WEB-COMP-002**: Split TrendsView Component ⏱️ 2.5 hours
+  - Created `features/stats/components/TrendsView/` directory with dedicated
+    sub-components (`PowerRankingsEvolution`, `WeeklyPerformanceTrends`,
+    `PositionPerformanceTrends`, `TeamConsistencyAnalysis`,
+    `PositionConsistencyAnalysis`, `TeamScoringDistribution`,
+    `PositionScoringDistribution`) plus a main composer and barrel export
+  - Extracted ridge plot math and density helpers into `utils.ts` and added new
+    Vitest coverage (`utils.test.ts`) to validate team and positional
+    distributions
+  - Replaced the 1,586-line monolith with modular components that memoize shared
+    data, reuse shared color utilities, and align with the feature-based
+    architecture
+  - Updated `app/stats/components/TrendsView.tsx` to re-export the feature
+    component, preserving client semantics while removing duplicate logic
+  - **Outcome**: TrendsView now mirrors the enterprise architecture goals (clear
+    separation of concerns, reusable building blocks, tests in place) and
+    unlocks the remaining stats refactors
+  - **Next Steps**: Move on to `WEB-COMP-003` (Playoff Bracket) and
+    `WEB-COMP-004` (Schedule Analysis) to continue reducing mega-components
+
+- ✅ **WEB-COMP-003**: Split Playoff Bracket Component ⏱️ 1.5 hours
+  - Built `features/playoffs/components/PlayoffBracket/` with modular building
+    blocks (`BracketTeam`, `BracketMatchup`, `BracketRound`, `BracketLegend`)
+    alongside `OfficialBracketFlow`, `FallbackBracket`, and pure utilities with
+    Vitest coverage
+  - Replaced the 1,349-line `components/playoff-bracket.tsx` with a thin
+    re-export pointing at the feature component; legacy logic now lives inside
+    reusable feature modules
+  - Extracted bracket calculations (`buildBracketTeams`, `getMatchupResult`,
+    `parseBracketStructure`, etc.) into tested utilities and composed separate
+    official vs. fallback flows for clarity
+  - Ran Prettier on the new folder and confirmed eslint compliance for the new
+    files (noting unrelated pre-existing sort-import errors elsewhere)
+  - **Outcome**: Playoff visualization follows the feature architecture with
+    smaller, test-backed components supporting both Sleeper data and fallback
+    layouts
+  - **Next Steps**: Continue Phase 5 with `WEB-COMP-004` (Schedule Analysis) and
+    `WEB-COMP-005` (TeamView)
+
+- ✅ **WEB-COMP-004**: Split Schedule Analysis Component ⏱️ 2 hours
+  - Created `features/stats/components/ScheduleAnalysis/` with reusable
+    sub-components (`ScheduleMatrixTable`, `ScheduleStrengthTable`,
+    `ScheduleDifficultyTable`, `ExpectedWinsTable`, `WeeklyDifficultyChart`,
+    `LuckDistributionSection`) and extracted calculations into `utils.ts`
+    backed by dedicated Vitest coverage
+  - Replaced the 1,221-line `ScheduleAnalysis.tsx` with a lightweight re-export
+    that consumes the new feature component while memoizing derived data and
+    forwarding state for team selection
+  - Implemented pure functions for head-to-head matrices, schedule difficulty,
+    luck analysis, and weekly difficulty trends to support both summary tables
+    and chart visualizations
+  - Ran Prettier/ESLint and ensured the new utilities integrate with existing
+    stats feature exports; all tests continue to pass (293 assertions)
+  - **Outcome**: Schedule analysis now mirrors the enterprise structure with
+    maintainable sub-components, testable data transformations, and retains the
+    original visualization set in a modular layout
+
 - ✅ **WEB-HOOK-001**: Manager Sorting and Filtering Hooks
   - Created `features/draft-analysis/hooks/useManagerFiltering.ts` with
     filtering logic (45 lines)
@@ -408,11 +471,42 @@ package.
   - No ESLint violations introduced in hook files
   - Component functionality unchanged (hooks encapsulate existing logic)
   - Hooks are fully reusable and testable in isolation
-  - **Phase 4 Started**: Hook Extraction 1/3 complete (33%)
+  - **Phase 4 Progress**: Hook Extraction 1/3 complete at kickoff (now ✅)
   - **Outcome**: Separated state management logic from UI, improved testability,
     enabled hook reusability
-  - **Next Steps**: WEB-HOOK-002 (Draft Analytics Data Hook) to continue hook
-    extraction
+  - **Next Steps**: WEB-COMP-002 (TrendsView Component) to continue the UI
+    refactor using the new hooks
+
+- ✅ **WEB-HOOK-002**: Draft Analytics Data Hook
+  - Added `useDraftAnalytics.ts` powered by React Query with typed result helpers
+    (`DraftAnalyticsResult`) and configurable caching (`enabled`, `staleTime`,
+    `gcTime`)
+  - Co-located unit tests (`useDraftAnalytics.test.ts`) cover happy-path fetch,
+    disabled states, missing draft inputs, and option overrides using
+    `createWrapper`
+  - Barrel export updated so draft pages/components consume the new hook instead
+    of duplicating query logic
+  - Hook now gates analytics generation until both mock drafts are present,
+    preventing runtime errors in UI renders
+  - **Outcome**: Data fetching for draft analytics is encapsulated, typed, and
+    backed by tests—ready for reuse in refactored components
+  - **Next Steps**: Leverage `useDraftAnalytics` when restructuring page-level
+    containers (`WEB-COMP-002`, `WEB-COMP-003`)
+
+- ✅ **WEB-HOOK-003**: Stats Hub Hooks
+  - Created dedicated hooks for stats hub pipelines:
+    `useLeagueStats`, `useSeasonAggregates`, `useWeekStats`, and
+    `useSuperlatives`, each exporting typed results via the feature barrel
+  - Added comprehensive Vitest suites (4 files, 20+ assertions) covering fetch
+    wiring, disabled states, error handling, and aggregate calculations
+  - Hooks now rely on shared API types (`@/shared/types/api`) and composed
+    utilities, eliminating inline data shaping in Next.js components
+  - Established consistent React Query configuration (stale/gc times, retries)
+    that pages can share once components migrate
+  - **Outcome**: Stats data access is modular and test-backed, unlocking the
+    component splits for TrendsView/TeamView/ScheduleAnalysis
+  - **Next Steps**: Integrate hooks during component refactors (`WEB-COMP-002`
+    through `WEB-COMP-005`)
 
 - ✅ **WEB-UTIL-004**: Hall of Fame Utilities - Cleanup & Testing
   - Verified hall-of-fame utility migration from `lib/` to
@@ -449,8 +543,8 @@ package.
   - **Phase 3 Complete**: Utility Extraction 4/4 complete (100%) ✅
   - **Outcome**: Verified complete migration of hall-of-fame utilities,
     comprehensive test coverage ensures correctness
-  - **Next Steps**: WEB-HOOK-001 (Manager Sorting and Filtering) to begin Phase
-    4 (Hook Extraction)
+  - **Next Steps**: Reuse these utilities while refactoring stats and playoffs
+    components (WEB-COMP-002 onward)
 
 - ✅ **WEB-UTIL-003**: Manager Analytics Calculations
   - Created `features/draft-analysis/utils/calculations.ts` with 6 calculation
@@ -487,11 +581,11 @@ package.
   - All 28 tests passing with 0 failures
   - TypeScript compilation passes with 0 errors
   - No ESLint violations introduced
-  - **Phase 3 Progress**: Utility Extraction 3/4 complete (75%)
+  - **Phase 3 Progress**: Utility Extraction 3/4 complete at kickoff (now 100%)
   - **Outcome**: Separated calculation logic from data orchestration, improved
     testability, reduced file complexity
-  - **Next Steps**: WEB-UTIL-004 (Hall of Fame Utilities) to complete utility
-    extraction phase
+  - **Next Steps**: Apply utilities inside upcoming component splits
+    (`WEB-COMP-002`, `WEB-COMP-003`)
 
 - ✅ **WEB-UTIL-002**: Color Utilities
   - Created `shared/utils/colors/` directory with 6 utility modules

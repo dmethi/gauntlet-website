@@ -13,12 +13,12 @@
       "narrative": "```json\n{\n  \"narrative\": \"Week 5 was a week of extremes in The Gauntlet, delivering a total of 2854.44 points, averaging 118.93 per team. While 4 matchups kept us on the edge of our seats with nail-biting finishes, a whopping 7 games were decided by more than 20 points. It seems some managers brought their A-game, while others... well, let's just say their fantasy gods were on vacation. \\n\\nThe week's most agonizingly close contest saw Anant narrowly defeat both Darshan and Kyle by a razor-thin margin of 0.72 points! Meanwhile, Jeffrey handed Ziyan a brutal 46.69-point beatdown. Ouch! Akhil V, however, reigned supreme with the highest score of the week, proving that consistency is still king... unless your opponent is Jeffrey, apparently.\",\n  \"metrics\": {\n    \"totalPoints\": 2854.44,\n    \"averageScore\": 118.93,\n    \"closeGames\": 4,\n    \"blowouts\": 7\n  }\n}\n```",
       "stats": {
         "totalGames": 12,
-        "totalPoints": 0,
-        "averageScore": 0,
-        "highestScore": 0,
-        "lowestScore": 0,
-        "blowouts": 0,
-        "closeGames": 0
+        "totalPoints": 2854.44,
+        "averageScore": 118.94,
+        "highestScore": 145.96,
+        "lowestScore": 88.88,
+        "blowouts": 4,
+        "closeGames": 4
       },
       "generatedAt": "2025-10-08T21:29:28.113Z"
     },
@@ -35,57 +35,57 @@
             "topPerformers": [
               {
                 "playerId": "4984",
-                "name": "Josh Allen",
                 "position": "QB",
-                "points": 20.92
+                "points": 20.92,
+                "playerName": "Josh Allen"
               },
               {
                 "playerId": "4098",
-                "name": "Kareem Hunt",
                 "position": "RB",
-                "points": 18.7
+                "points": 18.7,
+                "playerName": "Kareem Hunt"
               },
               {
                 "playerId": "7547",
-                "name": "Amon-Ra St. Brown",
                 "position": "WR",
-                "points": 14
+                "points": 14,
+                "playerName": "Amon-Ra St. Brown"
               },
               {
                 "playerId": "2133",
-                "name": "Davante Adams",
                 "position": "WR",
-                "points": 11.3
+                "points": 11.3,
+                "playerName": "Davante Adams"
               },
               {
                 "playerId": "5022",
-                "name": "Dallas Goedert",
                 "position": "TE",
-                "points": 9.4
+                "points": 9.4,
+                "playerName": "Dallas Goedert"
               },
               {
                 "playerId": "MIA",
-                "name": "Miami Dolphins",
                 "position": "DEF",
-                "points": 6.95
+                "points": 6.95,
+                "playerName": "Miami Dolphins"
               },
               {
                 "playerId": "8126",
-                "name": "Wan'Dale Robinson",
                 "position": "WR",
-                "points": 6.2
+                "points": 6.2,
+                "playerName": "Wan'Dale Robinson"
               },
               {
                 "playerId": "6783",
-                "name": "Jerry Jeudy",
                 "position": "WR",
-                "points": 2.5
+                "points": 2.5,
+                "playerName": "Jerry Jeudy"
               },
               {
                 "playerId": "4219",
-                "name": "Jeremy McNichols",
                 "position": "RB",
-                "points": 2.3
+                "points": 2.3,
+                "playerName": "Jeremy McNichols"
               }
             ]
           },
@@ -97,57 +97,57 @@
             "topPerformers": [
               {
                 "playerId": "4892",
-                "name": "Baker Mayfield",
                 "position": "QB",
-                "points": 27.16
+                "points": 27.16,
+                "playerName": "Baker Mayfield"
               },
               {
                 "playerId": "6794",
-                "name": "Justin Jefferson",
                 "position": "WR",
-                "points": 15.8
+                "points": 15.8,
+                "playerName": "Justin Jefferson"
               },
               {
                 "playerId": "4981",
-                "name": "Calvin Ridley",
                 "position": "WR",
-                "points": 15.6
+                "points": 15.6,
+                "playerName": "Calvin Ridley"
               },
               {
                 "playerId": "6819",
-                "name": "Michael Pittman",
                 "position": "WR",
-                "points": 12.4
+                "points": 12.4,
+                "playerName": "Michael Pittman"
               },
               {
                 "playerId": "12506",
-                "name": "Harold Fannin",
                 "position": "TE",
-                "points": 9.3
+                "points": 9.3,
+                "playerName": "Harold Fannin"
               },
               {
                 "playerId": "4035",
-                "name": "Alvin Kamara",
                 "position": "RB",
-                "points": 7.5
+                "points": 7.5,
+                "playerName": "Alvin Kamara"
               },
               {
                 "playerId": "LAC",
-                "name": "Los Angeles Chargers",
                 "position": "DEF",
-                "points": 2.6
+                "points": 2.6,
+                "playerName": "Los Angeles Chargers"
               },
               {
                 "playerId": "7587",
-                "name": "Dyami Brown",
                 "position": "WR",
-                "points": 2.5
+                "points": 2.5,
+                "playerName": "Dyami Brown"
               },
               {
                 "playerId": "5995",
-                "name": "Justice Hill",
                 "position": "RB",
-                "points": 1.7
+                "points": 1.7,
+                "playerName": "Justice Hill"
               }
             ]
           },
@@ -655,57 +655,57 @@
             "topPerformers": [
               {
                 "playerId": "6813",
-                "name": "Jonathan Taylor",
                 "position": "RB",
-                "points": 31.6
+                "points": 31.6,
+                "playerName": "Jonathan Taylor"
               },
               {
                 "playerId": "7591",
-                "name": "Justin Fields",
                 "position": "QB",
-                "points": 27.42
+                "points": 27.42,
+                "playerName": "Justin Fields"
               },
               {
                 "playerId": "12512",
-                "name": "Quinshon Judkins",
                 "position": "RB",
-                "points": 15.8
+                "points": 15.8,
+                "playerName": "Quinshon Judkins"
               },
               {
                 "playerId": "IND",
-                "name": "Indianapolis Colts",
                 "position": "DEF",
-                "points": 13.9
+                "points": 13.9,
+                "playerName": "Indianapolis Colts"
               },
               {
                 "playerId": "8137",
-                "name": "George Pickens",
                 "position": "WR",
-                "points": 12.7
+                "points": 12.7,
+                "playerName": "George Pickens"
               },
               {
                 "playerId": "12526",
-                "name": "Tetairoa McMillan",
                 "position": "WR",
-                "points": 10.3
+                "points": 10.3,
+                "playerName": "Tetairoa McMillan"
               },
               {
                 "playerId": "5859",
-                "name": "A.J. Brown",
                 "position": "WR",
-                "points": 6.8
+                "points": 6.8,
+                "playerName": "A.J. Brown"
               },
               {
                 "playerId": "8130",
-                "name": "Trey McBride",
                 "position": "TE",
-                "points": 6.6
+                "points": 6.6,
+                "playerName": "Trey McBride"
               },
               {
                 "playerId": "11610",
-                "name": "Malik Washington",
                 "position": "WR",
-                "points": 2
+                "points": 2,
+                "playerName": "Malik Washington"
               }
             ]
           },
@@ -717,57 +717,57 @@
             "topPerformers": [
               {
                 "playerId": "3294",
-                "name": "Dak Prescott",
                 "position": "QB",
-                "points": 29.28
+                "points": 29.28,
+                "playerName": "Dak Prescott"
               },
               {
                 "playerId": "8150",
-                "name": "Kyren Williams",
                 "position": "RB",
-                "points": 29.1
+                "points": 29.1,
+                "playerName": "Kyren Williams"
               },
               {
                 "playerId": "10859",
-                "name": "Sam LaPorta",
                 "position": "TE",
-                "points": 17.7
+                "points": 17.7,
+                "playerName": "Sam LaPorta"
               },
               {
                 "playerId": "7525",
-                "name": "DeVonta Smith",
                 "position": "WR",
-                "points": 15.4
+                "points": 15.4,
+                "playerName": "DeVonta Smith"
               },
               {
                 "playerId": "12481",
-                "name": "Cam Skattebo",
                 "position": "RB",
-                "points": 13.4
+                "points": 13.4,
+                "playerName": "Cam Skattebo"
               },
               {
                 "playerId": "8144",
-                "name": "Chris Olave",
                 "position": "WR",
-                "points": 9.4
+                "points": 9.4,
+                "playerName": "Chris Olave"
               },
               {
                 "playerId": "8138",
-                "name": "James Cook",
                 "position": "RB",
-                "points": 5.9
+                "points": 5.9,
+                "playerName": "James Cook"
               },
               {
                 "playerId": "5947",
-                "name": "Jakobi Meyers",
                 "position": "WR",
-                "points": 5.2
+                "points": 5.2,
+                "playerName": "Jakobi Meyers"
               },
               {
                 "playerId": "BAL",
-                "name": "Baltimore Ravens",
                 "position": "DEF",
-                "points": -0.7
+                "points": -0.7,
+                "playerName": "Baltimore Ravens"
               }
             ]
           },
@@ -1233,57 +1233,57 @@
             "topPerformers": [
               {
                 "playerId": "12514",
-                "name": "Emeka Egbuka",
                 "position": "WR",
-                "points": 27.8
+                "points": 27.8,
+                "playerName": "Emeka Egbuka"
               },
               {
                 "playerId": "4454",
-                "name": "Kendrick Bourne",
                 "position": "WR",
-                "points": 19.2
+                "points": 19.2,
+                "playerName": "Kendrick Bourne"
               },
               {
                 "playerId": "9221",
-                "name": "Jahmyr Gibbs",
                 "position": "RB",
-                "points": 17.2
+                "points": 17.2,
+                "playerName": "Jahmyr Gibbs"
               },
               {
                 "playerId": "7607",
-                "name": "Michael Carter",
                 "position": "RB",
-                "points": 16.3
+                "points": 16.3,
+                "playerName": "Michael Carter"
               },
               {
                 "playerId": "DET",
-                "name": "Detroit Lions",
                 "position": "DEF",
-                "points": 14.8
+                "points": 14.8,
+                "playerName": "Detroit Lions"
               },
               {
                 "playerId": "11564",
-                "name": "Drake Maye",
                 "position": "QB",
-                "points": 12.62
+                "points": 12.62,
+                "playerName": "Drake Maye"
               },
               {
                 "playerId": "3198",
-                "name": "Derrick Henry",
                 "position": "RB",
-                "points": 10.3
+                "points": 10.3,
+                "playerName": "Derrick Henry"
               },
               {
                 "playerId": "1479",
-                "name": "Keenan Allen",
                 "position": "WR",
-                "points": 8.3
+                "points": 8.3,
+                "playerName": "Keenan Allen"
               },
               {
                 "playerId": "7002",
-                "name": "Juwan Johnson",
                 "position": "TE",
-                "points": 2.7
+                "points": 2.7,
+                "playerName": "Juwan Johnson"
               }
             ]
           },
@@ -1295,57 +1295,57 @@
             "topPerformers": [
               {
                 "playerId": "8136",
-                "name": "Rachaad White",
                 "position": "RB",
-                "points": 22.6
+                "points": 22.6,
+                "playerName": "Rachaad White"
               },
               {
                 "playerId": "9493",
-                "name": "Puka Nacua",
                 "position": "WR",
-                "points": 19.5
+                "points": 19.5,
+                "playerName": "Puka Nacua"
               },
               {
                 "playerId": "8155",
-                "name": "Breece Hall",
                 "position": "RB",
-                "points": 18.5
+                "points": 18.5,
+                "playerName": "Breece Hall"
               },
               {
                 "playerId": "11566",
-                "name": "Jayden Daniels",
                 "position": "QB",
-                "points": 18.14
+                "points": 18.14,
+                "playerName": "Jayden Daniels"
               },
               {
                 "playerId": "5967",
-                "name": "Tony Pollard",
                 "position": "RB",
-                "points": 14.8
+                "points": 14.8,
+                "playerName": "Tony Pollard"
               },
               {
                 "playerId": "12518",
-                "name": "Tyler Warren",
                 "position": "TE",
-                "points": 12.4
+                "points": 12.4,
+                "playerName": "Tyler Warren"
               },
               {
                 "playerId": "8151",
-                "name": "Kenneth Walker",
                 "position": "RB",
-                "points": 10.6
+                "points": 10.6,
+                "playerName": "Kenneth Walker"
               },
               {
                 "playerId": "9997",
-                "name": "Zay Flowers",
                 "position": "WR",
-                "points": 9.7
+                "points": 9.7,
+                "playerName": "Zay Flowers"
               },
               {
                 "playerId": "ARI",
-                "name": "Arizona Cardinals",
                 "position": "DEF",
-                "points": 8.75
+                "points": 8.75,
+                "playerName": "Arizona Cardinals"
               }
             ]
           },
@@ -1818,57 +1818,57 @@
             "topPerformers": [
               {
                 "playerId": "8110",
-                "name": "Jake Ferguson",
                 "position": "TE",
-                "points": 20.4
+                "points": 20.4,
+                "playerName": "Jake Ferguson"
               },
               {
                 "playerId": "5872",
-                "name": "Deebo Samuel",
                 "position": "WR",
-                "points": 19.6
+                "points": 19.6,
+                "playerName": "Deebo Samuel"
               },
               {
                 "playerId": "4866",
-                "name": "Saquon Barkley",
                 "position": "RB",
-                "points": 16.8
+                "points": 16.8,
+                "playerName": "Saquon Barkley"
               },
               {
                 "playerId": "5870",
-                "name": "Daniel Jones",
                 "position": "QB",
-                "points": 16.18
+                "points": 16.18,
+                "playerName": "Daniel Jones"
               },
               {
                 "playerId": "9226",
-                "name": "De'Von Achane",
                 "position": "RB",
-                "points": 14.6
+                "points": 14.6,
+                "playerName": "De'Von Achane"
               },
               {
                 "playerId": "11631",
-                "name": "Brian Thomas",
                 "position": "WR",
-                "points": 10
+                "points": 10,
+                "playerName": "Brian Thomas"
               },
               {
                 "playerId": "11624",
-                "name": "Xavier Worthy",
                 "position": "WR",
-                "points": 8.1
+                "points": 8.1,
+                "playerName": "Xavier Worthy"
               },
               {
                 "playerId": "11627",
-                "name": "Troy Franklin",
                 "position": "WR",
-                "points": 7
+                "points": 7,
+                "playerName": "Troy Franklin"
               },
               {
                 "playerId": "SEA",
-                "name": "Seattle Seahawks",
                 "position": "DEF",
-                "points": -0.45
+                "points": -0.45,
+                "playerName": "Seattle Seahawks"
               }
             ]
           },
@@ -1880,57 +1880,57 @@
             "topPerformers": [
               {
                 "playerId": "12533",
-                "name": "Jacory Croskey-Merritt",
                 "position": "RB",
-                "points": 28
+                "points": 28,
+                "playerName": "Jacory Croskey-Merritt"
               },
               {
                 "playerId": "421",
-                "name": "Matthew Stafford",
                 "position": "QB",
-                "points": 25.56
+                "points": 25.56,
+                "playerName": "Matthew Stafford"
               },
               {
                 "playerId": "5045",
-                "name": "Courtland Sutton",
                 "position": "WR",
-                "points": 13.9
+                "points": 13.9,
+                "playerName": "Courtland Sutton"
               },
               {
                 "playerId": "9756",
-                "name": "Jordan Addison",
                 "position": "WR",
-                "points": 12.6
+                "points": 12.6,
+                "playerName": "Jordan Addison"
               },
               {
                 "playerId": "8408",
-                "name": "Jordan Mason",
                 "position": "RB",
-                "points": 12.1
+                "points": 12.1,
+                "playerName": "Jordan Mason"
               },
               {
                 "playerId": "BUF",
-                "name": "Buffalo Bills",
                 "position": "DEF",
-                "points": 9.35
+                "points": 9.35,
+                "playerName": "Buffalo Bills"
               },
               {
                 "playerId": "9224",
-                "name": "Chase Brown",
                 "position": "RB",
-                "points": 7.3
+                "points": 7.3,
+                "playerName": "Chase Brown"
               },
               {
                 "playerId": "9480",
-                "name": "Brenton Strange",
                 "position": "TE",
-                "points": 2.7
+                "points": 2.7,
+                "playerName": "Brenton Strange"
               },
               {
                 "playerId": "8117",
-                "name": "Jalen Tolbert",
                 "position": "WR",
-                "points": 0
+                "points": 0,
+                "playerName": "Jalen Tolbert"
               }
             ]
           },
@@ -2438,57 +2438,57 @@
             "topPerformers": [
               {
                 "playerId": "7021",
-                "name": "Rico Dowdle",
                 "position": "RB",
-                "points": 33.9
+                "points": 33.9,
+                "playerName": "Rico Dowdle"
               },
               {
                 "playerId": "7564",
-                "name": "Ja'Marr Chase",
                 "position": "WR",
-                "points": 26
+                "points": 26,
+                "playerName": "Ja'Marr Chase"
               },
               {
                 "playerId": "6806",
-                "name": "J.K. Dobbins",
                 "position": "RB",
-                "points": 16.9
+                "points": 16.9,
+                "playerName": "J.K. Dobbins"
               },
               {
                 "playerId": "6797",
-                "name": "Justin Herbert",
                 "position": "QB",
-                "points": 16.14
+                "points": 16.14,
+                "playerName": "Justin Herbert"
               },
               {
                 "playerId": "8146",
-                "name": "Garrett Wilson",
                 "position": "WR",
-                "points": 16.1
+                "points": 16.1,
+                "playerName": "Garrett Wilson"
               },
               {
                 "playerId": "12527",
-                "name": "Ashton Jeanty",
                 "position": "RB",
-                "points": 14.9
+                "points": 14.9,
+                "playerName": "Ashton Jeanty"
               },
               {
                 "playerId": "MIN",
-                "name": "Minnesota Vikings",
                 "position": "DEF",
-                "points": 5.95
+                "points": 5.95,
+                "playerName": "Minnesota Vikings"
               },
               {
                 "playerId": "3214",
-                "name": "Hunter Henry",
                 "position": "TE",
-                "points": 5.6
+                "points": 5.6,
+                "playerName": "Hunter Henry"
               },
               {
                 "playerId": "8148",
-                "name": "Jameson Williams",
                 "position": "WR",
-                "points": 1.5
+                "points": 1.5,
+                "playerName": "Jameson Williams"
               }
             ]
           },
@@ -2500,57 +2500,57 @@
             "topPerformers": [
               {
                 "playerId": "9488",
-                "name": "Jaxon Smith-Njigba",
                 "position": "WR",
-                "points": 23.2
+                "points": 23.2,
+                "playerName": "Jaxon Smith-Njigba"
               },
               {
                 "playerId": "6904",
-                "name": "Jalen Hurts",
                 "position": "QB",
-                "points": 19.5
+                "points": 19.5,
+                "playerName": "Jalen Hurts"
               },
               {
                 "playerId": "7611",
-                "name": "Rhamondre Stevenson",
                 "position": "RB",
-                "points": 13.7
+                "points": 13.7,
+                "playerName": "Rhamondre Stevenson"
               },
               {
                 "playerId": "9753",
-                "name": "Zach Charbonnet",
                 "position": "RB",
-                "points": 12.3
+                "points": 12.3,
+                "playerName": "Zach Charbonnet"
               },
               {
                 "playerId": "12507",
-                "name": "Omarion Hampton",
                 "position": "RB",
-                "points": 11
+                "points": 11,
+                "playerName": "Omarion Hampton"
               },
               {
                 "playerId": "HOU",
-                "name": "Houston Texans",
                 "position": "DEF",
-                "points": 10.85
+                "points": 10.85,
+                "playerName": "Houston Texans"
               },
               {
                 "playerId": "5001",
-                "name": "Dalton Schultz",
                 "position": "TE",
-                "points": 8.5
+                "points": 8.5,
+                "playerName": "Dalton Schultz"
               },
               {
                 "playerId": "8134",
-                "name": "Khalil Shakir",
                 "position": "WR",
-                "points": 8
+                "points": 8,
+                "playerName": "Khalil Shakir"
               },
               {
                 "playerId": "12474",
-                "name": "Woody Marks",
                 "position": "RB",
-                "points": 2.9
+                "points": 2.9,
+                "playerName": "Woody Marks"
               }
             ]
           },
@@ -3016,57 +3016,57 @@
             "topPerformers": [
               {
                 "playerId": "7588",
-                "name": "Javonte Williams",
                 "position": "RB",
-                "points": 28.9
+                "points": 28.9,
+                "playerName": "Javonte Williams"
               },
               {
                 "playerId": "4046",
-                "name": "Patrick Mahomes",
                 "position": "QB",
-                "points": 28.22
+                "points": 28.22,
+                "playerName": "Patrick Mahomes"
               },
               {
                 "playerId": "5892",
-                "name": "David Montgomery",
                 "position": "RB",
-                "points": 19.22
+                "points": 19.22,
+                "playerName": "David Montgomery"
               },
               {
                 "playerId": "1466",
-                "name": "Travis Kelce",
                 "position": "TE",
-                "points": 15.6
+                "points": 15.6,
+                "playerName": "Travis Kelce"
               },
               {
                 "playerId": "11628",
-                "name": "Marvin Harrison",
                 "position": "WR",
-                "points": 11.8
+                "points": 11.8,
+                "playerName": "Marvin Harrison"
               },
               {
                 "playerId": "7543",
-                "name": "Travis Etienne",
                 "position": "RB",
-                "points": 8.3
+                "points": 8.3,
+                "playerName": "Travis Etienne"
               },
               {
                 "playerId": "9754",
-                "name": "Quentin Johnston",
                 "position": "WR",
-                "points": 4.9
+                "points": 4.9,
+                "playerName": "Quentin Johnston"
               },
               {
                 "playerId": "NE",
-                "name": "New England Patriots",
                 "position": "DEF",
-                "points": 4.25
+                "points": 4.25,
+                "playerName": "New England Patriots"
               },
               {
                 "playerId": "4037",
-                "name": "Chris Godwin",
                 "position": "WR",
-                "points": 4.1
+                "points": 4.1,
+                "playerName": "Chris Godwin"
               }
             ]
           },
@@ -3078,57 +3078,57 @@
             "topPerformers": [
               {
                 "playerId": "4034",
-                "name": "Christian McCaffrey",
                 "position": "RB",
-                "points": 24.9
+                "points": 24.9,
+                "playerName": "Christian McCaffrey"
               },
               {
                 "playerId": "11563",
-                "name": "Bo Nix",
                 "position": "QB",
-                "points": 18.38
+                "points": 18.38,
+                "playerName": "Bo Nix"
               },
               {
                 "playerId": "7569",
-                "name": "Nico Collins",
                 "position": "WR",
-                "points": 14
+                "points": 14,
+                "playerName": "Nico Collins"
               },
               {
                 "playerId": "6801",
-                "name": "Tee Higgins",
                 "position": "WR",
-                "points": 9.7
+                "points": 9.7,
+                "playerName": "Tee Higgins"
               },
               {
                 "playerId": "8205",
-                "name": "Isiah Pacheco",
                 "position": "RB",
-                "points": 9.1
+                "points": 9.1,
+                "playerName": "Isiah Pacheco"
               },
               {
                 "playerId": "5844",
-                "name": "T.J. Hockenson",
                 "position": "TE",
-                "points": 6.8
+                "points": 6.8,
+                "playerName": "T.J. Hockenson"
               },
               {
                 "playerId": "PHI",
-                "name": "Philadelphia Eagles",
                 "position": "DEF",
-                "points": 5.3
+                "points": 5.3,
+                "playerName": "Philadelphia Eagles"
               },
               {
                 "playerId": "9494",
-                "name": "Marvin Mims",
                 "position": "WR",
-                "points": 2.9
+                "points": 2.9,
+                "playerName": "Marvin Mims"
               },
               {
                 "playerId": "1339",
-                "name": "Zach Ertz",
                 "position": "TE",
-                "points": 0
+                "points": 0,
+                "playerName": "Zach Ertz"
               }
             ]
           },
@@ -3643,57 +3643,57 @@
             "topPerformers": [
               {
                 "playerId": "8136",
-                "name": "Rachaad White",
                 "position": "RB",
-                "points": 22.6
+                "points": 22.6,
+                "playerName": "Rachaad White"
               },
               {
                 "playerId": "9493",
-                "name": "Puka Nacua",
                 "position": "WR",
-                "points": 19.5
+                "points": 19.5,
+                "playerName": "Puka Nacua"
               },
               {
                 "playerId": "12527",
-                "name": "Ashton Jeanty",
                 "position": "RB",
-                "points": 14.9
+                "points": 14.9,
+                "playerName": "Ashton Jeanty"
               },
               {
                 "playerId": "6819",
-                "name": "Michael Pittman",
                 "position": "WR",
-                "points": 12.4
+                "points": 12.4,
+                "playerName": "Michael Pittman"
               },
               {
                 "playerId": "1479",
-                "name": "Keenan Allen",
                 "position": "WR",
-                "points": 8.3
+                "points": 8.3,
+                "playerName": "Keenan Allen"
               },
               {
                 "playerId": "9224",
-                "name": "Chase Brown",
                 "position": "RB",
-                "points": 7.3
+                "points": 7.3,
+                "playerName": "Chase Brown"
               },
               {
                 "playerId": "1373",
-                "name": "Geno Smith",
                 "position": "QB",
-                "points": 6.92
+                "points": 6.92,
+                "playerName": "Geno Smith"
               },
               {
                 "playerId": "MIN",
-                "name": "Minnesota Vikings",
                 "position": "DEF",
-                "points": 5.95
+                "points": 5.95,
+                "playerName": "Minnesota Vikings"
               },
               {
                 "playerId": "1339",
-                "name": "Zach Ertz",
                 "position": "TE",
-                "points": 0
+                "points": 0,
+                "playerName": "Zach Ertz"
               }
             ]
           },
@@ -3705,57 +3705,57 @@
             "topPerformers": [
               {
                 "playerId": "7021",
-                "name": "Rico Dowdle",
                 "position": "RB",
-                "points": 33.9
+                "points": 33.9,
+                "playerName": "Rico Dowdle"
               },
               {
                 "playerId": "9758",
-                "name": "C.J. Stroud",
                 "position": "QB",
-                "points": 29.26
+                "points": 29.26,
+                "playerName": "C.J. Stroud"
               },
               {
                 "playerId": "8110",
-                "name": "Jake Ferguson",
                 "position": "TE",
-                "points": 20.4
+                "points": 20.4,
+                "playerName": "Jake Ferguson"
               },
               {
                 "playerId": "8146",
-                "name": "Garrett Wilson",
                 "position": "WR",
-                "points": 16.1
+                "points": 16.1,
+                "playerName": "Garrett Wilson"
               },
               {
                 "playerId": "DET",
-                "name": "Detroit Lions",
                 "position": "DEF",
-                "points": 14.8
+                "points": 14.8,
+                "playerName": "Detroit Lions"
               },
               {
                 "playerId": "3198",
-                "name": "Derrick Henry",
                 "position": "RB",
-                "points": 10.3
+                "points": 10.3,
+                "playerName": "Derrick Henry"
               },
               {
                 "playerId": "12526",
-                "name": "Tetairoa McMillan",
                 "position": "WR",
-                "points": 10.3
+                "points": 10.3,
+                "playerName": "Tetairoa McMillan"
               },
               {
                 "playerId": "5859",
-                "name": "A.J. Brown",
                 "position": "WR",
-                "points": 6.8
+                "points": 6.8,
+                "playerName": "A.J. Brown"
               },
               {
                 "playerId": "7002",
-                "name": "Juwan Johnson",
                 "position": "TE",
-                "points": 2.7
+                "points": 2.7,
+                "playerName": "Juwan Johnson"
               }
             ]
           },
@@ -4221,57 +4221,57 @@
             "topPerformers": [
               {
                 "playerId": "7526",
-                "name": "Jaylen Waddle",
                 "position": "WR",
-                "points": 20
+                "points": 20,
+                "playerName": "Jaylen Waddle"
               },
               {
                 "playerId": "11566",
-                "name": "Jayden Daniels",
                 "position": "QB",
-                "points": 18.14
+                "points": 18.14,
+                "playerName": "Jayden Daniels"
               },
               {
                 "playerId": "9221",
-                "name": "Jahmyr Gibbs",
                 "position": "RB",
-                "points": 17.2
+                "points": 17.2,
+                "playerName": "Jahmyr Gibbs"
               },
               {
                 "playerId": "6806",
-                "name": "J.K. Dobbins",
                 "position": "RB",
-                "points": 16.9
+                "points": 16.9,
+                "playerName": "J.K. Dobbins"
               },
               {
                 "playerId": "9226",
-                "name": "De'Von Achane",
                 "position": "RB",
-                "points": 14.6
+                "points": 14.6,
+                "playerName": "De'Von Achane"
               },
               {
                 "playerId": "8137",
-                "name": "George Pickens",
                 "position": "WR",
-                "points": 12.7
+                "points": 12.7,
+                "playerName": "George Pickens"
               },
               {
                 "playerId": "CLE",
-                "name": "Cleveland Browns",
                 "position": "DEF",
-                "points": 9.55
+                "points": 9.55,
+                "playerName": "Cleveland Browns"
               },
               {
                 "playerId": "12506",
-                "name": "Harold Fannin",
                 "position": "TE",
-                "points": 9.3
+                "points": 9.3,
+                "playerName": "Harold Fannin"
               },
               {
                 "playerId": "11624",
-                "name": "Xavier Worthy",
                 "position": "WR",
-                "points": 8.1
+                "points": 8.1,
+                "playerName": "Xavier Worthy"
               }
             ]
           },
@@ -4283,57 +4283,57 @@
             "topPerformers": [
               {
                 "playerId": "4046",
-                "name": "Patrick Mahomes",
                 "position": "QB",
-                "points": 28.22
+                "points": 28.22,
+                "playerName": "Patrick Mahomes"
               },
               {
                 "playerId": "2449",
-                "name": "Stefon Diggs",
                 "position": "WR",
-                "points": 19.6
+                "points": 19.6,
+                "playerName": "Stefon Diggs"
               },
               {
                 "playerId": "10859",
-                "name": "Sam LaPorta",
                 "position": "TE",
-                "points": 17.7
+                "points": 17.7,
+                "playerName": "Sam LaPorta"
               },
               {
                 "playerId": "2505",
-                "name": "Darren Waller",
                 "position": "TE",
-                "points": 16.3
+                "points": 16.3,
+                "playerName": "Darren Waller"
               },
               {
                 "playerId": "6794",
-                "name": "Justin Jefferson",
                 "position": "WR",
-                "points": 15.8
+                "points": 15.8,
+                "playerName": "Justin Jefferson"
               },
               {
                 "playerId": "7547",
-                "name": "Amon-Ra St. Brown",
                 "position": "WR",
-                "points": 14
+                "points": 14,
+                "playerName": "Amon-Ra St. Brown"
               },
               {
                 "playerId": "7611",
-                "name": "Rhamondre Stevenson",
                 "position": "RB",
-                "points": 13.7
+                "points": 13.7,
+                "playerName": "Rhamondre Stevenson"
               },
               {
                 "playerId": "MIA",
-                "name": "Miami Dolphins",
                 "position": "DEF",
-                "points": 6.95
+                "points": 6.95,
+                "playerName": "Miami Dolphins"
               },
               {
                 "playerId": "8138",
-                "name": "James Cook",
                 "position": "RB",
-                "points": 5.9
+                "points": 5.9,
+                "playerName": "James Cook"
               }
             ]
           },
@@ -4841,57 +4841,57 @@
             "topPerformers": [
               {
                 "playerId": "8150",
-                "name": "Kyren Williams",
                 "position": "RB",
-                "points": 29.1
+                "points": 29.1,
+                "playerName": "Kyren Williams"
               },
               {
                 "playerId": "7591",
-                "name": "Justin Fields",
                 "position": "QB",
-                "points": 27.42
+                "points": 27.42,
+                "playerName": "Justin Fields"
               },
               {
                 "playerId": "4033",
-                "name": "David Njoku",
                 "position": "TE",
-                "points": 15.7
+                "points": 15.7,
+                "playerName": "David Njoku"
               },
               {
                 "playerId": "DEN",
-                "name": "Denver Broncos",
                 "position": "DEF",
-                "points": 11.45
+                "points": 11.45,
+                "playerName": "Denver Broncos"
               },
               {
                 "playerId": "8151",
-                "name": "Kenneth Walker",
                 "position": "RB",
-                "points": 10.6
+                "points": 10.6,
+                "playerName": "Kenneth Walker"
               },
               {
                 "playerId": "11631",
-                "name": "Brian Thomas",
                 "position": "WR",
-                "points": 10
+                "points": 10,
+                "playerName": "Brian Thomas"
               },
               {
                 "playerId": "6801",
-                "name": "Tee Higgins",
                 "position": "WR",
-                "points": 9.7
+                "points": 9.7,
+                "playerName": "Tee Higgins"
               },
               {
                 "playerId": "8144",
-                "name": "Chris Olave",
                 "position": "WR",
-                "points": 9.4
+                "points": 9.4,
+                "playerName": "Chris Olave"
               },
               {
                 "playerId": "5947",
-                "name": "Jakobi Meyers",
                 "position": "WR",
-                "points": 5.2
+                "points": 5.2,
+                "playerName": "Jakobi Meyers"
               }
             ]
           },
@@ -4903,57 +4903,57 @@
             "topPerformers": [
               {
                 "playerId": "421",
-                "name": "Matthew Stafford",
                 "position": "QB",
-                "points": 25.56
+                "points": 25.56,
+                "playerName": "Matthew Stafford"
               },
               {
                 "playerId": "8155",
-                "name": "Breece Hall",
                 "position": "RB",
-                "points": 18.5
+                "points": 18.5,
+                "playerName": "Breece Hall"
               },
               {
                 "playerId": "11635",
-                "name": "Ladd McConkey",
                 "position": "WR",
-                "points": 12.4
+                "points": 12.4,
+                "playerName": "Ladd McConkey"
               },
               {
                 "playerId": "8408",
-                "name": "Jordan Mason",
                 "position": "RB",
-                "points": 12.1
+                "points": 12.1,
+                "playerName": "Jordan Mason"
               },
               {
                 "playerId": "5022",
-                "name": "Dallas Goedert",
                 "position": "TE",
-                "points": 9.4
+                "points": 9.4,
+                "playerName": "Dallas Goedert"
               },
               {
                 "playerId": "7543",
-                "name": "Travis Etienne",
                 "position": "RB",
-                "points": 8.3
+                "points": 8.3,
+                "playerName": "Travis Etienne"
               },
               {
                 "playerId": "8134",
-                "name": "Khalil Shakir",
                 "position": "WR",
-                "points": 8
+                "points": 8,
+                "playerName": "Khalil Shakir"
               },
               {
                 "playerId": "6149",
-                "name": "Darius Slayton",
                 "position": "WR",
-                "points": 2.6
+                "points": 2.6,
+                "playerName": "Darius Slayton"
               },
               {
                 "playerId": "BAL",
-                "name": "Baltimore Ravens",
                 "position": "DEF",
-                "points": -0.7
+                "points": -0.7,
+                "playerName": "Baltimore Ravens"
               }
             ]
           },
@@ -5461,57 +5461,57 @@
             "topPerformers": [
               {
                 "playerId": "6813",
-                "name": "Jonathan Taylor",
                 "position": "RB",
-                "points": 31.6
+                "points": 31.6,
+                "playerName": "Jonathan Taylor"
               },
               {
                 "playerId": "12514",
-                "name": "Emeka Egbuka",
                 "position": "WR",
-                "points": 27.8
+                "points": 27.8,
+                "playerName": "Emeka Egbuka"
               },
               {
                 "playerId": "5892",
-                "name": "David Montgomery",
                 "position": "RB",
-                "points": 19.22
+                "points": 19.22,
+                "playerName": "David Montgomery"
               },
               {
                 "playerId": "7607",
-                "name": "Michael Carter",
                 "position": "RB",
-                "points": 16.3
+                "points": 16.3,
+                "playerName": "Michael Carter"
               },
               {
                 "playerId": "6797",
-                "name": "Justin Herbert",
                 "position": "QB",
-                "points": 16.14
+                "points": 16.14,
+                "playerName": "Justin Herbert"
               },
               {
                 "playerId": "12518",
-                "name": "Tyler Warren",
                 "position": "TE",
-                "points": 12.4
+                "points": 12.4,
+                "playerName": "Tyler Warren"
               },
               {
                 "playerId": "11628",
-                "name": "Marvin Harrison",
                 "position": "WR",
-                "points": 11.8
+                "points": 11.8,
+                "playerName": "Marvin Harrison"
               },
               {
                 "playerId": "11637",
-                "name": "Keon Coleman",
                 "position": "WR",
-                "points": 8.3
+                "points": 8.3,
+                "playerName": "Keon Coleman"
               },
               {
                 "playerId": "LAR",
-                "name": "Los Angeles Rams",
                 "position": "DEF",
-                "points": 2.4
+                "points": 2.4,
+                "playerName": "Los Angeles Rams"
               }
             ]
           },
@@ -5523,57 +5523,57 @@
             "topPerformers": [
               {
                 "playerId": "4892",
-                "name": "Baker Mayfield",
                 "position": "QB",
-                "points": 27.16
+                "points": 27.16,
+                "playerName": "Baker Mayfield"
               },
               {
                 "playerId": "4034",
-                "name": "Christian McCaffrey",
                 "position": "RB",
-                "points": 24.9
+                "points": 24.9,
+                "playerName": "Christian McCaffrey"
               },
               {
                 "playerId": "5872",
-                "name": "Deebo Samuel",
                 "position": "WR",
-                "points": 19.6
+                "points": 19.6,
+                "playerName": "Deebo Samuel"
               },
               {
                 "playerId": "8676",
-                "name": "Rashid Shaheed",
                 "position": "WR",
-                "points": 19.4
+                "points": 19.4,
+                "playerName": "Rashid Shaheed"
               },
               {
                 "playerId": "12507",
-                "name": "Omarion Hampton",
                 "position": "RB",
-                "points": 11
+                "points": 11,
+                "playerName": "Omarion Hampton"
               },
               {
                 "playerId": "10213",
-                "name": "Tre Tucker",
                 "position": "WR",
-                "points": 9.1
+                "points": 9.1,
+                "playerName": "Tre Tucker"
               },
               {
                 "playerId": "SF",
-                "name": "San Francisco 49ers",
                 "position": "DEF",
-                "points": 4.3
+                "points": 4.3,
+                "playerName": "San Francisco 49ers"
               },
               {
                 "playerId": "5012",
-                "name": "Mark Andrews",
                 "position": "TE",
-                "points": 3.2
+                "points": 3.2,
+                "playerName": "Mark Andrews"
               },
               {
                 "playerId": "12499",
-                "name": "Elic Ayomanor",
                 "position": "WR",
-                "points": 2.8
+                "points": 2.8,
+                "playerName": "Elic Ayomanor"
               }
             ]
           },
@@ -6039,57 +6039,57 @@
             "topPerformers": [
               {
                 "playerId": "3294",
-                "name": "Dak Prescott",
                 "position": "QB",
-                "points": 29.28
+                "points": 29.28,
+                "playerName": "Dak Prescott"
               },
               {
                 "playerId": "7564",
-                "name": "Ja'Marr Chase",
                 "position": "WR",
-                "points": 26
+                "points": 26,
+                "playerName": "Ja'Marr Chase"
               },
               {
                 "playerId": "4866",
-                "name": "Saquon Barkley",
                 "position": "RB",
-                "points": 16.8
+                "points": 16.8,
+                "playerName": "Saquon Barkley"
               },
               {
                 "playerId": "DAL",
-                "name": "Dallas Cowboys",
                 "position": "DEF",
-                "points": 13.75
+                "points": 13.75,
+                "playerName": "Dallas Cowboys"
               },
               {
                 "playerId": "11627",
-                "name": "Troy Franklin",
                 "position": "WR",
-                "points": 7
+                "points": 7,
+                "playerName": "Troy Franklin"
               },
               {
                 "playerId": "3214",
-                "name": "Hunter Henry",
                 "position": "TE",
-                "points": 5.6
+                "points": 5.6,
+                "playerName": "Hunter Henry"
               },
               {
                 "playerId": "9754",
-                "name": "Quentin Johnston",
                 "position": "WR",
-                "points": 4.9
+                "points": 4.9,
+                "playerName": "Quentin Johnston"
               },
               {
                 "playerId": "4037",
-                "name": "Chris Godwin",
                 "position": "WR",
-                "points": 4.1
+                "points": 4.1,
+                "playerName": "Chris Godwin"
               },
               {
                 "playerId": "4219",
-                "name": "Jeremy McNichols",
                 "position": "RB",
-                "points": 2.3
+                "points": 2.3,
+                "playerName": "Jeremy McNichols"
               }
             ]
           },
@@ -6101,57 +6101,57 @@
             "topPerformers": [
               {
                 "playerId": "7588",
-                "name": "Javonte Williams",
                 "position": "RB",
-                "points": 28.9
+                "points": 28.9,
+                "playerName": "Javonte Williams"
               },
               {
                 "playerId": "9488",
-                "name": "Jaxon Smith-Njigba",
                 "position": "WR",
-                "points": 23.2
+                "points": 23.2,
+                "playerName": "Jaxon Smith-Njigba"
               },
               {
                 "playerId": "11563",
-                "name": "Bo Nix",
                 "position": "QB",
-                "points": 18.38
+                "points": 18.38,
+                "playerName": "Bo Nix"
               },
               {
                 "playerId": "12512",
-                "name": "Quinshon Judkins",
                 "position": "RB",
-                "points": 15.8
+                "points": 15.8,
+                "playerName": "Quinshon Judkins"
               },
               {
                 "playerId": "4981",
-                "name": "Calvin Ridley",
                 "position": "WR",
-                "points": 15.6
+                "points": 15.6,
+                "playerName": "Calvin Ridley"
               },
               {
                 "playerId": "5967",
-                "name": "Tony Pollard",
                 "position": "RB",
-                "points": 14.8
+                "points": 14.8,
+                "playerName": "Tony Pollard"
               },
               {
                 "playerId": "2133",
-                "name": "Davante Adams",
                 "position": "WR",
-                "points": 11.3
+                "points": 11.3,
+                "playerName": "Davante Adams"
               },
               {
                 "playerId": "5844",
-                "name": "T.J. Hockenson",
                 "position": "TE",
-                "points": 6.8
+                "points": 6.8,
+                "playerName": "T.J. Hockenson"
               },
               {
                 "playerId": "NYG",
-                "name": "New York Giants",
                 "position": "DEF",
-                "points": 1.05
+                "points": 1.05,
+                "playerName": "New York Giants"
               }
             ]
           },
@@ -6617,57 +6617,57 @@
             "topPerformers": [
               {
                 "playerId": "3163",
-                "name": "Jared Goff",
                 "position": "QB",
-                "points": 20.12
+                "points": 20.12,
+                "playerName": "Jared Goff"
               },
               {
                 "playerId": "5045",
-                "name": "Courtland Sutton",
                 "position": "WR",
-                "points": 13.9
+                "points": 13.9,
+                "playerName": "Courtland Sutton"
               },
               {
                 "playerId": "IND",
-                "name": "Indianapolis Colts",
                 "position": "DEF",
-                "points": 13.9
+                "points": 13.9,
+                "playerName": "Indianapolis Colts"
               },
               {
                 "playerId": "12481",
-                "name": "Cam Skattebo",
                 "position": "RB",
-                "points": 13.4
+                "points": 13.4,
+                "playerName": "Cam Skattebo"
               },
               {
                 "playerId": "9997",
-                "name": "Zay Flowers",
                 "position": "WR",
-                "points": 9.7
+                "points": 9.7,
+                "playerName": "Zay Flowers"
               },
               {
                 "playerId": "4035",
-                "name": "Alvin Kamara",
                 "position": "RB",
-                "points": 7.5
+                "points": 7.5,
+                "playerName": "Alvin Kamara"
               },
               {
                 "playerId": "12489",
-                "name": "RJ Harvey",
                 "position": "RB",
-                "points": 5
+                "points": 5,
+                "playerName": "RJ Harvey"
               },
               {
                 "playerId": "12529",
-                "name": "TreVeyon Henderson",
                 "position": "RB",
-                "points": 4.2
+                "points": 4.2,
+                "playerName": "TreVeyon Henderson"
               },
               {
                 "playerId": "4381",
-                "name": "Taysom Hill",
                 "position": "TE",
-                "points": 1.16
+                "points": 1.16,
+                "playerName": "Taysom Hill"
               }
             ]
           },
@@ -6679,57 +6679,57 @@
             "topPerformers": [
               {
                 "playerId": "12533",
-                "name": "Jacory Croskey-Merritt",
                 "position": "RB",
-                "points": 28
+                "points": 28,
+                "playerName": "Jacory Croskey-Merritt"
               },
               {
                 "playerId": "4984",
-                "name": "Josh Allen",
                 "position": "QB",
-                "points": 20.92
+                "points": 20.92,
+                "playerName": "Josh Allen"
               },
               {
                 "playerId": "4098",
-                "name": "Kareem Hunt",
                 "position": "RB",
-                "points": 18.7
+                "points": 18.7,
+                "playerName": "Kareem Hunt"
               },
               {
                 "playerId": "1466",
-                "name": "Travis Kelce",
                 "position": "TE",
-                "points": 15.6
+                "points": 15.6,
+                "playerName": "Travis Kelce"
               },
               {
                 "playerId": "7525",
-                "name": "DeVonta Smith",
                 "position": "WR",
-                "points": 15.4
+                "points": 15.4,
+                "playerName": "DeVonta Smith"
               },
               {
                 "playerId": "7569",
-                "name": "Nico Collins",
                 "position": "WR",
-                "points": 14
+                "points": 14,
+                "playerName": "Nico Collins"
               },
               {
                 "playerId": "ARI",
-                "name": "Arizona Cardinals",
                 "position": "DEF",
-                "points": 8.75
+                "points": 8.75,
+                "playerName": "Arizona Cardinals"
               },
               {
                 "playerId": "8130",
-                "name": "Trey McBride",
                 "position": "TE",
-                "points": 6.6
+                "points": 6.6,
+                "playerName": "Trey McBride"
               },
               {
                 "playerId": "12474",
-                "name": "Woody Marks",
                 "position": "RB",
-                "points": 2.9
+                "points": 2.9,
+                "playerName": "Woody Marks"
               }
             ]
           },
@@ -14032,7 +14032,9 @@
           "tier": 1,
           "powerScore": 115.37,
           "movement": "up",
-          "movementAmount": 10
+          "movementAmount": 10,
+          "leagueId": "1263740549504962561",
+          "rosterId": 9
         },
         {
           "rank": 2,
@@ -14043,7 +14045,9 @@
           "tier": 1,
           "powerScore": 114.98,
           "movement": "up",
-          "movementAmount": 7
+          "movementAmount": 7,
+          "leagueId": "1263740549504962561",
+          "rosterId": 4
         },
         {
           "rank": 3,
@@ -14054,7 +14058,9 @@
           "tier": 1,
           "powerScore": 114.36,
           "movement": "down",
-          "movementAmount": 1
+          "movementAmount": 1,
+          "leagueId": "1263744209295245312",
+          "rosterId": 10
         },
         {
           "rank": 4,
@@ -14065,7 +14071,9 @@
           "tier": 1,
           "powerScore": 114.35,
           "movement": "same",
-          "movementAmount": 0
+          "movementAmount": 0,
+          "leagueId": "1263744209295245312",
+          "rosterId": 6
         },
         {
           "rank": 5,
@@ -14076,7 +14084,9 @@
           "tier": 1,
           "powerScore": 113.96,
           "movement": "same",
-          "movementAmount": 0
+          "movementAmount": 0,
+          "leagueId": "1263740549504962561",
+          "rosterId": 8
         },
         {
           "rank": 6,
@@ -14087,7 +14097,9 @@
           "tier": 1,
           "powerScore": 112.85,
           "movement": "down",
-          "movementAmount": 5
+          "movementAmount": 5,
+          "leagueId": "1263740549504962561",
+          "rosterId": 1
         },
         {
           "rank": 7,
@@ -14098,7 +14110,9 @@
           "tier": 1,
           "powerScore": 112.78,
           "movement": "up",
-          "movementAmount": 1
+          "movementAmount": 1,
+          "leagueId": "1263740549504962561",
+          "rosterId": 10
         },
         {
           "rank": 8,
@@ -14109,7 +14123,9 @@
           "tier": 2,
           "powerScore": 111.67,
           "movement": "down",
-          "movementAmount": 5
+          "movementAmount": 5,
+          "leagueId": "1263740549504962561",
+          "rosterId": 2
         },
         {
           "rank": 9,
@@ -14120,7 +14136,9 @@
           "tier": 2,
           "powerScore": 109.42,
           "movement": "up",
-          "movementAmount": 1
+          "movementAmount": 1,
+          "leagueId": "1263744209295245312",
+          "rosterId": 2
         },
         {
           "rank": 10,
@@ -14131,7 +14149,9 @@
           "tier": 2,
           "powerScore": 109.27,
           "movement": "down",
-          "movementAmount": 4
+          "movementAmount": 4,
+          "leagueId": "1263744209295245312",
+          "rosterId": 4
         },
         {
           "rank": 11,
@@ -14142,7 +14162,9 @@
           "tier": 3,
           "powerScore": 107.68,
           "movement": "up",
-          "movementAmount": 5
+          "movementAmount": 5,
+          "leagueId": "1263744209295245312",
+          "rosterId": 7
         },
         {
           "rank": 12,
@@ -14153,7 +14175,9 @@
           "tier": 3,
           "powerScore": 103.86,
           "movement": "down",
-          "movementAmount": 5
+          "movementAmount": 5,
+          "leagueId": "1263744209295245312",
+          "rosterId": 9
         },
         {
           "rank": 13,
@@ -14164,7 +14188,9 @@
           "tier": 3,
           "powerScore": 101.05,
           "movement": "up",
-          "movementAmount": 4
+          "movementAmount": 4,
+          "leagueId": "1263740549504962561",
+          "rosterId": 12
         },
         {
           "rank": 14,
@@ -14175,7 +14201,9 @@
           "tier": 3,
           "powerScore": 99.97,
           "movement": "same",
-          "movementAmount": 0
+          "movementAmount": 0,
+          "leagueId": "1263744209295245312",
+          "rosterId": 11
         },
         {
           "rank": 15,
@@ -14186,7 +14214,9 @@
           "tier": 4,
           "powerScore": 98.67,
           "movement": "same",
-          "movementAmount": 0
+          "movementAmount": 0,
+          "leagueId": "1263740549504962561",
+          "rosterId": 11
         },
         {
           "rank": 16,
@@ -14197,7 +14227,9 @@
           "tier": 4,
           "powerScore": 94.42,
           "movement": "down",
-          "movementAmount": 4
+          "movementAmount": 4,
+          "leagueId": "1263744209295245312",
+          "rosterId": 1
         },
         {
           "rank": 17,
@@ -14208,7 +14240,9 @@
           "tier": 4,
           "powerScore": 93.12,
           "movement": "up",
-          "movementAmount": 2
+          "movementAmount": 2,
+          "leagueId": "1263744209295245312",
+          "rosterId": 8
         },
         {
           "rank": 18,
@@ -14219,7 +14253,9 @@
           "tier": 4,
           "powerScore": 92.24,
           "movement": "down",
-          "movementAmount": 5
+          "movementAmount": 5,
+          "leagueId": "1263740549504962561",
+          "rosterId": 7
         },
         {
           "rank": 19,
@@ -14230,7 +14266,9 @@
           "tier": 4,
           "powerScore": 91.43,
           "movement": "up",
-          "movementAmount": 2
+          "movementAmount": 2,
+          "leagueId": "1263740549504962561",
+          "rosterId": 3
         },
         {
           "rank": 20,
@@ -14241,7 +14279,9 @@
           "tier": 5,
           "powerScore": 89.91,
           "movement": "down",
-          "movementAmount": 2
+          "movementAmount": 2,
+          "leagueId": "1263744209295245312",
+          "rosterId": 5
         },
         {
           "rank": 21,
@@ -14252,7 +14292,9 @@
           "tier": 5,
           "powerScore": 82.2,
           "movement": "down",
-          "movementAmount": 1
+          "movementAmount": 1,
+          "leagueId": "1263740549504962561",
+          "rosterId": 6
         },
         {
           "rank": 22,
@@ -14263,7 +14305,9 @@
           "tier": 5,
           "powerScore": 75.27,
           "movement": "same",
-          "movementAmount": 0
+          "movementAmount": 0,
+          "leagueId": "1263744209295245312",
+          "rosterId": 3
         },
         {
           "rank": 23,
@@ -14274,7 +14318,9 @@
           "tier": 6,
           "powerScore": 73.09,
           "movement": "up",
-          "movementAmount": 1
+          "movementAmount": 1,
+          "leagueId": "1263740549504962561",
+          "rosterId": 5
         },
         {
           "rank": 24,
@@ -14285,7 +14331,9 @@
           "tier": 6,
           "powerScore": 68.11,
           "movement": "down",
-          "movementAmount": 1
+          "movementAmount": 1,
+          "leagueId": "1263744209295245312",
+          "rosterId": 12
         }
       ],
       "generatedAt": "2025-10-08T21:29:28.113Z",
@@ -14294,8 +14342,274 @@
     "standings": {
       "narrative": "```json\n{\n  \"narrative\": \"In the AFC, Joel reigns supreme at 4-1, holding the top seed. Hunter and Shivang lead their respective divisions, both sitting at 3-2. Adam, Neil, and Ben currently occupy the wild card spots, also at 3-2. Akhil C is the first team out at 2-3, but with a higher point total than Ben, so he is on the bubble and needs a win. \\n\\nOver in the NFC, Jeffrey's perfect 5-0 record has him firmly in control. Akhil V and Ziyan are the other division leaders, at 4-1 and 3-2, respectively. Christian, Aman, and Josh round out the playoff picture as the wild cards. Dhruv sits just outside the playoffs at 3-2, and will be fighting for a spot in the coming weeks. \\n\\nAt the bottom of the barrel, Arnav in the NFC is still winless. Vinny in the AFC is struggling too. It's going to take a miracle for these guys to turn things around.\",\n  \"standings\": {\n    \"afc\": {\n      \"divisionLeaders\": [\"Joel (4-1)\", \"Hunter (3-2)\", \"Shivang (3-2)\"],\n      \"wildCards\": [\"Adam (3-2)\", \"Neil (3-2)\", \"Ben (3-2)\"],\n      \"onBubble\": [\"Akhil C (2-3)\", \"Nolan (2-3)\"]\n    },\n    \"nfc\": {\n      \"divisionLeaders\": [\"Jeffrey (5-0)\", \"Akhil V (4-1)\", \"Ziyan (3-2)\"],\n      \"wildCards\": [\"Christian (4-1)\", \"Aman (3-2)\", \"Josh (3-2)\"],\n      \"onBubble\": [\"Dhruv (3-2)\", \"Luke (2-3)\"]\n    }\n  }\n}\n```",
       "standings": {
-        "afc": [],
-        "nfc": []
+        "afc": [
+          {
+            "rank": 1,
+            "teamName": "To Infinity and Bijan",
+            "record": "4-1",
+            "pointsFor": 608,
+            "pointsAgainst": 499.48,
+            "streak": "",
+            "wins": 4,
+            "losses": 1,
+            "playoffSeed": 1
+          },
+          {
+            "rank": 2,
+            "teamName": "Nacua Matata",
+            "record": "3-2",
+            "pointsFor": 602.71,
+            "pointsAgainst": 566.88,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 4
+          },
+          {
+            "rank": 3,
+            "teamName": "The Golden Age",
+            "record": "3-2",
+            "pointsFor": 596.87,
+            "pointsAgainst": 522.33,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 2
+          },
+          {
+            "rank": 4,
+            "teamName": "lol jerry jones",
+            "record": "3-2",
+            "pointsFor": 586.74,
+            "pointsAgainst": 595.49,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 5
+          },
+          {
+            "rank": 5,
+            "teamName": "benweinfeld",
+            "record": "3-2",
+            "pointsFor": 572.47,
+            "pointsAgainst": 574.75,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 6
+          },
+          {
+            "rank": 6,
+            "teamName": "scboom5",
+            "record": "3-2",
+            "pointsFor": 558.81,
+            "pointsAgainst": 608.6,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 3
+          },
+          {
+            "rank": 7,
+            "teamName": "achak7",
+            "record": "2-3",
+            "pointsFor": 596.69,
+            "pointsAgainst": 578.55,
+            "streak": "",
+            "wins": 2,
+            "losses": 3,
+            "playoffSeed": null
+          },
+          {
+            "rank": 8,
+            "teamName": "2 Dolla Balla$",
+            "record": "2-3",
+            "pointsFor": 547.58,
+            "pointsAgainst": 535.7,
+            "streak": "",
+            "wins": 2,
+            "losses": 3,
+            "playoffSeed": null
+          },
+          {
+            "rank": 9,
+            "teamName": "Quonspiracy Theorists",
+            "record": "2-3",
+            "pointsFor": 537.84,
+            "pointsAgainst": 546.02,
+            "streak": "",
+            "wins": 2,
+            "losses": 3,
+            "playoffSeed": null
+          },
+          {
+            "rank": 10,
+            "teamName": "Dr Patel Parikh MD MBA",
+            "record": "2-3",
+            "pointsFor": 533.77,
+            "pointsAgainst": 560.32,
+            "streak": "",
+            "wins": 2,
+            "losses": 3,
+            "playoffSeed": null
+          },
+          {
+            "rank": 11,
+            "teamName": "NielGetsCarried",
+            "record": "2-3",
+            "pointsFor": 489.92,
+            "pointsAgainst": 500.16,
+            "streak": "",
+            "wins": 2,
+            "losses": 3,
+            "playoffSeed": null
+          },
+          {
+            "rank": 12,
+            "teamName": "vchak",
+            "record": "1-4",
+            "pointsFor": 470.37,
+            "pointsAgainst": 613.49,
+            "streak": "",
+            "wins": 1,
+            "losses": 4,
+            "playoffSeed": null
+          }
+        ],
+        "nfc": [
+          {
+            "rank": 1,
+            "teamName": "Marginal Returns",
+            "record": "5-0",
+            "pointsFor": 600.21,
+            "pointsAgainst": 505.2,
+            "streak": "",
+            "wins": 5,
+            "losses": 0,
+            "playoffSeed": 1
+          },
+          {
+            "rank": 2,
+            "teamName": "DJ Herbussy ",
+            "record": "4-1",
+            "pointsFor": 610.35,
+            "pointsAgainst": 531.64,
+            "streak": "",
+            "wins": 4,
+            "losses": 1,
+            "playoffSeed": 2
+          },
+          {
+            "rank": 3,
+            "teamName": "cescott25",
+            "record": "4-1",
+            "pointsFor": 560.38,
+            "pointsAgainst": 507.41,
+            "streak": "",
+            "wins": 4,
+            "losses": 1,
+            "playoffSeed": 4
+          },
+          {
+            "rank": 4,
+            "teamName": "Saint Brown Does Mahomes",
+            "record": "3-2",
+            "pointsFor": 602.93,
+            "pointsAgainst": 547.48,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 5
+          },
+          {
+            "rank": 5,
+            "teamName": "ziyanp22",
+            "record": "3-2",
+            "pointsFor": 600.82,
+            "pointsAgainst": 595.53,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 3
+          },
+          {
+            "rank": 6,
+            "teamName": "C&G^2",
+            "record": "3-2",
+            "pointsFor": 600.74,
+            "pointsAgainst": 571.46,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": 6
+          },
+          {
+            "rank": 7,
+            "teamName": "Mach 10",
+            "record": "3-2",
+            "pointsFor": 589.96,
+            "pointsAgainst": 584.04,
+            "streak": "",
+            "wins": 3,
+            "losses": 2,
+            "playoffSeed": null
+          },
+          {
+            "rank": 8,
+            "teamName": "lukebowsh",
+            "record": "2-3",
+            "pointsFor": 562.97,
+            "pointsAgainst": 569.42,
+            "streak": "",
+            "wins": 2,
+            "losses": 3,
+            "playoffSeed": null
+          },
+          {
+            "rank": 9,
+            "teamName": "Jaxson Dart-Njigba",
+            "record": "1-4",
+            "pointsFor": 546.3,
+            "pointsAgainst": 604.9,
+            "streak": "",
+            "wins": 1,
+            "losses": 4,
+            "playoffSeed": null
+          },
+          {
+            "rank": 10,
+            "teamName": "vayyala",
+            "record": "1-4",
+            "pointsFor": 537.63,
+            "pointsAgainst": 590.5,
+            "streak": "",
+            "wins": 1,
+            "losses": 4,
+            "playoffSeed": null
+          },
+          {
+            "rank": 11,
+            "teamName": "The zoo",
+            "record": "1-4",
+            "pointsFor": 515.16,
+            "pointsAgainst": 599.28,
+            "streak": "",
+            "wins": 1,
+            "losses": 4,
+            "playoffSeed": null
+          },
+          {
+            "rank": 12,
+            "teamName": "Dont go Chasing Saquon",
+            "record": "0-5",
+            "pointsFor": 497.41,
+            "pointsAgainst": 618,
+            "streak": "",
+            "wins": 0,
+            "losses": 5,
+            "playoffSeed": null
+          }
+        ]
       },
       "playoffPicture": {
         "clinched": [],
@@ -14303,7 +14617,321 @@
         "eliminated": []
       },
       "generatedAt": "2025-10-08T21:29:28.113Z",
-      "commentary": "In the AFC, Joel reigns supreme at 4-1, holding the top seed. Hunter and Shivang lead their respective divisions, both sitting at 3-2. Adam, Neil, and Ben currently occupy the wild card spots, also at 3-2. Akhil C is the first team out at 2-3, but with a higher point total than Ben, so he is on the bubble and needs a win. \n\nOver in the NFC, Jeffrey's perfect 5-0 record has him firmly in control. Akhil V and Ziyan are the other division leaders, at 4-1 and 3-2, respectively. Christian, Aman, and Josh round out the playoff picture as the wild cards. Dhruv sits just outside the playoffs at 3-2, and will be fighting for a spot in the coming weeks. \n\nAt the bottom of the barrel, Arnav in the NFC is still winless. Vinny in the AFC is struggling too. It's going to take a miracle for these guys to turn things around."
+      "commentary": "In the AFC, Joel reigns supreme at 4-1, holding the top seed. Hunter and Shivang lead their respective divisions, both sitting at 3-2. Adam, Neil, and Ben currently occupy the wild card spots, also at 3-2. Akhil C is the first team out at 2-3, but with a higher point total than Ben, so he is on the bubble and needs a win. \n\nOver in the NFC, Jeffrey's perfect 5-0 record has him firmly in control. Akhil V and Ziyan are the other division leaders, at 4-1 and 3-2, respectively. Christian, Aman, and Josh round out the playoff picture as the wild cards. Dhruv sits just outside the playoffs at 3-2, and will be fighting for a spot in the coming weeks. \n\nAt the bottom of the barrel, Arnav in the NFC is still winless. Vinny in the AFC is struggling too. It's going to take a miracle for these guys to turn things around.",
+      "standingsData": [
+        {
+          "leagueId": "1263744209295245312",
+          "leagueName": "Gauntlet AFC",
+          "divisions": {
+            "North": [
+              {
+                "rosterId": 4,
+                "teamName": "The Golden Age",
+                "ownerName": "Hunter",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 596.87,
+                "leagueId": "1263744209295245312",
+                "division": 1,
+                "playoffSeed": 2
+              },
+              {
+                "rosterId": 2,
+                "teamName": "lol jerry jones",
+                "ownerName": "Neil",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 586.74,
+                "leagueId": "1263744209295245312",
+                "division": 1,
+                "playoffSeed": 5
+              },
+              {
+                "rosterId": 3,
+                "teamName": "NielGetsCarried",
+                "ownerName": "Arpit & Yash",
+                "wins": 2,
+                "losses": 3,
+                "ties": 0,
+                "points": 489.92,
+                "leagueId": "1263744209295245312",
+                "division": 1,
+                "playoffSeed": null
+              },
+              {
+                "rosterId": 12,
+                "teamName": "vchak",
+                "ownerName": "Vinny",
+                "wins": 1,
+                "losses": 4,
+                "ties": 0,
+                "points": 470.37,
+                "leagueId": "1263744209295245312",
+                "division": 1,
+                "playoffSeed": null
+              }
+            ],
+            "South": [
+              {
+                "rosterId": 11,
+                "teamName": "scboom5",
+                "ownerName": "Shivang",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 558.81,
+                "leagueId": "1263744209295245312",
+                "division": 2,
+                "playoffSeed": 3
+              },
+              {
+                "rosterId": 9,
+                "teamName": "achak7",
+                "ownerName": "Akhil C",
+                "wins": 2,
+                "losses": 3,
+                "ties": 0,
+                "points": 596.69,
+                "leagueId": "1263744209295245312",
+                "division": 2,
+                "playoffSeed": null
+              },
+              {
+                "rosterId": 1,
+                "teamName": "2 Dolla Balla$",
+                "ownerName": "Nolan",
+                "wins": 2,
+                "losses": 3,
+                "ties": 0,
+                "points": 547.58,
+                "leagueId": "1263744209295245312",
+                "division": 2,
+                "playoffSeed": null
+              },
+              {
+                "rosterId": 5,
+                "teamName": "Quonspiracy Theorists",
+                "ownerName": "Anant",
+                "wins": 2,
+                "losses": 3,
+                "ties": 0,
+                "points": 537.84,
+                "leagueId": "1263744209295245312",
+                "division": 2,
+                "playoffSeed": null
+              }
+            ],
+            "East": [
+              {
+                "rosterId": 10,
+                "teamName": "To Infinity and Bijan",
+                "ownerName": "Joel",
+                "wins": 4,
+                "losses": 1,
+                "ties": 0,
+                "points": 608,
+                "leagueId": "1263744209295245312",
+                "division": 3,
+                "playoffSeed": 1
+              },
+              {
+                "rosterId": 6,
+                "teamName": "Nacua Matata",
+                "ownerName": "Adam",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 602.71,
+                "leagueId": "1263744209295245312",
+                "division": 3,
+                "playoffSeed": 4
+              },
+              {
+                "rosterId": 7,
+                "teamName": "benweinfeld",
+                "ownerName": "Ben",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 572.47,
+                "leagueId": "1263744209295245312",
+                "division": 3,
+                "playoffSeed": 6
+              },
+              {
+                "rosterId": 8,
+                "teamName": "Dr Patel Parikh MD MBA",
+                "ownerName": "Darshan and Kyle",
+                "wins": 2,
+                "losses": 3,
+                "ties": 0,
+                "points": 533.77,
+                "leagueId": "1263744209295245312",
+                "division": 3,
+                "playoffSeed": null
+              }
+            ]
+          }
+        },
+        {
+          "leagueId": "1263740549504962561",
+          "leagueName": "Gauntlet NFC",
+          "divisions": {
+            "North": [
+              {
+                "rosterId": 9,
+                "teamName": "Marginal Returns",
+                "ownerName": "Jeffrey",
+                "wins": 5,
+                "losses": 0,
+                "ties": 0,
+                "points": 600.21,
+                "leagueId": "1263740549504962561",
+                "division": 1,
+                "playoffSeed": 1
+              },
+              {
+                "rosterId": 8,
+                "teamName": "C&G^2",
+                "ownerName": "Josh",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 600.74,
+                "leagueId": "1263740549504962561",
+                "division": 1,
+                "playoffSeed": 6
+              },
+              {
+                "rosterId": 7,
+                "teamName": "Jaxson Dart-Njigba",
+                "ownerName": "Alex",
+                "wins": 1,
+                "losses": 4,
+                "ties": 0,
+                "points": 546.3,
+                "leagueId": "1263740549504962561",
+                "division": 1,
+                "playoffSeed": null
+              },
+              {
+                "rosterId": 3,
+                "teamName": "vayyala",
+                "ownerName": "Vinay",
+                "wins": 1,
+                "losses": 4,
+                "ties": 0,
+                "points": 537.63,
+                "leagueId": "1263740549504962561",
+                "division": 1,
+                "playoffSeed": null
+              }
+            ],
+            "South": [
+              {
+                "rosterId": 4,
+                "teamName": "DJ Herbussy ",
+                "ownerName": "Akhil V",
+                "wins": 4,
+                "losses": 1,
+                "ties": 0,
+                "points": 610.35,
+                "leagueId": "1263740549504962561",
+                "division": 2,
+                "playoffSeed": 2
+              },
+              {
+                "rosterId": 12,
+                "teamName": "cescott25",
+                "ownerName": "Christian",
+                "wins": 4,
+                "losses": 1,
+                "ties": 0,
+                "points": 560.38,
+                "leagueId": "1263740549504962561",
+                "division": 2,
+                "playoffSeed": 4
+              },
+              {
+                "rosterId": 10,
+                "teamName": "Saint Brown Does Mahomes",
+                "ownerName": "Aman",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 602.93,
+                "leagueId": "1263740549504962561",
+                "division": 2,
+                "playoffSeed": 5
+              },
+              {
+                "rosterId": 6,
+                "teamName": "The zoo",
+                "ownerName": "Rithik and Varun",
+                "wins": 1,
+                "losses": 4,
+                "ties": 0,
+                "points": 515.16,
+                "leagueId": "1263740549504962561",
+                "division": 2,
+                "playoffSeed": null
+              }
+            ],
+            "East": [
+              {
+                "rosterId": 1,
+                "teamName": "ziyanp22",
+                "ownerName": "Ziyan",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 600.82,
+                "leagueId": "1263740549504962561",
+                "division": 3,
+                "playoffSeed": 3
+              },
+              {
+                "rosterId": 2,
+                "teamName": "Mach 10",
+                "ownerName": "Dhruv",
+                "wins": 3,
+                "losses": 2,
+                "ties": 0,
+                "points": 589.96,
+                "leagueId": "1263740549504962561",
+                "division": 3,
+                "playoffSeed": null
+              },
+              {
+                "rosterId": 11,
+                "teamName": "lukebowsh",
+                "ownerName": "Luke",
+                "wins": 2,
+                "losses": 3,
+                "ties": 0,
+                "points": 562.97,
+                "leagueId": "1263740549504962561",
+                "division": 3,
+                "playoffSeed": null
+              },
+              {
+                "rosterId": 5,
+                "teamName": "Dont go Chasing Saquon",
+                "ownerName": "Arnav",
+                "wins": 0,
+                "losses": 5,
+                "ties": 0,
+                "points": 497.41,
+                "leagueId": "1263740549504962561",
+                "division": 3,
+                "playoffSeed": null
+              }
+            ]
+          }
+        }
+      ]
     },
     "upcoming": {
       "narrative": "",
@@ -14314,5 +14942,319 @@
       "narrative": "```json\n{\n  \"narrative\": \"Week 5 was pure, unadulterated chaos. Blowouts and nail-biters painted a picture of extreme volatility, but a clear top tier is starting to solidify. Jeffrey's meteoric rise and Akhil V's consistency are making them the teams to beat, while Joel is still in the top 3, but his grip is slipping. The middle tiers are a free-for-all, setting the stage for a brutal fight for playoff positioning in the coming weeks.\\n\\nThis week highlighted the importance of both ceiling and floor. Jeffrey's explosion shows the power of a high-scoring week, while others like Ziyan need to find more consistency. The standings are tightening, particularly in the AFC where several teams are knotted at 3-2. Every point matters, and the margin for error is shrinking.\\n\\nNext week promises even more fireworks as the pretenders try to separate themselves from the contenders. Can Jeffrey maintain his momentum against a tough opponent? Will the middle of the pack start to sort itself out? The stage is set for another week of high-stakes fantasy football.\",\n  \"themes\": [\"Volatility\", \"Emerging contenders\", \"Playoff race tightening\"],\n  \"keyTakeaway\": \"Week 5 was a wild ride that further defined the contenders and pretenders in The Gauntlet.\"\n}\n```",
       "generatedAt": "2025-10-08T21:29:28.113Z"
     }
-  }
+  },
+  "standingsData": [
+    {
+      "leagueId": "1263744209295245312",
+      "leagueName": "Gauntlet AFC",
+      "divisions": {
+        "North": [
+          {
+            "rosterId": 4,
+            "teamName": "The Golden Age",
+            "ownerName": "Hunter",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 596.87,
+            "leagueId": "1263744209295245312",
+            "division": 1,
+            "playoffSeed": 2
+          },
+          {
+            "rosterId": 2,
+            "teamName": "lol jerry jones",
+            "ownerName": "Neil",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 586.74,
+            "leagueId": "1263744209295245312",
+            "division": 1,
+            "playoffSeed": 5
+          },
+          {
+            "rosterId": 3,
+            "teamName": "NielGetsCarried",
+            "ownerName": "Arpit & Yash",
+            "wins": 2,
+            "losses": 3,
+            "ties": 0,
+            "points": 489.92,
+            "leagueId": "1263744209295245312",
+            "division": 1,
+            "playoffSeed": null
+          },
+          {
+            "rosterId": 12,
+            "teamName": "vchak",
+            "ownerName": "Vinny",
+            "wins": 1,
+            "losses": 4,
+            "ties": 0,
+            "points": 470.37,
+            "leagueId": "1263744209295245312",
+            "division": 1,
+            "playoffSeed": null
+          }
+        ],
+        "South": [
+          {
+            "rosterId": 11,
+            "teamName": "scboom5",
+            "ownerName": "Shivang",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 558.81,
+            "leagueId": "1263744209295245312",
+            "division": 2,
+            "playoffSeed": 3
+          },
+          {
+            "rosterId": 9,
+            "teamName": "achak7",
+            "ownerName": "Akhil C",
+            "wins": 2,
+            "losses": 3,
+            "ties": 0,
+            "points": 596.69,
+            "leagueId": "1263744209295245312",
+            "division": 2,
+            "playoffSeed": null
+          },
+          {
+            "rosterId": 1,
+            "teamName": "2 Dolla Balla$",
+            "ownerName": "Nolan",
+            "wins": 2,
+            "losses": 3,
+            "ties": 0,
+            "points": 547.58,
+            "leagueId": "1263744209295245312",
+            "division": 2,
+            "playoffSeed": null
+          },
+          {
+            "rosterId": 5,
+            "teamName": "Quonspiracy Theorists",
+            "ownerName": "Anant",
+            "wins": 2,
+            "losses": 3,
+            "ties": 0,
+            "points": 537.84,
+            "leagueId": "1263744209295245312",
+            "division": 2,
+            "playoffSeed": null
+          }
+        ],
+        "East": [
+          {
+            "rosterId": 10,
+            "teamName": "To Infinity and Bijan",
+            "ownerName": "Joel",
+            "wins": 4,
+            "losses": 1,
+            "ties": 0,
+            "points": 608,
+            "leagueId": "1263744209295245312",
+            "division": 3,
+            "playoffSeed": 1
+          },
+          {
+            "rosterId": 6,
+            "teamName": "Nacua Matata",
+            "ownerName": "Adam",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 602.71,
+            "leagueId": "1263744209295245312",
+            "division": 3,
+            "playoffSeed": 4
+          },
+          {
+            "rosterId": 7,
+            "teamName": "benweinfeld",
+            "ownerName": "Ben",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 572.47,
+            "leagueId": "1263744209295245312",
+            "division": 3,
+            "playoffSeed": 6
+          },
+          {
+            "rosterId": 8,
+            "teamName": "Dr Patel Parikh MD MBA",
+            "ownerName": "Darshan and Kyle",
+            "wins": 2,
+            "losses": 3,
+            "ties": 0,
+            "points": 533.77,
+            "leagueId": "1263744209295245312",
+            "division": 3,
+            "playoffSeed": null
+          }
+        ]
+      }
+    },
+    {
+      "leagueId": "1263740549504962561",
+      "leagueName": "Gauntlet NFC",
+      "divisions": {
+        "North": [
+          {
+            "rosterId": 9,
+            "teamName": "Marginal Returns",
+            "ownerName": "Jeffrey",
+            "wins": 5,
+            "losses": 0,
+            "ties": 0,
+            "points": 600.21,
+            "leagueId": "1263740549504962561",
+            "division": 1,
+            "playoffSeed": 1
+          },
+          {
+            "rosterId": 8,
+            "teamName": "C&G^2",
+            "ownerName": "Josh",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 600.74,
+            "leagueId": "1263740549504962561",
+            "division": 1,
+            "playoffSeed": 6
+          },
+          {
+            "rosterId": 7,
+            "teamName": "Jaxson Dart-Njigba",
+            "ownerName": "Alex",
+            "wins": 1,
+            "losses": 4,
+            "ties": 0,
+            "points": 546.3,
+            "leagueId": "1263740549504962561",
+            "division": 1,
+            "playoffSeed": null
+          },
+          {
+            "rosterId": 3,
+            "teamName": "vayyala",
+            "ownerName": "Vinay",
+            "wins": 1,
+            "losses": 4,
+            "ties": 0,
+            "points": 537.63,
+            "leagueId": "1263740549504962561",
+            "division": 1,
+            "playoffSeed": null
+          }
+        ],
+        "South": [
+          {
+            "rosterId": 4,
+            "teamName": "DJ Herbussy ",
+            "ownerName": "Akhil V",
+            "wins": 4,
+            "losses": 1,
+            "ties": 0,
+            "points": 610.35,
+            "leagueId": "1263740549504962561",
+            "division": 2,
+            "playoffSeed": 2
+          },
+          {
+            "rosterId": 12,
+            "teamName": "cescott25",
+            "ownerName": "Christian",
+            "wins": 4,
+            "losses": 1,
+            "ties": 0,
+            "points": 560.38,
+            "leagueId": "1263740549504962561",
+            "division": 2,
+            "playoffSeed": 4
+          },
+          {
+            "rosterId": 10,
+            "teamName": "Saint Brown Does Mahomes",
+            "ownerName": "Aman",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 602.93,
+            "leagueId": "1263740549504962561",
+            "division": 2,
+            "playoffSeed": 5
+          },
+          {
+            "rosterId": 6,
+            "teamName": "The zoo",
+            "ownerName": "Rithik and Varun",
+            "wins": 1,
+            "losses": 4,
+            "ties": 0,
+            "points": 515.16,
+            "leagueId": "1263740549504962561",
+            "division": 2,
+            "playoffSeed": null
+          }
+        ],
+        "East": [
+          {
+            "rosterId": 1,
+            "teamName": "ziyanp22",
+            "ownerName": "Ziyan",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 600.82,
+            "leagueId": "1263740549504962561",
+            "division": 3,
+            "playoffSeed": 3
+          },
+          {
+            "rosterId": 2,
+            "teamName": "Mach 10",
+            "ownerName": "Dhruv",
+            "wins": 3,
+            "losses": 2,
+            "ties": 0,
+            "points": 589.96,
+            "leagueId": "1263740549504962561",
+            "division": 3,
+            "playoffSeed": null
+          },
+          {
+            "rosterId": 11,
+            "teamName": "lukebowsh",
+            "ownerName": "Luke",
+            "wins": 2,
+            "losses": 3,
+            "ties": 0,
+            "points": 562.97,
+            "leagueId": "1263740549504962561",
+            "division": 3,
+            "playoffSeed": null
+          },
+          {
+            "rosterId": 5,
+            "teamName": "Dont go Chasing Saquon",
+            "ownerName": "Arnav",
+            "wins": 0,
+            "losses": 5,
+            "ties": 0,
+            "points": 497.41,
+            "leagueId": "1263740549504962561",
+            "division": 3,
+            "playoffSeed": null
+          }
+        ]
+      }
+    }
+  ]
 }

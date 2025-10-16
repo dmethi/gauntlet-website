@@ -63,6 +63,116 @@ const filterConsecutiveDuplicates = (series: ChartSeriesPoint[]): ChartSeriesPoi
 };
 
 /**
+ * Check if a timestamp is during an NFL game window
+ * Game windows are ONLY the specific time periods when NFL games are played
+ *
+ * This is intentionally strict to compress non-game data and emphasize
+ * the interesting changes that happen during actual games.
+ */
+const isInGameWindow = (timestamp: Date): boolean => {
+  const dayOfWeek = timestamp.getUTCDay();
+  const hourUTC = timestamp.getUTCHours();
+
+  // Thursday Night Football ONLY
+  // 8:15 PM ET Thursday = 00:15 UTC Friday (accounting for EDT/EST)
+  // Game window: Thu 10pm UTC - Fri 4am UTC (8 hour window)
+  if (dayOfWeek === 4 && hourUTC >= 22) return true;
+  if (dayOfWeek === 5 && hourUTC <= 4) return true;
+
+  // Sunday games ONLY
+  // Early games: 1:00 PM ET = 17:00 UTC (EDT) or 18:00 UTC (EST)
+  // Late games: 4:05/4:25 PM ET = 20:05/20:25 or 21:05/21:25 UTC
+  // SNF: 8:20 PM ET = 00:20 or 01:20 UTC Monday
+  // Window: Sun 5pm UTC - Mon 4am UTC (captures all Sunday games)
+  if (dayOfWeek === 0 && hourUTC >= 17) return true;
+  if (dayOfWeek === 1 && hourUTC <= 4) return true;
+
+  // Monday Night Football ONLY
+  // 8:15 PM ET Monday = 00:15 or 01:15 UTC Tuesday
+  // Window: Mon 10pm UTC - Tue 4am UTC (8 hour window)
+  if (dayOfWeek === 1 && hourUTC >= 22) return true;
+  if (dayOfWeek === 2 && hourUTC <= 4) return true;
+
+  // No Friday/Saturday games by default
+  // These are rare and only happen in special circumstances
+  // If needed, manually adjust for specific weeks
+
+  return false;
+};
+
+/**
+ * Compress data to reduce non-game-time noise while preserving game-time detail
+ *
+ * Strategy:
+ * - During NFL game windows: Keep all data points (high detail)
+ * - Outside game windows: Keep only 1-2 points per 12-hour segment
+ *
+ * This makes the interesting game-time data dominate the chart.
+ */
+const compressNonGameData = (series: ChartSeriesPoint[]): ChartSeriesPoint[] => {
+  if (series.length === 0) return [];
+
+  const compressed: ChartSeriesPoint[] = [];
+  let currentSegment: ChartSeriesPoint[] = [];
+  let lastSegmentKey = '';
+  let isCurrentlyInGame = false;
+
+  for (let i = 0; i < series.length; i++) {
+    const point = series[i];
+    const timestamp = new Date(point.timestamp);
+    const inGameWindow = isInGameWindow(timestamp);
+
+    // Create a segment key: YYYY-MM-DD-AM/PM (12-hour segments)
+    const dateStr = timestamp.toISOString().split('T')[0];
+    const period = timestamp.getUTCHours() < 12 ? 'AM' : 'PM';
+    const segmentKey = `${dateStr}-${period}`;
+
+    // If we're in a game window, keep all points
+    if (inGameWindow) {
+      // Flush any accumulated non-game segment first
+      if (currentSegment.length > 0 && !isCurrentlyInGame) {
+        // Keep first and last point of non-game segment
+        compressed.push(currentSegment[0]);
+        if (currentSegment.length > 1) {
+          compressed.push(currentSegment[currentSegment.length - 1]);
+        }
+        currentSegment = [];
+      }
+
+      compressed.push(point);
+      isCurrentlyInGame = true;
+      lastSegmentKey = segmentKey;
+    }
+    // Outside game window - compress aggressively
+    else {
+      // If entering a new segment, flush the old one
+      if (segmentKey !== lastSegmentKey && currentSegment.length > 0) {
+        // Keep first and last point of segment
+        compressed.push(currentSegment[0]);
+        if (currentSegment.length > 1) {
+          compressed.push(currentSegment[currentSegment.length - 1]);
+        }
+        currentSegment = [];
+      }
+
+      currentSegment.push(point);
+      isCurrentlyInGame = false;
+      lastSegmentKey = segmentKey;
+    }
+  }
+
+  // Flush any remaining segment
+  if (currentSegment.length > 0) {
+    compressed.push(currentSegment[0]);
+    if (currentSegment.length > 1) {
+      compressed.push(currentSegment[currentSegment.length - 1]);
+    }
+  }
+
+  return compressed;
+};
+
+/**
  * Determine game window label based on timestamp
  * Maps to NFL game windows: Thursday Night, Sunday Early/Afternoon/Night, Monday Night
  */
@@ -154,11 +264,13 @@ export const WinProbChart = ({
 }) => {
   const chartColors = useChartColors();
 
-  // Filter consecutive duplicates and prepare data
+  // Compress non-game data and prepare chart data
   const { data, ticks } = useMemo(() => {
+    // First filter consecutive duplicates, then compress non-game windows
     const filtered = filterConsecutiveDuplicates(series);
+    const compressed = compressNonGameData(filtered);
 
-    const chartData = filtered.map((p, idx) => ({
+    const chartData = compressed.map((p, idx) => ({
       idx,
       t: new Date(p.timestamp).toLocaleString(),
       timestamp: new Date(p.timestamp),
@@ -211,14 +323,7 @@ export const WinProbChart = ({
             padding: '8px',
           }}
           labelFormatter={(label: number) => data[label]?.t || ''}
-          formatter={(value: number, name: string) => {
-            // Recharts passes the Line's 'name' prop, which is already the team name
-            // No need to map it - just use it directly
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[WinProbChart Tooltip]', { value, name, teamAName, teamBName });
-            }
-            return [`${value}%`, name];
-          }}
+          formatter={(value: number, name: string) => [`${value}%`, name]}
         />
         <Legend
           verticalAlign="top"
@@ -269,11 +374,13 @@ export const ScoreChart = ({
 }) => {
   const chartColors = useChartColors();
 
-  // Filter consecutive duplicates and prepare data
+  // Compress non-game data and prepare chart data
   const { data, ticks } = useMemo(() => {
-    const filteredSeries = filterConsecutiveDuplicates(series);
+    // First filter consecutive duplicates, then compress non-game windows
+    const filtered = filterConsecutiveDuplicates(series);
+    const compressed = compressNonGameData(filtered);
 
-    const chartData = filteredSeries
+    const chartData = compressed
       .filter(p => p.team1Score != null && p.team2Score != null)
       .map((p, idx) => ({
         idx,
@@ -328,14 +435,7 @@ export const ScoreChart = ({
             padding: '8px',
           }}
           labelFormatter={(label: number) => data[label]?.t || ''}
-          formatter={(value: number, name: string) => {
-            // Recharts passes the Line's 'name' prop, which is already the team name
-            // No need to map it - just use it directly
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[ScoreChart Tooltip]', { value, name, teamAName, teamBName });
-            }
-            return [value.toFixed(1), name];
-          }}
+          formatter={(value: number, name: string) => [value.toFixed(1), name]}
         />
         <Legend
           verticalAlign="top"

@@ -15,6 +15,7 @@ import {
   fetchKeyPlayerPerformancesTool,
   fetchMatchupBoxScoreTool,
   fetchMatchupRostersTool,
+  fetchPlayoffImplicationsTool,
   fetchPositionBreakdownTool,
   fetchPreGameProjectionsTool,
   fetchProjectionVsActualTool,
@@ -41,6 +42,7 @@ const fetchMatchupData = async (leagueId: string, week: number, matchupId: numbe
       records,
       h2hHistory,
       gameFlow,
+      playoffImplications,
       positionBreakdown,
       keyPlayers,
     ] = await Promise.all([
@@ -61,6 +63,12 @@ const fetchMatchupData = async (leagueId: string, week: number, matchupId: numbe
         rosterId2: boxScore.team2.rosterId,
       }),
       gameFlowTool.execute({ leagueId, week, matchupId }),
+      fetchPlayoffImplicationsTool.execute({
+        leagueId,
+        week,
+        rosterId1: boxScore.team1.rosterId,
+        rosterId2: boxScore.team2.rosterId,
+      }),
       fetchPositionBreakdownTool.execute({ leagueId, week, matchupId }),
       fetchKeyPlayerPerformancesTool.execute({ leagueId, week, matchupId }),
     ]);
@@ -74,6 +82,7 @@ const fetchMatchupData = async (leagueId: string, week: number, matchupId: numbe
       records,
       h2hHistory,
       gameFlow,
+      playoffImplications,
       positionBreakdown,
       keyPlayers,
     };
@@ -123,11 +132,19 @@ export const batchMatchupNarrativesNode = async (
     console.log(`\n[${completed + 1}/12] Processing ${matchupKey}...`);
 
     try {
+      // Fetch matchup data
+      const data = await fetchMatchupData(leagueId, week, matchupId);
+
+      if (!data) {
+        console.log(`   ⚠️  Failed to fetch data for ${matchupKey}, skipping...`);
+        continue;
+      }
+
       // Create fresh Gemini client for each matchup (clears context)
       const geminiClient = createGeminiClient();
 
       // Build prompt for this specific matchup
-      const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId, {});
+      const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId, data);
 
       // Invoke Gemini with the prompt
       const response = await geminiClient.invoke([
@@ -227,10 +244,7 @@ export const batchMatchupNarrativesNode = async (
         };
       }
 
-      // Fetch all matchup data for enriching the JSON
-      console.log(`   📥 Fetching matchup data...`);
-      const matchupData = await fetchMatchupData(leagueId, week, matchupId);
-
+      // Use the already-fetched matchup data for enriching the JSON
       narratives.push({
         leagueId,
         matchupId,
@@ -242,7 +256,7 @@ export const batchMatchupNarrativesNode = async (
           keyPlayers: narrativeData.metadata.keyPlayers || [],
           wordCount: narrativeData.metadata.wordCount,
         },
-        data: matchupData || undefined, // Store fetched data for UI rendering
+        data, // Store fetched data for UI rendering (already fetched at line 127)
       });
 
       console.log(

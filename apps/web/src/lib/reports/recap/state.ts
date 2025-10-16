@@ -79,6 +79,17 @@ export interface RecapReportState {
   upcoming?: string;
   closing?: string;
 
+  // Structured data for League Overview (for UI rendering)
+  leagueOverviewData?: {
+    totalPoints: number;
+    averageScore: number;
+    highestScore: number;
+    lowestScore: number;
+    totalMatchups: number;
+    closeGames: number;
+    blowouts: number;
+  };
+
   // Structured data for Hall of Fame/Shame (for UI rendering)
   hallOfFameData?: {
     recordBreakdowns: any[]; // Historical records that week made

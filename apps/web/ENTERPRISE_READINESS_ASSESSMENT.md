@@ -2,22 +2,22 @@
 
 **Date**: October 7, 2025  
 **Assessed By**: AI Analysis  
-**Current Enterprise Score**: **3.5/10** 🔴 CRITICAL GAPS
+**Current Enterprise Score**: **4.5/10** 🟠 MAJOR GAPS
 
 ---
 
 ## Executive Summary
 
-The `apps/web` Next.js application has **strong domain functionality** but exhibits **severe architectural and quality issues** that prevent enterprise deployment. The codebase operates as a monolithic flat structure with mega-files, zero tests, no linting automation, and widespread technical debt.
+The `apps/web` Next.js application has **strong domain functionality** but still carries **major architectural and quality issues** that prevent enterprise deployment. Testing, linting, and feature-based patterns now exist for draft analytics, yet most of the codebase continues to operate as a monolithic structure with mega-files, limited coverage, and widespread technical debt.
 
 ### Critical Blockers (Must Fix Before Production)
 
-1. 🔴 **Zero test coverage** (0% - no test infrastructure)
-2. 🔴 **Mega-files** (2,805 lines max, 10+ files >1,000 lines)
-3. 🔴 **No linting/formatting** (no ESLint, no Prettier)
-4. 🔴 **Flat file organization** (no feature-based architecture)
-5. 🔴 **Massive eslint-disable abuse** (widespread suppressions)
-6. 🔴 **No component patterns** (no memo, no separation of concerns)
+1. 🔴 **Insufficient automated coverage** (Vitest configured, but critical paths remain untested)
+2. 🔴 **Mega-files persist** (2,805 lines max, 8 files >1,000 lines still in production)
+3. 🔴 **Partial feature architecture** (draft analysis migrated, stats/playoffs untouched)
+4. 🔴 **Residual lint suppressions** (`eslint-disable` blocks still guard core logic)
+5. 🔴 **Flat data modules** (`data/report-week2.ts` remains a 2,805-line blob)
+6. 🔴 **Limited component patterns** (memoized sub-components only adopted in draft analysis)
 
 ---
 
@@ -32,195 +32,118 @@ The `apps/web` Next.js application has **strong domain functionality** but exhib
 | Rank | File                                           | Lines | Category  | Priority    |
 | ---- | ---------------------------------------------- | ----- | --------- | ----------- |
 | 1    | `data/report-week2.ts`                         | 2,805 | Data      | 🔴 Critical |
-| 2    | `components/manager-analysis.tsx`              | 1,624 | Component | 🔴 Critical |
-| 3    | `app/stats/components/TrendsView.tsx`          | 1,606 | Component | 🔴 Critical |
-| 4    | `app/league/draft/page.tsx`                    | 1,488 | Page      | 🔴 Critical |
-| 5    | `components/playoff-bracket.tsx`               | 1,400 | Component | 🔴 Critical |
-| 6    | `lib/manager-analytics.ts`                     | 1,346 | Logic     | 🔴 Critical |
-| 7    | `app/hall-of-fame-enhanced/page.tsx`           | 1,251 | Page      | 🔴 Critical |
-| 8    | `app/stats/components/ScheduleAnalysis.tsx`    | 1,243 | Component | 🔴 Critical |
-| 9    | `app/draft/analysis/page.tsx`                  | 1,228 | Page      | 🔴 Critical |
-| 10   | `app/stats/components/TeamView.tsx`            | 1,198 | Component | 🔴 Critical |
-| 11   | `app/competition/reports/2025/week-4/page.tsx` | 1,177 | Page      | 🟡 High     |
-| 12   | `app/league/transactions/page.tsx`             | 1,169 | Page      | 🟡 High     |
-| 13   | `components/start-sit-efficiency.tsx`          | 1,162 | Component | 🟡 High     |
-| 14   | `app/api/reports/[season]/[week]/route.ts`     | 1,035 | API       | 🟡 High     |
-| 15   | `app/matchup/[matchupId]/page.tsx`             | 957   | Page      | 🟡 High     |
+| 2    | `app/stats/components/TrendsView.tsx`          | 1,586 | Component | 🔴 Critical |
+| 3    | `app/league/draft/page.tsx`                    | 1,488 | Page      | 🔴 Critical |
+| 4    | `components/playoff-bracket.tsx`               | 1,347 | Component | 🔴 Critical |
+| 5    | `app/hall-of-fame-enhanced/page.tsx`           | 1,251 | Page      | 🔴 Critical |
+| 6    | `app/draft/analysis/page.tsx`                  | 1,228 | Page      | 🔴 Critical |
+| 7    | `app/stats/components/ScheduleAnalysis.tsx`    | 1,221 | Component | 🔴 Critical |
+| 8    | `app/competition/reports/2025/week-4/page.tsx` | 1,172 | Page      | 🟡 High     |
+| 9    | `app/stats/components/TeamView.tsx`            | 1,169 | Component | 🟡 High     |
+| 10   | `app/league/transactions/page.tsx`             | 1,129 | Page      | 🟡 High     |
+| 11   | `components/start-sit-efficiency.tsx`          | 1,092 | Component | 🟡 High     |
+| 12   | `app/api/reports/[season]/[week]/route.ts`     | 1,070 | API       | 🟡 High     |
+| 13   | `app/matchup/[matchupId]/page.tsx`             | 782   | Page      | 🟡 High     |
+| 14   | `app/stats/components/TransactionAnalysis.tsx` | 852   | Component | 🟡 High     |
+| 15   | `features/draft-analysis/utils/calculations.ts`| 757   | Logic     | 🟡 High     |
 
-**Total Lines in Top 15**: 19,079 lines (32.6% of entire codebase!)
+**Total Lines in Top 15**: 18,949 lines (~32.4% of entire codebase)
 
 ### Code Quality Issues
 
-#### 1. Testing Infrastructure: ❌ **0/10** (CRITICAL)
+#### 1. Testing Infrastructure: ⚠️ **5/10** (HIGH PRIORITY)
 
-- ✅ Zero test files found in entire codebase
-- ❌ No Vitest configuration
-- ❌ No React Testing Library
-- ❌ No test utilities or factories
-- ❌ No integration tests
-- ❌ No component tests
-- ❌ Zero coverage tracking
+- ✅ Vitest config in place with `happy-dom` and RTL support
+- ✅ Shared test setup, factories, and 20+ new specs across hooks/utilities/features
+- ⚠️ Coverage <80% (no gating in CI, core pages untested)
+- ❌ No integration or API route tests yet
+- ❌ No coverage trend reporting
 
-**Impact**: Cannot safely refactor, no regression detection, unpredictable behavior in production.
+**Impact**: The safety net exists, but critical paths (stats hub, playoff bracket, Next.js pages) still lack regression detection.
 
-#### 2. Code Quality Automation: ❌ **0/10** (CRITICAL)
+#### 2. Code Quality Automation: ⚠️ **6/10** (HIGH PRIORITY)
 
-- ❌ No ESLint configuration file
-- ❌ No Prettier configuration
-- ❌ Only `next lint` script (minimal Next.js defaults)
-- ❌ No format scripts
-- ❌ No pre-commit hooks
-- ❌ No CI/CD quality gates
+- ✅ ESLint flat config + Prettier wired through workspace scripts
+- ✅ Vitest + lint scripts hooked into package.json with coverage thresholds defined
+- ⚠️ Husky/CI enforcement not yet configured
+- ⚠️ ESLint suppressions still guard key files (`lib/manager-analytics.ts`, recap prompts)
+- ❌ No automated format/lint verification in CI pipelines
 
-**Evidence**:
+**Impact**: Local tooling is healthy, but without enforcement and debt cleanup quality could regress.
 
-```typescript
-// manager-analysis.tsx line 3
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, sort-imports, prefer-const */
+#### 3. Component Patterns: ⚠️ **3/10** (HIGH PRIORITY)
 
-// hooks.ts line 1
-/* eslint-disable @typescript-eslint/no-explicit-any */
-```
+- ✅ `ManagerAnalysis` decomposed into memoized sub-components under `features/draft-analysis`
+- ✅ Hooks encapsulate stateful logic (`useManagerSorting`, `useManagerFiltering`)
+- ⚠️ No `forwardRef` adoption and limited reuse of primitives outside draft analysis
+- ❌ TrendsView, ScheduleAnalysis, PlayoffBracket, StartSitEfficiency remain 1k+ line mega-components
 
-**Impact**: No automated style enforcement, inconsistent code patterns, technical debt accumulation.
+**Impact**: Draft analytics is now performant and testable; remaining areas still block maintainability.
 
-#### 3. Component Patterns: ❌ **1/10** (CRITICAL)
+#### 4. File Organization: ⚠️ **4/10** (HIGH PRIORITY)
 
-- ❌ No memoization (no `memo()` usage found)
-- ❌ No `forwardRef` pattern
-- ❌ Props destructured in signatures (violates conventions)
-- ✅ Arrow functions used (good!)
-- ❌ Inline JSX in mega-components (1,624 lines!)
-- ❌ No sub-component extraction
-
-**Evidence**:
-
-```typescript
-// manager-analysis.tsx (1,624 lines)
-export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) => {
-  // 50+ lines of useState declarations
-  const [selectedCluster, setSelectedCluster] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('concentration');
-  // ... 40+ more state variables
-
-  // 200 lines of useMemo calculations
-  const filteredProfiles = useMemo(() => { /* ... */ }, []);
-  // ... 15+ more useMemo hooks
-
-  // 1000+ lines of inline JSX
-  return <div>{/* Massive nested JSX */}</div>;
-};
-```
-
-**Impact**: Performance issues, hard to maintain, impossible to test in isolation, poor developer experience.
-
-#### 4. File Organization: ❌ **2/10** (CRITICAL)
-
-**Current Structure** (flat, unorganized):
+**Current Structure**:
 
 ```
 apps/web/src/
-├── components/          # Flat, mixed concerns (48 files)
-│   ├── manager-analysis.tsx (1,624 lines!)
-│   ├── playoff-bracket.tsx (1,400 lines!)
-│   ├── stats/           # Some organization
-│   ├── charts/          # Some organization
-│   └── ui/              # shadcn components
-├── lib/                 # Flat utilities (35 files, 243 exports!)
-│   ├── manager-analytics.ts (1,346 lines!)
-│   ├── hall-of-fame-*.ts (5 separate files)
-│   ├── stats/           # Minimal sub-organization
-│   └── sleeper/         # API client
-├── hooks/               # Only 6 files (good!)
-├── app/                 # Next.js pages (mixed organization)
-│   ├── stats/           # Feature-like structure
-│   └── api/             # API routes
-└── data/                # Static/precomputed data
+├── features/
+│   ├── draft-analysis/          # ✅ fully migrated (components, hooks, utils, tests)
+│   ├── stats/                   # ⚠️ hooks + types migrated, components pending
+│   ├── hall-of-fame/            # ✅ utilities + tests migrated
+│   └── transactions/            # ✅ utilities migrated, components pending
+├── shared/
+│   ├── utils/formatting         # ✅ centralized helpers + coverage
+│   └── utils/colors             # ✅ consolidated color helpers
+├── components/                  # Legacy components (playoff bracket, etc.)
+├── app/                         # Next.js routes (many still contain feature logic)
+└── data/                        # Flat static/precomputed blobs
 ```
 
 **Issues**:
 
-- No feature-based organization (everything flat)
-- No co-location (components, hooks, utils, types scattered)
-- Inconsistent sub-folders (some exist, most don't)
-- No barrel exports (`index.ts` missing everywhere)
-- Relative path imports to `brand/` directory (e.g., `'../../../../brand/colors'`)
+- Feature folders exist but only draft analysis is end-to-end migrated
+- Stats, playoffs, and matchup features still live under `app/` and legacy `components/`
+- `data/` contains multi-thousand line blobs with no loaders or schemas
+- Relative imports to `brand/` and `lib/` remain common
 
-**Impact**: Cannot find code, difficult navigation, circular dependencies, no clear boundaries.
+**Impact**: Navigating draft analytics is easy; other domains still lack clear boundaries and increase refactor risk.
 
-#### 5. Type System: ⚠️ **4/10** (IMPORTANT)
+#### 5. Type System: ⚠️ **6/10** (IMPORTANT)
 
-- ✅ Uses `@gauntlet/types` central package (good!)
-- ⚠️ Types mixed with implementation (no separate `types.ts` files)
-- ⚠️ No API type organization (no `schemas.ts`, `endpoints.ts`)
-- ❌ Local type duplication in multiple files
-- ❌ Heavy use of `any` type (see eslint-disable comments)
+- ✅ Feature-level `types.ts` files cover draft analysis, stats, hall-of-fame, transactions
+- ✅ Shared utilities consume typed contracts and expose inference-friendly signatures
+- ⚠️ API schemas and data loaders still live beside implementation logic
+- ❌ Remaining `any` usage in report builders and analytics helpers
 
-**Evidence**:
-
-```typescript
-// hooks.ts - types inline with logic
-interface Matchup {
-  /* ... */
-}
-interface WeeklyMetric {
-  /* ... */
-}
-interface Roster extends FantasyTeam {
-  /* ... */
-}
-export interface TeamStats {
-  /* ... */
-}
-// ... 40+ more interfaces in same file!
-```
-
-**Impact**: Type pollution, hard to share types, inconsistent contracts.
+**Impact**: Core analytics are strongly typed; report/data pipelines still mix types and logic.
 
 #### 6. State Management: ⚠️ **5/10** (IMPORTANT)
 
-- ✅ Using React Query (good!)
-- ✅ React Query DevTools installed
-- ⚠️ No global state library (Jotai/Zustand)
-- ⚠️ Local state scattered (useState everywhere)
-- ❌ No atom organization
-- ❌ Hooks not co-located (centralized in `lib/hooks.ts`)
+- ✅ React Query + custom hooks encapsulate draft analytics and stats data fetching
+- ✅ Hook-level tests validate sorting/filtering behavior
+- ⚠️ No shared atom/state container for cross-feature data yet
+- ❌ Legacy pages continue to manage complex state inline
 
-**Impact**: State scattered, hard to debug, no centralized state management.
+**Impact**: Draft workflows are predictable; other features remain state-fragmented.
 
-#### 7. Import/Export Conventions: ❌ **2/10** (CRITICAL)
+#### 7. Import/Export Conventions: ⚠️ **3/10** (IMPORTANT)
 
-- ✅ Path alias `@/*` configured (good!)
-- ❌ Relative path imports to monorepo packages (`../../../../brand/colors`)
-- ❌ No import ordering enforcement
-- ❌ No type-only imports (`import type { }`)
-- ❌ No barrel exports (`index.ts` files missing)
-- ❌ 243 exports in flat `lib/` directory (unorganized)
+- ✅ Feature and shared barrels introduced (`features/draft-analysis`, `shared/utils`)
+- ✅ Path alias `@/*` consistently used in migrated modules
+- ⚠️ No lint enforcement for import order or type-only imports yet
+- ❌ Legacy modules still rely on deep relative paths to `brand/`
+- ❌ `lib/` exports remain dense and unscoped
 
-**Evidence**:
+**Impact**: Migrated areas are cleaner; remaining imports remain brittle.
 
-```typescript
-// manager-analysis.tsx line 29
-import { colors, dataVizColors } from '../../../../brand/colors';
-// Should be: import { colors, dataVizColors } from '@gauntlet/tokens';
-```
+#### 8. Separation of Concerns: ⚠️ **3/10** (HIGH PRIORITY)
 
-**Impact**: Fragile imports, refactoring nightmares, poor IDE support.
+- ✅ Draft analysis isolates hooks, utilities, and UI into discrete modules with tests
+- ✅ Shared formatting/color utilities extracted from duplicated inline logic
+- ⚠️ Stats, playoffs, and report generation still intermix data shaping, business rules, and presentation
+- ❌ Massive data blobs (`data/report-week2.ts`) embed transformation logic alongside data
 
-#### 8. Separation of Concerns: ❌ **1/10** (CRITICAL)
-
-**Example: `manager-analysis.tsx` (1,624 lines)**
-
-- 🔴 Component logic (50+ state variables)
-- 🔴 Sorting logic (200+ lines of useMemo)
-- 🔴 Filtering logic (150+ lines)
-- 🔴 Helper functions (100+ lines inline)
-- 🔴 Formatting utilities (50+ lines inline)
-- 🔴 Color calculations (80+ lines inline)
-- 🔴 1,000+ lines of JSX
-- 🔴 All in ONE file!
-
-**Impact**: Impossible to test, hard to maintain, poor performance, violates SOLID principles.
+**Impact**: Draft workflows are maintainable; remaining domains remain brittle and risky to modify.
 
 ---
 
@@ -1326,49 +1249,49 @@ Week 8:
 
 ### Quantifiable Improvements
 
-| Metric                    | Current     | Target     | Improvement  |
-| ------------------------- | ----------- | ---------- | ------------ |
-| **Test Coverage**         | 0%          | 80%+       | +80%         |
-| **Largest File**          | 2,805 lines | <300 lines | -2,505 lines |
-| **Avg Component Size**    | ~600 lines  | <200 lines | -400 lines   |
-| **Files >1,000 lines**    | 10 files    | 0 files    | -10 files    |
-| **ESLint Violations**     | 100+        | <5         | -95+         |
-| **Barrel Exports**        | 0%          | 100%       | +100%        |
-| **Feature Organization**  | 0%          | 100%       | +100%        |
-| **Type Separation**       | 10%         | 90%        | +80%         |
-| **Component Memoization** | 0%          | 80%        | +80%         |
-| **Enterprise Score**      | 3.5/10      | 9.0/10     | +5.5 points  |
+| Metric                    | Current Snapshot         | Target     | Gap            |
+| ------------------------- | ------------------------ | ---------- | -------------- |
+| **Test Coverage**         | ≈20% (hooks/utilities)   | 80%+       | +60% points    |
+| **Largest File**          | 2,805 lines              | <300 lines | -2,505 lines   |
+| **Avg Component Size**    | ~450 lines (legacy pods) | <200 lines | -250 lines     |
+| **Files >1,000 lines**    | 8 files                  | 0 files    | -8 files       |
+| **ESLint Violations**     | Tens (mostly suppressed) | <5         | -45+           |
+| **Barrel Exports**        | Partial (draft/shared)   | 100%       | +70%           |
+| **Feature Organization**  | Draft + shared only      | 100%       | +70%           |
+| **Type Separation**       | Feature pods typed       | 90%        | +50%           |
+| **Component Memoization** | Draft analysis only      | 80%        | +60%           |
+| **Enterprise Score**      | 4.5/10                   | 9.0/10     | +4.5 points    |
 
 ---
 
 ## 🚦 Enterprise Readiness Scorecard
 
-### Before Refactoring: **3.5/10** 🔴
+### Current Snapshot (October 2025): **4.5/10** 🟠
 
-| Category                | Score | Weight   | Weighted   |
-| ----------------------- | ----- | -------- | ---------- |
-| Testing Infrastructure  | 0/10  | 20%      | 0.0        |
-| Code Quality Automation | 0/10  | 15%      | 0.0        |
-| Component Patterns      | 1/10  | 15%      | 0.15       |
-| File Organization       | 2/10  | 15%      | 0.3        |
-| Type System             | 4/10  | 10%      | 0.4        |
-| State Management        | 5/10  | 10%      | 0.5        |
-| Import Conventions      | 2/10  | 5%       | 0.1        |
-| Separation of Concerns  | 1/10  | 10%      | 0.1        |
-| **Total**               |       | **100%** | **3.5/10** |
+| Category                | Score | Weight   | Weighted |
+| ----------------------- | ----- | -------- | -------- |
+| Testing Infrastructure  | 5/10  | 20%      | 1.00     |
+| Code Quality Automation | 6/10  | 15%      | 0.90     |
+| Component Patterns      | 3/10  | 15%      | 0.45     |
+| File Organization       | 4/10  | 15%      | 0.60     |
+| Type System             | 6/10  | 10%      | 0.60     |
+| State Management        | 5/10  | 10%      | 0.50     |
+| Import Conventions      | 3/10  | 5%       | 0.15     |
+| Separation of Concerns  | 3/10  | 10%      | 0.30     |
+| **Total**               |       | **100%** | **4.5/10** |
 
-### After Refactoring: **9.0/10** ✅ (Target)
+### Target: **9.0/10** ✅
 
-| Category                | Score | Weight   | Weighted   |
-| ----------------------- | ----- | -------- | ---------- |
-| Testing Infrastructure  | 9/10  | 20%      | 1.8        |
-| Code Quality Automation | 10/10 | 15%      | 1.5        |
-| Component Patterns      | 9/10  | 15%      | 1.35       |
-| File Organization       | 10/10 | 15%      | 1.5        |
-| Type System             | 9/10  | 10%      | 0.9        |
-| State Management        | 8/10  | 10%      | 0.8        |
-| Import Conventions      | 9/10  | 5%       | 0.45       |
-| Separation of Concerns  | 9/10  | 10%      | 0.9        |
+| Category                | Score | Weight   | Weighted |
+| ----------------------- | ----- | -------- | -------- |
+| Testing Infrastructure  | 9/10  | 20%      | 1.80     |
+| Code Quality Automation | 10/10 | 15%      | 1.50     |
+| Component Patterns      | 9/10  | 15%      | 1.35     |
+| File Organization       | 10/10 | 15%      | 1.50     |
+| Type System             | 9/10  | 10%      | 0.90     |
+| State Management        | 8/10  | 10%      | 0.80     |
+| Import Conventions      | 9/10  | 5%       | 0.45     |
+| Separation of Concerns  | 9/10  | 10%      | 0.90     |
 | **Total**               |       | **100%** | **9.0/10** |
 
 ---
@@ -1377,22 +1300,10 @@ Week 8:
 
 ### Immediate Next Steps
 
-1. **Read this document completely** to understand scope
-2. **Review `CODING_CONVENTIONS.MD`** for coding standards
-3. **Review `GAP_ANALYSIS.md`** for context
-4. **Review `tasks/README.md`** for task system
-5. **Start with WEB-SETUP-001** (Testing Infrastructure)
-
-### First Task: WEB-SETUP-001
-
-```bash
-# Read the first task
-cat tasks/WEB-SETUP-001-testing-infrastructure.md
-
-# Create task file (if not exists)
-# Follow instructions in task
-# Complete and mark in PROGRESS.md
-```
+1. **Review this document + `tasks/PROGRESS.md`** for the refreshed baseline
+2. **Skim recent task files** (`WEB-HOOK-00X`, `WEB-COMP-00X`) to understand existing patterns
+3. **Prioritize Phase 5 component splits**, starting with `WEB-COMP-002` (TrendsView) and `WEB-COMP-003` (PlayoffBracket)
+4. **Plan coverage expansion** alongside each component split (target: add component + integration tests)
 
 ### Commit Message Template
 

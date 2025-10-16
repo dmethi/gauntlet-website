@@ -199,7 +199,7 @@ const toLineupPlayersWithMinutes = (
       name: p.full_name || id,
       position,
       projection: remainingProjection, // This is the key change - adjusted based on actual time
-      currentScore: Number(currentScore),
+      currentScore: Number(currentScore) || 0, // Ensure valid number, default to 0
       nflTeam: nflTeam,
 
       // Additional data for UI transparency
@@ -296,7 +296,8 @@ export const GET = async (
     if (liveNflTeams.size === 0) {
       const approxLive = new Set<string>();
       [...team1Players, ...team2Players].forEach(p => {
-        if ((p.currentScore || 0) > 0 && p.nflTeam) approxLive.add(p.nflTeam);
+        // Include any player with a non-zero score (including negative scores for defenses)
+        if ((p.currentScore || 0) !== 0 && p.nflTeam) approxLive.add(p.nflTeam);
       });
       liveNflTeams = approxLive;
     }
@@ -378,7 +379,27 @@ export const GET = async (
     return NextResponse.json(response);
   } catch (err) {
     console.error('[SIMULATE] Error:', err);
-    return NextResponse.json({ success: false, error: 'Failed to simulate' }, { status: 500 });
+
+    // Return more detailed error information for debugging
+    const errorMessage = err instanceof Error ? err.message : 'Failed to simulate';
+    const errorDetails = err instanceof Error && err.stack ? err.stack : String(err);
+
+    console.error('[SIMULATE] Error details:', {
+      message: errorMessage,
+      stack: errorDetails,
+      leagueId: params.leagueId,
+      week: params.week,
+      matchupId: params.matchupId,
+    });
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined,
+      },
+      { status: 500 },
+    );
   }
 };
 

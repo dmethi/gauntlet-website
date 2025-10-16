@@ -15,3 +15,5 @@ export type {
   MatchupProps,
   PlayoffBracketProps,
 } from './types';
+
+export * from './components';

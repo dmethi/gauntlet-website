@@ -54,9 +54,8 @@ export const validateLineupPlayer = (player: LineupPlayer, index?: number): stri
   if (player.currentScore !== undefined) {
     if (typeof player.currentScore !== 'number') {
       errors.push(`${prefix}.currentScore: must be number if provided`);
-    } else if (player.currentScore < 0) {
-      errors.push(`${prefix}.currentScore: must be ≥ 0 (got: ${player.currentScore})`);
     }
+    // Note: Negative scores are allowed (e.g., defenses can have negative scores)
   }
 
   if (player.nflTeam !== undefined && typeof player.nflTeam !== 'string') {

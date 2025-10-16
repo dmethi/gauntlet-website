@@ -137,6 +137,15 @@ export const leagueOverviewNode = async (
 
     return {
       leagueOverview: overviewData.narrative,
+      leagueOverviewData: {
+        totalPoints: summaryStats.totalPoints,
+        averageScore: summaryStats.averageScore,
+        highestScore: summaryStats.highestScore,
+        lowestScore: summaryStats.lowestScore,
+        totalMatchups: summaryStats.totalMatchups,
+        closeGames: summaryStats.closeGames,
+        blowouts: summaryStats.blowouts,
+      },
     };
   } catch (error) {
     console.error('❌ Failed to generate league overview:', error);

@@ -79,7 +79,9 @@ const convertToProcessedMatchup = async (
     }
   });
 
-  const teamName = roster?.metadata?.team_name || `Team ${matchup.roster_id}`;
+  const ownerName =
+    getRealNameByRoster(leagueId, matchup.roster_id) || roster?.owner?.display_name || 'Unknown';
+  const teamName = roster?.owner?.metadata?.team_name || ownerName;
 
   return {
     rosterId: matchup.roster_id,
@@ -91,7 +93,7 @@ const convertToProcessedMatchup = async (
     points: matchup.points || 0,
     projectedPoints: undefined, // Would need to fetch from projections API
     opponentId: opponent?.roster_id,
-    opponentName: opponentRoster?.metadata?.team_name || undefined,
+    opponentName: opponentRoster?.owner?.metadata?.team_name || undefined,
     opponentPoints: opponent?.points,
     won: opponent ? (matchup.points || 0) > (opponent.points || 0) : undefined,
     starters: matchup.starters || [],
@@ -136,13 +138,15 @@ const checkPlayerOwnership = async (
     const roster = rosters.find(r => r.roster_id === owningMatchup.roster_id);
     const wasStarted = owningMatchup.starters?.includes(playerId) || false;
 
+    const manager =
+      getRealNameByRoster(leagueId, owningMatchup.roster_id) ||
+      roster?.owner?.display_name ||
+      'Unknown';
+
     return {
       league: leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
-      manager:
-        getRealNameByRoster(leagueId, owningMatchup.roster_id) ||
-        roster?.metadata?.owner_name ||
-        'Unknown',
-      teamName: roster?.metadata?.team_name || `Team ${owningMatchup.roster_id}`,
+      manager,
+      teamName: roster?.owner?.metadata?.team_name || manager,
       status: wasStarted ? 'started' : 'benched',
     };
   } catch (error) {

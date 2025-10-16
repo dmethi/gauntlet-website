@@ -119,12 +119,12 @@ const createMockState = (): RecapReportState => {
 /**
  * Test formatter
  */
-const testFormatter = () => {
+const testFormatter = async () => {
   console.log('\n📝 Testing Report Formatter\n');
   console.log('='.repeat(60));
 
   const state = createMockState();
-  const report = formatRecapReport(state);
+  const report = await formatRecapReport(state);
 
   console.log(`\n✅ Report formatted successfully`);
   console.log(`\n📊 Report Metadata:`);
@@ -192,7 +192,7 @@ const testValidator = (report: any) => {
 /**
  * Test partial failure scenario
  */
-const testPartialFailure = () => {
+const testPartialFailure = async () => {
   console.log('\n\n⚠️  Testing Partial Failure Scenario\n');
   console.log('='.repeat(60));
 
@@ -207,7 +207,7 @@ const testPartialFailure = () => {
   state.sectionMetadata!.upcoming!.status = 'failed';
   state.sectionMetadata!.upcoming!.error = 'Data not available';
 
-  const report = formatRecapReport(state);
+  const report = await formatRecapReport(state);
 
   console.log(`\n📊 Report Status: ${report.metadata.status}`);
   console.log(`\n❌ Errors:`);
@@ -223,7 +223,7 @@ const testPartialFailure = () => {
 /**
  * Test complete failure scenario
  */
-const testCompleteFailure = () => {
+const testCompleteFailure = async () => {
   console.log('\n\n❌ Testing Complete Failure Scenario\n');
   console.log('='.repeat(60));
 
@@ -269,7 +269,7 @@ const testCompleteFailure = () => {
     },
   };
 
-  const report = formatRecapReport(state);
+  const report = await formatRecapReport(state);
 
   console.log(`\n📊 Report Status: ${report.metadata.status}`);
   console.log(`\n❌ Errors (${report.metadata.errors?.length || 0}):`);
@@ -285,22 +285,22 @@ const testCompleteFailure = () => {
 /**
  * Main execution
  */
-const main = () => {
+const main = async () => {
   console.log('\n🧪 Report Output System Test Suite');
   console.log('='.repeat(60));
 
   try {
     // Test 1: Successful report formatting
-    const report = testFormatter();
+    const report = await testFormatter();
 
     // Test 2: Report validation
     testValidator(report);
 
     // Test 3: Partial failure handling
-    testPartialFailure();
+    await testPartialFailure();
 
     // Test 4: Complete failure handling
-    testCompleteFailure();
+    await testCompleteFailure();
 
     console.log('\n\n✅ All tests completed successfully!\n');
   } catch (error) {
