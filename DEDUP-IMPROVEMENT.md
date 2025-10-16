@@ -8,13 +8,15 @@
 
 ## 🎯 Problem
 
-The cron job was saving **too many snapshots** - creating database bloat with minimal value:
+The cron job was saving **too many snapshots** - creating database bloat with
+minimal value:
 
 - **477 entries** per matchup per week
 - **5,604 total entries** for Week 6 (12 matchups)
 - **95% were noise** - tiny projection changes with no score movement
 
 ### Example of Noise:
+
 ```
 10:00 AM: Proj 121.17, Score 0.00
 10:05 AM: Proj 121.24, Score 0.00  ← SAVED (but useless!)
@@ -25,18 +27,21 @@ The cron job was saving **too many snapshots** - creating database bloat with mi
 
 ## ✅ Solution
 
-Implemented **smarter thresholds** in `apps/server/src/lib/snapshot-validator.ts`:
+Implemented **smarter thresholds** in
+`apps/server/src/lib/snapshot-validator.ts`:
 
 ### New Logic:
 
 1. **ANY score change → SAVE** (games happening!)
+
    ```typescript
    if (scoreChangedA || scoreChangedB) return true;
    ```
 
 2. **Projection changes <10% → SKIP** (simulation noise)
+
    ```typescript
-   const projThresholdA = previous.projectedFinalA * 0.10; // 10%
+   const projThresholdA = previous.projectedFinalA * 0.1; // 10%
    if (projChanged < projThresholdA) continue; // Skip
    ```
 
@@ -46,6 +51,7 @@ Implemented **smarter thresholds** in `apps/server/src/lib/snapshot-validator.ts
    ```
 
 ### Old Logic (Too Sensitive):
+
 ```typescript
 // Saved if ANY change > 0.01 points
 const changed = Math.abs(prev.proj - curr.proj) >= 0.01;
@@ -53,9 +59,10 @@ const changed = Math.abs(prev.proj - curr.proj) >= 0.01;
 ```
 
 ### New Logic (Smart Thresholds):
+
 ```typescript
 // Only save if projection changed >10%
-const threshold = prev.proj * 0.10; // ~12 points
+const threshold = prev.proj * 0.1; // ~12 points
 const changed = Math.abs(prev.proj - curr.proj) >= threshold;
 // Result: 121.17 → 121.24 = SKIPPED ✅
 ```
@@ -65,21 +72,25 @@ const changed = Math.abs(prev.proj - curr.proj) >= threshold;
 ## 📊 Results
 
 ### Database Reduction:
+
 - **Before:** 477 entries per matchup
 - **After:** ~25 entries per matchup
 - **Reduction:** **95%** fewer entries!
 
 ### For Week 6 (12 matchups):
+
 - **Before:** 5,604 entries
 - **After:** ~300 entries
 - **Savings:** 5,304 entries eliminated
 
 ### What Gets Kept:
+
 - ✅ ALL score changes (games happening)
 - ✅ Big projection shifts (>10% = injury, status change)
 - ✅ Win probability swings (>5% = momentum shift)
 
 ### What Gets Filtered:
+
 - ❌ Tiny projection tweaks (<10%)
 - ❌ Small win prob changes (<5%)
 - ❌ Simulation noise when scores are 0
@@ -104,6 +115,7 @@ Ran analysis on existing Week 6 data:
 ## 📂 Files Changed
 
 ### Updated:
+
 1. `apps/server/src/lib/snapshot-validator.ts`
    - Enhanced `hasSignificantChange()` function
    - Added percentage-based thresholds
@@ -115,16 +127,19 @@ Ran analysis on existing Week 6 data:
 ## 🚀 Impact
 
 ### Storage:
+
 - 95% less database storage needed
 - Faster queries (fewer rows to scan)
 - Better index performance
 
 ### Chart Quality:
+
 - **BETTER!** Charts show actual meaningful changes
 - Fewer noisy data points
 - Clearer trend lines
 
 ### API Performance:
+
 - Faster time-series queries
 - Less data to transfer
 - Better user experience
@@ -140,6 +155,7 @@ The new logic has been validated but **NOT deployed yet**. To deploy:
 3. **Monitor** first week to ensure no data loss
 
 ### Things to Watch:
+
 - Verify score changes are ALL captured
 - Check that meaningful projection shifts are kept
 - Ensure charts still look good with less data
@@ -172,6 +188,6 @@ Could enhance further:
 - `apps/server/src/lib/snapshot-validator.ts` - Dedup logic
 - `apps/server/src/lib/historical-data.ts` - Database queries
 - `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts` - Cron job
-- `apps/web/src/app/api/matchup-timeseries/[leagueId]/[week]/[matchupId]/route.ts` - API endpoint
+- `apps/web/src/app/api/matchup-timeseries/[leagueId]/[week]/[matchupId]/route.ts` -
+  API endpoint
 - `apps/web/src/components/matchup-charts.tsx` - Chart components
-

@@ -29,23 +29,23 @@ The `apps/web` Next.js application has **strong domain functionality** but still
 
 #### Top 15 Problem Files (Lines of Code)
 
-| Rank | File                                           | Lines | Category  | Priority    |
-| ---- | ---------------------------------------------- | ----- | --------- | ----------- |
-| 1    | `data/report-week2.ts`                         | 2,805 | Data      | 🔴 Critical |
-| 2    | `app/stats/components/TrendsView.tsx`          | 1,586 | Component | 🔴 Critical |
-| 3    | `app/league/draft/page.tsx`                    | 1,488 | Page      | 🔴 Critical |
-| 4    | `components/playoff-bracket.tsx`               | 1,347 | Component | 🔴 Critical |
-| 5    | `app/hall-of-fame-enhanced/page.tsx`           | 1,251 | Page      | 🔴 Critical |
-| 6    | `app/draft/analysis/page.tsx`                  | 1,228 | Page      | 🔴 Critical |
-| 7    | `app/stats/components/ScheduleAnalysis.tsx`    | 1,221 | Component | 🔴 Critical |
-| 8    | `app/competition/reports/2025/week-4/page.tsx` | 1,172 | Page      | 🟡 High     |
-| 9    | `app/stats/components/TeamView.tsx`            | 1,169 | Component | 🟡 High     |
-| 10   | `app/league/transactions/page.tsx`             | 1,129 | Page      | 🟡 High     |
-| 11   | `components/start-sit-efficiency.tsx`          | 1,092 | Component | 🟡 High     |
-| 12   | `app/api/reports/[season]/[week]/route.ts`     | 1,070 | API       | 🟡 High     |
-| 13   | `app/matchup/[matchupId]/page.tsx`             | 782   | Page      | 🟡 High     |
-| 14   | `app/stats/components/TransactionAnalysis.tsx` | 852   | Component | 🟡 High     |
-| 15   | `features/draft-analysis/utils/calculations.ts`| 757   | Logic     | 🟡 High     |
+| Rank | File                                            | Lines | Category  | Priority    |
+| ---- | ----------------------------------------------- | ----- | --------- | ----------- |
+| 1    | `data/report-week2.ts`                          | 2,805 | Data      | 🔴 Critical |
+| 2    | `app/stats/components/TrendsView.tsx`           | 1,586 | Component | 🔴 Critical |
+| 3    | `app/league/draft/page.tsx`                     | 1,488 | Page      | 🔴 Critical |
+| 4    | `components/playoff-bracket.tsx`                | 1,347 | Component | 🔴 Critical |
+| 5    | `app/hall-of-fame-enhanced/page.tsx`            | 1,251 | Page      | 🔴 Critical |
+| 6    | `app/draft/analysis/page.tsx`                   | 1,228 | Page      | 🔴 Critical |
+| 7    | `app/stats/components/ScheduleAnalysis.tsx`     | 1,221 | Component | 🔴 Critical |
+| 8    | `app/competition/reports/2025/week-4/page.tsx`  | 1,172 | Page      | 🟡 High     |
+| 9    | `app/stats/components/TeamView.tsx`             | 1,169 | Component | 🟡 High     |
+| 10   | `app/league/transactions/page.tsx`              | 1,129 | Page      | 🟡 High     |
+| 11   | `components/start-sit-efficiency.tsx`           | 1,092 | Component | 🟡 High     |
+| 12   | `app/api/reports/[season]/[week]/route.ts`      | 1,070 | API       | 🟡 High     |
+| 13   | `app/matchup/[matchupId]/page.tsx`              | 782   | Page      | 🟡 High     |
+| 14   | `app/stats/components/TransactionAnalysis.tsx`  | 852   | Component | 🟡 High     |
+| 15   | `features/draft-analysis/utils/calculations.ts` | 757   | Logic     | 🟡 High     |
 
 **Total Lines in Top 15**: 18,949 lines (~32.4% of entire codebase)
 
@@ -1249,18 +1249,18 @@ Week 8:
 
 ### Quantifiable Improvements
 
-| Metric                    | Current Snapshot         | Target     | Gap            |
-| ------------------------- | ------------------------ | ---------- | -------------- |
-| **Test Coverage**         | ≈20% (hooks/utilities)   | 80%+       | +60% points    |
-| **Largest File**          | 2,805 lines              | <300 lines | -2,505 lines   |
-| **Avg Component Size**    | ~450 lines (legacy pods) | <200 lines | -250 lines     |
-| **Files >1,000 lines**    | 8 files                  | 0 files    | -8 files       |
-| **ESLint Violations**     | Tens (mostly suppressed) | <5         | -45+           |
-| **Barrel Exports**        | Partial (draft/shared)   | 100%       | +70%           |
-| **Feature Organization**  | Draft + shared only      | 100%       | +70%           |
-| **Type Separation**       | Feature pods typed       | 90%        | +50%           |
-| **Component Memoization** | Draft analysis only      | 80%        | +60%           |
-| **Enterprise Score**      | 4.5/10                   | 9.0/10     | +4.5 points    |
+| Metric                    | Current Snapshot         | Target     | Gap          |
+| ------------------------- | ------------------------ | ---------- | ------------ |
+| **Test Coverage**         | ≈20% (hooks/utilities)   | 80%+       | +60% points  |
+| **Largest File**          | 2,805 lines              | <300 lines | -2,505 lines |
+| **Avg Component Size**    | ~450 lines (legacy pods) | <200 lines | -250 lines   |
+| **Files >1,000 lines**    | 8 files                  | 0 files    | -8 files     |
+| **ESLint Violations**     | Tens (mostly suppressed) | <5         | -45+         |
+| **Barrel Exports**        | Partial (draft/shared)   | 100%       | +70%         |
+| **Feature Organization**  | Draft + shared only      | 100%       | +70%         |
+| **Type Separation**       | Feature pods typed       | 90%        | +50%         |
+| **Component Memoization** | Draft analysis only      | 80%        | +60%         |
+| **Enterprise Score**      | 4.5/10                   | 9.0/10     | +4.5 points  |
 
 ---
 
@@ -1268,30 +1268,30 @@ Week 8:
 
 ### Current Snapshot (October 2025): **4.5/10** 🟠
 
-| Category                | Score | Weight   | Weighted |
-| ----------------------- | ----- | -------- | -------- |
-| Testing Infrastructure  | 5/10  | 20%      | 1.00     |
-| Code Quality Automation | 6/10  | 15%      | 0.90     |
-| Component Patterns      | 3/10  | 15%      | 0.45     |
-| File Organization       | 4/10  | 15%      | 0.60     |
-| Type System             | 6/10  | 10%      | 0.60     |
-| State Management        | 5/10  | 10%      | 0.50     |
-| Import Conventions      | 3/10  | 5%       | 0.15     |
-| Separation of Concerns  | 3/10  | 10%      | 0.30     |
+| Category                | Score | Weight   | Weighted   |
+| ----------------------- | ----- | -------- | ---------- |
+| Testing Infrastructure  | 5/10  | 20%      | 1.00       |
+| Code Quality Automation | 6/10  | 15%      | 0.90       |
+| Component Patterns      | 3/10  | 15%      | 0.45       |
+| File Organization       | 4/10  | 15%      | 0.60       |
+| Type System             | 6/10  | 10%      | 0.60       |
+| State Management        | 5/10  | 10%      | 0.50       |
+| Import Conventions      | 3/10  | 5%       | 0.15       |
+| Separation of Concerns  | 3/10  | 10%      | 0.30       |
 | **Total**               |       | **100%** | **4.5/10** |
 
 ### Target: **9.0/10** ✅
 
-| Category                | Score | Weight   | Weighted |
-| ----------------------- | ----- | -------- | -------- |
-| Testing Infrastructure  | 9/10  | 20%      | 1.80     |
-| Code Quality Automation | 10/10 | 15%      | 1.50     |
-| Component Patterns      | 9/10  | 15%      | 1.35     |
-| File Organization       | 10/10 | 15%      | 1.50     |
-| Type System             | 9/10  | 10%      | 0.90     |
-| State Management        | 8/10  | 10%      | 0.80     |
-| Import Conventions      | 9/10  | 5%       | 0.45     |
-| Separation of Concerns  | 9/10  | 10%      | 0.90     |
+| Category                | Score | Weight   | Weighted   |
+| ----------------------- | ----- | -------- | ---------- |
+| Testing Infrastructure  | 9/10  | 20%      | 1.80       |
+| Code Quality Automation | 10/10 | 15%      | 1.50       |
+| Component Patterns      | 9/10  | 15%      | 1.35       |
+| File Organization       | 10/10 | 15%      | 1.50       |
+| Type System             | 9/10  | 10%      | 0.90       |
+| State Management        | 8/10  | 10%      | 0.80       |
+| Import Conventions      | 9/10  | 5%       | 0.45       |
+| Separation of Concerns  | 9/10  | 10%      | 0.90       |
 | **Total**               |       | **100%** | **9.0/10** |
 
 ---

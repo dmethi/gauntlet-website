@@ -432,8 +432,8 @@ package.
   - Created `features/stats/components/ScheduleAnalysis/` with reusable
     sub-components (`ScheduleMatrixTable`, `ScheduleStrengthTable`,
     `ScheduleDifficultyTable`, `ExpectedWinsTable`, `WeeklyDifficultyChart`,
-    `LuckDistributionSection`) and extracted calculations into `utils.ts`
-    backed by dedicated Vitest coverage
+    `LuckDistributionSection`) and extracted calculations into `utils.ts` backed
+    by dedicated Vitest coverage
   - Replaced the 1,221-line `ScheduleAnalysis.tsx` with a lightweight re-export
     that consumes the new feature component while memoizing derived data and
     forwarding state for team selection
@@ -478,9 +478,9 @@ package.
     refactor using the new hooks
 
 - ✅ **WEB-HOOK-002**: Draft Analytics Data Hook
-  - Added `useDraftAnalytics.ts` powered by React Query with typed result helpers
-    (`DraftAnalyticsResult`) and configurable caching (`enabled`, `staleTime`,
-    `gcTime`)
+  - Added `useDraftAnalytics.ts` powered by React Query with typed result
+    helpers (`DraftAnalyticsResult`) and configurable caching (`enabled`,
+    `staleTime`, `gcTime`)
   - Co-located unit tests (`useDraftAnalytics.test.ts`) cover happy-path fetch,
     disabled states, missing draft inputs, and option overrides using
     `createWrapper`
@@ -494,9 +494,9 @@ package.
     containers (`WEB-COMP-002`, `WEB-COMP-003`)
 
 - ✅ **WEB-HOOK-003**: Stats Hub Hooks
-  - Created dedicated hooks for stats hub pipelines:
-    `useLeagueStats`, `useSeasonAggregates`, `useWeekStats`, and
-    `useSuperlatives`, each exporting typed results via the feature barrel
+  - Created dedicated hooks for stats hub pipelines: `useLeagueStats`,
+    `useSeasonAggregates`, `useWeekStats`, and `useSuperlatives`, each exporting
+    typed results via the feature barrel
   - Added comprehensive Vitest suites (4 files, 20+ assertions) covering fetch
     wiring, disabled states, error handling, and aggregate calculations
   - Hooks now rely on shared API types (`@/shared/types/api`) and composed

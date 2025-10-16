@@ -1,10 +1,7 @@
 {
   "2025": {
     "week-99": {
-      "generated": [
-        "2025-10-08T18:06:17.438Z",
-        "2025-10-08T18:06:17.542Z"
-      ],
+      "generated": ["2025-10-08T18:06:17.438Z", "2025-10-08T18:06:17.542Z"],
       "lastStatus": "partial",
       "lastDuration": 45805.7259240343,
       "lastTokens": 49536,
@@ -24,9 +21,7 @@
       "fileSize": 84075
     },
     "week-7": {
-      "generated": [
-        "2025-10-14T14:11:05.757Z"
-      ],
+      "generated": ["2025-10-14T14:11:05.757Z"],
       "lastStatus": "success",
       "lastDuration": 67016,
       "lastTokens": 0,
