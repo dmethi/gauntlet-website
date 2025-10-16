@@ -16,8 +16,8 @@ import type {
 // Configuration
 const PROJECTION_THRESHOLD = 0.15; // 15%
 const WAIVER_DISCOUNT = 0.35; // 35%
-const DEFAULT_SEASON = '2025';
-const DEFAULT_WEEKS = [1, 2, 3, 4];
+const FALLBACK_SEASON = '2025';
+const FALLBACK_WEEKS = [1, 2, 3, 4];
 
 const POSITION_WEIGHTS: Record<string, number> = {
   FLEX: 1.0,
@@ -424,14 +424,54 @@ const getRosteredPlayers = (matchups: any[]): Set<string> => {
   return rostered;
 };
 
+const resolveSeasonAndWeeks = async (options?: {
+  season?: string;
+  weeks?: number[];
+}): Promise<{ season: string; weeks: number[] }> => {
+  let season = options?.season;
+  let weeks = options?.weeks && options.weeks.length > 0 ? options.weeks : [];
+
+  try {
+    const state = await sleeperClient.fetchNFLState();
+
+    if (!season) {
+      const stateSeason = (state as any)?.season;
+      if (stateSeason) {
+        season = String(stateSeason);
+      }
+    }
+
+    if (weeks.length === 0) {
+      const previousWeek = Number((state as any)?.previous_week);
+      const currentWeek = Number((state as any)?.week);
+
+      let latestCompletedWeek: number | null = null;
+      if (Number.isInteger(previousWeek) && previousWeek > 0) {
+        latestCompletedWeek = previousWeek;
+      } else if (Number.isInteger(currentWeek) && currentWeek > 0) {
+        latestCompletedWeek = Math.max(currentWeek - 1, 1);
+      }
+
+      if (latestCompletedWeek != null && latestCompletedWeek > 0) {
+        const cappedWeek = Math.min(latestCompletedWeek, 18);
+        weeks = Array.from({ length: cappedWeek }, (_, index) => index + 1);
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to determine current NFL state, falling back to default weeks:', error);
+  }
+
+  return {
+    season: season || FALLBACK_SEASON,
+    weeks: weeks.length > 0 ? weeks : FALLBACK_WEEKS,
+  };
+};
+
 export const analyzeStartSitEfficiency = async (options?: {
   season?: string;
   weeks?: number[];
 }): Promise<StartSitData> => {
-  const season = options?.season || DEFAULT_SEASON;
-
-  // Determine weeks: use provided or default
-  const weeks = options?.weeks && options.weeks.length > 0 ? options.weeks : DEFAULT_WEEKS;
+  const { season, weeks } = await resolveSeasonAndWeeks(options);
 
   // Fetch massive static data once (players)
   const allPlayers = await sleeperClient.fetchAllPlayers();
