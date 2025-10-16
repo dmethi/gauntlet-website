@@ -10,8 +10,8 @@ import {
   filterTransactions,
   getUniqueValues,
   GRADE_ORDER,
-  sortTransactions,
   type LetterGrade,
+  sortTransactions,
 } from './utils';
 import type { GradeTxn } from '@/features/transactions/types';
 

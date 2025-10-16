@@ -2,10 +2,10 @@
 
 **Last Updated**: October 16, 2025  
 **Phase**: Foundation Setup → Enterprise Readiness  
-**Overall Progress**: 46.8% (59/126 tasks)  
+**Overall Progress**: 47.6% (60/126 tasks)  
 **Apps/Server Progress**: 83.3% (15/18 server tasks complete)  
 **Apps/Sim-Engine Progress**: 100% (15/15 sim-engine tasks complete) ✅  
-**Apps/Web Progress**: 69.0% (29/42 web tasks complete) 🔴 IN PROGRESS
+**Apps/Web Progress**: 71.4% (30/42 web tasks complete) 🔴 IN PROGRESS
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### Priority: Setup Tasks (Foundation)
 
-#### ✅ Completed (59)
+#### ✅ Completed (60)
 
 - [x] **CLEAN-601**: Delete Dead Code ⏱️ 15 min
 - [x] **CLEAN-602**: Fix TypeScript Configuration ⏱️ 15 min
@@ -74,6 +74,7 @@
 - [x] **WEB-COMP-005**: Split TeamView Component ⏱️ 2.5 hours
 - [x] **WEB-COMP-006**: Split Start/Sit Efficiency Component ⏱️ 2 hours
 - [x] **WEB-COMP-007**: Split TransactionAnalysis Component ⏱️ 1.5 hours
+- [x] **WEB-COMP-008**: Split LeagueView Component ⏱️ 1.5 hours
 
 #### 🔄 In Progress (0)
 
@@ -81,7 +82,7 @@ _Ready to begin_
 
 #### ⏭️ Up Next (1)
 
-- [ ] **WEB-COMP-008**: Split ManagerRankings Component
+- [ ] **WEB-COMP-009**: Split ManagerRankings Component
 
 ---
 
@@ -93,7 +94,7 @@ _Ready to begin_
 | **EXTRACT**         | 23      | 13        | 0           | 10        |
 | **UTIL**            | 16      | 4         | 0           | 12        |
 | **HOOK**            | 11      | 3         | 0           | 8         |
-| **COMP**            | 15      | 7         | 0           | 8         |
+| **COMP**            | 15      | 8         | 0           | 7         |
 | **TEST**            | 11      | 4         | 0           | 7         |
 | **PAGE**            | 3       | 0         | 0           | 3         |
 | **CLEAN**           | 9       | 5         | 0           | 4         |
@@ -103,7 +104,7 @@ _Ready to begin_
 | **DATA_MANAGEMENT** | 3       | 3         | 0           | 0         |
 | **DOCUMENTATION**   | 4       | 2         | 0           | 2         |
 | **SECURITY**        | 1       | 0         | 0           | 1         |
-| **Total**           | **126** | **59**    | **0**       | **67**    |
+| **Total**           | **126** | **60**    | **0**       | **66**    |
 
 ---
 
@@ -347,38 +348,86 @@ package.
 
 ### October 16, 2025 (Latest)
 
-- ✅ **WEB-COMP-007**: Split TransactionAnalysis Component + Fix Week Bug ⏱️ 1.5 hours
-  - Split monolithic TransactionAnalysis.tsx (852 lines) into a properly structured feature module
-  - **Fixed Critical Bug**: Removed hardcoded week 4 limit, now dynamically uses current NFL week from stats dataset
-  - Created `features/transactions/components/TransactionAnalysis/` directory with sub-components:
-    - `TransactionAnalysis.tsx` - Main orchestrator component (~200 lines, now accepts `currentWeek` prop)
+- ✅ **WEB-COMP-008**: Split LeagueView Component ⏱️ 1.5 hours
+  - Split LeagueView.tsx (765 lines) into a maintainable feature module with
+    focused sub-components
+  - Created `features/stats/components/LeagueView/` directory with
+    sub-components:
+    - `LeagueView.tsx` - Main orchestrator component (~100 lines)
+    - `LeagueRankingsTable.tsx` - Overall rankings table with positional
+      breakdowns
+    - `PositionRankingsSection.tsx` - Position-specific rankings with expandable
+      player breakdowns
+    - `PositionalAdvantagesCard.tsx` - Season-view positional advantages
+      analysis
+    - `ColorLegend.tsx` - Color guide for heatmap visualization
+    - `utils.ts` + `utils.test.ts` - Pure utility functions (6 functions, 32
+      tests)
+  - Extracted league calculation utilities:
+    - `calculateLeagueRankings()` - Calculate league-wide rankings with
+      positional breakdowns
+    - `calculatePositionRankings()` - Calculate position-specific team rankings
+    - `getSparklineData()` - Extract weekly score data for sparkline charts
+    - `getPositionSparklineData()` - Extract position-specific weekly scores
+    - `getPositionSparklineColor()` - Determine sparkline color based on rank
+  - All sub-components use `memo()` for optimal performance
+  - Comprehensive test coverage: 32 tests covering all ranking calculations
+  - Updated `app/stats/stats-content.tsx` to import from feature location
+  - Deleted old `app/stats/components/LeagueView.tsx` file
+  - **Outcome**: League view follows enterprise architecture with clear
+    separation of concerns
+  - Tests: 32 utility tests (100% utility coverage)
+  - Build: ✅ Production build successful
+  - Types: ✅ Zero type errors
+  - Lint: ✅ All files formatted correctly
+  - **Impact**: Main component reduced from 765 lines to ~100 lines (87%
+    reduction)
+
+- ✅ **WEB-COMP-007**: Split TransactionAnalysis Component + Fix Week Bug ⏱️ 1.5
+  hours
+  - Split monolithic TransactionAnalysis.tsx (852 lines) into a properly
+    structured feature module
+  - **Fixed Critical Bug**: Removed hardcoded week 4 limit, now dynamically uses
+    current NFL week from stats dataset
+  - Created `features/transactions/components/TransactionAnalysis/` directory
+    with sub-components:
+    - `TransactionAnalysis.tsx` - Main orchestrator component (~200 lines, now
+      accepts `currentWeek` prop)
     - `TransactionSummary.tsx` - Stats overview card
     - `TransactionFilters.tsx` - Filter and sort controls
     - `TransactionTable.tsx` - Transaction list table
     - `TransactionDetailsDialog.tsx` - Modal with transaction breakdown
-    - `useTransactionAnalysisModel.ts` - Custom hook accepting `currentNflWeek` parameter
-    - `utils.ts` + `utils.test.ts` - Pure utility functions (11 functions, 27 tests)
+    - `useTransactionAnalysisModel.ts` - Custom hook accepting `currentNflWeek`
+      parameter
+    - `utils.ts` + `utils.test.ts` - Pure utility functions (11 functions, 27
+      tests)
     - `TransactionAnalysis.test.tsx` - Component integration tests
   - Extracted transaction grading logic:
     - `assignLetterGrades()` - Calculate letter grades from score distribution
     - `filterTransactions()` - Multi-criteria filtering
     - `sortTransactions()` - Sort by score, grade, or date
     - `calculateScoreBreakdown()` - Analyze contribution/harm components
-    - `calculateTransactionStats()` - Count positive/negative/neutral transactions
+    - `calculateTransactionStats()` - Count positive/negative/neutral
+      transactions
   - Bug fix details:
     - Removed separate `/api/nfl-state` API call (was defaulting to week 4)
-    - Changed hook to accept `currentNflWeek` as parameter instead of fetching it
+    - Changed hook to accept `currentNflWeek` as parameter instead of fetching
+      it
     - Updated component to pass `dataset.currentWeek` from stats hub
     - Now consistent with other stats hub features (TeamView, TrendsView, etc.)
-  - Created comprehensive test suite with 27 passing tests covering all utilities
+  - Created comprehensive test suite with 27 passing tests covering all
+    utilities
   - Updated `app/stats/stats-content.tsx` to pass `dataset.currentWeek` prop
   - Deleted old `app/stats/components/TransactionAnalysis.tsx` file
-  - **Outcome**: Transaction analysis now follows enterprise architecture with clear separation of concerns, comprehensive test coverage, and dynamic week support
+  - **Outcome**: Transaction analysis now follows enterprise architecture with
+    clear separation of concerns, comprehensive test coverage, and dynamic week
+    support
   - Tests: 27 utility tests pass (100% utility coverage)
   - Build: ✅ Production build successful
   - Types: ✅ Zero type errors
   - Lint: ✅ All files formatted correctly
-  - **Impact**: Transactions now analyzed dynamically through current week (not limited to week 4)
+  - **Impact**: Transactions now analyzed dynamically through current week (not
+    limited to week 4)
 
 ### October 7, 2025
 

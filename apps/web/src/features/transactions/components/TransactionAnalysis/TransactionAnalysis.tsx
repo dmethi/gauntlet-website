@@ -19,9 +19,9 @@ import { TransactionDetailsDialog } from './TransactionDetailsDialog';
 import {
   filterTransactions,
   getUniqueValues,
-  sortTransactions,
   type SortBy,
   type SortOrder,
+  sortTransactions,
 } from './utils';
 
 /**

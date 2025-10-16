@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StartSitEfficiencyTab from '@/components/stats/StartSitEfficiencyTab';
 import { TransactionAnalysis } from '@/features/transactions/components/TransactionAnalysis';
-import { LeagueView } from './components/LeagueView';
+import { LeagueView } from '@/features/stats/components/LeagueView';
 import { ScheduleAnalysis } from './components/ScheduleAnalysis';
 import { ScatterAnalysis } from './components/ScatterAnalysis';
 import { TrendsView } from './components/TrendsView';
