@@ -1,10 +1,9 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import Link from 'next/link';
 import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
 import { useTeamData } from '@/lib/hooks';
+import type { Roster } from '@/shared/types';
 import ContentLoader from 'react-content-loader';
 import { Container, PageHeader } from '@gauntlet/ui';
 import { Button } from '@/components/ui/button';
@@ -96,7 +95,8 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
 
   const getAvatarUrl = () => {
     // Prioritize team avatar from metadata over user avatar
-    const teamAvatar = (team.owner?.metadata as any)?.avatar;
+    const metadata = team.owner?.metadata as Record<string, unknown> | undefined;
+    const teamAvatar = metadata?.avatar as string | undefined;
     const userAvatar = team.owner?.avatar;
 
     const avatar = teamAvatar || userAvatar;
@@ -113,8 +113,8 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
   };
 
   // Get all owners for this team (primary + co-owners)
-  const getAllOwners = (team: any) => {
-    const owners = [];
+  const getAllOwners = (team: Roster) => {
+    const owners: string[] = [];
 
     // Add primary owner
     if (team.owner) {
@@ -124,7 +124,7 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
 
     // Add co-owners
     if (team.coOwnerDetails && team.coOwnerDetails.length > 0) {
-      team.coOwnerDetails.forEach((coOwner: any) => {
+      team.coOwnerDetails.forEach(coOwner => {
         const coOwnerName = coOwner.displayName || coOwner.username || 'Unknown Co-owner';
         owners.push(coOwnerName);
       });

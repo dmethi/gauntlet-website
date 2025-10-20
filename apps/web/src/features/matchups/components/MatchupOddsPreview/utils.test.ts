@@ -34,14 +34,15 @@ describe('MatchupOddsPreview Utils', () => {
     });
 
     it('handles boundary values correctly', () => {
-      expect(getWinProbColor(0.65)).toBe('text-yellow-600 dark:text-yellow-400');
-      expect(getWinProbColor(0.66)).toBe('text-green-600 dark:text-green-400');
-      expect(getWinProbColor(0.55)).toBe('text-yellow-600 dark:text-yellow-400');
-      expect(getWinProbColor(0.54)).toBe('text-yellow-500 dark:text-yellow-500');
-      expect(getWinProbColor(0.45)).toBe('text-yellow-500 dark:text-yellow-500');
-      expect(getWinProbColor(0.44)).toBe('text-orange-500 dark:text-orange-400');
-      expect(getWinProbColor(0.35)).toBe('text-orange-500 dark:text-orange-400');
-      expect(getWinProbColor(0.34)).toBe('text-red-500 dark:text-red-400');
+      // Boundaries are exclusive (>), so values equal to threshold fall into next category
+      expect(getWinProbColor(0.65)).toBe('text-yellow-600 dark:text-yellow-400'); // =0.65, not > 0.65
+      expect(getWinProbColor(0.66)).toBe('text-green-600 dark:text-green-400'); // >0.65
+      expect(getWinProbColor(0.55)).toBe('text-yellow-500 dark:text-yellow-500'); // =0.55, not > 0.55
+      expect(getWinProbColor(0.56)).toBe('text-yellow-600 dark:text-yellow-400'); // >0.55
+      expect(getWinProbColor(0.45)).toBe('text-orange-500 dark:text-orange-400'); // =0.45, not > 0.45
+      expect(getWinProbColor(0.46)).toBe('text-yellow-500 dark:text-yellow-500'); // >0.45
+      expect(getWinProbColor(0.35)).toBe('text-red-500 dark:text-red-400'); // =0.35, not > 0.35
+      expect(getWinProbColor(0.36)).toBe('text-orange-500 dark:text-orange-400'); // >0.35
     });
   });
 

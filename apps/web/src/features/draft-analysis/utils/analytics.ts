@@ -384,7 +384,17 @@ export const generateMockAnalytics = (draft1: MockDraft, draft2: MockDraft): Dra
     });
 
     // Find notable nomination order differences
-    const notableDifferences: any[] = [];
+    const notableDifferences: Array<{
+      player_name: string;
+      position: string;
+      league_A_order: number;
+      league_B_order: number;
+      order_diff: number;
+      league_A_price: number;
+      league_B_price: number;
+      price_diff: number;
+      consistent_with_early_premium: boolean;
+    }> = [];
     picks1.forEach(pick1 => {
       const pick2 = picks2.find(p => p.playerId === pick1.playerId);
       if (pick2) {

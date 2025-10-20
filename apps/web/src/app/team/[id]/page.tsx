@@ -1,7 +1,5 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useMemo, useState } from 'react';
 import {
   TeamExpectedPerformanceChart,
@@ -10,13 +8,13 @@ import {
   TeamPositionalRadarChart,
 } from '@/components/team-charts';
 import {
-  LeagueTransactionsResponse,
   useLeagueData,
   useLeagueTransactions,
   useRosterDetails,
   useSeasonalAggregates,
   useTeamData,
 } from '@/lib/hooks';
+import type { LeagueData, LeagueTransactionsResponse, Roster } from '@/shared/types';
 import { TeamTransactionsList } from '@/components/transactions';
 import ContentLoader from 'react-content-loader';
 import { Container, PageHeader } from '@gauntlet/ui';
@@ -100,8 +98,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
     );
   }
 
-  const playoffStart =
-    Number((team.league as { playoff_week_start?: number })?.playoff_week_start) || 15;
+  const playoffStart = Number((team.league as LeagueData).playoff_week_start) || 15;
 
   const weeklyData = (team.weeklyMetrics ?? [])
     // Regular season only (Weeks 1–(playoffStart-1))
@@ -143,7 +140,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
   const getAvatarUrl = () => {
     // Prioritize team avatar from metadata over user avatar
-    const teamAvatar = (team.owner?.metadata as any)?.avatar;
+    const metadata = team.owner?.metadata as Record<string, unknown> | undefined;
+    const teamAvatar = metadata?.avatar as string | undefined;
     const userAvatar = team.owner?.avatar;
 
     const avatar = teamAvatar || userAvatar;
@@ -162,8 +160,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   // formatTransactionType moved to shared component
 
   // Get all owners for this team (primary + co-owners)
-  const getAllOwners = (team: any) => {
-    const owners = [];
+  const getAllOwners = (team: Roster) => {
+    const owners: string[] = [];
 
     // Add primary owner
     if (team.owner) {
@@ -173,7 +171,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
     // Add co-owners
     if (team.coOwnerDetails && team.coOwnerDetails.length > 0) {
-      team.coOwnerDetails.forEach((coOwner: any) => {
+      team.coOwnerDetails.forEach(coOwner => {
         const coOwnerName = coOwner.displayName || coOwner.username || 'Unknown Co-owner';
         owners.push(coOwnerName);
       });
@@ -261,14 +259,14 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               .reduce<Record<string, { team: number; opponent: number }>>((acc, r) => {
                 const pos = (r.positionalPoints as Record<string, number>) || {};
                 const opp = (r.opponentPositionalPoints as Record<string, number>) || {};
-                for (const p of Object.keys(pos) as (typeof VALID_POSITIONS)[number][]) {
+                for (const p of Object.keys(pos)) {
                   // Filter out unknown positions like 'UNK'
-                  if (!VALID_POSITIONS.includes(p as any)) continue;
+                  if (!VALID_POSITIONS.includes(p as (typeof VALID_POSITIONS)[number])) continue;
                   if (!acc[p]) acc[p] = { team: 0, opponent: 0 };
                   acc[p].team += Number(pos[p] ?? 0);
                 }
-                for (const p of Object.keys(opp) as (typeof VALID_POSITIONS)[number][]) {
-                  if (!VALID_POSITIONS.includes(p as any)) continue;
+                for (const p of Object.keys(opp)) {
+                  if (!VALID_POSITIONS.includes(p as (typeof VALID_POSITIONS)[number])) continue;
                   if (!acc[p]) acc[p] = { team: 0, opponent: 0 };
                   acc[p].opponent += Number(opp[p] ?? 0);
                 }
@@ -285,8 +283,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
               .filter(r => r.week >= 1 && r.week < Number(playoffStart))
               .forEach(r => {
                 const pos = (r.positionalPoints as Record<string, number>) || {};
-                for (const p of Object.keys(pos) as (typeof VALID_POSITIONS)[number][]) {
-                  if (!VALID_POSITIONS.includes(p as any)) continue;
+                for (const p of Object.keys(pos)) {
+                  if (!VALID_POSITIONS.includes(p as (typeof VALID_POSITIONS)[number])) continue;
                   perRosterTotals[r.rosterId][p] =
                     (perRosterTotals[r.rosterId][p] ?? 0) + Number(pos[p] ?? 0);
                 }
@@ -344,8 +342,8 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                 )
                 .forEach(r => {
                   const pos = (r.positionalPoints as Record<string, number>) || {};
-                  for (const p of Object.keys(pos) as (typeof VALID_POSITIONS)[number][]) {
-                    if (!allowedPositions.includes(p)) continue;
+                  for (const p of Object.keys(pos)) {
+                    if (!allowedPositions.includes(p as (typeof VALID_POSITIONS)[number])) continue;
                     compareTotals[p] = (compareTotals[p] ?? 0) + Number(pos[p] ?? 0);
                   }
                 });
@@ -688,12 +686,14 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                   // Check if transaction includes this team's unique ID or original Sleeper ID
                   return t.rosterIds.includes(teamId) || t.rosterIds.includes(originalId);
                 })
-                .slice(0, 20) as any;
+                .slice(0, 20) as unknown as Parameters<
+                typeof TeamTransactionsList
+              >[0]['transactions'];
 
               return (
                 <TeamTransactionsList
                   transactions={filteredTransactions}
-                  league={team.league as any}
+                  league={team.league as Parameters<typeof TeamTransactionsList>[0]['league']}
                 />
               );
             })()

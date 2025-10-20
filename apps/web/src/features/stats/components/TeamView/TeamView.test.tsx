@@ -165,13 +165,305 @@ const buildProps = (): TeamViewProps => {
 };
 
 describe('TeamView component', () => {
-  it('renders summary, comparison, and positional sections', () => {
-    const props = buildProps();
-    render(<TeamView {...props} />);
+  describe('Rendering', () => {
+    it('renders summary, comparison, and positional sections', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
 
-    expect(screen.getByText(/Team Overview/)).toBeInTheDocument();
-    expect(screen.getByText(/League Comparison/)).toBeInTheDocument();
-    expect(screen.getByText(/Weekly Performance/)).toBeInTheDocument();
-    expect(screen.getByText(/Positional Breakdown/)).toBeInTheDocument();
+      expect(screen.getByText(/Team Overview/)).toBeInTheDocument();
+      expect(screen.getByText(/League Comparison/)).toBeInTheDocument();
+      expect(screen.getByText(/Weekly Performance/)).toBeInTheDocument();
+      expect(screen.getByText(/Positional Breakdown/)).toBeInTheDocument();
+    });
+
+    it('renders team selector', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      expect(screen.getByText('Select Team')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
+    });
+
+    it('displays team name in selector', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      expect(screen.getByText(/Alpha.*Premier/)).toBeInTheDocument();
+    });
+  });
+
+  describe('Team Selection', () => {
+    it('renders with first team selected by default', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      // First team should be selected
+      expect(screen.getByText(/Alpha.*Premier/)).toBeInTheDocument();
+    });
+
+    it('displays multiple team options', () => {
+      const teamInfo1 = createTeamInfo({
+        teamName: 'Alpha',
+        leagueName: 'Premier',
+        leagueId: 'L1',
+        rosterId: 1,
+      });
+      const teamInfo2 = createTeamInfo({
+        teamName: 'Beta',
+        leagueName: 'Premier',
+        leagueId: 'L1',
+        rosterId: 2,
+      });
+
+      const entry1 = createTeamData({
+        key: 'L1-1',
+        info: teamInfo1,
+        teamScores: [{ week: 1, value: 120 }],
+        opponentScores: [{ week: 1, value: 115 }],
+      });
+      const entry2 = createTeamData({
+        key: 'L1-2',
+        info: teamInfo2,
+        teamScores: [{ week: 1, value: 110 }],
+        opponentScores: [{ week: 1, value: 105 }],
+      });
+
+      const positionMap = new Map<TrackedPosition, PositionData>();
+      trackedPositions.forEach(position => {
+        positionMap.set(position, { teams: [] });
+      });
+
+      const dataset = buildDataset([entry1, entry2], positionMap, {
+        1: {
+          [entry1[0]]: {
+            week: 1,
+            teamKey: entry1[0],
+            positions: { QB: [], RB: [], WR: [], TE: [], DEF: [] },
+          },
+        },
+      });
+
+      render(
+        <TeamView
+          allTeamEntries={[entry1, entry2]}
+          positionsMap={positionMap}
+          dataset={dataset}
+          fromWeek={1}
+          toWeek={1}
+          availableWeeks={[1]}
+        />,
+      );
+
+      // Both teams should be available
+      expect(screen.getByText(/Alpha.*Premier/)).toBeInTheDocument();
+    });
+  });
+
+  describe('Data Display', () => {
+    it('displays team total points', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      // Total should be 120 + 110 + 130 = 360
+      expect(screen.getByText('360.0')).toBeInTheDocument();
+    });
+
+    it('displays weekly scores', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      // Individual week scores should be displayed
+      expect(screen.getByText('120.0')).toBeInTheDocument();
+      expect(screen.getByText('110.0')).toBeInTheDocument();
+      expect(screen.getByText('130.0')).toBeInTheDocument();
+    });
+
+    it('displays opponent totals', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      // Opponent total should be 115 + 118 + 122 = 355
+      expect(screen.getByText('355.0')).toBeInTheDocument();
+    });
+  });
+
+  describe('Positional Breakdown', () => {
+    it('displays QB scores', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      // QB positional data should be present
+      // Check for QB label
+      expect(screen.getByText('QB')).toBeInTheDocument();
+    });
+
+    it('handles empty positional data', () => {
+      const teamInfo = createTeamInfo({
+        teamName: 'Empty Team',
+        leagueName: 'Test',
+        leagueId: 'L1',
+        rosterId: 1,
+      });
+
+      const entry = createTeamData({
+        key: 'L1-1',
+        info: teamInfo,
+        teamScores: [{ week: 1, value: 100 }],
+        opponentScores: [{ week: 1, value: 95 }],
+      });
+
+      const positionMap = new Map<TrackedPosition, PositionData>();
+      trackedPositions.forEach(position => {
+        positionMap.set(position, { teams: [] });
+      });
+
+      const dataset = buildDataset([entry], positionMap, {
+        1: {
+          [entry[0]]: {
+            week: 1,
+            teamKey: entry[0],
+            positions: { QB: [], RB: [], WR: [], TE: [], DEF: [] },
+          },
+        },
+      });
+
+      render(
+        <TeamView
+          allTeamEntries={[entry]}
+          positionsMap={positionMap}
+          dataset={dataset}
+          fromWeek={1}
+          toWeek={1}
+          availableWeeks={[1]}
+        />,
+      );
+
+      // Should still render with empty data
+      expect(screen.getByText(/Team Overview/)).toBeInTheDocument();
+    });
+  });
+
+  describe('Week Range Handling', () => {
+    it('filters data by week range', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      // Should show data for weeks 1-3
+      expect(screen.getByText('120.0')).toBeInTheDocument();
+      expect(screen.getByText('110.0')).toBeInTheDocument();
+      expect(screen.getByText('130.0')).toBeInTheDocument();
+    });
+
+    it('handles single week range', () => {
+      const teamInfo = createTeamInfo({
+        teamName: 'Single Week',
+        leagueName: 'Test',
+        leagueId: 'L1',
+        rosterId: 1,
+      });
+
+      const entry = createTeamData({
+        key: 'L1-1',
+        info: teamInfo,
+        teamScores: [{ week: 1, value: 100 }],
+        opponentScores: [{ week: 1, value: 95 }],
+      });
+
+      const positionMap = new Map<TrackedPosition, PositionData>();
+      trackedPositions.forEach(position => {
+        positionMap.set(position, { teams: [] });
+      });
+
+      const dataset = buildDataset([entry], positionMap, {
+        1: {
+          [entry[0]]: {
+            week: 1,
+            teamKey: entry[0],
+            positions: { QB: [], RB: [], WR: [], TE: [], DEF: [] },
+          },
+        },
+      });
+
+      render(
+        <TeamView
+          allTeamEntries={[entry]}
+          positionsMap={positionMap}
+          dataset={dataset}
+          fromWeek={1}
+          toWeek={1}
+          availableWeeks={[1]}
+        />,
+      );
+
+      expect(screen.getByText('100.0')).toBeInTheDocument();
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('shows empty state when no teams provided', () => {
+      const positionMap = new Map<TrackedPosition, PositionData>();
+      trackedPositions.forEach(position => {
+        positionMap.set(position, { teams: [] });
+      });
+
+      const dataset = buildDataset([], positionMap, {});
+
+      render(
+        <TeamView
+          allTeamEntries={[]}
+          positionsMap={positionMap}
+          dataset={dataset}
+          fromWeek={1}
+          toWeek={3}
+          availableWeeks={[1, 2, 3]}
+        />,
+      );
+
+      expect(screen.getByText('Select a team to view analysis')).toBeInTheDocument();
+    });
+
+    it('handles zero scores', () => {
+      const teamInfo = createTeamInfo({
+        teamName: 'Zero Team',
+        leagueName: 'Test',
+        leagueId: 'L1',
+        rosterId: 1,
+      });
+
+      const entry = createTeamData({
+        key: 'L1-1',
+        info: teamInfo,
+        teamScores: [{ week: 1, value: 0 }],
+        opponentScores: [{ week: 1, value: 0 }],
+      });
+
+      const positionMap = new Map<TrackedPosition, PositionData>();
+      trackedPositions.forEach(position => {
+        positionMap.set(position, { teams: [] });
+      });
+
+      const dataset = buildDataset([entry], positionMap, {
+        1: {
+          [entry[0]]: {
+            week: 1,
+            teamKey: entry[0],
+            positions: { QB: [], RB: [], WR: [], TE: [], DEF: [] },
+          },
+        },
+      });
+
+      render(
+        <TeamView
+          allTeamEntries={[entry]}
+          positionsMap={positionMap}
+          dataset={dataset}
+          fromWeek={1}
+          toWeek={1}
+          availableWeeks={[1]}
+        />,
+      );
+
+      expect(screen.getByText('0.0')).toBeInTheDocument();
+    });
   });
 });

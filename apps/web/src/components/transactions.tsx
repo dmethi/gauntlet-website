@@ -1,7 +1,5 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
@@ -132,7 +130,7 @@ export const TeamTransactionsList = ({
   // Create roster ID to team name mapping (with reverse mapping for original IDs)
   const rosterMap = new Map<number, string>();
   if (league?.rosters) {
-    league.rosters.forEach((r: any) => {
+    league.rosters.forEach(r => {
       const name =
         r?.owner?.metadata?.team_name ||
         r?.owner?.displayName ||
@@ -203,8 +201,8 @@ export const PlayerTransactionsList = ({
     adds: t.addedTo?.map(x => ({ label: `Added to ${x.name}`, href: `/team/${x.id}` })),
     drops: t.droppedFrom?.map(x => ({ label: `Dropped from ${x.name}`, href: `/team/${x.id}` })),
     waiverBid:
-      t && typeof t.waiver === 'object' && t.waiver && 'waiver_bid' in (t.waiver as any)
-        ? Number((t.waiver as any).waiver_bid)
+      t && typeof t.waiver === 'object' && t.waiver && 'waiver_bid' in t.waiver
+        ? Number((t.waiver as { waiver_bid?: number }).waiver_bid)
         : null,
   }));
   return <TransactionList items={items} />;

@@ -1,10 +1,9 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { LeagueChart } from '@/components/league-chart';
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
+import type { LeagueData } from '@/shared/types';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { Suspense, useMemo, useState } from 'react';
@@ -301,8 +300,49 @@ export default function LeagueOverview() {
   );
 }
 
-const RecentTransactionsWidget = ({ league }: { league: any }) => {
-  const [items, setItems] = useState<any[] | null>(null);
+interface TransactionPlayer {
+  fullName: string;
+}
+
+interface TransactionRosterData {
+  rosterId: number;
+  players: TransactionPlayer[];
+}
+
+interface TransactionData {
+  id: string;
+  type: string;
+  status?: string;
+  createdAt: string;
+  adds?: TransactionRosterData[];
+  drops?: TransactionRosterData[];
+  settings?: {
+    waiver_bid?: number;
+  };
+}
+
+interface TransactionPlayerDetail {
+  player: string;
+  rosterId: number;
+  label: string;
+}
+
+const RecentTransactionsWidget = ({
+  league,
+}: {
+  league: {
+    id: string;
+    rosters?: Array<{
+      id: string | number;
+      owner?: {
+        metadata?: { team_name?: string };
+        displayName?: string;
+        username?: string;
+      };
+    }>;
+  };
+}) => {
+  const [items, setItems] = useState<TransactionData[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const INITIAL_DISPLAY_COUNT = 10; // Show more transactions by default
@@ -312,7 +352,7 @@ const RecentTransactionsWidget = ({ league }: { league: any }) => {
     (async () => {
       try {
         const res = await fetch(`/api/league/${String(league.id)}/transactions`);
-        const json = (await res.json()) as { ok: boolean; data?: any[] };
+        const json = (await res.json()) as { ok: boolean; data?: TransactionData[] };
         if (!cancelled && json.ok) setItems(json.data || []);
       } catch {
         if (!cancelled) setItems([]);
@@ -331,7 +371,7 @@ const RecentTransactionsWidget = ({ league }: { league: any }) => {
 
   // Create mapping from both unique roster IDs and original Sleeper IDs (1-12)
   const rosterMap = new Map<number, string>();
-  (league?.rosters || []).forEach((r: any) => {
+  (league?.rosters || []).forEach(r => {
     const name =
       r?.owner?.metadata?.team_name ||
       r?.owner?.displayName ||
@@ -356,15 +396,15 @@ const RecentTransactionsWidget = ({ league }: { league: any }) => {
 
   const adapted = (items || []).map(t => {
     // Get raw adds and drops
-    const rawAdds = (t.adds || []).flatMap((a: any) =>
-      a.players.map((p: any) => ({
+    const rawAdds: TransactionPlayerDetail[] = (t.adds || []).flatMap(a =>
+      a.players.map(p => ({
         player: p.fullName,
         rosterId: a.rosterId,
         label: `${p.fullName} to ${rosterName(a.rosterId)}`,
       })),
     );
-    const rawDrops = (t.drops || []).flatMap((d: any) =>
-      d.players.map((p: any) => ({
+    const rawDrops: TransactionPlayerDetail[] = (t.drops || []).flatMap(d =>
+      d.players.map(p => ({
         player: p.fullName,
         rosterId: d.rosterId,
         label: `${p.fullName} from ${rosterName(d.rosterId)}`,
@@ -376,23 +416,26 @@ const RecentTransactionsWidget = ({ league }: { league: any }) => {
     let cleanedDrops = rawDrops;
 
     if (t.type === 'trade' && rawAdds.length > 0 && rawDrops.length > 0) {
-      const addPlayerNames = new Set(rawAdds.map((a: any) => a.player));
-      const dropPlayerNames = new Set(rawDrops.map((d: any) => d.player));
+      const addPlayerNames = new Set(rawAdds.map(a => a.player));
+      const dropPlayerNames = new Set(rawDrops.map(d => d.player));
       const duplicatePlayerNames = [...addPlayerNames].filter(name => dropPlayerNames.has(name));
 
       // If we have duplicates, this suggests malformed trade data
       if (duplicatePlayerNames.length > 0) {
         // For malformed trades, group players by roster and show as separate trade legs
-        const playersByRoster = new Map<number, { adds: any[]; drops: any[] }>();
+        const playersByRoster = new Map<
+          number,
+          { adds: TransactionPlayerDetail[]; drops: TransactionPlayerDetail[] }
+        >();
 
-        rawAdds.forEach((add: any) => {
+        rawAdds.forEach(add => {
           if (!playersByRoster.has(add.rosterId)) {
             playersByRoster.set(add.rosterId, { adds: [], drops: [] });
           }
           playersByRoster.get(add.rosterId)!.adds.push(add);
         });
 
-        rawDrops.forEach((drop: any) => {
+        rawDrops.forEach(drop => {
           if (!playersByRoster.has(drop.rosterId)) {
             playersByRoster.set(drop.rosterId, { adds: [], drops: [] });
           }
@@ -405,15 +448,15 @@ const RecentTransactionsWidget = ({ league }: { league: any }) => {
         cleanedDrops = [];
 
         playersByRoster.forEach((data, _rosterId) => {
-          data.adds.forEach((add: any) => {
-            const isAlsoDropped = data.drops.some((drop: any) => drop.player === add.player);
+          data.adds.forEach(add => {
+            const isAlsoDropped = data.drops.some(drop => drop.player === add.player);
             if (!isAlsoDropped) {
               cleanedAdds.push(add);
             }
           });
 
-          data.drops.forEach((drop: any) => {
-            const isAlsoAdded = data.adds.some((add: any) => add.player === drop.player);
+          data.drops.forEach(drop => {
+            const isAlsoAdded = data.adds.some(add => add.player === drop.player);
             if (!isAlsoAdded) {
               cleanedDrops.push(drop);
             }
@@ -427,8 +470,8 @@ const RecentTransactionsWidget = ({ league }: { league: any }) => {
       type: t.type,
       status: t.status,
       createdAt: t.createdAt,
-      adds: cleanedAdds.map((a: any) => ({ label: a.label })),
-      drops: cleanedDrops.map((d: any) => ({ label: d.label })),
+      adds: cleanedAdds.map(a => ({ label: a.label })),
+      drops: cleanedDrops.map(d => ({ label: d.label })),
       waiverBid: t.settings?.waiver_bid ?? null,
     };
   });
