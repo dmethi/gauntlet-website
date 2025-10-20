@@ -225,17 +225,11 @@ describe('useMatchupTimeSeries', () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
-  it('retries failed requests once', async () => {
+  it('fails fast without retrying', async () => {
     let callCount = 0;
     (global.fetch as any).mockImplementation(() => {
       callCount++;
-      if (callCount === 1) {
-        return Promise.reject(new Error('First attempt failed'));
-      }
-      return Promise.resolve({
-        ok: true,
-        json: async () => mockResponse,
-      });
+      return Promise.reject(new Error('First attempt failed'));
     });
 
     const { result } = renderHook(() => useMatchupTimeSeries('12345', 5, 1), {
@@ -243,10 +237,10 @@ describe('useMatchupTimeSeries', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(callCount).toBe(2); // Initial + 1 retry
-    expect(result.current.data).toEqual(mockResponse);
+    expect(callCount).toBe(1);
+    expect(result.current.data).toBeUndefined();
   });
 });

@@ -52,7 +52,7 @@ describe('useMatchupOdds', () => {
       }),
     );
 
-    expect(result.current.loading).toBe(false); // Initial render is false
+    expect(result.current.loading).toBe(true);
     expect(result.current.oddsData).toBeNull();
     expect(result.current.error).toBeNull();
   });

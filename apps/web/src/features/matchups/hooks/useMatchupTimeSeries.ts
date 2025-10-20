@@ -71,7 +71,7 @@ export const useMatchupTimeSeries = (leagueId: string, week: number, matchupId: 
     staleTime: 5 * 60 * 1000,
     // Keep data for 30 minutes when not in use
     gcTime: 30 * 60 * 1000,
-    // Retry once on failure
-    retry: 1,
+    // Fail fast so UI can surface errors immediately
+    retry: false,
   });
 };

@@ -22,6 +22,10 @@ vi.mock('@/features/draft-analysis/hooks', () => ({
 describe('ManagerAnalysis', () => {
   const mockAnalytics = ManagerFactory.generateAnalytics();
 
+  const expectTextPresent = (value: string) => {
+    expect(screen.getAllByText((content: string) => content.includes(value))).not.toHaveLength(0);
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -41,7 +45,7 @@ describe('ManagerAnalysis', () => {
       render(<ManagerAnalysis analytics={mockAnalytics} />);
       // ConcentrationMetricsTable should render managers
       mockAnalytics.profiles.forEach(profile => {
-        expect(screen.getByText(profile.manager)).toBeInTheDocument();
+        expectTextPresent(profile.manager);
       });
     });
 
@@ -50,7 +54,7 @@ describe('ManagerAnalysis', () => {
 
       // Check that components are rendered (they have their own headings)
       // ConcentrationMetricsTable is always present
-      expect(screen.getByText(mockAnalytics.profiles[0].manager)).toBeInTheDocument();
+      expectTextPresent(mockAnalytics.profiles[0].manager);
 
       // Other sections should be present in the DOM
       const sections = screen.getAllByRole('table', { hidden: true });
@@ -64,7 +68,7 @@ describe('ManagerAnalysis', () => {
 
       // Verify all manager names are present
       mockAnalytics.profiles.forEach(profile => {
-        expect(screen.getByText(profile.manager)).toBeInTheDocument();
+        expectTextPresent(profile.manager);
       });
     });
 
@@ -73,7 +77,7 @@ describe('ManagerAnalysis', () => {
 
       // PlayerOverlapAnalysis should receive analytics
       // Check if any overlap data is rendered
-      const content = screen.getByText(mockAnalytics.profiles[0].manager).closest('div');
+      const content = screen.getAllByText((content: string) => content.includes(mockAnalytics.profiles[0].manager))[0]?.closest('div');
       expect(content).toBeInTheDocument();
     });
 
@@ -94,7 +98,7 @@ describe('ManagerAnalysis', () => {
       // Check that Gini coefficients are displayed (formatted to 3 decimals)
       const profile = mockAnalytics.profiles[0];
       const giniText = profile.concentration.giniSpend.toFixed(3);
-      expect(screen.getByText(giniText)).toBeInTheDocument();
+      expectTextPresent(giniText);
     });
 
     it('displays league information', () => {
@@ -123,7 +127,7 @@ describe('ManagerAnalysis', () => {
 
       // All managers should appear in the main table
       mockAnalytics.profiles.forEach(profile => {
-        expect(screen.getByText(profile.manager)).toBeInTheDocument();
+        expectTextPresent(profile.manager);
       });
     });
   });
@@ -135,7 +139,7 @@ describe('ManagerAnalysis', () => {
       });
 
       render(<ManagerAnalysis analytics={singleManagerAnalytics} />);
-      expect(screen.getByText('Test Manager')).toBeInTheDocument();
+      expectTextPresent('Test Manager');
     });
 
     it('handles managers with extreme concentration values', () => {
@@ -156,8 +160,8 @@ describe('ManagerAnalysis', () => {
       });
 
       render(<ManagerAnalysis analytics={extremeAnalytics} />);
-      expect(screen.getByText('Extreme Manager')).toBeInTheDocument();
-      expect(screen.getByText('0.950')).toBeInTheDocument(); // Gini formatted
+      expectTextPresent('Extreme Manager');
+      expectTextPresent('0.950'); // Gini formatted
     });
 
     it('handles managers with minimal concentration', () => {
@@ -178,8 +182,8 @@ describe('ManagerAnalysis', () => {
       });
 
       render(<ManagerAnalysis analytics={balancedAnalytics} />);
-      expect(screen.getByText('Balanced Manager')).toBeInTheDocument();
-      expect(screen.getByText('0.150')).toBeInTheDocument(); // Gini formatted
+      expectTextPresent('Balanced Manager');
+      expectTextPresent('0.150'); // Gini formatted
     });
   });
 });

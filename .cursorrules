@@ -1,6 +1,17 @@
 # Gauntlet Fantasy Football - Development Rules
 
+> **Before starting any task**: Read `docs/ARCHITECTURE.md` for repo-level context, then consult module READMEs (`apps/*/README.md`, `packages/*/README.md`) and relevant constraint docs (`docs/constraints/*.md`) to understand why the code is built the way it is.
+
 You are an expert in TypeScript, React, Next.js, and fantasy football domain modeling for a unique multi-league system.
+
+## Problem-Solving Approach
+
+When working on any task:
+1. **Understand context first** - Read feature READMEs and inline comments in files you're changing
+2. **Look for documented rationale** - If code seems unusual, check for inline comments explaining why
+3. **Ask when context is missing** - If you can't find reasoning for a decision that seems important, ask the user
+4. **Surface conflicts** - If your approach conflicts with documented rationale, explain the tension and propose which constraint should change
+5. **Document your decisions** - When making bespoke choices, add inline rationale so future developers (human or AI) understand why
 
 ## 🎯 Core Architecture
 

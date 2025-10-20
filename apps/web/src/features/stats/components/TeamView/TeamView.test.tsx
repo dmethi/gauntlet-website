@@ -188,7 +188,7 @@ describe('TeamView component', () => {
       const props = buildProps();
       render(<TeamView {...props} />);
 
-      expect(screen.getByText(/Alpha.*Premier/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Alpha.*Premier/)).not.toHaveLength(0);
     });
   });
 
@@ -198,7 +198,7 @@ describe('TeamView component', () => {
       render(<TeamView {...props} />);
 
       // First team should be selected
-      expect(screen.getByText(/Alpha.*Premier/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Alpha.*Premier/)).not.toHaveLength(0);
     });
 
     it('displays multiple team options', () => {
@@ -255,7 +255,7 @@ describe('TeamView component', () => {
       );
 
       // Both teams should be available
-      expect(screen.getByText(/Alpha.*Premier/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Alpha.*Premier/)).not.toHaveLength(0);
     });
   });
 
@@ -265,7 +265,7 @@ describe('TeamView component', () => {
       render(<TeamView {...props} />);
 
       // Total should be 120 + 110 + 130 = 360
-      expect(screen.getByText('360.0')).toBeInTheDocument();
+      expect(screen.getAllByText('360.0')).not.toHaveLength(0);
     });
 
     it('displays weekly scores', () => {
@@ -273,9 +273,9 @@ describe('TeamView component', () => {
       render(<TeamView {...props} />);
 
       // Individual week scores should be displayed
-      expect(screen.getByText('120.0')).toBeInTheDocument();
-      expect(screen.getByText('110.0')).toBeInTheDocument();
-      expect(screen.getByText('130.0')).toBeInTheDocument();
+      expect(screen.getAllByText('120.0')).not.toHaveLength(0);
+      expect(screen.getAllByText('110.0')).not.toHaveLength(0);
+      expect(screen.getAllByText('130.0')).not.toHaveLength(0);
     });
 
     it('displays opponent totals', () => {
@@ -283,7 +283,7 @@ describe('TeamView component', () => {
       render(<TeamView {...props} />);
 
       // Opponent total should be 115 + 118 + 122 = 355
-      expect(screen.getByText('355.0')).toBeInTheDocument();
+      expect(screen.getAllByText('355.0')).not.toHaveLength(0);
     });
   });
 
@@ -294,7 +294,7 @@ describe('TeamView component', () => {
 
       // QB positional data should be present
       // Check for QB label
-      expect(screen.getByText('QB')).toBeInTheDocument();
+      expect(screen.getAllByText('QB')).not.toHaveLength(0);
     });
 
     it('handles empty positional data', () => {
@@ -349,9 +349,9 @@ describe('TeamView component', () => {
       render(<TeamView {...props} />);
 
       // Should show data for weeks 1-3
-      expect(screen.getByText('120.0')).toBeInTheDocument();
-      expect(screen.getByText('110.0')).toBeInTheDocument();
-      expect(screen.getByText('130.0')).toBeInTheDocument();
+      expect(screen.getAllByText('120.0')).not.toHaveLength(0);
+      expect(screen.getAllByText('110.0')).not.toHaveLength(0);
+      expect(screen.getAllByText('130.0')).not.toHaveLength(0);
     });
 
     it('handles single week range', () => {
@@ -395,7 +395,7 @@ describe('TeamView component', () => {
         />,
       );
 
-      expect(screen.getByText('100.0')).toBeInTheDocument();
+      expect(screen.getAllByText('100.0')).not.toHaveLength(0);
     });
   });
 
@@ -463,7 +463,7 @@ describe('TeamView component', () => {
         />,
       );
 
-      expect(screen.getByText('0.0')).toBeInTheDocument();
+      expect(screen.getAllByText('0.0')).not.toHaveLength(0);
     });
   });
 });

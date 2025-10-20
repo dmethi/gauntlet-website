@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useTransactionAnalysisModel } from './useTransactionAnalysisModel';
+import { CURRENT_LEAGUES } from '@/config/leagues';
 
 // Mock dependencies
 vi.mock('@/features/transactions/utils', () => ({
@@ -147,14 +148,23 @@ describe('useTransactionAnalysisModel', () => {
   });
 
   it('processes transactions from both leagues', async () => {
+    const [afc, nfc] = CURRENT_LEAGUES;
+
     const mockTeamsResponse = {
       teams: [
         {
           id: 1,
           name: 'Team A',
           owner: 'Owner A',
-          leagueId: 'afc123',
-          leagueName: 'AFC',
+          leagueId: afc.id,
+          leagueName: afc.name,
+        },
+        {
+          id: 2,
+          name: 'Team B',
+          owner: 'Owner B',
+          leagueId: nfc.id,
+          leagueName: nfc.name,
         },
       ],
     };
@@ -174,13 +184,13 @@ describe('useTransactionAnalysisModel', () => {
           json: async () => mockTeamsResponse,
         });
       }
-      if (url.includes('afc123/transactions')) {
+      if (url.includes(`${afc.id}/transactions`)) {
         return Promise.resolve({
           ok: true,
           json: async () => mockTransactionsAFC,
         });
       }
-      if (url.includes('nfc123/transactions')) {
+      if (url.includes(`${nfc.id}/transactions`)) {
         return Promise.resolve({
           ok: true,
           json: async () => mockTransactionsNFC,
@@ -196,7 +206,6 @@ describe('useTransactionAnalysisModel', () => {
     });
 
     expect(result.current.loading).toBe(false);
-    // The mocked computeTransactionGradesForStatsHub returns data
     expect(result.current.allData.length).toBeGreaterThanOrEqual(0);
   });
 

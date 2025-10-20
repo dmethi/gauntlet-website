@@ -26,6 +26,16 @@ Monte Carlo simulation engine for fantasy football matchup win probability and s
 
 ---
 
+## 🧠 Design Decisions
+
+- **Functional core** – Simulation entry points (`simulateMatchupProbabilityFromPlayers`, etc.) stay pure; any I/O (variance loaders, logging) lives in adapters so the core remains deterministic and easy to port to Rust later.
+- **Variance data contracts** – Loader APIs return typed snapshots keyed by schema version, enabling side-by-side evaluation of new variance models.
+- **Metrics hooks** – Consumers can pass a `Metrics` instance to capture timing/counter data without coupling the engine to a specific observability stack.
+- **Happy-path first** – Input validation uses lightweight guards (`validation.ts`) to keep the hot loop fast; extensive validation happens closer to the web layer.
+- **Packaging** – Compiled as plain TypeScript (`tsc`) so it can run in Node, serverless functions, or be embedded inside other PNPM workspaces.
+
+---
+
 ## 📦 Installation
 
 ```bash

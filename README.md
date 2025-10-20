@@ -1,250 +1,75 @@
-# 🏈 The Gauntlet
+# 🏈 Gauntlet Monorepo
 
-High-stakes fantasy football platform with advanced simulation, dynamic scoring
-systems, and tightly integrated game mechanics.
+Gauntlet is a fantasy football companion that automates league analysis, live win-probability simulations, and weekly recap reports across two Sleeper leagues (AFC/NFC). The project doubles as an enterprise hygiene sandbox: clean architecture, strict typing, and AI-friendly patterns are first-class goals.
 
-## Project Structure
+## Orientation
+- **Service charter & architectural intent**: `docs/README.md`
+- **Development rules for AI collaborators**: `.cursorrules`
+- **Module deep-dives**: see the README in each `apps/*` and `packages/*` directory
 
+## Repository Layout
 ```
-gauntlet-website/
-├── apps/
-│   ├── web/          # Next.js frontend application and API
-│   ├── api/          # Data ingestion and processing scripts
-│   └── sim-engine/   # Fantasy simulation CLI and service
-├── packages/
-│   ├── types/        # Shared TypeScript interfaces
-│   ├── lib/          # Utility functions and helpers
-│   └── models/       # Business logic and domain models
-├── brand/
-│   ├── logo.svg      # Brand assets
-│   ├── fonts/        # Typography files
-│   └── colors.ts     # Color system
-└── docs/
-    ├── architecture.md
-    ├── league-format.md
-    └── simulation-notes.md
+apps/
+  web/         # Next.js 14 app (UI, API routes, cron entrypoints)
+  server/      # Background jobs + Prisma access to historical DB
+  sim-engine/  # Monte Carlo simulation engine (TypeScript)
+packages/
+  types/       # Canonical Sleeper & Gauntlet type system
+  lib/         # Shared utilities and report tooling
+  models/      # Legacy domain models (under evaluation)
+  tokens/      # Design tokens (Tailwind preset, theme)
+  ui/          # Shared UI primitives / Storybook playground
+brand/         # Branding assets
+scripts/       # One-off maintenance scripts (root scope)
+docs/          # Service overview and architecture notes
 ```
 
-## Quick Start
-
-### Prerequisites
-
-- **Node.js**: v18.0.0 or higher
-- **pnpm**: v8.0.0 or higher
-- **PostgreSQL**: v14 or higher (for production)
-
-### Installation
-
+## Getting Started
 ```bash
-# Clone the repository
-git clone https://github.com/your-org/gauntlet-website
-cd gauntlet-website
-
-# Install dependencies
+# install dependencies (turbo + pnpm workspaces)
 pnpm install
 
-# Set up environment variables
-cp apps/web/.env.example apps/web/.env.local
-cp apps/api/.env.example apps/api/.env
+# spin up the Next.js dev server
+pnpm --filter @gauntlet/web dev
 
-# Start development servers
-pnpm dev
-```
-
-This will start:
-
-- **Web App**: http://localhost:3000
-
-### Development Commands
-
-```bash
-# Start all applications in development mode
-pnpm dev
-
-# Build all packages and applications
-pnpm build
-
-# Run linting across all packages
+# run targeted scripts (see module READMEs for details)
 pnpm lint
-
-# Fix linting issues
-pnpm lint:fix
-
-# Run type checking
 pnpm type-check
-
-# Run tests
 pnpm test
-
-# Format code
-pnpm format
-
-# Clean build artifacts
-pnpm clean
 ```
 
-## Applications
+### Environment
+- Node.js ≥ 18, pnpm ≥ 9
+- Copy `.env.example` files per module (e.g. `apps/web/.env.example`)
+- PostgreSQL is required only when running the historical snapshot jobs (`apps/server`)
 
-### 🌐 Web App (`apps/web`)
+## Quality Gates
+- `pnpm lint` → ESLint flat configs per package
+- `pnpm type-check` → Turborepo orchestrated `tsc --noEmit`
+- `pnpm test` → Vitest (web, sim-engine, server) + Jest (legacy models)
+- Coverage artifacts live locally (`coverage/` dirs) and are ignored by git
 
-Next.js 14 application with:
+## Module Summaries
+- [`apps/web`](apps/web/README.md) – Feature-based Next.js app powering UI, APIs, and report generation.
+- [`apps/server`](apps/server/README.md) – Background job runner for live odds snapshots and DB utilities.
+- [`apps/sim-engine`](apps/sim-engine/README.md) – Simulation library focused on performant Monte Carlo win probabilities.
+- [`packages/types`](packages/types/README.md) – Source-of-truth TypeScript contracts for Sleeper and Gauntlet domains.
+- [`packages/lib`](packages/lib/README.md) – Shared infrastructure helpers (report templating, validation, calculations).
+- [`packages/models`](packages/models/README.md) – Legacy models; slated for consolidation with feature modules.
+- [`packages/ui`](packages/ui/README.md) – Shared UI primitives and Storybook workspace.
+- [`packages/tokens`](packages/tokens/README.md) – Design tokens and Tailwind preset.
 
-- Modern React with TypeScript
-- Tailwind CSS for styling
-- shadcn/ui component library
-- API routes for backend logic
-
-```bash
-cd apps/web
-pnpm dev  # Start at localhost:3000
-```
-
-### 🔌 Data Ingestion (`apps/api`)
-
-A collection of Node.js scripts for:
-
-- Ingesting data from various sources
-- Processing and storing data in PostgreSQL
-- Running data analysis scripts
-
-```bash
-# Run data ingestion scripts
-pnpm --filter @gauntlet/api -- <script_name>
-```
-
-### 🎯 Simulation Engine (`apps/sim-engine`)
-
-Advanced fantasy football simulation system:
-
-```bash
-# Run test simulation
-pnpm --filter @gauntlet/sim-engine sim:test
-
-# Simulate full season
-pnpm --filter @gauntlet/sim-engine sim:season
-
-# Simulate specific matchup
-pnpm --filter @gauntlet/sim-engine sim:matchup --team1 team_123 --team2 team_456
-```
-
-## Packages
-
-### 📋 Types (`packages/types`)
-
-Shared TypeScript definitions for:
-
-- Player and team interfaces
-- League settings and scoring systems
-- API response types
-- Simulation results
-
-### 🔧 Lib (`packages/lib`)
-
-Utility functions including:
-
-- Scoring calculations
-- Data validation
-- Helper functions
-- Constants and configurations
-
-### 🏗️ Models (`packages/models`)
-
-Business logic models for:
-
-- League management
-- Team operations
-- Player statistics
-- Game simulations
-
-## Technology Stack
-
-- **Frontend/Backend**: Next.js, React, TypeScript
-- **Styling**: Tailwind CSS
-- **Database**: PostgreSQL with Prisma ORM
-- **Monorepo**: pnpm workspaces + Turbo
-- **Testing**: Jest, React Testing Library, Playwright
-- **Deployment**: Vercel (frontend and backend)
-
-## Tech Debt
-
-This section tracks known technical debt and areas for improvement.
-
-- [ ] **Consolidate API Logic**: The backend logic is currently split between
-      `apps/api` (data ingestion) and `apps/web` (API routes). This should be
-      consolidated into a single, dedicated backend service.
-- [ ] **Add a UI Package**: A shared `ui` package should be created to house
-      common React components, reducing code duplication between applications.
-- [ ] **Improve Test Coverage**: The current test coverage is low. More
-      comprehensive tests (unit, integration, and end-to-end) should be added to
-      ensure code quality and prevent regressions.
-- [ ] **Refactor Data Ingestion**: The data ingestion scripts in `apps/api`
-      should be refactored for better error handling, logging, and
-      configurability.
-- [ ] **Standardize API Responses**: The API responses should follow a
-      consistent format to simplify client-side data handling.
-- [ ] **Fix Team Record Calculation (UI)**: The league overview table's record
-      display is incorrect. Recompute wins/losses using authoritative data
-      (server-side weekly metrics or matchup outcomes) and ensure ties are
-      handled. Add tests for edge cases.
-- [ ] **Stable Rank Number in Sortable Table (UI)**: In `League Overview`, the
-      1–N rank label should remain anchored to the primary ranking metric (e.g.,
-      power rank or points) regardless of secondary sort selection. Implement a
-      canonical rank field in the dataset and render that instead of the visible
-      row index.
+## Development Philosophy
+1. **Feature isolation** – Keep route files thin; real logic lives in `features/<domain>` with tests and typed inputs.
+2. **Type-first** – Centralize domain types in `@gauntlet/types`; prefer inference helpers (`ReturnType`, `as const`) over `any`.
+3. **AI-aware scaffolding** – Document design decisions, use small focused modules, and maintain consistent naming to help automations stay on track.
+4. **Continuous cleanup** – Identify mega-files, lint suppressions, and data blobs during each feature cycle and capture accepted debt explicitly.
 
 ## Contributing
+1. Fork or branch off `main`.
+2. Keep the pipelines green (`pnpm lint && pnpm type-check && pnpm test`).
+3. Document meaningful architectural choices in the relevant module README.
+4. Open a PR describing scope, testing, and any accepted debt.
 
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Make your changes**
-4. **Run tests**: `pnpm test`
-5. **Commit changes**: `git commit -m 'Add amazing feature'`
-6. **Push to branch**: `git push origin feature/amazing-feature`
-7. **Open a Pull Request**
+Questions or new ideas? Capture them in module READMEs or start a discussion in `docs/`.
 
-### Code Quality
-
-This project maintains high code quality standards:
-
-- **TypeScript**: Strict type checking across all packages
-- **ESLint**: Consistent code style and error detection
-- **Prettier**: Automated code formatting
-- **Husky**: Pre-commit hooks for quality gates
-- **Jest**: Comprehensive test coverage
-
-## Deployment
-
-### Production Build
-
-```bash
-# Build all packages and applications
-pnpm build
-```
-
-### Vercel Deployment
-
-The web app is configured for automatic deployment to Vercel:
-
-```bash
-# Deploy to Vercel
-vercel deploy
-
-# Deploy to production
-vercel deploy --prod
-```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
-
-## Support
-
-- **Documentation**: Check the `/docs` folder for detailed guides
-- **Issues**: Report bugs via GitHub Issues
-- **Discussions**: Join project discussions for questions and ideas
-
----
-
-Built with ❤️ for fantasy football enthusiasts who demand the best tools for
-their high-stakes leagues.

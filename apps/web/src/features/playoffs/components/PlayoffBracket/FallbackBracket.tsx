@@ -16,6 +16,26 @@ interface FallbackBracketProps {
 const buildUpperBracket = (bracketTeams: BracketTeam[], league: LeagueData | undefined) => {
   const upper = bracketTeams.slice(0, 6);
 
+  if (upper.length < 6) {
+    return {
+      week15: {
+        bye1: null,
+        bye2: null,
+        wc1Winner: null,
+        wc2Winner: null,
+        wc1Loser: null,
+        wc2Loser: null,
+      },
+      week16: {
+        sf1Winner: null,
+        sf2Winner: null,
+        sf1Loser: null,
+        sf2Loser: null,
+      },
+      teams: upper,
+    };
+  }
+
   const week15 = {
     bye1: getAdvancingTeamFromBye(league, bracketTeams, upper[0].id, 15),
     bye2: getAdvancingTeamFromBye(league, bracketTeams, upper[1].id, 15),
@@ -49,6 +69,25 @@ const buildUpperBracket = (bracketTeams: BracketTeam[], league: LeagueData | und
 
 const buildLowerBracket = (bracketTeams: BracketTeam[], league: LeagueData | undefined) => {
   const lower = bracketTeams.slice(6, 12);
+
+  if (lower.length < 6) {
+    return {
+      week15: {
+        bye1: null,
+        bye2: null,
+        wc1Loser: null,
+        wc2Loser: null,
+        wc1Winner: null,
+        wc2Winner: null,
+      },
+      week16: {
+        sf1Loser: null,
+        sf2Loser: null,
+      },
+      teams: lower,
+    };
+  }
+
   const week15 = {
     bye1: getAdvancingTeamFromBye(league, bracketTeams, lower[5].id, 15),
     bye2: getAdvancingTeamFromBye(league, bracketTeams, lower[4].id, 15),
@@ -75,6 +114,22 @@ const buildLowerBracket = (bracketTeams: BracketTeam[], league: LeagueData | und
 export const FallbackBracket = memo<FallbackBracketProps>(({ bracketTeams, league }) => {
   const upper = buildUpperBracket(bracketTeams, league);
   const lower = buildLowerBracket(bracketTeams, league);
+
+  if (upper.teams.length < 6 || lower.teams.length < 6) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <span>Bracket Preview</span>
+            <Badge variant="outline" className="text-xs">Insufficient Data</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">Not enough teams to render the full playoff bracket.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <>

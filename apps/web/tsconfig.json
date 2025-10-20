@@ -33,6 +33,7 @@
     "**/*.test.tsx",
     "**/*.spec.ts",
     "**/*.spec.tsx",
+    "src/__tests__/**",
     "src/lib/reports/recap/test-function-calling.ts",
     "src/lib/reports/recap/utils/legacy-transformer.ts",
     "src/lib/reports/recap/tools/langchain-adapter.ts"

@@ -66,6 +66,25 @@ Schema: `prisma/schema-historical.prisma`
 └─────────────────────────────────────────────────────┘
 ```
 
+## Design Decisions
+- **Package, not service** – Distributed as a workspace package so web/API layers can import shared DB utilities without duplicating Prisma clients.
+- **Resilient fetches** – Sleeper/Gauntlet API calls use `fetchWithRetry` with exponential backoff to tolerate transient failures.
+- **Atomic persistence** – `saveSnapshotIfChanged` compares snapshots before writes to avoid noisy history when scores do not change.
+- **Metrics hooks** – Jobs optionally emit metrics objects so they can be wired into observability stacks without changing core logic.
+- **Environment isolation** – PostgreSQL credentials are required only when running snapshot jobs; the web app consumes historical data through package exports.
+
+## Commands
+
+```bash
+pnpm --filter @gauntlet/server build          # Compile TypeScript to dist/
+pnpm --filter @gauntlet/server test           # Vitest unit coverage
+pnpm --filter @gauntlet/server live-snapshot  # Capture matchups (requires DATABASE_URL)
+pnpm --filter @gauntlet/server audit:db       # Inspect historical DB usage
+pnpm --filter @gauntlet/server prisma:generate
+```
+
+Document job-specific quirks inside `src/scripts/jobs/<name>.ts` so consumers understand scheduling assumptions and data contracts.
+
 ## Development
 
 ### Scripts

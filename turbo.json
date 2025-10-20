@@ -10,17 +10,17 @@
       "persistent": true
     },
     "lint": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^lint"]
     },
     "lint:fix": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^lint:fix"],
       "cache": false
     },
     "type-check": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^type-check"]
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^test"],
       "outputs": ["coverage/**"]
     },
     "clean": {

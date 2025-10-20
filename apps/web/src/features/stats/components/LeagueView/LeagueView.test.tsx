@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { LeagueView } from './LeagueView';
 import type { LeagueViewProps, TeamData } from '@/features/stats/types';
@@ -51,6 +51,18 @@ describe('LeagueView', () => {
     ['DEF', { teams: [] }],
   ]);
 
+  const createProps = (overrides: Partial<LeagueViewProps> = {}): LeagueViewProps => ({
+    selectedWeek: 'season',
+    setSelectedWeek: vi.fn(),
+    availableWeeks: [1, 2, 3, 4],
+    allTeamEntries: [],
+    positionsMap: mockPositionsMap,
+    dataset: createMockDataset(),
+    fromWeek: 1,
+    toWeek: 3,
+    ...overrides,
+  });
+
   describe('Rendering', () => {
     it('renders league rankings table', () => {
       const entries = [
@@ -58,13 +70,7 @@ describe('LeagueView', () => {
         createMockTeamEntry('team-2', 'Team Beta', 340),
       ];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
@@ -77,13 +83,7 @@ describe('LeagueView', () => {
         createMockTeamEntry('team-2', 'Team Beta', 340),
       ];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
@@ -96,13 +96,7 @@ describe('LeagueView', () => {
     it('displays position ranking sections', () => {
       const entries = [createMockTeamEntry('team-1', 'Team Alpha', 360)];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
@@ -117,17 +111,11 @@ describe('LeagueView', () => {
     it('displays positional advantages card', () => {
       const entries = [createMockTeamEntry('team-1', 'Team Alpha', 360)];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
-      expect(screen.getByText(/Positional Advantages/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Positional Advantages/i)).not.toHaveLength(0);
     });
   });
 
@@ -138,13 +126,7 @@ describe('LeagueView', () => {
         createMockTeamEntry('team-2', 'Team Beta', 340),
       ];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
@@ -162,13 +144,7 @@ describe('LeagueView', () => {
         createMockTeamEntry('team-3', 'Team Gamma', 340),
       ];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       const { container } = render(<LeagueView {...props} />);
 
@@ -180,13 +156,7 @@ describe('LeagueView', () => {
 
   describe('Edge Cases', () => {
     it('handles empty team list', () => {
-      const props: LeagueViewProps = {
-        allTeamEntries: [],
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps();
 
       render(<LeagueView {...props} />);
 
@@ -196,13 +166,7 @@ describe('LeagueView', () => {
     it('handles single team', () => {
       const entries = [createMockTeamEntry('team-1', 'Solo Team', 360)];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
@@ -213,13 +177,7 @@ describe('LeagueView', () => {
     it('handles zero scores', () => {
       const entries = [createMockTeamEntry('team-1', 'Zero Team', 0)];
 
-      const props: LeagueViewProps = {
-        allTeamEntries: entries,
-        positionsMap: mockPositionsMap,
-        dataset: createMockDataset(),
-        fromWeek: 1,
-        toWeek: 3,
-      };
+      const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 

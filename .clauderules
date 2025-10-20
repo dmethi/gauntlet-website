@@ -1,0 +1,79 @@
+# Gauntlet Fantasy Football - Development Rules
+
+> **Before starting any task**: Read `docs/ARCHITECTURE.md` for repo-level context, then consult module READMEs (`apps/*/README.md`, `packages/*/README.md`) and relevant constraint docs (`docs/constraints/*.md`) to understand why the code is built the way it is.
+
+You are an expert in TypeScript, React, Next.js, and fantasy football domain modeling for a unique multi-league system.
+
+## Problem-Solving Approach
+
+When working on any task:
+1. **Understand context first** - Read feature READMEs and inline comments in files you're changing
+2. **Look for documented rationale** - If code seems unusual, check for inline comments explaining why
+3. **Ask when context is missing** - If you can't find reasoning for a decision that seems important, ask the user
+4. **Surface conflicts** - If your approach conflicts with documented rationale, explain the tension and propose which constraint should change
+5. **Document your decisions** - When making bespoke choices, add inline rationale so future developers (human or AI) understand why
+
+## Core Constraints
+
+Detailed constraints live in dedicated docs. Key highlights:
+
+**Multi-League System** (`docs/constraints/multi-league.md`):
+- TWO separate Sleeper leagues (AFC + NFC) with 24 total teams
+- IDs are NOT unique across leagues
+- ALWAYS process leagues separately, then combine results
+- Use composite keys: `${leagueId}-${rosterId}`
+
+**Type System**:
+- Import ALL domain types from `@gauntlet/types`
+- NEVER redefine types locally
+- Local types ONLY for: component props, UI state, route-specific transforms
+
+**Simulation Engine** (`docs/constraints/simulations.md`):
+- Must complete within 200ms for UI responsiveness
+- Output must match `SimulationResult` contract
+- Document iteration count changes with performance rationale
+
+**API Integration** (`docs/constraints/integrations.md`):
+- Use unified Sleeper client (never direct fetch)
+- Follow caching strategy by data type
+- Validate external data at boundaries
+
+**Code Patterns**:
+- Arrow functions ONLY (no classes)
+- Factory pattern for stateful objects
+- Feature-based organization (`features/<domain>`)
+- Inline rationale for bespoke business logic
+
+## When to Document
+
+Add inline rationale comments when:
+- Making bespoke business or domain-specific choice (not standard patterns)
+- Choosing between multiple valid approaches for a reason
+- Implementing workaround for external constraint
+- Optimizing for specific performance target
+
+Skip documentation for:
+- Standard React/TypeScript patterns
+- Obvious variable names or logic
+- Temporary debug code (delete instead)
+
+## Quality Gates
+
+**Must pass before completing any task**:
+- `pnpm build` - Zero errors
+- `pnpm type-check` - Zero type errors
+- `pnpm test` - All tests passing
+
+**Present tech debt findings** (user decides what to fix):
+- Files >700 lines
+- Missing tests for complex logic
+- Console.log statements (suggest DEBUG pattern)
+
+## Learning Resources
+
+- `docs/ARCHITECTURE.md` - Repo-level decisions
+- `docs/constraints/*.md` - Cross-feature contracts
+- Module READMEs - Feature-specific context
+- `.cursorrules` - Detailed coding standards
+
+When in doubt, read the docs first, then ask questions.
