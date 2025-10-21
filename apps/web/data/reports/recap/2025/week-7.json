@@ -2,7 +2,7 @@
   "metadata": {
     "week": 7,
     "season": 2025,
-    "generatedAt": "2025-10-21T22:41:14.544Z",
+    "generatedAt": "2025-10-21T22:58:47.569Z",
     "generationTime": 0,
     "tokensUsed": 0,
     "version": "1.0.0",
@@ -10,7 +10,7 @@
   },
   "sections": {
     "leagueOverview": {
-      "narrative": "Week 7 was a mixed bag, delivering a total of 2840.81 points across the Gauntlet leagues, averaging 118.37 per team. While the scoring ceiling was high, the floor was basement-level, leading to a somewhat lopsided week. There were only 2 close games to keep us on the edge of our seats, but a whopping 6 matchups ended in decisive blowouts, leaving several managers questioning their roster decisions. \n\nThe most heart-stopping battle saw achak7 narrowly edge out benweinfeld 120.66 to 118.15, a difference of just 2.51 points. Meanwhile, nkjchamp administered a 76.35-point beatdown to lazy9669, demolishing them 146.94 to 70.59 in the week's biggest massacre. In a high-octane affair, hunterzogg outgunned scboom5 155.88 to 143.44.",
+      "narrative": "Week 7 was a week of extremes, with some teams soaring to new heights while others crashed and burned. Across the leagues, a total of 2840.81 points were scored, averaging 118.37 per team. While the average might seem respectable, 6 matchups were decided by massive blowouts, contrasting sharply with only 2 nail-biters that kept fans on the edge of their seats. \n\nThe closest contest saw achak7 edge out benweinfeld in a Gauntlet AFC thriller, 120.66 to 118.15 – a mere 2.51 points separating victory from defeat. Meanwhile, nkjchamp delivered a 76.35-point shellacking to lazy9669, demolishing them 146.94 to 70.59. hunterzogg and scboom5 also put on a show with hunterzogg winning 155.88 to 143.44.",
       "stats": {
         "totalGames": 12,
         "totalPoints": 2840.81,
@@ -20,12 +20,12 @@
         "blowouts": 6,
         "closeGames": 2
       },
-      "generatedAt": "2025-10-21T22:42:40.125Z"
+      "generatedAt": "2025-10-21T23:00:08.932Z"
     },
     "matchupNarratives": [
       {
         "matchupId": "1263744209295245312-7-1",
-        "narrative": "Arpit & Yash's Team, riding a three-game win streak, aimed to dethrone Joel's 'To Infinity and Bijan' squad. But Joel, sitting pretty at 5-1 and ranked #1, wasn't about to relinquish the throne easily. This one was a seesaw battle that came down to the wire. \n\nEarly on, Arpit & Yash built a solid lead, buoyed by D'Andre Swift's 22.8 points and Josh Jacobs contributing 19.3. However, Joel's squad slowly chipped away, with Patrick Mahomes leading the charge, racking up 27.24 points. Bijan Robinson also contributed a solid 18.7 points. The lead changed hands multiple times, with both teams trading blows like heavyweight fighters. A dramatic momentum shift late Sunday saw Arpit & Yash clawing back, but Javonte Williams's 19.8 points ultimately proved too much to overcome.\n\nFinal score: 118.84 to 103.82, Joel emerges victorious, proving once again why he's the team to beat. Arpit & Yash fought valiantly, but their kicker's goose egg ultimately sealed their fate. Maybe next time, Arpit & Yash will remember to set their lineup, because zero points from the kicker in a close game is simply unforgivable.",
+        "narrative": "A clash of titans early in the season saw Joel's To Infinity and Bijan (5-1) take on Arpit & Yash (3-3) in a battle with serious playoff implications. Both squads were riding 3-game win streaks, so something had to give. The projections favored Joel, but Arpit & Yash were looking to prove they belonged in the top tier. What unfolded was a nail-biter that came down to the wire.\n\nThe lead changed hands multiple times throughout the weekend, with momentum swings that would make even the most seasoned fantasy manager sweat. Arpit & Yash briefly pulled ahead thanks to a solid performance from D'Andre Swift (22.8), but Patrick Mahomes (27.24) wasn't about to let Joel go down without a fight. Josh Jacobs (19.3) tried to give Arpit & Yash a late push, but ultimately Bijan Robinson (18.7) and Javonte Williams (19.8) were enough to hold on. The Bears defense (18.7) did their best to keep Arpit & Yash in it, but Joel slammed the door shut, securing a hard-fought victory.\n\nFinal score: 118.84 to 103.82. Joel's consistent performers edged out Arpit & Yash, despite a valiant effort. The win cements Joel's status as a top contender, while Arpit & Yash will need to regroup and avoid a mid-season slump. This loss could sting as playoff spots become scarce.",
         "boxScore": {
           "team1": {
             "teamName": "Arpit & Yash's Team",
@@ -163,7 +163,7 @@
         "gameFlow": {
           "leadChanges": 3,
           "biggestLead": 28,
-          "excitementScore": 75
+          "excitementScore": 50
         },
         "timeSeries": [
           {
@@ -1077,11 +1077,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.062Z"
+        "generatedAt": "2025-10-21T23:00:08.520Z"
       },
       {
         "matchupId": "1263744209295245312-7-2",
-        "narrative": "Neil's lol jerry jones absolutely obliterated Adam's Nacua Matata in a Week 7 beatdown that has Adam questioning all his life choices. Both squads came in at 3-3, but only one left looking like they belonged in the Gauntlet. This one was over before the late games even kicked off. \n\nJonathan Taylor erupted for a massive 35.2 points, spearheading Neil's offensive onslaught, with Quinshon Judkins adding 27.4 of his own. A.J. Brown chipped in a cool 26.1, ensuring Adam's Nacua Matata was buried under a mountain of points. Meanwhile, Adam was left watching Jayden Daniels scrape together a measly 19.24, and Tyler Warren added a whopping 14.9. Even worse, Tony Pollard faceplanted with a pathetic 9.1 points. The projections failed Adam miserably, forecasting nearly 50 points more than he actually managed to scrounge together. \n\nFinal score: 146.94 to 70.59. Ouch. Neil's team played like they were shot out of a cannon, while Adam's squad seemed to be actively sabotaging him. With this kind of performance, Adam might be punting on the season before Halloween.",
+        "narrative": "Neil's 'lol jerry jones' (3-3) absolutely curb-stomped Adam's 'Nacua Matata' (also 3-3) in a matchup that was supposed to be a tight battle between two middle-of-the-pack teams vying for playoff positioning. The projections suggested a close game, but Adam apparently forgot to tell his team that. This one was over before the late games even kicked off. \n\nJonathan Taylor (35.2) and Quinshon Judkins (27.4) formed a two-headed monster that Adam simply had no answer for. A.J. Brown chipped in a cool 26.1 points, just for kicks. Meanwhile, Adam's offense was busy auditioning for a role in a community theater production of 'Offensive Ineptitude.' Jayden Daniels' 19.24 points led the way for Adam, but Tyler Warren's 14.9 points and Tony Pollard's measly 9.1 points just weren't going to cut it against Neil's onslaught. The game flow chart looks like a cliff, with Neil's win probability spiking early and never looking back. \n\nFinal score: 146.94 to 70.59. Ouch. Neil proved that his team is ready to roll, while Adam's squad needs a serious intervention. At least he can take solace in the fact that his team name is marginally better than “lol jerry jones.” Maybe next week Adam's team will actually show up to play.",
         "boxScore": {
           "team1": {
             "teamName": "lol jerry jones",
@@ -1219,7 +1219,7 @@
         "gameFlow": {
           "leadChanges": 1,
           "biggestLead": 95,
-          "excitementScore": 75
+          "excitementScore": 25
         },
         "timeSeries": [
           {
@@ -1951,11 +1951,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:39.667Z"
+        "generatedAt": "2025-10-21T23:00:08.927Z"
       },
       {
         "matchupId": "1263744209295245312-7-3",
-        "narrative": "Akhil C, sitting pretty at #2, barely scraped by Ben in a nail-biter that had playoff implications swirling. This wasn't the high-octane shootout expected from two of the league's top teams, but it sure was tense. Ben jumped out to an early lead with Justin Herbert erupting for 29.9 points, but Akhil C clawed back, spearheaded by DeVonta Smith's 28.8 point performance. \n\nThe turning point? Probably the Carolina Panthers defense inexplicably racking up 16.45 points for Ben, a total that masked a lot of offensive mediocrity elsewhere. Still, Akhil C found himself trailing entering the late games Sunday. Dak Prescott’s solid 22.76 points kept Akhil C afloat, while Chris Olave chipped in a valuable 24.3. Ben's RBs, on the other hand, laid an egg, dooming him to a frustrating defeat. \n\nAkhil C squeaked out the victory, 120.66 to 118.15, despite a relatively quiet week. Ben will be kicking himself after this one. A few more points from literally anyone not named Justin Herbert or Ja'Marr Chase (30.1), and this is a different story. Akhil C escapes with a win, proving that even the best can win ugly sometimes.",
+        "narrative": "Akhil C, sitting pretty at #2, faced a stiff test against Ben's Team, who were riding a 3-game win streak. Projections favored Akhil C slightly, but Ben's squad looked ready to keep the momentum rolling. Instead, they got clipped by just 2.51 points in a nail-biter. \n\nBen started strong with Ja'Marr Chase exploding for 30.1 points and Justin Herbert adding 29.9, but it wasn't enough. Akhil C's WR duo of DeVonta Smith (28.8) and Chris Olave (24.3) proved too much to handle, steadily chipping away at Ben's lead. Dak Prescott's 22.76 at QB wasn't flashy, but it was enough to keep Akhil C in striking distance. The lead changed hands only once, but the tension was palpable as both teams traded blows all weekend long. Even a solid 16.45 from the Carolina Panthers defense couldn't save Ben from the late collapse. \n\nFinal score: 120.66 - 118.15. Akhil C escaped with the W, proving his team's strength in the WR department. Ben's Team falls despite strong performances from key players, a tough loss that will sting. Back to the drawing board to figure out what went wrong.",
         "boxScore": {
           "team1": {
             "teamName": "Ben's Team",
@@ -2825,11 +2825,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.081Z"
+        "generatedAt": "2025-10-21T23:00:08.932Z"
       },
       {
         "matchupId": "1263744209295245312-7-4",
-        "narrative": "Desperation Bowl! Nolan's 2 Dolla Balla$ and Darshan/Kyle's Dr Patel Parikh MD MBA, both limping in at 2-4, needed a win like a fish needs water. The projections favored Darshan and Kyle slightly, but nobody expected Nolan's squad to faceplant this hard. \n\nIt started promisingly enough with Davante Adams (24) putting up a respectable showing, and Amon-Ra St. Brown (17.6) chipping in. But the rest of Nolan's roster decided to take the week off, culminating in a DEF score of 0.2. Ouch. Meanwhile, Matthew Stafford (27.38) actually exceeded expectations for Dr Patel Parikh MD MBA, and Jordan Addison (17.3) added a solid contribution. The turning point? Probably Nolan's kicker putting up a big, fat zero. That's a punt on your fantasy season right there. \n\nFinal score: 108.53 to 83.22. Darshan and Kyle pulled away thanks to consistent performances across the board, while Nolan's team sputtered and died. With the win, Dr. Patel Parikh MD MBA claw their way out of the league's basement, while Nolan might want to consider renaming his team 'No Dolla Balla$.'",
+        "narrative": "Nolan's 2 Dolla Balla$ and Darshan and Kyle's Dr Patel Parikh MD MBA, both limping in at 2-4, engaged in a Week 7 showdown for…well, bragging rights, I guess. This wasn't exactly a clash of the titans, more like a pillow fight between underachievers. Projections favored Dr Patel Parikh MD MBA slightly, but would either team actually deliver?.\n\nEarly on, it looked like Nolan might pull off the upset, but Matthew Stafford (27.38) had other plans, steadily racking up points and shifting the momentum. Davante Adams (24) did his best to keep Nolan in the game, but the rest of the 2 Dolla Balla$ offense sputtered. Amon-Ra St. Brown's 17.6 wasn't enough to counter the balanced attack of Dr Patel Parikh MD MBA, which saw Jordan Addison (17.3) and Courtland Sutton (13.7) contribute effectively. By the time the dust settled, Nolan's squad was left wondering what went wrong, again.\n\nFinal score: 108.53 to 83.22. Dr Patel Parikh MD MBA finally snapped their losing streak, while Nolan continues to search for answers. Maybe it's time for 2 Dolla Balla$ to start investing a little more in their roster, because right now, they're playing like they're worth even less.",
         "boxScore": {
           "team1": {
             "teamName": "2 Dolla Balla$",
@@ -2967,7 +2967,7 @@
         "gameFlow": {
           "leadChanges": 0,
           "biggestLead": 52,
-          "excitementScore": 25
+          "excitementScore": 50
         },
         "timeSeries": [
           {
@@ -3734,11 +3734,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.125Z"
+        "generatedAt": "2025-10-21T23:00:08.922Z"
       },
       {
         "matchupId": "1263744209295245312-7-5",
-        "narrative": "Hunter's The Golden Age, reeling from a three-game skid, desperately needed a win against Shivang's Team to stay in the playoff hunt. The projections favored Shivang, but Hunter’s squad had other plans, unleashing a scoring eruption that Shivang couldn’t match.\n\nThe game started predictably enough, with both teams trading blows. But a massive 27-point run by The Golden Age flipped the script, fueled by Jahmyr Gibbs (36.8) going absolutely bonkers. Shivang's Jalen Hurts (24.54) did his best to keep pace, but the Browns defense (28.2) slammed the door shut, stifling Shivang's comeback attempts. Drake Maye (24.58) also chipped in nicely for Hunter, exceeding expectations. Zach Charbonnet (19.5) had a decent showing, but it wasn’t enough to overcome the deficit. Shivang will be kicking himself for not finding a way to capitalize.\n\nFinal score: 155.88 to 143.44. Hunter's The Golden Age snapped their losing streak in a huge way, while Shivang’s Team needs to regroup after getting outgunned. This win could be the momentum Hunter needed to climb back into contention.",
+        "narrative": "Hunter, reeling from a three-game skid, needed a statement win against Shivang to right the Golden Age ship. Shivang, sitting pretty at 4-2, looked to solidify his playoff positioning. What unfolded was less a battle of titans and more a beatdown, fueled by vintage performances and questionable Shivang decisions. \n\nEarly jitters turned into a laugher by Sunday afternoon. Jahmyr Gibbs erupted for 36.8 points, spearheading Hunter's offensive onslaught. The Cleveland Browns' defense chipped in a surprising 28.2, while Drake Maye added a solid 24.58 from the QB spot. Shivang, meanwhile, watched helplessly as Jalen Hurts managed only 24.54 and Zach Charbonnet put up 19.5. The crucial moment came mid-Sunday: a 27-point surge by Hunter that Shivang simply couldn't answer. Leaving points on the bench proved costly, as the Golden Age slammed the door.\n\nFinal score: 155.88 to 143.44. Hunter finally snapped his losing streak in emphatic fashion, proving that the Golden Age isn't ready to fade just yet. Shivang, on the other hand, got a harsh reality check. Time to re-evaluate those flex decisions or risk watching the playoffs from the couch.",
         "boxScore": {
           "team1": {
             "teamName": "The Golden Age",
@@ -4545,11 +4545,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.118Z"
+        "generatedAt": "2025-10-21T23:00:08.923Z"
       },
       {
         "matchupId": "1263744209295245312-7-6",
-        "narrative": "Down in the dumps at 1-5, Vinny desperately needed a win. Anant and the Quonspiracy Theorists, middling at 3-3, looked like the perfect punching bag... until Vinny's squad decided to actually show up. What followed was less a strategic victory and more a straight-up beatdown. \n\nVinny's Bo Nix exploded for 39.96 points, leading the charge. Christian McCaffrey followed close behind with 39.1, making Anant question his life choices. Tee Higgins chipped in 18.6 points, proving that Vinny's Team might finally be waking up. Anant, meanwhile, could only watch as Daniel Jones put up a respectable 22.22, but the rest of the team failed to keep pace. Jaylen Warren tried his best with 20.8, and the New England Patriots defense contributed 18.95, but it wasn't nearly enough to counteract Vinny's offensive explosion. The lead changed hands a couple of times early, but Vinny slammed the door shut in the second half, leaving Anant in the dust.\n\nFinal score: 150.61 to 109.77. Vinny didn't just win; he humiliated Anant. Looks like someone remembered they're supposed to be competing in The Gauntlet. This victory gives Vinny a glimmer of hope, while Anant will be spending the week wondering where it all went wrong.",
+        "narrative": "Did someone finally figure out Vinny's password and set a lineup? Because the guy who was averaging 91 points a game suddenly looks like a fantasy god. Anant's Quonspiracy Theorists, fresh off a winning streak, walked into a buzzsaw they didn't see coming.\n\nThe seesaw battle early was a mirage. After Daniel Jones (22.22) and Jaylen Warren (20.8) gave Anant a brief lead, Bo Nix (39.96) decided to channel his inner Mahomes. Then, Christian McCaffrey (39.1) piled on, and suddenly Vinny was up big. Anant's squad tried to mount a comeback, but the deficit was too much, and Tee Higgins' (18.6) contribution only rubbed salt in the wound. Looks like the Quonspiracy Theorists need a new theory, one that explains how they just got boat-raced by the league's punching bag.\n\nFinal score: 150.61 to 109.77. Vinny finally remembered how to set a lineup, while Anant's team faceplanted hard. Maybe it's time for Anant to start questioning his own life choices. This win might be the start of a wild comeback for Vinny, or just a blip before returning to the basement. Only time will tell.",
         "boxScore": {
           "team1": {
             "teamName": "Quonspiracy Theorists",
@@ -5503,11 +5503,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.104Z"
+        "generatedAt": "2025-10-21T23:00:08.928Z"
       },
       {
         "matchupId": "1263740549504962561-7-1",
-        "narrative": "Akhil's \"DJ Herbussy\" (4-2) came into this tilt as a heavy favorite against Alex's \"Jaxson Dart-Njigba\" (1-5), and the projections weren't lying. This one was a straight-up beatdown. Akhil's squad exploded for almost 33 points above projection, while Alex's team faceplanted, falling short of their mark by over 10. So much for setting the pace for playoff positioning for Alex. \n\nJonathan Taylor (35.2) led the charge for Akhil, proving he's still got the juice. Drake Maye (24.58) and D'Andre Swift (22.8) added insult to injury, ensuring Alex had zero chance of mounting any kind of comeback. Alex's top scorer, Rashee Rice (19.7), tried to keep things respectable. Cam Skattebo (18.4) and the Carolina Panthers (16.45) defense chipped in, but it was like bringing a knife to a gun fight. A 25-point run by Akhil mid-game sealed Alex's fate well before the final whistle.\n\nFinal score: 147.08 to 95.59. Akhil's team fired on all cylinders, while Alex's squad laid an egg. This loss plants Alex firmly at the bottom of the standings. Maybe next week Alex can actually put up a fight, but I wouldn't bet on it.",
+        "narrative": "Akhil's DJ Herbussy, fresh off a wobbly 1-2 stretch, decided to remind the league why they were once feared, absolutely dismantling Alex and Jaxson Dart-Njigba in a 147.08 to 95.59 beatdown. Alex, mired in a 0-3 slump, walked into this one hoping for a lifeline. What they got was a full-body cast. \n\nJonathan Taylor (35.2) led the charge for Akhil, proving that reports of his demise were greatly exaggerated. Drake Maye (24.58) also chipped in a solid performance at QB, ensuring Alex's defense, led by the Carolina Panthers (16.45), was left picking up the pieces. The game was never close after Akhil went on a 25-point run early. Rashee Rice (19.7) tried to keep Alex afloat, but it was like using a thimble to bail out the Titanic. The rest of Alex's roster simply faceplanted.\n\nIn the end, Akhil's team exceeded projections by a whopping 32 points, while Alex's team fell short by 10.5 points. Final score: 147.08 to 95.59. This was a statement win for Akhil, while Alex is left wondering if they accidentally drafted a team of mascots instead of football players. Back to the drawing board, Alex.",
         "boxScore": {
           "team1": {
             "teamName": "DJ Herbussy ",
@@ -5645,7 +5645,7 @@
         "gameFlow": {
           "leadChanges": 0,
           "biggestLead": 63,
-          "excitementScore": 25
+          "excitementScore": 50
         },
         "timeSeries": [
           {
@@ -6251,11 +6251,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.124Z"
+        "generatedAt": "2025-10-21T23:00:08.881Z"
       },
       {
         "matchupId": "1263740549504962561-7-2",
-        "narrative": "Aman's 'Saint Brown Does Mahomes' (4-2) looked poised to continue their winning streak against Vinay (2-4), but someone forgot to tell Vinay's team they were supposed to lose. This one was a seesaw battle, filled with enough lead changes to make your head spin. The projections favored Aman by a hair, but Vinay had other plans.\n\nThursday night football saw a slow start, but by Sunday afternoon, the real fireworks began. Patrick Mahomes did his part for Aman with 27.24 points, and Amon-Ra St. Brown chipped in with 17.6. But Jalen Hurts (24.54) and Chris Olave (24.3) were busy cooking up a storm for Vinay, keeping the score tight. The turning point came late Sunday, with a dramatic momentum shift that swung the win probability heavily in Vinay's favor. Despite a valiant effort by Rhamondre Stevenson (17.8), Aman couldn't close the gap. It was a nail-biter down to the wire.\n\nFinal score: 116.24 to 106.69. Vinay snags the W, proving that projections are just that – projections. Aman's squad, despite a strong performance from Mahomes, couldn't overcome Vinay's balanced attack. This win injects some much-needed life into Vinay's season, while Aman is left wondering what could have been. Momentum can be a fickle beast in the Gauntlet.",
+        "narrative": "Aman, riding a three-game win streak, looked poised to steamroll Vinay, but the fantasy gods had other plans. This Week 7 tilt was a rollercoaster, swapping leads like a used car lot. Early on, Aman's Patrick Mahomes (27.24) looked like he’d continue his reign of terror, but Vinay's squad refused to fold. \n\nMid-game, Aman pulled ahead, but the seesaw battle continued as Vinay's Chris Olave (24.3) and Jalen Hurts (24.54) started cooking. A late surge fueled by Tee Higgins (18.6) proved to be the difference maker, as Vinay wrestled back control and slammed the door shut. Aman's Rhamondre Stevenson (17.8) and Amon-Ra St. Brown (17.6) tried their best to mount a comeback, but the hole was too deep. The projections favored a tighter contest, but the actual game delivered more drama than expected.\n\nFinal score: 116.24 to 106.69. Vinay snatches a crucial win to stay in the hunt, while Aman's momentum takes a hit. It's back to the drawing board for Aman, who needs to figure out how to translate those projections into actual points. Vinay, meanwhile, can savor the sweet taste of victory – at least until next week when the gauntlet continues.",
         "boxScore": {
           "team1": {
             "teamName": "Vinay's Team",
@@ -6393,7 +6393,7 @@
         "gameFlow": {
           "leadChanges": 2,
           "biggestLead": 33,
-          "excitementScore": 75
+          "excitementScore": 50
         },
         "timeSeries": [
           {
@@ -7111,11 +7111,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.062Z"
+        "generatedAt": "2025-10-21T23:00:08.923Z"
       },
       {
         "matchupId": "1263740549504962561-7-3",
-        "narrative": "Dhruv's Mach 10, teetering at 3-3, ran into a buzzsaw named Josh this week. Both squads entered as top-6 teams, but only one looked like they deserved the ranking. Josh came out swinging, building a lead that quickly ballooned into an insurmountable chasm. Dhruv's squad was projected to score nearly 130, but the actual output was a depressing 121.89. Ouch. \n\nBo Nix (39.96) led the charge for Josh, turning in a QB1 performance that Dhruv could only dream of. Quinshon Judkins (27.4) and Davante Adams (24) added insult to injury, consistently padding the lead. Dhruv saw a valiant effort from Jahmyr Gibbs (36.8), but the rest of the roster offered little resistance. The Patriots defense chipped in 18.95, but not enough to save face. A 24-point run midway through pretty much sealed Dhruv's fate.\n\nFinal score: 173.51 to 121.89. Josh's team woke up and remembered they're supposed to be good, while Dhruv's squad faceplanted harder than a toddler on a trampoline. Josh now sits pretty in the top 4, while Dhruv is going to need to make some moves to climb back into contention. Better luck next week, buddy.",
+        "narrative": "Dhruv's Mach 10, teetering after a rough patch, ran into a buzzsaw named Josh and his C&G^2 squad. This wasn't just a loss; it was a statement. Pre-game projections suggested a tight contest, but Josh's crew apparently scoffed at those numbers, opting instead for a full-blown offensive explosion. Dhruv, meanwhile, watched his team fall flat, averaging well below their season norm. Ouch. \n\nJosh's Bo Nix (39.96) came out firing, setting the tone early. While Jahmyr Gibbs (36.8) tried to keep Dhruv in the game, a 24-point run by C&G^2 buried Mach 10 before the second half even began. Dhruv attempted a comeback, but Davante Adams (24) slammed the door shut. The New England Patriots (18.95) were a bright spot for Dhruv, but they couldn't carry the entire team. Meanwhile, Quinshon Judkins (27.4) helped cement Josh's victory. Leaving Dhruv questioning his roster construction. \n\nFinal score: 173.51 to 121.89. Josh's C&G^2 laughed in the face of projections and delivered a 50+ point beatdown. Dhruv's Mach 10, on the other hand, needs to find some consistency if they want to contend for anything beyond a participation trophy. This loss stings, but the season is long. Can Dhruv bounce back, or will this be the start of a downward spiral?",
         "boxScore": {
           "team1": {
             "teamName": "Mach 10",
@@ -7880,11 +7880,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.104Z"
+        "generatedAt": "2025-10-21T23:00:08.932Z"
       },
       {
         "matchupId": "1263740549504962561-7-4",
-        "narrative": "Jeffrey, reigning supreme at 6-0, clashed with Luke (3-3) in a battle that promised playoff implications. The projections favored Luke slightly, but Jeffrey's Marginal Returns laughed in the face of analytics, ultimately pulling away with a decisive, if not dominant, victory. \n\nThe early game saw both teams trading blows, but Jeffrey's RB duo of Jaylen Warren (20.8) and Josh Jacobs (19.3) slowly began to tilt the field. A.J. Brown (26.1) added fuel to the fire, creating a lead that Luke’s squad struggled to extinguish. Christian McCaffrey (39.1) tried his best to carry Luke to victory, but his efforts were ultimately thwarted by an anemic performance from his QB and Kicker position, who combined to score only 10.1 points. Oronde Gadsden (25.9) and CeeDee Lamb (19.5) tried to help CMC keep pace, but it proved insufficient against Jeffrey's well-rounded attack.\n\nFinal score: 132.41 to 116.12. Jeffrey continues his reign of terror atop the league, proving that sometimes, all you need is a solid RB room to crush the competition. Luke will need more consistency from his supporting cast if he wants to make a serious playoff push. At least CMC is trying. Maybe next week, Luke!",
+        "narrative": "Jeffrey's Marginal Returns came into this matchup as the league's undefeated bully, looking to add Luke to their list of victims. The projections suggested a comfortable win, but Luke's squad wasn't ready to roll over. Christian McCaffrey (39.1) came to PLAY, putting Luke ahead early and applying some serious pressure to the top dog. \n\nJeffrey, however, had other plans. A.J. Brown's 26.1 points helped stabilize the ship, but the real MVP was the RB duo of Jaylen Warren (20.8) and Josh Jacobs (19.3), who relentlessly pounded Luke's defensive line. The momentum swung wildly throughout Sunday, with Luke mounting a comeback, but ultimately, Jeffrey's depth proved too much to overcome. Luke can only watch as Jeffrey continues his reign of terror.\n\nFinal score: 132.41 to 116.12. Luke got a Herculean effort from McCaffrey and a pleasant surprise from Oronde Gadsden (25.9), but inconsistent QB play and a general lack of firepower doomed his chances. Jeffrey, meanwhile, continues to look like a juggernaut, making a mockery of the projections. Is there anyone in this league who can stop this guy?",
         "boxScore": {
           "team1": {
             "teamName": "Marginal Returns",
@@ -8845,11 +8845,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.068Z"
+        "generatedAt": "2025-10-21T23:00:08.920Z"
       },
       {
         "matchupId": "1263740549504962561-7-5",
-        "narrative": "Was this the week Arnav finally stopped chasing Saquon and started chasing wins? Facing Rithik and Varun's 'The zoo', Arnav's 'Dont go Chasing Saquon' squad needed a W badly at 1-5. Rithik and Varun, clinging to a slightly less embarrassing 2-4, were hoping to claw their way towards respectability. This matchup, projected to be a nail-biter, turned into anything but. \n\nThursday and Saturday were relatively quiet, but by Sunday afternoon Ja'Marr Chase (30.1) decided enough was enough. He erupted, while Dak Prescott (22.76) and Bijan Robinson (18.7) did their part to bury The zoo. Jaxson Dart (28.92) tried to keep Rithik and Varun in the game, but with Jordan Mason mustering a measly 13.7, and Ladd McConkey adding only 11.2, it was clear the zoo animals had escaped their cages and were lost in the wilderness. The zoo's DEF posting a negative score pretty much summed up their day. Meanwhile, Arnav's defense was doing all the work, posting a whopping 35.1.\n\nFinal score: 117.56 to 87.47. A dominant win for Arnav, who finally gets a taste of victory. Rithik and Varun, on the other hand, are left wondering if they should just release their entire team into the wild. Maybe they'll have better luck next week... or maybe not.",
+        "narrative": "Arnav's 'Dont go Chasing Saquon' (1-5) finally found something to chase: a W, dismantling Rithik and Varun's 'The zoo' (2-4) in a surprisingly lopsided affair. Coming in as underdogs, Arnav flipped the script, while The zoo's projected improvement proved to be nothing more than hot air. \n\nThe game started predictably slow, but Ja'Marr Chase (30.1) quickly turned up the heat, giving Arnav a lead they would never relinquish. Dak Prescott (22.76) chipped in nicely, and Bijan Robinson (18.7) did just enough to keep the momentum rolling. Meanwhile, The zoo's offense was…well, at the zoo. Jaxson Dart (28.92) tried his best to keep the zoo in business, but Jordan Mason (13.7) and Ladd McConkey (11.2) couldn't provide the necessary support, leaving Dart to fend for himself against Arnav's rampaging roster.\n\nFinal score: 117.56 to 87.47. Arnav's team finally remembered they're supposed to score points, while Rithik and Varun are left wondering if their team accidentally wandered into the reptile house. Looks like someone forgot to feed the animals.",
         "boxScore": {
           "team1": {
             "teamName": "Dont go Chasing Saquon",
@@ -8987,7 +8987,7 @@
         "gameFlow": {
           "leadChanges": 1,
           "biggestLead": 30,
-          "excitementScore": 25
+          "excitementScore": 50
         },
         "timeSeries": [
           {
@@ -9740,11 +9740,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.124Z"
+        "generatedAt": "2025-10-21T23:00:08.924Z"
       },
       {
         "matchupId": "1263740549504962561-7-6",
-        "narrative": "Christian, sitting pretty at 4-2, came into this matchup against Ziyan (3-3) looking to solidify a top spot in The Gauntlet. Ziyan, on the other hand, desperately needed a win to stay in the playoff hunt. What transpired was less a battle of titans and more a systematic dismantling. \n\nEarly on, Ziyan showed a flicker of hope, but Christian quickly slammed the door shut. DeVonta Smith exploded for 28.8 points, leading a charge that Ziyan simply couldn't answer. The Cleveland Browns defense chipped in a monstrous 28.2 points, while Trey McBride added a solid 24.4. On Ziyan's side, Keenan Allen did his best with 23.4 points, but Chase Brown's 13 points and the Seahawks' 15.8 were simply not enough to keep pace. The projections had Ziyan pegged for 118, but they faceplanted, scoring a measly 81.06.\n\nFinal score: 114.74 to 81.06. Christian's team proved they are a force to be reckoned with, while Ziyan is left questioning their life choices. Maybe it's time to trade for a kicker, because that goose egg is just embarrassing. Next week is a must-win if Ziyan wants to stay relevant.",
+        "narrative": "Christian, sitting pretty at 4-2, aimed to solidify his playoff positioning against Ziyan, who's been trending downward. The projections favored a tighter contest, but Christian's squad had other plans. A slow start quickly turned into a one-sided affair, with Christian seizing control early and never looking back. \n\nDeVonta Smith (28.8) and Trey McBride (24.4) formed an unstoppable duo, while the Cleveland Browns (28.2) defense slammed the door shut, leaving Ziyan's offense gasping for air. Ziyan needed a miracle from Keenan Allen, who did his part with 23.4 points, but the rest of the team faceplanted. Chase Brown's 13 points were a drop in the bucket, and the overall offensive output was pathetic. The 26-point run by Christian effectively sealed Ziyan's fate before Sunday even reached primetime.\n\nFinal score: 114.74 to 81.06. Christian's roster fired on all cylinders, while Ziyan’s team couldn't get out of its own way. This beatdown might just send Ziyan into a full-blown tailspin, while Christian continues his ascent towards league dominance. Maybe Ziyan should consider trading for a whole new team.",
         "boxScore": {
           "team1": {
             "teamName": "Ziyan's Team",
@@ -10628,11 +10628,11 @@
             "gameProgress": 0
           }
         ],
-        "generatedAt": "2025-10-21T22:42:40.118Z"
+        "generatedAt": "2025-10-21T23:00:08.928Z"
       }
     ],
     "hallOfFame": {
-      "narrative": "What a week for the record books! Josh absolutely obliterated the competition, smashing the record for Highest Team Points with a staggering 173.51! But hold your applause, Shivang, because you etched your name in history too, albeit with a Most Points in Loss record of 143.44 – talk about a bittersweet victory. Neil didn't just win; he orchestrated the Largest Victory Margin we've ever seen, a jaw-dropping 76.35! Vinny also snagged a record for QB Points and Single Player Score Record, both with 39.96 points. Hunter and Shivang battled in a game for the ages, resulting in the Highest Combined Score, while Anant and Vinny's QBs lit up the scoreboard for the Highest Combined QB Score.\n\nThis week's positional standouts were nothing short of spectacular. Bo Nix torched defenses for a league-leading 40.0 points. Christian McCaffrey proved why he’s a fantasy mainstay, exploding for 39.1 points and claiming the top RB spot. Ja'Marr Chase reminded everyone of his elite talent, hauling in passes for 30.1 points to lead all wide receivers.\n\nOronde Gadsden emerged from the tight end shadows to command attention with 25.9 points. Trey McBride wasn't far behind, contributing 24.4 points. This week's performances have proven that fantasy greatness is alive and well.\n",
+      "narrative": "This week, the record books were not just rewritten, they were demolished! Josh and team Josh etched their names in history with a mind-blowing 173.51 points – the new all-time high for team points. Vinny also etched his name in the Hall of Fame, setting a new single player record and QB record of 39.96! Neil delivered a beatdown so brutal it earned the title of \"Biggest Blowout\" with a 76.35-point margin. But let's not forget Shivang who had the unfortunate honor of setting the \"Most Points in Loss\" record with a whopping 143.44 points.\n\nOn the gridiron, Bo Nix absolutely exploded for 40.0 points, leading all quarterbacks in a dominant display. Christian McCaffrey continued his reign, bulldozing his way to 39.1 points, topping all running backs. Jahmyr Gibbs wasn't far behind with a stellar 36.8 points. Ja'Marr Chase torched secondaries, racking up 30.1 points and securing the top spot among wide receivers. DeVonta Smith was right behind him with a solid 28.8 points.\n\nFinally, Oronde Gadsden showed up in a big way, hauling in passes for 25.9 points, a TE performance for the ages! Trey McBride also had a great week with 24.4 points. What a week for offensive explosions!\n",
       "records": [
         {
           "categoryId": "highest_team_points",
@@ -17883,10 +17883,10 @@
           ]
         }
       },
-      "generatedAt": "2025-10-21T22:42:40.125Z"
+      "generatedAt": "2025-10-21T23:00:08.933Z"
     },
     "hallOfShame": {
-      "narrative": "This week in fantasy football, we witnessed a level of ineptitude that can only be described as breathtaking. Leading the charge to the cellar is Adam (Nacua Matata) with a pathetic 70.59 points, followed closely by Ziyan (81.06) and Nolan (83.22). Rithik and Varun (87.47) and Alex (95.59) round out the bottom five, proving that even among the worst, there's still a hierarchy of suck. The difference between Adam and Alex is a whopping 25 points - a testament to... well, something.\n\nThe carnage didn't stop there, folks. Mike Evans, projected for a respectable 15.5 points, decided to take the week off, gifting Neil and Luke a big fat ZERO. Justin Fields, with a measly 4.5 points against his 18.9 projection, single-handedly ruined Neil's week. George Kittle joined the goose egg party, leaving Ziyan wondering where his projected 14.3 points went. Ashton Jeanty's 3.9 points against a 17.4 projection stung both Ben and Ziyan. Add Jacory Croskey-Merritt's abysmal 4.2 (projected 16.8) which ruined Darshan and Kyle’s as well as Christian’s week and you've got a recipe for fantasy disaster.\n\nThe historical lows are just the cherry on top. Two of the lowest combined RB scores in history were recorded, and Adam notched the fourth-lowest team score ever! Clearly, the projections were as accurate as a blindfolded dart thrower this week, and team management? Let's just say some folks should stick to Sudoku.\n",
+      "narrative": "Welcome to the Week 7 Hall of Shame, where fantasy dreams go to die. Leading the parade of pathetic performances, we have Adam (Nacua Matata) scraping by with a measly 70.59. Ziyan wasn't much better at 81.06. Nolan and his 2 Dolla Balla$ closed out the bottom three with 83.22. It's a tight race to the bottom, folks, but someone has to win (or lose, in this case).\n\nThe carnage wasn't limited to just the cellar dwellers. Mike Evans, projected for a respectable 15.5 points, decided to take the week off, gifting Neil and Luke a big, fat zero. Justin Fields only managed 4.5 points against a projection of 18.9, leaving Neil wondering what he did to deserve this. Then there's George Kittle, who also laid a goose egg, crushing Ziyan's hopes and dreams. Ashton Jeanty (3.9 points vs. 17.4 projected) managed to disappoint both Ben and Ziyan. Finally, Jacory Croskey-Merritt (4.2 points vs 16.8) sunk Darshan and Kyle, and Christian. A true team effort in futility!\n\nThis week was a testament to the unreliability of projections and the unpredictable nature of football. Maybe everyone should just pick names out of a hat next week. It couldn't be much worse, could it?\n",
       "lowlights": {
         "lowestTeamScore": {
           "teamName": "Nacua Matata",
@@ -18033,10 +18033,10 @@
         ],
         "badBeatLosses": []
       },
-      "generatedAt": "2025-10-21T22:42:40.125Z"
+      "generatedAt": "2025-10-21T23:00:08.933Z"
     },
     "powerRankings": {
-      "narrative": "The league has stratified into a 7-tier hierarchy, with Jeffrey and Akhil V holding court at the top. Hunter is the biggest mover near the top, surging a massive 7 spots to claim the #3 position after a strong week. Joel, once seemingly invincible, is showing cracks, tumbling down to #5. \n\nThe middle tiers (2-4) are a chaotic battleground. Aman plummeted 4 spots to #10, while Shivang clawed his way up 3 to #12. Josh made a huge leap of 6 spots to #8, breaking into the middle pack. Meanwhile, down in the depths, Nolan continues his downward spiral, dropping 4 spots to #23, while Luke is making a desperate attempt to climb out of the cellar, rising 5 spots to #17. Adam had the biggest fall, moving from #7 to #15.",
+      "narrative": "The league has stratified into a complex hierarchy of seven tiers, with Jeffrey firmly entrenched at #1 and Akhil V close behind at #2. Hunter, surging an impressive seven spots, now sits at #3, marking the week's biggest climb. Meanwhile, Adam experienced a catastrophic tumble, plummeting eight spots from #7 to #15. The middle tiers (2-4) saw significant jostling for position. Joel, despite a strong record, dropped two spots to #5, while Josh catapulted six places to #8. Aman took a hit, falling from #6 to #10, a blow to his NFC aspirations. Down in the depths, Luke is desperately trying to claw his way out of Tier 6, rising five spots to #17. Nolan continues his descent, dropping four spots to #23 in Tier 7, while Vinny remains firmly anchored at the bottom.",
       "rankings": [
         {
           "rank": 1,
@@ -18351,10 +18351,10 @@
           "movementAmount": 0
         }
       ],
-      "generatedAt": "2025-10-21T22:42:40.125Z"
+      "generatedAt": "2025-10-21T23:00:08.933Z"
     },
     "standings": {
-      "narrative": "In the AFC, Joel is sitting pretty at 6-1, claiming the top seed, followed by Akhil C and Hunter leading their respective divisions. Neil, Ben, and Shivang currently hold the Wild Card spots, all deadlocked at 4-3, making for a tense race. Anant, Adam, and Arpit & Yash are on the outside looking in, clinging to hope on the playoff bubble.\n\nOver in the NFC, Jeffrey's undefeated 7-0 record has him locked in at the top spot. Akhil V and Dhruv lead their divisions, while Christian, Josh, and Aman are in the Wild Card slots. Vinay, Ziyan, and Luke are nipping at their heels, hoping for a chance to sneak into the playoffs. The NFC wild card picture is shaping up to be a brutal battle.\n\nMeanwhile, Vinny, Nolan, Alex, and Arnav are already playing for pride, barring a miracle. Their seasons have gone off the rails, and they'll need a major turnaround to avoid being completely irrelevant.",
+      "narrative": "In the AFC, Joel has secured the top spot at 6-1, with Akhil C and Hunter leading their respective divisions at 4-3. Neil, Ben, and Shivang currently hold the Wild Card positions, all sitting at 4-3 and fighting for playoff positioning. Anant, Adam, and Arpit & Yash are right on the bubble at 3-4, needing a strong push to climb into contention.\n\nOver in the NFC, Jeffrey dominates at 7-0, while Akhil V and Dhruv lead their divisions with records of 5-2 and 3-4, respectively. Christian and Josh are locked into the Wild Card with records of 5-2 and 4-3. Aman holds the last spot. Vinay, Ziyan, and Luke are nipping at their heels with records of 3-4, hoping for a chance to make a playoff push.\n\nFor Vinny, Nolan, Alex, and Arnav, at 2-5 or worse, the playoffs are a distant dream. It's time to start planning for next season, or maybe just trying to avoid the league's toilet bowl.",
       "standings": {
         "afc": [
           {
@@ -18558,16 +18558,16 @@
         "inHunt": [],
         "eliminated": []
       },
-      "generatedAt": "2025-10-21T22:42:40.125Z"
+      "generatedAt": "2025-10-21T23:00:08.933Z"
     },
     "upcoming": {
-      "narrative": "Week 8 is shaping up to be a pivotal one! All eyes will be on Akhil V (5-2) as he attempts the impossible: taking down the undefeated Jeffrey (7-0) in what promises to be an NFC barnburner. Can Akhil crack the code and hand Jeffrey his first loss? Or will Jeffrey continue his dominant run? Over in the AFC, Anant (3-4) faces a monumental challenge against the league-leading Joel (6-1) in a true David vs. Goliath showdown. Anant desperately needs a win to stay in the playoff hunt, but Joel looks unstoppable. \n\nBeyond these marquee matchups, watch for Vinny to try and right the ship against Akhil C after a tough start to the season. Will Josh and Aman deliver a nail-biting battle of 4-3 teams? The pressure is on—get your popcorn ready!",
+      "narrative": "Week 8 is shaping up to be a pivotal one! All eyes are on Jeffrey (7-0) as he faces his toughest test yet against Akhil V (5-2) in a battle that could redefine the NFC playoff picture. Can Akhil V hand Jeffrey his first loss, or will Jeffrey continue his dominant run? Meanwhile, Anant (3-4) faces a daunting task against Joel (6-1) in a classic David vs. Goliath showdown. Anant desperately needs a win to stay in contention, while Joel looks to solidify his place at the top.\n\nDon't sleep on the AFC clash between Neil (4-3) and Ben (4-3), a crucial game for playoff positioning. Expect fireworks as teams look to rebound from tough losses and make a statement. Week 8 promises drama and excitement – you won't want to miss it!",
       "matchups": [],
-      "generatedAt": "2025-10-21T22:41:17.802Z"
+      "generatedAt": "2025-10-21T22:58:50.895Z"
     },
     "closing": {
-      "narrative": "Week 7 was a week of extremes, a wild ride from record-breaking highs to soul-crushing lows. While Jeffrey continues to look untouchable, and Joel remains a force in the AFC, cracks are starting to show in the foundation of some early-season favorites. Are we seeing the emergence of a true top tier, or is this just the calm before an even more chaotic storm? The middle of the pack is a dogfight, and the basement dwellers are… well, dwelling. \n\nTwo themes dominated: record-breaking performances and utter implosions. Vinny and Josh etched their names in the history books, while Adam and others provided a masterclass in how *not* to manage a fantasy team. Injuries and inexplicable duds from supposed studs left many managers reeling. The key takeaway? Consistency is a myth; survival is the name of the game.\n\nNext week, the undefeated Jeffrey faces his biggest test against Akhil V, while Anant hopes to play spoiler against Joel. Can the underdogs rise, or will the established powers continue their reign? Get ready for more drama, more heartbreak, and maybe, just maybe, a little bit of sanity.\n\n**Key Themes**: Parity reigns, Record Setting Performances, The agony of Defeat\n\n**Key Takeaway**: Week 7 was a week of extremes, with record-breaking highs and soul-crushing lows shaking up the league landscape.",
-      "generatedAt": "2025-10-21T22:42:40.125Z"
+      "narrative": "Week 7 was defined by offensive explosions and corresponding implosions. We saw a new all-time scoring record set by Josh, and Vinny had a record-setting QB performance, but the bottom of the league is looking uglier by the week. Are we seeing the contenders separate themselves? Maybe. Jeffrey continues his undefeated march, while Joel still holds the top spot in the AFC. But Hunter's surge and Adam's freefall prove nothing is set in stone. \n\nThe main theme? Volatility. Whether it was Mike Evans and George Kittle laying eggs or Bo Nix going supernova, predicting outcomes felt like a fool's errand. Injuries and busts are starting to take their toll, forcing managers to scramble. The difference between a playoff berth and the toilet bowl could come down to who navigates the chaos best. \n\nNext week, Jeffrey faces his biggest test against Akhil V. Will the undefeated streak continue, or will Akhil V finally expose a weakness? Meanwhile, the Neil vs. Ben matchup could be a Wild Card preview. Buckle up, because the playoff race is about to get even wilder.\n\n**Key Themes**: Parity reigns, Playoff race tightening, Injuries taking toll\n\n**Key Takeaway**: Week 7 was defined by extreme performances, highlighting the unpredictable nature of fantasy football and setting the stage for a dramatic playoff push.",
+      "generatedAt": "2025-10-21T23:00:08.933Z"
     }
   },
   "standingsData": [
