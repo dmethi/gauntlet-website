@@ -77,7 +77,9 @@ describe('ManagerAnalysis', () => {
 
       // PlayerOverlapAnalysis should receive analytics
       // Check if any overlap data is rendered
-      const content = screen.getAllByText((content: string) => content.includes(mockAnalytics.profiles[0].manager))[0]?.closest('div');
+      const content = screen
+        .getAllByText((content: string) => content.includes(mockAnalytics.profiles[0].manager))[0]
+        ?.closest('div');
       expect(content).toBeInTheDocument();
     });
 

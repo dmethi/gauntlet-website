@@ -11,20 +11,25 @@
 
 ## Objective
 
-Add integration tests for multi-league system interactions and critical user flows. Ensure that the two-league system (AFC + NFC) works correctly when processing data together and that key user journeys work end-to-end.
+Add integration tests for multi-league system interactions and critical user
+flows. Ensure that the two-league system (AFC + NFC) works correctly when
+processing data together and that key user journeys work end-to-end.
 
 ---
 
 ## Context
 
 **Multi-League System**:
+
 - Two separate Sleeper leagues: AFC (12 teams) + NFC (12 teams) = 24 teams
 - Matchup IDs NOT unique across leagues (both use 1-6)
 - Roster IDs only unique within a league
 - Must ALWAYS process leagues separately, then combine
-- Use composite keys: `${leagueId}-${rosterId}`, `${leagueId}-${week}-${matchupId}`
+- Use composite keys: `${leagueId}-${rosterId}`,
+  `${leagueId}-${week}-${matchupId}`
 
 **Critical Bug Pattern**:
+
 ```typescript
 // WRONG: Combines data, then groups (creates 6 groups of 4 teams)
 const all = [...afcMatchups, ...nfcMatchups];
@@ -45,6 +50,7 @@ const combined = [...afcResults, ...nfcResults];
 Test that all data processing correctly handles two leagues:
 
 **Critical Areas**:
+
 - Stats aggregation across leagues
 - Matchup grouping by league
 - Roster lookups
@@ -56,6 +62,7 @@ Test that all data processing correctly handles two leagues:
 Test API routes with multi-league data:
 
 **Key Routes**:
+
 - `/api/stats` - League-wide statistics
 - `/api/matchups/[leagueId]/[week]` - Matchup data
 - `/api/draft/analysis` - Draft analytics
@@ -66,6 +73,7 @@ Test API routes with multi-league data:
 Test complete user journeys:
 
 **Critical Flows**:
+
 - View stats page → Select team → View details
 - View matchups → Simulate matchup → View results
 - View draft analysis → Filter managers → Sort by metric
@@ -76,6 +84,7 @@ Test complete user journeys:
 Test caching behavior across leagues:
 
 **Cache Scenarios**:
+
 - Data fetched from cache when available
 - Cache invalidation on new data
 - Multi-league cache keys don't collide
@@ -90,7 +99,11 @@ Test caching behavior across leagues:
 
 ```typescript
 import { describe, it, expect, beforeAll } from 'vitest';
-import { fetchAllLeaguesData, processMatchups, aggregateStats } from '@/lib/data-processing';
+import {
+  fetchAllLeaguesData,
+  processMatchups,
+  aggregateStats,
+} from '@/lib/data-processing';
 import { mockAfcLeague, mockNfcLeague } from '@/test/fixtures/league-data';
 
 describe('Multi-League System Integration', () => {
@@ -115,8 +128,12 @@ describe('Multi-League System Integration', () => {
 
       // But composite keys must be unique
       const allKeys = [
-        ...result.afc.rosters.map(r => `${result.afc.league_id}-${r.roster_id}`),
-        ...result.nfc.rosters.map(r => `${result.nfc.league_id}-${r.roster_id}`),
+        ...result.afc.rosters.map(
+          r => `${result.afc.league_id}-${r.roster_id}`
+        ),
+        ...result.nfc.rosters.map(
+          r => `${result.nfc.league_id}-${r.roster_id}`
+        ),
       ];
 
       const uniqueKeys = new Set(allKeys);
@@ -221,7 +238,7 @@ describe('Multi-League System Integration', () => {
     it('handles leagues with different week counts', () => {
       const afcWithExtraWeek = {
         ...mockAfcLeague,
-        matchups: [...mockAfcLeague.matchups, /* week 15 data */],
+        matchups: [...mockAfcLeague.matchups /* week 15 data */],
       };
 
       const result = aggregateStats({
@@ -291,7 +308,9 @@ describe('API Routes Integration', () => {
         params: { leagueId: 'afc', week: '5' },
       });
 
-      const response = await getMatchups(req, { params: { leagueId: 'afc', week: '5' } });
+      const response = await getMatchups(req, {
+        params: { leagueId: 'afc', week: '5' },
+      });
       const data = await response.json();
 
       expect(data.matchups).toBeDefined();
@@ -304,7 +323,9 @@ describe('API Routes Integration', () => {
         params: { leagueId: 'invalid', week: '5' },
       });
 
-      const response = await getMatchups(req, { params: { leagueId: 'invalid', week: '5' } });
+      const response = await getMatchups(req, {
+        params: { leagueId: 'invalid', week: '5' },
+      });
 
       expect(response.status).toBe(400);
     });
@@ -564,6 +585,7 @@ describe('Data Flow Integration', () => {
 ## Acceptance Criteria
 
 ### Multi-League Tests
+
 - [ ] All multi-league processing tested
 - [ ] Composite key generation verified
 - [ ] League separation maintained
@@ -571,24 +593,28 @@ describe('Data Flow Integration', () => {
 - [ ] Edge cases handled (missing data, mismatched weeks)
 
 ### API Integration Tests
+
 - [ ] All critical API routes tested
 - [ ] Request/response flow verified
 - [ ] Error handling tested
 - [ ] Multi-league queries work
 
 ### User Flow Tests
+
 - [ ] At least 3 complete user journeys tested
 - [ ] Data loading verified
 - [ ] User interactions work
 - [ ] State management correct
 
 ### Cache Tests
+
 - [ ] Cache key generation tested
 - [ ] Cache invalidation works
 - [ ] No cache collisions
 - [ ] React Query integration verified
 
 ### Build Status
+
 - [ ] All tests pass: `pnpm test`
 - [ ] Integration tests isolated (don't pollute unit tests)
 - [ ] Tests run in reasonable time (<30 seconds)
@@ -609,7 +635,7 @@ describe('Multi-League Feature', () => {
 
     // Verify separation maintained
     expect(combined.every(item => item.leagueId)).toBe(true);
-    
+
     // Verify composite keys unique
     const keys = combined.map(item => item.compositeId);
     expect(new Set(keys).size).toBe(keys.length);
@@ -693,11 +719,13 @@ Ensure we never group by matchup_id alone without including leagueId.
 ### Why Integration Tests Matter
 
 **For Multi-League System:**
+
 - Most common bug category is multi-league data mixing
 - Composite keys must be verified in integration context
 - Cross-league rankings need end-to-end testing
 
 **For User Flows:**
+
 - Unit tests can't catch integration issues
 - State management bugs appear in flows
 - Data flow through multiple layers needs verification
@@ -705,6 +733,7 @@ Ensure we never group by matchup_id alone without including leagueId.
 ### Test Isolation
 
 **Keep integration tests separate:**
+
 - Different directory: `__tests__/integration/`
 - Can run independently: `pnpm test:integration`
 - Longer running (exclude from watch mode)
@@ -713,6 +742,7 @@ Ensure we never group by matchup_id alone without including leagueId.
 ### Mock Strategy
 
 **Integration tests use:**
+
 - ✅ Real component composition
 - ✅ Real state management
 - ✅ Real data flow
@@ -724,4 +754,5 @@ Ensure we never group by matchup_id alone without including leagueId.
 
 **Estimated Context Usage**: ~300 lines read, ~400 lines written, 3 hours total
 
-**Success Metric**: All critical multi-league scenarios tested, all user flows verified, no regressions in league data handling
+**Success Metric**: All critical multi-league scenarios tested, all user flows
+verified, no regressions in league data handling

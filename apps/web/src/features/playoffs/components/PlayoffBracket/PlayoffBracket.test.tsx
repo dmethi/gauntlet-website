@@ -35,7 +35,6 @@ describe('PlayoffBracket', () => {
       };
 
       render(<PlayoffBracket {...props} />);
-
     });
 
     it('displays bracket legend', () => {
@@ -243,7 +242,6 @@ describe('PlayoffBracket', () => {
       };
 
       render(<PlayoffBracket {...props} />);
-
     });
 
     it('handles missing league data', () => {
@@ -254,7 +252,6 @@ describe('PlayoffBracket', () => {
       };
 
       render(<PlayoffBracket {...props} />);
-
     });
   });
 

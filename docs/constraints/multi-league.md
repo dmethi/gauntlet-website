@@ -2,9 +2,11 @@
 
 ## Problem
 
-Gauntlet tracks **two separate Sleeper leagues** (AFC + NFC) with 24 total teams. IDs from Sleeper API are **only unique within a league**, not globally.
+Gauntlet tracks **two separate Sleeper leagues** (AFC + NFC) with 24 total
+teams. IDs from Sleeper API are **only unique within a league**, not globally.
 
 **Critical invariants**:
+
 - Matchup IDs repeat across leagues (both use 1-6)
 - Roster IDs only unique within a league
 - Processing data from both leagues simultaneously creates ID collisions
@@ -25,7 +27,8 @@ const nfcResults = processLeague(nfcMatchups, 'nfc');
 const combined = [...afcResults, ...nfcResults];
 ```
 
-**Rationale**: Data must maintain league context throughout processing pipeline. Only merge at presentation layer when league distinction is no longer needed.
+**Rationale**: Data must maintain league context throughout processing pipeline.
+Only merge at presentation layer when league distinction is no longer needed.
 
 ---
 
@@ -44,7 +47,8 @@ const rosterKey = `${leagueId}-${rosterId}`;
 const teamKey = `${leagueId}-${userId}`;
 ```
 
-**Rationale**: Ensures uniqueness across leagues. Makes data provenance explicit in logs/debugging.
+**Rationale**: Ensures uniqueness across leagues. Makes data provenance explicit
+in logs/debugging.
 
 ---
 
@@ -56,7 +60,7 @@ const teamKey = `${leagueId}-${userId}`;
 // Always fetch leagues in parallel, keep separate
 const [afcLeague, nfcLeague] = await Promise.all([
   sleeperClient.getLeague(AFC_LEAGUE_ID),
-  sleeperClient.getLeague(NFC_LEAGUE_ID)
+  sleeperClient.getLeague(NFC_LEAGUE_ID),
 ]);
 
 // Process with league context attached
@@ -64,7 +68,8 @@ const afcData = await processLeagueData(afcLeague, 'afc');
 const nfcData = await processLeagueData(nfcLeague, 'nfc');
 ```
 
-**Never** create a generic "league processor" that loses track of which league is being processed.
+**Never** create a generic "league processor" that loses track of which league
+is being processed.
 
 ---
 
@@ -84,7 +89,8 @@ const matchupKey = ['matchup', leagueId, week, matchupId];
 
 ### Database Storage
 
-When persisting historical data (in `apps/server`), schema must enforce league context:
+When persisting historical data (in `apps/server`), schema must enforce league
+context:
 
 ```prisma
 model Matchup {
@@ -148,14 +154,17 @@ function calculateStandings(rosters: Roster[]): Standings {
 
 // ✅ Explicit league parameter
 function calculateStandings(rosters: Roster[], leagueId: string): Standings {
-  return rosters.sort((a, b) => b.wins - a.wins).map(r => ({
-    ...r,
-    leagueId, // Attach context
-  }));
+  return rosters
+    .sort((a, b) => b.wins - a.wins)
+    .map(r => ({
+      ...r,
+      leagueId, // Attach context
+    }));
 }
 ```
 
-**Rationale**: Even if current function doesn't use `leagueId`, downstream consumers will need it. Attach early.
+**Rationale**: Even if current function doesn't use `leagueId`, downstream
+consumers will need it. Attach early.
 
 ---
 
@@ -165,7 +174,8 @@ Every function that processes league data should have tests covering:
 
 1. **Single league** - Verify logic works correctly in isolation
 2. **Both leagues** - Verify no cross-league contamination
-3. **ID collisions** - Explicitly test that same IDs from different leagues don't conflict
+3. **ID collisions** - Explicitly test that same IDs from different leagues
+   don't conflict
 
 ```typescript
 describe('processMatchups', () => {
@@ -187,11 +197,13 @@ describe('processMatchups', () => {
 ## When to Merge Leagues
 
 Only merge when:
+
 - Displaying combined standings (with league indicator in UI)
 - Aggregate statistics (total points across all teams)
 - Cross-league comparisons (AFC vs. NFC rankings)
 
-**UI Requirement**: Always show league context (badge, color, icon) when displaying merged data.
+**UI Requirement**: Always show league context (badge, color, icon) when
+displaying merged data.
 
 ---
 

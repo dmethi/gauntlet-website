@@ -92,6 +92,7 @@ _Ready to begin_
 #### ⏭️ Apps/Web: COMPLETE! ✅
 
 **All 42 web tasks complete!** Optional tasks remaining:
+
 - WEB-PAGE-002, WEB-PAGE-003 (optional page migrations)
 - WEB-CLEAN-001, WEB-DOC-001, WEB-DOC-002 (optional polish)
 
@@ -263,15 +264,15 @@ plan
       hours [MEDIUM] ✅
 - [x] **WEB-COMP-005**: Split TeamView Component (1,198 lines) ⏱️ 2.5 hours
       [MEDIUM] ✅
-- [x] **WEB-COMP-006**: Split Start/Sit Efficiency Component ⏱️ 2 hours
-      [MEDIUM] ✅
+- [x] **WEB-COMP-006**: Split Start/Sit Efficiency Component ⏱️ 2 hours [MEDIUM]
+      ✅
 - [x] **WEB-COMP-007**: Split TransactionAnalysis Component ⏱️ 1.5 hours
       [MEDIUM] ✅
 - [x] **WEB-COMP-008**: Split LeagueView Component ⏱️ 1.5 hours [MEDIUM] ✅
-- [x] **WEB-COMP-009**: Split MatchupSimulation Component ⏱️ 1.5 hours
-      [MEDIUM] ✅
-- [x] **WEB-COMP-010**: Split MatchupOddsPreview Component ⏱️ 1.5 hours
-      [MEDIUM] ✅
+- [x] **WEB-COMP-009**: Split MatchupSimulation Component ⏱️ 1.5 hours [MEDIUM]
+      ✅
+- [x] **WEB-COMP-010**: Split MatchupOddsPreview Component ⏱️ 1.5 hours [MEDIUM]
+      ✅
 
 #### Phase 6: Page Migration (Week 4-5) 🟢 INTEGRATION
 

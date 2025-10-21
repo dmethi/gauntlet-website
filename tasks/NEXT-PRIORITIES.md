@@ -9,6 +9,7 @@
 ## ✅ Cleanup Complete
 
 Archived completed task files to `tasks/archive/completed/`:
+
 - WEB-COMP-001 through WEB-COMP-010 (10 component splits)
 - WEB-HOOK-002, WEB-HOOK-003 (2 hook extractions)
 
@@ -20,20 +21,21 @@ Archived completed task files to `tasks/archive/completed/`:
 
 ### By Category (Remaining Work)
 
-| Category | Complete | Remaining | % Done | Priority |
-|----------|----------|-----------|--------|----------|
-| **TEST** | 4/11 | 7 | 36% | 🔴 CRITICAL |
-| **UTIL** | 4/16 | 12 | 25% | 🟡 HIGH |
-| **HOOK** | 3/11 | 8 | 27% | 🟡 HIGH |
-| **COMP** | 10/15 | 5 | 67% | 🟢 MEDIUM |
-| **PAGE** | 0/3 | 3 | 0% | 🟢 MEDIUM |
-| **CLEAN** | 5/9 | 4 | 56% | 🟡 MEDIUM |
+| Category  | Complete | Remaining | % Done | Priority    |
+| --------- | -------- | --------- | ------ | ----------- |
+| **TEST**  | 4/11     | 7         | 36%    | 🔴 CRITICAL |
+| **UTIL**  | 4/16     | 12        | 25%    | 🟡 HIGH     |
+| **HOOK**  | 3/11     | 8         | 27%    | 🟡 HIGH     |
+| **COMP**  | 10/15    | 5         | 67%    | 🟢 MEDIUM   |
+| **PAGE**  | 0/3      | 3         | 0%     | 🟢 MEDIUM   |
+| **CLEAN** | 5/9      | 4         | 56%    | 🟡 MEDIUM   |
 
 ### Large Components Still Remaining
 
 From codebase analysis:
 
 **In `app/stats/components/`:**
+
 1. ✅ ~~TrendsView.tsx~~ (split, 3-line re-export)
 2. ✅ ~~TeamView.tsx~~ (split, feature-based)
 3. ✅ ~~ScheduleAnalysis.tsx~~ (split, 3-line re-export)
@@ -44,13 +46,15 @@ From codebase analysis:
 8. ⚠️ **ManagerRankings.tsx** (159 lines) - Not in original plan
 
 **In `components/`:**
+
 1. ⚠️ **RecapReportView.tsx** (644 lines)
 2. ⚠️ **league-wide-odds.tsx** (564 lines)
 3. ⚠️ **matchup-charts.tsx** (466 lines)
 4. ✅ ~~playoff-bracket.tsx~~ (split, 3-line re-export)
 5. ✅ ~~start-sit-efficiency.tsx~~ (split, feature-based)
 
-**Note**: We completed MatchupOddsPreview (141 lines) instead of ScatterAnalysis for WEB-COMP-010.
+**Note**: We completed MatchupOddsPreview (141 lines) instead of ScatterAnalysis
+for WEB-COMP-010.
 
 ---
 
@@ -65,11 +69,11 @@ Week 1 (Critical):
   1. WEB-TEST-001: Component Tests (3 hours)
      - Test all migrated features: draft-analysis, stats, matchups, transactions
      - Achieve 80%+ coverage on existing components
-  
+
   2. WEB-TEST-002: Hook Tests (2 hours)
      - Test all custom hooks in features/*/hooks/
      - Cover loading/error states
-  
+
   3. WEB-TEST-003: Utility Tests (2 hours)
      - Ensure all utilities are covered
      - Test edge cases
@@ -82,6 +86,7 @@ Week 2 (Integration):
 ```
 
 **Impact**:
+
 - ✅ Regression safety for all completed work
 - ✅ Confidence to refactor remaining code
 - ✅ Clear baseline before adding more features
@@ -97,7 +102,7 @@ Week 1 (Components):
   1. WEB-COMP-011: Split ScatterAnalysis (1.5 hours)
      - 625 lines → feature-based structure
      - 3+ scatter plot sub-components
-  
+
   2. WEB-COMP-012: Split ManagerDetailModal (1 hour)
   3. WEB-COMP-013: Split RidgePlot (1 hour)
   4. WEB-COMP-014: Split LeagueWideOdds (1.5 hours)
@@ -109,6 +114,7 @@ Week 2 (Integration):
 ```
 
 **Impact**:
+
 - ✅ All components follow feature architecture
 - ⚠️ Risk: More code without safety net
 - ⚠️ Harder to fix bugs found in testing
@@ -131,6 +137,7 @@ Week 2 (Hooks):
 ```
 
 **Impact**:
+
 - ✅ Clean separation of concerns
 - ⚠️ Delay validation and integration
 - ⚠️ May discover needed refactors during testing
@@ -150,12 +157,14 @@ Week 2 (Hooks):
 5. **Remaining components can wait** - they're smaller or less critical
 
 **The Risk of Not Testing Now:**
+
 - Build more features on untested foundation
 - Find bugs late when context is lost
 - Harder to isolate root causes
 - More expensive to fix
 
 **The Benefit of Testing Now:**
+
 - Lock in current quality
 - Find integration issues early
 - Gain confidence for final push
@@ -178,7 +187,9 @@ cd apps/web
 ```
 
 **Focus areas for WEB-TEST-001:**
-- `features/draft-analysis/components/ManagerAnalysis/` (already has 8 utility tests)
+
+- `features/draft-analysis/components/ManagerAnalysis/` (already has 8 utility
+  tests)
 - `features/stats/components/TeamView/` (already has 2 tests)
 - `features/stats/components/TrendsView/` (has utility tests)
 - `features/matchups/components/MatchupSimulation/` (has 68 utility tests)
@@ -222,18 +233,21 @@ wc -l src/app/stats/components/ScatterAnalysis.tsx
 ## 🎯 Decision Framework
 
 **Choose Testing-First if:**
+
 - ✅ You want safety and confidence
 - ✅ You're risk-averse
 - ✅ You want clear validation checkpoints
 - ✅ You value stability over velocity
 
 **Choose Component-First if:**
+
 - ✅ You want architectural completeness
 - ✅ You're comfortable with risk
 - ✅ You want all refactoring done together
 - ✅ You value velocity over interim validation
 
 **Choose Utilities-First if:**
+
 - ✅ You see lots of duplication
 - ✅ Components need shared utilities
 - ✅ You want the cleanest possible architecture
@@ -244,11 +258,13 @@ wc -l src/app/stats/components/ScatterAnalysis.tsx
 
 **Start with WEB-TEST-001** (Component Tests - Critical Paths)
 
-Then decide: continue testing or switch to remaining components based on what you discover.
+Then decide: continue testing or switch to remaining components based on what
+you discover.
 
-Testing will tell you if the architecture is solid or needs adjustments. Better to know now than after building 5 more components.
+Testing will tell you if the architecture is solid or needs adjustments. Better
+to know now than after building 5 more components.
 
 ---
 
-**Questions? Let me know which path you want to take and I'll create the detailed task breakdown!**
-
+**Questions? Let me know which path you want to take and I'll create the
+detailed task breakdown!**

@@ -173,74 +173,62 @@ const compressNonGameData = (series: ChartSeriesPoint[]): ChartSeriesPoint[] => 
 };
 
 /**
- * Determine game window label based on timestamp
- * Maps to NFL game windows: Thursday Night, Sunday Early/Afternoon/Night, Monday Night
+ * Format timestamp to EST with day and time
+ * Example: "Thu 8PM", "Sun 1PM", "Mon 11PM"
  */
-const getGameWindowLabel = (timestamp: Date): string => {
-  const dayOfWeek = timestamp.getUTCDay(); // 0 = Sunday, 4 = Thursday, 1 = Monday
-  const hourUTC = timestamp.getUTCHours();
+const formatTimestampEST = (timestamp: Date): string => {
+  // Convert to EST (UTC-5) or EDT (UTC-4) - using a simple approach
+  // Note: This doesn't handle DST transitions perfectly but works for display
+  const estDate = new Date(timestamp.getTime() - 5 * 60 * 60 * 1000);
 
-  // Thursday Night Football (typically 8:15 PM ET = 00:15 UTC Friday)
-  if (dayOfWeek === 4 || (dayOfWeek === 5 && hourUTC === 0)) {
-    return 'Thu Night';
-  }
-  // Sunday games
-  else if (dayOfWeek === 0) {
-    // Sunday Night Football (8:20 PM ET = 00:20 UTC Monday)
-    if (hourUTC === 0 || hourUTC === 1) {
-      return 'Sun Night';
-    }
-    // Late afternoon (4:05 or 4:25 PM ET = 20:05 or 20:25 UTC)
-    else if (hourUTC >= 20 && hourUTC < 23) {
-      return 'Sun Late';
-    }
-    // Early games (1:00 PM ET = 17:00 UTC or 9:30am games = 13:30 UTC)
-    else {
-      return 'Sun Early';
-    }
-  }
-  // Monday Night Football (8:15 PM ET = 00:15 UTC Tuesday)
-  else if (dayOfWeek === 1 || (dayOfWeek === 2 && hourUTC === 0)) {
-    return 'Mon Night';
-  }
-  // Saturday games (late season)
-  else if (dayOfWeek === 6) {
-    return 'Saturday';
-  }
-  // Friday games (international/special games)
-  else if (dayOfWeek === 5 && hourUTC > 1) {
-    return 'Friday';
-  }
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const day = dayNames[estDate.getUTCDay()];
 
-  return '';
+  let hours = estDate.getUTCHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; // Convert to 12-hour format
+
+  return `${day} ${hours}${ampm}`;
 };
 
 /**
- * Generate game window tick marks for X-axis
- * Identifies unique game windows and their positions in the data
+ * Generate time-based tick marks for X-axis
+ * Spreads ticks evenly across the timeline to show actual timestamps in EST
  */
-const generateGameWindowTicks = (
+const generateTimeTicks = (
   data: Array<{ idx: number; timestamp: Date }>,
 ): Array<{ value: number; label: string }> => {
   if (data.length === 0) return [];
 
-  const windows: Array<{ value: number; label: string }> = [];
-  let lastWindow = '';
+  const ticks: Array<{ value: number; label: string }> = [];
 
-  for (let i = 0; i < data.length; i++) {
-    const windowLabel = getGameWindowLabel(data[i].timestamp);
+  // Aim for ~6-8 ticks across the timeline
+  const targetTickCount = Math.min(8, Math.max(4, Math.floor(data.length / 10)));
+  const step = Math.max(1, Math.floor(data.length / targetTickCount));
 
-    // Add tick when we enter a new game window
-    if (windowLabel && windowLabel !== lastWindow) {
-      windows.push({
-        value: data[i].idx,
-        label: windowLabel,
-      });
-      lastWindow = windowLabel;
-    }
+  // Always include first tick
+  ticks.push({
+    value: data[0].idx,
+    label: formatTimestampEST(data[0].timestamp),
+  });
+
+  // Add intermediate ticks
+  for (let i = step; i < data.length - step; i += step) {
+    ticks.push({
+      value: data[i].idx,
+      label: formatTimestampEST(data[i].timestamp),
+    });
   }
 
-  return windows;
+  // Always include last tick if we have more than one data point
+  if (data.length > 1) {
+    ticks.push({
+      value: data[data.length - 1].idx,
+      label: formatTimestampEST(data[data.length - 1].timestamp),
+    });
+  }
+
+  return ticks;
 };
 
 /**
@@ -278,9 +266,9 @@ export const WinProbChart = ({
       teamB: Math.round((1 - (p.team1WinProbability || 0)) * 1000) / 10,
     }));
 
-    const gameTicks = generateGameWindowTicks(chartData);
+    const timeTicks = generateTimeTicks(chartData);
 
-    return { data: chartData, ticks: gameTicks };
+    return { data: chartData, ticks: timeTicks };
   }, [series]);
 
   if (!data.length) return null;
@@ -390,9 +378,9 @@ export const ScoreChart = ({
         teamB: Number(p.team2Score),
       }));
 
-    const gameTicks = generateGameWindowTicks(chartData);
+    const timeTicks = generateTimeTicks(chartData);
 
-    return { data: chartData, ticks: gameTicks };
+    return { data: chartData, ticks: timeTicks };
   }, [series]);
 
   if (!data.length) return null;

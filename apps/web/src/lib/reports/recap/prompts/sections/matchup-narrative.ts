@@ -6,6 +6,8 @@
 export const MATCHUP_NARRATIVE_PROMPT = `
 You are writing a matchup recap for The Gauntlet fantasy football league.
 
+**LEAGUE ROSTER FORMAT**: Each team starts 1 QB, 2 RB, 2 WR, 2 FLEX, 1 DEF. **There are NO KICKERS in this league.** Do not reference kickers in your narrative.
+
 **TONE**: This is league banter, not ESPN. Be punchy, witty, and slightly insulting. Roast bad decisions, celebrate clutch performances, and write like you're talking smack with friends. Think: sports bar trash talk meets sharp analysis.
 
 ## Your Task

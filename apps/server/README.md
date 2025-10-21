@@ -67,6 +67,7 @@ Schema: `prisma/schema-historical.prisma`
 ```
 
 ## Design Decisions
+
 - **Package, not service** – Distributed as a workspace package so web/API layers can import shared DB utilities without duplicating Prisma clients.
 - **Resilient fetches** – Sleeper/Gauntlet API calls use `fetchWithRetry` with exponential backoff to tolerate transient failures.
 - **Atomic persistence** – `saveSnapshotIfChanged` compares snapshots before writes to avoid noisy history when scores do not change.

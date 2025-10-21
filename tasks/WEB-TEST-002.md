@@ -10,14 +10,17 @@
 
 ## Objective
 
-Add comprehensive tests for all custom React hooks across features to ensure proper state management, data fetching, error handling, and side effects. Achieve 100% coverage on all custom hooks since they encapsulate critical business logic.
+Add comprehensive tests for all custom React hooks across features to ensure
+proper state management, data fetching, error handling, and side effects.
+Achieve 100% coverage on all custom hooks since they encapsulate critical
+business logic.
 
 ## Completion Summary
 
 ✅ **All 59 tests passing (100%)**  
 ✅ 5 new test files created covering all priority untested hooks  
 ✅ Build and TypeScript clean  
-✅ Zero tech debt  
+✅ Zero tech debt
 
 See: `apps/web/WEB-TEST-002-FINAL-SUMMARY.md`
 
@@ -26,38 +29,49 @@ See: `apps/web/WEB-TEST-002-FINAL-SUMMARY.md`
 ## Current Hook Inventory
 
 ### ✅ Already Tested
+
 - `features/matchups/hooks/useMatchupOdds.test.ts` (8 tests) ✅
 
 ### ❌ Need Tests
 
 **Draft Analysis** (2 hooks):
+
 - `features/draft-analysis/hooks/useManagerFiltering.ts` (7 existing tests)
 - `features/draft-analysis/hooks/useManagerSorting.ts` (13 existing tests)
 - `features/draft-analysis/hooks/useDraftAnalytics.ts` (8 existing tests)
 
 **Stats** (4 hooks):
+
 - `features/stats/hooks/useLeagueStats.ts` (6 existing tests)
 - `features/stats/hooks/useSeasonAggregates.ts` (3 existing tests)
 - `features/stats/hooks/useSuperlatives.ts` (4 existing tests)
 - `features/stats/hooks/useWeekStats.ts` (3 existing tests)
 
 **Matchups** (2 hooks):
+
 - `features/matchups/hooks/useMatchupTimeSeries.ts` (0 tests) ❌
 - `features/matchups/hooks/useMatchupOdds.ts` (8 tests) ✅
 
 **Transactions** (1 hook):
-- `features/transactions/components/TransactionAnalysis/useTransactionAnalysisModel.ts` (0 tests) ❌
+
+- `features/transactions/components/TransactionAnalysis/useTransactionAnalysisModel.ts`
+  (0 tests) ❌
 
 **Start/Sit** (1 hook):
-- `features/start-sit/components/StartSitEfficiency/useStartSitEfficiencyModel.ts` (0 tests) ❌
+
+- `features/start-sit/components/StartSitEfficiency/useStartSitEfficiencyModel.ts`
+  (0 tests) ❌
 
 **Stats Components** (2 hooks):
+
 - `features/stats/components/TeamView/useTeamViewModel.ts` (0 tests) ❌
 
 **Hall of Fame** (1 hook):
+
 - `features/hall-of-fame/hooks/useHallOfFameData.ts` (0 tests) ❌
 
 **Legacy (in hooks/)** (5 hooks - deprioritize):
+
 - `hooks/useSleeper.ts` (large, API calls)
 - `hooks/useHallOfFame.ts` (superseded by feature hook)
 - `hooks/useHallOfFameEnhanced.ts` (superseded)
@@ -112,7 +126,11 @@ describe('useMatchupTimeSeries', () => {
   it('fetches time series data successfully', async () => {
     const mockData = {
       timeSeries: [
-        { timestamp: '2024-10-01T12:00:00Z', team1WinProb: 0.55, team2WinProb: 0.45 },
+        {
+          timestamp: '2024-10-01T12:00:00Z',
+          team1WinProb: 0.55,
+          team2WinProb: 0.45,
+        },
         // ... more data points
       ],
     };
@@ -127,7 +145,7 @@ describe('useMatchupTimeSeries', () => {
         leagueId: '123',
         week: 5,
         matchupId: 1,
-      }),
+      })
     );
 
     await waitFor(() => {
@@ -146,7 +164,7 @@ describe('useMatchupTimeSeries', () => {
         leagueId: '123',
         week: 5,
         matchupId: 1,
-      }),
+      })
     );
 
     await waitFor(() => {
@@ -168,7 +186,7 @@ describe('useMatchupTimeSeries', () => {
         leagueId: '123',
         week: 5,
         matchupId: 1,
-      }),
+      })
     );
 
     await waitFor(() => {
@@ -190,7 +208,7 @@ describe('useMatchupTimeSeries', () => {
         useMatchupTimeSeries({ leagueId, week, matchupId }),
       {
         initialProps: { leagueId: '123', week: 5, matchupId: 1 },
-      },
+      }
     );
 
     await waitFor(() => {
@@ -203,7 +221,7 @@ describe('useMatchupTimeSeries', () => {
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(2);
       expect(global.fetch).toHaveBeenLastCalledWith(
-        expect.stringContaining('/week/6/'),
+        expect.stringContaining('/week/6/')
       );
     });
   });
@@ -219,7 +237,7 @@ describe('useMatchupTimeSeries', () => {
         leagueId: '123',
         week: 5,
         matchupId: 1,
-      }),
+      })
     );
 
     await waitFor(() => {
@@ -232,6 +250,7 @@ describe('useMatchupTimeSeries', () => {
 ```
 
 **Test Coverage Goals**:
+
 - [ ] Successful data fetch
 - [ ] Network errors
 - [ ] 404 responses
@@ -242,7 +261,8 @@ describe('useMatchupTimeSeries', () => {
 
 ### 2. Test useTransactionAnalysisModel Hook (15 min)
 
-**File**: `src/features/transactions/components/TransactionAnalysis/useTransactionAnalysisModel.test.ts`
+**File**:
+`src/features/transactions/components/TransactionAnalysis/useTransactionAnalysisModel.test.ts`
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -256,7 +276,7 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: mockTransactions,
         currentNflWeek: 5,
-      }),
+      })
     );
 
     expect(result.current.selectedManager).toBe('all');
@@ -269,7 +289,7 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: mockTransactions,
         currentNflWeek: 5,
-      }),
+      })
     );
 
     act(() => {
@@ -277,7 +297,7 @@ describe('useTransactionAnalysisModel', () => {
     });
 
     expect(result.current.filteredTransactions).toHaveLength(
-      mockTransactions.filter(t => t.manager === 'manager1').length,
+      mockTransactions.filter(t => t.manager === 'manager1').length
     );
   });
 
@@ -286,14 +306,16 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: mockTransactions,
         currentNflWeek: 5,
-      }),
+      })
     );
 
     act(() => {
       result.current.setFilterGrade('A');
     });
 
-    expect(result.current.filteredTransactions.every(t => t.grade === 'A')).toBe(true);
+    expect(
+      result.current.filteredTransactions.every(t => t.grade === 'A')
+    ).toBe(true);
   });
 
   it('sorts transactions by score', () => {
@@ -301,7 +323,7 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: mockTransactions,
         currentNflWeek: 5,
-      }),
+      })
     );
 
     act(() => {
@@ -317,11 +339,11 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: mockTransactions,
         currentNflWeek: 5,
-      }),
+      })
     );
 
     const { stats } = result.current;
-    
+
     expect(stats.total).toBe(mockTransactions.length);
     expect(stats.positive).toBeGreaterThanOrEqual(0);
     expect(stats.negative).toBeGreaterThanOrEqual(0);
@@ -334,7 +356,7 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: [],
         currentNflWeek: 5,
-      }),
+      })
     );
 
     expect(result.current.filteredTransactions).toEqual([]);
@@ -346,10 +368,12 @@ describe('useTransactionAnalysisModel', () => {
       useTransactionAnalysisModel({
         transactions: mockTransactions,
         currentNflWeek: 3,
-      }),
+      })
     );
 
-    expect(result.current.filteredTransactions.every(t => t.week <= 3)).toBe(true);
+    expect(result.current.filteredTransactions.every(t => t.week <= 3)).toBe(
+      true
+    );
   });
 });
 ```
@@ -358,7 +382,8 @@ describe('useTransactionAnalysisModel', () => {
 
 ### 3. Test useStartSitEfficiencyModel Hook (15 min)
 
-**File**: `src/features/start-sit/components/StartSitEfficiency/useStartSitEfficiencyModel.test.ts`
+**File**:
+`src/features/start-sit/components/StartSitEfficiency/useStartSitEfficiencyModel.test.ts`
 
 ```typescript
 describe('useStartSitEfficiencyModel', () => {
@@ -463,21 +488,25 @@ describe('useHallOfFameData', () => {
 Add missing test cases to hooks with partial coverage:
 
 **useManagerFiltering** - Add tests for:
+
 - [ ] Edge case: empty clusters array
 - [ ] Multiple cluster selections
 - [ ] Clear filters
 
 **useManagerSorting** - Add tests for:
+
 - [ ] Sort stability
 - [ ] Toggle sort direction multiple times
 - [ ] Sort persistence across renders
 
 **useDraftAnalytics** - Add tests for:
+
 - [ ] Cache invalidation
 - [ ] Parallel requests
 - [ ] Stale data handling
 
 **Stats hooks** - Add for each:
+
 - [ ] Network timeout scenarios
 - [ ] Invalid data responses
 - [ ] Retry logic
@@ -495,15 +524,15 @@ describe('Draft Analysis Hooks Integration', () => {
   it('filtering and sorting work together', () => {
     // Test useManagerFiltering + useManagerSorting
     const filtering = renderHook(() => useManagerFiltering(mockManagers));
-    const sorting = renderHook(() => 
+    const sorting = renderHook(() =>
       useManagerSorting(filtering.result.current.filtered)
     );
-    
+
     // Apply filter
     act(() => {
       filtering.result.current.setCluster(1);
     });
-    
+
     // Verify sorted filtered results
     expect(sorting.result.current.sorted).toBeDefined();
   });
@@ -519,12 +548,14 @@ describe('Draft Analysis Hooks Integration', () => {
 ## Acceptance Criteria
 
 ### Hook Coverage
+
 - [ ] All untested hooks have test files (5 hooks)
 - [ ] All existing hook tests expanded with edge cases
 - [ ] 100% coverage on all custom hooks
 - [ ] Integration tests for hook combinations
 
 ### Test Quality
+
 - [ ] Each hook has 5-10 test cases covering:
   - [ ] Initial state
   - [ ] State updates
@@ -534,6 +565,7 @@ describe('Draft Analysis Hooks Integration', () => {
   - [ ] Cleanup
 
 ### Specific Tests
+
 - [ ] Async hooks test loading states
 - [ ] Async hooks test error states
 - [ ] Async hooks test refetch on param changes
@@ -542,6 +574,7 @@ describe('Draft Analysis Hooks Integration', () => {
 - [ ] Cleanup functions tested (useEffect cleanup)
 
 ### Build Status
+
 - [ ] All tests pass: `pnpm test`
 - [ ] Coverage report shows 100% on hooks
 - [ ] TypeScript compilation passes
@@ -624,14 +657,14 @@ describe('useComputedHook', () => {
   it('memoizes computed value', () => {
     const { result, rerender } = renderHook(
       ({ input }) => useComputedHook(input),
-      { initialProps: { input: value1 } },
+      { initialProps: { input: value1 } }
     );
 
     const firstResult = result.current.computed;
-    
+
     // Re-render with same input
     rerender({ input: value1 });
-    
+
     // Should be same reference
     expect(result.current.computed).toBe(firstResult);
   });
@@ -691,6 +724,7 @@ Target: 100% coverage on all custom hooks.
 ### Common Hook Testing Mistakes
 
 **Avoid:**
+
 - ❌ Testing React internals
 - ❌ Testing implementation details
 - ❌ Not wrapping state updates in `act()`
@@ -698,6 +732,7 @@ Target: 100% coverage on all custom hooks.
 - ❌ Not mocking external dependencies
 
 **Do:**
+
 - ✅ Test the hook's public API
 - ✅ Test return values and behavior
 - ✅ Always use `act()` for state updates
@@ -720,6 +755,7 @@ const { result } = renderHook(() => useQueryHook(), { wrapper });
 
 ---
 
-**Estimated Context Usage**: ~100 lines read per hook, ~80-120 lines written per test file, 2 hours total
+**Estimated Context Usage**: ~100 lines read per hook, ~80-120 lines written per
+test file, 2 hours total
 
 **Success Metric**: 100% test coverage on all custom hooks, all tests passing

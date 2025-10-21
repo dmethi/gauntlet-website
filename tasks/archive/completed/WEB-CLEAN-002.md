@@ -11,7 +11,8 @@
 
 ## Objective
 
-Eliminate all ESLint violations across the web app codebase to achieve zero errors and enable strict linting in CI/CD pipelines.
+Eliminate all ESLint violations across the web app codebase to achieve zero
+errors and enable strict linting in CI/CD pipelines.
 
 ---
 

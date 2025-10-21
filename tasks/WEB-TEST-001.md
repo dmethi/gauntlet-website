@@ -11,30 +11,37 @@
 
 ## Objective
 
-Add comprehensive integration and component tests for all migrated feature components to achieve 80%+ test coverage on critical user paths. Focus on testing component behavior, user interactions, and data flow rather than implementation details.
+Add comprehensive integration and component tests for all migrated feature
+components to achieve 80%+ test coverage on critical user paths. Focus on
+testing component behavior, user interactions, and data flow rather than
+implementation details.
 
 ---
 
 ## Current Test Coverage Status
 
 ### ✅ Already Tested (Utilities Only)
+
 - `features/matchups/components/MatchupSimulation/utils.test.ts` (68 tests)
 - `features/matchups/components/MatchupOddsPreview/utils.test.ts` (54 tests)
 - `features/stats/components/TrendsView/utils.test.ts` (27 tests)
 - `features/stats/components/LeagueView/utils.test.ts` (32 tests)
 - `features/stats/components/ScheduleAnalysis/utils.test.ts` (22 tests)
 - `features/stats/components/TeamView/utils.test.ts` (35 tests)
-- `features/transactions/components/TransactionAnalysis/utils.test.ts` (27 tests)
+- `features/transactions/components/TransactionAnalysis/utils.test.ts` (27
+  tests)
 - `features/start-sit/components/StartSitEfficiency/utils.test.ts` (28 tests)
 - `features/hall-of-fame/utils/*.test.ts` (86 tests)
 
 ### ⚠️ Partially Tested (Need Integration Tests)
+
 - `features/start-sit/components/StartSitEfficiency/` (3 component tests)
 - `features/transactions/components/TransactionAnalysis/` (1 component test)
 - `features/stats/components/TeamView/` (2 component tests)
 - `features/matchups/components/MatchupOddsPreview/` (7 component tests)
 
 ### ❌ Need Component Tests
+
 - `features/draft-analysis/components/ManagerAnalysis/` (0 component tests)
 - `features/stats/components/TrendsView/` (0 component tests)
 - `features/stats/components/LeagueView/` (0 component tests)
@@ -75,7 +82,8 @@ Add comprehensive integration and component tests for all migrated feature compo
 
 ### 1. Create Test for ManagerAnalysis Component (45 min)
 
-**File**: `src/features/draft-analysis/components/ManagerAnalysis/ManagerAnalysis.test.tsx`
+**File**:
+`src/features/draft-analysis/components/ManagerAnalysis/ManagerAnalysis.test.tsx`
 
 ```typescript
 import { describe, it, expect, vi } from 'vitest';
@@ -106,11 +114,11 @@ describe('ManagerAnalysis', () => {
   it('filters by cluster selection', async () => {
     const user = userEvent.setup();
     render(<ManagerAnalysis managers={mockManagers} />);
-    
+
     // Click cluster filter
     const clusterButton = screen.getByText(/Cluster/i);
     await user.click(clusterButton);
-    
+
     // Verify filtered results
     // ...
   });
@@ -130,6 +138,7 @@ describe('ManagerAnalysis', () => {
 ```
 
 **Test Coverage Goals**:
+
 - [ ] Manager list renders correctly
 - [ ] Cluster filtering works
 - [ ] Column sorting works
@@ -140,7 +149,8 @@ describe('ManagerAnalysis', () => {
 
 ### 2. Create Test for TeamView Component (30 min)
 
-**File**: `src/features/stats/components/TeamView/TeamView.test.tsx` (expand existing)
+**File**: `src/features/stats/components/TeamView/TeamView.test.tsx` (expand
+existing)
 
 ```typescript
 describe('TeamView - Integration', () => {
@@ -175,6 +185,7 @@ describe('TeamView - Integration', () => {
 ```
 
 **Test Coverage Goals**:
+
 - [ ] All sub-components integrate correctly
 - [ ] Team data calculations are accurate
 - [ ] Team selection works
@@ -220,6 +231,7 @@ describe('TrendsView', () => {
 ```
 
 **Test Coverage Goals**:
+
 - [ ] All trend visualizations render
 - [ ] Data calculations are accurate
 - [ ] Ridge plot data is correct
@@ -260,7 +272,8 @@ describe('LeagueView', () => {
 
 ### 5. Create Test for ScheduleAnalysis Component (20 min)
 
-**File**: `src/features/stats/components/ScheduleAnalysis/ScheduleAnalysis.test.tsx`
+**File**:
+`src/features/stats/components/ScheduleAnalysis/ScheduleAnalysis.test.tsx`
 
 ```typescript
 describe('ScheduleAnalysis', () => {
@@ -294,7 +307,8 @@ describe('ScheduleAnalysis', () => {
 
 ### 6. Create Test for MatchupSimulation Component (20 min)
 
-**File**: `src/features/matchups/components/MatchupSimulation/MatchupSimulation.test.tsx`
+**File**:
+`src/features/matchups/components/MatchupSimulation/MatchupSimulation.test.tsx`
 
 ```typescript
 describe('MatchupSimulation', () => {
@@ -328,7 +342,8 @@ describe('MatchupSimulation', () => {
 
 ### 7. Create Test for PlayoffBracket Component (15 min)
 
-**File**: `src/features/playoffs/components/PlayoffBracket/PlayoffBracket.test.tsx`
+**File**:
+`src/features/playoffs/components/PlayoffBracket/PlayoffBracket.test.tsx`
 
 ```typescript
 describe('PlayoffBracket', () => {
@@ -358,9 +373,11 @@ describe('PlayoffBracket', () => {
 
 ### 8. Expand TransactionAnalysis Tests (15 min)
 
-**File**: Expand `src/features/transactions/components/TransactionAnalysis/TransactionAnalysis.test.tsx`
+**File**: Expand
+`src/features/transactions/components/TransactionAnalysis/TransactionAnalysis.test.tsx`
 
 Add tests for:
+
 - Filtering by grade/type
 - Sorting transactions
 - Transaction details dialog
@@ -383,6 +400,7 @@ pnpm test:coverage --run
 ## Acceptance Criteria
 
 ### Component Tests
+
 - [ ] All 7 main feature components have integration tests
 - [ ] Each component has 5-10 test cases covering:
   - [ ] Basic rendering
@@ -392,17 +410,20 @@ pnpm test:coverage --run
   - [ ] Sub-component integration
 
 ### Coverage Metrics
+
 - [ ] Overall test coverage ≥80% for features/
 - [ ] All critical user paths tested
 - [ ] No untested critical calculations
 
 ### Test Quality
+
 - [ ] Tests use realistic data (not just empty arrays)
 - [ ] Tests verify actual behavior, not implementation
 - [ ] Tests are readable and maintainable
 - [ ] Tests run fast (<5 seconds total)
 
 ### Build Status
+
 - [ ] All tests pass: `pnpm test`
 - [ ] Coverage report generated: `pnpm test:coverage`
 - [ ] TypeScript compilation passes
@@ -426,7 +447,7 @@ export const mockTeamData = {
 };
 
 export const mockLeagueData = {
-  teams: [mockTeamData, /* ... more teams */],
+  teams: [mockTeamData /* ... more teams */],
   // ... league-level data
 };
 ```
@@ -473,18 +494,18 @@ pnpm build
 
 ## Coverage Targets by Feature
 
-| Feature | Current | Target | Priority |
-|---------|---------|--------|----------|
-| draft-analysis | ~40% (utils only) | 80%+ | 🔴 Critical |
-| stats/TeamView | ~50% (2 tests) | 85%+ | 🔴 Critical |
-| stats/TrendsView | ~30% (utils only) | 80%+ | 🔴 Critical |
-| stats/LeagueView | ~35% (utils only) | 80%+ | 🟡 High |
-| stats/ScheduleAnalysis | ~30% (utils only) | 80%+ | 🟡 High |
-| matchups/Simulation | ~35% (utils only) | 80%+ | 🟡 High |
-| matchups/OddsPreview | ~85% (well tested) | 90%+ | 🟢 Low |
-| transactions | ~50% (partial) | 80%+ | 🟡 High |
-| start-sit | ~60% (partial) | 85%+ | 🟡 High |
-| playoffs | ~40% (utils only) | 75%+ | 🟢 Low |
+| Feature                | Current            | Target | Priority    |
+| ---------------------- | ------------------ | ------ | ----------- |
+| draft-analysis         | ~40% (utils only)  | 80%+   | 🔴 Critical |
+| stats/TeamView         | ~50% (2 tests)     | 85%+   | 🔴 Critical |
+| stats/TrendsView       | ~30% (utils only)  | 80%+   | 🔴 Critical |
+| stats/LeagueView       | ~35% (utils only)  | 80%+   | 🟡 High     |
+| stats/ScheduleAnalysis | ~30% (utils only)  | 80%+   | 🟡 High     |
+| matchups/Simulation    | ~35% (utils only)  | 80%+   | 🟡 High     |
+| matchups/OddsPreview   | ~85% (well tested) | 90%+   | 🟢 Low      |
+| transactions           | ~50% (partial)     | 80%+   | 🟡 High     |
+| start-sit              | ~60% (partial)     | 85%+   | 🟡 High     |
+| playoffs               | ~40% (utils only)  | 75%+   | 🟢 Low      |
 
 ---
 
@@ -507,7 +528,7 @@ describe('ManagerAnalysis', () => {
   describe('Rendering', () => {
     it('renders all manager rows', () => {
       render(<ManagerAnalysis managers={mockManagers} />);
-      
+
       mockManagers.forEach(manager => {
         expect(screen.getByText(manager.managerName)).toBeInTheDocument();
       });
@@ -515,14 +536,14 @@ describe('ManagerAnalysis', () => {
 
     it('displays concentration metrics table', () => {
       render(<ManagerAnalysis managers={mockManagers} />);
-      
+
       expect(screen.getByText(/Gini Coefficient/i)).toBeInTheDocument();
       expect(screen.getByText(/Top 1%/i)).toBeInTheDocument();
     });
 
     it('shows player overlap analysis', () => {
       render(<ManagerAnalysis managers={mockManagers} />);
-      
+
       expect(screen.getByText(/Player Overlap/i)).toBeInTheDocument();
     });
   });
@@ -531,15 +552,15 @@ describe('ManagerAnalysis', () => {
     it('filters by cluster when cluster selected', async () => {
       const user = userEvent.setup();
       render(<ManagerAnalysis managers={mockManagers} />);
-      
+
       // Should show all managers initially
       expect(screen.getAllByRole('row')).toHaveLength(mockManagers.length + 1); // +1 for header
-      
+
       // Click cluster filter
       const clusterFilter = screen.getByLabelText(/Filter by cluster/i);
       await user.click(clusterFilter);
       await user.click(screen.getByText('Cluster 1'));
-      
+
       // Should show filtered results
       const cluster1Managers = mockManagers.filter(m => m.cluster === 1);
       expect(screen.getAllByRole('row')).toHaveLength(cluster1Managers.length + 1);
@@ -548,10 +569,10 @@ describe('ManagerAnalysis', () => {
     it('sorts by Gini coefficient', async () => {
       const user = userEvent.setup();
       render(<ManagerAnalysis managers={mockManagers} />);
-      
+
       const giniHeader = screen.getByText(/Gini/i);
       await user.click(giniHeader);
-      
+
       // Verify sort order
       const rows = screen.getAllByRole('row');
       // First row should have highest Gini
@@ -562,7 +583,7 @@ describe('ManagerAnalysis', () => {
   describe('Data Accuracy', () => {
     it('calculates concentrations correctly', () => {
       render(<ManagerAnalysis managers={mockManagers} />);
-      
+
       const manager1 = mockManagers[0];
       const giniCell = screen.getByText(manager1.giniCoefficient.toFixed(3));
       expect(giniCell).toBeInTheDocument();
@@ -608,7 +629,8 @@ Target 80%+ coverage for all migrated features.
 
 **Blocks**: WEB-PAGE-001, WEB-PAGE-002, WEB-PAGE-003, WEB-CLEAN-002  
 **Blocked By**: WEB-COMP-001 through WEB-COMP-010, WEB-SETUP-003  
-**Related**: WEB-TEST-002 (Hook Tests), WEB-TEST-003 (Utility Tests), WEB-TEST-004 (Integration Tests)
+**Related**: WEB-TEST-002 (Hook Tests), WEB-TEST-003 (Utility Tests),
+WEB-TEST-004 (Integration Tests)
 
 ---
 
@@ -617,6 +639,7 @@ Target 80%+ coverage for all migrated features.
 ### Testing Philosophy
 
 **Do Test:**
+
 - ✅ User-visible behavior
 - ✅ Data transformations and calculations
 - ✅ User interactions (clicks, selections)
@@ -624,6 +647,7 @@ Target 80%+ coverage for all migrated features.
 - ✅ Integration between sub-components
 
 **Don't Test:**
+
 - ❌ Implementation details
 - ❌ Third-party library internals
 - ❌ CSS/styling (use visual regression tests)
@@ -650,6 +674,8 @@ describe('ComponentName', () => {
 
 ---
 
-**Estimated Context Usage**: ~500 lines read per component, ~100-150 lines written per test file, 3 hours total
+**Estimated Context Usage**: ~500 lines read per component, ~100-150 lines
+written per test file, 3 hours total
 
-**Success Metric**: 80%+ test coverage on all migrated features, all tests passing
+**Success Metric**: 80%+ test coverage on all migrated features, all tests
+passing

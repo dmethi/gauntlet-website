@@ -1,7 +1,10 @@
 {
   "2025": {
     "week-99": {
-      "generated": ["2025-10-08T18:06:17.438Z", "2025-10-08T18:06:17.542Z"],
+      "generated": [
+        "2025-10-08T18:06:17.438Z",
+        "2025-10-08T18:06:17.542Z"
+      ],
       "lastStatus": "partial",
       "lastDuration": 45805.7259240343,
       "lastTokens": 49536,
@@ -21,12 +24,18 @@
       "fileSize": 84075
     },
     "week-7": {
-      "generated": ["2025-10-14T14:11:05.757Z"],
-      "lastStatus": "success",
-      "lastDuration": 67016,
+      "generated": [
+        "2025-10-14T14:11:05.757Z",
+        "2025-10-21T22:29:25.461Z",
+        "2025-10-21T22:30:37.224Z",
+        "2025-10-21T22:40:06.195Z",
+        "2025-10-21T22:41:14.544Z"
+      ],
+      "lastStatus": "partial",
+      "lastDuration": 0,
       "lastTokens": 0,
-      "lastGeneratedAt": "2025-10-14T14:11:05.757Z",
-      "fileSize": 33923
+      "lastGeneratedAt": "2025-10-21T22:41:14.544Z",
+      "fileSize": 617329
     },
     "week-6": {
       "generated": [

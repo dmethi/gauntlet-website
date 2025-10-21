@@ -121,11 +121,15 @@ export const FallbackBracket = memo<FallbackBracketProps>(({ bracketTeams, leagu
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>Bracket Preview</span>
-            <Badge variant="outline" className="text-xs">Insufficient Data</Badge>
+            <Badge variant="outline" className="text-xs">
+              Insufficient Data
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Not enough teams to render the full playoff bracket.</p>
+          <p className="text-sm text-muted-foreground">
+            Not enough teams to render the full playoff bracket.
+          </p>
         </CardContent>
       </Card>
     );

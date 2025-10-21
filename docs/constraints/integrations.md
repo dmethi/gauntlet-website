@@ -2,7 +2,9 @@
 
 ## Purpose
 
-Constraints that span multiple domains or external system boundaries. Use this doc when a constraint doesn't fit neatly into a single feature or technical area.
+Constraints that span multiple domains or external system boundaries. Use this
+doc when a constraint doesn't fit neatly into a single feature or technical
+area.
 
 ---
 
@@ -10,9 +12,11 @@ Constraints that span multiple domains or external system boundaries. Use this d
 
 ### Unified Client Pattern
 
-**All Sleeper API calls** must go through `@/lib/sleeper/unified-client`. Never use direct `fetch()` calls to Sleeper endpoints.
+**All Sleeper API calls** must go through `@/lib/sleeper/unified-client`. Never
+use direct `fetch()` calls to Sleeper endpoints.
 
 **Rationale**:
+
 - Centralized rate limiting (Sleeper has undocumented limits)
 - Consistent error handling and retry logic
 - Caching layer reduces redundant calls
@@ -32,15 +36,18 @@ const league = await sleeperClient.getLeague(id);
 ### Caching Strategy
 
 **Cache duration by data type**:
+
 - **Player metadata** (names, positions): 24 hours (rarely changes mid-season)
 - **League settings**: 1 hour (trades, settings can change weekly)
 - **Rosters**: 5 minutes (lineup changes happen frequently)
 - **Matchups**: No cache during game day, 1 hour on off-days
 - **Transactions**: Real-time (no cache)
 
-**Rationale**: Balance freshness with API load. Cache expiration tuned based on how frequently data actually changes in Sleeper.
+**Rationale**: Balance freshness with API load. Cache expiration tuned based on
+how frequently data actually changes in Sleeper.
 
-**Flexibility**: Individual features can override cache via `{ fresh: true }` option if they need real-time data.
+**Flexibility**: Individual features can override cache via `{ fresh: true }`
+option if they need real-time data.
 
 ```typescript
 // Force fresh data (bypasses cache)
@@ -53,12 +60,12 @@ const rosters = await sleeperClient.getRosters(leagueId, { fresh: true });
 
 Client should handle these Sleeper API errors gracefully:
 
-| Error | Status | Handling |
-|-------|--------|----------|
-| Rate limit | 429 | Exponential backoff, retry after 60s |
-| Not found | 404 | Return null, don't throw (league might not exist yet) |
-| Server error | 500+ | Retry 3x, then fall back to cached data if available |
-| Network timeout | - | Retry 3x with increasing timeout (5s, 10s, 20s) |
+| Error           | Status | Handling                                              |
+| --------------- | ------ | ----------------------------------------------------- |
+| Rate limit      | 429    | Exponential backoff, retry after 60s                  |
+| Not found       | 404    | Return null, don't throw (league might not exist yet) |
+| Server error    | 500+   | Retry 3x, then fall back to cached data if available  |
+| Network timeout | -      | Retry 3x with increasing timeout (5s, 10s, 20s)       |
 
 **Never show raw API errors to users.** Map to user-friendly messages:
 
@@ -76,14 +83,17 @@ throw new Error('Unable to load data. Please try again in a moment.');
 
 ### Usage Constraints
 
-Only `apps/web/src/lib/reports/recap` should call Gemini API for narrative generation.
+Only `apps/web/src/lib/reports/recap` should call Gemini API for narrative
+generation.
 
 **Why restricted**:
+
 - API costs money per token
 - Rate limits apply
 - Consistency in tone/style requires centralized prompts
 
-**Current use case**: Weekly recap report narrative ("What happened this week in your league?")
+**Current use case**: Weekly recap report narrative ("What happened this week in
+your league?")
 
 ---
 
@@ -112,12 +122,14 @@ ${JSON.stringify(weekData, null, 2)}
 ```
 
 **Key sections**:
+
 1. **Role definition** - Sets tone and style
 2. **Context** - Gives Gemini situational awareness
 3. **Guidelines** - Constraints on output format
 4. **Data** - Structured input for analysis
 
-**Rationale**: Consistent prompt structure improves output quality and makes prompts easier to version/test.
+**Rationale**: Consistent prompt structure improves output quality and makes
+prompts easier to version/test.
 
 ---
 
@@ -138,7 +150,8 @@ try {
 }
 ```
 
-**Rationale**: Users rely on weekly reports. Better to send report with boring narrative than no report at all.
+**Rationale**: Users rely on weekly reports. Better to send report with boring
+narrative than no report at all.
 
 ---
 
@@ -147,11 +160,13 @@ try {
 ### When to Use React Query
 
 Use React Query for:
+
 - API data that changes over time (rosters, matchups, stats)
 - Data shared across multiple components
 - Data that needs background refetching
 
 **Don't use** for:
+
 - Computed values (use `useMemo` instead)
 - Component-local state
 - Data that never changes (constants)
@@ -164,30 +179,29 @@ Use React Query for:
 // Pattern: [domain, ...identifiers, ...filters]
 
 // League data
-['league', leagueId]
-['league', leagueId, 'rosters']
-['league', leagueId, 'users']
-
-// Matchup data (include week)
-['matchups', leagueId, week]
-['matchup-odds', leagueId, week, matchupId]
-
-// Player data
-['players']  // All players (cached 24h)
-['player', playerId]
-
-// Stats (include time range)
-['stats', leagueId, 'season']
-['stats', leagueId, 'weeks', startWeek, endWeek]
+['league', leagueId][('league', leagueId, 'rosters')][
+  ('league', leagueId, 'users')
+][
+  // Matchup data (include week)
+  ('matchups', leagueId, week)
+][('matchup-odds', leagueId, week, matchupId)][
+  // Player data
+  'players'
+][('player', playerId)][ // All players (cached 24h)
+  // Stats (include time range)
+  ('stats', leagueId, 'season')
+][('stats', leagueId, 'weeks', startWeek, endWeek)];
 ```
 
-**Rationale**: Hierarchical keys make invalidation easier. Can invalidate all matchup data with `queryClient.invalidateQueries(['matchups'])`.
+**Rationale**: Hierarchical keys make invalidation easier. Can invalidate all
+matchup data with `queryClient.invalidateQueries(['matchups'])`.
 
 ---
 
 ### Invalidation Strategy
 
 **When to invalidate**:
+
 - After user action (trade, roster change)
 - When entering a new week
 - After cron job completes (new projections loaded)
@@ -200,7 +214,8 @@ queryClient.invalidateQueries(['matchup-odds', leagueId, week, matchupId]);
 queryClient.invalidateQueries(['matchups', leagueId, week]);
 ```
 
-**Don't over-invalidate**: Invalidating root keys (e.g., `['league']`) clears everything, forcing full refetch.
+**Don't over-invalidate**: Invalidating root keys (e.g., `['league']`) clears
+everything, forcing full refetch.
 
 ---
 
@@ -255,7 +270,8 @@ Weekly recap reports combine data from multiple features:
 
 **Orchestration**: `apps/web/src/lib/reports/recap/generate-recap.ts`
 
-**Constraint**: Each feature exposes a `getData()` function that returns JSON. Report generator composes them.
+**Constraint**: Each feature exposes a `getData()` function that returns JSON.
+Report generator composes them.
 
 ```typescript
 // Feature contract for reports
@@ -268,7 +284,8 @@ export const getMatchupDataForReport = async (
 };
 ```
 
-**Rationale**: Keeps report generator thin. Features control their own data shapes.
+**Rationale**: Keeps report generator thin. Features control their own data
+shapes.
 
 ---
 
@@ -278,12 +295,12 @@ export const getMatchupDataForReport = async (
 
 Some integrations behave differently in development:
 
-| Integration | Development | Production |
-|-------------|-------------|------------|
+| Integration | Development                 | Production               |
+| ----------- | --------------------------- | ------------------------ |
 | Sleeper API | Real API with shorter cache | Real API with full cache |
-| Gemini API | Mock responses (faster) | Real API |
-| Cron jobs | Manual trigger only | Scheduled via Vercel |
-| Database | Optional (feature flags) | Required for history |
+| Gemini API  | Mock responses (faster)     | Real API                 |
+| Cron jobs   | Manual trigger only         | Scheduled via Vercel     |
+| Database    | Optional (feature flags)    | Required for history     |
 
 **How to toggle**: Use `process.env.NODE_ENV`
 
@@ -314,11 +331,13 @@ interface SleeperLeague { ... }
 ```
 
 **Local types allowed for**:
+
 - Component props (`ButtonProps`, `TableProps`)
 - UI-specific state (`FormState`, `ModalState`)
 - Route-specific transforms (`PageData`, `ApiResponse`)
 
-**Rationale**: Prevents type drift. If Sleeper API changes, we update `@gauntlet/types` once.
+**Rationale**: Prevents type drift. If Sleeper API changes, we update
+`@gauntlet/types` once.
 
 ---
 
@@ -342,7 +361,8 @@ const rawData = await fetch(url).then(r => r.json());
 const league = SleeperLeagueSchema.parse(rawData); // Throws if invalid
 ```
 
-**Rationale**: External APIs can change without notice. Validation catches breaking changes before they cause runtime errors.
+**Rationale**: External APIs can change without notice. Validation catches
+breaking changes before they cause runtime errors.
 
 ---
 
@@ -355,4 +375,5 @@ Before modifying any pattern in this doc:
 3. **Update tests** - Integration tests should cover new behavior
 4. **Document breaking changes** - Add migration guide if needed
 
-**Don't silently break contracts** - coordinate with feature owners (or update features yourself).
+**Don't silently break contracts** - coordinate with feature owners (or update
+features yourself).

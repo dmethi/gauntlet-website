@@ -9,31 +9,38 @@
 
 ## Objective
 
-Ensure 100% test coverage on all utility functions across shared/ and features/ directories. Utilities contain pure business logic that must be bulletproof since they're used throughout the application.
+Ensure 100% test coverage on all utility functions across shared/ and features/
+directories. Utilities contain pure business logic that must be bulletproof
+since they're used throughout the application.
 
 ---
 
 ## Current Utility Test Coverage
 
 ### ✅ Excellent Coverage (90-100%)
+
 - `shared/utils/formatting/` - 49 tests ✅
 - `shared/utils/colors/` - 44 tests ✅
 - `features/draft-analysis/utils/calculations.test.ts` - 28 tests ✅
-- `features/hall-of-fame/utils/` - 86 tests (calculations, aggregations, categories) ✅
+- `features/hall-of-fame/utils/` - 86 tests (calculations, aggregations,
+  categories) ✅
 - `features/matchups/components/MatchupSimulation/utils.test.ts` - 68 tests ✅
 - `features/matchups/components/MatchupOddsPreview/utils.test.ts` - 54 tests ✅
 - `features/stats/components/TeamView/utils.test.ts` - 35 tests ✅
 - `features/stats/components/LeagueView/utils.test.ts` - 32 tests ✅
-- `features/transactions/components/TransactionAnalysis/utils.test.ts` - 27 tests ✅
+- `features/transactions/components/TransactionAnalysis/utils.test.ts` - 27
+  tests ✅
 - `features/start-sit/components/StartSitEfficiency/utils.test.ts` - 28 tests ✅
 
 ### ⚠️ Partial Coverage (Need Expansion)
+
 - `shared/utils/stats/` - Missing tests ❌
 - `features/draft-analysis/utils/analytics.ts` - Missing tests ❌
 - `features/reports/utils/narratives.ts` - Missing tests ❌
 - `features/matchups/utils/swing-analysis.ts` - Missing tests ❌
 
 ### ❌ Zero Coverage (Critical Gap)
+
 - `lib/manager-analytics.ts` - Large file with complex calculations ❌
 - `lib/draft-analytics.ts` - Draft analysis calculations ❌
 - `lib/hooks.ts` - Data transformation utilities ❌
@@ -483,12 +490,14 @@ describe('Draft Analytics (Legacy - Critical Subset)', () => {
 ## Acceptance Criteria
 
 ### Coverage Metrics
+
 - [ ] All shared/utils/ files have tests
-- [ ] All features/*/utils/ files have tests
+- [ ] All features/\*/utils/ files have tests
 - [ ] Coverage ≥95% on all utility files
 - [ ] Critical lib/ utilities have basic tests
 
 ### Test Quality
+
 - [ ] Each utility function has 3-5 test cases
 - [ ] Edge cases covered (empty, null, undefined)
 - [ ] Boundary conditions tested
@@ -496,6 +505,7 @@ describe('Draft Analytics (Legacy - Critical Subset)', () => {
 - [ ] Complex calculations verified with known outputs
 
 ### Specific Tests
+
 - [ ] All statistical functions tested with known inputs/outputs
 - [ ] All data transformation utilities tested
 - [ ] All calculation utilities verified
@@ -503,6 +513,7 @@ describe('Draft Analytics (Legacy - Critical Subset)', () => {
 - [ ] All color utilities tested
 
 ### Build Status
+
 - [ ] All tests pass: `pnpm test`
 - [ ] Coverage report shows 95%+ on utils
 - [ ] TypeScript compilation passes
@@ -539,9 +550,11 @@ describe('calculateSomething', () => {
 ```typescript
 describe('transformData', () => {
   it('transforms data correctly', () => {
-    const input = { /* ... */ };
+    const input = {
+      /* ... */
+    };
     const output = transformData(input);
-    
+
     expect(output).toEqual(expectedOutput);
   });
 
@@ -552,7 +565,7 @@ describe('transformData', () => {
   it('filters invalid entries', () => {
     const input = [valid, invalid, valid];
     const output = transformData(input);
-    
+
     expect(output).toHaveLength(2);
   });
 });
@@ -641,6 +654,7 @@ Target: 95%+ coverage on all utility files.
 ### Why 100% Utility Coverage Matters
 
 **Utilities are:**
+
 - ✅ Pure functions (easiest to test)
 - ✅ Used everywhere (high impact)
 - ✅ Business logic (must be correct)
@@ -648,6 +662,7 @@ Target: 95%+ coverage on all utility files.
 - ✅ No dependencies (no mocking needed)
 
 **Benefits:**
+
 - Find calculation bugs early
 - Document expected behavior
 - Enable confident refactoring
@@ -656,6 +671,7 @@ Target: 95%+ coverage on all utility files.
 ### Test Data Strategy
 
 For statistical/calculation tests:
+
 - Use small, hand-calculable examples
 - Include known edge cases
 - Test with realistic data ranges
@@ -664,6 +680,7 @@ For statistical/calculation tests:
 ### Coverage Philosophy
 
 **Aim for 95-100% because:**
+
 - Utilities are easy to test (pure functions)
 - High test value (catch bugs early)
 - Low maintenance cost
@@ -671,6 +688,7 @@ For statistical/calculation tests:
 
 ---
 
-**Estimated Context Usage**: ~150 lines read per file, ~100-150 lines written per test file, 2 hours total
+**Estimated Context Usage**: ~150 lines read per file, ~100-150 lines written
+per test file, 2 hours total
 
 **Success Metric**: 95%+ test coverage on all utility files, all tests passing
