@@ -65,6 +65,7 @@ export {
   SEASONAL_CATEGORIES,
   PLAYOFF_CATEGORIES,
   getAllCategories,
+  getCategoryInfoExpanded,
   getExpandedCategoriesGrouped,
   // Aggregation types
   type RollingWindowData,

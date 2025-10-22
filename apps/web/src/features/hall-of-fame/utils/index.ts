@@ -46,5 +46,6 @@ export {
   SEASONAL_CATEGORIES,
   PLAYOFF_CATEGORIES,
   getAllCategories,
+  getCategoryInfoExpanded,
   getExpandedCategoriesGrouped,
 } from './categories-expanded';

@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 import { useHallOfFameEnhanced } from '@/hooks/useHallOfFameEnhanced';
-import { formatRecord, getCategoryInfo, getRankEmoji } from '@/features/hall-of-fame/utils';
+import {
+  formatRecord,
+  getCategoryInfo,
+  getCategoryInfoExpanded,
+  getRankEmoji,
+} from '@/features/hall-of-fame/utils';
 import { Container, PageHeader } from '@gauntlet/ui';
 import ContentLoader from 'react-content-loader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -627,7 +632,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                   'lowest_bottom3_sum',
                 ].map(categoryId => {
                   const records = weeklyRecords.get(categoryId);
-                  const category = getCategoryInfo(categoryId);
+                  const category = getCategoryInfoExpanded(categoryId);
                   if (!records || !category || records.length === 0) return null;
 
                   // Check if this is a "both" type category (has both high and low records)

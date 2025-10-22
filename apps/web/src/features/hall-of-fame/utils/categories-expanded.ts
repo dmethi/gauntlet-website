@@ -696,6 +696,15 @@ export const getAllCategories = (): HallOfFameCategory[] => {
 };
 
 /**
+ * Get category info from ALL categories (base + expanded)
+ * Use this instead of getCategoryInfo when working with expanded categories
+ */
+export const getCategoryInfoExpanded = (categoryId: string): HallOfFameCategory | undefined => {
+  const allCategories = getAllCategories();
+  return allCategories.find(c => c.id === categoryId);
+};
+
+/**
  * Get expanded categories grouped
  */
 export const getExpandedCategoriesGrouped = (): Map<string, HallOfFameCategory[]> => {
