@@ -117,31 +117,41 @@ export const GET = async (_req: NextRequest, { params }: { params: { week: strin
           const pts: Record<string, number> = (entry.startersPoints ||
             entry.starterPoints ||
             {}) as any;
-          return ids.map((id, index) => {
-            const p = playersMap[id] || {};
-            // starters_points uses array indices as keys, not player IDs
-            const currentScore = Number(pts?.[index.toString()] || 0);
+          return ids
+            .map((id, index) => {
+              const p = playersMap[id] || {};
+              // starters_points uses array indices as keys, not player IDs
+              const currentScore = Number(pts?.[index.toString()] || 0);
 
-            // Ensure position is valid for sim-engine validation
-            // Valid positions: QB, RB, WR, TE, K, DEF, DST
-            let position = p.position;
-            if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
-              // Default to RB for flex positions or unknown players (most common flex position)
-              position = 'RB';
-            }
+              // Ensure position is valid for sim-engine validation
+              // Valid positions: QB, RB, WR, TE, K, DEF, DST
+              let position = p.position;
+              if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+                // Default to RB for flex positions or unknown players (most common flex position)
+                position = 'RB';
+              }
 
-            return {
-              id,
-              name: p.full_name || id,
-              position,
-              projection: projOf(id),
-              currentScore,
-              nflTeam: p.team || undefined,
-            };
-          });
+              return {
+                id,
+                name: p.full_name || id,
+                position,
+                projection: projOf(id),
+                currentScore,
+                nflTeam: p.team || undefined,
+              };
+            })
+            .filter(player => player.id !== '0'); // Filter out empty roster slots (Sleeper uses "0" for empty slots)
         };
         const team1Players = buildPlayers(a);
         const team2Players = buildPlayers(b);
+
+        // Skip matchups where either team has no valid players (all empty slots)
+        if (team1Players.length === 0 || team2Players.length === 0) {
+          console.warn(
+            `[LEAGUE ODDS] Skipping matchup ${a.matchupId} in league ${leagueId} - empty lineup detected`,
+          );
+          continue;
+        }
 
         // Run sim-engine once per matchup pair to get distributions. We don't have per-player NFL team live set here,
         // so pass undefined; sim-engine will treat players without currentScore as pre-game and with currentScore as finished.

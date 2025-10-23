@@ -9,7 +9,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import type { SleeperTransaction } from '@gauntlet/types';
 import { CURRENT_LEAGUES } from '@/config/leagues';
 import type { WaiverAnalysisData } from '../types';
-import { processWaiverData, type PlayerDataLoader } from '../utils/process-waiver-data';
+import { type PlayerDataLoader, processWaiverData } from '../utils/process-waiver-data';
 import type { TeamInfo } from '../utils/transformations';
 
 /**

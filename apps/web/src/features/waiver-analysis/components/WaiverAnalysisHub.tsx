@@ -10,7 +10,7 @@
 import { memo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, Users, ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, DollarSign, TrendingUp, Users } from 'lucide-react';
 import { useWaiverAnalytics } from '../hooks';
 import { CrossLeagueView } from './CrossLeagueView';
 import { ManagerView } from './ManagerView';
@@ -178,9 +178,9 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
               <ManagerView data={data} />
             </TabsContent>
 
-          <TabsContent value="players" className="mt-6">
-            <PlayerMovementView data={data} />
-          </TabsContent>
+            <TabsContent value="players" className="mt-6">
+              <PlayerMovementView data={data} />
+            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>

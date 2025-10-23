@@ -7,7 +7,7 @@
 
 'use client';
 
-import React, { memo, useState, useMemo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
@@ -17,8 +17,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { ChevronDown, ChevronRight, Search, TrendingUp, TrendingDown } from 'lucide-react';
-import type { WaiverTransaction, WaiverAnalysisData } from '../../types';
+import { ChevronDown, ChevronRight, Search, TrendingDown, TrendingUp } from 'lucide-react';
+import type { WaiverAnalysisData, WaiverTransaction } from '../../types';
 
 interface CentralWaiverTableProps {
   readonly data: WaiverAnalysisData;

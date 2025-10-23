@@ -72,53 +72,57 @@ export const GET = async (
       const starterPoints = (matchup.starters_points as Record<string, number> | undefined) || {};
 
       // Build starter players
-      const starterPlayers: PlayerDetails[] = starters.map((playerId: string, index: number) => {
-        const player = playersData[playerId] || {};
-        const actualPoints = Number(starterPoints[index.toString()] || 0);
+      const starterPlayers: PlayerDetails[] = starters
+        .filter((playerId: string) => playerId !== '0') // Filter out empty roster slots
+        .map((playerId: string, index: number) => {
+          const player = playersData[playerId] || {};
+          const actualPoints = Number(starterPoints[index.toString()] || 0);
 
-        // Ensure position is valid for sim-engine validation
-        // Valid positions: QB, RB, WR, TE, K, DEF, DST
-        let position = player.position;
-        if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
-          // Default to RB for flex positions or unknown players
-          position = 'RB';
-        }
+          // Ensure position is valid for sim-engine validation
+          // Valid positions: QB, RB, WR, TE, K, DEF, DST
+          let position = player.position;
+          if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+            // Default to RB for flex positions or unknown players
+            position = 'RB';
+          }
 
-        return {
-          id: playerId,
-          name: player.full_name || playerId,
-          position,
-          team: player.team || '',
-          points: actualPoints,
-          projectedPoints: projectionOf(playerId),
-          isStarter: true,
-          status: 'active' as const,
-        };
-      });
+          return {
+            id: playerId,
+            name: player.full_name || playerId,
+            position,
+            team: player.team || '',
+            points: actualPoints,
+            projectedPoints: projectionOf(playerId),
+            isStarter: true,
+            status: 'active' as const,
+          };
+        });
 
       // Build bench players
-      const benchPlayers: PlayerDetails[] = bench.map((playerId: string) => {
-        const player = playersData[playerId] || {};
+      const benchPlayers: PlayerDetails[] = bench
+        .filter((playerId: string) => playerId !== '0') // Filter out empty roster slots
+        .map((playerId: string) => {
+          const player = playersData[playerId] || {};
 
-        // Ensure position is valid for sim-engine validation
-        // Valid positions: QB, RB, WR, TE, K, DEF, DST
-        let position = player.position;
-        if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
-          // Default to RB for flex positions or unknown players
-          position = 'RB';
-        }
+          // Ensure position is valid for sim-engine validation
+          // Valid positions: QB, RB, WR, TE, K, DEF, DST
+          let position = player.position;
+          if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
+            // Default to RB for flex positions or unknown players
+            position = 'RB';
+          }
 
-        return {
-          id: playerId,
-          name: player.full_name || playerId,
-          position,
-          team: player.team || '',
-          points: 0, // Bench players don't have points in current week
-          projectedPoints: projectionOf(playerId),
-          isStarter: false,
-          status: 'active' as const,
-        };
-      });
+          return {
+            id: playerId,
+            name: player.full_name || playerId,
+            position,
+            team: player.team || '',
+            points: 0, // Bench players don't have points in current week
+            projectedPoints: projectionOf(playerId),
+            isStarter: false,
+            status: 'active' as const,
+          };
+        });
 
       return {
         rosterId: matchup.roster_id,

@@ -8,13 +8,13 @@
 import type { SleeperTransaction } from '@gauntlet/types';
 import type { WaiverAnalysisData, WaiverTransaction } from '../types';
 import {
-  transformSleeperTransaction,
   enrichWithCompetingBids,
   groupByManager,
-  type TeamInfo,
   type PlayerInfo,
+  type TeamInfo,
+  transformSleeperTransaction,
 } from './transformations';
-import { buildManagerWaiverStats, buildLeagueWaiverTrends } from './aggregations';
+import { buildLeagueWaiverTrends, buildManagerWaiverStats } from './aggregations';
 import {
   buildCrossLeaguePlayerComparisons,
   buildPositionalSpendComparison,

@@ -4,7 +4,7 @@
  * Track highest volume movers - players involved in most transactions
  */
 
-import type { WaiverTransaction, PlayerMovement } from '../types';
+import type { PlayerMovement, WaiverTransaction } from '../types';
 
 /**
  * Build player movement history showing ownership changes

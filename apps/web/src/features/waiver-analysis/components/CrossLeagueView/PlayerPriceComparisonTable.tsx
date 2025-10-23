@@ -6,7 +6,7 @@
 
 'use client';
 
-import { memo, useState, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import {
   Table,
   TableBody,

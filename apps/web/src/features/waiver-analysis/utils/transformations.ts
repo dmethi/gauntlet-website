@@ -6,7 +6,7 @@
  */
 
 import type { SleeperTransaction } from '@gauntlet/types';
-import type { WaiverTransaction, CompetingBid, PlayerWaiverHistory } from '../types';
+import type { CompetingBid, PlayerWaiverHistory, WaiverTransaction } from '../types';
 
 /**
  * Team info lookup map

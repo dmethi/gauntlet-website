@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { memo, useState, useMemo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -24,7 +24,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronDown, ChevronRight, Search, TrendingUp, TrendingDown, ArrowUpDown } from 'lucide-react';
+import {
+  ArrowUpDown,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
 import type { ManagerWaiverStats, WaiverTransaction } from '../../types';
 
 interface ManagerWaiverTableProps {
@@ -271,10 +278,7 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                     <React.Fragment key={rowKey}>
                       <TableRow className="hover:bg-muted/30 cursor-pointer">
                         {/* Expand icon */}
-                        <TableCell
-                          className="text-center"
-                          onClick={() => toggleRow(rowKey)}
-                        >
+                        <TableCell className="text-center" onClick={() => toggleRow(rowKey)}>
                           <button className="text-muted-foreground hover:text-foreground">
                             {isExpanded ? (
                               <ChevronDown className="h-4 w-4" />
@@ -288,7 +292,9 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                         <TableCell onClick={() => toggleRow(rowKey)}>
                           <div>
                             <div className="font-medium">{manager.teamName}</div>
-                            <div className="text-xs text-muted-foreground">{manager.managerName}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {manager.managerName}
+                            </div>
                           </div>
                         </TableCell>
 
@@ -306,12 +312,18 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                         </TableCell>
 
                         {/* Total Spent */}
-                        <TableCell className="text-right font-mono" onClick={() => toggleRow(rowKey)}>
+                        <TableCell
+                          className="text-right font-mono"
+                          onClick={() => toggleRow(rowKey)}
+                        >
                           <span className="font-semibold">${manager.totalFAABSpent}</span>
                         </TableCell>
 
                         {/* Remaining */}
-                        <TableCell className="text-right font-mono" onClick={() => toggleRow(rowKey)}>
+                        <TableCell
+                          className="text-right font-mono"
+                          onClick={() => toggleRow(rowKey)}
+                        >
                           ${manager.remainingFAAB}
                         </TableCell>
 

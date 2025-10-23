@@ -140,7 +140,8 @@ export const GET = async (
       const ownerB: User | null = rosterB ? (usersById.get(rosterB.ownerId) ?? null) : null;
 
       const makeTeam = (m: SleeperMatchup | null, roster: Roster | null, owner: User | null) => {
-        const starters = (m?.starters || []) as string[];
+        const allStarters = (m?.starters || []) as string[];
+        const starters = allStarters.filter(pid => pid !== '0'); // Filter out empty roster slots
         const starterPoints = m?.starterPoints || {};
 
         // Create actual points mapping using array indices

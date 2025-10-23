@@ -9,7 +9,7 @@
 import { memo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { WaiverAnalysisData, LeagueWaiverTrends } from '../../types';
+import type { LeagueWaiverTrends, WaiverAnalysisData } from '../../types';
 
 interface WeeklyTrendsViewProps {
   readonly data: WaiverAnalysisData;
