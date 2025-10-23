@@ -9,7 +9,15 @@ import { useSearchParams } from 'next/navigation';
 interface StatsPageProps {
   searchParams: {
     team?: string;
-    view?: 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit';
+    view?:
+      | 'team'
+      | 'league'
+      | 'schedule'
+      | 'trends'
+      | 'scatter'
+      | 'transactions'
+      | 'start-sit'
+      | 'waiver-analysis';
     week?: string;
   };
 }

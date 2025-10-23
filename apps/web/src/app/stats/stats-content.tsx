@@ -11,12 +11,21 @@ import { ScheduleAnalysis } from './components/ScheduleAnalysis';
 import { ScatterAnalysis } from './components/ScatterAnalysis';
 import { TrendsView } from './components/TrendsView';
 import { TeamView } from '@/features/stats/components/TeamView';
+import { WaiverAnalysisHub } from '@/features/waiver-analysis/components';
 
 interface StatsContentProps {
   dataset: PlainStatsDataset & { startSitEfficiency?: any };
   searchParams: {
     team?: string;
-    view?: 'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit';
+    view?:
+      | 'team'
+      | 'league'
+      | 'schedule'
+      | 'trends'
+      | 'scatter'
+      | 'transactions'
+      | 'start-sit'
+      | 'waiver-analysis';
     week?: string;
   };
   leagues: Array<{ id: string; name: string; season: number }>;
@@ -40,7 +49,14 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
   const [selectedTeamKey] = useState<string>(searchParams.team || teamOptions[0]?.key || '');
 
   const [currentView, setCurrentView] = useState<
-    'team' | 'league' | 'schedule' | 'trends' | 'scatter' | 'transactions' | 'start-sit'
+    | 'team'
+    | 'league'
+    | 'schedule'
+    | 'trends'
+    | 'scatter'
+    | 'transactions'
+    | 'start-sit'
+    | 'waiver-analysis'
   >(
     (searchParams.view as
       | 'team'
@@ -49,7 +65,8 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
       | 'trends'
       | 'scatter'
       | 'transactions'
-      | 'start-sit') || 'team',
+      | 'start-sit'
+      | 'waiver-analysis') || 'team',
   );
 
   const [selectedWeek, setSelectedWeek] = useState<string>(searchParams.week || 'season');
@@ -98,7 +115,8 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
               | 'trends'
               | 'scatter'
               | 'transactions'
-              | 'start-sit',
+              | 'start-sit'
+              | 'waiver-analysis',
           )
         }
       >
@@ -109,6 +127,7 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
           <TabsTrigger value="trends">Performance Trends</TabsTrigger>
           <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
           <TabsTrigger value="transactions">Transaction Analysis</TabsTrigger>
+          <TabsTrigger value="waiver-analysis">Waiver Analysis</TabsTrigger>
           <TabsTrigger value="start-sit">Start/Sit Efficiency</TabsTrigger>
         </TabsList>
 
@@ -154,6 +173,10 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
 
         <TabsContent value="transactions">
           <TransactionAnalysis currentWeek={dataset.currentWeek} />
+        </TabsContent>
+
+        <TabsContent value="waiver-analysis">
+          <WaiverAnalysisHub currentWeek={dataset.currentWeek} />
         </TabsContent>
 
         <TabsContent value="start-sit">
