@@ -443,26 +443,86 @@ const calculateScenarios = (
       if (seedScenarios.length === 0) {
         // This seed only occurs due to Monte Carlo variance (points tiebreakers)
         // Not in the deterministic 64-outcome analysis
-        // Add a points_margin condition to indicate this
+        // We need to figure out WHICH team's points matter for the tiebreaker
+        
         const teamName = isTeam1 ? targetMatchup.team1Name : targetMatchup.team2Name;
+        const targetStanding = standings.find((s) => s.rosterId === rosterId);
         
-        // Find adjacent seeds to see what differentiates them
-        const adjacentSeeds = rawScenarios.filter(
-          (s) => Math.abs(s.seed - scenario.seed) === 1
-        );
+        // Find adjacent seed to compare against
+        const adjacentSeed = scenario.seed <= 6 
+          ? rawScenarios.find((s) => s.seed === scenario.seed + 1)
+          : rawScenarios.find((s) => s.seed === scenario.seed - 1);
         
-        if (adjacentSeeds.length > 0) {
-          // This seed is differentiated by points tiebreaker from adjacent seeds
-          finalConditions = [{
-            type: scenario.isWin ? 'win' : 'lose',
-            teamName,
-            rosterId,
-          }, {
-            type: 'points_margin',
-            teamName: 'tiebreaker',
-            rosterId: 0,
-            marginRequired: scenario.seed <= 6 ? -20 : 20, // Negative means "score lower"
-          }];
+        if (adjacentSeed && targetStanding) {
+          // Find teams with similar records who could be the tiebreaker
+          // After target's matchup, they'll have wins +/- 1
+          const projectedWins = targetStanding.wins + (scenario.isWin ? 1 : 0);
+          
+          // Look for teams with same projected wins (same record = tiebreaker)
+          const tiebreakerCandidates = standings.filter((s) => {
+            if (s.rosterId === rosterId) return false;
+            // Check if they could end up with same record
+            const theirMatchup = matchups.find(
+              (m) => m.team1RosterId === s.rosterId || m.team2RosterId === s.rosterId
+            );
+            if (!theirMatchup) return false;
+            // Either winning or losing could give them same record
+            const theirWinsIfWin = s.wins + 1;
+            const theirWinsIfLose = s.wins;
+            return theirWinsIfWin === projectedWins || theirWinsIfLose === projectedWins;
+          });
+          
+          if (tiebreakerCandidates.length > 0) {
+            // Sort by current points (closest to target = most likely tiebreaker)
+            const sortedCandidates = tiebreakerCandidates.sort((a, b) => {
+              const aDiff = Math.abs(a.pointsFor - targetStanding.pointsFor);
+              const bDiff = Math.abs(b.pointsFor - targetStanding.pointsFor);
+              return aDiff - bDiff;
+            });
+            
+            const tiebreakerTeam = sortedCandidates[0];
+            const currentDiff = targetStanding.pointsFor - tiebreakerTeam.pointsFor;
+            
+            // For better seed (lower number), target needs to have MORE points
+            // For worse seed (higher number), target has FEWER points
+            const needsMorePoints = scenario.seed < (adjacentSeed.seed);
+            
+            // Calculate approximate margin needed based on current difference
+            // If currently ahead by 50, and this is a better seed, maintain lead
+            // If currently behind by 50, and this is worse seed, stay behind or close gap
+            const marginNeeded = needsMorePoints
+              ? Math.max(1, Math.ceil(-currentDiff + 1)) // Need to be ahead by at least 1
+              : undefined; // Any points where you fall behind
+            
+            finalConditions = [{
+              type: scenario.isWin ? 'win' : 'lose',
+              teamName,
+              rosterId,
+            }];
+            
+            if (needsMorePoints && marginNeeded && marginNeeded > 0) {
+              finalConditions.push({
+                type: 'points_margin',
+                teamName: tiebreakerTeam.teamName,
+                rosterId: tiebreakerTeam.rosterId,
+                marginRequired: marginNeeded,
+              });
+            } else if (!needsMorePoints) {
+              // Worse seed = be outscored by this team
+              finalConditions.push({
+                type: 'points_margin',
+                teamName: tiebreakerTeam.teamName,
+                rosterId: tiebreakerTeam.rosterId,
+                marginRequired: currentDiff > 0 ? -Math.ceil(currentDiff + 1) : -1,
+              });
+            }
+          } else {
+            finalConditions = [{
+              type: scenario.isWin ? 'win' : 'lose',
+              teamName,
+              rosterId,
+            }];
+          }
         } else {
           finalConditions = [{
             type: scenario.isWin ? 'win' : 'lose',

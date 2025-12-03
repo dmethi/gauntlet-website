@@ -125,15 +125,13 @@ export const formatScenarioConditions = (
         parts.push(`${condition.teamName} loses`);
         break;
       case 'points_margin':
-        if (condition.teamName === 'tiebreaker') {
-          // Special case for variance-driven seeds
-          if (condition.marginRequired && condition.marginRequired < 0) {
-            parts.push('+ favorable points tiebreaker');
+        if (condition.marginRequired) {
+          if (condition.marginRequired > 0) {
+            parts.push(`outscore ${condition.teamName} by ${condition.marginRequired}+ pts`);
           } else {
-            parts.push('+ unfavorable points tiebreaker');
+            // Negative margin = be outscored by this team
+            parts.push(`be outscored by ${condition.teamName}`);
           }
-        } else if (condition.marginRequired && condition.marginRequired > 0) {
-          parts.push(`outscore ${condition.teamName} by ${condition.marginRequired}+ pts`);
         }
         break;
     }
