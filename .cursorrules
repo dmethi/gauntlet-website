@@ -113,6 +113,30 @@ Tech Debt Notes:
 | Utils/Logic | 400 | 700 | 1000+ |
 | Types | 200 | 400 | 600+ |
 
+## 🔒 Security Standards
+
+**CRITICAL: NEVER commit secrets or API keys**
+
+❌ **STRICTLY FORBIDDEN:**
+- API keys, tokens, or credentials in ANY file (code, docs, commit messages, task files)
+- Pattern examples: `sk-proj-*`, `Bearer *`, `API_KEY=*`, database passwords
+- Credentials in commit messages or PR descriptions
+- Keys in documentation or markdown files
+
+✅ **Required Practices:**
+- ALL secrets MUST use environment variables
+- Use `.env.local` (gitignored) for local development
+- Use Vercel/deployment platform secrets for production
+- Before any commit: scan for patterns like `sk-`, `Bearer`, `API_KEY`, `password`, `secret`
+- If accidentally committed: IMMEDIATELY use `git filter-repo` to remove from history
+
+**If a key is leaked:**
+1. STOP all work
+2. Revoke/rotate the leaked credential immediately
+3. Use `git filter-repo --invert-paths --path <file>` to remove from history
+4. Force push cleaned history
+5. Notify relevant parties
+
 ## 🔍 Logging Standards
 
 **NEVER use console.log in production code**
@@ -237,6 +261,7 @@ export const createService = (config: Config): Service => {
 - [ ] `npx tsc --noEmit` passes
 - [ ] Tests pass (if exist)
 - [ ] No files >800 lines (or justified)
+- [ ] **No secrets/API keys in any files or commit messages**
 - [ ] Tech debt review presented to user
 - [ ] Accepted tech debt documented in commit
 - [ ] Debug files deleted

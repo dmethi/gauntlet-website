@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, ChevronDown, ChevronRight, ChevronUp, Trophy, Users } from 'lucide-react';
+import { Calendar, ChevronDown, ChevronRight, ChevronUp, Trophy, Users, Target, Swords } from 'lucide-react';
 import Link from 'next/link';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
 import { useState } from 'react';
@@ -547,6 +547,52 @@ export default function CompetitionPage(): JSX.Element {
       {/* Reports Section */}
       <div className="mb-8">
         <ReportsSection />
+      </div>
+
+      {/* Playoff Scenarios - Week 14 Feature */}
+      <div className="mb-8">
+        <Card className="bg-gradient-to-r from-gauntlet-gold/5 to-gauntlet-crimson/5 border-gauntlet-gold/30 hover:shadow-lg transition-shadow">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5 text-gauntlet-gold" />
+              Playoff Scenarios
+              <Badge variant="default" className="bg-gauntlet-gold text-black ml-2">
+                Week 14
+              </Badge>
+            </CardTitle>
+            <CardDescription>
+              Final week before playoffs! See your team&apos;s seeding odds and cross-league battle predictions.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 mb-4">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <Trophy className="h-8 w-8 text-gauntlet-gold" />
+                <div>
+                  <div className="font-semibold">Seeding Probabilities</div>
+                  <div className="text-sm text-muted-foreground">
+                    What needs to happen for each playoff seed
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <Swords className="h-8 w-8 text-gauntlet-crimson" />
+                <div>
+                  <div className="font-semibold">Cross-League Battle</div>
+                  <div className="text-sm text-muted-foreground">
+                    AFC vs NFC - $100/person championship
+                  </div>
+                </div>
+              </div>
+            </div>
+            <Button asChild className="w-full bg-gauntlet-gold hover:bg-gauntlet-gold/90 text-black">
+              <Link href="/competition/playoff-scenarios">
+                <span>View Playoff Scenarios</span>
+                <ChevronRight className="h-4 w-4 ml-2" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
 
       {/* League Standings */}

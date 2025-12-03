@@ -1,6 +1,30 @@
 /**
  * Playoff hooks barrel export
- * Hooks will be added here during hook extraction phase
  */
 
-// TODO: Export playoff hooks here when created
+// Seeding simulation hook
+export {
+  usePlayoffSeeding,
+  usePlayoffSeedingWithScenarios,
+  formatSeedProbability,
+  getSeedProbabilityColor,
+  formatScenarioConditions,
+} from './usePlayoffSeeding';
+
+// Cross-league battle hook
+export {
+  useCrossLeagueBattle,
+  formatWinProbability,
+  getAfcColor,
+  getNfcColor,
+  formatExpectedWins,
+  getMatchupFavorite,
+  getMatchupIndicatorColor,
+} from './useCrossLeagueBattle';
+
+// Scenario builder hook
+export {
+  useWeek14Scenarios,
+  getOutcomeLabel,
+  getOutcomeButtonVariant,
+} from './useWeek14Scenarios';
