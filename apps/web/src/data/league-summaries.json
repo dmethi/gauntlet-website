@@ -1,0 +1,423 @@
+{
+  "generatedAt": "2025-12-04T17:12:28.239Z",
+  "throughWeek": 13,
+  "afc": {
+    "summary": {
+      "leagueName": "AFC",
+      "generatedAt": "2025-12-04T17:12:26.428Z",
+      "overallSummary": "It all comes down to this! Week 14 is the final stand for AFC fantasy teams, with playoff dreams hanging in the balance and Toilet Bowl fates to be decided. Get ready for a wild ride as contenders clash and pretenders try to salvage some dignity.",
+      "playoffRace": "To Infinity and Bijan has locked up the #1 seed and a guaranteed playoff spot. lol jerry jones, Drake Maye Lover, and scboom5 have also punched their tickets to the dance. The real drama is for the final two spots, with achak7 (75%), benweinfeld (75%), and Quonspiracy Theorists (50%) battling it out. 2 Dolla Balla$, Dr Patel Parikh MD MBA, NielGetsCarried, vchak, and Nacua Matata are mathematically eliminated and will be fighting to avoid the depths of the Toilet Bowl.",
+      "seedingBattles": "The fight for seeding is fierce! lol jerry jones (63%) has the inside track on the #2 seed, but Drake Maye Lover (25%) and scboom5 (13%) are still in the hunt. scboom5 (88%) is the heavy favorite for the #3 seed, while Drake Maye Lover (75%) is most likely to end up with the #4 seed. The #5 and #6 seeds are a free-for-all between achak7, Quonspiracy Theorists, and benweinfeld, with each game holding massive implications.",
+      "toiletBowl": "The Toilet Bowl is shaping up to be a battle of the basement dwellers! NielGetsCarried and Nacua Matata are currently in the worst positions and are fighting to avoid the ignominy of a first-round Toilet Bowl BYE. vchak is also in danger of ending up in the bottom two.",
+      "keyMatchups": [
+        "Quonspiracy Theorists (50% playoff) vs achak7 (75% playoff): A win for achak7 likely secures their playoff spot, while a loss could send them spiraling. Quonspiracy Theorists NEED a win to keep their playoff hopes alive.",
+        "Nacua Matata (0% playoff) vs benweinfeld (75% playoff): benweinfeld needs a win against the lowly Nacua Matata to secure a playoff spot. However, a loss could open the door for Quonspiracy Theorists to sneak in.",
+        "lol jerry jones (100% playoff) vs vchak (0% playoff): While lol jerry jones has already clinched a playoff spot, they are still fighting for seeding. vchak, on the other hand, is playing for pride and to avoid the Toilet Bowl BYE."
+      ]
+    },
+    "teams": {
+      "1": {
+        "teamName": "2 Dolla Balla$",
+        "rosterId": 1,
+        "record": "5-8",
+        "points": 1354.15,
+        "division": 2,
+        "bestSeed": 8,
+        "worstSeed": 10,
+        "seedProbabilities": {
+          "8": 63,
+          "9": 25,
+          "10": 13
+        },
+        "playoffOdds": 0,
+        "opponent": "scboom5"
+      },
+      "2": {
+        "teamName": "lol jerry jones",
+        "rosterId": 2,
+        "record": "8-5",
+        "points": 1626.82,
+        "division": 1,
+        "bestSeed": 2,
+        "worstSeed": 4,
+        "seedProbabilities": {
+          "2": 63,
+          "3": 13,
+          "4": 25
+        },
+        "playoffOdds": 100,
+        "opponent": "vchak"
+      },
+      "3": {
+        "teamName": "NielGetsCarried",
+        "rosterId": 3,
+        "record": "5-8",
+        "points": 1252.12,
+        "division": 1,
+        "bestSeed": 8,
+        "worstSeed": 11,
+        "seedProbabilities": {
+          "8": 13,
+          "9": 25,
+          "10": 38,
+          "11": 25
+        },
+        "playoffOdds": 0,
+        "opponent": "Drake Maye Lover"
+      },
+      "4": {
+        "teamName": "Drake Maye Lover",
+        "rosterId": 4,
+        "record": "8-5",
+        "points": 1616.96,
+        "division": 1,
+        "bestSeed": 2,
+        "worstSeed": 4,
+        "seedProbabilities": {
+          "2": 25,
+          "4": 75
+        },
+        "playoffOdds": 100,
+        "opponent": "NielGetsCarried"
+      },
+      "5": {
+        "teamName": "Quonspiracy Theorists",
+        "rosterId": 5,
+        "record": "7-6",
+        "points": 1471.15,
+        "division": 2,
+        "bestSeed": 5,
+        "worstSeed": 7,
+        "seedProbabilities": {
+          "5": 25,
+          "6": 25,
+          "7": 50
+        },
+        "playoffOdds": 50,
+        "opponent": "achak7"
+      },
+      "6": {
+        "teamName": "Nacua Matata",
+        "rosterId": 6,
+        "record": "3-10",
+        "points": 1304.98,
+        "division": 3,
+        "bestSeed": 11,
+        "worstSeed": 12,
+        "seedProbabilities": {
+          "11": 25,
+          "12": 75
+        },
+        "playoffOdds": 0,
+        "opponent": "benweinfeld"
+      },
+      "7": {
+        "teamName": "benweinfeld",
+        "rosterId": 7,
+        "record": "7-6",
+        "points": 1491.18,
+        "division": 3,
+        "bestSeed": 5,
+        "worstSeed": 7,
+        "seedProbabilities": {
+          "5": 25,
+          "6": 50,
+          "7": 25
+        },
+        "playoffOdds": 75,
+        "opponent": "Nacua Matata"
+      },
+      "8": {
+        "teamName": "Dr Patel Parikh MD MBA",
+        "rosterId": 8,
+        "record": "5-8",
+        "points": 1300.17,
+        "division": 3,
+        "bestSeed": 8,
+        "worstSeed": 10,
+        "seedProbabilities": {
+          "8": 25,
+          "9": 50,
+          "10": 25
+        },
+        "playoffOdds": 0,
+        "opponent": "To Infinity and Bijan"
+      },
+      "9": {
+        "teamName": "achak7",
+        "rosterId": 9,
+        "record": "7-6",
+        "points": 1498.94,
+        "division": 2,
+        "bestSeed": 5,
+        "worstSeed": 7,
+        "seedProbabilities": {
+          "5": 50,
+          "6": 25,
+          "7": 25
+        },
+        "playoffOdds": 75,
+        "opponent": "Quonspiracy Theorists"
+      },
+      "10": {
+        "teamName": "To Infinity and Bijan",
+        "rosterId": 10,
+        "record": "11-2",
+        "points": 1568.71,
+        "division": 3,
+        "bestSeed": 1,
+        "worstSeed": 1,
+        "seedProbabilities": {
+          "1": 100
+        },
+        "playoffOdds": 100,
+        "opponent": "Dr Patel Parikh MD MBA"
+      },
+      "11": {
+        "teamName": "scboom5",
+        "rosterId": 11,
+        "record": "8-5",
+        "points": 1502.82,
+        "division": 2,
+        "bestSeed": 2,
+        "worstSeed": 3,
+        "seedProbabilities": {
+          "2": 13,
+          "3": 88
+        },
+        "playoffOdds": 100,
+        "opponent": "2 Dolla Balla$"
+      },
+      "12": {
+        "teamName": "vchak",
+        "rosterId": 12,
+        "record": "4-9",
+        "points": 1258.62,
+        "division": 1,
+        "bestSeed": 10,
+        "worstSeed": 12,
+        "seedProbabilities": {
+          "10": 25,
+          "11": 50,
+          "12": 25
+        },
+        "playoffOdds": 0,
+        "opponent": "lol jerry jones"
+      }
+    }
+  },
+  "nfc": {
+    "summary": {
+      "leagueName": "NFC",
+      "generatedAt": "2025-12-04T17:12:28.239Z",
+      "overallSummary": "Welcome to the thunderdome, folks! Week 14 is the LAST week of the regular season in the NFC league, and the stakes couldn't be higher. Playoff dreams will be realized or crushed, seeding will be determined, and some will be forced to face the ignominy of the Toilet Bowl. Get your popcorn ready; this is going to be a wild ride!",
+      "playoffRace": "Six teams have already punched their tickets to the playoffs: Marginal Returns, cescott25, Mach 10, DJ Herbussy, ziyanp22, and Saint Brown Does Mahomes. vayyala is on the outside looking in with a 38% chance, needing a win and some help to sneak in. For C&G^2, Jaxson Dart-Njigba, The zoo, Dont go Chasing Saquon, and lukebowsh, the playoffs are a distant memory; they're battling to avoid the depths of the Toilet Bowl.",
+      "seedingBattles": "The top seeds are up for grabs! Marginal Returns (75% chance) and cescott25 (25% chance) are battling for the coveted #1 seed, which comes with home-field advantage throughout the playoffs. Their head-to-head matchup against Saint Brown Does Mahomes will be crucial for cescott25. The #3 seed is a coin flip between Mach 10 (50%) and ziyanp22 (50%), who face off this week in a pivotal game. DJ Herbussy (63%) is in the driver's seat for the #4 seed, but Saint Brown Does Mahomes (25%) and Mach 10 (13%) are still in the hunt. The #5 and #6 seeds are a chaotic mix, with Mach 10, DJ Herbussy, Saint Brown Does Mahomes, ziyanp22, and vayyala all vying for position.",
+      "toiletBowl": "At the bottom, the Toilet Bowl looms large. Dont go Chasing Saquon and lukebowsh are battling to avoid the very bottom, which would mean no first-round bye in the Toilet Bowl. The zoo, Jaxson Dart-Njigba, and C&G^2 are all hoping to climb out of the bottom two and secure a much-needed week off from the shame. Every point matters in this fight to avoid the ultimate indignity!",
+      "keyMatchups": [
+        "ziyanp22 (88% playoff) vs Mach 10 (100% playoff): A clash of titans with major seeding implications. The winner is likely to secure the #3 seed, while the loser could fall as low as #6.",
+        "Saint Brown Does Mahomes (75% playoff) vs cescott25 (100% playoff): cescott25 needs a win to keep pace with Marginal Returns for the #1 seed. Saint Brown Does Mahomes needs a win to secure a better seed and avoid a tough first-round matchup.",
+        "vayyala (38% playoff) vs C&G^2 (0% playoff): vayyala's playoff hopes hinge on this game. A win keeps their slim chances alive, while a loss seals their fate. C&G^2 is playing for pride and to avoid the Toilet Bowl bye."
+      ]
+    },
+    "teams": {
+      "1": {
+        "teamName": "ziyanp22",
+        "rosterId": 1,
+        "record": "7-6",
+        "points": 1460.88,
+        "division": 3,
+        "bestSeed": 3,
+        "worstSeed": 7,
+        "seedProbabilities": {
+          "3": 50,
+          "5": 13,
+          "6": 25,
+          "7": 13
+        },
+        "playoffOdds": 88,
+        "opponent": "Mach 10"
+      },
+      "2": {
+        "teamName": "Mach 10",
+        "rosterId": 2,
+        "record": "7-6",
+        "points": 1545.23,
+        "division": 3,
+        "bestSeed": 3,
+        "worstSeed": 6,
+        "seedProbabilities": {
+          "3": 50,
+          "4": 13,
+          "5": 25,
+          "6": 13
+        },
+        "playoffOdds": 100,
+        "opponent": "ziyanp22"
+      },
+      "3": {
+        "teamName": "vayyala",
+        "rosterId": 3,
+        "record": "6-7",
+        "points": 1508.83,
+        "division": 1,
+        "bestSeed": 5,
+        "worstSeed": 7,
+        "seedProbabilities": {
+          "5": 13,
+          "6": 25,
+          "7": 63
+        },
+        "playoffOdds": 38,
+        "opponent": "C&G^2"
+      },
+      "4": {
+        "teamName": "DJ Herbussy ",
+        "rosterId": 4,
+        "record": "7-6",
+        "points": 1511.43,
+        "division": 2,
+        "bestSeed": 4,
+        "worstSeed": 6,
+        "seedProbabilities": {
+          "4": 63,
+          "5": 25,
+          "6": 13
+        },
+        "playoffOdds": 100,
+        "opponent": "The zoo"
+      },
+      "5": {
+        "teamName": "Dont go Chasing Saquon",
+        "rosterId": 5,
+        "record": "5-8",
+        "points": 1306.38,
+        "division": 3,
+        "bestSeed": 8,
+        "worstSeed": 12,
+        "seedProbabilities": {
+          "8": 6,
+          "9": 19,
+          "10": 19,
+          "11": 6,
+          "12": 50
+        },
+        "playoffOdds": 0,
+        "opponent": "lukebowsh"
+      },
+      "6": {
+        "teamName": "The zoo",
+        "rosterId": 6,
+        "record": "5-8",
+        "points": 1342.9,
+        "division": 2,
+        "bestSeed": 8,
+        "worstSeed": 11,
+        "seedProbabilities": {
+          "8": 13,
+          "9": 25,
+          "10": 38,
+          "11": 25
+        },
+        "playoffOdds": 0,
+        "opponent": "DJ Herbussy "
+      },
+      "7": {
+        "teamName": "Jaxson Dart-Njigba",
+        "rosterId": 7,
+        "record": "5-8",
+        "points": 1381.52,
+        "division": 1,
+        "bestSeed": 8,
+        "worstSeed": 11,
+        "seedProbabilities": {
+          "8": 25,
+          "9": 38,
+          "10": 25,
+          "11": 13
+        },
+        "playoffOdds": 0,
+        "opponent": "Marginal Returns"
+      },
+      "8": {
+        "teamName": "C&G^2",
+        "rosterId": 8,
+        "record": "5-8",
+        "points": 1442.76,
+        "division": 1,
+        "bestSeed": 8,
+        "worstSeed": 11,
+        "seedProbabilities": {
+          "8": 56,
+          "9": 19,
+          "10": 19,
+          "11": 6
+        },
+        "playoffOdds": 0,
+        "opponent": "vayyala"
+      },
+      "9": {
+        "teamName": "Marginal Returns",
+        "rosterId": 9,
+        "record": "10-3",
+        "points": 1545.79,
+        "division": 1,
+        "bestSeed": 1,
+        "worstSeed": 2,
+        "seedProbabilities": {
+          "1": 75,
+          "2": 25
+        },
+        "playoffOdds": 100,
+        "opponent": "Jaxson Dart-Njigba"
+      },
+      "10": {
+        "teamName": "Saint Brown Does Mahomes",
+        "rosterId": 10,
+        "record": "7-6",
+        "points": 1429.78,
+        "division": 2,
+        "bestSeed": 4,
+        "worstSeed": 7,
+        "seedProbabilities": {
+          "4": 25,
+          "5": 25,
+          "6": 25,
+          "7": 25
+        },
+        "playoffOdds": 75,
+        "opponent": "cescott25"
+      },
+      "11": {
+        "teamName": "lukebowsh",
+        "rosterId": 11,
+        "record": "4-9",
+        "points": 1332.96,
+        "division": 3,
+        "bestSeed": 11,
+        "worstSeed": 12,
+        "seedProbabilities": {
+          "11": 50,
+          "12": 50
+        },
+        "playoffOdds": 0,
+        "opponent": "Dont go Chasing Saquon"
+      },
+      "12": {
+        "teamName": "cescott25",
+        "rosterId": 12,
+        "record": "10-3",
+        "points": 1525.62,
+        "division": 2,
+        "bestSeed": 1,
+        "worstSeed": 2,
+        "seedProbabilities": {
+          "1": 25,
+          "2": 75
+        },
+        "playoffOdds": 100,
+        "opponent": "Saint Brown Does Mahomes"
+      }
+    }
+  }
+}

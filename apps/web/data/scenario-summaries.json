@@ -1,0 +1,15 @@
+{
+  "generatedAt": "placeholder",
+  "throughWeek": 13,
+  "afc": {
+    "leagueId": "",
+    "leagueName": "AFC",
+    "teams": {}
+  },
+  "nfc": {
+    "leagueId": "",
+    "leagueName": "NFC", 
+    "teams": {}
+  }
+}
+

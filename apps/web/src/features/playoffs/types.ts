@@ -126,17 +126,55 @@ export interface SeedingSimulationResult {
 export interface SeedScenario {
   readonly seed: number;
   readonly probability: number;
-  readonly conditions: readonly ScenarioCondition[];
+  readonly conditions: readonly ScenarioCondition[]; // Legacy - single representative condition set
+  readonly paths?: readonly SeedPath[]; // All deterministic paths to this seed
+  readonly summary?: PathSummary; // Simplified summary for display
 }
 
 /**
- * Individual condition in a scenario
+ * Individual condition in a scenario (legacy - kept for backwards compatibility)
  */
 export interface ScenarioCondition {
   readonly type: 'win' | 'lose' | 'other_team_wins' | 'other_team_loses' | 'points_margin';
   readonly teamName: string;
   readonly rosterId: number;
   readonly marginRequired?: number; // For points_margin type
+}
+
+/**
+ * Individual condition in a deterministic path to a seed
+ */
+export interface PathCondition {
+  readonly type: 'win' | 'lose' | 'other_result' | 'points_margin';
+  readonly teamName: string;
+  readonly rosterId: number;
+  readonly opponentName?: string; // For other_result type, the team they play against
+  readonly opponentRosterId?: number;
+  readonly wins?: boolean; // For other_result type, true if this team needs to win
+  readonly marginRequired?: number; // Exact points needed for tiebreaker
+  readonly vsTeamName?: string; // For points_margin, who they need to outscore
+}
+
+/**
+ * A specific path (combination of outcomes) that leads to a seed
+ */
+export interface SeedPath {
+  readonly outcomeId: number; // Which of 64 outcomes (0-63)
+  readonly conditions: readonly PathCondition[];
+}
+
+/**
+ * Summarized path information for cleaner display
+ * Instead of showing 32 individual paths, summarize the key requirements
+ */
+export interface PathSummary {
+  readonly type: 'guaranteed' | 'conditional' | 'impossible';
+  readonly requiresWin: boolean | null; // null = either works, true = must win, false = must lose
+  readonly description: string; // Human-readable summary like "WIN and in" or "LOSE + Team A wins"
+  readonly additionalConditions?: readonly string[]; // Key differentiating conditions
+  readonly pathCount: number; // How many of the 64 outcomes lead here
+  readonly winPathCount: number; // How many require winning
+  readonly losePathCount: number; // How many require losing
 }
 
 /**
@@ -245,6 +283,18 @@ export interface ScenarioBuilderState {
 // ============================================================================
 // SIMULATION CONFIG TYPES
 // ============================================================================
+
+/**
+ * Point constraints for deterministic path calculations
+ * Teams can realistically score between MIN and MAX points in a week
+ */
+export const POINTS_CONSTRAINTS = {
+  MIN_SCORE: 50,
+  MAX_SCORE: 200,
+  // Maximum possible points differential in a single matchup
+  // If winner scores MAX and loser scores MIN
+  MAX_MARGIN: 150, // 200 - 50
+} as const;
 
 /**
  * Configuration for seeding simulation

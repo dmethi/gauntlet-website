@@ -7,7 +7,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { runBothLeagueSimulations } from '../simulations';
-import type { LeagueSeedingResults, SeedingSimulationConfig } from '../types';
+import type { LeagueSeedingResults, SeedingSimulationConfig, PathCondition } from '../types';
 import { CACHE_DURATIONS } from '@/lib/constants';
 
 /**
@@ -138,5 +138,63 @@ export const formatScenarioConditions = (
   });
 
   return parts.length > 0 ? parts.join(' + ') : 'Any outcome results in this seed';
+};
+
+/**
+ * Format path conditions as readable text
+ * For the new deterministic paths
+ */
+export const formatPathConditions = (conditions: readonly PathCondition[]): string => {
+  if (conditions.length === 0) return 'Any outcome results in this seed';
+
+  const parts: string[] = [];
+  
+  // Find own result first (win/lose)
+  const ownResult = conditions.find((c) => c.type === 'win' || c.type === 'lose');
+  if (ownResult) {
+    const result = ownResult.type === 'win' ? 'WIN' : 'LOSE';
+    if (ownResult.opponentName) {
+      parts.push(`${result} vs ${ownResult.opponentName}`);
+    } else {
+      parts.push(result);
+    }
+  }
+
+  // Then add other team outcomes
+  conditions.forEach((condition) => {
+    switch (condition.type) {
+      case 'other_result':
+        if (condition.wins !== undefined) {
+          const action = condition.wins ? 'wins' : 'loses';
+          if (condition.opponentName) {
+            parts.push(`${condition.teamName} ${action} vs ${condition.opponentName}`);
+          } else {
+            parts.push(`${condition.teamName} ${action}`);
+          }
+        }
+        break;
+      case 'points_margin':
+        if (condition.marginRequired !== undefined) {
+          if (condition.marginRequired > 0) {
+            parts.push(`outscore ${condition.vsTeamName || condition.teamName} by ${condition.marginRequired}+ pts`);
+          } else if (condition.marginRequired < 0) {
+            // Negative margin = be outscored by this team
+            parts.push(`be outscored by ${condition.vsTeamName || condition.teamName} by ${Math.abs(condition.marginRequired)}+ pts`);
+          }
+        }
+        break;
+    }
+  });
+
+  return parts.length > 0 ? parts.join(' AND ') : 'Any outcome results in this seed';
+};
+
+/**
+ * Format path count for display
+ */
+export const formatPathCount = (count: number): string => {
+  if (count === 0) return 'No paths';
+  if (count === 1) return '1 path';
+  return `${count} paths`;
 };
 

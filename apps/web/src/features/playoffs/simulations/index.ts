@@ -24,3 +24,11 @@ export {
 // Cross-league battle simulation
 export { runCrossLeagueBattle } from './cross-league-simulator';
 
+// AI-powered scenario summarization
+export {
+  generateTeamScenarioSummary,
+  generateLeagueScenarioSummaries,
+  type ScenarioSummaryInput,
+  type ScenarioSummaryOutput,
+} from './scenario-summarizer';
+

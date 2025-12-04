@@ -1,0 +1,212 @@
+{
+  "generatedAt": "2025-12-04T17:03:02.661Z",
+  "throughWeek": 13,
+  "afc": {
+    "leagueId": "1263744209295245312",
+    "leagueName": "AFC",
+    "teams": {
+      "1": {
+        "overallSummary": "2 Dolla Balla$ needs a dominant win against scboom5 and significant help to sneak into the playoffs as a wild card, focusing on outscoring Dr Patel Parikh MD MBA and NielGetsCarried.",
+        "seedSummaries": {
+          "2": "Not realistically achievable.",
+          "3": "Not realistically achievable.",
+          "4": "Not realistically achievable.",
+          "5": "Not realistically achievable.",
+          "6": "WIN = #6 seed ONLY IF: you beat scboom5, AND outscore Dr Patel Parikh MD MBA by 54.0+ points AND outscore NielGetsCarried by 102.0+ points. This is because they are in other divisions and have the same record as you if you win."
+        },
+        "generatedAt": "2025-12-04T17:02:08.064Z"
+      },
+      "2": {
+        "overallSummary": "lol jerry jones faces vchak with a division title on the line against Drake Maye Lover, where total points will be the ultimate tiebreaker.",
+        "seedSummaries": {
+          "2": "A win against vchak secures at least the #2 seed for lol jerry jones, unless Drake Maye Lover also wins AND outscores them by 9.9+ points. A loss opens the door for Drake Maye Lover to steal the division if they win and outscore lol jerry jones by 9.9+ points.",
+          "3": "If lol jerry jones loses to vchak AND Drake Maye Lover wins, lol jerry jones falls to the #3 seed ONLY if they are NOT outscored by Drake Maye Lover by 9.9+ points. Otherwise, lol jerry jones falls to a wild card spot."
+        },
+        "generatedAt": "2025-12-04T17:02:11.880Z"
+      },
+      "3": {
+        "overallSummary": "NielGetsCarried needs a dominant Week 14 performance against Drake Maye Lover and favorable outcomes elsewhere to have any chance at a Wild Card spot, as they are currently far behind in total points.",
+        "seedSummaries": {
+          "4": "NielGetsCarried needs to win and score a massive amount of points to overcome their current deficit. They need to outscore scboom5 by 250.7+ points, achak7 by 246.8+ points, benweinfeld by 239.1+ points, and Quonspiracy Theorists by 219.1+ points to have a chance at the #4 seed.",
+          "5": "NielGetsCarried needs to win and score a massive amount of points to overcome their current deficit. They need to outscore scboom5 by 250.7+ points, achak7 by 246.8+ points, benweinfeld by 239.1+ points, and Quonspiracy Theorists by 219.1+ points to have a chance at the #5 seed.",
+          "6": "NielGetsCarried needs to win and score a massive amount of points to overcome their current deficit. They need to outscore scboom5 by 250.7+ points, achak7 by 246.8+ points, benweinfeld by 239.1+ points, and Quonspiracy Theorists by 219.1+ points to have a chance at the #6 seed."
+        },
+        "generatedAt": "2025-12-04T17:02:16.637Z"
+      },
+      "4": {
+        "overallSummary": "Drake Maye Lover needs to defeat NielGetsCarried and outscore lol jerry jones by at least 9.9 points to win their division, otherwise they will be fighting for a wild card spot.",
+        "seedSummaries": {
+          "2": "If Drake Maye Lover wins and lol jerry jones loses, Drake Maye Lover wins the division and is the #2 seed. If Drake Maye Lover wins and lol jerry jones also wins, Drake Maye Lover can be the #2 seed ONLY IF they outscore lol jerry jones by 9.9+ points.",
+          "3": "If Drake Maye Lover loses and lol jerry jones wins, Drake Maye Lover cannot be the #2 seed. If Drake Maye Lover loses and lol jerry jones also loses, Drake Maye Lover can be the #2 seed ONLY IF they outscore lol jerry jones by 9.9+ points."
+        },
+        "generatedAt": "2025-12-04T17:02:20.510Z"
+      },
+      "5": {
+        "overallSummary": "Quonspiracy Theorists faces achak7 in a critical Week 14 matchup that will determine the Division 2 winner, with total points serving as the tiebreaker if they end with the same record.",
+        "seedSummaries": {
+          "2": "WIN = #2 seed ONLY IF you outscore achak7 by 27.8+ pts (or achak7 loses). If achak7 loses, Quonspiracy Theorists wins the division outright. ",
+          "3": "LOSS = Needs to rely on a wild card spot. Even with a loss, a wild card is possible, but depends on other teams' results and point totals. benweinfeld is only 20 points ahead, so Quonspiracy Theorists would need to outscore him to jump him in points."
+        },
+        "generatedAt": "2025-12-04T17:02:23.991Z"
+      },
+      "6": {
+        "overallSummary": "Nacua Matata is already eliminated from playoff contention, so their Week 14 game against benweinfeld has no impact on their playoff seeding.",
+        "seedSummaries": {},
+        "generatedAt": "2025-12-04T17:02:26.952Z"
+      },
+      "7": {
+        "overallSummary": "benweinfeld needs to win against Nacua Matata and outscore achak7 and Quonspiracy Theorists to secure a wild card spot, as they are in a tight race for the final playoff berths.",
+        "seedSummaries": {
+          "2": "WIN = #5 or #6 seed, depending on how much benweinfeld scores. If benweinfeld wins AND scores 7.8+ more points than achak7, benweinfeld will be the #5 seed. If benweinfeld wins AND scores 20.0+ more points than Quonspiracy Theorists, benweinfeld will be the #5 seed.",
+          "3": "LOSS = unlikely to make playoffs, as benweinfeld would be 7-7 and would need achak7 and Quonspiracy Theorists to lose AND for benweinfeld to still have more total points than them."
+        },
+        "generatedAt": "2025-12-04T17:02:30.463Z"
+      },
+      "8": {
+        "overallSummary": "Dr Patel Parikh MD MBA, at 5-8, needs a massive Week 14 performance against the league leader and some help to sneak into the playoffs as a low seed, focusing on outscoring other 5-8 teams.",
+        "seedSummaries": {
+          "2": "Unlikely. Dr Patel Parikh MD MBA needs to beat To Infinity and Bijan AND outscore lol jerry jones by a significant margin to win the division, as lol jerry jones is currently 326.6 points ahead. This is only possible if lol jerry jones loses.",
+          "3": "Unlikely. Dr Patel Parikh MD MBA needs to beat To Infinity and Bijan AND outscore benweinfeld by a significant margin to win the division, as benweinfeld is currently 191 points ahead. This is only possible if benweinfeld loses."
+        },
+        "generatedAt": "2025-12-04T17:02:34.258Z"
+      },
+      "9": {
+        "overallSummary": "achak7 faces Quonspiracy Theorists in a crucial Week 14 divisional matchup that will likely determine the Division 2 winner based on record or total points.",
+        "seedSummaries": {
+          "2": "If achak7 wins, they clinch the #2 seed (Division 2 winner) outright. If achak7 loses, they can still clinch the #2 seed ONLY IF they outscore Quonspiracy Theorists by 27.8+ points.",
+          "4": "If achak7 loses to Quonspiracy Theorists, they will need to rely on a Wild Card spot. If achak7 loses and Quonspiracy Theorists outscores them by less than 27.8 points, achak7 will need benweinfeld to lose or for achak7 to outscore benweinfeld by 7.8+ points to secure the #4 seed."
+        },
+        "generatedAt": "2025-12-04T17:02:37.832Z"
+      },
+      "10": {
+        "overallSummary": "To Infinity and Bijan is already guaranteed a playoff spot, but needs to win and score enough points to secure the #2 seed if lol jerry jones wins.",
+        "seedSummaries": {
+          "2": "WIN = #2 seed (unless lol jerry jones also wins AND outscores you by 58.1+ pts).",
+          "3": "LOSS = #3 seed (unless benweinfeld wins AND outscores you by 277.5+ pts)."
+        },
+        "generatedAt": "2025-12-04T17:02:40.772Z"
+      },
+      "11": {
+        "overallSummary": "scboom5 needs to win or outscore lol jerry jones and Drake Maye Lover to secure a higher seed, as they are competing for a wild card spot.",
+        "seedSummaries": {
+          "2": "WIN = #2 seed ONLY IF you outscore lol jerry jones by 124.0+ pts AND outscore Drake Maye Lover by 114.1+ pts (or both lose).",
+          "3": "WIN = #3 seed ONLY IF you outscore either lol jerry jones by 124.0+ pts OR Drake Maye Lover by 114.1+ pts (or both lose). LOSS = #6 seed ONLY IF achak7 loses."
+        },
+        "generatedAt": "2025-12-04T17:02:43.694Z"
+      },
+      "12": {
+        "overallSummary": "vchak needs a dominant Week 14 performance and some help to sneak into the playoffs, facing a tough matchup against lol jerry jones.",
+        "seedSummaries": {
+          "2": "vchak CANNOT get the #2 seed. Even with a win, lol jerry jones would either have a better record or win the tiebreaker based on total points.",
+          "3": "vchak CANNOT get the #3 seed. Even with a win, To Infinity and Bijan would either have a better record or win the tiebreaker based on total points."
+        },
+        "generatedAt": "2025-12-04T17:02:46.704Z"
+      }
+    }
+  },
+  "nfc": {
+    "leagueId": "1263740549504962561",
+    "leagueName": "NFC",
+    "teams": {
+      "1": {
+        "overallSummary": "ziyanp22 faces Mach 10 in a crucial Week 14 matchup that will determine the Division 3 winner, with total season points serving as the tiebreaker if both teams finish with the same record.",
+        "seedSummaries": {
+          "2": "ziyanp22 CANNOT be the #2 seed. Marginal Returns and cescott25 have better records.",
+          "3": "ziyanp22 WIN = #3 seed ONLY IF they outscore Mach 10 by 84.3+ points (or Mach 10 loses). LOSS = no chance at #3 seed."
+        },
+        "generatedAt": "2025-12-04T17:02:08.936Z"
+      },
+      "2": {
+        "overallSummary": "Mach 10 faces a critical Week 14 matchup against division rival ziyanp22, where the outcome directly impacts the Division 3 title and playoff seeding, with total season points serving as the tiebreaker.",
+        "seedSummaries": {
+          "2": "WIN and cescott25 loses = #2 seed. WIN and cescott25 wins = #2 seed (unless cescott25 outscores Marginal Returns AND outscores you by 20.2+ points).",
+          "3": "WIN and ziyanp22 outscores you by 84.3+ points = #3 seed. LOSS = #4-#6 seed ONLY IF you are not outscored by ziyanp22 by 84.3+ points AND DJ Herbussy and Saint Brown Does Mahomes both lose."
+        },
+        "generatedAt": "2025-12-04T17:02:12.647Z"
+      },
+      "3": {
+        "overallSummary": "vayyala needs a strong performance against C&G^2 and some help from other matchups to sneak into the playoffs as a wild card, as they are currently on the outside looking in.",
+        "seedSummaries": {
+          "2": "vayyala cannot get the #2 seed. Two teams are already at 10-3.",
+          "3": "vayyala cannot get the #3 seed. Mach 10, DJ Herbussy, ziyanp22, and Saint Brown Does Mahomes all have a better record than vayyala. If vayyala wins, they need all four of those teams to lose to win their division. Even then, vayyala would need to outscore Mach 10 by 36.4+ points to win the tiebreaker.",
+          "4": "vayyala needs to win and have at least two of Mach 10, DJ Herbussy, ziyanp22, and Saint Brown Does Mahomes lose. If vayyala wins and only two of those teams lose, vayyala needs to outscore the higher scoring of the two winning teams by enough points to pass them in total points. vayyala is 36.4 points behind Mach 10, 0.6 points behind DJ Herbussy, 47.9 points ahead of ziyanp22, and 79 points ahead of Saint Brown Does Mahomes.",
+          "5": "vayyala needs to win and have at least one of Mach 10, DJ Herbussy, ziyanp22, and Saint Brown Does Mahomes lose. If vayyala wins and only one of those teams lose, vayyala needs to outscore the higher scoring of the three winning teams by enough points to pass them in total points. vayyala is 36.4 points behind Mach 10, 0.6 points behind DJ Herbussy, 47.9 points ahead of ziyanp22, and 79 points ahead of Saint Brown Does Mahomes.",
+          "6": "vayyala needs to win and have at least one of Mach 10, DJ Herbussy, ziyanp22, and Saint Brown Does Mahomes lose. If vayyala wins and all of those teams win, vayyala needs to outscore the lowest scoring of those teams by enough points to pass them in total points. vayyala is 36.4 points behind Mach 10, 0.6 points behind DJ Herbussy, 47.9 points ahead of ziyanp22, and 79 points ahead of Saint Brown Does Mahomes."
+        },
+        "generatedAt": "2025-12-04T17:02:18.322Z"
+      },
+      "4": {
+        "overallSummary": "DJ Herbussy faces The zoo with their division title and playoff hopes hinging on their performance relative to Saint Brown Does Mahomes, whom they lead by 81.7 points.",
+        "seedSummaries": {
+          "2": "If DJ Herbussy wins and Saint Brown Does Mahomes loses, DJ Herbussy wins the division and the #2 seed. If DJ Herbussy wins and Saint Brown Does Mahomes also wins, DJ Herbussy wins the #2 seed unless Saint Brown Does Mahomes outscores them by 81.7+ points.",
+          "4": "If DJ Herbussy loses and Saint Brown Does Mahomes wins, Saint Brown Does Mahomes wins the division and DJ Herbussy will need to rely on a wild card spot. If DJ Herbussy loses and Saint Brown Does Mahomes loses, DJ Herbussy gets #2 seed unless Saint Brown Does Mahomes outscores them by 81.7+ points. DJ Herbussy will need to have more points than vayyala, Mach 10, and ziyanp22 to secure a wild card spot."
+        },
+        "generatedAt": "2025-12-04T17:02:21.927Z"
+      },
+      "5": {
+        "overallSummary": "Dont go Chasing Saquon needs a dominant Week 14 performance against lukebowsh and help from other teams to sneak into the playoffs as a wild card, as they are currently behind several teams in the standings and points.",
+        "seedSummaries": {
+          "2": "Not Possible: Marginal Returns and cescott25 have already clinched the top 2 seeds.",
+          "3": "Not Possible: Marginal Returns and cescott25 have already clinched the top 2 seeds.",
+          "4": "Not Possible: Marginal Returns and cescott25 have already clinched the top 2 seeds.",
+          "5": "Not Possible: Marginal Returns and cescott25 have already clinched the top 2 seeds.",
+          "6": "WIN: Needs to win against lukebowsh AND outscore C&G^2 by 136.4+ points, Jaxson Dart-Njigba by 75.1+ points, and The zoo by 36.5+ points to have a chance at the #6 seed. If Dont go Chasing Saquon loses, they are eliminated from playoff contention."
+        },
+        "generatedAt": "2025-12-04T17:02:26.471Z"
+      },
+      "6": {
+        "overallSummary": "The zoo (5-8) is effectively eliminated from playoff contention and faces DJ Herbussy in Week 14.",
+        "seedSummaries": {},
+        "generatedAt": "2025-12-04T17:04:20.000Z"
+      },
+      "7": {
+        "overallSummary": "Jaxson Dart-Njigba needs to beat Marginal Returns and outscore division rival C&G^2 by at least 61.2 points to have a chance at the playoffs.",
+        "seedSummaries": {
+          "4": "Jaxson Dart-Njigba needs to win and outscore C&G^2 by 61.2+ points to win the division. If they win and C&G^2 loses, they win the division outright. If they lose, they are eliminated from playoff contention.",
+          "5": "If Jaxson Dart-Njigba wins but does not outscore C&G^2 by 61.2+ points, and other teams with 7 wins lose, they could sneak into the playoffs as a wild card based on total points. However, this is unlikely given the point totals of other 7-6 teams."
+        },
+        "generatedAt": "2025-12-04T17:02:45.413Z"
+      },
+      "8": {
+        "overallSummary": "C&G^2 needs a win against vayyala and help from Marginal Returns to have a shot at the playoffs, with their division rival Jaxson Dart-Njigba's performance being crucial due to a potential tiebreaker based on total points.",
+        "seedSummaries": {
+          "2": "C&G^2 cannot get the #2 seed. The top 2 seeds are locked in.",
+          "3": "C&G^2 cannot get the #3 seed. The top 3 seeds are locked in."
+        },
+        "generatedAt": "2025-12-04T17:02:48.640Z"
+      },
+      "9": {
+        "overallSummary": "Marginal Returns is 10-3 and needs to either win their game or score enough points to hold off cescott25 for the #2 seed.",
+        "seedSummaries": {
+          "2": "WIN = #2 seed (unless cescott25 also wins AND outscores you by 20.2+ pts). LOSS = #2 seed ONLY IF you outscore cescott25 by 20.2+ pts (or cescott25 loses).",
+          "3": "LOSS = #3 seed ONLY IF you outscore Mach 10 by 0.6+ pts (or Mach 10 loses AND DJ Herbussy does not win). WIN = #3 seed ONLY IF cescott25 wins AND outscores you by 20.2+ pts."
+        },
+        "generatedAt": "2025-12-04T17:02:52.188Z"
+      },
+      "10": {
+        "overallSummary": "Saint Brown Does Mahomes faces a must-win scenario against cescott25, needing a win and favorable point differential to potentially steal the division from DJ Herbussy or secure a Wild Card spot.",
+        "seedSummaries": {
+          "2": "A win against cescott25, combined with a DJ Herbussy loss to The zoo, would give Saint Brown Does Mahomes the division title outright. If both Saint Brown Does Mahomes and DJ Herbussy win, or both lose, Saint Brown Does Mahomes needs to outscore DJ Herbussy by at least 81.7 points to win the division on total points.",
+          "3": "Even with a win, Saint Brown Does Mahomes may not win the division. However, a win gives them a strong chance at a Wild Card spot, but they must outscore Mach 10 by 115.5+ points and ziyanp22 by 31.1+ points to pass them in total points. A loss likely eliminates them from playoff contention."
+        },
+        "generatedAt": "2025-12-04T17:02:56.417Z"
+      },
+      "11": {
+        "overallSummary": "lukebowsh needs a dominant Week 14 performance and for multiple teams ahead of him to falter to have any chance at a playoff spot.",
+        "seedSummaries": {
+          "2": "lukebowsh cannot get the #2 seed.",
+          "3": "lukebowsh cannot get the #3 seed."
+        },
+        "generatedAt": "2025-12-04T17:02:59.036Z"
+      },
+      "12": {
+        "overallSummary": "cescott25 (10-3) faces Saint Brown Does Mahomes (7-6) with the #2 seed and a potential wild card spot at stake, determined by total points.",
+        "seedSummaries": {
+          "2": "WIN = #2 seed (unless Marginal Returns also wins AND outscores you by 20.2+ pts). LOSS = must rely on wild card.",
+          "3": "LOSS = wild card spot ONLY IF they outscore multiple 7-6 teams (Mach 10, DJ Herbussy, ziyanp22, Saint Brown Does Mahomes) by enough to overcome their current point deficits."
+        },
+        "generatedAt": "2025-12-04T17:03:02.661Z"
+      }
+    }
+  }
+}

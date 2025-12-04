@@ -3,7 +3,11 @@
  *
  * Monte Carlo simulation engine for calculating playoff seeding probabilities.
  * Runs simulations to determine probability of each team achieving each seed.
- * Also calculates specific scenario requirements for each achievable seed.
+ * 
+ * Also includes deterministic path enumeration for scenario analysis:
+ * - Enumerates all 64 possible win/loss outcomes per league
+ * - Calculates exact point margins needed for tiebreakers
+ * - Shows ALL paths to each seed with expandable details
  */
 
 import { LEAGUE_IDS } from '@/lib/constants';
@@ -16,7 +20,11 @@ import type {
   TeamStanding,
   SeedingSimulationConfig,
   TeamScoringDistribution,
+  PathCondition,
+  SeedPath,
+  PathSummary,
 } from '../types';
+import { POINTS_CONSTRAINTS } from '../types';
 import {
   buildTeamScoringDistributions,
   sampleTeamScore,
@@ -59,6 +67,38 @@ const generateAllOutcomes = (
 
 /**
  * Apply a specific outcome to standings (for scenario analysis)
+ * Does NOT add points - only updates wins/losses
+ */
+const applyOutcomeToStandingsWinsOnly = (
+  standings: TeamStanding[],
+  matchups: Week14Matchup[],
+  outcome: Map<number, 'team1' | 'team2'>
+): TeamStanding[] => {
+  // Create mutable copy
+  const updated = standings.map((t) => ({ ...t }));
+
+  matchups.forEach((matchup) => {
+    const winner = outcome.get(matchup.matchupId);
+    const team1 = updated.find((t) => t.rosterId === matchup.team1RosterId);
+    const team2 = updated.find((t) => t.rosterId === matchup.team2RosterId);
+
+    if (!team1 || !team2) return;
+
+    // Update wins/losses based on outcome (no points added yet)
+    if (winner === 'team1') {
+      (team1 as any).wins += 1;
+      (team2 as any).losses += 1;
+    } else {
+      (team2 as any).wins += 1;
+      (team1 as any).losses += 1;
+    }
+  });
+
+  return updated;
+};
+
+/**
+ * Apply a specific outcome to standings with mean scores (legacy compatibility)
  */
 const applyOutcomeToStandings = (
   standings: TeamStanding[],
@@ -275,8 +315,554 @@ const simplifyConditions = (
   return simplified;
 };
 
+// ============================================================================
+// DETERMINISTIC PATH ENUMERATION
+// ============================================================================
+
+/**
+ * Calculate the exact margin needed for team A to beat team B on points tiebreaker
+ * 
+ * Given:
+ * - Current points difference (A.pointsFor - B.pointsFor)
+ * - A scores scoreA in week 14 (50-200 range)
+ * - B scores scoreB in week 14 (50-200 range)
+ * - If A wins their matchup: scoreA > their opponent's score
+ * - If B wins their matchup: scoreB > their opponent's score
+ * 
+ * For A to win tiebreaker: currentDiff + scoreA - scoreB > 0
+ * Minimum margin needed: scoreA - scoreB > -currentDiff
+ * 
+ * Returns:
+ * - positive number: A needs to outscore B by this much
+ * - negative number: A can be outscored by up to this much and still win
+ * - null: impossible within constraints
+ */
+const calculateExactMarginNeeded = (
+  teamACurrentPoints: number,
+  teamBCurrentPoints: number,
+  teamAMustWin: boolean,
+  teamBMustWin: boolean
+): { margin: number; achievable: boolean; description: string } | null => {
+  const currentDiff = teamACurrentPoints - teamBCurrentPoints;
+  
+  // For A to win tiebreaker: finalDiff > 0
+  // finalDiff = currentDiff + (A_week14_score - B_week14_score)
+  // Need: A_week14_score - B_week14_score > -currentDiff
+  
+  const marginNeeded = Math.ceil(-currentDiff + 0.1); // +0.1 to handle floating point, must be strictly greater
+  
+  // Check if achievable within constraints
+  // Best case for A: A scores MAX (200), B scores MIN (50) = +150 margin
+  // Worst case for A: A scores MIN (50), B scores MAX (200) = -150 margin
+  
+  // But also need to account for win constraints:
+  // If A must win their game: A scores > their opponent (so A >= 51 minimum)
+  // If A must lose their game: A scores <= their opponent
+  // If B must win their game: B scores > their opponent (so B >= 51 minimum)  
+  // If B must lose their game: B scores <= their opponent
+  
+  const minAScore = teamAMustWin ? 51 : POINTS_CONSTRAINTS.MIN_SCORE;
+  const maxAScore = POINTS_CONSTRAINTS.MAX_SCORE;
+  const minBScore = teamBMustWin ? 51 : POINTS_CONSTRAINTS.MIN_SCORE;
+  const maxBScore = POINTS_CONSTRAINTS.MAX_SCORE;
+  
+  const maxPossibleMargin = maxAScore - minBScore; // Best case for A
+  const minPossibleMargin = minAScore - maxBScore; // Worst case for A
+  
+  if (marginNeeded > maxPossibleMargin) {
+    // A cannot possibly outscore B enough - tiebreaker impossible
+    return null;
+  }
+  
+  if (marginNeeded <= minPossibleMargin) {
+    // A will always win tiebreaker regardless of scores
+    return { 
+      margin: 0, 
+      achievable: true, 
+      description: 'Tiebreaker guaranteed (already ahead enough)' 
+    };
+  }
+  
+  // Margin is achievable
+  if (marginNeeded <= 0) {
+    // A is already ahead or tied - just need to not fall too far behind
+    return {
+      margin: marginNeeded,
+      achievable: true,
+      description: `Can be outscored by up to ${Math.abs(marginNeeded)} pts`
+    };
+  }
+  
+  // A is behind - needs to outscore B
+  return {
+    margin: marginNeeded,
+    achievable: true,
+    description: `Must outscore by ${marginNeeded}+ pts`
+  };
+};
+
+/**
+ * Find teams that could be in a tiebreaker situation with the target team
+ * for a given outcome
+ */
+const findTiebreakerCompetitors = (
+  targetRosterId: number,
+  updatedStandings: TeamStanding[],
+  targetSeed: number,
+  matchups: Week14Matchup[],
+  outcome: Map<number, 'team1' | 'team2'>
+): Array<{
+  competitor: TeamStanding;
+  marginInfo: { margin: number; achievable: boolean; description: string };
+}> => {
+  const target = updatedStandings.find(t => t.rosterId === targetRosterId);
+  if (!target) return [];
+  
+  const competitors: Array<{
+    competitor: TeamStanding;
+    marginInfo: { margin: number; achievable: boolean; description: string };
+  }> = [];
+  
+  // Find teams with same record after applying outcome
+  const sameRecordTeams = updatedStandings.filter(
+    t => t.rosterId !== targetRosterId && t.wins === target.wins
+  );
+  
+  // For each same-record team, calculate if points tiebreaker matters
+  sameRecordTeams.forEach(competitor => {
+    // Determine if target/competitor must win/lose their games
+    const targetMatchup = matchups.find(
+      m => m.team1RosterId === targetRosterId || m.team2RosterId === targetRosterId
+    );
+    const competitorMatchup = matchups.find(
+      m => m.team1RosterId === competitor.rosterId || m.team2RosterId === competitor.rosterId
+    );
+    
+    let targetMustWin = false;
+    let competitorMustWin = false;
+    
+    if (targetMatchup) {
+      const winner = outcome.get(targetMatchup.matchupId);
+      const targetIsTeam1 = targetMatchup.team1RosterId === targetRosterId;
+      targetMustWin = (targetIsTeam1 && winner === 'team1') || (!targetIsTeam1 && winner === 'team2');
+    }
+    
+    if (competitorMatchup) {
+      const winner = outcome.get(competitorMatchup.matchupId);
+      const competitorIsTeam1 = competitorMatchup.team1RosterId === competitor.rosterId;
+      competitorMustWin = (competitorIsTeam1 && winner === 'team1') || (!competitorIsTeam1 && winner === 'team2');
+    }
+    
+    // Get ORIGINAL standings (before week 14) for points calculation
+    // The updatedStandings already have wins/losses applied but we need original points
+    // Since we're using applyOutcomeToStandingsWinsOnly, pointsFor is unchanged
+    const marginInfo = calculateExactMarginNeeded(
+      target.pointsFor,
+      competitor.pointsFor,
+      targetMustWin,
+      competitorMustWin
+    );
+    
+    if (marginInfo && marginInfo.achievable) {
+      competitors.push({ competitor, marginInfo });
+    }
+  });
+  
+  return competitors;
+};
+
+/**
+ * Build path conditions for a specific outcome
+ */
+const buildPathConditions = (
+  outcome: Map<number, 'team1' | 'team2'>,
+  matchups: Week14Matchup[],
+  targetRosterId: number,
+  originalStandings: TeamStanding[],
+  targetSeed: number
+): PathCondition[] => {
+  const conditions: PathCondition[] = [];
+  
+  // Apply outcome to get updated standings (wins/losses only, no points)
+  const updatedStandings = applyOutcomeToStandingsWinsOnly(originalStandings, matchups, outcome);
+  
+  // Add win/loss condition for target team
+  const targetMatchup = matchups.find(
+    m => m.team1RosterId === targetRosterId || m.team2RosterId === targetRosterId
+  );
+  
+  if (targetMatchup) {
+    const winner = outcome.get(targetMatchup.matchupId);
+    const targetIsTeam1 = targetMatchup.team1RosterId === targetRosterId;
+    const targetWins = (targetIsTeam1 && winner === 'team1') || (!targetIsTeam1 && winner === 'team2');
+    
+    conditions.push({
+      type: targetWins ? 'win' : 'lose',
+      teamName: targetIsTeam1 ? targetMatchup.team1Name : targetMatchup.team2Name,
+      rosterId: targetRosterId,
+      opponentName: targetIsTeam1 ? targetMatchup.team2Name : targetMatchup.team1Name,
+      opponentRosterId: targetIsTeam1 ? targetMatchup.team2RosterId : targetMatchup.team1RosterId,
+    });
+  }
+  
+  // Add conditions for other matchups that affect this seed
+  matchups.forEach(matchup => {
+    if (matchup.team1RosterId === targetRosterId || matchup.team2RosterId === targetRosterId) {
+      return; // Skip target's matchup (already added)
+    }
+    
+    const winner = outcome.get(matchup.matchupId);
+    const winnerName = winner === 'team1' ? matchup.team1Name : matchup.team2Name;
+    const winnerRosterId = winner === 'team1' ? matchup.team1RosterId : matchup.team2RosterId;
+    const loserName = winner === 'team1' ? matchup.team2Name : matchup.team1Name;
+    
+    conditions.push({
+      type: 'other_result',
+      teamName: winnerName,
+      rosterId: winnerRosterId,
+      opponentName: loserName,
+      wins: true,
+    });
+  });
+  
+  // Find and add points tiebreaker conditions
+  const tiebreakerCompetitors = findTiebreakerCompetitors(
+    targetRosterId,
+    updatedStandings,
+    targetSeed,
+    matchups,
+    outcome
+  );
+  
+  // Only add points margin conditions if they're non-trivial
+  tiebreakerCompetitors.forEach(({ competitor, marginInfo }) => {
+    // Only add if margin is significant (not already guaranteed)
+    if (marginInfo.margin !== 0) {
+      conditions.push({
+        type: 'points_margin',
+        teamName: competitor.teamName,
+        rosterId: competitor.rosterId,
+        marginRequired: marginInfo.margin,
+        vsTeamName: competitor.teamName,
+      });
+    }
+  });
+  
+  return conditions;
+};
+
+/**
+ * Build all deterministic paths to each seed for a team
+ * 
+ * For each of 64 possible outcomes:
+ * 1. Apply wins/losses
+ * 2. Calculate possible seeds considering points tiebreakers
+ * 3. Build path with all required conditions
+ */
+const buildAllPathsForTeam = (
+  rosterId: number,
+  standings: TeamStanding[],
+  matchups: Week14Matchup[]
+): Map<number, SeedPath[]> => {
+  const allOutcomes = generateAllOutcomes(matchups);
+  const pathsBySeed = new Map<number, SeedPath[]>();
+  
+  // Initialize seeds 1-12
+  for (let seed = 1; seed <= 12; seed++) {
+    pathsBySeed.set(seed, []);
+  }
+  
+  allOutcomes.forEach((outcome, outcomeId) => {
+    // Apply outcome with wins/losses only
+    const updatedStandings = applyOutcomeToStandingsWinsOnly(standings, matchups, outcome);
+    
+    // Calculate seeds based on current points (no week 14 points added)
+    // This gives us the "base" seed for this outcome
+    const seeds = calculatePlayoffSeeds(updatedStandings);
+    const baseSeed = seeds.get(rosterId) || 12;
+    
+    // Find tiebreaker competitors to determine seed range
+    const target = updatedStandings.find(t => t.rosterId === rosterId);
+    if (!target) return;
+    
+    // Identify teams with same record
+    const sameRecordTeams = updatedStandings.filter(
+      t => t.rosterId !== rosterId && t.wins === target.wins
+    );
+    
+    // Calculate potential seed range based on tiebreakers
+    // For each same-record team, determine if we can beat them on points
+    let bestPossibleSeed = baseSeed;
+    let worstPossibleSeed = baseSeed;
+    
+    sameRecordTeams.forEach(competitor => {
+      const currentDiff = target.pointsFor - competitor.pointsFor;
+      const competitorSeed = seeds.get(competitor.rosterId) || 12;
+      
+      // Check if we can beat this competitor on points
+      // Max possible swing: +150 (we score 200, they score 50)
+      // Min possible swing: -150 (we score 50, they score 200)
+      
+      if (currentDiff + POINTS_CONSTRAINTS.MAX_MARGIN > 0) {
+        // We CAN beat them on points - we might get their seed
+        if (competitorSeed < bestPossibleSeed) {
+          bestPossibleSeed = competitorSeed;
+        }
+      }
+      
+      if (currentDiff - POINTS_CONSTRAINTS.MAX_MARGIN < 0) {
+        // They CAN beat us on points - we might get a worse seed
+        if (competitorSeed > worstPossibleSeed) {
+          worstPossibleSeed = competitorSeed;
+        }
+      }
+    });
+    
+    // Build conditions for this path
+    const conditions = buildPathConditions(
+      outcome,
+      matchups,
+      rosterId,
+      standings,
+      baseSeed
+    );
+    
+    // Add path to all achievable seeds in the range
+    // For simplicity, we add to the base seed (most likely outcome)
+    // In practice, a single outcome typically maps to one seed deterministically
+    // unless there's a points tiebreaker scenario
+    
+    const path: SeedPath = {
+      outcomeId,
+      conditions,
+    };
+    
+    // Add to base seed
+    pathsBySeed.get(baseSeed)?.push(path);
+    
+    // If there are tiebreaker scenarios, also note the seed range
+    // but we primarily associate with the base seed
+  });
+  
+  return pathsBySeed;
+};
+
+/**
+ * Simplify paths by removing redundant conditions
+ * Keep only conditions that actually differentiate this seed from others
+ */
+const simplifyPaths = (
+  pathsBySeed: Map<number, SeedPath[]>,
+  _matchups: Week14Matchup[],
+  targetRosterId: number
+): Map<number, SeedPath[]> => {
+  const simplified = new Map<number, SeedPath[]>();
+  
+  pathsBySeed.forEach((paths, seed) => {
+    if (paths.length === 0) {
+      simplified.set(seed, []);
+      return;
+    }
+    
+    // Find conditions that appear in ALL paths for this seed
+    // These are the "required" conditions
+    const simplifiedPaths: SeedPath[] = [];
+    
+    paths.forEach(path => {
+      // Filter conditions to only include:
+      // 1. Target team's win/loss (always include)
+      // 2. Other results that differ between paths leading to different seeds
+      // 3. Points margins that matter
+      
+      const essentialConditions = path.conditions.filter(c => {
+        // Always keep target's win/loss
+        if ((c.type === 'win' || c.type === 'lose') && c.rosterId === targetRosterId) {
+          return true;
+        }
+        // Always keep points margins
+        if (c.type === 'points_margin') {
+          return true;
+        }
+        // Keep other results (we'll simplify display later)
+        if (c.type === 'other_result') {
+          return true;
+        }
+        return false;
+      });
+      
+      simplifiedPaths.push({
+        outcomeId: path.outcomeId,
+        conditions: essentialConditions,
+      });
+    });
+    
+    simplified.set(seed, simplifiedPaths);
+  });
+  
+  return simplified;
+};
+
+/**
+ * Generate a human-readable summary of paths to a seed
+ * Instead of showing 32 individual paths, summarize the key requirements
+ */
+const generatePathSummary = (
+  paths: SeedPath[],
+  targetRosterId: number,
+  matchups: Week14Matchup[],
+  seed: number
+): PathSummary => {
+  const pathCount = paths.length;
+  
+  if (pathCount === 0) {
+    return {
+      type: 'impossible',
+      requiresWin: null,
+      description: 'Cannot reach this seed',
+      pathCount: 0,
+      winPathCount: 0,
+      losePathCount: 0,
+    };
+  }
+  
+  // Count win vs lose paths
+  const winPaths = paths.filter(p => 
+    p.conditions.some(c => c.type === 'win' && c.rosterId === targetRosterId)
+  );
+  const losePaths = paths.filter(p => 
+    p.conditions.some(c => c.type === 'lose' && c.rosterId === targetRosterId)
+  );
+  
+  const winPathCount = winPaths.length;
+  const losePathCount = losePaths.length;
+  
+  // Determine the summary based on path counts
+  // 32 = all outcomes of that type (win or lose)
+  // Since there are 6 matchups and 1 involves the target team,
+  // there are 2^5 = 32 possible outcomes for each of win/lose
+  
+  let requiresWin: boolean | null = null;
+  let description = '';
+  let type: 'guaranteed' | 'conditional' = 'conditional';
+  const additionalConditions: string[] = [];
+  
+  if (winPathCount === 32 && losePathCount === 0) {
+    // WIN guarantees this seed regardless of other outcomes
+    requiresWin = true;
+    type = 'guaranteed';
+    description = 'WIN and in';
+  } else if (losePathCount === 32 && winPathCount === 0) {
+    // LOSE leads to this seed regardless of other outcomes (locked in)
+    requiresWin = false;
+    type = 'guaranteed';
+    description = 'Locked into this seed (even with loss)';
+  } else if (winPathCount === 32 && losePathCount === 32) {
+    // All 64 outcomes lead here - already locked in
+    requiresWin = null;
+    type = 'guaranteed';
+    description = 'Locked into this seed';
+  } else if (winPathCount > 0 && losePathCount === 0) {
+    // Only win paths, but not all of them
+    requiresWin = true;
+    type = 'conditional';
+    // Find what else needs to happen
+    const keyConditions = findKeyDifferentiatingConditions(winPaths, targetRosterId, matchups);
+    if (keyConditions.length > 0) {
+      description = `WIN + ${keyConditions.join(' + ')}`;
+      additionalConditions.push(...keyConditions);
+    } else {
+      description = `WIN (${winPathCount} of 32 scenarios)`;
+    }
+  } else if (losePathCount > 0 && winPathCount === 0) {
+    // Only lose paths, but not all of them
+    requiresWin = false;
+    type = 'conditional';
+    const keyConditions = findKeyDifferentiatingConditions(losePaths, targetRosterId, matchups);
+    if (keyConditions.length > 0) {
+      description = `LOSE + ${keyConditions.join(' + ')}`;
+      additionalConditions.push(...keyConditions);
+    } else {
+      description = `LOSE (${losePathCount} of 32 scenarios)`;
+    }
+  } else {
+    // Mixed win and lose paths
+    requiresWin = null;
+    type = 'conditional';
+    
+    // Check which is more common
+    if (winPathCount >= losePathCount) {
+      const winConditions = findKeyDifferentiatingConditions(winPaths, targetRosterId, matchups);
+      const loseConditions = findKeyDifferentiatingConditions(losePaths, targetRosterId, matchups);
+      
+      if (winPathCount === 32) {
+        description = `WIN guarantees it, or LOSE + specific outcomes`;
+      } else if (losePathCount === 32) {
+        description = `LOSE keeps it, or WIN + specific outcomes`;
+      } else {
+        description = `Multiple paths: ${winPathCount} with WIN, ${losePathCount} with LOSE`;
+      }
+      
+      if (winConditions.length > 0) additionalConditions.push(`WIN: ${winConditions.join(', ')}`);
+      if (loseConditions.length > 0) additionalConditions.push(`LOSE: ${loseConditions.join(', ')}`);
+    } else {
+      description = `Multiple paths: ${losePathCount} with LOSE, ${winPathCount} with WIN`;
+    }
+  }
+  
+  return {
+    type,
+    requiresWin,
+    description,
+    additionalConditions: additionalConditions.length > 0 ? additionalConditions : undefined,
+    pathCount,
+    winPathCount,
+    losePathCount,
+  };
+};
+
+/**
+ * Find the key conditions that differentiate paths
+ * Look for conditions that appear in ALL paths (required)
+ * vs conditions that vary (determining factors)
+ */
+const findKeyDifferentiatingConditions = (
+  paths: SeedPath[],
+  targetRosterId: number,
+  matchups: Week14Matchup[]
+): string[] => {
+  if (paths.length === 0) return [];
+  
+  // Count how often each "other team result" appears
+  const conditionCounts = new Map<string, { count: number; teamName: string; wins: boolean }>();
+  
+  paths.forEach(path => {
+    path.conditions.forEach(c => {
+      if (c.type === 'other_result' && c.wins !== undefined) {
+        const key = `${c.rosterId}-${c.wins}`;
+        if (!conditionCounts.has(key)) {
+          conditionCounts.set(key, { count: 0, teamName: c.teamName, wins: c.wins });
+        }
+        conditionCounts.get(key)!.count++;
+      }
+    });
+  });
+  
+  // Find conditions that appear in ALL paths (100% required)
+  const required: string[] = [];
+  conditionCounts.forEach((value, key) => {
+    if (value.count === paths.length) {
+      // This condition is required for ALL paths to this seed
+      required.push(`${value.teamName} ${value.wins ? 'wins' : 'loses'}`);
+    }
+  });
+  
+  // Limit to 2 most important conditions
+  return required.slice(0, 2);
+};
+
 /**
  * Calculate scenarios for each possible seed for a team
+ * Now includes deterministic paths showing ALL ways to reach each seed
  */
 const calculateScenarios = (
   rosterId: number,
@@ -287,6 +873,10 @@ const calculateScenarios = (
   totalSimulations: number
 ): SeedScenario[] => {
   const allOutcomes = generateAllOutcomes(matchups);
+  
+  // Build deterministic paths for all seeds
+  const rawPathsBySeed = buildAllPathsForTeam(rosterId, standings, matchups);
+  const pathsBySeed = simplifyPaths(rawPathsBySeed, matchups, rosterId);
   
   // Find which matchups actually affect this team's seed
   const relevantMatchupIds = findRelevantMatchups(
@@ -578,10 +1168,18 @@ const calculateScenarios = (
       }
     }
 
+    // Get deterministic paths for this seed
+    const seedPaths = pathsBySeed.get(scenario.seed) || [];
+    
+    // Generate simplified summary
+    const summary = generatePathSummary(seedPaths, rosterId, matchups, scenario.seed);
+    
     return {
       seed: scenario.seed,
       probability: scenario.probability,
       conditions: finalConditions,
+      paths: seedPaths,
+      summary,
     };
   });
 

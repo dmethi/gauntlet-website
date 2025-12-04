@@ -9,6 +9,8 @@ export {
   formatSeedProbability,
   getSeedProbabilityColor,
   formatScenarioConditions,
+  formatPathConditions,
+  formatPathCount,
 } from './usePlayoffSeeding';
 
 // Cross-league battle hook
@@ -28,3 +30,18 @@ export {
   getOutcomeLabel,
   getOutcomeButtonVariant,
 } from './useWeek14Scenarios';
+
+// Pre-generated scenario summaries (static, not dynamic)
+export {
+  useScenarioSummary,
+  useLeagueSummaries,
+  type ScenarioSummaryOutput,
+  type CachedSummaries,
+} from './useScenarioSummary';
+
+// League-level summaries
+export {
+  useLeagueSummary,
+  type LeagueSummary,
+  type TeamPathData,
+} from './useLeagueSummary';

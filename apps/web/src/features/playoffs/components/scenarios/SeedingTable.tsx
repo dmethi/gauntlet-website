@@ -1,20 +1,91 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, Trophy, Target } from 'lucide-react';
+import { Trophy, Target, Sparkles, Users, TrendingDown, Swords } from 'lucide-react';
 import type { TeamSeedingProbabilities, LeagueSeedingResults } from '../../types';
 import {
   formatSeedProbability,
   getSeedProbabilityColor,
-  formatScenarioConditions,
 } from '../../hooks';
+import { useLeagueSummary, type LeagueSummary } from '../../hooks/useLeagueSummary';
 
 interface SeedingTableProps {
   readonly results: LeagueSeedingResults;
 }
+
+/**
+ * League-level summary section at the top
+ */
+const LeagueSummarySection = memo<{
+  readonly summary: LeagueSummary;
+  readonly leagueName: string;
+}>(({ summary, leagueName }) => {
+  return (
+    <Card className="mb-6 border-2 border-gauntlet-gold/30 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20">
+      <CardHeader className="pb-3">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-gauntlet-gold" />
+          <CardTitle className="text-lg font-geizer tracking-wide">
+            Week 14 Preview: {leagueName}
+          </CardTitle>
+        </div>
+        <CardDescription className="text-sm font-avenir mt-1">
+          {summary.overallSummary}
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent className="space-y-4">
+        {/* Playoff Race */}
+        <div className="p-3 bg-background/80 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <Trophy className="h-4 w-4 text-green-600" />
+            <span className="font-semibold text-sm">Playoff Race</span>
+          </div>
+          <p className="text-sm text-muted-foreground">{summary.playoffRace}</p>
+        </div>
+        
+        {/* Seeding Battles */}
+        <div className="p-3 bg-background/80 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <Swords className="h-4 w-4 text-blue-600" />
+            <span className="font-semibold text-sm">Seeding Battles</span>
+          </div>
+          <p className="text-sm text-muted-foreground">{summary.seedingBattles}</p>
+        </div>
+        
+        {/* Toilet Bowl */}
+        <div className="p-3 bg-background/80 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingDown className="h-4 w-4 text-amber-600" />
+            <span className="font-semibold text-sm">Toilet Bowl</span>
+          </div>
+          <p className="text-sm text-muted-foreground">{summary.toiletBowl}</p>
+        </div>
+        
+        {/* Key Matchups */}
+        {summary.keyMatchups && summary.keyMatchups.length > 0 && (
+          <div className="p-3 bg-background/80 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="h-4 w-4 text-purple-600" />
+              <span className="font-semibold text-sm">Key Matchups</span>
+            </div>
+            <ul className="space-y-2">
+              {summary.keyMatchups.map((matchup, idx) => (
+                <li key={idx} className="text-sm text-muted-foreground pl-4 border-l-2 border-purple-200 dark:border-purple-800">
+                  {matchup}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+});
+
+LeagueSummarySection.displayName = 'LeagueSummarySection';
 
 /**
  * Probability bar component showing chance for each seed
@@ -26,7 +97,7 @@ const SeedProbabilityBar = memo<{
   if (probability === 0) return null;
 
   const colorClass = getSeedProbabilityColor(seed);
-  const widthPercent = Math.max(probability * 100, 2); // Min 2% width for visibility
+  const widthPercent = Math.max(probability * 100, 2);
 
   return (
     <div className="flex items-center gap-2 text-xs">
@@ -47,14 +118,12 @@ const SeedProbabilityBar = memo<{
 SeedProbabilityBar.displayName = 'SeedProbabilityBar';
 
 /**
- * Individual team seeding card with expandable scenarios
+ * Simplified team seeding card - just probabilities and ranges
  */
 const TeamSeedingCard = memo<{
   readonly team: TeamSeedingProbabilities;
   readonly rank: number;
 }>(({ team, rank }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   // Get seeds with probability > 0
   const activeSeedProbabilities = Object.entries(team.seedProbabilities)
     .filter(([_, prob]) => prob > 0)
@@ -62,13 +131,19 @@ const TeamSeedingCard = memo<{
 
   const playoffProb = team.playoffProbability;
   const isPlayoffLikely = playoffProb > 0.5;
+  const isEliminated = playoffProb === 0;
+  const isLocked = playoffProb === 1;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className={`overflow-hidden ${isEliminated ? 'opacity-60' : ''}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-bold">
+            <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
+              isLocked ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
+              isEliminated ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' :
+              'bg-muted'
+            }`}>
               {rank}
             </div>
             <div>
@@ -89,7 +164,10 @@ const TeamSeedingCard = memo<{
               )}
               <span
                 className={`text-lg font-bold ${
-                  isPlayoffLikely ? 'text-green-600' : 'text-muted-foreground'
+                  isLocked ? 'text-green-600' :
+                  isEliminated ? 'text-red-600' :
+                  isPlayoffLikely ? 'text-green-600' : 
+                  'text-muted-foreground'
                 }`}
               >
                 {formatSeedProbability(playoffProb)}
@@ -113,7 +191,7 @@ const TeamSeedingCard = memo<{
         </div>
 
         {/* Best/worst case badges */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-xs">
             Best: #{team.bestPossibleSeed}
           </Badge>
@@ -121,50 +199,6 @@ const TeamSeedingCard = memo<{
             Worst: #{team.worstPossibleSeed}
           </Badge>
         </div>
-
-        {/* Expandable scenarios */}
-        {team.scenarios.length > 0 && (
-          <div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full text-xs"
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? (
-                <>
-                  Hide Scenarios <ChevronUp className="ml-1 h-3 w-3" />
-                </>
-              ) : (
-                <>
-                  Show What Needs to Happen <ChevronDown className="ml-1 h-3 w-3" />
-                </>
-              )}
-            </Button>
-
-            {isExpanded && (
-              <div className="mt-3 space-y-2 text-xs">
-                {team.scenarios
-                  .filter((s) => s.probability > 0.01) // Only show scenarios with >1% chance
-                  .map((scenario) => (
-                    <div
-                      key={scenario.seed}
-                      className="p-2 bg-muted/50 rounded-md"
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold">
-                          #{scenario.seed} Seed ({formatSeedProbability(scenario.probability)})
-                        </span>
-                      </div>
-                      <p className="text-muted-foreground">
-                        {formatScenarioConditions(scenario.conditions)}
-                      </p>
-                    </div>
-                  ))}
-              </div>
-            )}
-          </div>
-        )}
       </CardContent>
     </Card>
   );
@@ -173,15 +207,26 @@ const TeamSeedingCard = memo<{
 TeamSeedingCard.displayName = 'TeamSeedingCard';
 
 /**
- * Main seeding table component showing all teams in a league
+ * Main seeding table component showing league summary + all teams
  */
 export const SeedingTable = memo<SeedingTableProps>(({ results }) => {
+  const { data: leagueData, isLoading } = useLeagueSummary(results.leagueName);
+
   return (
     <div className="space-y-4">
+      {/* League Summary Section */}
+      {leagueData?.summary && !isLoading && (
+        <LeagueSummarySection 
+          summary={leagueData.summary} 
+          leagueName={results.leagueName}
+        />
+      )}
+      
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold font-geizer tracking-wide">
-            {results.leagueName} Playoff Seeding
+            {results.leagueName} Standings
           </h2>
           <p className="text-sm text-muted-foreground font-avenir">
             Based on {results.simulationCount.toLocaleString()} simulations
@@ -192,6 +237,7 @@ export const SeedingTable = memo<SeedingTableProps>(({ results }) => {
         </Badge>
       </div>
 
+      {/* Team Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {results.teams.map((team, index) => (
           <TeamSeedingCard
@@ -206,4 +252,3 @@ export const SeedingTable = memo<SeedingTableProps>(({ results }) => {
 });
 
 SeedingTable.displayName = 'SeedingTable';
-
