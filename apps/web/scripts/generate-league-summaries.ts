@@ -1,11 +1,11 @@
 /**
  * Generate League-Level Playoff Summaries
- * 
+ *
  * Creates a high-level summary for each league covering:
  * - Playoff seedings on the line
  * - Teams on the bubble (making/missing playoffs)
  * - Toilet bowl seedings (bottom 2 get byes)
- * 
+ *
  * Run with: npx tsx scripts/generate-league-summaries.ts
  */
 
@@ -86,9 +86,9 @@ const fetchStandings = async (leagueId: string, throughWeek: number): Promise<Te
   ]);
 
   const userMap = new Map(users.map(u => [u.user_id, u]));
-  
+
   const matchupPromises = Array.from({ length: throughWeek }, (_, i) =>
-    sleeperClient.fetchMatchups(leagueId, i + 1)
+    sleeperClient.fetchMatchups(leagueId, i + 1),
   );
   const allMatchups = await Promise.all(matchupPromises);
 
@@ -105,7 +105,7 @@ const fetchStandings = async (leagueId: string, throughWeek: number): Promise<Te
       pointsFor += points;
 
       const opponent = weekMatchups.find(
-        m => m.matchup_id === teamMatchup.matchup_id && m.roster_id !== roster.roster_id
+        m => m.matchup_id === teamMatchup.matchup_id && m.roster_id !== roster.roster_id,
       );
       if (!opponent) return;
 
@@ -137,7 +137,7 @@ const fetchMatchups = async (leagueId: string): Promise<Week14Matchup[]> => {
 
   const userMap = new Map(users.map(u => [u.user_id, u]));
   const matchupGroups = new Map<number, typeof matchups>();
-  
+
   matchups.forEach(m => {
     if (!matchupGroups.has(m.matchup_id)) {
       matchupGroups.set(m.matchup_id, []);
@@ -146,7 +146,7 @@ const fetchMatchups = async (leagueId: string): Promise<Week14Matchup[]> => {
   });
 
   const week14Matchups: Week14Matchup[] = [];
-  
+
   matchupGroups.forEach((teams, matchupId) => {
     if (teams.length !== 2) return;
     const [team1, team2] = teams;
@@ -172,19 +172,22 @@ const fetchMatchups = async (leagueId: string): Promise<Week14Matchup[]> => {
  */
 const calculatePathData = (
   standings: TeamStanding[],
-  matchups: Week14Matchup[]
+  matchups: Week14Matchup[],
 ): TeamPathData[] => {
   const numMatchups = matchups.length;
   const totalOutcomes = Math.pow(2, numMatchups);
-  
+
   // Initialize path data for each team
-  const pathData = new Map<number, {
-    bestSeed: number;
-    worstSeed: number;
-    seedCounts: Map<number, number>;
-    playoffCount: number;
-  }>();
-  
+  const pathData = new Map<
+    number,
+    {
+      bestSeed: number;
+      worstSeed: number;
+      seedCounts: Map<number, number>;
+      playoffCount: number;
+    }
+  >();
+
   standings.forEach(team => {
     pathData.set(team.rosterId, {
       bestSeed: 12,
@@ -193,19 +196,19 @@ const calculatePathData = (
       playoffCount: 0,
     });
   });
-  
+
   // Simulate all 64 outcomes
   for (let i = 0; i < totalOutcomes; i++) {
     // Apply this outcome
     const updatedStandings = standings.map(t => ({ ...t }));
-    
+
     for (let j = 0; j < numMatchups; j++) {
       const matchup = matchups[j];
       const team1Wins = ((i >> j) & 1) === 0;
-      
+
       const team1 = updatedStandings.find(t => t.rosterId === matchup.team1RosterId);
       const team2 = updatedStandings.find(t => t.rosterId === matchup.team2RosterId);
-      
+
       if (team1 && team2) {
         if (team1Wins) {
           team1.wins += 1;
@@ -216,10 +219,10 @@ const calculatePathData = (
         }
       }
     }
-    
+
     // Calculate seeds for this outcome
     const seeds = calculateSeeds(updatedStandings);
-    
+
     // Update path data
     seeds.forEach((seed, rosterId) => {
       const data = pathData.get(rosterId)!;
@@ -231,22 +234,24 @@ const calculatePathData = (
       }
     });
   }
-  
+
   // Convert to TeamPathData
   return standings.map(team => {
     const data = pathData.get(team.rosterId)!;
     const matchup = matchups.find(
-      m => m.team1RosterId === team.rosterId || m.team2RosterId === team.rosterId
+      m => m.team1RosterId === team.rosterId || m.team2RosterId === team.rosterId,
     );
     const opponent = matchup
-      ? (team.rosterId === matchup.team1RosterId ? matchup.team2Name : matchup.team1Name)
+      ? team.rosterId === matchup.team1RosterId
+        ? matchup.team2Name
+        : matchup.team1Name
       : 'BYE';
-    
+
     const seedProbabilities: Record<number, number> = {};
     data.seedCounts.forEach((count, seed) => {
       seedProbabilities[seed] = Math.round((count / totalOutcomes) * 100);
     });
-    
+
     return {
       teamName: team.teamName,
       rosterId: team.rosterId,
@@ -268,7 +273,7 @@ const calculatePathData = (
  */
 const calculateSeeds = (standings: TeamStanding[]): Map<number, number> => {
   const seeds = new Map<number, number>();
-  
+
   // Find division winners
   const divisionWinners: TeamStanding[] = [];
   for (let div = 1; div <= 3; div++) {
@@ -281,32 +286,30 @@ const calculateSeeds = (standings: TeamStanding[]): Map<number, number> => {
       divisionWinners.push(divTeams[0]);
     }
   }
-  
+
   // Sort division winners by record then points
   divisionWinners.sort((a, b) => {
     if (b.wins !== a.wins) return b.wins - a.wins;
     return b.pointsFor - a.pointsFor;
   });
-  
+
   // Assign seeds 1-3 to division winners
   divisionWinners.forEach((team, idx) => {
     seeds.set(team.rosterId, idx + 1);
   });
-  
+
   // Find wild card teams (non-division winners)
-  const nonWinners = standings.filter(
-    t => !divisionWinners.some(dw => dw.rosterId === t.rosterId)
-  );
+  const nonWinners = standings.filter(t => !divisionWinners.some(dw => dw.rosterId === t.rosterId));
   nonWinners.sort((a, b) => {
     if (b.wins !== a.wins) return b.wins - a.wins;
     return b.pointsFor - a.pointsFor;
   });
-  
+
   // Assign seeds 4-12 to remaining teams
   nonWinners.forEach((team, idx) => {
     seeds.set(team.rosterId, idx + 4);
   });
-  
+
   return seeds;
 };
 
@@ -314,21 +317,21 @@ const buildLeaguePrompt = (
   leagueName: string,
   standings: TeamStanding[],
   matchups: Week14Matchup[],
-  pathData: TeamPathData[]
+  pathData: TeamPathData[],
 ): string => {
   // Sort by current standing
   const sortedStandings = [...standings].sort((a, b) => {
     if (b.wins !== a.wins) return b.wins - a.wins;
     return b.pointsFor - a.pointsFor;
   });
-  
+
   const standingsStr = sortedStandings
     .map((s, idx) => {
       const pd = pathData.find(p => p.rosterId === s.rosterId)!;
       return `${idx + 1}. ${s.teamName} (${s.wins}-${s.losses}, ${s.pointsFor.toFixed(1)} pts, Div ${s.division}) - Best: #${pd.bestSeed}, Worst: #${pd.worstSeed}, Playoff: ${pd.playoffOdds}%`;
     })
     .join('\n');
-  
+
   const matchupsStr = matchups
     .map(m => {
       const t1 = pathData.find(p => p.rosterId === m.team1RosterId)!;
@@ -336,18 +339,20 @@ const buildLeaguePrompt = (
       return `${m.team1Name} (${t1.playoffOdds}% playoff) vs ${m.team2Name} (${t2.playoffOdds}% playoff)`;
     })
     .join('\n');
-  
+
   // Identify bubble teams (playoff odds between 10-90%)
   const bubbleTeams = pathData
     .filter(p => p.playoffOdds > 10 && p.playoffOdds < 90)
     .sort((a, b) => b.playoffOdds - a.playoffOdds)
     .map(p => `${p.teamName} (${p.playoffOdds}%)`)
     .join(', ');
-  
+
   // Identify seeding battles (multiple teams can get same seed)
   const seedingBattles: string[] = [];
   for (let seed = 1; seed <= 6; seed++) {
-    const contenders = pathData.filter(p => p.seedProbabilities[seed] && p.seedProbabilities[seed] > 5);
+    const contenders = pathData.filter(
+      p => p.seedProbabilities[seed] && p.seedProbabilities[seed] > 5,
+    );
     if (contenders.length > 1) {
       const names = contenders
         .sort((a, b) => (b.seedProbabilities[seed] || 0) - (a.seedProbabilities[seed] || 0))
@@ -356,7 +361,7 @@ const buildLeaguePrompt = (
       seedingBattles.push(`#${seed} seed: ${names}`);
     }
   }
-  
+
   // Toilet bowl - teams that could be seeds 11-12
   const toiletTeams = pathData
     .filter(p => p.worstSeed >= 11)
@@ -408,21 +413,21 @@ const generateLeagueSummary = async (
   standings: TeamStanding[],
   matchups: Week14Matchup[],
   pathData: TeamPathData[],
-  retries: number = 3
+  retries: number = 3,
 ): Promise<LeagueSummary> => {
   const prompt = buildLeaguePrompt(leagueName, standings, matchups, pathData);
-  
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await client.invoke(prompt);
       let content = response.content.toString().trim();
-      
+
       if (content.startsWith('```json')) content = content.slice(7);
       if (content.startsWith('```')) content = content.slice(3);
       if (content.endsWith('```')) content = content.slice(0, -3);
-      
+
       const parsed = JSON.parse(content.trim());
-      
+
       return {
         leagueName,
         generatedAt: new Date().toISOString(),
@@ -450,7 +455,7 @@ const generateLeagueSummary = async (
       }
     }
   }
-  
+
   return {
     leagueName,
     generatedAt: new Date().toISOString(),
@@ -465,65 +470,70 @@ const generateLeagueSummary = async (
 const processLeague = async (
   leagueId: string,
   leagueName: 'AFC' | 'NFC',
-  throughWeek: number
+  throughWeek: number,
 ): Promise<{ summary: LeagueSummary; pathData: TeamPathData[] }> => {
   console.log(`\n📊 Processing ${leagueName} league...`);
-  
+
   const [standings, matchups] = await Promise.all([
     fetchStandings(leagueId, throughWeek),
     fetchMatchups(leagueId),
   ]);
-  
+
   console.log(`  Calculating path data for ${standings.length} teams...`);
   const pathData = calculatePathData(standings, matchups);
-  
+
   console.log(`  Generating league summary...`);
   const client = createClient();
   const summary = await generateLeagueSummary(client, leagueName, standings, matchups, pathData);
-  
+
   return { summary, pathData };
 };
 
 const main = async () => {
   console.log('🚀 Generating League Summaries');
   console.log('This will take a minute...\n');
-  
+
   const throughWeek = 13;
-  
+
   try {
     const [afcResult, nfcResult] = await Promise.all([
       processLeague(LEAGUE_IDS.AFC, 'AFC', throughWeek),
       processLeague(LEAGUE_IDS.NFC, 'NFC', throughWeek),
     ]);
-    
+
     const output = {
       generatedAt: new Date().toISOString(),
       throughWeek,
       afc: {
         summary: afcResult.summary,
-        teams: afcResult.pathData.reduce((acc, team) => {
-          acc[team.rosterId] = team;
-          return acc;
-        }, {} as Record<number, TeamPathData>),
+        teams: afcResult.pathData.reduce(
+          (acc, team) => {
+            acc[team.rosterId] = team;
+            return acc;
+          },
+          {} as Record<number, TeamPathData>,
+        ),
       },
       nfc: {
         summary: nfcResult.summary,
-        teams: nfcResult.pathData.reduce((acc, team) => {
-          acc[team.rosterId] = team;
-          return acc;
-        }, {} as Record<number, TeamPathData>),
+        teams: nfcResult.pathData.reduce(
+          (acc, team) => {
+            acc[team.rosterId] = team;
+            return acc;
+          },
+          {} as Record<number, TeamPathData>,
+        ),
       },
     };
-    
+
     const outputPath = resolve(__dirname, '../src/data/league-summaries.json');
     writeFileSync(outputPath, JSON.stringify(output, null, 2));
-    
+
     console.log(`\n✅ Summaries saved to: ${outputPath}`);
     console.log('\n=== AFC Summary ===');
     console.log(afcResult.summary.overallSummary);
     console.log('\n=== NFC Summary ===');
     console.log(nfcResult.summary.overallSummary);
-    
   } catch (error) {
     console.error('Failed to generate summaries:', error);
     process.exit(1);
@@ -531,4 +541,3 @@ const main = async () => {
 };
 
 main();
-

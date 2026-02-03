@@ -12,29 +12,24 @@ import type { Week14Matchup, ScenarioBuilderState, LockedOutcome } from '../type
  * Hook for managing scenario builder state
  */
 export const useWeek14Scenarios = (matchups: readonly Week14Matchup[]) => {
-  const [lockedOutcomes, setLockedOutcomes] = useState<
-    Record<number, LockedOutcome>
-  >({});
+  const [lockedOutcomes, setLockedOutcomes] = useState<Record<number, LockedOutcome>>({});
   const [isSimulating, setIsSimulating] = useState(false);
 
   /**
    * Lock a matchup outcome to a specific winner
    */
-  const lockOutcome = useCallback(
-    (matchupId: number, winner: 'team1' | 'team2' | null) => {
-      setLockedOutcomes((prev) => ({
-        ...prev,
-        [matchupId]: { matchupId, winner },
-      }));
-    },
-    []
-  );
+  const lockOutcome = useCallback((matchupId: number, winner: 'team1' | 'team2' | null) => {
+    setLockedOutcomes(prev => ({
+      ...prev,
+      [matchupId]: { matchupId, winner },
+    }));
+  }, []);
 
   /**
    * Toggle a matchup outcome (cycles through team1 -> team2 -> null)
    */
   const toggleOutcome = useCallback((matchupId: number) => {
-    setLockedOutcomes((prev) => {
+    setLockedOutcomes(prev => {
       const current = prev[matchupId]?.winner;
       let nextWinner: 'team1' | 'team2' | null;
 
@@ -67,33 +62,27 @@ export const useWeek14Scenarios = (matchups: readonly Week14Matchup[]) => {
     (matchupId: number): 'team1' | 'team2' | null => {
       return lockedOutcomes[matchupId]?.winner ?? null;
     },
-    [lockedOutcomes]
+    [lockedOutcomes],
   );
 
   /**
    * Check if any outcomes are locked
    */
   const hasLockedOutcomes = useMemo(() => {
-    return Object.values(lockedOutcomes).some(
-      (outcome) => outcome.winner !== null
-    );
+    return Object.values(lockedOutcomes).some(outcome => outcome.winner !== null);
   }, [lockedOutcomes]);
 
   /**
    * Get count of locked outcomes
    */
   const lockedCount = useMemo(() => {
-    return Object.values(lockedOutcomes).filter(
-      (outcome) => outcome.winner !== null
-    ).length;
+    return Object.values(lockedOutcomes).filter(outcome => outcome.winner !== null).length;
   }, [lockedOutcomes]);
 
   /**
    * Convert locked outcomes to format expected by simulation
    */
-  const getSimulationLockedOutcomes = useMemo(():
-    | Record<number, 'team1' | 'team2'>
-    | undefined => {
+  const getSimulationLockedOutcomes = useMemo((): Record<number, 'team1' | 'team2'> | undefined => {
     const locked: Record<number, 'team1' | 'team2'> = {};
     let hasAny = false;
 
@@ -115,7 +104,7 @@ export const useWeek14Scenarios = (matchups: readonly Week14Matchup[]) => {
       lockedOutcomes,
       isSimulating,
     }),
-    [lockedOutcomes, isSimulating]
+    [lockedOutcomes, isSimulating],
   );
 
   /**
@@ -132,7 +121,7 @@ export const useWeek14Scenarios = (matchups: readonly Week14Matchup[]) => {
         isLocked: locked !== null,
       };
     },
-    [getLockedOutcome]
+    [getLockedOutcome],
   );
 
   return {
@@ -161,7 +150,7 @@ export const useWeek14Scenarios = (matchups: readonly Week14Matchup[]) => {
  */
 export const getOutcomeLabel = (
   matchup: Week14Matchup,
-  locked: 'team1' | 'team2' | null
+  locked: 'team1' | 'team2' | null,
 ): string => {
   if (locked === null) return 'Simulate';
   if (locked === 'team1') return `${matchup.team1Name} wins`;
@@ -172,8 +161,7 @@ export const getOutcomeLabel = (
  * Get button variant for outcome selector
  */
 export const getOutcomeButtonVariant = (
-  isSelected: boolean
+  isSelected: boolean,
 ): 'default' | 'outline' | 'secondary' => {
   return isSelected ? 'default' : 'outline';
 };
-

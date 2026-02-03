@@ -16,10 +16,7 @@ export {
 } from './standings-calculator';
 
 // Seeding simulation
-export {
-  runSeedingSimulation,
-  runBothLeagueSimulations,
-} from './seeding-simulator';
+export { runSeedingSimulation, runBothLeagueSimulations } from './seeding-simulator';
 
 // Cross-league battle simulation
 export { runCrossLeagueBattle } from './cross-league-simulator';
@@ -31,4 +28,3 @@ export {
   type ScenarioSummaryInput,
   type ScenarioSummaryOutput,
 } from './scenario-summarizer';
-

@@ -28,7 +28,7 @@ const DEFAULT_CONFIG: CrossLeagueSimulationConfig = {
  */
 export const useCrossLeagueBattle = (
   throughWeek: number = 13,
-  config: CrossLeagueSimulationConfig = DEFAULT_CONFIG
+  config: CrossLeagueSimulationConfig = DEFAULT_CONFIG,
 ) => {
   return useQuery({
     queryKey: [CROSS_LEAGUE_QUERY_KEY, throughWeek, config.iterations],
@@ -73,9 +73,7 @@ export const formatExpectedWins = (wins: number): string => {
 /**
  * Determine which league is favored in a matchup
  */
-export const getMatchupFavorite = (
-  afcWinProb: number
-): 'afc' | 'nfc' | 'even' => {
+export const getMatchupFavorite = (afcWinProb: number): 'afc' | 'nfc' | 'even' => {
   if (afcWinProb > 0.55) return 'afc';
   if (afcWinProb < 0.45) return 'nfc';
   return 'even';
@@ -84,9 +82,7 @@ export const getMatchupFavorite = (
 /**
  * Get matchup indicator color based on favorite
  */
-export const getMatchupIndicatorColor = (
-  favorite: 'afc' | 'nfc' | 'even'
-): string => {
+export const getMatchupIndicatorColor = (favorite: 'afc' | 'nfc' | 'even'): string => {
   switch (favorite) {
     case 'afc':
       return 'text-red-500';
@@ -96,4 +92,3 @@ export const getMatchupIndicatorColor = (
       return 'text-muted-foreground';
   }
 };
-

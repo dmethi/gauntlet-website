@@ -28,7 +28,7 @@ const DEFAULT_CONFIG: SeedingSimulationConfig = {
  */
 export const usePlayoffSeeding = (
   throughWeek: number = 13,
-  config: SeedingSimulationConfig = DEFAULT_CONFIG
+  config: SeedingSimulationConfig = DEFAULT_CONFIG,
 ) => {
   return useQuery({
     queryKey: [SEEDING_QUERY_KEY, throughWeek, config.iterations, config.lockedOutcomes],
@@ -51,7 +51,7 @@ export const usePlayoffSeeding = (
  */
 export const usePlayoffSeedingWithScenarios = (
   throughWeek: number = 13,
-  lockedOutcomes?: Record<number, 'team1' | 'team2'>
+  lockedOutcomes?: Record<number, 'team1' | 'team2'>,
 ) => {
   const config: SeedingSimulationConfig = {
     iterations: lockedOutcomes ? 5000 : 10000, // Fewer iterations when recalculating scenarios
@@ -103,20 +103,25 @@ export const getSeedProbabilityColor = (seed: number): string => {
  * Format scenario conditions as readable text
  */
 export const formatScenarioConditions = (
-  conditions: readonly { type: string; teamName: string; rosterId?: number; marginRequired?: number }[]
+  conditions: readonly {
+    type: string;
+    teamName: string;
+    rosterId?: number;
+    marginRequired?: number;
+  }[],
 ): string => {
   if (conditions.length === 0) return 'Any outcome results in this seed';
 
   const parts: string[] = [];
-  
+
   // Find own result first
-  const ownResult = conditions.find((c) => c.type === 'win' || c.type === 'lose');
+  const ownResult = conditions.find(c => c.type === 'win' || c.type === 'lose');
   if (ownResult) {
     parts.push(ownResult.type === 'win' ? 'WIN' : 'LOSE');
   }
 
   // Then add other team outcomes
-  conditions.forEach((condition) => {
+  conditions.forEach(condition => {
     switch (condition.type) {
       case 'other_team_wins':
         parts.push(`${condition.teamName} wins`);
@@ -148,9 +153,9 @@ export const formatPathConditions = (conditions: readonly PathCondition[]): stri
   if (conditions.length === 0) return 'Any outcome results in this seed';
 
   const parts: string[] = [];
-  
+
   // Find own result first (win/lose)
-  const ownResult = conditions.find((c) => c.type === 'win' || c.type === 'lose');
+  const ownResult = conditions.find(c => c.type === 'win' || c.type === 'lose');
   if (ownResult) {
     const result = ownResult.type === 'win' ? 'WIN' : 'LOSE';
     if (ownResult.opponentName) {
@@ -161,7 +166,7 @@ export const formatPathConditions = (conditions: readonly PathCondition[]): stri
   }
 
   // Then add other team outcomes
-  conditions.forEach((condition) => {
+  conditions.forEach(condition => {
     switch (condition.type) {
       case 'other_result':
         if (condition.wins !== undefined) {
@@ -176,10 +181,14 @@ export const formatPathConditions = (conditions: readonly PathCondition[]): stri
       case 'points_margin':
         if (condition.marginRequired !== undefined) {
           if (condition.marginRequired > 0) {
-            parts.push(`outscore ${condition.vsTeamName || condition.teamName} by ${condition.marginRequired}+ pts`);
+            parts.push(
+              `outscore ${condition.vsTeamName || condition.teamName} by ${condition.marginRequired}+ pts`,
+            );
           } else if (condition.marginRequired < 0) {
             // Negative margin = be outscored by this team
-            parts.push(`be outscored by ${condition.vsTeamName || condition.teamName} by ${Math.abs(condition.marginRequired)}+ pts`);
+            parts.push(
+              `be outscored by ${condition.vsTeamName || condition.teamName} by ${Math.abs(condition.marginRequired)}+ pts`,
+            );
           }
         }
         break;
@@ -197,4 +206,3 @@ export const formatPathCount = (count: number): string => {
   if (count === 1) return '1 path';
   return `${count} paths`;
 };
-

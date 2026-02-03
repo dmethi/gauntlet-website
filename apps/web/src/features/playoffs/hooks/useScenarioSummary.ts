@@ -1,6 +1,6 @@
 /**
  * useScenarioSummary Hook
- * 
+ *
  * Loads pre-generated AI summaries from static JSON file.
  * Summaries are generated once via scripts/generate-scenario-summaries.ts
  * and embedded in the build, not fetched dynamically.
@@ -49,7 +49,7 @@ const loadStaticSummaries = async (): Promise<StaticSummariesFile | null> => {
   if (cachedSummaries) {
     return cachedSummaries;
   }
-  
+
   try {
     // Try to import the static JSON file
     const data = await import('@/data/scenario-summaries.json');
@@ -57,7 +57,9 @@ const loadStaticSummaries = async (): Promise<StaticSummariesFile | null> => {
     return cachedSummaries;
   } catch {
     // File doesn't exist yet - that's okay
-    console.warn('Scenario summaries file not found. Run: npx tsx scripts/generate-scenario-summaries.ts');
+    console.warn(
+      'Scenario summaries file not found. Run: npx tsx scripts/generate-scenario-summaries.ts',
+    );
     return null;
   }
 };
@@ -67,14 +69,14 @@ const loadStaticSummaries = async (): Promise<StaticSummariesFile | null> => {
  */
 const getTeamSummary = async (
   rosterId: number,
-  leagueName: 'AFC' | 'NFC'
+  leagueName: 'AFC' | 'NFC',
 ): Promise<ScenarioSummaryOutput | null> => {
   const summaries = await loadStaticSummaries();
   if (!summaries) return null;
-  
+
   const leagueData = leagueName === 'AFC' ? summaries.afc : summaries.nfc;
   const teamSummary = leagueData?.teams?.[rosterId.toString()];
-  
+
   return teamSummary || null;
 };
 
@@ -85,7 +87,7 @@ const getTeamSummary = async (
 export const useScenarioSummary = (
   rosterId: number | null,
   leagueName: 'AFC' | 'NFC' | null,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery({
     queryKey: ['static-scenario-summary', rosterId, leagueName],
@@ -109,10 +111,10 @@ export const useLeagueSummaries = (results: LeagueSeedingResults | null) => {
     queryKey: ['static-league-summaries', results?.leagueId],
     queryFn: async () => {
       if (!results) return null;
-      
+
       const summaries = await loadStaticSummaries();
       if (!summaries) return null;
-      
+
       const leagueData = results.leagueName === 'AFC' ? summaries.afc : summaries.nfc;
       return leagueData?.teams || null;
     },
@@ -126,4 +128,3 @@ export const useLeagueSummaries = (results: LeagueSeedingResults | null) => {
  * Type for cached summaries
  */
 export type CachedSummaries = Map<number, ScenarioSummaryOutput>;
-

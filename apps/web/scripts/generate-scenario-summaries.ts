@@ -1,11 +1,11 @@
 /**
  * Generate Static Scenario Summaries
- * 
+ *
  * Generates AI summaries for all teams in both leagues and saves to a JSON file.
  * This runs ONCE (manually or as a build step), not on every page load.
- * 
+ *
  * Run with: npx tsx scripts/generate-scenario-summaries.ts
- * 
+ *
  * Output: data/scenario-summaries.json
  */
 
@@ -75,9 +75,9 @@ const fetchStandings = async (leagueId: string, throughWeek: number): Promise<Te
   ]);
 
   const userMap = new Map(users.map(u => [u.user_id, u]));
-  
+
   const matchupPromises = Array.from({ length: throughWeek }, (_, i) =>
-    sleeperClient.fetchMatchups(leagueId, i + 1)
+    sleeperClient.fetchMatchups(leagueId, i + 1),
   );
   const allMatchups = await Promise.all(matchupPromises);
 
@@ -94,7 +94,7 @@ const fetchStandings = async (leagueId: string, throughWeek: number): Promise<Te
       pointsFor += points;
 
       const opponent = weekMatchups.find(
-        m => m.matchup_id === teamMatchup.matchup_id && m.roster_id !== roster.roster_id
+        m => m.matchup_id === teamMatchup.matchup_id && m.roster_id !== roster.roster_id,
       );
       if (!opponent) return;
 
@@ -126,7 +126,7 @@ const fetchMatchups = async (leagueId: string): Promise<Week14Matchup[]> => {
 
   const userMap = new Map(users.map(u => [u.user_id, u]));
   const matchupGroups = new Map<number, typeof matchups>();
-  
+
   matchups.forEach(m => {
     if (!matchupGroups.has(m.matchup_id)) {
       matchupGroups.set(m.matchup_id, []);
@@ -135,7 +135,7 @@ const fetchMatchups = async (leagueId: string): Promise<Week14Matchup[]> => {
   });
 
   const week14Matchups: Week14Matchup[] = [];
-  
+
   matchupGroups.forEach((teams, matchupId) => {
     if (teams.length !== 2) return;
     const [team1, team2] = teams;
@@ -160,7 +160,7 @@ const buildPrompt = (
   team: TeamStanding,
   standings: TeamStanding[],
   matchups: Week14Matchup[],
-  leagueName: string
+  leagueName: string,
 ): string => {
   // Sort standings by wins, then points
   const sortedStandings = [...standings].sort((a, b) => {
@@ -169,19 +169,22 @@ const buildPrompt = (
   });
 
   const standingsStr = sortedStandings
-    .map((s, idx) => `${idx + 1}. ${s.teamName} (${s.wins}-${s.losses}, ${s.pointsFor.toFixed(1)} pts, Div ${s.division})`)
+    .map(
+      (s, idx) =>
+        `${idx + 1}. ${s.teamName} (${s.wins}-${s.losses}, ${s.pointsFor.toFixed(1)} pts, Div ${s.division})`,
+    )
     .join('\n');
 
-  const matchupsStr = matchups
-    .map(m => `${m.team1Name} vs ${m.team2Name}`)
-    .join('\n');
+  const matchupsStr = matchups.map(m => `${m.team1Name} vs ${m.team2Name}`).join('\n');
 
   // Find this team's opponent
   const teamMatchup = matchups.find(
-    m => m.team1RosterId === team.rosterId || m.team2RosterId === team.rosterId
+    m => m.team1RosterId === team.rosterId || m.team2RosterId === team.rosterId,
   );
   const opponent = teamMatchup
-    ? (team.rosterId === teamMatchup.team1RosterId ? teamMatchup.team2Name : teamMatchup.team1Name)
+    ? team.rosterId === teamMatchup.team1RosterId
+      ? teamMatchup.team2Name
+      : teamMatchup.team1Name
     : 'Unknown';
   const opponentTeam = standings.find(s => s.teamName === opponent);
 
@@ -202,7 +205,7 @@ const buildPrompt = (
       const diff = team.pointsFor - rival.pointsFor;
       const ahead = diff > 0;
       const pointGap = Math.abs(diff).toFixed(1);
-      
+
       tiebreakerContext += `\n${rival.teamName} (${rival.pointsFor.toFixed(1)} pts):\n`;
       tiebreakerContext += `- Point gap: ${team.teamName} is ${pointGap} pts ${ahead ? 'AHEAD' : 'BEHIND'}\n`;
       tiebreakerContext += `- If BOTH WIN: Both are ${team.wins + 1}-${team.losses} (SAME RECORD!).\n`;
@@ -275,22 +278,22 @@ const generateSummary = async (
   standings: TeamStanding[],
   matchups: Week14Matchup[],
   leagueName: string,
-  retries: number = 3
+  retries: number = 3,
 ): Promise<ScenarioSummary> => {
   const prompt = buildPrompt(team, standings, matchups, leagueName);
-  
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await client.invoke(prompt);
       let content = response.content.toString().trim();
-      
+
       // Clean JSON
       if (content.startsWith('```json')) content = content.slice(7);
       if (content.startsWith('```')) content = content.slice(3);
       if (content.endsWith('```')) content = content.slice(0, -3);
-      
+
       const parsed = JSON.parse(content.trim());
-      
+
       return {
         overallSummary: parsed.overallSummary || '',
         seedSummaries: parsed.seedSummaries || {},
@@ -310,7 +313,7 @@ const generateSummary = async (
       }
     }
   }
-  
+
   // Should never reach here, but TypeScript needs a return
   return {
     overallSummary: 'Unable to generate summary',
@@ -322,38 +325,32 @@ const generateSummary = async (
 const processLeague = async (
   leagueId: string,
   leagueName: 'AFC' | 'NFC',
-  throughWeek: number
+  throughWeek: number,
 ): Promise<LeagueSummaries> => {
   console.log(`\n📊 Processing ${leagueName} league...`);
-  
+
   const [standings, matchups] = await Promise.all([
     fetchStandings(leagueId, throughWeek),
     fetchMatchups(leagueId),
   ]);
-  
+
   console.log(`  Found ${standings.length} teams, ${matchups.length} matchups`);
-  
+
   const client = createClient();
   const summaries: Record<number, ScenarioSummary> = {};
-  
+
   for (let i = 0; i < standings.length; i++) {
     const team = standings[i];
     console.log(`  [${i + 1}/${standings.length}] Generating summary for ${team.teamName}...`);
-    
-    summaries[team.rosterId] = await generateSummary(
-      client,
-      team,
-      standings,
-      matchups,
-      leagueName
-    );
-    
+
+    summaries[team.rosterId] = await generateSummary(client, team, standings, matchups, leagueName);
+
     // Rate limit - wait between requests
     if (i < standings.length - 1) {
       await new Promise(r => setTimeout(r, 1500));
     }
   }
-  
+
   return {
     leagueId,
     leagueName,
@@ -364,31 +361,30 @@ const processLeague = async (
 const main = async () => {
   console.log('🚀 Generating Static Scenario Summaries');
   console.log('This will take a few minutes...\n');
-  
+
   const throughWeek = 13; // Current completed week
-  
+
   try {
     // Process both leagues
     const [afcSummaries, nfcSummaries] = await Promise.all([
       processLeague(LEAGUE_IDS.AFC, 'AFC', throughWeek),
       processLeague(LEAGUE_IDS.NFC, 'NFC', throughWeek),
     ]);
-    
+
     const output = {
       generatedAt: new Date().toISOString(),
       throughWeek,
       afc: afcSummaries,
       nfc: nfcSummaries,
     };
-    
+
     // Save to file in src/data for proper module resolution
     const outputPath = resolve(__dirname, '../src/data/scenario-summaries.json');
     writeFileSync(outputPath, JSON.stringify(output, null, 2));
-    
+
     console.log(`\n✅ Summaries saved to: ${outputPath}`);
     console.log(`   AFC: ${Object.keys(afcSummaries.teams).length} teams`);
     console.log(`   NFC: ${Object.keys(nfcSummaries.teams).length} teams`);
-    
   } catch (error) {
     console.error('Failed to generate summaries:', error);
     process.exit(1);
@@ -396,4 +392,3 @@ const main = async () => {
 };
 
 main();
-

@@ -1,10 +1,10 @@
 /**
  * Evaluation Script: Test different prompts for scenario summarization
- * 
+ *
  * Tests two approaches:
  * 1. Minimal context: Just standings + matchups (let Gemini figure it out)
  * 2. Full context: Include all calculated paths and ask Gemini to summarize
- * 
+ *
  * Run with: npx tsx scripts/eval-scenario-prompts.ts
  */
 
@@ -24,18 +24,95 @@ const GEMINI_CONFIG = {
 // Sample test data (you can replace with real data)
 const TEST_DATA = {
   standings: [
-    { rank: 1, teamName: 'lol jerry jones', ownerName: 'nkjchamp', record: '8-5', points: 1626.8, division: 1 },
-    { rank: 2, teamName: 'Drake Maye Lover', ownerName: 'hunterzogg', record: '8-5', points: 1617.0, division: 1 },
-    { rank: 3, teamName: 'To Infinity and Bijan', ownerName: 'kanzelm3', record: '11-2', points: 1568.7, division: 2 },
-    { rank: 4, teamName: 'scboom5', ownerName: 'scboom5', record: '8-5', points: 1502.8, division: 3 },
+    {
+      rank: 1,
+      teamName: 'lol jerry jones',
+      ownerName: 'nkjchamp',
+      record: '8-5',
+      points: 1626.8,
+      division: 1,
+    },
+    {
+      rank: 2,
+      teamName: 'Drake Maye Lover',
+      ownerName: 'hunterzogg',
+      record: '8-5',
+      points: 1617.0,
+      division: 1,
+    },
+    {
+      rank: 3,
+      teamName: 'To Infinity and Bijan',
+      ownerName: 'kanzelm3',
+      record: '11-2',
+      points: 1568.7,
+      division: 2,
+    },
+    {
+      rank: 4,
+      teamName: 'scboom5',
+      ownerName: 'scboom5',
+      record: '8-5',
+      points: 1502.8,
+      division: 3,
+    },
     { rank: 5, teamName: 'vchak', ownerName: 'vchak', record: '7-6', points: 1520.0, division: 1 },
-    { rank: 6, teamName: 'NielGetsCarried', ownerName: 'NielGetsCarried', record: '7-6', points: 1480.0, division: 2 },
-    { rank: 7, teamName: '2 Dolla Balla$', ownerName: '2dolla', record: '7-6', points: 1450.0, division: 3 },
-    { rank: 8, teamName: 'achak7', ownerName: 'achak7', record: '7-6', points: 1498.9, division: 3 },
-    { rank: 9, teamName: 'Quonspiracy Theorists', ownerName: 'quon', record: '6-7', points: 1420.0, division: 2 },
-    { rank: 10, teamName: 'Team10', ownerName: 'owner10', record: '5-8', points: 1380.0, division: 1 },
-    { rank: 11, teamName: 'Team11', ownerName: 'owner11', record: '4-9', points: 1320.0, division: 2 },
-    { rank: 12, teamName: 'Team12', ownerName: 'owner12', record: '3-10', points: 1250.0, division: 3 },
+    {
+      rank: 6,
+      teamName: 'NielGetsCarried',
+      ownerName: 'NielGetsCarried',
+      record: '7-6',
+      points: 1480.0,
+      division: 2,
+    },
+    {
+      rank: 7,
+      teamName: '2 Dolla Balla$',
+      ownerName: '2dolla',
+      record: '7-6',
+      points: 1450.0,
+      division: 3,
+    },
+    {
+      rank: 8,
+      teamName: 'achak7',
+      ownerName: 'achak7',
+      record: '7-6',
+      points: 1498.9,
+      division: 3,
+    },
+    {
+      rank: 9,
+      teamName: 'Quonspiracy Theorists',
+      ownerName: 'quon',
+      record: '6-7',
+      points: 1420.0,
+      division: 2,
+    },
+    {
+      rank: 10,
+      teamName: 'Team10',
+      ownerName: 'owner10',
+      record: '5-8',
+      points: 1380.0,
+      division: 1,
+    },
+    {
+      rank: 11,
+      teamName: 'Team11',
+      ownerName: 'owner11',
+      record: '4-9',
+      points: 1320.0,
+      division: 2,
+    },
+    {
+      rank: 12,
+      teamName: 'Team12',
+      ownerName: 'owner12',
+      record: '3-10',
+      points: 1250.0,
+      division: 3,
+    },
   ],
   matchups: [
     { team1: 'lol jerry jones', team2: 'vchak' },
@@ -64,10 +141,8 @@ const buildMinimalPrompt = () => {
   const standingsStr = TEST_DATA.standings
     .map(s => `${s.rank}. ${s.teamName} (${s.record}, ${s.points} pts, Div ${s.division})`)
     .join('\n');
-  
-  const matchupsStr = TEST_DATA.matchups
-    .map(m => `${m.team1} vs ${m.team2}`)
-    .join('\n');
+
+  const matchupsStr = TEST_DATA.matchups.map(m => `${m.team1} vs ${m.team2}`).join('\n');
 
   return `You are a fantasy football analyst. This is the FINAL week of the regular season (Week 14).
 
@@ -112,10 +187,8 @@ const buildFullPathPrompt = () => {
   const standingsStr = TEST_DATA.standings
     .map(s => `${s.rank}. ${s.teamName} (${s.record}, ${s.points} pts, Div ${s.division})`)
     .join('\n');
-  
-  const matchupsStr = TEST_DATA.matchups
-    .map(m => `${m.team1} vs ${m.team2}`)
-    .join('\n');
+
+  const matchupsStr = TEST_DATA.matchups.map(m => `${m.team1} vs ${m.team2}`).join('\n');
 
   const pathsStr = Object.entries(TEST_DATA.scenarios)
     .map(([seed, data]) => {
@@ -192,23 +265,23 @@ const runPrompt = async (name: string, prompt: string) => {
   console.log(`TESTING: ${name}`);
   console.log('='.repeat(60));
   console.log('\nPrompt length:', prompt.length, 'chars');
-  
+
   try {
     const client = createClient();
     const start = Date.now();
     const response = await client.invoke(prompt);
     const elapsed = Date.now() - start;
-    
+
     console.log(`\nResponse time: ${elapsed}ms`);
     console.log('\n--- RAW RESPONSE ---');
     console.log(response.content.toString());
-    
+
     // Try to parse JSON
     let content = response.content.toString().trim();
     if (content.startsWith('```json')) content = content.slice(7);
     if (content.startsWith('```')) content = content.slice(3);
     if (content.endsWith('```')) content = content.slice(0, -3);
-    
+
     try {
       const parsed = JSON.parse(content.trim());
       console.log('\n--- PARSED JSON ---');
@@ -227,35 +300,34 @@ const runPrompt = async (name: string, prompt: string) => {
 const main = async () => {
   console.log('🧪 Scenario Prompt Evaluation');
   console.log('Testing different prompts for playoff scenario summarization\n');
-  
+
   // Test Prompt 1: Minimal
   const result1 = await runPrompt('MINIMAL CONTEXT', buildMinimalPrompt());
-  
+
   // Small delay between requests
   await new Promise(r => setTimeout(r, 2000));
-  
+
   // Test Prompt 2: Full Path Context
   const result2 = await runPrompt('FULL PATH CONTEXT', buildFullPathPrompt());
-  
+
   // Compare results
   console.log('\n' + '='.repeat(60));
   console.log('COMPARISON');
   console.log('='.repeat(60));
-  
+
   if (result1 && result2) {
     console.log('\n📊 MINIMAL CONTEXT:');
     console.log('Overall:', result1.overallSummary);
-    
+
     console.log('\n📊 FULL PATH CONTEXT:');
     console.log('Overall:', result2.overallSummary);
-    
+
     console.log('\n🎯 Key differences in #2 seed explanation:');
     console.log('Minimal:', result1.seedSummaries?.['2']?.slice(0, 200) + '...');
     console.log('Full:', result2.seedSummaries?.['2']?.slice(0, 200) + '...');
   }
-  
+
   console.log('\n✅ Evaluation complete!');
 };
 
 main().catch(console.error);
-

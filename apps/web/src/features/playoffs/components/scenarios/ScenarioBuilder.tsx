@@ -37,9 +37,7 @@ const MatchupSelector = memo<{
         variant={lockedWinner === 'team1' ? 'default' : 'outline'}
         size="sm"
         className={`flex-1 text-xs h-9 ${
-          lockedWinner === 'team1'
-            ? 'bg-green-600 hover:bg-green-700 border-green-600'
-            : ''
+          lockedWinner === 'team1' ? 'bg-green-600 hover:bg-green-700 border-green-600' : ''
         }`}
         onClick={() => onSelect(lockedWinner === 'team1' ? null : 'team1')}
         disabled={isLoading}
@@ -65,9 +63,7 @@ const MatchupSelector = memo<{
         variant={lockedWinner === 'team2' ? 'default' : 'outline'}
         size="sm"
         className={`flex-1 text-xs h-9 ${
-          lockedWinner === 'team2'
-            ? 'bg-green-600 hover:bg-green-700 border-green-600'
-            : ''
+          lockedWinner === 'team2' ? 'bg-green-600 hover:bg-green-700 border-green-600' : ''
         }`}
         onClick={() => onSelect(lockedWinner === 'team2' ? null : 'team2')}
         disabled={isLoading}
@@ -84,80 +80,72 @@ MatchupSelector.displayName = 'MatchupSelector';
 /**
  * Scenario builder component for locking matchup outcomes
  */
-export const ScenarioBuilder = memo<ScenarioBuilderProps>(({
-  matchups,
-  leagueName,
-  lockedOutcomes,
-  onLockOutcome,
-  onResetAll,
-  isLoading,
-}) => {
-  const lockedCount = Object.values(lockedOutcomes).filter(
-    (outcome) => outcome !== null
-  ).length;
+export const ScenarioBuilder = memo<ScenarioBuilderProps>(
+  ({ matchups, leagueName, lockedOutcomes, onLockOutcome, onResetAll, isLoading }) => {
+    const lockedCount = Object.values(lockedOutcomes).filter(outcome => outcome !== null).length;
 
-  const totalMatchups = matchups.length;
+    const totalMatchups = matchups.length;
 
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-base font-geizer tracking-wide flex items-center gap-2">
-              {leagueName} Scenario Builder
-              {lockedCount > 0 && (
-                <Badge variant="secondary" className="text-xs">
-                  {lockedCount}/{totalMatchups} locked
-                </Badge>
-              )}
-            </CardTitle>
-            <CardDescription className="text-xs font-avenir">
-              Lock matchup outcomes to see how it affects playoff seeding
-            </CardDescription>
+    return (
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base font-geizer tracking-wide flex items-center gap-2">
+                {leagueName} Scenario Builder
+                {lockedCount > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {lockedCount}/{totalMatchups} locked
+                  </Badge>
+                )}
+              </CardTitle>
+              <CardDescription className="text-xs font-avenir">
+                Lock matchup outcomes to see how it affects playoff seeding
+              </CardDescription>
+            </div>
+            {lockedCount > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onResetAll}
+                disabled={isLoading}
+                className="text-xs"
+              >
+                <RotateCcw className="h-3 w-3 mr-1" />
+                Reset
+              </Button>
+            )}
           </div>
-          {lockedCount > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onResetAll}
-              disabled={isLoading}
-              className="text-xs"
-            >
-              <RotateCcw className="h-3 w-3 mr-1" />
-              Reset
-            </Button>
-          )}
-        </div>
-      </CardHeader>
+        </CardHeader>
 
-      <CardContent className="pt-0">
-        <div className="space-y-2">
-          {matchups.map((matchup) => (
-            <MatchupSelector
-              key={matchup.matchupId}
-              matchup={matchup}
-              lockedWinner={lockedOutcomes[matchup.matchupId] ?? null}
-              onSelect={(winner) => onLockOutcome(matchup.matchupId, winner)}
-              isLoading={isLoading}
-            />
-          ))}
-        </div>
+        <CardContent className="pt-0">
+          <div className="space-y-2">
+            {matchups.map(matchup => (
+              <MatchupSelector
+                key={matchup.matchupId}
+                matchup={matchup}
+                lockedWinner={lockedOutcomes[matchup.matchupId] ?? null}
+                onSelect={winner => onLockOutcome(matchup.matchupId, winner)}
+                isLoading={isLoading}
+              />
+            ))}
+          </div>
 
-        {/* Helper text */}
-        <div className="mt-4 p-3 bg-muted/20 rounded-md">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Unlock className="h-3 w-3" />
-            <span>Click a team to lock them as the winner</span>
+          {/* Helper text */}
+          <div className="mt-4 p-3 bg-muted/20 rounded-md">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Unlock className="h-3 w-3" />
+              <span>Click a team to lock them as the winner</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+              <Lock className="h-3 w-3" />
+              <span>Click again to unlock and simulate</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-            <Lock className="h-3 w-3" />
-            <span>Click again to unlock and simulate</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-});
+        </CardContent>
+      </Card>
+    );
+  },
+);
 
 ScenarioBuilder.displayName = 'ScenarioBuilder';
-

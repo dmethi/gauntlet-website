@@ -1,6 +1,6 @@
 /**
  * Scenario Summarizer
- * 
+ *
  * Uses Gemini to generate human-readable summaries of playoff scenarios.
  * Instead of mathematical compression, we let the LLM explain what needs to happen
  * in natural language that makes sense to fantasy football players.
@@ -64,37 +64,48 @@ export interface ScenarioSummaryOutput {
  * Build the prompt for Gemini to summarize scenarios
  */
 const buildSummarizationPrompt = (input: ScenarioSummaryInput): string => {
-  const { teamName, ownerName, currentRecord, currentPoints, division, scenarios, standings, matchups } = input;
-  
+  const {
+    teamName,
+    ownerName,
+    currentRecord,
+    currentPoints,
+    division,
+    scenarios,
+    standings,
+    matchups,
+  } = input;
+
   // Find this team's matchup
-  const teamMatchup = matchups.find(m => 
-    standings.some(s => 
-      (s.rosterId === m.team1RosterId || s.rosterId === m.team2RosterId) && 
-      s.teamName === teamName
-    )
+  const teamMatchup = matchups.find(m =>
+    standings.some(
+      s =>
+        (s.rosterId === m.team1RosterId || s.rosterId === m.team2RosterId) &&
+        s.teamName === teamName,
+    ),
   );
-  
+
   const team = standings.find(s => s.teamName === teamName);
-  const opponent = teamMatchup ? (
-    team?.rosterId === teamMatchup.team1RosterId 
+  const opponent = teamMatchup
+    ? team?.rosterId === teamMatchup.team1RosterId
       ? matchups.find(m => m.matchupId === teamMatchup.matchupId)?.team2Name
       : matchups.find(m => m.matchupId === teamMatchup.matchupId)?.team1Name
-  ) : 'Unknown';
-  
+    : 'Unknown';
+
   // Build standings context
   const standingsContext = [...standings]
     .sort((a, b) => {
       if (b.wins !== a.wins) return b.wins - a.wins;
       return b.pointsFor - a.pointsFor;
     })
-    .map((s, idx) => `${idx + 1}. ${s.teamName} (${s.wins}-${s.losses}, ${s.pointsFor.toFixed(1)} pts, Div ${s.division})`)
+    .map(
+      (s, idx) =>
+        `${idx + 1}. ${s.teamName} (${s.wins}-${s.losses}, ${s.pointsFor.toFixed(1)} pts, Div ${s.division})`,
+    )
     .join('\n');
-  
+
   // Build matchups context
-  const matchupsContext = matchups
-    .map(m => `${m.team1Name} vs ${m.team2Name}`)
-    .join('\n');
-  
+  const matchupsContext = matchups.map(m => `${m.team1Name} vs ${m.team2Name}`).join('\n');
+
   // Build scenarios context
   const scenariosContext = scenarios
     .filter(s => s.probability > 0.01)
@@ -164,9 +175,9 @@ const parseGeminiResponse = (response: string, teamName: string): ScenarioSummar
       cleaned = cleaned.slice(0, -3);
     }
     cleaned = cleaned.trim();
-    
+
     const parsed = JSON.parse(cleaned);
-    
+
     // Convert string keys to numbers for seedSummaries
     const seedSummaries: Record<number, string> = {};
     if (parsed.seedSummaries) {
@@ -174,7 +185,7 @@ const parseGeminiResponse = (response: string, teamName: string): ScenarioSummar
         seedSummaries[parseInt(key)] = value as string;
       });
     }
-    
+
     return {
       teamName,
       overallSummary: parsed.overallSummary || 'Playoff scenarios being calculated...',
@@ -194,15 +205,15 @@ const parseGeminiResponse = (response: string, teamName: string): ScenarioSummar
  * Generate scenario summaries for a single team using Gemini
  */
 export const generateTeamScenarioSummary = async (
-  input: ScenarioSummaryInput
+  input: ScenarioSummaryInput,
 ): Promise<ScenarioSummaryOutput> => {
   try {
     const client = createSummarizerClient();
     const prompt = buildSummarizationPrompt(input);
-    
+
     const response = await client.invoke(prompt);
     const content = response.content.toString();
-    
+
     return parseGeminiResponse(content, input.teamName);
   } catch (error) {
     console.error(`Error generating summary for ${input.teamName}:`, error);
@@ -221,13 +232,13 @@ export const generateTeamScenarioSummary = async (
 export const generateLeagueScenarioSummaries = async (
   standings: readonly TeamStanding[],
   matchups: readonly Week14Matchup[],
-  scenarios: ReadonlyMap<number, readonly SeedScenario[]> // rosterId -> scenarios
+  scenarios: ReadonlyMap<number, readonly SeedScenario[]>, // rosterId -> scenarios
 ): Promise<Map<number, ScenarioSummaryOutput>> => {
   const summaries = new Map<number, ScenarioSummaryOutput>();
-  
+
   for (const team of standings) {
     const teamScenarios = scenarios.get(team.rosterId) || [];
-    
+
     // Skip teams with no meaningful scenarios
     if (teamScenarios.length === 0) {
       summaries.set(team.rosterId, {
@@ -237,7 +248,7 @@ export const generateLeagueScenarioSummaries = async (
       });
       continue;
     }
-    
+
     const input: ScenarioSummaryInput = {
       teamName: team.teamName,
       ownerName: team.ownerName,
@@ -248,14 +259,13 @@ export const generateLeagueScenarioSummaries = async (
       standings,
       matchups,
     };
-    
+
     const summary = await generateTeamScenarioSummary(input);
     summaries.set(team.rosterId, summary);
-    
+
     // Small delay between requests to avoid rate limits
     await new Promise(resolve => setTimeout(resolve, 500));
   }
-  
+
   return summaries;
 };
-

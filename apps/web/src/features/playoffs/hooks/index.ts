@@ -25,11 +25,7 @@ export {
 } from './useCrossLeagueBattle';
 
 // Scenario builder hook
-export {
-  useWeek14Scenarios,
-  getOutcomeLabel,
-  getOutcomeButtonVariant,
-} from './useWeek14Scenarios';
+export { useWeek14Scenarios, getOutcomeLabel, getOutcomeButtonVariant } from './useWeek14Scenarios';
 
 // Pre-generated scenario summaries (static, not dynamic)
 export {
@@ -40,8 +36,4 @@ export {
 } from './useScenarioSummary';
 
 // League-level summaries
-export {
-  useLeagueSummary,
-  type LeagueSummary,
-  type TeamPathData,
-} from './useLeagueSummary';
+export { useLeagueSummary, type LeagueSummary, type TeamPathData } from './useLeagueSummary';

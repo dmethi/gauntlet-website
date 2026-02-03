@@ -6,11 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Swords, DollarSign, TrendingUp, ChevronDown, ChevronUp, Users } from 'lucide-react';
 import type { CrossLeagueBattleResults, CrossLeagueMatchup, CrossLeaguePlayer } from '../../types';
-import {
-  formatWinProbability,
-  formatExpectedWins,
-  getMatchupFavorite,
-} from '../../hooks';
+import { formatWinProbability, formatExpectedWins, getMatchupFavorite } from '../../hooks';
 
 interface CrossLeagueBattleProps {
   readonly results: CrossLeagueBattleResults;
@@ -26,78 +22,80 @@ const LeagueProbabilityHeader = memo<{
   readonly expectedNfcWins: number;
   readonly expectedAfcPoints: number;
   readonly expectedNfcPoints: number;
-}>(({
-  afcWinProb,
-  nfcWinProb,
-  expectedAfcWins,
-  expectedNfcWins,
-  expectedAfcPoints,
-  expectedNfcPoints,
-}) => {
-  const afcFavored = afcWinProb > 0.5;
+}>(
+  ({
+    afcWinProb,
+    nfcWinProb,
+    expectedAfcWins,
+    expectedNfcWins,
+    expectedAfcPoints,
+    expectedNfcPoints,
+  }) => {
+    const afcFavored = afcWinProb > 0.5;
 
-  return (
-    <Card className="bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10">
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-3 gap-4 items-center">
-          {/* AFC Side */}
-          <div className="text-center">
-            <h3 className="text-lg font-bold font-geizer tracking-wide text-red-500">
-              AFC
-            </h3>
-            <div className={`text-3xl font-bold ${afcFavored ? 'text-red-500' : 'text-muted-foreground'}`}>
-              {formatWinProbability(afcWinProb)}
+    return (
+      <Card className="bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-3 gap-4 items-center">
+            {/* AFC Side */}
+            <div className="text-center">
+              <h3 className="text-lg font-bold font-geizer tracking-wide text-red-500">AFC</h3>
+              <div
+                className={`text-3xl font-bold ${afcFavored ? 'text-red-500' : 'text-muted-foreground'}`}
+              >
+                {formatWinProbability(afcWinProb)}
+              </div>
+              <div className="text-sm text-muted-foreground mt-1">
+                {formatExpectedWins(expectedAfcWins)} wins expected
+              </div>
+              <div className="text-xs text-muted-foreground">
+                ~{expectedAfcPoints.toLocaleString()} pts
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground mt-1">
-              {formatExpectedWins(expectedAfcWins)} wins expected
+
+            {/* VS Indicator */}
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-2">
+                <DollarSign className="h-5 w-5 text-gauntlet-gold" />
+                <span className="text-lg font-bold text-gauntlet-gold">$100</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">per person</p>
+              <Swords className="h-8 w-8 mx-auto mt-2 text-muted-foreground" />
             </div>
-            <div className="text-xs text-muted-foreground">
-              ~{expectedAfcPoints.toLocaleString()} pts
+
+            {/* NFC Side */}
+            <div className="text-center">
+              <h3 className="text-lg font-bold font-geizer tracking-wide text-blue-500">NFC</h3>
+              <div
+                className={`text-3xl font-bold ${!afcFavored ? 'text-blue-500' : 'text-muted-foreground'}`}
+              >
+                {formatWinProbability(nfcWinProb)}
+              </div>
+              <div className="text-sm text-muted-foreground mt-1">
+                {formatExpectedWins(expectedNfcWins)} wins expected
+              </div>
+              <div className="text-xs text-muted-foreground">
+                ~{expectedNfcPoints.toLocaleString()} pts
+              </div>
             </div>
           </div>
 
-          {/* VS Indicator */}
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2">
-              <DollarSign className="h-5 w-5 text-gauntlet-gold" />
-              <span className="text-lg font-bold text-gauntlet-gold">$100</span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">per person</p>
-            <Swords className="h-8 w-8 mx-auto mt-2 text-muted-foreground" />
+          {/* Progress bar showing win probability */}
+          <div className="mt-4 h-3 rounded-full overflow-hidden bg-muted flex">
+            <div
+              className="h-full bg-red-500 transition-all duration-500"
+              style={{ width: `${afcWinProb * 100}%` }}
+            />
+            <div
+              className="h-full bg-blue-500 transition-all duration-500"
+              style={{ width: `${nfcWinProb * 100}%` }}
+            />
           </div>
-
-          {/* NFC Side */}
-          <div className="text-center">
-            <h3 className="text-lg font-bold font-geizer tracking-wide text-blue-500">
-              NFC
-            </h3>
-            <div className={`text-3xl font-bold ${!afcFavored ? 'text-blue-500' : 'text-muted-foreground'}`}>
-              {formatWinProbability(nfcWinProb)}
-            </div>
-            <div className="text-sm text-muted-foreground mt-1">
-              {formatExpectedWins(expectedNfcWins)} wins expected
-            </div>
-            <div className="text-xs text-muted-foreground">
-              ~{expectedNfcPoints.toLocaleString()} pts
-            </div>
-          </div>
-        </div>
-
-        {/* Progress bar showing win probability */}
-        <div className="mt-4 h-3 rounded-full overflow-hidden bg-muted flex">
-          <div
-            className="h-full bg-red-500 transition-all duration-500"
-            style={{ width: `${afcWinProb * 100}%` }}
-          />
-          <div
-            className="h-full bg-blue-500 transition-all duration-500"
-            style={{ width: `${nfcWinProb * 100}%` }}
-          />
-        </div>
-      </CardContent>
-    </Card>
-  );
-});
+        </CardContent>
+      </Card>
+    );
+  },
+);
 
 LeagueProbabilityHeader.displayName = 'LeagueProbabilityHeader';
 
@@ -119,11 +117,15 @@ const PlayerRow = memo<{
   const posColor = positionColors[player.position] || 'bg-gray-500';
 
   return (
-    <div className={`flex items-center gap-2 py-1 text-xs ${isAfc ? 'justify-end' : 'justify-start'}`}>
+    <div
+      className={`flex items-center gap-2 py-1 text-xs ${isAfc ? 'justify-end' : 'justify-start'}`}
+    >
       {isAfc && (
         <>
           <span className="text-muted-foreground w-12 text-right">
-            {player.currentScore > 0 ? player.currentScore.toFixed(1) : player.projection.toFixed(1)}
+            {player.currentScore > 0
+              ? player.currentScore.toFixed(1)
+              : player.projection.toFixed(1)}
           </span>
           <span className="truncate max-w-[100px]">{player.name}</span>
           <Badge variant="secondary" className={`${posColor} text-white text-[10px] px-1 py-0`}>
@@ -138,7 +140,9 @@ const PlayerRow = memo<{
           </Badge>
           <span className="truncate max-w-[100px]">{player.name}</span>
           <span className="text-muted-foreground w-12 text-left">
-            {player.currentScore > 0 ? player.currentScore.toFixed(1) : player.projection.toFixed(1)}
+            {player.currentScore > 0
+              ? player.currentScore.toFixed(1)
+              : player.projection.toFixed(1)}
           </span>
         </>
       )}
@@ -175,12 +179,8 @@ const MatchupRow = memo<{
 
         {/* AFC Team */}
         <div className="flex-1 text-right">
-          <div className="font-medium text-sm truncate">
-            {matchup.afcTeam.teamName}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {matchup.afcTeam.ownerName}
-          </div>
+          <div className="font-medium text-sm truncate">{matchup.afcTeam.teamName}</div>
+          <div className="text-xs text-muted-foreground">{matchup.afcTeam.ownerName}</div>
           <div className="text-xs text-muted-foreground">
             ~{matchup.projectedAfcScore.toFixed(1)} proj
           </div>
@@ -207,14 +207,8 @@ const MatchupRow = memo<{
           </div>
           {/* Mini progress bar */}
           <div className="h-1 rounded-full overflow-hidden bg-muted flex mt-1">
-            <div
-              className="h-full bg-red-500"
-              style={{ width: `${afcPercent}%` }}
-            />
-            <div
-              className="h-full bg-blue-500"
-              style={{ width: `${nfcPercent}%` }}
-            />
+            <div className="h-full bg-red-500" style={{ width: `${afcPercent}%` }} />
+            <div className="h-full bg-blue-500" style={{ width: `${nfcPercent}%` }} />
           </div>
           {hasRosterData && (
             <div className="flex items-center justify-center mt-1 text-muted-foreground">
@@ -226,12 +220,8 @@ const MatchupRow = memo<{
 
         {/* NFC Team */}
         <div className="flex-1 text-left">
-          <div className="font-medium text-sm truncate">
-            {matchup.nfcTeam.teamName}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {matchup.nfcTeam.ownerName}
-          </div>
+          <div className="font-medium text-sm truncate">{matchup.nfcTeam.teamName}</div>
+          <div className="text-xs text-muted-foreground">{matchup.nfcTeam.ownerName}</div>
           <div className="text-xs text-muted-foreground">
             ~{matchup.projectedNfcScore.toFixed(1)} proj
           </div>
@@ -246,12 +236,18 @@ const MatchupRow = memo<{
             <div className="border-r border-muted pr-4">
               <div className="text-xs font-semibold text-red-500 mb-2 text-right">AFC Roster</div>
               <div className="space-y-0.5">
-                {matchup.afcTeam.roster?.map((player) => (
+                {matchup.afcTeam.roster?.map(player => (
                   <PlayerRow key={player.playerId} player={player} isAfc={true} />
                 ))}
               </div>
               <div className="text-xs font-semibold text-right mt-2 border-t border-muted pt-1">
-                Total: {matchup.afcTeam.roster?.reduce((sum, p) => sum + (p.currentScore > 0 ? p.currentScore : p.projection), 0).toFixed(1)}
+                Total:{' '}
+                {matchup.afcTeam.roster
+                  ?.reduce(
+                    (sum, p) => sum + (p.currentScore > 0 ? p.currentScore : p.projection),
+                    0,
+                  )
+                  .toFixed(1)}
               </div>
             </div>
 
@@ -259,12 +255,18 @@ const MatchupRow = memo<{
             <div className="pl-4">
               <div className="text-xs font-semibold text-blue-500 mb-2 text-left">NFC Roster</div>
               <div className="space-y-0.5">
-                {matchup.nfcTeam.roster?.map((player) => (
+                {matchup.nfcTeam.roster?.map(player => (
                   <PlayerRow key={player.playerId} player={player} isAfc={false} />
                 ))}
               </div>
               <div className="text-xs font-semibold text-left mt-2 border-t border-muted pt-1">
-                Total: {matchup.nfcTeam.roster?.reduce((sum, p) => sum + (p.currentScore > 0 ? p.currentScore : p.projection), 0).toFixed(1)}
+                Total:{' '}
+                {matchup.nfcTeam.roster
+                  ?.reduce(
+                    (sum, p) => sum + (p.currentScore > 0 ? p.currentScore : p.projection),
+                    0,
+                  )
+                  .toFixed(1)}
               </div>
             </div>
           </div>
@@ -281,9 +283,7 @@ MatchupRow.displayName = 'MatchupRow';
  */
 export const CrossLeagueBattle = memo<CrossLeagueBattleProps>(({ results }) => {
   // Count matchups favoring each league
-  const afcFavoredCount = results.matchups.filter(
-    (m) => m.afcWinProbability > 0.5
-  ).length;
+  const afcFavoredCount = results.matchups.filter(m => m.afcWinProbability > 0.5).length;
   const nfcFavoredCount = results.matchups.length - afcFavoredCount;
 
   return (
@@ -316,16 +316,14 @@ export const CrossLeagueBattle = memo<CrossLeagueBattleProps>(({ results }) => {
       {/* Matchup grid */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-geizer tracking-wide">
-            All 12 Matchups
-          </CardTitle>
+          <CardTitle className="text-base font-geizer tracking-wide">All 12 Matchups</CardTitle>
           <CardDescription className="text-xs">
             Based on {results.simulationCount.toLocaleString()} simulations per matchup
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="space-y-2">
-            {results.matchups.map((matchup) => (
+            {results.matchups.map(matchup => (
               <MatchupRow key={matchup.seed} matchup={matchup} />
             ))}
           </div>
@@ -341,4 +339,3 @@ export const CrossLeagueBattle = memo<CrossLeagueBattleProps>(({ results }) => {
 });
 
 CrossLeagueBattle.displayName = 'CrossLeagueBattle';
-

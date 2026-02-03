@@ -47,13 +47,7 @@ const CrossLeagueLoadingSkeleton = () => (
 /**
  * Error display component
  */
-const ErrorDisplay = ({
-  message,
-  onRetry,
-}: {
-  message: string;
-  onRetry?: () => void;
-}) => (
+const ErrorDisplay = ({ message, onRetry }: { message: string; onRetry?: () => void }) => (
   <Card className="border-destructive">
     <CardContent className="pt-6">
       <div className="flex items-center gap-2 text-destructive">
@@ -91,7 +85,7 @@ export default function PlayoffScenariosPage() {
     currentWeek,
     activeLeague === 'afc'
       ? afcScenarios.getSimulationLockedOutcomes
-      : nfcScenarios.getSimulationLockedOutcomes
+      : nfcScenarios.getSimulationLockedOutcomes,
   );
 
   // Fetch cross-league battle data
@@ -211,11 +205,8 @@ export default function PlayoffScenariosPage() {
           Probabilities calculated using Monte Carlo simulations based on historical scoring
           distributions and current projections.
         </p>
-        <p className="mt-1">
-          Last updated: {new Date().toLocaleString()}
-        </p>
+        <p className="mt-1">Last updated: {new Date().toLocaleString()}</p>
       </div>
     </Container>
   );
 }
-

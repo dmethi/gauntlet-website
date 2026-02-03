@@ -1,6 +1,6 @@
 /**
  * useLeagueSummary Hook
- * 
+ *
  * Loads pre-generated league-level summaries from static JSON.
  * Summaries include playoff race, seeding battles, and toilet bowl info.
  */
@@ -47,13 +47,15 @@ let cachedData: LeagueSummaryFile | null = null;
 
 const loadLeagueSummaries = async (): Promise<LeagueSummaryFile | null> => {
   if (cachedData) return cachedData;
-  
+
   try {
     const data = await import('@/data/league-summaries.json');
     cachedData = data.default || data;
     return cachedData;
   } catch {
-    console.warn('League summaries file not found. Run: npx tsx scripts/generate-league-summaries.ts');
+    console.warn(
+      'League summaries file not found. Run: npx tsx scripts/generate-league-summaries.ts',
+    );
     return null;
   }
 };
@@ -66,10 +68,10 @@ export const useLeagueSummary = (leagueName: 'AFC' | 'NFC' | null) => {
     queryKey: ['league-summary', leagueName],
     queryFn: async () => {
       if (!leagueName) return null;
-      
+
       const data = await loadLeagueSummaries();
       if (!data) return null;
-      
+
       const leagueData = leagueName === 'AFC' ? data.afc : data.nfc;
       return {
         summary: leagueData.summary,
@@ -83,4 +85,3 @@ export const useLeagueSummary = (leagueName: 'AFC' | 'NFC' | null) => {
     gcTime: Infinity,
   });
 };
-

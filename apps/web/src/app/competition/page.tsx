@@ -5,7 +5,16 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, ChevronDown, ChevronRight, ChevronUp, Trophy, Users, Target, Swords } from 'lucide-react';
+import {
+  Calendar,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Trophy,
+  Users,
+  Target,
+  Swords,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
 import { useState } from 'react';
@@ -561,7 +570,8 @@ export default function CompetitionPage(): JSX.Element {
               </Badge>
             </CardTitle>
             <CardDescription>
-              Final week before playoffs! See your team&apos;s seeding odds and cross-league battle predictions.
+              Final week before playoffs! See your team&apos;s seeding odds and cross-league battle
+              predictions.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -585,7 +595,10 @@ export default function CompetitionPage(): JSX.Element {
                 </div>
               </div>
             </div>
-            <Button asChild className="w-full bg-gauntlet-gold hover:bg-gauntlet-gold/90 text-black">
+            <Button
+              asChild
+              className="w-full bg-gauntlet-gold hover:bg-gauntlet-gold/90 text-black"
+            >
               <Link href="/competition/playoff-scenarios">
                 <span>View Playoff Scenarios</span>
                 <ChevronRight className="h-4 w-4 ml-2" />

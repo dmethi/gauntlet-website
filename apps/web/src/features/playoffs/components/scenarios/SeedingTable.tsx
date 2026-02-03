@@ -5,10 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Target, Sparkles, Users, TrendingDown, Swords } from 'lucide-react';
 import type { TeamSeedingProbabilities, LeagueSeedingResults } from '../../types';
-import {
-  formatSeedProbability,
-  getSeedProbabilityColor,
-} from '../../hooks';
+import { formatSeedProbability, getSeedProbabilityColor } from '../../hooks';
 import { useLeagueSummary, type LeagueSummary } from '../../hooks/useLeagueSummary';
 
 interface SeedingTableProps {
@@ -35,7 +32,7 @@ const LeagueSummarySection = memo<{
           {summary.overallSummary}
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Playoff Race */}
         <div className="p-3 bg-background/80 rounded-lg">
@@ -45,7 +42,7 @@ const LeagueSummarySection = memo<{
           </div>
           <p className="text-sm text-muted-foreground">{summary.playoffRace}</p>
         </div>
-        
+
         {/* Seeding Battles */}
         <div className="p-3 bg-background/80 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
@@ -54,7 +51,7 @@ const LeagueSummarySection = memo<{
           </div>
           <p className="text-sm text-muted-foreground">{summary.seedingBattles}</p>
         </div>
-        
+
         {/* Toilet Bowl */}
         <div className="p-3 bg-background/80 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
@@ -63,7 +60,7 @@ const LeagueSummarySection = memo<{
           </div>
           <p className="text-sm text-muted-foreground">{summary.toiletBowl}</p>
         </div>
-        
+
         {/* Key Matchups */}
         {summary.keyMatchups && summary.keyMatchups.length > 0 && (
           <div className="p-3 bg-background/80 rounded-lg">
@@ -73,7 +70,10 @@ const LeagueSummarySection = memo<{
             </div>
             <ul className="space-y-2">
               {summary.keyMatchups.map((matchup, idx) => (
-                <li key={idx} className="text-sm text-muted-foreground pl-4 border-l-2 border-purple-200 dark:border-purple-800">
+                <li
+                  key={idx}
+                  className="text-sm text-muted-foreground pl-4 border-l-2 border-purple-200 dark:border-purple-800"
+                >
                   {matchup}
                 </li>
               ))}
@@ -108,9 +108,7 @@ const SeedProbabilityBar = memo<{
           style={{ width: `${widthPercent}%` }}
         />
       </div>
-      <span className="w-12 text-right font-medium">
-        {formatSeedProbability(probability)}
-      </span>
+      <span className="w-12 text-right font-medium">{formatSeedProbability(probability)}</span>
     </div>
   );
 });
@@ -139,17 +137,19 @@ const TeamSeedingCard = memo<{
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
-              isLocked ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
-              isEliminated ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' :
-              'bg-muted'
-            }`}>
+            <div
+              className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
+                isLocked
+                  ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                  : isEliminated
+                    ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                    : 'bg-muted'
+              }`}
+            >
               {rank}
             </div>
             <div>
-              <CardTitle className="text-base font-geizer tracking-wide">
-                {team.teamName}
-              </CardTitle>
+              <CardTitle className="text-base font-geizer tracking-wide">{team.teamName}</CardTitle>
               <CardDescription className="text-xs font-avenir">
                 {team.ownerName} • {team.currentRecord} • {team.currentPoints.toFixed(1)} pts
               </CardDescription>
@@ -164,10 +164,13 @@ const TeamSeedingCard = memo<{
               )}
               <span
                 className={`text-lg font-bold ${
-                  isLocked ? 'text-green-600' :
-                  isEliminated ? 'text-red-600' :
-                  isPlayoffLikely ? 'text-green-600' : 
-                  'text-muted-foreground'
+                  isLocked
+                    ? 'text-green-600'
+                    : isEliminated
+                      ? 'text-red-600'
+                      : isPlayoffLikely
+                        ? 'text-green-600'
+                        : 'text-muted-foreground'
                 }`}
               >
                 {formatSeedProbability(playoffProb)}
@@ -182,11 +185,7 @@ const TeamSeedingCard = memo<{
         {/* Seed probability bars */}
         <div className="space-y-1 mb-3">
           {activeSeedProbabilities.slice(0, 6).map(([seed, prob]) => (
-            <SeedProbabilityBar
-              key={seed}
-              seed={parseInt(seed)}
-              probability={prob}
-            />
+            <SeedProbabilityBar key={seed} seed={parseInt(seed)} probability={prob} />
           ))}
         </div>
 
@@ -216,12 +215,9 @@ export const SeedingTable = memo<SeedingTableProps>(({ results }) => {
     <div className="space-y-4">
       {/* League Summary Section */}
       {leagueData?.summary && !isLoading && (
-        <LeagueSummarySection 
-          summary={leagueData.summary} 
-          leagueName={results.leagueName}
-        />
+        <LeagueSummarySection summary={leagueData.summary} leagueName={results.leagueName} />
       )}
-      
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -240,11 +236,7 @@ export const SeedingTable = memo<SeedingTableProps>(({ results }) => {
       {/* Team Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {results.teams.map((team, index) => (
-          <TeamSeedingCard
-            key={team.rosterId}
-            team={team}
-            rank={index + 1}
-          />
+          <TeamSeedingCard key={team.rosterId} team={team} rank={index + 1} />
         ))}
       </div>
     </div>

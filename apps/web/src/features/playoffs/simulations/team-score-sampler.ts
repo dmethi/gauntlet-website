@@ -22,7 +22,7 @@ const calculateMean = (values: readonly number[]): number => {
  */
 const calculateStdDev = (values: readonly number[], mean: number): number => {
   if (values.length < 2) return 0;
-  const squaredDiffs = values.map((val) => Math.pow(val - mean, 2));
+  const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
   const variance = squaredDiffs.reduce((sum, val) => sum + val, 0) / (values.length - 1);
   return Math.sqrt(variance);
 };
@@ -32,13 +32,13 @@ const calculateStdDev = (values: readonly number[], mean: number): number => {
  */
 export const fetchTeamScoringHistory = async (
   leagueId: string,
-  throughWeek: number
+  throughWeek: number,
 ): Promise<Map<number, number[]>> => {
   const teamScores = new Map<number, number[]>();
 
   // Fetch matchups for each week
   const weekPromises = Array.from({ length: throughWeek }, (_, i) =>
-    sleeperClient.fetchMatchups(leagueId, i + 1)
+    sleeperClient.fetchMatchups(leagueId, i + 1),
   );
 
   const allMatchups = await Promise.all(weekPromises);
@@ -47,7 +47,7 @@ export const fetchTeamScoringHistory = async (
   allMatchups.forEach((weekMatchups, weekIndex) => {
     if (!weekMatchups || weekMatchups.length === 0) return;
 
-    weekMatchups.forEach((matchup) => {
+    weekMatchups.forEach(matchup => {
       const rosterId = matchup.roster_id;
       const points = matchup.points || 0;
 
@@ -69,7 +69,7 @@ export const fetchTeamScoringHistory = async (
  */
 export const buildTeamScoringDistributions = async (
   leagueId: string,
-  throughWeek: number
+  throughWeek: number,
 ): Promise<Map<number, TeamScoringDistribution>> => {
   const teamScores = await fetchTeamScoringHistory(leagueId, throughWeek);
   const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
@@ -82,9 +82,7 @@ export const buildTeamScoringDistributions = async (
     const stdDev = calculateStdDev(scores, mean);
 
     const teamName =
-      roster.owner?.metadata?.team_name ||
-      roster.owner?.display_name ||
-      `Team ${rosterId}`;
+      roster.owner?.metadata?.team_name || roster.owner?.display_name || `Team ${rosterId}`;
 
     distributions.set(rosterId, {
       rosterId,
@@ -123,7 +121,7 @@ export const sampleTeamScore = (distribution: TeamScoringDistribution): number =
  * Sample scores for all teams in a simulation iteration
  */
 export const sampleAllTeamScores = (
-  distributions: Map<number, TeamScoringDistribution>
+  distributions: Map<number, TeamScoringDistribution>,
 ): Map<number, number> => {
   const scores = new Map<number, number>();
 
@@ -138,7 +136,7 @@ export const sampleAllTeamScores = (
  * Get scoring distributions for both leagues
  */
 export const fetchBothLeagueDistributions = async (
-  throughWeek: number
+  throughWeek: number,
 ): Promise<{
   afc: Map<number, TeamScoringDistribution>;
   nfc: Map<number, TeamScoringDistribution>;
@@ -153,4 +151,3 @@ export const fetchBothLeagueDistributions = async (
     nfc: nfcDistributions,
   };
 };
-
