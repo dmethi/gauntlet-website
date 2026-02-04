@@ -11,6 +11,58 @@
 
 ---
 
+## Git Worktree Protocol (Required for Parallel Work)
+
+Multiple agents may work on this repository simultaneously. **Always use git worktrees** to avoid conflicts.
+
+### Why Worktrees?
+
+- Multiple agents cannot safely share a single working directory
+- Worktrees provide isolated working directories sharing the same `.git` history
+- Each agent gets its own branch and files without stepping on others
+
+### Setting Up Your Worktree
+
+```bash
+# From the main repo directory, create a worktree for your issue
+git worktree add ../gauntlet-website-worktrees/issue-<NUMBER> -b issue-<NUMBER>
+
+# Example: Working on issue #42
+git worktree add ../gauntlet-website-worktrees/issue-42 -b issue-42
+
+# Navigate to your worktree
+cd ../gauntlet-website-worktrees/issue-42
+```
+
+### Worktree Naming Convention
+
+- Directory: `../gauntlet-website-worktrees/issue-<NUMBER>` or `../gauntlet-website-worktrees/<agent-id>`
+- Branch: `issue-<NUMBER>` or `<agent-id>/<short-description>`
+
+### Working in Your Worktree
+
+1. **Always work in your worktree directory**, not the main repo
+2. **Pull latest main before starting:** `git fetch origin && git rebase origin/main`
+3. **Push your branch regularly** to avoid losing work
+4. **Never modify files in another agent's worktree**
+
+### Cleanup After PR Merge
+
+```bash
+# After your PR is merged, clean up
+cd /path/to/main/gauntlet-website
+git worktree remove ../gauntlet-website-worktrees/issue-<NUMBER>
+git branch -d issue-<NUMBER>
+```
+
+### Conflict Prevention
+
+- Each agent works on **one issue at a time** in **one worktree**
+- Check `git worktree list` to see active worktrees before creating new ones
+- If you see another agent's worktree touching the same files, coordinate before proceeding
+
+---
+
 ## Issue Graph Protocol
 
 The project uses `ISSUE_GRAPH.yaml` (repo root) to track issue dependencies and execution order.
@@ -25,7 +77,7 @@ The project uses `ISSUE_GRAPH.yaml` (repo root) to track issue dependencies and 
 ### While Working
 
 1. **Set issue status to `in_progress`** in ISSUE_GRAPH.yaml when you begin
-2. **One agent per issue** - coordinate via git worktrees for parallelism
+2. **One agent per issue** - use git worktrees for parallelism (see [Git Worktree Protocol](#git-worktree-protocol-required-for-parallel-work) above)
 3. Follow the PR checklist (see below)
 
 ### After Completing Work
