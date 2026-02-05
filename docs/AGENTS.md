@@ -2,6 +2,8 @@
 
 > This document defines how AI agents should operate in the gauntlet-website codebase.
 
+When making edits, follow [Engineering Principles](ENGINEERING_PRINCIPLES.md).
+
 ## Quick Links
 
 - [ETHOS.md](./ETHOS.md) - Engineering principles and values
