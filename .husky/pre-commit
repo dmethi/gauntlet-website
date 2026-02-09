@@ -9,6 +9,9 @@ fi
 echo "📝 Formatting code with Prettier..."
 pnpm format
 
+echo "Staging formatted files..."
+git add -A
+
 echo "🔎 Running ESLint..."
 pnpm lint
 
