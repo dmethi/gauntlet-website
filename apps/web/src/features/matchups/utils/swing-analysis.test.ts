@@ -3,10 +3,10 @@ import {
   detectAllSwings,
   detectConsecutiveSwings,
   detectWindowSwings,
-  formatDelta,
   getSwingBeneficiary,
   getSwingDriver,
 } from './swing-analysis';
+import { formatDelta } from '@/shared/utils/formatting';
 import type { TimeSeriesPoint } from '../hooks/useMatchupTimeSeries';
 
 describe('Swing Analysis Utilities', () => {

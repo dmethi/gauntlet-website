@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 
 import type { TransactionFacts } from '@/features/transactions/types';
+import { playoffWeight } from '@/shared/utils/calculations';
+import { median } from '@/shared/utils/stats';
 
 /**
  * @deprecated Use TransactionFacts from '@/features/transactions/types' instead
@@ -114,13 +116,6 @@ export const buildFacts = async (
   };
 };
 
-const median = (arr: number[]): number => {
-  if (!arr.length) return 0;
-  const a = [...arr].sort((x, y) => x - y);
-  const mid = Math.floor(a.length / 2);
-  return a.length % 2 === 0 ? (a[mid - 1] + a[mid]) / 2 : a[mid];
-};
-
 export const firstOwnedWeek = (
   facts: TransactionFacts,
   rosterId: number,
@@ -140,6 +135,3 @@ export const lastOwnedWeek = (
   if (!set || set.size === 0) return null;
   return Math.max(...Array.from(set.values()));
 };
-
-export const playoffWeight = (w: number) =>
-  w === 15 ? 1.3 : w === 16 ? 1.6 : w === 17 ? 2.0 : 1.0;

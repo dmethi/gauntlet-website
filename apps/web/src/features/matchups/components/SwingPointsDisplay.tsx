@@ -14,11 +14,11 @@ import { Activity, TrendingDown, TrendingUp } from 'lucide-react';
 import type { TimeSeriesPoint } from '../hooks/useMatchupTimeSeries';
 import {
   detectAllSwings,
-  formatDelta,
   getSwingBeneficiary,
   getSwingDriver,
   type SwingPoint,
 } from '../utils/swing-analysis';
+import { formatDelta } from '@/shared/utils/formatting';
 
 interface SwingPointsDisplayProps {
   readonly series: TimeSeriesPoint[];

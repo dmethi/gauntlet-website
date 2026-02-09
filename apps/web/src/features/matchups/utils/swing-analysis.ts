@@ -226,14 +226,6 @@ export const detectAllSwings = (
 };
 
 /**
- * Format a delta value with sign and color
- */
-export const formatDelta = (value: number, decimals: number = 1): string => {
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${value.toFixed(decimals)}`;
-};
-
-/**
  * Determine which team benefited from a swing
  */
 export const getSwingBeneficiary = (swing: SwingPoint): 'teamA' | 'teamB' => {
