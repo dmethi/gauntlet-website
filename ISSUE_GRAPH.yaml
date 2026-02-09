@@ -70,7 +70,7 @@ layers:
         depends_on: [20, 21]
       - id: 8
         title: '[Agent OS] Create docs/runbooks/deployment.md'
-        status: pending
+        status: done
         depends_on: [20, 21]
       - id: 9
         title: '[Agent OS] Consolidate Coding Conventions'
