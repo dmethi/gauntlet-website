@@ -15,106 +15,106 @@
 #   - Analyze and place unassigned issues into appropriate layers
 
 schema_version: 1
-last_updated: "2026-02-03"
+last_updated: '2026-02-03'
 current_layer: 0
 
 layers:
   0:
-    name: "Meta & Foundation"
-    description: "No dependencies. Establishes project direction and basic infrastructure."
+    name: 'Meta & Foundation'
+    description: 'No dependencies. Establishes project direction and basic infrastructure.'
     issues:
       - id: 4
-        title: "[Meta] Review Agent Infrastructure"
+        title: '[Meta] Review Agent Infrastructure'
         status: pending
       - id: 5
-        title: "[Meta] Review Roadmap"
+        title: '[Meta] Review Roadmap'
         status: pending
       - id: 21
-        title: "[CRITICAL] Create .env.example files"
+        title: '[CRITICAL] Create .env.example files'
         status: pending
       - id: 23
-        title: "[HIGH] Fix Husky pre-commit hook"
+        title: '[HIGH] Fix Husky pre-commit hook'
         status: pending
       - id: 24
-        title: "[HIGH] Add environment validation"
+        title: '[HIGH] Add environment validation'
         status: pending
 
   1:
-    name: "Core Scaffolding"
-    description: "Core documentation and infrastructure. Enables quality gates and team workflows."
+    name: 'Core Scaffolding'
+    description: 'Core documentation and infrastructure. Enables quality gates and team workflows.'
     issues:
       - id: 14
-        title: "[Feature] Audit Feature Module Completeness"
+        title: '[Feature] Audit Feature Module Completeness'
         status: pending
         # No dependencies - independent work
       - id: 16
-        title: "[Simulation] Verify Latency < 200ms"
+        title: '[Simulation] Verify Latency < 200ms'
         status: pending
         # No dependencies - independent work
       - id: 20
-        title: "[CRITICAL] Create missing docs/AGENTS.md"
+        title: '[CRITICAL] Create missing docs/AGENTS.md'
         status: pending
         depends_on: [4]
       - id: 22
-        title: "[CRITICAL] Add CI workflow for PR validation"
+        title: '[CRITICAL] Add CI workflow for PR validation'
         status: pending
         depends_on: [4]
 
   2:
-    name: "Docs & Quality Gates"
-    description: "Runbooks, conventions, and CI integration for quality enforcement."
+    name: 'Docs & Quality Gates'
+    description: 'Runbooks, conventions, and CI integration for quality enforcement.'
     issues:
       - id: 7
-        title: "[Agent OS] Create docs/runbooks/local-dev.md"
-        status: pending
+        title: '[Agent OS] Create docs/runbooks/local-dev.md'
+        status: done
         depends_on: [20, 21]
       - id: 8
-        title: "[Agent OS] Create docs/runbooks/deployment.md"
+        title: '[Agent OS] Create docs/runbooks/deployment.md'
         status: pending
         depends_on: [20, 21]
       - id: 9
-        title: "[Agent OS] Consolidate Coding Conventions"
+        title: '[Agent OS] Consolidate Coding Conventions'
         status: pending
         depends_on: [20]
       - id: 10
-        title: "[Quality] Add Test Coverage Thresholds to CI"
+        title: '[Quality] Add Test Coverage Thresholds to CI'
         status: pending
         depends_on: [22]
       - id: 13
-        title: "[Quality] Remove Console.log from Production Code"
+        title: '[Quality] Remove Console.log from Production Code'
         status: pending
         # No dependencies - independent work
       - id: 18
-        title: "[Infra] Add Diagram Infrastructure"
+        title: '[Infra] Add Diagram Infrastructure'
         status: pending
         # No dependencies - independent work
 
   3:
-    name: "Refactoring & Polish"
-    description: "Tech debt reduction and final polish work."
+    name: 'Refactoring & Polish'
+    description: 'Tech debt reduction and final polish work.'
     issues:
       - id: 15
-        title: "[Feature] Extract Shared Utils to @/shared"
+        title: '[Feature] Extract Shared Utils to @/shared'
         status: pending
         depends_on: [14]
       - id: 17
-        title: "[Simulation] Document Accuracy"
+        title: '[Simulation] Document Accuracy'
         status: pending
         # No dependencies - independent work
       - id: 19
-        title: "[UI] Audit Mobile Responsiveness"
+        title: '[UI] Audit Mobile Responsiveness'
         status: pending
         # No dependencies - independent work
       - id: 25
-        title: "[MEDIUM] Reduce mega-files (8+ files over 1000 lines)"
+        title: '[MEDIUM] Reduce mega-files (8+ files over 1000 lines)'
         status: pending
         depends_on: [14]
 
 unassigned:
   - id: 11
-    title: "[Quality] Add Multi-League Safety Tests"
+    title: '[Quality] Add Multi-League Safety Tests'
     status: pending
-    notes: "Needs rethinking - platform abstraction goal changes the approach here"
+    notes: 'Needs rethinking - platform abstraction goal changes the approach here'
 
 # Issues to close (duplicates)
 # - #6: Duplicate of #20 (Create AGENTS.md)

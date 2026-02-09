@@ -10,6 +10,12 @@ A groomed issue is **execution-ready**. An agent (or developer) can pick it up a
 ## Summary
 [1-2 sentences: what this accomplishes and why]
 
+## Autocomplete Readiness
+- **Autocomplete-ready**: [yes/no]
+- **If yes, implementation steps**: [high-level steps, numbered]
+- **If yes, verification guide**: [commands + manual checks]
+- **If no, why**: [brief reason: research needed, ambiguous requirements, complex refactor]
+
 ## Design Decisions
 - **Approach**: [chosen approach]
 - **Files to modify**: [explicit paths]
@@ -52,6 +58,7 @@ A groomed issue is **execution-ready**. An agent (or developer) can pick it up a
 Before applying the `groomed` label, verify:
 
 - [ ] **No open questions** — All decisions made
+- [ ] **Autocomplete readiness captured** — yes/no, steps, verification (or reason if no)
 - [ ] **Files specified** — Exact paths, not vague locations
 - [ ] **Patterns referenced** — Points to existing code to match
 - [ ] **Risk assessed** — Blast radius and affected areas identified
