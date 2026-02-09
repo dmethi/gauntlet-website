@@ -3,10 +3,10 @@
 import { memo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Target, Sparkles, Users, TrendingDown, Swords } from 'lucide-react';
-import type { TeamSeedingProbabilities, LeagueSeedingResults } from '../../types';
+import { Sparkles, Swords, Target, TrendingDown, Trophy, Users } from 'lucide-react';
+import type { LeagueSeedingResults, TeamSeedingProbabilities } from '../../types';
 import { formatSeedProbability, getSeedProbabilityColor } from '../../hooks';
-import { useLeagueSummary, type LeagueSummary } from '../../hooks/useLeagueSummary';
+import { type LeagueSummary, useLeagueSummary } from '../../hooks/useLeagueSummary';
 
 interface SeedingTableProps {
   readonly results: LeagueSeedingResults;

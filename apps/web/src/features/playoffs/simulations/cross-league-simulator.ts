@@ -10,8 +10,8 @@ import { sleeperClient } from '@/lib/sleeper/unified-client';
 import type {
   CrossLeagueBattleResults,
   CrossLeagueMatchup,
-  CrossLeagueSimulationConfig,
   CrossLeaguePlayer,
+  CrossLeagueSimulationConfig,
 } from '../types';
 import { fetchCurrentStandings, getTeamsBySeed } from './standings-calculator';
 

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { RotateCcw, Lock, Unlock, Shuffle } from 'lucide-react';
+import { Lock, RotateCcw, Shuffle, Unlock } from 'lucide-react';
 import type { Week14Matchup } from '../../types';
 
 interface ScenarioBuilderProps {

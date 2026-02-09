@@ -12,25 +12,25 @@
 
 import { LEAGUE_IDS } from '@/lib/constants';
 import type {
-  TeamSeedingProbabilities,
   LeagueSeedingResults,
-  SeedScenario,
-  ScenarioCondition,
-  Week14Matchup,
-  TeamStanding,
-  SeedingSimulationConfig,
-  TeamScoringDistribution,
   PathCondition,
-  SeedPath,
   PathSummary,
+  ScenarioCondition,
+  SeedingSimulationConfig,
+  SeedPath,
+  SeedScenario,
+  TeamScoringDistribution,
+  TeamSeedingProbabilities,
+  TeamStanding,
+  Week14Matchup,
 } from '../types';
 import { POINTS_CONSTRAINTS } from '../types';
 import { buildTeamScoringDistributions, sampleTeamScore } from './team-score-sampler';
 import {
-  fetchCurrentStandings,
-  fetchWeek14Matchups,
   applyWeek14Results,
   calculatePlayoffSeeds,
+  fetchCurrentStandings,
+  fetchWeek14Matchups,
 } from './standings-calculator';
 
 /**

@@ -7,7 +7,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { runBothLeagueSimulations } from '../simulations';
-import type { LeagueSeedingResults, SeedingSimulationConfig, PathCondition } from '../types';
+import type { LeagueSeedingResults, PathCondition, SeedingSimulationConfig } from '../types';
 import { CACHE_DURATIONS } from '@/lib/constants';
 
 /**

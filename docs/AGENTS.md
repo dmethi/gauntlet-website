@@ -1,6 +1,7 @@
 # Agent Operating Manual
 
-> This document defines how AI agents should operate in the gauntlet-website codebase.
+> This document defines how AI agents should operate in the gauntlet-website
+> codebase.
 
 When making edits, follow [Engineering Principles](ENGINEERING_PRINCIPLES.md).
 
@@ -9,13 +10,15 @@ When making edits, follow [Engineering Principles](ENGINEERING_PRINCIPLES.md).
 - [ETHOS.md](./ETHOS.md) - Engineering principles and values
 - [TOPOLOGY.md](./TOPOLOGY.md) - What we're building (scope)
 - [TRADEOFFS.md](./TRADEOFFS.md) - Decision-making guidance
-- [ISSUE_GROOMING.md](./ISSUE_GROOMING.md) - Issue template for execution-ready tasks
+- [ISSUE_GROOMING.md](./ISSUE_GROOMING.md) - Issue template for execution-ready
+  tasks
 
 ---
 
 ## Git Worktree Protocol (Required for Parallel Work)
 
-Multiple agents may work on this repository simultaneously. **Always use git worktrees** to avoid conflicts.
+Multiple agents may work on this repository simultaneously. **Always use git
+worktrees** to avoid conflicts.
 
 ### Why Worktrees?
 
@@ -38,13 +41,15 @@ cd ../gauntlet-website-worktrees/issue-42
 
 ### Worktree Naming Convention
 
-- Directory: `../gauntlet-website-worktrees/issue-<NUMBER>` or `../gauntlet-website-worktrees/<agent-id>`
+- Directory: `../gauntlet-website-worktrees/issue-<NUMBER>` or
+  `../gauntlet-website-worktrees/<agent-id>`
 - Branch: `issue-<NUMBER>` or `<agent-id>/<short-description>`
 
 ### Working in Your Worktree
 
 1. **Always work in your worktree directory**, not the main repo
-2. **Pull latest main before starting:** `git fetch origin && git rebase origin/main`
+2. **Pull latest main before starting:**
+   `git fetch origin && git rebase origin/main`
 3. **Push your branch regularly** to avoid losing work
 4. **Never modify files in another agent's worktree**
 
@@ -61,31 +66,40 @@ git branch -d issue-<NUMBER>
 
 - Each agent works on **one issue at a time** in **one worktree**
 - Check `git worktree list` to see active worktrees before creating new ones
-- If you see another agent's worktree touching the same files, coordinate before proceeding
+- If you see another agent's worktree touching the same files, coordinate before
+  proceeding
 
 ---
 
 ## Issue Graph Protocol
 
-The project uses `ISSUE_GRAPH.yaml` (repo root) to track issue dependencies and execution order.
+The project uses `ISSUE_GRAPH.yaml` (repo root) to track issue dependencies and
+execution order.
 
 ### Before Starting Work
 
 1. **Read `ISSUE_GRAPH.yaml`** to identify the `current_layer`
 2. **Only pick issues from the current layer** with `status: pending`
-3. If all issues in current layer are `done`, increment `current_layer` and proceed
-4. Check `depends_on` - if an issue has dependencies, verify those are `done` first
+3. If all issues in current layer are `done`, increment `current_layer` and
+   proceed
+4. Check `depends_on` - if an issue has dependencies, verify those are `done`
+   first
 
 ### Issue Grooming (Autocomplete Readiness)
 
-1. **Record whether the task is autocomplete-ready** (yes/no) in the issue description or ISSUE_GRAPH.yaml entry
-2. If **yes**, add high-level implementation steps and a verification guide (commands + manual checks)
-3. If **no**, add a brief reason (research needed, ambiguous requirements, complex refactor)
+1. **Record whether the task is autocomplete-ready** (yes/no) in the issue
+   description or ISSUE_GRAPH.yaml entry
+2. If **yes**, add high-level implementation steps and a verification guide
+   (commands + manual checks)
+3. If **no**, add a brief reason (research needed, ambiguous requirements,
+   complex refactor)
 
 ### While Working
 
 1. **Set issue status to `in_progress`** in ISSUE_GRAPH.yaml when you begin
-2. **One agent per issue** - use git worktrees for parallelism (see [Git Worktree Protocol](#git-worktree-protocol-required-for-parallel-work) above)
+2. **One agent per issue** - use git worktrees for parallelism (see
+   [Git Worktree Protocol](#git-worktree-protocol-required-for-parallel-work)
+   above)
 3. Follow the PR checklist (see below)
 
 ### After Completing Work
@@ -121,7 +135,8 @@ Before submitting a PR, verify:
 These are non-negotiable rules. Violating them blocks merge.
 
 1. **Type safety** - No `any` types, no `@ts-ignore` without justification
-2. **Process leagues separately** - Never combine league data before the presentation layer (see ETHOS.md)
+2. **Process leagues separately** - Never combine league data before the
+   presentation layer (see ETHOS.md)
 3. **One issue per PR** - Keep changes atomic and reviewable
 
 ---

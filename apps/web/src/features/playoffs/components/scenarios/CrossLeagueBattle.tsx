@@ -4,9 +4,9 @@ import { memo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Swords, DollarSign, TrendingUp, ChevronDown, ChevronUp, Users } from 'lucide-react';
+import { ChevronDown, ChevronUp, DollarSign, Swords, TrendingUp, Users } from 'lucide-react';
 import type { CrossLeagueBattleResults, CrossLeagueMatchup, CrossLeaguePlayer } from '../../types';
-import { formatWinProbability, formatExpectedWins, getMatchupFavorite } from '../../hooks';
+import { formatExpectedWins, formatWinProbability, getMatchupFavorite } from '../../hooks';
 
 interface CrossLeagueBattleProps {
   readonly results: CrossLeagueBattleResults;

@@ -10,10 +10,10 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  Swords,
+  Target,
   Trophy,
   Users,
-  Target,
-  Swords,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';

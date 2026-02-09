@@ -5,17 +5,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle, Trophy, Swords, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, Swords, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Container, PageHeader } from '@gauntlet/ui';
 import {
-  SeedingTable,
   CrossLeagueBattle,
   ScenarioBuilder,
+  SeedingTable,
 } from '@/features/playoffs/components/scenarios';
 import {
-  usePlayoffSeedingWithScenarios,
   useCrossLeagueBattle,
+  usePlayoffSeedingWithScenarios,
   useWeek14Scenarios,
 } from '@/features/playoffs/hooks';
 

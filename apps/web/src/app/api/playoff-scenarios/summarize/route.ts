@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { TeamStanding, Week14Matchup, SeedScenario } from '@/features/playoffs/types';
+import type { SeedScenario, TeamStanding, Week14Matchup } from '@/features/playoffs/types';
 import {
   generateTeamScenarioSummary,
   ScenarioSummaryInput,
@@ -25,7 +25,7 @@ interface RequestBody {
   matchups: Week14Matchup[];
 }
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   try {
     const body: RequestBody = await request.json();
 
@@ -52,4 +52,4 @@ export async function POST(request: NextRequest) {
     console.error('Error generating scenario summary:', error);
     return NextResponse.json({ error: 'Failed to generate summary' }, { status: 500 });
   }
-}
+};

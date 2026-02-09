@@ -5,8 +5,8 @@
  * Allows users to lock specific matchup outcomes and see updated probabilities.
  */
 
-import { useState, useCallback, useMemo } from 'react';
-import type { Week14Matchup, ScenarioBuilderState, LockedOutcome } from '../types';
+import { useCallback, useMemo, useState } from 'react';
+import type { LockedOutcome, ScenarioBuilderState, Week14Matchup } from '../types';
 
 /**
  * Hook for managing scenario builder state

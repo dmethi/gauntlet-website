@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getCurrentWeek } from '@gauntlet/lib';
+import { getCurrentWeek, getCurrentWeekSync } from '@gauntlet/lib';
 
 // const LEAGUE_ID = '1049321550490456064'; // Replace with your actual league ID
 
@@ -34,7 +34,7 @@ interface LiveData {
 const getLiveData = async (): Promise<LiveData> => {
   // This is a placeholder for a real API call
   // In a real app, you would fetch this data from your server
-  const currentWeek = getCurrentWeek();
+  const currentWeek = await getCurrentWeek();
   return { liveScores: null, winProbs: null, currentWeek };
 };
 
@@ -59,7 +59,7 @@ export default function LivePage() {
   }
 
   if (error || !data || !data.liveScores?.matchups) {
-    const currentWeek = data?.currentWeek || getCurrentWeek();
+    const currentWeek = data?.currentWeek || getCurrentWeekSync();
     return (
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Live Scores - Week {currentWeek}</h1>

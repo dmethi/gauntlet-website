@@ -7,7 +7,7 @@
  */
 
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-import type { TeamStanding, Week14Matchup, SeedScenario, SeedPath } from '../types';
+import type { SeedPath, SeedScenario, TeamStanding, Week14Matchup } from '../types';
 
 /**
  * Configuration for Gemini API client for scenario summarization.
