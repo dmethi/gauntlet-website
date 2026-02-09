@@ -76,6 +76,12 @@ The project uses `ISSUE_GRAPH.yaml` (repo root) to track issue dependencies and 
 3. If all issues in current layer are `done`, increment `current_layer` and proceed
 4. Check `depends_on` - if an issue has dependencies, verify those are `done` first
 
+### Issue Grooming (Autocomplete Readiness)
+
+1. **Record whether the task is autocomplete-ready** (yes/no) in the issue description or ISSUE_GRAPH.yaml entry
+2. If **yes**, add high-level implementation steps and a verification guide (commands + manual checks)
+3. If **no**, add a brief reason (research needed, ambiguous requirements, complex refactor)
+
 ### While Working
 
 1. **Set issue status to `in_progress`** in ISSUE_GRAPH.yaml when you begin
