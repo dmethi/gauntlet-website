@@ -271,3 +271,6 @@ class CalculationCache {
 }
 
 export const calculationCache = new CalculationCache();
+
+// Re-export weight calculations
+export { playoffWeight } from './weights';

@@ -10,13 +10,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { useSearchParams } from 'next/navigation';
-import {
-  buildFacts,
-  Facts,
-  firstOwnedWeek,
-  lastOwnedWeek,
-  playoffWeight,
-} from '@/features/transactions/utils';
+import { buildFacts, Facts, firstOwnedWeek, lastOwnedWeek } from '@/features/transactions/utils';
+import { playoffWeight } from '@/shared/utils/calculations';
 import {
   Table,
   TableBody,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { firstOwnedWeek, lastOwnedWeek, playoffWeight } from './facts';
+import { firstOwnedWeek, lastOwnedWeek } from './facts';
+import { playoffWeight } from '@/shared/utils/calculations';
 import type { TransactionFacts } from '@/features/transactions/types';
 
 describe('Transaction Utilities', () => {

@@ -1,5 +1,6 @@
 import type { PositionalTeamData, PositionData, RidgeTeamData, TeamData } from '@/features/stats';
 import type { TrackedPosition } from '@/shared/utils/stats';
+import { median } from '@/shared/utils/stats';
 
 interface RidgeChartResult {
   chartData: Array<
@@ -11,15 +12,6 @@ interface RidgeChartResult {
   >;
   domain: [number, number];
 }
-
-const median = (values: number[]): number => {
-  if (!values.length) {
-    return NaN;
-  }
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-};
 
 const linspace = (start: number, end: number, count: number): number[] => {
   if (count <= 1) {
