@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Callout } from '@/components/Callout';
 import { colors as brandColors } from '@/lib/colors';
-import reportData from '@/data/report-week2';
+import reportData from '@/data/reports/2025/week-2';
 
 // Helper to derive conference abbreviation (AFC/NFC) from league name
 const getConference = (name: string): string =>

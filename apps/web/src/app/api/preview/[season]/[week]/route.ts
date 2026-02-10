@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import reportData from '@/data/report-week2';
+import reportData from '@/data/reports/2025/week-2';
 
 const GAUNTLET_LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },
