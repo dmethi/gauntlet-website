@@ -107,15 +107,59 @@ layers:
         # No dependencies - independent work
       - id: 25
         title: '[MEDIUM] Reduce mega-files (8+ files over 1000 lines)'
-        status: pending
+        status: groomed
         depends_on: [14]
+        autocomplete_ready: true
+        sub_issues:
+          - id: 31
+            title: '[Sub] Decompose report-week2.ts (2,805 lines)'
+            status: pending
+            priority: 1
+          - id: 32
+            title: '[Sub] Decompose hall-of-fame-enhanced/page.tsx (1,256 lines)'
+            status: pending
+            priority: 4
+          - id: 33
+            title: '[Sub] Decompose draft/page.tsx (1,488 lines)'
+            status: pending
+            priority: 2
+          - id: 34
+            title: '[Sub] Decompose seeding-simulator.ts (1,355 lines)'
+            status: pending
+            priority: 6
+          - id: 27
+            title: '[Sub] Decompose draft/analysis/page.tsx (1,228 lines)'
+            status: pending
+            priority: 5
+          - id: 28
+            title: '[Sub] Consolidate weekly report pages'
+            status: pending
+            priority: 3
+          - id: 29
+            title: '[Sub] Decompose transactions/page.tsx (1,124 lines)'
+            status: pending
+            priority: 7
+          - id: 30
+            title: '[Sub] Decompose reports API route (1,070 lines)'
+            status: pending
+            priority: 8
+        files_affected:
+          - apps/web/src/data/report-week2.ts (2,805 lines)
+          - apps/web/src/app/league/draft/page.tsx (1,488 lines)
+          - apps/web/src/features/playoffs/simulations/seeding-simulator.ts (1,355 lines)
+          - apps/web/src/app/hall-of-fame-enhanced/page.tsx (1,256 lines)
+          - apps/web/src/app/draft/analysis/page.tsx (1,228 lines)
+          - apps/web/src/app/competition/reports/2025/week-4/page.tsx (1,172 lines)
+          - apps/web/src/app/league/transactions/page.tsx (1,124 lines)
+          - apps/web/src/app/api/reports/[season]/[week]/route.ts (1,070 lines)
+        grooming_complete: true
+        notes: 'Work on sub-issues in priority order (1-8). See issue description for full grooming details.'
 
 unassigned:
   - id: 11
     title: '[Quality] Add Multi-League Safety Tests'
     status: pending
     notes: 'Needs rethinking - platform abstraction goal changes the approach here'
-
 # Issues to close (duplicates)
 # - #6: Duplicate of #20 (Create AGENTS.md)
 # - #12: Duplicate of #25 (Reduce mega-files)
