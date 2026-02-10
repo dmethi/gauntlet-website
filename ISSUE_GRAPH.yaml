@@ -15,7 +15,7 @@
 #   - Analyze and place unassigned issues into appropriate layers
 
 schema_version: 1
-last_updated: '2026-02-03'
+last_updated: '2026-02-09'
 current_layer: 0
 
 layers:
@@ -113,7 +113,7 @@ layers:
         sub_issues:
           - id: 31
             title: '[Sub] Decompose report-week2.ts (2,805 lines)'
-            status: pending
+            status: done
             priority: 1
           - id: 32
             title: '[Sub] Decompose hall-of-fame-enhanced/page.tsx (1,256 lines)'
