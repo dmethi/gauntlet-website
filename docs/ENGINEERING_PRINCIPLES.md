@@ -65,12 +65,36 @@ Before implementing anything:
 - Prefer improving existing modules over adding new ones when the change fits.
 - If adding significant complexity, pause and justify it.
 
-### 6. Keep Changes Minimal
+### 6. Vertical Slice Decomposition
 
-- Solve the stated problem, nothing more.
-- Don't refactor adjacent code "while you're there."
-- Don't add "nice to have" features.
-- One PR = one logical change.
+Decompose work into **vertical slices**, not horizontal layers.
+
+A vertical slice delivers one complete feature or capability end-to-end: schema,
+domain logic, API, tests. It crosses technical layers but stays within one
+feature boundary.
+
+Prefer:
+
+- "Add Identity module (schema + service + controller + tests)"
+
+Over:
+
+- "Add user schema" → "Add auth service" → "Add auth controller" → "Add auth
+  tests"
+
+Why:
+
+- Maintains reasoning coherence for agents working on the task.
+- Reduces coordination overhead between issues.
+- Produces working, testable features at each step.
+- Eliminates dependency management between atomic tasks.
+
+Guardrails:
+
+- Each slice should be reviewable (target <1000 LOC of actual changes).
+- If a slice exceeds this, split by **feature boundary**, not technical layer.
+- Non-goals must be explicit to prevent scope creep.
+- One PR = one vertical slice.
 - **If the change affects documented architecture, topology, or system behavior,
   update the relevant docs/diagrams in the same PR.**
 
@@ -145,8 +169,8 @@ When assigned a task:
 3. **Implement** — Make the smallest correct change; follow existing patterns;
    keep functions small and focused.
 4. **Validate** — Run build and tests; fix failures at the root.
-5. **Submit** — PR must solve one logical problem, include a clear description,
-   and pass CI.
+5. **Submit** — PR must deliver one vertical slice, include a clear description
+   (WHY not WHAT), and pass CI.
 
 ## Dependency Policy
 

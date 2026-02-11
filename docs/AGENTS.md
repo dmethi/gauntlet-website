@@ -71,49 +71,31 @@ git branch -d issue-<NUMBER>
 
 ---
 
-## Issue Graph Protocol
+## Picking Up Work
 
-The project uses `ISSUE_GRAPH.yaml` (repo root) to track issue dependencies and
-execution order.
+Issues are structured as **vertical slices** — each delivers one complete
+feature end-to-end. Issues use the `vertical_slice` template on GitHub.
 
-### Before Starting Work
+### Before Starting
 
-1. **Read `ISSUE_GRAPH.yaml`** to identify the `current_layer`
-2. **Only pick issues from the current layer** with `status: pending`
-3. If all issues in current layer are `done`, increment `current_layer` and
-   proceed
-4. Check `depends_on` - if an issue has dependencies, verify those are `done`
-   first
-
-### Issue Grooming (Autocomplete Readiness)
-
-1. **Record whether the task is autocomplete-ready** (yes/no) in the issue
-   description or ISSUE_GRAPH.yaml entry
-2. If **yes**, add high-level implementation steps and a verification guide
-   (commands + manual checks)
-3. If **no**, add a brief reason (research needed, ambiguous requirements,
-   complex refactor)
+1. Check open issues: `gh issue list --state open --label slice`
+2. Pick an unassigned slice issue
+3. Read the full issue — especially **Scope** and **Out of Scope**
+4. Set up a worktree for the issue (see above)
 
 ### While Working
 
-1. **Set issue status to `in_progress`** in ISSUE_GRAPH.yaml when you begin
-2. **One agent per issue** - use git worktrees for parallelism (see
-   [Git Worktree Protocol](#git-worktree-protocol-required-for-parallel-work)
-   above)
-3. Follow the PR checklist (see below)
+1. **Stay within scope** — the In Scope checklist IS the work; Out of Scope is a
+   hard boundary
+2. **Commit incrementally** — don't save everything for one giant commit
+3. **One slice per PR** — each PR closes exactly one issue
 
-### After Completing Work
+### After Completing
 
-1. **Set issue status to `done`** in ISSUE_GRAPH.yaml
-2. **Close the GitHub issue** with a link to the merged PR
-3. If you discovered new issues, add them to the `unassigned` section
-
-### Hygiene (Weekly)
-
-1. Run `gh issue list --state open` and compare against ISSUE_GRAPH.yaml
-2. Add any untracked issues to the `unassigned` section
-3. Analyze unassigned issues and place them in appropriate layers
-4. Update `last_updated` timestamp
+1. Verify all scope items are checked off
+2. Verify guardrails hold (existing tests pass, no type/lint errors)
+3. Create PR using the repo's PR template
+4. Link PR to issue (`Closes #X`)
 
 ---
 
@@ -126,7 +108,7 @@ Before submitting a PR, verify:
 - [ ] Type checking passes (`pnpm typecheck`)
 - [ ] Linting passes (`pnpm lint`)
 - [ ] No `console.log` statements in production code
-- [ ] ISSUE_GRAPH.yaml updated (status → `done`)
+- [ ] Issue linked in PR (`Closes #X`)
 
 ---
 
