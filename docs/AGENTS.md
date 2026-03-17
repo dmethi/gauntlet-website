@@ -9,9 +9,10 @@ When making edits, follow [Engineering Principles](ENGINEERING_PRINCIPLES.md).
 
 - [ETHOS.md](./ETHOS.md) - Engineering principles and values
 - [TOPOLOGY.md](./TOPOLOGY.md) - What we're building (scope)
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - System layout and module boundaries
 - [TRADEOFFS.md](./TRADEOFFS.md) - Decision-making guidance
-- [ISSUE_GROOMING.md](./ISSUE_GROOMING.md) - Issue template for execution-ready
-  tasks
+- [ISSUE_GROOMING.md](./ISSUE_GROOMING.md) - Execution-readiness checklist and
+  workflow
 
 ---
 
@@ -41,9 +42,10 @@ cd ../gauntlet-website-worktrees/issue-42
 
 ### Worktree Naming Convention
 
-- Directory: `../gauntlet-website-worktrees/issue-<NUMBER>` or
-  `../gauntlet-website-worktrees/<agent-id>`
-- Branch: `issue-<NUMBER>` or `<agent-id>/<short-description>`
+- Directory: `../gauntlet-website-worktrees/issue-<NUMBER>`
+- Branch: `issue-<NUMBER>` or `issue-<NUMBER>-<short-description>`
+- Non-issue explorations may use: `../gauntlet-website-worktrees/<agent-id>` and
+  `<agent-id>/<short-description>`
 
 ### Working in Your Worktree
 
@@ -74,12 +76,14 @@ git branch -d issue-<NUMBER>
 ## Picking Up Work
 
 Issues are structured as **vertical slices** — each delivers one complete
-feature end-to-end. Issues use the `vertical_slice` template on GitHub.
+feature end-to-end. Issues use the `vertical_slice` template on GitHub. Treat
+legacy references to `groomed_issue` as `vertical_slice` + the
+`ISSUE_GROOMING.md` readiness checklist.
 
 ### Before Starting
 
 1. Check open issues: `gh issue list --state open --label slice`
-2. Pick an unassigned slice issue
+2. Pick an unassigned slice issue and confirm it is execution-ready
 3. Read the full issue — especially **Scope** and **Out of Scope**
 4. Set up a worktree for the issue (see above)
 
@@ -105,7 +109,7 @@ Before submitting a PR, verify:
 
 - [ ] Changes are scoped to ONE issue only
 - [ ] All tests pass (`pnpm test`)
-- [ ] Type checking passes (`pnpm typecheck`)
+- [ ] Type checking passes (`pnpm type-check`)
 - [ ] Linting passes (`pnpm lint`)
 - [ ] No `console.log` statements in production code
 - [ ] Issue linked in PR (`Closes #X`)
