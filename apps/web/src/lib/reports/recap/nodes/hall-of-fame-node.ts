@@ -13,6 +13,7 @@ import {
 } from '../tools/hall-of-fame-enhanced';
 import { fetchHallOfShameTool } from '../tools/hall-of-shame';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Generates both Hall of Fame and Hall of Shame sections using enhanced tool.
@@ -41,7 +42,7 @@ export const hallOfFameNode = async (
     throw new Error('Missing required state for hall of fame: week');
   }
 
-  console.log(`\n🏆 Generating Hall of Fame & Hall of Shame for Week ${week}...`);
+  debugLog(`\n🏆 Generating Hall of Fame & Hall of Shame for Week ${week}...`);
 
   const errors: string[] = [];
   let hallOfFameNarrative: string | undefined;
@@ -49,7 +50,7 @@ export const hallOfFameNode = async (
 
   try {
     // Pre-fetch all data using enhanced tools
-    console.log('   📦 Pre-fetching data from enhanced tools...');
+    debugLog('   📦 Pre-fetching data from enhanced tools...');
 
     const [historicalRecords, topPerformers, shameData] = await Promise.all([
       checkAllHistoricalRecordsTool.execute({ week }),
@@ -74,12 +75,12 @@ export const hallOfFameNode = async (
 
     const recordBreakdowns = historicalRecords.recordBreakdowns || [];
 
-    console.log('   ✅ Data fetched successfully');
-    console.log(`      • ${recordBreakdowns.filter(r => r.isRecord).length} new all-time records`);
-    console.log(`      • ${recordBreakdowns.filter(r => r.isTopTen).length} top-10 appearances`);
-    console.log(`      • Top 5 performers at 6 positions`);
-    console.log(`      • ${shameData.biggestBusts.length} biggest busts`);
-    console.log(`      • ${shameData.worstTeams.length} worst teams`);
+    debugLog('   ✅ Data fetched successfully');
+    debugLog(`      • ${recordBreakdowns.filter(r => r.isRecord).length} new all-time records`);
+    debugLog(`      • ${recordBreakdowns.filter(r => r.isTopTen).length} top-10 appearances`);
+    debugLog(`      • Top 5 performers at 6 positions`);
+    debugLog(`      • ${shameData.biggestBusts.length} biggest busts`);
+    debugLog(`      • ${shameData.worstTeams.length} worst teams`);
 
     // Create Gemini client
     const geminiClient = createGeminiClient();
@@ -88,7 +89,7 @@ export const hallOfFameNode = async (
     // HALL OF FAME SECTION
     // ============================================================
     try {
-      console.log('   🤖 Generating Hall of Fame narrative...');
+      debugLog('   🤖 Generating Hall of Fame narrative...');
 
       // Build context-enriched prompt for Hall of Fame
       const newRecords = recordBreakdowns.filter(r => r.isRecord);
@@ -195,7 +196,7 @@ Now write the Hall of Fame narrative based on this data.`;
       }
 
       const fameWordCount = (hallOfFameNarrative || '').split(/\s+/).length;
-      console.log(`   ✅ Hall of Fame narrative generated (${fameWordCount} words)`);
+      debugLog(`   ✅ Hall of Fame narrative generated (${fameWordCount} words)`);
     } catch (error) {
       console.error('❌ Failed to generate Hall of Fame:', error);
       errors.push(`Hall of Fame: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -206,7 +207,7 @@ Now write the Hall of Fame narrative based on this data.`;
     // HALL OF SHAME SECTION
     // ============================================================
     try {
-      console.log('   🤖 Generating Hall of Shame narrative...');
+      debugLog('   🤖 Generating Hall of Shame narrative...');
 
       // Build context-enriched prompt for Hall of Shame
       const shameRecords = recordBreakdowns.filter(
@@ -279,7 +280,7 @@ Now write the Hall of Shame narrative based on this data.`;
       }
 
       const shameWordCount = (hallOfShameNarrative || '').split(/\s+/).length;
-      console.log(`   ✅ Hall of Shame narrative generated (${shameWordCount} words)`);
+      debugLog(`   ✅ Hall of Shame narrative generated (${shameWordCount} words)`);
     } catch (error) {
       console.error('❌ Failed to generate Hall of Shame:', error);
       errors.push(`Hall of Shame: ${error instanceof Error ? error.message : 'Unknown error'}`);

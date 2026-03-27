@@ -113,6 +113,27 @@ If any of the following occur: ambiguous requirements, multiple valid
 approaches, new dependencies, architecture changes → present options and ask for
 direction.
 
+### 7.5 Domain Map Protocol
+
+Before touching any code, check for `docs/domain/`:
+
+1. **If `docs/domain/current-slice.md` exists** — read it first. It defines what
+   you're building, acceptance criteria, constraints, and non-goals. Do not
+   implement anything outside it.
+2. **Read the context files it references** (`docs/domain/<context>.md`) — these
+   define bounded context boundaries and invariants you must not violate.
+3. **Read `docs/domain/system.md`** — the full system map. Understand how your
+   slice connects to the rest of the system.
+
+If `docs/domain/` does not exist, check with the human before starting. A
+missing domain map on an active slice is a signal that planning is incomplete.
+
+**Domain map files are owned by the planning session, not the execution agent.**
+Do not rewrite `current-slice.md` during implementation — only append
+observations or blockers.
+
+Templates live in `shared-agent-config/templates/domain/`.
+
 ## Additional Principles for Agent-Friendly Repos
 
 ### 9. Prefer Explicitness Over Magic

@@ -5,11 +5,12 @@
  * Falls back to real-time computation if precomputed data is not available.
  */
 
-/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { DraftAnalytics } from '@/features/draft-analysis/utils';
 import { ManagerAnalytics } from './manager-analytics';
 import { MockDraft } from './draft-generator';
+import { debugLog } from '@/lib/debug-log';
 
 // Cache for precomputed data
 let precomputedDrafts: { draft1: MockDraft; draft2: MockDraft } | null = null;
@@ -36,13 +37,11 @@ const loadPrecomputedData = async (): Promise<void> => {
       precomputedManagerAnalytics = await managerRes.json();
       precomputedMetadata = await metadataRes.json();
 
-      console.log('✅ Loaded precomputed analytics data from server');
+      debugLog('✅ Loaded precomputed analytics data from server');
       if (precomputedMetadata) {
-        console.log(
-          `📊 Generated: ${new Date(precomputedMetadata.timestamp || 0).toLocaleString()}`,
-        );
-        console.log(`⚡ Generation time: ${precomputedMetadata.generationTime}ms`);
-        console.log(`🏈 Players: ${precomputedMetadata.playerCount}`);
+        debugLog(`📊 Generated: ${new Date(precomputedMetadata.timestamp || 0).toLocaleString()}`);
+        debugLog(`⚡ Generation time: ${precomputedMetadata.generationTime}ms`);
+        debugLog(`🏈 Players: ${precomputedMetadata.playerCount}`);
       }
     } else {
       console.warn('⚠️ Precomputed data not found on server, will generate on demand');
@@ -145,9 +144,9 @@ export const getDataSummary = () => {
 // Development helper - log data status
 if (typeof window === 'undefined') {
   const summary = getDataSummary();
-  console.log(`📈 Analytics Data Status: ${summary.status}`);
-  console.log(`⚡ Expected load time: ${summary.loadTime}`);
+  debugLog(`📈 Analytics Data Status: ${summary.status}`);
+  debugLog(`⚡ Expected load time: ${summary.loadTime}`);
   if (summary.generationTime) {
-    console.log(`🔥 Pre-generation saved: ${summary.generationTime} of computation`);
+    debugLog(`🔥 Pre-generation saved: ${summary.generationTime} of computation`);
   }
 }

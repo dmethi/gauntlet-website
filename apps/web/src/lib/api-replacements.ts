@@ -5,6 +5,7 @@
 
 import { sleeperClient } from './sleeper/unified-client';
 import { ALL_LEAGUES, getCurrentLeagues, getLeagueConfig } from '@/config/leagues';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Replace: prisma.league.findMany()
@@ -44,10 +45,10 @@ export const getLeagueById = async (leagueId: string) => {
  * Replace: prisma.roster.findMany({ where: { leagueId } })
  */
 export const getRostersByLeague = async (leagueId: string) => {
-  console.log(`[DEBUG] getRostersByLeague called with leagueId: ${leagueId}`);
+  debugLog(`[DEBUG] getRostersByLeague called with leagueId: ${leagueId}`);
   const rosters = await sleeperClient.fetchRostersWithOwners(leagueId);
 
-  console.log(`[DEBUG] getRostersByLeague - rosters received:`, {
+  debugLog(`[DEBUG] getRostersByLeague - rosters received:`, {
     type: typeof rosters,
     isArray: Array.isArray(rosters),
     length: Array.isArray(rosters) ? rosters.length : 'N/A',

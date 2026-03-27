@@ -23,6 +23,7 @@ import {
   fetchTeamRecordsTool,
 } from '../tools/matchup-data';
 import { gameFlowTool } from '../tools/game-flow';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Fetches all matchup data for enriching the report.
@@ -111,8 +112,8 @@ export const batchMatchupNarrativesNode = async (
     throw new Error('Missing required state: week');
   }
 
-  console.log(`\n🎬 Generating narratives for all Week ${week} matchups...`);
-  console.log(`   Total: 12 matchups (6 AFC + 6 NFC)\n`);
+  debugLog(`\n🎬 Generating narratives for all Week ${week} matchups...`);
+  debugLog(`   Total: 12 matchups (6 AFC + 6 NFC)\n`);
 
   const narratives: MatchupNarrative[] = [];
   const failedMatchups: string[] = [];
@@ -129,14 +130,14 @@ export const batchMatchupNarrativesNode = async (
     const { leagueId, matchupId } = matchup;
     const matchupKey = `${leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC'}-${matchupId}`;
 
-    console.log(`\n[${completed + 1}/12] Processing ${matchupKey}...`);
+    debugLog(`\n[${completed + 1}/12] Processing ${matchupKey}...`);
 
     try {
       // Fetch matchup data
       const data = await fetchMatchupData(leagueId, week, matchupId);
 
       if (!data) {
-        console.log(`   ⚠️  Failed to fetch data for ${matchupKey}, skipping...`);
+        debugLog(`   ⚠️  Failed to fetch data for ${matchupKey}, skipping...`);
         continue;
       }
 
@@ -179,7 +180,7 @@ export const batchMatchupNarrativesNode = async (
           narrativeData = JSON.parse(jsonString);
         } catch {
           // If JSON.parse fails (control characters), extract manually
-          console.log(`   ⚠️  JSON.parse failed, using fallback extraction`);
+          debugLog(`   ⚠️  JSON.parse failed, using fallback extraction`);
           const narrativeStart = jsonString.indexOf('"narrative"');
           if (narrativeStart !== -1) {
             const valueStart = jsonString.indexOf('"', narrativeStart + '"narrative"'.length);
@@ -219,7 +220,7 @@ export const batchMatchupNarrativesNode = async (
                   narrative: extractedNarrative,
                   metadata,
                 };
-                console.log(`   ✅ Successfully extracted narrative via fallback`);
+                debugLog(`   ✅ Successfully extracted narrative via fallback`);
               }
             }
           }
@@ -259,7 +260,7 @@ export const batchMatchupNarrativesNode = async (
         data, // Store fetched data for UI rendering (already fetched at line 127)
       });
 
-      console.log(
+      debugLog(
         `   ✅ Generated (${narrativeData.metadata.wordCount} words, excitement: ${narrativeData.metadata.excitementScore}/100)`,
       );
 
@@ -290,10 +291,10 @@ export const batchMatchupNarrativesNode = async (
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  console.log(`\n✅ Batch processing complete!`);
-  console.log(`   Successful: ${12 - failedMatchups.length}/12`);
+  debugLog(`\n✅ Batch processing complete!`);
+  debugLog(`   Successful: ${12 - failedMatchups.length}/12`);
   if (failedMatchups.length > 0) {
-    console.log(`   Failed: ${failedMatchups.join(', ')}`);
+    debugLog(`   Failed: ${failedMatchups.join(', ')}`);
   }
 
   return {

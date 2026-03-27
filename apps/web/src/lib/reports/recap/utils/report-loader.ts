@@ -10,6 +10,7 @@ import { access, readFile } from 'fs/promises';
 import path from 'path';
 import type { WeeklyRecapReport } from '../types';
 import { isLegacyReport, transformLegacyReport } from './legacy-transformer';
+import { debugLog } from '@/lib/debug-log';
 
 export interface ReportListItem {
   season: number;
@@ -199,8 +200,7 @@ export const loadRecapReport = async (
 
       // Validate new format structure
       if (normalized.metadata && normalized.sections) {
-        // eslint-disable-next-line no-console
-        console.log(`[Report Loader] Loaded new format report: ${season}/week-${week}`);
+        debugLog(`[Report Loader] Loaded new format report: ${season}/week-${week}`);
         return normalized;
       }
     } catch {
@@ -217,16 +217,14 @@ export const loadRecapReport = async (
 
       // Check if it's a legacy report and transform it
       if (isLegacyReport(data)) {
-        // eslint-disable-next-line no-console
-        console.log(`[Report Loader] Loaded legacy report: week ${week} (transforming...)`);
+        debugLog(`[Report Loader] Loaded legacy report: week ${week} (transforming...)`);
         return normalizeReport(transformLegacyReport(data));
       }
     } catch {
       // Legacy format not found either
     }
 
-    // eslint-disable-next-line no-console
-    console.log(`[Report Loader] Report not found: ${season}/week-${week}`);
+    debugLog(`[Report Loader] Report not found: ${season}/week-${week}`);
     return null;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -290,8 +288,7 @@ export const getAvailableReports = async (): Promise<ReportListItem[]> => {
         }
       }
     } catch {
-      // eslint-disable-next-line no-console
-      console.log('[Report Loader] New format reports directory does not exist yet');
+      debugLog('[Report Loader] New format reports directory does not exist yet');
     }
 
     // Scan legacy format reports (data/report-week*.json)
@@ -335,8 +332,7 @@ export const getAvailableReports = async (): Promise<ReportListItem[]> => {
         }
       }
     } catch {
-      // eslint-disable-next-line no-console
-      console.log('[Report Loader] No legacy reports found');
+      debugLog('[Report Loader] No legacy reports found');
     }
 
     // Add Week 1 (hardcoded static page)

@@ -1,7 +1,5 @@
 'use client';
 
-/* eslint-disable no-console */
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +34,7 @@ import { PositionalCurvesChart } from '@/components/charts/positional-curves-cha
 import { ManagerAnalysis } from '@/features/draft-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 import { BarChart3, Filter, Trophy, Users } from 'lucide-react';
+import { debugLog } from '@/lib/debug-log';
 
 export default function DraftAnalysisPage(): JSX.Element {
   // All useState hooks must be at the top, before any conditional logic
@@ -227,14 +226,14 @@ export default function DraftAnalysisPage(): JSX.Element {
         setError(null);
 
         // First, check if we have precomputed data (much faster!)
-        console.log('🔍 Checking for precomputed data...');
+        debugLog('🔍 Checking for precomputed data...');
         const precomputedDrafts = await getPrecomputedDrafts();
         const precomputedLeagueAnalytics = await getPrecomputedAnalytics();
         const precomputedManagerAnalytics = await getPrecomputedManagerAnalytics();
 
-        console.log('📊 Precomputed drafts:', !!precomputedDrafts);
-        console.log('📊 Precomputed league analytics:', !!precomputedLeagueAnalytics);
-        console.log('📊 Precomputed manager analytics:', !!precomputedManagerAnalytics);
+        debugLog('📊 Precomputed drafts:', !!precomputedDrafts);
+        debugLog('📊 Precomputed league analytics:', !!precomputedLeagueAnalytics);
+        debugLog('📊 Precomputed manager analytics:', !!precomputedManagerAnalytics);
 
         if (precomputedDrafts && precomputedLeagueAnalytics && precomputedManagerAnalytics) {
           // Validate precomputed data sanity before using
@@ -244,11 +243,11 @@ export default function DraftAnalysisPage(): JSX.Element {
           ].every(t => t.totalSpent <= 250 && t.totalSpent >= 0);
           const namesOk = precomputedManagerAnalytics.profiles.every(p => !!p.manager);
           if (totalsOk && namesOk) {
-            console.log('⚡ Using precomputed data (instant load!)');
+            debugLog('⚡ Using precomputed data (instant load!)');
             setDrafts([precomputedDrafts.draft1, precomputedDrafts.draft2]);
             setAnalytics(precomputedLeagueAnalytics);
             setManagerAnalytics(precomputedManagerAnalytics);
-            console.log('✅ All precomputed data loaded successfully');
+            debugLog('✅ All precomputed data loaded successfully');
             setIsLoadingDrafts(false);
             return;
           } else {
@@ -262,25 +261,25 @@ export default function DraftAnalysisPage(): JSX.Element {
         }
 
         // If no precomputed data, fetch real draft data from Sleeper API (slower)
-        console.log('🔍 No precomputed data found, fetching from Sleeper API...');
-        console.log('💡 This will be slower. Run: npm run precompute:real');
+        debugLog('🔍 No precomputed data found, fetching from Sleeper API...');
+        debugLog('💡 This will be slower. Run: npm run precompute:real');
         const { draft1, draft2 } = await getRealDrafts();
         setDrafts([draft1, draft2]);
 
         // Generate analytics on-demand
-        console.log('📈 Generating analytics on-demand...');
+        debugLog('📈 Generating analytics on-demand...');
         const analytics = generateMockAnalytics(draft1, draft2);
         const managerAnalytics = generateManagerAnalytics(draft1, draft2);
         setAnalytics(analytics);
         setManagerAnalytics(managerAnalytics);
 
-        console.log('✅ Successfully loaded real draft data and computed analytics');
+        debugLog('✅ Successfully loaded real draft data and computed analytics');
       } catch (err) {
         console.error('❌ Error loading data:', err);
         setError(err instanceof Error ? err.message : 'Failed to load data');
 
         // Fallback to mock data
-        console.log('🎲 Falling back to mock draft data...');
+        debugLog('🎲 Falling back to mock draft data...');
         try {
           const mockDrafts = getPreGeneratedDrafts();
           setDrafts(mockDrafts);

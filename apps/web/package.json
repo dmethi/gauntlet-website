@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:multi-league": "vitest run src/__tests__/integration/multi-league.test.ts src/__tests__/integration/data-flow.test.ts",
     "test:recap-orchestrator": "tsx scripts/test-recap-orchestrator.ts",
     "test:recap-orchestration": "tsx scripts/test-recap-orchestration.ts",
     "test:dynamic-reports": "tsx scripts/test-dynamic-reports.ts",

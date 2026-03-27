@@ -1,7 +1,5 @@
 'use client';
 
-/* eslint-disable no-console */
-
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Container, PageHeader } from '@gauntlet/ui';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +10,7 @@ import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { useSearchParams } from 'next/navigation';
 import { buildFacts, Facts, firstOwnedWeek, lastOwnedWeek } from '@/features/transactions/utils';
 import { playoffWeight } from '@/shared/utils/calculations';
+import { debugLog } from '@/lib/debug-log';
 import {
   Table,
   TableBody,
@@ -188,31 +187,31 @@ const LeagueTransactionsContent = () => {
               );
             }
 
-            console.log('Transaction pairs - adds:', addPairs.length, 'drops:', dropPairs.length);
+            debugLog('Transaction pairs - adds:', addPairs.length, 'drops:', dropPairs.length);
 
             // Adds
-            console.log('Processing', addPairs.length, 'add pairs');
+            debugLog('Processing', addPairs.length, 'add pairs');
             for (const { rosterId, playerId } of addPairs) {
-              console.log('Processing add:', playerId, 'for roster:', rosterId);
+              debugLog('Processing add:', playerId, 'for roster:', rosterId);
               if (!filterByPos(playerId)) {
-                console.log('Add filtered out by position:', playerId);
+                debugLog('Add filtered out by position:', playerId);
                 continue;
               }
               const info = idToPlayer.get(playerId);
-              console.log('Player info:', info);
+              debugLog('Player info:', info);
               const w0 = firstOwnedWeek(f, rosterId, playerId);
-              console.log('First owned week for', playerId, 'on roster', rosterId, ':', w0);
+              debugLog('First owned week for', playerId, 'on roster', rosterId, ':', w0);
               const forYou = { starts: 0, points: 0, weightedPoints: 0 } as NonNullable<
                 GradeTxn['players'][number]['forYou']
               >;
               if (w0 != null) {
-                console.log('Processing weeks for add, w0:', w0, 'txnWeekHint:', txnWeekHint);
+                debugLog('Processing weeks for add, w0:', w0, 'txnWeekHint:', txnWeekHint);
                 for (const w of f.weeks) {
-                  console.log('Checking week', w, 'against threshold', Math.max(w0, txnWeekHint));
+                  debugLog('Checking week', w, 'against threshold', Math.max(w0, txnWeekHint));
                   if (w < Math.max(w0, txnWeekHint)) continue;
-                  console.log('Processing week', w, 'for player', playerId, 'on roster', rosterId);
+                  debugLog('Processing week', w, 'for player', playerId, 'on roster', rosterId);
                   const starters = f.weekRosterStarters.get(`${w}:${rosterId}`);
-                  console.log(
+                  debugLog(
                     'Starters for week',
                     w,
                     'roster',
@@ -241,26 +240,26 @@ const LeagueTransactionsContent = () => {
                 weight: number;
               }> = [];
               const firstW = w0; // Use the same w0 we calculated above
-              console.log('Weekly points bounds: firstW:', firstW, 'txnWeekHint:', txnWeekHint);
+              debugLog('Weekly points bounds: firstW:', firstW, 'txnWeekHint:', txnWeekHint);
               for (const w of f.weeks) {
-                console.log('Building weekly point for week', w);
+                debugLog('Building weekly point for week', w);
                 if (firstW != null && w < firstW) {
-                  console.log('Week', w, 'skipped - before firstW', firstW);
+                  debugLog('Week', w, 'skipped - before firstW', firstW);
                   continue;
                 }
                 if (w < txnWeekHint) {
-                  console.log('Week', w, 'skipped - before txnWeekHint', txnWeekHint);
+                  debugLog('Week', w, 'skipped - before txnWeekHint', txnWeekHint);
                   continue;
                 }
                 const points = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
                 const started =
                   f.weekRosterStarters.get(`${w}:${rosterId}`)?.has(playerId) || false;
                 const weight = playoffWeight(w);
-                console.log('Week', w, '- points:', points, 'started:', started, 'weight:', weight);
+                debugLog('Week', w, '- points:', points, 'started:', started, 'weight:', weight);
                 weeklyPoints.push({ week: w, points, started, weight });
               }
 
-              console.log('Built weekly points for add:', weeklyPoints.length, 'weeks');
+              debugLog('Built weekly points for add:', weeklyPoints.length, 'weeks');
               const playerOut = {
                 playerId,
                 name: info?.name || playerId,
@@ -271,16 +270,16 @@ const LeagueTransactionsContent = () => {
                 forYou,
                 weeklyPoints,
               };
-              console.log('Adding player to playersOut:', playerOut.playerId, playerOut.name);
+              debugLog('Adding player to playersOut:', playerOut.playerId, playerOut.name);
               playersOut.push(playerOut);
             }
 
             // Drops
-            console.log('Processing', dropPairs.length, 'drop pairs');
+            debugLog('Processing', dropPairs.length, 'drop pairs');
             for (const { rosterId, playerId } of dropPairs) {
-              console.log('Processing drop:', playerId, 'for roster:', rosterId);
+              debugLog('Processing drop:', playerId, 'for roster:', rosterId);
               if (!filterByPos(playerId)) {
-                console.log('Drop filtered out by position:', playerId);
+                debugLog('Drop filtered out by position:', playerId);
                 continue;
               }
               const info = idToPlayer.get(playerId);
@@ -383,7 +382,7 @@ const LeagueTransactionsContent = () => {
               });
             }
 
-            console.log('Final transaction processing - playersOut:', playersOut.length);
+            debugLog('Final transaction processing - playersOut:', playersOut.length);
             const contribution = playersOut
               .filter(p => p.role === 'add' && p.forYou)
               .reduce((s, p) => s + (p.forYou?.weightedPoints || 0), 0);
@@ -395,7 +394,7 @@ const LeagueTransactionsContent = () => {
                 0,
               );
             const score = contribution - penalties;
-            console.log('Transaction scoring:', { contribution, penalties, score });
+            debugLog('Transaction scoring:', { contribution, penalties, score });
             const gradedTxn = {
               id: t.id,
               type: t.type,
@@ -405,7 +404,7 @@ const LeagueTransactionsContent = () => {
               score,
               grade: 'N/A',
             };
-            console.log(
+            debugLog(
               'Created graded transaction:',
               gradedTxn.id,
               'players:',

@@ -8,6 +8,7 @@ import { createGeminiClient } from '../gemini-client';
 import { POWER_RANKINGS_PROMPT } from '../prompts/sections/power-rankings';
 import { fetchPowerRankingsTool } from '../tools/power-rankings';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Generates the power rankings section using pre-fetched data and Gemini.
@@ -37,11 +38,11 @@ export const powerRankingsNode = async (
     throw new Error('Missing required state for power rankings: week');
   }
 
-  console.log(`\n📊 Generating power rankings for Week ${week}...`);
+  debugLog(`\n📊 Generating power rankings for Week ${week}...`);
 
   try {
     // Pre-fetch power rankings data
-    console.log('   📦 Pre-fetching power rankings data...');
+    debugLog('   📦 Pre-fetching power rankings data...');
 
     const rankingsData = await fetchPowerRankingsTool.execute({ currentWeek: week });
 
@@ -55,12 +56,12 @@ export const powerRankingsNode = async (
     const biggestFaller = rankingsData.changes.biggestFaller || null;
     const notableChanges = rankingsData.changes.notableChanges || [];
 
-    console.log('   ✅ Rankings fetched successfully');
-    console.log(`      • ${tiers.length} tiers identified`);
-    console.log(
+    debugLog('   ✅ Rankings fetched successfully');
+    debugLog(`      • ${tiers.length} tiers identified`);
+    debugLog(
       `      • Biggest riser: ${biggestRiser ? `${biggestRiser.teamName} (↑${biggestRiser.movement})` : 'None'}`,
     );
-    console.log(
+    debugLog(
       `      • Biggest faller: ${biggestFaller ? `${biggestFaller.teamName} (↓${Math.abs(biggestFaller.movement)})` : 'None'}`,
     );
 
@@ -107,7 +108,7 @@ ${POWER_RANKINGS_PROMPT}
 
 Now write the power rankings narrative based on this data.`;
 
-    console.log('   🤖 Sending to Gemini with injected context...');
+    debugLog('   🤖 Sending to Gemini with injected context...');
 
     // Invoke Gemini with data-enriched prompt
     const response = await geminiClient.invoke([
@@ -147,7 +148,7 @@ Now write the power rankings narrative based on this data.`;
     }
 
     const wordCount = rankingsNarrative.split(/\s+/).length;
-    console.log(`   ✅ Narrative generated (${wordCount} words)`);
+    debugLog(`   ✅ Narrative generated (${wordCount} words)`);
 
     // Extract full rankings from tiers for UI rendering
     const allRankings = tiers.flatMap(tier => tier.teams);

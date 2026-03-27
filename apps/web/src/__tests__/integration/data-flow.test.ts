@@ -313,6 +313,97 @@ describe('Data Flow Integration', () => {
         expect(m.compositeId).toContain('5');
       });
     });
+
+    it('prevents cross-league collisions when matchup_id overlaps', () => {
+      const createLeagueMatchups = (leagueId: string) =>
+        Array.from({ length: 12 }, (_, idx) => ({
+          leagueId,
+          matchup_id: Math.floor(idx / 2) + 1,
+          roster_id: idx + 1,
+        }));
+
+      const afc = createLeagueMatchups('afc-123');
+      const nfc = createLeagueMatchups('nfc-456');
+      const merged = [...afc, ...nfc];
+
+      const wrongGrouping = merged.reduce(
+        (acc, matchup) => {
+          const key = String(matchup.matchup_id);
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(matchup);
+          return acc;
+        },
+        {} as Record<string, Array<{ leagueId: string; matchup_id: number; roster_id: number }>>,
+      );
+
+      expect(Object.keys(wrongGrouping)).toHaveLength(6);
+      Object.values(wrongGrouping).forEach(group => {
+        expect(group).toHaveLength(4);
+      });
+
+      const safeGrouping = merged.reduce(
+        (acc, matchup) => {
+          const key = `${matchup.leagueId}-${matchup.matchup_id}`;
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(matchup);
+          return acc;
+        },
+        {} as Record<string, Array<{ leagueId: string; matchup_id: number; roster_id: number }>>,
+      );
+
+      expect(Object.keys(safeGrouping)).toHaveLength(12);
+      Object.values(safeGrouping).forEach(group => {
+        expect(group).toHaveLength(2);
+      });
+    });
+
+    it('requires week in keys to avoid same-league cross-week collisions', () => {
+      const leagueId = 'afc-123';
+      const week5 = [
+        { week: 5, leagueId, matchup_id: 1, roster_id: 1 },
+        { week: 5, leagueId, matchup_id: 1, roster_id: 2 },
+      ];
+      const week6 = [
+        { week: 6, leagueId, matchup_id: 1, roster_id: 1 },
+        { week: 6, leagueId, matchup_id: 1, roster_id: 2 },
+      ];
+
+      const mergedWeeks = [...week5, ...week6];
+
+      const noWeekKey = mergedWeeks.reduce(
+        (acc, matchup) => {
+          const key = `${matchup.leagueId}-${matchup.matchup_id}`;
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(matchup);
+          return acc;
+        },
+        {} as Record<
+          string,
+          Array<{ week: number; leagueId: string; matchup_id: number; roster_id: number }>
+        >,
+      );
+
+      expect(Object.keys(noWeekKey)).toHaveLength(1);
+      expect(Object.values(noWeekKey)[0]).toHaveLength(4);
+
+      const withWeekKey = mergedWeeks.reduce(
+        (acc, matchup) => {
+          const key = `${matchup.leagueId}-${matchup.week}-${matchup.matchup_id}`;
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(matchup);
+          return acc;
+        },
+        {} as Record<
+          string,
+          Array<{ week: number; leagueId: string; matchup_id: number; roster_id: number }>
+        >,
+      );
+
+      expect(Object.keys(withWeekKey)).toHaveLength(2);
+      Object.values(withWeekKey).forEach(group => {
+        expect(group).toHaveLength(2);
+      });
+    });
   });
 
   describe('Roster Data Flow', () => {

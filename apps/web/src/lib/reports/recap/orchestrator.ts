@@ -1,5 +1,6 @@
 import { Annotation, END, START, StateGraph } from '@langchain/langgraph';
 import type { BatchProgress, MatchupNarrative, RecapReportState, SectionMetadata } from './state';
+import { debugLog } from '@/lib/debug-log';
 
 // Import all section nodes
 import { leagueOverviewNode } from './nodes/league-overview-node';
@@ -91,8 +92,7 @@ const wrapNodeWithTracking = (
     };
 
     try {
-      // eslint-disable-next-line no-console
-      console.log(`\n🚀 [${nodeName}] Starting...`);
+      debugLog(`\n🚀 [${nodeName}] Starting...`);
 
       // Execute the node
       const result = await nodeFunction(state);
@@ -108,8 +108,7 @@ const wrapNodeWithTracking = (
         status: 'completed',
       };
 
-      // eslint-disable-next-line no-console
-      console.log(`✅ [${nodeName}] Completed in ${duration}ms`);
+      debugLog(`✅ [${nodeName}] Completed in ${duration}ms`);
 
       return {
         ...result,
@@ -257,12 +256,9 @@ export const generateRecapReport = async (
 ): Promise<RecapReportState> => {
   const overallStartTime = Date.now();
 
-  // eslint-disable-next-line no-console
-  console.log('\n' + '='.repeat(80));
-  // eslint-disable-next-line no-console
-  console.log(`🏈 GENERATING WEEKLY RECAP REPORT - Week ${week}, ${season} Season`);
-  // eslint-disable-next-line no-console
-  console.log('='.repeat(80));
+  debugLog('\n' + '='.repeat(80));
+  debugLog(`🏈 GENERATING WEEKLY RECAP REPORT - Week ${week}, ${season} Season`);
+  debugLog('='.repeat(80));
 
   const orchestrator = createRecapOrchestrator();
 
@@ -279,40 +275,29 @@ export const generateRecapReport = async (
     const overallDuration = Date.now() - overallStartTime;
 
     // Print summary
-    // eslint-disable-next-line no-console
-    console.log('\n' + '='.repeat(80));
-    // eslint-disable-next-line no-console
-    console.log('📊 GENERATION SUMMARY');
-    // eslint-disable-next-line no-console
-    console.log('='.repeat(80));
-    // eslint-disable-next-line no-console
-    console.log(`⏱️  Total Duration: ${(overallDuration / 1000).toFixed(2)}s`);
-    // eslint-disable-next-line no-console
-    console.log(`📝 Sections Generated:`);
+    debugLog('\n' + '='.repeat(80));
+    debugLog('📊 GENERATION SUMMARY');
+    debugLog('='.repeat(80));
+    debugLog(`⏱️  Total Duration: ${(overallDuration / 1000).toFixed(2)}s`);
+    debugLog(`📝 Sections Generated:`);
 
     const metadata = result.sectionMetadata || {};
     Object.entries(metadata).forEach(([section, data]) => {
       const status = data.status === 'completed' ? '✅' : data.status === 'failed' ? '❌' : '⏳';
       const duration = data.duration ? `${(data.duration / 1000).toFixed(2)}s` : '---';
-      // eslint-disable-next-line no-console
-      console.log(`   ${status} ${section}: ${duration}`);
+      debugLog(`   ${status} ${section}: ${duration}`);
       if (data.error) {
-        // eslint-disable-next-line no-console
-        console.log(`      Error: ${data.error}`);
+        debugLog(`      Error: ${data.error}`);
       }
     });
 
     if (result.errors && result.errors.length > 0) {
-      // eslint-disable-next-line no-console
-      console.log(`\n⚠️  Errors (${result.errors.length}):`);
-      // eslint-disable-next-line no-console
-      result.errors.forEach(err => console.log(`   - ${err}`));
+      debugLog(`\n⚠️  Errors (${result.errors.length}):`);
+      result.errors.forEach(err => debugLog(`   - ${err}`));
     }
 
-    // eslint-disable-next-line no-console
-    console.log('\n✨ Report generation complete!');
-    // eslint-disable-next-line no-console
-    console.log('='.repeat(80) + '\n');
+    debugLog('\n✨ Report generation complete!');
+    debugLog('='.repeat(80) + '\n');
 
     return result;
   } catch (error) {

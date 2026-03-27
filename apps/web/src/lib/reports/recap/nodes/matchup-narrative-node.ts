@@ -20,6 +20,7 @@ import {
 } from '../tools/matchup-data';
 import { gameFlowTool } from '../tools/game-flow';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Prefetches all matchup data from the 11 data tools.
@@ -46,11 +47,10 @@ const prefetchMatchupData = async (
   positionBreakdown: Awaited<ReturnType<typeof fetchPositionBreakdownTool.execute>>;
   keyPlayers: Awaited<ReturnType<typeof fetchKeyPlayerPerformancesTool.execute>>;
 }> => {
-  // eslint-disable-next-line no-console
-  console.log('   📥 Prefetching all matchup data...');
-
   // First, fetch box score to get roster IDs
   const boxScore = await fetchMatchupBoxScoreTool.execute({ leagueId, week, matchupId });
+
+  debugLog('   📥 Prefetching all matchup data...');
 
   // Fetch all remaining data in parallel
   const [
@@ -92,8 +92,7 @@ const prefetchMatchupData = async (
     fetchKeyPlayerPerformancesTool.execute({ leagueId, week, matchupId }),
   ]);
 
-  // eslint-disable-next-line no-console
-  console.log('   ✅ All data fetched successfully');
+  debugLog('   ✅ All data fetched successfully');
 
   return {
     boxScore,
@@ -131,8 +130,7 @@ export const matchupNarrativeNode = async (
     throw new Error('Missing required state for matchup narrative: week, leagueId, or matchupId');
   }
 
-  // eslint-disable-next-line no-console
-  console.log(`\n🎬 Generating narrative for Matchup ${matchupId}...`);
+  debugLog(`\n🎬 Generating narrative for Matchup ${matchupId}...`);
 
   try {
     // Prefetch all matchup data
@@ -144,8 +142,7 @@ export const matchupNarrativeNode = async (
     // Build the prompt with all data included
     const prompt = buildMatchupNarrativePrompt(leagueId, week, matchupId, data);
 
-    // eslint-disable-next-line no-console
-    console.log('   🤖 Sending to Gemini for narrative generation...');
+    debugLog('   🤖 Sending to Gemini for narrative generation...');
 
     // Invoke Gemini with the prompt
     const response = await geminiClient.invoke([
@@ -198,10 +195,8 @@ export const matchupNarrativeNode = async (
       };
     }
 
-    // eslint-disable-next-line no-console
-    console.log(`✅ Narrative generated (${narrativeData.metadata.wordCount} words)`);
-    // eslint-disable-next-line no-console
-    console.log(`   Excitement Level: ${narrativeData.metadata.excitementLevel || 'medium'}`);
+    debugLog(`✅ Narrative generated (${narrativeData.metadata.wordCount} words)`);
+    debugLog(`   Excitement Level: ${narrativeData.metadata.excitementLevel || 'medium'}`);
 
     return {
       matchupNarratives: [

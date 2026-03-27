@@ -20,6 +20,7 @@
 
 import { generateAndSave } from '@/lib/reports/recap/integration';
 import { getCurrentWeek } from '@/lib/api-replacements';
+import { debugLog } from '@/lib/debug-log';
 
 interface RecapGenerationResult {
   week: number;
@@ -47,7 +48,7 @@ export const runRecapGeneration = async (): Promise<RecapGenerationResult> => {
     const currentWeek = await getCurrentWeek();
     const currentSeason = new Date().getFullYear();
 
-    console.log(`📰 [RECAP] Generating report for Week ${currentWeek}, ${currentSeason} season`);
+    debugLog(`📰 [RECAP] Generating report for Week ${currentWeek}, ${currentSeason} season`);
 
     // Check environment
     if (!process.env.GEMINI_API_KEY) {
@@ -67,7 +68,7 @@ export const runRecapGeneration = async (): Promise<RecapGenerationResult> => {
     const duration = Date.now() - jobStartTime;
 
     if (result.success) {
-      console.log('✅ [RECAP] Report generated successfully:', {
+      debugLog('✅ [RECAP] Report generated successfully:', {
         week: currentWeek,
         season: currentSeason,
         duration: `${duration}ms`,

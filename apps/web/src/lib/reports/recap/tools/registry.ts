@@ -1,5 +1,6 @@
 import type { ReportTool, ToolContext, ToolExecutionResult } from './base';
 import { createToolError } from './errors';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Tool registry interface defining all available methods.
@@ -56,8 +57,7 @@ export const createToolRegistry = (): ToolRegistry => {
       }
 
       tools.set(tool.name, tool as ReportTool);
-      // eslint-disable-next-line no-console
-      console.log(`[TOOL REGISTRY] Registered tool: ${tool.name}`);
+      debugLog(`[TOOL REGISTRY] Registered tool: ${tool.name}`);
     },
 
     /**
@@ -111,8 +111,7 @@ export const createToolRegistry = (): ToolRegistry => {
 
         try {
           if (context.debug) {
-            // eslint-disable-next-line no-console
-            console.log(`[TOOL EXECUTE] ${toolName}`, {
+            debugLog(`[TOOL EXECUTE] ${toolName}`, {
               args,
               context: { week: context.week, season: context.season },
             });
@@ -135,8 +134,7 @@ export const createToolRegistry = (): ToolRegistry => {
           });
 
           if (context.debug) {
-            // eslint-disable-next-line no-console
-            console.log(`[TOOL EXECUTE] ${toolName} completed in ${executionTime}ms`);
+            debugLog(`[TOOL EXECUTE] ${toolName} completed in ${executionTime}ms`);
           }
 
           return result;

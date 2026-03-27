@@ -7,9 +7,8 @@
  * Ported from the original sleeper-draft-fetcher.ts with full transformation logic.
  */
 
-/* eslint-disable no-console */
-
 import { createDraftClient } from './sleeper/unified-client';
+import { debugLog } from '@/lib/debug-log';
 import type {
   SleeperDraft,
   SleeperDraftPick,
@@ -80,15 +79,15 @@ class DraftDataFetcher {
     allPlayers: Record<string, SleeperPlayer>,
     draftName: string,
   ): Promise<MockDraft> {
-    console.log(`🔄 Transforming ${draftName} (${draftInfo.type} format)`);
+    debugLog(`🔄 Transforming ${draftName} (${draftInfo.type} format)`);
 
-    console.log(
+    debugLog(
       `📥 ${draftName} data summary → users: ${users.length}, rosters: ${rosters.length}, picks: ${picks.length}`,
     );
     const sampleUsers = users
       .slice(0, 5)
       .map(u => ({ id: u.user_id, name: u.display_name || u.username }));
-    console.log(`👥 Sample users (${draftName}):`, sampleUsers);
+    debugLog(`👥 Sample users (${draftName}):`, sampleUsers);
 
     // Create user map for team names
     const userMap = new Map(users.map(u => [u.user_id, u]));
@@ -218,7 +217,7 @@ class DraftDataFetcher {
     draftId1: string,
     draftId2: string,
   ): Promise<{ draft1: MockDraft; draft2: MockDraft }> {
-    console.log('🏈 Fetching real draft data from Sleeper API...');
+    debugLog('🏈 Fetching real draft data from Sleeper API...');
 
     const draftClient = createDraftClient();
 
@@ -262,9 +261,9 @@ class DraftDataFetcher {
       'Draft 2',
     );
 
-    console.log('✅ Successfully fetched and transformed real draft data');
-    console.log(`📊 Draft 1: ${draft1.teams.length} teams, ${draft1.totalPicks} picks`);
-    console.log(`📊 Draft 2: ${draft2.teams.length} teams, ${draft2.totalPicks} picks`);
+    debugLog('✅ Successfully fetched and transformed real draft data');
+    debugLog(`📊 Draft 1: ${draft1.teams.length} teams, ${draft1.totalPicks} picks`);
+    debugLog(`📊 Draft 2: ${draft2.teams.length} teams, ${draft2.totalPicks} picks`);
 
     return { draft1, draft2 };
   }

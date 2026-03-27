@@ -1,0 +1,37 @@
+name: Quality Gates
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    name: Coverage - ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - '@gauntlet/web'
+          - '@gauntlet/server'
+          - '@gauntlet/sim-engine'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run coverage with thresholds
+        run: pnpm --filter "${{ matrix.package }}" test:coverage

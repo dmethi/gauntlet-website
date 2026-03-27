@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Vercel Cron endpoint for live odds snapshots
@@ -22,14 +23,14 @@ export const GET = async (request: NextRequest) => {
   const startTime = Date.now();
 
   try {
-    console.log('🏈 [CRON] Starting live odds snapshot...');
+    debugLog('🏈 [CRON] Starting live odds snapshot...');
 
     // Dynamic import to avoid bundling server code unnecessarily
     const { runLiveSnapshot } = await import('./snapshot-runner');
 
     const result = await runLiveSnapshot();
 
-    console.log('✅ [CRON] Live odds snapshot completed:', {
+    debugLog('✅ [CRON] Live odds snapshot completed:', {
       duration: `${result.duration}ms`,
       saved: result.savedCount,
       skipped: result.skippedCount,

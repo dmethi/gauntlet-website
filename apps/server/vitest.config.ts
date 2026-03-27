@@ -18,6 +18,12 @@ export default defineConfig({
       exclude: ['src/generated/**', 'dist/**', 'node_modules/**'],
       all: true,
       include: ['src/lib/**/*.ts'],
+      thresholds: {
+        lines: 50,
+        functions: 50,
+        branches: 40,
+        statements: 50,
+      },
     },
   },
 });

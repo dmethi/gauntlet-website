@@ -8,6 +8,7 @@ import { createGeminiClient } from '../gemini-client';
 import { UPCOMING_PROMPT } from '../prompts/sections/upcoming';
 import { fetchNextWeekMatchupsTool } from '../tools/upcoming';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Generates the upcoming matchups section using pre-fetched data and Gemini.
@@ -37,18 +38,18 @@ export const upcomingMatchupsNode = async (
     throw new Error('Missing required state for upcoming matchups: week');
   }
 
-  console.log(`\n🔮 Generating upcoming matchups preview for Week ${week + 1}...`);
+  debugLog(`\n🔮 Generating upcoming matchups preview for Week ${week + 1}...`);
 
   try {
     // Pre-fetch upcoming matchups data
-    console.log('   📦 Pre-fetching next week matchups...');
+    debugLog('   📦 Pre-fetching next week matchups...');
 
     const upcomingData = await fetchNextWeekMatchupsTool.execute({ currentWeek: week });
 
     const allMatchups = [...upcomingData.afc, ...upcomingData.nfc];
 
     if (!upcomingData.available || allMatchups.length === 0) {
-      console.log('   ⚠️  Next week matchups not available yet');
+      debugLog('   ⚠️  Next week matchups not available yet');
       return {
         upcoming:
           upcomingData.message ||
@@ -56,8 +57,8 @@ export const upcomingMatchupsNode = async (
       };
     }
 
-    console.log('   ✅ Matchups fetched successfully');
-    console.log(`      • ${allMatchups.length} matchups scheduled`);
+    debugLog('   ✅ Matchups fetched successfully');
+    debugLog(`      • ${allMatchups.length} matchups scheduled`);
 
     // Create Gemini client
     const geminiClient = createGeminiClient();
@@ -92,7 +93,7 @@ ${UPCOMING_PROMPT}
 
 Now write the upcoming matchups preview based on this data. Focus on the 2-3 most compelling matchups and build anticipation.`;
 
-    console.log('   🤖 Sending to Gemini with injected context...');
+    debugLog('   🤖 Sending to Gemini with injected context...');
 
     // Invoke Gemini with data-enriched prompt
     const response = await geminiClient.invoke([
@@ -132,7 +133,7 @@ Now write the upcoming matchups preview based on this data. Focus on the 2-3 mos
     }
 
     const wordCount = upcomingNarrative.split(/\s+/).length;
-    console.log(`   ✅ Narrative generated (${wordCount} words)`);
+    debugLog(`   ✅ Narrative generated (${wordCount} words)`);
 
     return {
       upcoming: upcomingNarrative,

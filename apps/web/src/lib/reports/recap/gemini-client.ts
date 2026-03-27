@@ -1,4 +1,5 @@
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Configuration for Gemini API client.
@@ -86,8 +87,7 @@ export const RATE_LIMITS = {
 export const rateLimitedDelay = async (requestCount: number): Promise<void> => {
   if (requestCount % 10 === 0) {
     // Every 10 requests, wait 5 seconds
-    // eslint-disable-next-line no-console
-    console.log('[RATE LIMIT] Pausing for 5s to avoid limits...');
+    debugLog('[RATE LIMIT] Pausing for 5s to avoid limits...');
     await new Promise(resolve => {
       // eslint-disable-next-line no-undef
       setTimeout(resolve, 5000);

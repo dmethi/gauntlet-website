@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { MatchupOddsPreview } from '@/features/matchups';
 import { LeagueWideOdds } from '@/components/league-wide-odds';
 import type { LeagueMatchups, MatchupData, MatchupTeam } from '@/features/matchups/types';
+import { debugLog } from '@/lib/debug-log';
 
 const LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },
@@ -55,7 +56,7 @@ const MatchupsPageContent = () => {
 
   // Function to handle week changes
   const handleWeekChange = (week: number) => {
-    console.log(`📅 [MATCHUPS CLIENT] Week changed to: ${week}`);
+    debugLog(`📅 [MATCHUPS CLIENT] Week changed to: ${week}`);
     setSelectedWeek(week);
     updateWeekInURL(week);
     fetchMatchupsForWeek(week);
@@ -65,14 +66,14 @@ const MatchupsPageContent = () => {
     setLoading(true);
     setError(null);
 
-    console.log('🔍 [MATCHUPS CLIENT] Fetching matchups for week:', week);
-    console.log('📋 [MATCHUPS CLIENT] Filtered leagues:', filteredLeagues);
+    debugLog('🔍 [MATCHUPS CLIENT] Fetching matchups for week:', week);
+    debugLog('📋 [MATCHUPS CLIENT] Filtered leagues:', filteredLeagues);
 
     try {
       const leagueData: LeagueMatchups[] = [];
 
       for (const league of filteredLeagues) {
-        console.log('⚔️ [MATCHUPS CLIENT] Fetching for league:', league.name, league.id);
+        debugLog('⚔️ [MATCHUPS CLIENT] Fetching for league:', league.name, league.id);
         const response = await fetch(`/api/matchups/${league.id}/${week}`);
         if (!response.ok) {
           console.error(
@@ -84,7 +85,7 @@ const MatchupsPageContent = () => {
         }
 
         const data = await response.json();
-        console.log('📊 [MATCHUPS CLIENT] Raw API response for', league.name, ':', data);
+        debugLog('📊 [MATCHUPS CLIENT] Raw API response for', league.name, ':', data);
 
         const matchups: MatchupData[] = data.matchups.map((matchup: any) => ({
           matchupId: matchup.matchupId,
@@ -129,7 +130,7 @@ const MatchupsPageContent = () => {
             matchup.summary?.winnerRosterId !== undefined,
         }));
 
-        console.log('📋 [MATCHUPS CLIENT] Processed matchups for', league.name, ':', matchups);
+        debugLog('📋 [MATCHUPS CLIENT] Processed matchups for', league.name, ':', matchups);
 
         leagueData.push({
           leagueId: league.id,
@@ -138,7 +139,7 @@ const MatchupsPageContent = () => {
         });
       }
 
-      console.log('🎯 [MATCHUPS CLIENT] Final league data:', leagueData);
+      debugLog('🎯 [MATCHUPS CLIENT] Final league data:', leagueData);
       setLeagueMatchups(leagueData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch matchups');
@@ -150,14 +151,14 @@ const MatchupsPageContent = () => {
   // Single useEffect to handle initialization and URL param changes
   useEffect(() => {
     const initialize = async () => {
-      console.log(
+      debugLog(
         `🔄 [MATCHUPS CLIENT] Initializing... URL week: ${weekParam}, selectedWeek: ${selectedWeek}`,
       );
 
       // If week is in URL, use it directly
       if (weekParam && !isNaN(parseInt(weekParam))) {
         const urlWeek = parseInt(weekParam);
-        console.log(`📅 [MATCHUPS CLIENT] Using week from URL: ${urlWeek}`);
+        debugLog(`📅 [MATCHUPS CLIENT] Using week from URL: ${urlWeek}`);
         setSelectedWeek(urlWeek);
         await fetchMatchupsForWeek(urlWeek);
         setIsInitializing(false);
@@ -166,7 +167,7 @@ const MatchupsPageContent = () => {
 
       // If no URL week, fetch current NFL week from Sleeper API
       try {
-        console.log(
+        debugLog(
           '🏈 [MATCHUPS CLIENT] No URL week, fetching current NFL state from Sleeper API...',
         );
         const res = await fetch('/api/nfl-state', {
@@ -175,7 +176,7 @@ const MatchupsPageContent = () => {
         if (res.ok) {
           const nflState = await res.json();
           const currentWeek = nflState.display_week || nflState.week || 2;
-          console.log(`📅 [MATCHUPS CLIENT] Current NFL week from Sleeper: ${currentWeek}`);
+          debugLog(`📅 [MATCHUPS CLIENT] Current NFL week from Sleeper: ${currentWeek}`);
 
           // Update both state and URL
           setSelectedWeek(currentWeek);
@@ -192,7 +193,7 @@ const MatchupsPageContent = () => {
 
       // Final fallback to week 2
       const fallbackWeek = 2;
-      console.log(`📅 [MATCHUPS CLIENT] Using final fallback to week ${fallbackWeek}`);
+      debugLog(`📅 [MATCHUPS CLIENT] Using final fallback to week ${fallbackWeek}`);
       setSelectedWeek(fallbackWeek);
       updateWeekInURL(fallbackWeek);
       await fetchMatchupsForWeek(fallbackWeek);
@@ -209,7 +210,7 @@ const MatchupsPageContent = () => {
     if (!isInitializing && weekParam && !isNaN(parseInt(weekParam))) {
       const urlWeek = parseInt(weekParam);
       if (urlWeek !== selectedWeek) {
-        console.log(`📅 [MATCHUPS CLIENT] URL week changed to: ${urlWeek}`);
+        debugLog(`📅 [MATCHUPS CLIENT] URL week changed to: ${urlWeek}`);
         setSelectedWeek(urlWeek);
         fetchMatchupsForWeek(urlWeek);
       }

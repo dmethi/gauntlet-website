@@ -7,6 +7,7 @@ import { HumanMessage } from '@langchain/core/messages';
 import { createGeminiClient } from '../gemini-client';
 import { buildClosingPrompt } from '../prompts/sections/closing';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Builds a context summary from all previous sections in the state.
@@ -94,15 +95,13 @@ const buildContextSummary = (state: RecapReportState): string => {
 export const closingCommentaryNode = async (
   state: RecapReportState,
 ): Promise<Partial<RecapReportState>> => {
-  // eslint-disable-next-line no-console
-  console.log('\n📝 Generating closing commentary...');
+  debugLog('\n📝 Generating closing commentary...');
 
   try {
     // Build context summary from all sections
     const contextSummary = buildContextSummary(state);
 
-    // eslint-disable-next-line no-console
-    console.log(
+    debugLog(
       `   📊 Context built from ${Object.keys(state).filter(k => state[k as keyof RecapReportState] && k !== 'week' && k !== 'season').length} sections`,
     );
 
@@ -155,12 +154,9 @@ export const closingCommentaryNode = async (
     }
 
     const wordCount = closingData.narrative.split(/\s+/).length;
-    // eslint-disable-next-line no-console
-    console.log(`✅ Closing commentary generated (${wordCount} words)`);
-    // eslint-disable-next-line no-console
-    console.log(`   Themes: ${closingData.themes.join(', ')}`);
-    // eslint-disable-next-line no-console
-    console.log(`   Key takeaway: "${closingData.keyTakeaway}"`);
+    debugLog(`✅ Closing commentary generated (${wordCount} words)`);
+    debugLog(`   Themes: ${closingData.themes.join(', ')}`);
+    debugLog(`   Key takeaway: "${closingData.keyTakeaway}"`);
 
     // Format the closing as a string for consistency with other sections
     const formattedClosing = `${closingData.narrative}

@@ -12,6 +12,7 @@ import {
   fetchWeekHighlightsTool,
 } from '../tools/league-overview';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Generates the league overview section using pre-fetched data and Gemini.
@@ -41,13 +42,11 @@ export const leagueOverviewNode = async (
     throw new Error('Missing required state for league overview: week');
   }
 
-  // eslint-disable-next-line no-console
-  console.log(`\n📊 Generating league overview for Week ${week}...`);
+  debugLog(`\n📊 Generating league overview for Week ${week}...`);
 
   try {
     // Pre-fetch all data using tools
-    // eslint-disable-next-line no-console
-    console.log('   📦 Pre-fetching data from 3 tools...');
+    debugLog('   📦 Pre-fetching data from 3 tools...');
 
     const [leagueData, summaryStats, highlights] = await Promise.all([
       fetchLeagueDataTool.execute({ week }),
@@ -55,16 +54,10 @@ export const leagueOverviewNode = async (
       fetchWeekHighlightsTool.execute({ week }),
     ]);
 
-    // eslint-disable-next-line no-console
-    console.log('   ✅ Data fetched successfully');
-    // eslint-disable-next-line no-console
-    console.log(`      • ${summaryStats.totalPoints} total points`);
-    // eslint-disable-next-line no-console
-    console.log(
-      `      • ${summaryStats.closeGames} close games, ${summaryStats.blowouts} blowouts`,
-    );
-    // eslint-disable-next-line no-console
-    console.log(
+    debugLog('   ✅ Data fetched successfully');
+    debugLog(`      • ${summaryStats.totalPoints} total points`);
+    debugLog(`      • ${summaryStats.closeGames} close games, ${summaryStats.blowouts} blowouts`);
+    debugLog(
       `      • Closest: ${highlights.closestGame.margin}pt, Biggest blowout: ${highlights.biggestBlowout.margin}pt`,
     );
 
@@ -78,8 +71,7 @@ export const leagueOverviewNode = async (
       highlights,
     });
 
-    // eslint-disable-next-line no-console
-    console.log('   🤖 Sending to Gemini with injected context...');
+    debugLog('   🤖 Sending to Gemini with injected context...');
 
     // Invoke Gemini with data-enriched prompt (no tool calling needed)
     const response = await geminiClient.invoke([
@@ -128,12 +120,8 @@ export const leagueOverviewNode = async (
     }
 
     const wordCount = overviewData.narrative.split(/\s+/).length;
-    // eslint-disable-next-line no-console
-    console.log(`   ✅ Narrative generated (${wordCount} words)`);
-    // eslint-disable-next-line no-console
-    console.log(
-      `      • Verified: ${summaryStats.totalPoints} pts, ${summaryStats.averageScore} avg`,
-    );
+    debugLog(`   ✅ Narrative generated (${wordCount} words)`);
+    debugLog(`      • Verified: ${summaryStats.totalPoints} pts, ${summaryStats.averageScore} avg`);
 
     return {
       leagueOverview: overviewData.narrative,

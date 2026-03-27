@@ -9,6 +9,7 @@ import { generateRecapReport } from './orchestrator';
 import { formatRecapReport } from './output/formatter';
 import { reportExists, saveReport } from './storage';
 import type { WeeklyRecapReport } from './types';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Clean narrative content by removing JSON code block wrappers.
@@ -99,7 +100,7 @@ export const generateAndSave = async (
     }
 
     // Generate the report using orchestrator
-    console.log(`\n📰 Generating recap report for Week ${week}, ${season} season...\n`);
+    debugLog(`\n📰 Generating recap report for Week ${week}, ${season} season...\n`);
     const reportState = await generateRecapReport(week, season);
 
     // Format the state into final WeeklyRecapReport structure with all data (now async to fetch full timeSeries)
@@ -163,7 +164,7 @@ export const generateAndSave = async (
     let backupCreated = false;
 
     if (saveToFile) {
-      console.log(`\n💾 Saving report to file system...\n`);
+      debugLog(`\n💾 Saving report to file system...\n`);
       saveResult = await saveReport(fullReport as WeeklyRecapReport);
 
       if (!saveResult.success) {
@@ -182,15 +183,15 @@ export const generateAndSave = async (
       filePath = saveResult.filePath;
       backupCreated = !!saveResult.backupPath;
 
-      console.log(`✅ Report saved to: ${filePath}`);
+      debugLog(`✅ Report saved to: ${filePath}`);
       if (backupCreated) {
-        console.log(`📦 Backup created: ${saveResult.backupPath}`);
+        debugLog(`📦 Backup created: ${saveResult.backupPath}`);
       }
     }
 
     const duration = Date.now() - startTime;
 
-    console.log(`\n✨ Report generation complete in ${(duration / 1000).toFixed(2)}s\n`);
+    debugLog(`\n✨ Report generation complete in ${(duration / 1000).toFixed(2)}s\n`);
 
     return {
       success: true,

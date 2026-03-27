@@ -5,6 +5,7 @@
 
 import playersData from './players-data.json';
 import type { PlayersData, SleeperPlayer } from './players-data.types';
+import { debugLog } from '@/lib/debug-log';
 
 // Type assertion for imported JSON
 const data = playersData as unknown as PlayersData;
@@ -18,8 +19,8 @@ const initializePlayersIndex = () => {
     playersById.set(playerId, player);
   }
 
-  console.log(`✅ Loaded ${playersById.size} players from static data`);
-  console.log(`✅ Data exported at: ${data.exportedAt}`);
+  debugLog(`✅ Loaded ${playersById.size} players from static data`);
+  debugLog(`✅ Data exported at: ${data.exportedAt}`);
 };
 
 // Initialize on module load

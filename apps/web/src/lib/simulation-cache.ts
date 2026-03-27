@@ -3,6 +3,8 @@
  * Stores Monte Carlo simulation results with TTL for performance and odds calculations
  */
 
+import { debugLog } from '@/lib/debug-log';
+
 interface CachedSimulation {
   leagueId: string;
   week: number;
@@ -89,7 +91,7 @@ class SimulationCache {
     this.evictExpired();
     this.enforceSizeLimit();
 
-    console.log(
+    debugLog(
       `📦 [CACHE] Stored simulation for ${leagueId}-W${week}-M${matchupId}, TTL: ${ttl / 1000}s`,
     );
   }
@@ -103,7 +105,7 @@ class SimulationCache {
 
     if (!cached) {
       this.hitCounts.misses++;
-      console.log(`❌ [CACHE] Miss for ${key}`);
+      debugLog(`❌ [CACHE] Miss for ${key}`);
       return null;
     }
 
@@ -111,14 +113,14 @@ class SimulationCache {
     if (cached.expiresAt < new Date()) {
       this.cache.delete(key);
       this.hitCounts.misses++;
-      console.log(`⏰ [CACHE] Expired for ${key}`);
+      debugLog(`⏰ [CACHE] Expired for ${key}`);
       return null;
     }
 
     // Update hit count and return
     cached.hitCount++;
     this.hitCounts.hits++;
-    console.log(`✅ [CACHE] Hit for ${key} (${cached.hitCount} times)`);
+    debugLog(`✅ [CACHE] Hit for ${key} (${cached.hitCount} times)`);
 
     return cached.result;
   }
@@ -138,7 +140,7 @@ class SimulationCache {
     const deleted = this.cache.delete(key);
 
     if (deleted) {
-      console.log(`🗑️ [CACHE] Invalidated ${key}`);
+      debugLog(`🗑️ [CACHE] Invalidated ${key}`);
     }
 
     return deleted;
@@ -157,7 +159,7 @@ class SimulationCache {
       }
     }
 
-    console.log(`🗑️ [CACHE] Invalidated ${deleted} entries for ${leagueId} Week ${week}`);
+    debugLog(`🗑️ [CACHE] Invalidated ${deleted} entries for ${leagueId} Week ${week}`);
     return deleted;
   }
 
@@ -176,7 +178,7 @@ class SimulationCache {
     }
 
     if (evicted > 0) {
-      console.log(`🧹 [CACHE] Evicted ${evicted} expired entries`);
+      debugLog(`🧹 [CACHE] Evicted ${evicted} expired entries`);
     }
   }
 
@@ -201,7 +203,7 @@ class SimulationCache {
       this.cache.delete(key);
     }
 
-    console.log(`🗑️ [CACHE] Evicted ${toRemove} entries to enforce size limit`);
+    debugLog(`🗑️ [CACHE] Evicted ${toRemove} entries to enforce size limit`);
   }
 
   /**
@@ -240,7 +242,7 @@ class SimulationCache {
     const size = this.cache.size;
     this.cache.clear();
     this.hitCounts = { hits: 0, misses: 0 };
-    console.log(`🧹 [CACHE] Cleared ${size} entries`);
+    debugLog(`🧹 [CACHE] Cleared ${size} entries`);
   }
 
   /**
@@ -254,12 +256,12 @@ class SimulationCache {
    * Warm up cache for a specific week across all leagues
    */
   async warmUpWeek(week: number, leagues: string[]): Promise<void> {
-    console.log(`🔥 [CACHE] Warming up cache for Week ${week}...`);
+    debugLog(`🔥 [CACHE] Warming up cache for Week ${week}...`);
 
     for (const leagueId of leagues) {
       // This would typically trigger simulation API calls
       // Implementation depends on your specific warming strategy
-      console.log(`🔥 [CACHE] Warming ${leagueId} Week ${week}...`);
+      debugLog(`🔥 [CACHE] Warming ${leagueId} Week ${week}...`);
     }
   }
 }

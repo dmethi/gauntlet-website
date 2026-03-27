@@ -1,4 +1,5 @@
 import type { ReportTool } from '../base';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Example tool: Fetch basic league statistics.
@@ -41,8 +42,7 @@ export const leagueStatsTool: ReportTool<LeagueStatsArgs, LeagueStatsResult> = {
     // TODO: Replace with actual data fetching from Sleeper API
     // For now, return mock data for testing
 
-    // eslint-disable-next-line no-console
-    console.log(`[LEAGUE STATS] Fetching data for Week ${args.week}, ${args.season}`);
+    debugLog(`[LEAGUE STATS] Fetching data for Week ${args.week}, ${args.season}`);
 
     // Simulate API delay
     await new Promise(resolve => {

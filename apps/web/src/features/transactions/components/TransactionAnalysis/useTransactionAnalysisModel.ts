@@ -10,6 +10,7 @@ import { CURRENT_LEAGUES } from '@/config/leagues';
 import { buildFacts } from '@/features/transactions/utils';
 import { computeTransactionGradesForStatsHub } from '@/app/stats/utils/computeTransactionGradesForStatsHub';
 import { assignLetterGrades } from './utils';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Transaction analysis model state
@@ -69,7 +70,7 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
               });
             });
 
-            console.log(`[Team Loading] Loaded ${teams.length} teams total`);
+            debugLog(`[Team Loading] Loaded ${teams.length} teams total`);
           }
         } catch (error) {
           console.error('Failed to load team data:', error);
@@ -94,7 +95,7 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
 
             // Build facts - dynamically use weeks 1 through current week
             const weeksToAnalyze = Array.from({ length: currentNflWeek }, (_, i) => i + 1);
-            console.log(`[Transaction Analysis] Analyzing weeks: ${weeksToAnalyze.join(', ')}`);
+            debugLog(`[Transaction Analysis] Analyzing weeks: ${weeksToAnalyze.join(', ')}`);
             const facts = await buildFacts(league.id, weeksToAnalyze);
 
             // Grade transactions

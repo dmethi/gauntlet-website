@@ -3,21 +3,25 @@
 # Agents pick the top unblocked slice and work top-to-bottom.
 
 schema_version: 2
-last_updated: "2026-02-10"
+last_updated: '2026-03-27'
 
 slices:
-  - issue: 36   # [Slice] Foundation: Docs, Env Config, CI Pipeline
-    title: "Foundation: Docs, Env Config, CI Pipeline"
-    note: "AGENTS.md, .env.example, CI workflow, meta reviews"
+  - issue: 36 # [Slice] Foundation: Docs, Env Config, CI Pipeline
+    title: 'Foundation: Docs, Env Config, CI Pipeline'
+    note: 'AGENTS.md, .env.example, CI workflow, meta reviews'
 
-  - issue: 37   # [Slice] Code Quality: Testing, Safety, Cleanup
-    title: "Code Quality: Testing, Safety, Cleanup"
-    note: "Test thresholds, multi-league safety, console.log removal"
+  - issue: 37 # [Slice] Code Quality: Testing, Safety, Cleanup
+    title: 'Code Quality: Testing, Safety, Cleanup'
+    note: 'Test thresholds, multi-league safety, console.log removal'
 
-  - issue: 38   # [Slice] Infrastructure: Performance, Docs, Mobile
-    title: "Infrastructure: Performance, Docs, Mobile"
-    note: "Latency, simulation accuracy, diagrams, mobile responsiveness"
+  - issue: 38 # [Slice] Infrastructure: Performance, Docs, Mobile
+    title: 'Infrastructure: Performance, Docs, Mobile'
+    note: 'Latency, simulation accuracy, diagrams, mobile responsiveness'
 
-  - issue: 39   # [Slice] Decompose Mega-Files
-    title: "Decompose Mega-Files (8 files over 1000 lines)"
-    note: "Pure refactor — no behavior changes"
+  - issue: 39 # [Slice] Decompose Mega-Files
+    title: 'Decompose Mega-Files (8 files over 1000 lines)'
+    note: 'Pure refactor — no behavior changes'
+
+  - issue: 41
+    title: 'Init domain map: docs/domain/system.md + context files'
+    note: 'System/domain map initialization to support planning workflow'

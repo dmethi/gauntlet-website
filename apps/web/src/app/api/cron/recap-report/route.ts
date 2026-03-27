@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Cron endpoint for weekly recap report generation
@@ -34,7 +35,7 @@ export const GET = async (request: NextRequest) => {
   const startTime = Date.now();
 
   try {
-    console.log('📰 [CRON] Starting weekly recap generation...');
+    debugLog('📰 [CRON] Starting weekly recap generation...');
 
     // Dynamic import to avoid bundling unnecessarily
     // @ts-ignore - ESLint has issues with dynamic imports but TypeScript resolves it correctly
@@ -44,7 +45,7 @@ export const GET = async (request: NextRequest) => {
 
     const duration = Date.now() - startTime;
 
-    console.log('✅ [CRON] Weekly recap generation completed:', {
+    debugLog('✅ [CRON] Weekly recap generation completed:', {
       duration: `${duration}ms`,
       week: result.week,
       season: result.season,

@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
-
 import type { TransactionFacts } from '@/features/transactions/types';
 import { playoffWeight } from '@/shared/utils/calculations';
 import { median } from '@/shared/utils/stats';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * @deprecated Use TransactionFacts from '@/features/transactions/types' instead
@@ -35,13 +34,13 @@ export const buildFacts = async (
     try {
       const res = await fetch(`/api/matchups/${leagueId}/${week}`);
       if (!res.ok) {
-        if (week <= 4) console.log(`[buildFacts] Week ${week} failed: ${res.status}`);
+        if (week <= 4) debugLog(`[buildFacts] Week ${week} failed: ${res.status}`);
         continue;
       }
       const json = (await res.json()) as { matchups: ApiMatchup[] };
 
       if (week <= 4) {
-        console.log(`[buildFacts] Week ${week} success:`, {
+        debugLog(`[buildFacts] Week ${week} success:`, {
           matchupsCount: json.matchups?.length || 0,
           hasMatchups: !!json.matchups,
           structure: json.matchups?.[0] ? Object.keys(json.matchups[0]) : 'no matchups',
@@ -66,10 +65,10 @@ export const buildFacts = async (
 
           // Debug logging for Drake Maye specifically
           if (t.starters.includes('11564')) {
-            console.log(
+            debugLog(
               `[buildFacts] Week ${week}: Drake Maye (11564) started by roster ${t.rosterId}`,
             );
-            console.log(`[buildFacts] Drake Maye points: ${playerPoints['11564'] || 'N/A'}`);
+            debugLog(`[buildFacts] Drake Maye points: ${playerPoints['11564'] || 'N/A'}`);
           }
 
           for (const pid of t.players) {
@@ -81,7 +80,7 @@ export const buildFacts = async (
 
             // Debug Drake Maye specifically
             if (String(pid) === '11564' && points > 0) {
-              console.log(
+              debugLog(
                 `[buildFacts] Week ${week}: Drake Maye (${pid}) points set to ${points} for roster ${t.rosterId}`,
               );
             }

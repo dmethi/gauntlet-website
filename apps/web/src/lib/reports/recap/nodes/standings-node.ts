@@ -9,6 +9,7 @@ import { buildStandingsPrompt } from '../prompts/sections/standings';
 import { fetchStandingsTool } from '../tools/standings';
 import { LEAGUE_IDS } from '@/lib/constants';
 import type { RecapReportState } from '../state';
+import { debugLog } from '@/lib/debug-log';
 
 /**
  * Generates the standings section using pre-fetched data and Gemini.
@@ -38,19 +39,19 @@ export const standingsNode = async (
     throw new Error('Missing required state for standings: week');
   }
 
-  console.log(`\n📋 Generating standings for Week ${week}...`);
+  debugLog(`\n📋 Generating standings for Week ${week}...`);
 
   try {
     // Pre-fetch standings data
-    console.log('   📦 Pre-fetching standings data...');
+    debugLog('   📦 Pre-fetching standings data...');
 
     const standingsData = await fetchStandingsTool.execute({ week });
 
-    console.log('   ✅ Standings fetched successfully');
-    console.log(
+    debugLog('   ✅ Standings fetched successfully');
+    debugLog(
       `      • AFC: ${standingsData.afc.allTeams.length} teams in ${standingsData.afc.divisions.length} divisions`,
     );
-    console.log(
+    debugLog(
       `      • NFC: ${standingsData.nfc.allTeams.length} teams in ${standingsData.nfc.divisions.length} divisions`,
     );
 
@@ -149,7 +150,7 @@ ${buildStandingsPrompt(week)}
 
 Now write the standings narrative based on this data. Remember to cover BOTH leagues (AFC and NFC).`;
 
-    console.log('   🤖 Sending to Gemini with injected context...');
+    debugLog('   🤖 Sending to Gemini with injected context...');
 
     // Invoke Gemini with data-enriched prompt
     const response = await geminiClient.invoke([
@@ -189,7 +190,7 @@ Now write the standings narrative based on this data. Remember to cover BOTH lea
     }
 
     const wordCount = standingsNarrative.split(/\s+/).length;
-    console.log(`   ✅ Narrative generated (${wordCount} words)`);
+    debugLog(`   ✅ Narrative generated (${wordCount} words)`);
 
     // Convert divisions to the format expected by UI
     const formatLeagueForUI = (

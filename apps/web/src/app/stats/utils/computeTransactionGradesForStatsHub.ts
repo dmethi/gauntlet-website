@@ -1,4 +1,5 @@
 import { Facts } from '@/features/transactions/utils';
+import { debugLog } from '@/lib/debug-log';
 import { playoffWeight } from '@/shared/utils/calculations';
 import { TeamInfo } from '../types';
 import { GradeTxn } from '../types';
@@ -39,7 +40,7 @@ export const computeTransactionGradesForStatsHub = async (
 
   // Use dynamic weeks from facts instead of hardcoding
   const completedWeeks = facts.weeks.filter(w => w <= currentNflWeek);
-  console.log(
+  debugLog(
     `[Transaction Grading] Processing weeks: ${completedWeeks.join(', ')} (current NFL week: ${currentNflWeek})`,
   );
 
@@ -51,15 +52,13 @@ export const computeTransactionGradesForStatsHub = async (
     // Copy replacement levels from facts (stored as ${week}:ALL_STARTERS)
     for (const [key, value] of facts.replacementByWeekPos.entries()) {
       replacementLevels.set(key, value);
-      console.log(
+      debugLog(
         `[Replacement Levels] Week ${key.split(':')[0]}: ${value.toFixed(2)} pts (median of all starters)`,
       );
     }
   }
 
-  console.log(
-    `[Replacement Levels] Loaded ${replacementLevels.size} week-level replacement values`,
-  );
+  debugLog(`[Replacement Levels] Loaded ${replacementLevels.size} week-level replacement values`);
 
   // Date to NFL week mapping (2025 season)
   // Returns the FIRST WEEK where an added player can contribute points
@@ -136,7 +135,7 @@ export const computeTransactionGradesForStatsHub = async (
         .forEach(d => d.players?.forEach(p => dropPairs.push({ rosterId, playerId: p.id })));
     }
 
-    console.log(
+    debugLog(
       `[Trade Split] Roster ${rosterId}: +${addPairs.length} adds, -${dropPairs.length} drops`,
     );
 
@@ -163,7 +162,7 @@ export const computeTransactionGradesForStatsHub = async (
         const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
         const started = starters?.has(playerId) || false;
 
-        console.log(
+        debugLog(
           `[Add Debug] ${playerInfo?.name} W${week}: ${points}pts, started=${started} by roster ${rId}`,
         );
 
@@ -220,7 +219,7 @@ export const computeTransactionGradesForStatsHub = async (
 
       for (const week of completedWeeks) {
         if (week < startWeek) {
-          console.log(
+          debugLog(
             `[Drop Debug] ${playerInfo?.name} W${week}: SKIPPED (before transaction week ${startWeek})`,
           );
           continue;
@@ -243,12 +242,12 @@ export const computeTransactionGradesForStatsHub = async (
         const replacementLevel = replacementLevels.get(`${week}:ALL_STARTERS`) || 0;
 
         if (started) {
-          console.log(
+          debugLog(
             `[Drop Debug] ${playerInfo?.name} W${week}: ${points}pts, VORP=${vorp.toFixed(1)}, started by roster ${starterRosterId}, transaction week was ${startWeek}`,
           );
           playerVORP += playoffWeight(week) * vorp;
         } else {
-          console.log(
+          debugLog(
             `[Drop Debug] ${playerInfo?.name} W${week}: ${points}pts, NOT STARTED (transaction week was ${startWeek})`,
           );
         }
@@ -292,7 +291,7 @@ export const computeTransactionGradesForStatsHub = async (
     // Final cost-adjusted score
     const score = rawScore - costPenalty;
 
-    console.log(
+    debugLog(
       `[FAAB Cost Debug] Transaction ${t.id}-${rosterId}: $${faabCost} (${faabPercentage.toFixed(1)}%) | Raw: ${rawScore.toFixed(1)} → Adj: ${score.toFixed(1)} | Penalty: ${costPenalty.toFixed(1)}`,
     );
 
@@ -319,10 +318,10 @@ export const computeTransactionGradesForStatsHub = async (
   // Process each completed transaction
   const validTransactions = transactions.filter(t => t.status === 'complete');
 
-  console.log(
+  debugLog(
     `[Transaction Processing] Starting to process ${validTransactions.length} completed transactions`,
   );
-  console.log(
+  debugLog(
     `[Transaction Processing] League: ${leagueName}, Weeks available: ${completedWeeks.join(', ')}`,
   );
 
@@ -340,20 +339,18 @@ export const computeTransactionGradesForStatsHub = async (
     const dropPlayers = t.drops?.flatMap(d => d.players?.map(p => p.fullName || p.id) || []) || [];
     const rosterIds = t.rosterIds || [];
 
-    console.log(
-      `[Transaction ${t.id}] Type: ${t.type}, Week: ${transactionWeek}, Date: ${createdAt}`,
-    );
-    console.log(
+    debugLog(`[Transaction ${t.id}] Type: ${t.type}, Week: ${transactionWeek}, Date: ${createdAt}`);
+    debugLog(
       `  └─ Rosters: ${rosterIds.join(', ')}, Adds: ${addPlayers.length}, Drops: ${dropPlayers.length}`,
     );
-    if (addPlayers.length > 0) console.log(`  └─ Added: ${addPlayers.join(', ')}`);
-    if (dropPlayers.length > 0) console.log(`  └─ Dropped: ${dropPlayers.join(', ')}`);
-    console.log(`  └─ FAAB: $${faabCost}`);
+    if (addPlayers.length > 0) debugLog(`  └─ Added: ${addPlayers.join(', ')}`);
+    if (dropPlayers.length > 0) debugLog(`  └─ Dropped: ${dropPlayers.join(', ')}`);
+    debugLog(`  └─ FAAB: $${faabCost}`);
 
     // Start counting from Week 1 for preseason transactions, otherwise from transaction week
     const startWeek = Math.max(transactionWeek, 1);
 
-    console.log(
+    debugLog(
       `[Transaction Debug] ID ${t.id}: Date ${createdAt}, Week ${transactionWeek}, Start Week ${startWeek}`,
     );
 
@@ -365,8 +362,8 @@ export const computeTransactionGradesForStatsHub = async (
         ...(t.drops?.map(d => d.rosterId) || []),
       ]);
 
-      console.log(`[Trade Split] Transaction ${t.id}: ${uniqueRosterIds.size} owners involved`);
-      console.log(`[Trade Split] Unique roster IDs:`, Array.from(uniqueRosterIds));
+      debugLog(`[Trade Split] Transaction ${t.id}: ${uniqueRosterIds.size} owners involved`);
+      debugLog(`[Trade Split] Unique roster IDs:`, Array.from(uniqueRosterIds));
 
       // Create separate transaction for each owner
       for (const rosterId of uniqueRosterIds) {

@@ -11,6 +11,7 @@
 
 import { HumanMessage } from '@langchain/core/messages';
 import { createGeminiClient } from './gemini-client';
+import { debugLog } from '@/lib/debug-log';
 import {
   calculateTopPositionPerformersEnhanced,
   checkAllHistoricalRecordsTool,
@@ -75,7 +76,7 @@ const generateNarrative = async (prompt: string): Promise<string> => {
  * Generate League Overview narrative
  */
 const generateLeagueOverview = async (week: number): Promise<string> => {
-  console.log('📊 Generating league overview...');
+  debugLog('📊 Generating league overview...');
 
   const data = await fetchLeagueOverviewTool.execute({ week });
 
@@ -103,7 +104,7 @@ ${LEAGUE_OVERVIEW_PROMPT}`;
  * Generate Hall of Fame narrative
  */
 const generateHallOfFame = async (week: number): Promise<string> => {
-  console.log('🏆 Generating Hall of Fame...');
+  debugLog('🏆 Generating Hall of Fame...');
 
   const [records, topPerformers] = await Promise.all([
     checkAllHistoricalRecordsTool.execute({ week }),
@@ -222,7 +223,7 @@ ${HALL_OF_FAME_PROMPT}`;
  * Generate Hall of Shame narrative
  */
 const generateHallOfShame = async (week: number): Promise<string> => {
-  console.log('💀 Generating Hall of Shame...');
+  debugLog('💀 Generating Hall of Shame...');
 
   // Import the comprehensive Hall of Shame tool
   const { fetchHallOfShameTool } = await import('./tools/hall-of-shame');
@@ -263,7 +264,7 @@ ${HALL_OF_SHAME_PROMPT}`;
  * Generate Power Rankings narrative
  */
 const generatePowerRankings = async (week: number): Promise<string> => {
-  console.log('📊 Generating power rankings...');
+  debugLog('📊 Generating power rankings...');
 
   const data = await fetchPowerRankingsTool.execute({ currentWeek: week });
 
@@ -334,7 +335,7 @@ ${POWER_RANKINGS_PROMPT}
  * Generate Standings narrative
  */
 const generateStandings = async (week: number): Promise<string> => {
-  console.log('📋 Generating standings...');
+  debugLog('📋 Generating standings...');
 
   const data = await fetchStandingsTool.execute({ week });
 
@@ -380,7 +381,7 @@ ${STANDINGS_PROMPT}`;
 const generateMatchupNarratives = async (
   week: number,
 ): Promise<WeeklyRecapReport['matchupNarratives']> => {
-  console.log('🎬 Generating matchup narratives...');
+  debugLog('🎬 Generating matchup narratives...');
 
   const data = await fetchMatchupDataTool.execute({ week });
   const narratives: WeeklyRecapReport['matchupNarratives'] = [];
@@ -476,7 +477,7 @@ const generateClosing = async (
     standings: string;
   },
 ): Promise<string> => {
-  console.log('📝 Generating closing commentary...');
+  debugLog('📝 Generating closing commentary...');
 
   const context = `
 Week ${week} Recap Sections Summary:
@@ -504,7 +505,7 @@ export const generateWeeklyRecap = async (
   week: number,
   season = 2025,
 ): Promise<WeeklyRecapReport> => {
-  console.log(`\n🏈 Generating Weekly Recap - Week ${week}, ${season} Season\n`);
+  debugLog(`\n🏈 Generating Weekly Recap - Week ${week}, ${season} Season\n`);
 
   const errors: string[] = [];
   const startTime = Date.now();
@@ -551,7 +552,7 @@ export const generateWeeklyRecap = async (
     });
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log(`\n✅ Report generated in ${duration}s\n`);
+    debugLog(`\n✅ Report generated in ${duration}s\n`);
 
     return {
       week,

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { debugLog } from '@/lib/debug-log';
 
 export const GET = async (request: NextRequest) => {
   try {
-    console.log('🏈 [NFL STATE API] Fetching current NFL state from Sleeper...');
+    debugLog('🏈 [NFL STATE API] Fetching current NFL state from Sleeper...');
 
     const response = await fetch('https://api.sleeper.app/v1/state/nfl', {
       headers: {
@@ -16,7 +17,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     const nflState = await response.json();
-    console.log('✅ [NFL STATE API] Successfully fetched NFL state:', nflState);
+    debugLog('✅ [NFL STATE API] Successfully fetched NFL state:', nflState);
 
     return NextResponse.json(nflState, {
       headers: {
@@ -48,7 +49,7 @@ export const GET = async (request: NextRequest) => {
       season_has_scores: true,
     };
 
-    console.log('🔄 [NFL STATE API] Using fallback state:', fallbackState);
+    debugLog('🔄 [NFL STATE API] Using fallback state:', fallbackState);
 
     return NextResponse.json(fallbackState, {
       headers: {
