@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, id: record.id });
   } catch (e) {
     if (e instanceof z.ZodError) {
-      return NextResponse.json({ ok: false, error: e.errors }, { status: 400 });
+      return NextResponse.json({ ok: false, error: e.issues }, { status: 400 });
     }
     console.error('[proposals POST]', e);
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 });
