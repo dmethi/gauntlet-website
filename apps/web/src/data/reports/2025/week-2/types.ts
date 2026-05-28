@@ -18,6 +18,15 @@ export interface GameStory {
   gameProgress: number;
 }
 
+export interface MatchupSeriesPoint {
+  timestamp: string;
+  winProbA: number;
+  winProbB: number;
+  gameProgress: number;
+  team1Score: number;
+  team2Score: number;
+}
+
 export interface Matchup {
   leagueId: string;
   matchupId: number;
@@ -31,7 +40,8 @@ export interface Matchup {
   combinedPoints: number;
   boxscoreA: BoxscorePlayer[];
   boxscoreB: BoxscorePlayer[];
-  gameStory: GameStory[];
+  gameStory?: GameStory[];
+  series?: MatchupSeriesPoint[];
   excitementMetrics: ExcitementMetrics;
 }
 
