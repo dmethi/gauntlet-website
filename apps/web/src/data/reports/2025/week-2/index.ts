@@ -1,9 +1,11 @@
 import reportDataJson from '../../../../../data/report-week2.json';
 import type { LeagueData, WeeklyReportData } from './types';
 
-const reportData = reportDataJson as WeeklyReportData & {
+type RawWeeklyReportData = Omit<WeeklyReportData, 'upcomingMatchups'> & {
   upcoming: WeeklyReportData['upcomingMatchups'];
 };
+
+const reportData = reportDataJson as RawWeeklyReportData;
 
 const [afcData, nfcData] = reportData.leagues as [LeagueData, LeagueData];
 
