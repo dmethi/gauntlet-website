@@ -5,9 +5,15 @@ import { useState } from 'react';
 import { SidebarTeam } from '@gauntlet/types';
 import { MainContent } from '@/components/main-content';
 import { useQuery } from '@tanstack/react-query';
+import { usePathname } from 'next/navigation';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  if (pathname.startsWith('/year-in-review')) {
+    return <>{children}</>;
+  }
 
   const {
     data: teams,

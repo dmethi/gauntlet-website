@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postinstall": "cd ../server && npx prisma generate --schema=prisma/schema-historical.prisma",
+    "postinstall": "cd ../server && npx prisma generate --schema=prisma/schema-historical.prisma && cd ../web && npx prisma generate --schema=prisma/schema.prisma",
     "start": "next start",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
@@ -91,7 +91,8 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "@prisma/client": "^5.17.0"
   },
   "devDependencies": {
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.17.0",
