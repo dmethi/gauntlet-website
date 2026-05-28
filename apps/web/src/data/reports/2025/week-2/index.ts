@@ -1,17 +1,23 @@
-import { afcData } from './afc';
-import { nfcData } from './nfc';
-import {
+import reportDataJson from '../../../../../data/report-week2.json';
+import type { LeagueData, WeeklyReportData } from './types';
+
+const reportData = reportDataJson as WeeklyReportData & {
+  upcoming: WeeklyReportData['upcomingMatchups'];
+};
+
+const [afcData, nfcData] = reportData.leagues as [LeagueData, LeagueData];
+
+const {
   season,
   week,
   lastUpdated,
   dataSource,
   powerRankings,
   standings,
-  upcomingMatchups,
-} from './meta';
-import type { WeeklyReportData } from './types';
+  upcoming: upcomingMatchups,
+} = reportData;
 
-const reportData: WeeklyReportData = {
+export default {
   season,
   week,
   lastUpdated,
@@ -20,9 +26,8 @@ const reportData: WeeklyReportData = {
   powerRankings,
   standings,
   upcomingMatchups,
-};
+} satisfies WeeklyReportData;
 
-export default reportData;
 export {
   afcData,
   nfcData,
@@ -34,4 +39,5 @@ export {
   standings,
   upcomingMatchups,
 };
+
 export type { WeeklyReportData } from './types';
