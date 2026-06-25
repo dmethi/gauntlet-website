@@ -17,12 +17,14 @@ When making changes, follow the principles below.
 
 ### 2. Minimize Dependencies
 
-- Prefer the standard library over third-party packages.
+- Prefer in this order: **stdlib → proven FOSS → custom implementation**. Only
+  write custom code when no suitable existing solution exists.
 - Prefer small, focused libraries over large frameworks.
 - Each new dependency must be justified.
 - Before adding a dependency:
   - Is this already solved in the codebase?
-  - Can we implement a minimal version ourselves?
+  - Is there a proven FOSS package for this? Only if not — can we implement a
+    minimal version?
   - Does this introduce long-term maintenance risk?
 
 ### 3. Domain-First Design (DDD-Lite)
@@ -51,9 +53,9 @@ Before implementing anything:
 
 - Search for similar functionality in the codebase.
 - Match existing conventions.
-- **Search `docs/solutions/` and read
-  `docs/solutions/patterns/critical-patterns.md` when relevant; apply learnings
-  before coding.**
+- **Read the repo's current truth before coding: module cards
+  (`docs/modules/*.md`) for invariants and vocabulary, and `docs/solutions/`
+  patterns where present. Apply prior learnings.**
 - Ask: "How is this already solved here?"
 - Consistency is more important than theoretical correctness.
 
@@ -61,17 +63,22 @@ Before implementing anything:
 
 - Prefer fewer dependencies over more.
 - Prefer simple solutions over clever ones.
-- Prefer editing existing code over adding new files.
+- Prefer editing existing code over adding new files. Only create a new file
+  when the existing module's complexity genuinely warrants extraction or the
+  domain boundary is structurally distinct.
 - Prefer improving existing modules over adding new ones when the change fits.
 - If adding significant complexity, pause and justify it.
 
-### 6. Vertical Slice Decomposition
+### 6. Build Wide, in Vertical Slices
 
-Decompose work into **vertical slices**, not horizontal layers.
+Default to **diffusion**: build wide across related surfaces in one pass, not
+deep planning of a single layer. Implementation illuminates design — don't
+assume plan-then-build sequencing. When not blocked on safety, compliance, or
+data integrity, build first and decide second.
 
-A vertical slice delivers one complete feature or capability end-to-end: schema,
-domain logic, API, tests. It crosses technical layers but stays within one
-feature boundary.
+Cut **vertically, not horizontally**: a change should deliver a capability
+end-to-end (schema, domain logic, API, tests) rather than one technical layer
+smeared across many features.
 
 Prefer:
 
@@ -82,19 +89,15 @@ Over:
 - "Add user schema" → "Add auth service" → "Add auth controller" → "Add auth
   tests"
 
-Why:
-
-- Maintains reasoning coherence for agents working on the task.
-- Reduces coordination overhead between issues.
-- Produces working, testable features at each step.
-- Eliminates dependency management between atomic tasks.
-
 Guardrails:
 
-- Each slice should be reviewable (target <1000 LOC of actual changes).
-- If a slice exceeds this, split by **feature boundary**, not technical layer.
-- Non-goals must be explicit to prevent scope creep.
-- One PR = one vertical slice.
+- One coherent change set per session — it may span multiple modules, but stays
+  a single reasoning thread.
+- Keep it reviewable; when it grows large, split by **feature boundary**, not
+  technical layer.
+- Make non-goals explicit to prevent scope creep.
+- **Stop diffusion and plan first** for safety-critical paths, privacy/PII
+  shifts, new infra (queue, cache, dedicated API), or LLM-guardrail changes.
 - **If the change affects documented architecture, topology, or system behavior,
   update the relevant docs/diagrams in the same PR.**
 
@@ -112,27 +115,6 @@ Before committing:
 If any of the following occur: ambiguous requirements, multiple valid
 approaches, new dependencies, architecture changes → present options and ask for
 direction.
-
-### 7.5 Domain Map Protocol
-
-Before touching any code, check for `docs/domain/`:
-
-1. **If `docs/domain/current-slice.md` exists** — read it first. It defines what
-   you're building, acceptance criteria, constraints, and non-goals. Do not
-   implement anything outside it.
-2. **Read the context files it references** (`docs/domain/<context>.md`) — these
-   define bounded context boundaries and invariants you must not violate.
-3. **Read `docs/domain/system.md`** — the full system map. Understand how your
-   slice connects to the rest of the system.
-
-If `docs/domain/` does not exist, check with the human before starting. A
-missing domain map on an active slice is a signal that planning is incomplete.
-
-**Domain map files are owned by the planning session, not the execution agent.**
-Do not rewrite `current-slice.md` during implementation — only append
-observations or blockers.
-
-Templates live in `shared-agent-config/templates/domain/`.
 
 ## Additional Principles for Agent-Friendly Repos
 
@@ -173,7 +155,16 @@ Do not abstract until duplication exists, the pattern is stable, and there is a
 second real use case. Rule: First make it work. Then make it clear. Then
 abstract.
 
-### 15. Stable Interfaces, Flexible Internals
+### 15. Idempotent Mutations
+
+Operations that mutate state must be safe to run more than once. Assume
+execution multiplicity — agents retry, CI reruns, deploys repeat.
+
+- Before mutating: check existing state. Do not assume a clean slate.
+- A second run must produce the same outcome as the first.
+- Migrations, setup scripts, and seed operations must be idempotent by default.
+
+### 16. Stable Interfaces, Flexible Internals
 
 - Public APIs should change rarely; internal implementations can evolve freely.
 - When changing an interface: ensure all callers are updated; avoid breaking
@@ -190,20 +181,28 @@ When assigned a task:
 3. **Implement** — Make the smallest correct change; follow existing patterns;
    keep functions small and focused.
 4. **Validate** — Run build and tests; fix failures at the root.
-5. **Submit** — PR must deliver one vertical slice, include a clear description
-   (WHY not WHAT), and pass CI.
+5. **Submit** — PR delivers one coherent change set, includes a clear
+   description (WHY not WHAT), and passes CI.
 
 ## Dependency Policy
 
 Before adding a dependency, answer: What problem does this solve? Is there an
-existing solution in the repo? Can we implement a minimal version ourselves?
-What is the maintenance risk? If not justified → do not add it.
+existing solution in the repo? Is there a proven FOSS package for this? Only if
+not — can we implement a minimal version? What is the maintenance risk? If not
+justified → do not add it.
 
 ## Testing Philosophy
 
+- Enforce an invariant the **cheapest way that catches a violation**: type →
+  lint → test. A runtime test is the last resort, not the default; a type or
+  strict lint rule guards every edit, not just covered paths.
 - Test behavior, not implementation details.
 - Prefer integration tests over excessive unit mocks.
 - Each bug fix should include a test.
+- No one-off test scripts. Any utility that verifies behavior belongs in the
+  test suite and must be reusable, not a throwaway file.
+- See `shared-agent-config/skills/testing.md` for the full method (seams,
+  invariants, the enforcement ladder).
 
 ## Definition of Done
 
