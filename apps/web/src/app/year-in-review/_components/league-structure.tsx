@@ -9,8 +9,11 @@ interface TeamSlot {
   pts: number;
   isOpen?: boolean;
   isConfirmed?: boolean;
+  isDeclined?: boolean;
+  isPromoted?: boolean;
   isWaitlist?: boolean;
   waitlistPosition?: number;
+  slotLabel?: string;
   divDest?: 1 | 2;
 }
 
@@ -259,24 +262,36 @@ function RosterRow({ team }: { team: TeamSlot }) {
     );
   }
   if (team.isWaitlist) {
+    const label = team.slotLabel ?? 'Waitlist';
     return (
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/5 last:border-0 bg-[#d4af37]/8">
         <span className="text-[10px] truncate text-[#f3d37a]">{team.name}</span>
         <span className="text-[9px] font-bold uppercase tracking-wide text-[#d4af37]/65">
-          Waitlist {team.waitlistPosition}
+          {label === 'New Team'
+            ? `New Team · WL ${team.waitlistPosition}`
+            : `${label} ${team.waitlistPosition}`}
         </span>
       </div>
     );
   }
 
-  const bg = team.isConfirmed ? 'bg-[#ef4444]/10' : '';
-  const color = team.isConfirmed ? 'text-[#f87171]' : 'text-[#d4af37]/65';
+  const bg = team.isPromoted ? 'bg-[#22c55e]/10' : team.isConfirmed ? 'bg-[#ef4444]/10' : '';
+  const color = team.isPromoted
+    ? 'text-[#86efac]'
+    : team.isConfirmed
+      ? 'text-[#f87171]'
+      : 'text-[#d4af37]/65';
   return (
     <div
       className={`flex items-center justify-between px-3 py-1.5 border-b border-white/5 last:border-0 ${bg}`}
     >
       <span className={`text-[10px] truncate ${color}`}>{team.name}</span>
-      {team.isConfirmed && (
+      {team.isPromoted && (
+        <span className="text-[9px] font-bold uppercase tracking-wide text-[#86efac]/80">
+          Promoted
+        </span>
+      )}
+      {!team.isPromoted && team.isConfirmed && (
         <span className="text-[9px] font-bold uppercase tracking-wide text-[#f87171]/80">
           Confirmed
         </span>

@@ -32,9 +32,12 @@ export interface TeamSlot {
   losses: number;
   pts: number;
   isConfirmed?: boolean;
+  isDeclined?: boolean;
   isOpen?: boolean;
+  isPromoted?: boolean;
   isWaitlist?: boolean;
   waitlistPosition?: number;
+  slotLabel?: string;
   /** Year 1 only — destination division */
   divDest?: 1 | 2;
 }
@@ -78,7 +81,43 @@ function normalizeTeamName(teamName: string) {
   return teamName.trim().toLowerCase();
 }
 
-function withWaitlistSlots(waitlistNames: string[], startIndex: number, count: number): TeamSlot[] {
+const DECLINED_TEAM_NAMES = new Set(
+  [
+    'achak',
+    'achak7',
+    'akhil c',
+    'arnav',
+    'arnav mehta',
+    'arnavmehta',
+    'dont go chasing saquon',
+    'kyle/darshan',
+    'darshan/kyle',
+    'darshan and kyle',
+    'dr patel parikh md mba',
+    'dparikh3',
+    'arpit/yash',
+    'arpit & yash',
+    'nielgetscarried',
+    'adam',
+    'nacua matata',
+    'lazy9669',
+  ].map(normalizeTeamName),
+);
+
+const isDeclinedTeam = (teamName: string) => {
+  return DECLINED_TEAM_NAMES.has(normalizeTeamName(teamName));
+};
+
+const bySeasonFinish = (a: TeamSlot, b: TeamSlot) => {
+  return b.wins - a.wins || b.pts - a.pts;
+};
+
+const withWaitlistSlots = (
+  waitlistNames: string[],
+  startIndex: number,
+  count: number,
+  slotLabel = 'Waitlist',
+): TeamSlot[] => {
   return Array.from({ length: count }, (_, index) => {
     const position = startIndex + index;
     const waitlistName = waitlistNames[position];
@@ -91,6 +130,7 @@ function withWaitlistSlots(waitlistNames: string[], startIndex: number, count: n
         pts: 0,
         isWaitlist: true,
         waitlistPosition: position + 1,
+        slotLabel,
       };
     }
 
@@ -100,9 +140,10 @@ function withWaitlistSlots(waitlistNames: string[], startIndex: number, count: n
       losses: 0,
       pts: 0,
       isOpen: true,
+      slotLabel,
     };
   });
-}
+};
 
 export async function GET() {
   try {
@@ -138,9 +179,10 @@ export async function GET() {
               losses: roster.settings.losses,
               pts: pts(roster),
               isConfirmed: confirmedTeams.has(normalizeTeamName(teamName)),
+              isDeclined: isDeclinedTeam(teamName),
             };
           })
-          .sort((a, b) => b.wins - a.wins || b.pts - a.pts);
+          .sort(bySeasonFinish);
 
         teams.forEach((team, index) => {
           team.divDest = index < PROMO_CUTOFF ? 1 : 2;
@@ -150,33 +192,52 @@ export async function GET() {
       }),
     );
 
-    const divITeams: TeamSlot[] = [
+    const yearOneDivI = [
       ...leagueData[0].teams.slice(0, PROMO_CUTOFF),
       ...leagueData[1].teams.slice(0, PROMO_CUTOFF),
-    ]
-      .sort((a, b) => b.wins - a.wins || b.pts - a.pts)
-      .map(team => ({
-        name: team.name,
-        wins: team.wins,
-        losses: team.losses,
-        pts: team.pts,
-        isConfirmed: team.isConfirmed,
-      }));
-
-    const divIITeams: TeamSlot[] = [
+    ];
+    const yearOneDivII = [
       ...leagueData[0].teams.slice(PROMO_CUTOFF),
       ...leagueData[1].teams.slice(PROMO_CUTOFF),
-    ]
-      .sort((a, b) => b.wins - a.wins || b.pts - a.pts)
+    ];
+
+    const returningDivI = yearOneDivI.filter(team => !team.isDeclined);
+    const returningDivII = yearOneDivII.filter(team => !team.isDeclined).sort(bySeasonFinish);
+    const divIVacancies = Math.max(0, 12 - returningDivI.length);
+    const promotedTeams = returningDivII.slice(0, divIVacancies);
+    const promotedNames = new Set(promotedTeams.map(team => normalizeTeamName(team.name)));
+
+    const divITeams: TeamSlot[] = [...returningDivI, ...promotedTeams]
+      .sort(bySeasonFinish)
       .map(team => ({
         name: team.name,
         wins: team.wins,
         losses: team.losses,
         pts: team.pts,
         isConfirmed: team.isConfirmed,
+        isPromoted: team.isPromoted,
+        slotLabel: team.slotLabel,
       }));
 
+    const divIIReturners = returningDivII.filter(
+      team => !promotedNames.has(normalizeTeamName(team.name)),
+    );
     const waitlistNames = waitlistEntries.map(entry => entry.name);
+    const divisionIIWaitlistSlots = withWaitlistSlots(
+      waitlistNames,
+      0,
+      Math.max(0, 12 - divIIReturners.length),
+      'New Team',
+    );
+
+    const divIIReturnerSlots: TeamSlot[] = divIIReturners.map(team => ({
+      name: team.name,
+      wins: team.wins,
+      losses: team.losses,
+      pts: team.pts,
+      isConfirmed: team.isConfirmed,
+    }));
+    const divIITeams: TeamSlot[] = [...divIIReturnerSlots, ...divisionIIWaitlistSlots];
 
     return NextResponse.json({
       ok: true,
@@ -190,11 +251,11 @@ export async function GET() {
           divisionII: { leagueName: 'Division II', teams: divIITeams },
           divisionIIIA: {
             leagueName: 'Division III A',
-            teams: withWaitlistSlots(waitlistNames, 0, 12),
+            teams: withWaitlistSlots(waitlistNames, divisionIIWaitlistSlots.length, 12),
           },
           divisionIIIB: {
             leagueName: 'Division III B',
-            teams: withWaitlistSlots(waitlistNames, 12, 12),
+            teams: withWaitlistSlots(waitlistNames, divisionIIWaitlistSlots.length + 12, 12),
           },
           zones: {
             divI: { relegation: 6 },
