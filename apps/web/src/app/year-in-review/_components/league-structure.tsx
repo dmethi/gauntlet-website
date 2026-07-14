@@ -264,12 +264,26 @@ function RosterRow({ team }: { team: TeamSlot }) {
   if (team.isWaitlist) {
     const label = team.slotLabel ?? 'Waitlist';
     return (
-      <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/5 last:border-0 bg-[#d4af37]/8">
-        <span className="text-[10px] truncate text-[#f3d37a]">{team.name}</span>
-        <span className="text-[9px] font-bold uppercase tracking-wide text-[#d4af37]/65">
-          {label === 'New Team'
-            ? `New Team · WL ${team.waitlistPosition}`
-            : `${label} ${team.waitlistPosition}`}
+      <div
+        className={`flex items-center justify-between px-3 py-1.5 border-b border-white/5 last:border-0 ${
+          team.isConfirmed ? 'bg-[#ef4444]/10' : 'bg-[#d4af37]/8'
+        }`}
+      >
+        <span
+          className={`text-[10px] truncate ${team.isConfirmed ? 'text-[#f87171]' : 'text-[#f3d37a]'}`}
+        >
+          {team.name}
+        </span>
+        <span
+          className={`text-[9px] font-bold uppercase tracking-wide ${
+            team.isConfirmed ? 'text-[#f87171]/80' : 'text-[#d4af37]/65'
+          }`}
+        >
+          {team.isConfirmed
+            ? 'Confirmed'
+            : label === 'New Team'
+              ? `New Team · WL ${team.waitlistPosition}`
+              : `${label} ${team.waitlistPosition}`}
         </span>
       </div>
     );

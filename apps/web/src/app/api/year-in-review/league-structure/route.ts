@@ -116,6 +116,7 @@ const withWaitlistSlots = (
   waitlistNames: string[],
   startIndex: number,
   count: number,
+  confirmedTeams: Set<string>,
   slotLabel = 'Waitlist',
 ): TeamSlot[] => {
   return Array.from({ length: count }, (_, index) => {
@@ -129,6 +130,7 @@ const withWaitlistSlots = (
         losses: 0,
         pts: 0,
         isWaitlist: true,
+        isConfirmed: confirmedTeams.has(normalizeTeamName(waitlistName)),
         waitlistPosition: position + 1,
         slotLabel,
       };
@@ -149,7 +151,7 @@ export async function GET() {
   try {
     const [confirmedEntries, waitlistEntries] = await Promise.all([
       formDb.returnConfirmation.findMany({
-        select: { team: true },
+        select: { name: true, team: true },
       }),
       formDb.waitlistEntry.findMany({
         orderBy: { createdAt: 'asc' },
@@ -158,7 +160,10 @@ export async function GET() {
     ]);
 
     const confirmedTeams = new Set(
-      confirmedEntries.flatMap(entry => (entry.team ? [normalizeTeamName(entry.team)] : [])),
+      confirmedEntries.flatMap(entry => [
+        normalizeTeamName(entry.name),
+        ...(entry.team ? [normalizeTeamName(entry.team)] : []),
+      ]),
     );
 
     const leagueData = await Promise.all(
@@ -227,6 +232,7 @@ export async function GET() {
       waitlistNames,
       0,
       Math.max(0, 12 - divIIReturners.length),
+      confirmedTeams,
       'New Team',
     );
 
@@ -251,11 +257,21 @@ export async function GET() {
           divisionII: { leagueName: 'Division II', teams: divIITeams },
           divisionIIIA: {
             leagueName: 'Division III A',
-            teams: withWaitlistSlots(waitlistNames, divisionIIWaitlistSlots.length, 12),
+            teams: withWaitlistSlots(
+              waitlistNames,
+              divisionIIWaitlistSlots.length,
+              12,
+              confirmedTeams,
+            ),
           },
           divisionIIIB: {
             leagueName: 'Division III B',
-            teams: withWaitlistSlots(waitlistNames, divisionIIWaitlistSlots.length + 12, 12),
+            teams: withWaitlistSlots(
+              waitlistNames,
+              divisionIIWaitlistSlots.length + 12,
+              12,
+              confirmedTeams,
+            ),
           },
           zones: {
             divI: { relegation: 6 },
