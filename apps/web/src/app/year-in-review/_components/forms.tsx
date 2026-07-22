@@ -179,7 +179,7 @@ export function ReturnForm() {
   );
 }
 
-export function WaitlistForm() {
+export function RegistrationForm() {
   const [form, setForm] = useState({ name: '', email: '', referredBy: '', notes: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
@@ -208,9 +208,9 @@ export function WaitlistForm() {
     return (
       <div className="text-center py-8">
         <div className="text-4xl mb-3">🏆</div>
-        <p className="text-[#d4af37] font-semibold text-lg">You&apos;re on the list.</p>
+        <p className="text-[#d4af37] font-semibold text-lg">Registration received.</p>
         <p className="text-white/60 text-sm mt-1">
-          We&apos;ll reach out when spots open for Year Two.
+          We&apos;ll follow up with League 3 details for Year Two.
         </p>
       </div>
     );
@@ -262,7 +262,7 @@ export function WaitlistForm() {
         disabled={status === 'loading'}
         className="w-full bg-[#d4af37] hover:bg-[#ebb748] disabled:opacity-50 text-black font-semibold py-3 rounded transition-colors uppercase tracking-widest text-sm"
       >
-        {status === 'loading' ? 'Submitting...' : 'Join the Waitlist'}
+        {status === 'loading' ? 'Submitting...' : 'Register for League 3'}
       </button>
     </form>
   );

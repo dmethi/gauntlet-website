@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 const SLEEPER = 'https://api.sleeper.app/v1';
 const PROMO_CUTOFF = 6; // top 6 per league -> Division I
+const BOTTOM_LEAGUE_PROMO_CUTOFF = 6;
 
 async function s<T>(path: string): Promise<T> {
   const res = await fetch(`${SLEEPER}/${path}`, { next: { revalidate: 3600 } });
@@ -35,8 +36,8 @@ export interface TeamSlot {
   isDeclined?: boolean;
   isOpen?: boolean;
   isPromoted?: boolean;
-  isWaitlist?: boolean;
-  waitlistPosition?: number;
+  isRegistration?: boolean;
+  registrationPosition?: number;
   slotLabel?: string;
   /** Year 1 only — destination division */
   divDest?: 1 | 2;
@@ -52,8 +53,7 @@ export interface StructureData {
   year2: {
     divisionI: LeagueBox;
     divisionII: LeagueBox;
-    divisionIIIA: LeagueBox;
-    divisionIIIB: LeagueBox;
+    divisionIII: LeagueBox;
     zones: {
       divI: { relegation: number };
       divII: { promotion: number; relegation: number };
@@ -101,6 +101,7 @@ const DECLINED_TEAM_NAMES = new Set(
     'adam',
     'nacua matata',
     'lazy9669',
+    'dhruv modi',
   ].map(normalizeTeamName),
 );
 
@@ -108,36 +109,54 @@ const isDeclinedTeam = (teamName: string) => {
   return DECLINED_TEAM_NAMES.has(normalizeTeamName(teamName));
 };
 
+const FALLBACK_PREREGISTRATION_NAMES = [
+  'Zach Hirsh',
+  'Sean Chokshi',
+  'Arsh Kumar',
+  'Dhruv Modi',
+  'Rishi',
+  'Akhil Madurai',
+  'Sunny Patel',
+  'Steven Moran',
+  'Ashwin Dandapani',
+  'Lance Jeffers',
+  'Sharaf',
+  'Adhitya Vadivel',
+  'Pauras Swami',
+];
+
+const TEMPORARILY_REMOVED_REGISTRATION_NAMES = new Set(['dhruv modi'].map(normalizeTeamName));
+
 const bySeasonFinish = (a: TeamSlot, b: TeamSlot) => {
   return b.wins - a.wins || b.pts - a.pts;
 };
 
-const withWaitlistSlots = (
-  waitlistNames: string[],
+const withRegistrationSlots = (
+  registrationNames: string[],
   startIndex: number,
   count: number,
   confirmedTeams: Set<string>,
-  slotLabel = 'Waitlist',
+  slotLabel = 'Preregistered',
 ): TeamSlot[] => {
   return Array.from({ length: count }, (_, index) => {
     const position = startIndex + index;
-    const waitlistName = waitlistNames[position];
+    const registrationName = registrationNames[position];
 
-    if (waitlistName) {
+    if (registrationName) {
       return {
-        name: waitlistName,
+        name: registrationName,
         wins: 0,
         losses: 0,
         pts: 0,
-        isWaitlist: true,
-        isConfirmed: confirmedTeams.has(normalizeTeamName(waitlistName)),
-        waitlistPosition: position + 1,
+        isRegistration: true,
+        isConfirmed: confirmedTeams.has(normalizeTeamName(registrationName)),
+        registrationPosition: position + 1,
         slotLabel,
       };
     }
 
     return {
-      name: `Open Slot ${position + 1}`,
+      name: 'Open',
       wins: 0,
       losses: 0,
       pts: 0,
@@ -149,14 +168,24 @@ const withWaitlistSlots = (
 
 export async function GET() {
   try {
-    const [confirmedEntries, waitlistEntries] = await Promise.all([
-      formDb.returnConfirmation.findMany({
-        select: { name: true, team: true },
-      }),
-      formDb.waitlistEntry.findMany({
-        orderBy: { createdAt: 'asc' },
-        select: { name: true },
-      }),
+    const [confirmedEntries, registrationEntries] = await Promise.all([
+      formDb.returnConfirmation
+        .findMany({
+          select: { name: true, team: true },
+        })
+        .catch(error => {
+          console.warn('[league-structure] return confirmations unavailable', error);
+          return [];
+        }),
+      formDb.waitlistEntry
+        .findMany({
+          orderBy: { createdAt: 'asc' },
+          select: { name: true },
+        })
+        .catch(error => {
+          console.warn('[league-structure] registrations unavailable', error);
+          return FALLBACK_PREREGISTRATION_NAMES.map(name => ({ name }));
+        }),
     ]);
 
     const confirmedTeams = new Set(
@@ -220,20 +249,22 @@ export async function GET() {
         losses: team.losses,
         pts: team.pts,
         isConfirmed: team.isConfirmed,
-        isPromoted: team.isPromoted,
+        isPromoted: promotedNames.has(normalizeTeamName(team.name)),
         slotLabel: team.slotLabel,
       }));
 
     const divIIReturners = returningDivII.filter(
       team => !promotedNames.has(normalizeTeamName(team.name)),
     );
-    const waitlistNames = waitlistEntries.map(entry => entry.name);
-    const divisionIIWaitlistSlots = withWaitlistSlots(
-      waitlistNames,
+    const registrationNames = registrationEntries
+      .map(entry => entry.name)
+      .filter(name => !TEMPORARILY_REMOVED_REGISTRATION_NAMES.has(normalizeTeamName(name)));
+    const divisionIIRegistrationSlots = withRegistrationSlots(
+      registrationNames,
       0,
       Math.max(0, 12 - divIIReturners.length),
       confirmedTeams,
-      'New Team',
+      'Preregistered',
     );
 
     const divIIReturnerSlots: TeamSlot[] = divIIReturners.map(team => ({
@@ -243,7 +274,7 @@ export async function GET() {
       pts: team.pts,
       isConfirmed: team.isConfirmed,
     }));
-    const divIITeams: TeamSlot[] = [...divIIReturnerSlots, ...divisionIIWaitlistSlots];
+    const divIITeams: TeamSlot[] = [...divIIReturnerSlots, ...divisionIIRegistrationSlots];
 
     return NextResponse.json({
       ok: true,
@@ -255,20 +286,11 @@ export async function GET() {
         year2: {
           divisionI: { leagueName: 'Division I', teams: divITeams },
           divisionII: { leagueName: 'Division II', teams: divIITeams },
-          divisionIIIA: {
-            leagueName: 'Division III A',
-            teams: withWaitlistSlots(
-              waitlistNames,
-              divisionIIWaitlistSlots.length,
-              12,
-              confirmedTeams,
-            ),
-          },
-          divisionIIIB: {
-            leagueName: 'Division III B',
-            teams: withWaitlistSlots(
-              waitlistNames,
-              divisionIIWaitlistSlots.length + 12,
+          divisionIII: {
+            leagueName: 'Division III',
+            teams: withRegistrationSlots(
+              registrationNames,
+              divisionIIRegistrationSlots.length,
               12,
               confirmedTeams,
             ),
@@ -276,7 +298,7 @@ export async function GET() {
           zones: {
             divI: { relegation: 6 },
             divII: { promotion: 6, relegation: 6 },
-            divIII: { promotion: 3 },
+            divIII: { promotion: BOTTOM_LEAGUE_PROMO_CUTOFF },
           },
         },
       } satisfies StructureData,

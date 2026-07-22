@@ -20,7 +20,7 @@ import {
 export const metadata = {
   title: '2026 Rules & Format — The Gauntlet',
   description:
-    'The Year Two format for The Gauntlet: four leagues, 48 teams, promotion and relegation, scoring, playoffs, payouts, and commissioner governance.',
+    'The Year Two format for The Gauntlet: three leagues, 36 teams, promotion and relegation, scoring, playoffs, payouts, and commissioner governance.',
 };
 
 function SectionHeading({ kicker, title, body }: { kicker: string; title: string; body?: string }) {
@@ -145,10 +145,10 @@ export default function Rules2026Page() {
                   Returning Manager
                 </Link>
                 <Link
-                  href="/year-in-review#waitlist"
+                  href="/year-in-review#registration"
                   className="inline-flex items-center justify-center gap-2 rounded border border-[#d4af37] px-7 py-4 text-sm font-semibold uppercase tracking-widest text-[#d4af37] transition-colors hover:bg-[#d4af37]/10"
                 >
-                  Join the Waitlist
+                  Register for League 3
                 </Link>
               </div>
             </div>
@@ -330,8 +330,8 @@ export default function Rules2026Page() {
         <div className="mx-auto max-w-6xl">
           <SectionHeading
             kicker="7. Payout Structure"
-            title="Where the $24,000 Goes"
-            body="League podiums still matter, but Year Two also pays for weekly performance and full-pool dominance across all 48 teams."
+            title="Where the $18,000 Goes"
+            body="League podiums still matter, but Year Two also pays for weekly performance and full-pool dominance across all 36 teams."
           />
 
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_24rem]">
@@ -446,10 +446,10 @@ export default function Rules2026Page() {
                 Confirm Your Return
               </Link>
               <Link
-                href="/year-in-review#waitlist"
+                href="/year-in-review#registration"
                 className="inline-flex items-center justify-center gap-2 rounded border border-[#d4af37] px-6 py-4 text-sm font-semibold uppercase tracking-widest text-[#d4af37] transition-colors hover:bg-[#d4af37]/10"
               >
-                Enter the Waitlist
+                Register for League 3
               </Link>
             </div>
           </div>

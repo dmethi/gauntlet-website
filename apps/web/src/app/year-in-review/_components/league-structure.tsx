@@ -11,8 +11,8 @@ interface TeamSlot {
   isConfirmed?: boolean;
   isDeclined?: boolean;
   isPromoted?: boolean;
-  isWaitlist?: boolean;
-  waitlistPosition?: number;
+  isRegistration?: boolean;
+  registrationPosition?: number;
   slotLabel?: string;
   divDest?: 1 | 2;
 }
@@ -33,8 +33,7 @@ interface StructureData {
   year2: {
     divisionI: LeagueBox;
     divisionII: LeagueBox;
-    divisionIIIA: LeagueBox;
-    divisionIIIB: LeagueBox;
+    divisionIII: LeagueBox;
     zones: Zones;
   };
 }
@@ -251,18 +250,18 @@ function RosterRow({ team }: { team: TeamSlot }) {
   if (team.isOpen) {
     return (
       <a
-        href="#waitlist"
+        href="#registration"
         className="flex items-center justify-between px-3 py-1.5 border-b border-white/5 last:border-0 bg-[#d4af37]/4 hover:bg-[#d4af37]/10 transition-colors group"
       >
-        <span className="text-[#d4af37]/40 text-[9px] italic">Open</span>
+        <span className="text-[#d4af37]/40 text-[9px] italic">{team.name}</span>
         <span className="text-[#d4af37] text-[9px] font-bold uppercase tracking-wide group-hover:translate-x-0.5 transition-transform">
-          Waitlist →
+          Register →
         </span>
       </a>
     );
   }
-  if (team.isWaitlist) {
-    const label = team.slotLabel ?? 'Waitlist';
+  if (team.isRegistration) {
+    const label = team.slotLabel ?? 'Preregistered';
     return (
       <div
         className={`flex items-center justify-between px-3 py-1.5 border-b border-white/5 last:border-0 ${
@@ -279,11 +278,7 @@ function RosterRow({ team }: { team: TeamSlot }) {
             team.isConfirmed ? 'text-[#f87171]/80' : 'text-[#d4af37]/65'
           }`}
         >
-          {team.isConfirmed
-            ? 'Confirmed'
-            : label === 'New Team'
-              ? `New Team · WL ${team.waitlistPosition}`
-              : `${label} ${team.waitlistPosition}`}
+          {team.isConfirmed ? 'Confirmed' : `${label} ${team.registrationPosition}`}
         </span>
       </div>
     );
@@ -378,6 +373,12 @@ export function LeagueStructureVisual() {
   const CUBE_W = 'w-48'; // 192px — all cubes same width
   const D3_W = 'w-40'; // 160px — D3 cubes slightly narrower
 
+  const unavailablePanel = (
+    <div className="rounded-lg border border-white/10 bg-[#0d0d0d] px-4 py-8 text-center text-xs uppercase tracking-widest text-white/35">
+      League structure unavailable
+    </div>
+  );
+
   const structurePanel = loading ? (
     <div className="flex flex-col items-center gap-2">
       <div className={`${CUBE_W} animate-pulse`}>
@@ -387,6 +388,8 @@ export function LeagueStructureVisual() {
         <Skeleton rows={12} />
       </div>
     </div>
+  ) : !data ? (
+    unavailablePanel
   ) : (
     <div className="flex flex-col items-center gap-2">
       <div className={CUBE_W}>
@@ -413,18 +416,16 @@ export function LeagueStructureVisual() {
       </div>
       <TierConnector />
       <div className="flex gap-2">
-        {['Div III A', 'Div III B'].map(name => (
-          <div key={name} className={D3_W}>
-            <StructCard
-              divLabel={name}
-              accent="border-white/15"
-              labelColor="text-white/35"
-              teams={12}
-              promoCutoff={z?.divIII.promotion ?? 3}
-              tier={3}
-            />
-          </div>
-        ))}
+        <div className={D3_W}>
+          <StructCard
+            divLabel="Division III"
+            accent="border-white/15"
+            labelColor="text-white/35"
+            teams={12}
+            promoCutoff={z?.divIII.promotion ?? 6}
+            tier={3}
+          />
+        </div>
       </div>
     </div>
   );
@@ -438,6 +439,8 @@ export function LeagueStructureVisual() {
         <Skeleton rows={12} />
       </div>
     </div>
+  ) : !data ? (
+    unavailablePanel
   ) : (
     <div className="flex flex-col items-center gap-2">
       <div className={CUBE_W}>
@@ -461,17 +464,15 @@ export function LeagueStructureVisual() {
       </div>
       <TierConnector />
       <div className="flex gap-2">
-        {[data!.year2.divisionIIIA, data!.year2.divisionIIIB].map((league, i) => (
-          <div key={i} className={D3_W}>
-            <RosterCard
-              divLabel={i === 0 ? 'Div III A' : 'Div III B'}
-              accent="border-white/15"
-              labelColor="text-white/35"
-              teams={league.teams}
-              tier={3}
-            />
-          </div>
-        ))}
+        <div className={D3_W}>
+          <RosterCard
+            divLabel="Division III"
+            accent="border-white/15"
+            labelColor="text-white/35"
+            teams={data!.year2.divisionIII.teams}
+            tier={3}
+          />
+        </div>
       </div>
     </div>
   );
@@ -526,7 +527,7 @@ export function LeagueStructureVisual() {
             Year 2 — 2026 Season
           </span>
           <div className="flex-1 h-px bg-white/10" />
-          <span className="text-white/25 text-[10px]">48 managers · 4 leagues</span>
+          <span className="text-white/25 text-[10px]">36 managers · 3 leagues</span>
         </div>
 
         {/* Mobile tab switcher — hidden on lg+ */}
@@ -581,7 +582,7 @@ export function LeagueStructureVisual() {
           </span>
           <span className="flex items-center gap-1.5">
             <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#d4af37]/25 border border-[#d4af37]/40" />
-            Waitlist
+            Preregistered
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded border border-[#d4af37]/30 inline-block" />

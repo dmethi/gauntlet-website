@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { LeagueStructureVisual } from './_components/league-structure';
 import { RULES_2026_PATH } from './_content/rules-2026';
-import { ProposalForm, ReturnForm, WaitlistForm } from './_components/forms';
+import { ProposalForm, RegistrationForm, ReturnForm } from './_components/forms';
 import { ProposalsDisplay } from './_components/proposals-display';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 import { fetchSeasonStats } from '@/lib/year-in-review/season-stats';
@@ -155,10 +155,10 @@ export default async function YearInReviewPage() {
             I&apos;m Back
           </a>
           <a
-            href="#waitlist"
+            href="#registration"
             className="text-xs font-semibold uppercase tracking-widest bg-[#d4af37] hover:bg-[#ebb748] text-black px-4 py-2 rounded transition-colors"
           >
-            Join Waitlist
+            Register
           </a>
         </div>
       </nav>
@@ -221,7 +221,7 @@ export default async function YearInReviewPage() {
             complete.
           </p>
           <p className="mt-5 text-sm uppercase tracking-[0.2em] text-white/45">
-            Year Two format is live: four leagues, 48 teams, and a $24,000 prize pool.
+            Year Two format is live: three leagues, 36 teams, and an $18,000 prize pool.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
             <a
@@ -231,10 +231,10 @@ export default async function YearInReviewPage() {
               I&apos;m Back for Year Two
             </a>
             <a
-              href="#waitlist"
+              href="#registration"
               className="w-full sm:w-auto border border-[#d4af37] hover:bg-[#d4af37]/10 text-[#d4af37] font-semibold px-8 py-4 rounded text-sm uppercase tracking-widest transition-colors"
             >
-              Join the Waitlist
+              Register for League 3
             </a>
             <Link
               href={RULES_2026_PATH}
@@ -592,9 +592,9 @@ export default async function YearInReviewPage() {
               </p>
               <div className="mt-5 grid grid-cols-2 gap-4">
                 {[
-                  ['48', 'Teams'],
-                  ['4', 'Leagues'],
-                  ['$24K', 'Prize Pool'],
+                  ['36', 'Teams'],
+                  ['3', 'Leagues'],
+                  ['$18K', 'Prize Pool'],
                   ['$500', 'Buy-In'],
                 ].map(([value, label]) => (
                   <div
@@ -639,19 +639,20 @@ export default async function YearInReviewPage() {
               <ReturnForm />
             </div>
 
-            {/* Waitlist */}
+            {/* Registration */}
             <div
-              id="waitlist"
+              id="registration"
               className="border border-[#d4af37]/30 rounded-xl p-6 sm:p-8 bg-[#d4af37]/3 scroll-mt-24"
             >
               <p className="text-[#d4af37] text-xs font-semibold uppercase tracking-widest mb-1">
                 New to The Gauntlet
               </p>
-              <h3 className="text-white text-xl font-bold mb-2">Join the Waitlist</h3>
+              <h3 className="text-white text-xl font-bold mb-2">Register for League 3</h3>
               <p className="text-white/50 text-sm mb-6">
-                Think you have what it takes? Get on the list. We&apos;ll reach out when spots open.
+                Think you have what it takes? Register for an open League 3 slot and we&apos;ll
+                follow up with next steps.
               </p>
-              <WaitlistForm />
+              <RegistrationForm />
             </div>
           </div>
         </div>

@@ -4,13 +4,13 @@ export const rules2026Meta = {
   seasonLabel: '2026 Season',
   title: 'League Overview & Foundational Contract',
   subtitle:
-    'The operating format for Year Two: four leagues, 48 managers, promotion and relegation, and a $24,000 prize pool.',
+    'The operating format for Year Two: three leagues, 36 managers, promotion and relegation, and an $18,000 prize pool.',
   banner:
     'Fees, schedule dates, and draft date are subject to change. Rule change proposal deadline: July 16, 2026.',
   highlights: [
-    { value: '48', label: 'Teams' },
-    { value: '4', label: 'Leagues' },
-    { value: '$24K', label: 'Prize Pool' },
+    { value: '36', label: 'Teams' },
+    { value: '3', label: 'Leagues' },
+    { value: '$18K', label: 'Prize Pool' },
     { value: '$500', label: 'Buy-In' },
   ],
 };
@@ -18,8 +18,7 @@ export const rules2026Meta = {
 export const rules2026Structure = [
   'League 1 (Top Tier): 12 teams',
   'League 2 (Second Tier): 12 teams',
-  'League 3 (Third Tier, Group A): 12 teams',
-  'League 4 (Third Tier, Group B): 12 teams',
+  'League 3 (Third Tier): 12 teams',
   'Teams are randomly assigned to leagues before the season, no later than one week before the draft.',
   'Future expansions are added beneath the current lowest tier so upward movement always happens one tier at a time.',
 ];
@@ -33,16 +32,11 @@ export const rules2026PromotionRows = [
   {
     league: 'League 2',
     promoted: 'Top 6 move to League 1',
-    relegated: 'Bottom 6 move to League 3 or 4',
+    relegated: 'Bottom 6 move to League 3',
   },
   {
     league: 'League 3',
-    promoted: 'Top 3 move to League 2',
-    relegated: 'Already bottom tier',
-  },
-  {
-    league: 'League 4',
-    promoted: 'Top 3 move to League 2',
+    promoted: 'Top 6 move to League 2',
     relegated: 'Already bottom tier',
   },
 ];
@@ -50,7 +44,6 @@ export const rules2026PromotionRows = [
 export const rules2026PromotionNotes = [
   'Thresholds are determined by end-of-season playoff rankings, 1 through 12, within each league.',
   'Teams outside the playoffs are ranked 7 through 12 using toilet bowl results.',
-  'League 2 teams relegated downward are assigned into League 3 or League 4 at random by the commissioner.',
   'If a higher-tier manager drops out, the highest-finishing eligible team from the tier below fills the spot. Total regular-season points break ties.',
 ];
 
@@ -150,29 +143,29 @@ export const rules2026PlayoffNotes = [
   'Top two playoff seeds receive first-round byes.',
   'Toilet bowl bottom two seeds receive byes, with losing teams advancing.',
   'Every playoff round is reseeded so the highest remaining seed plays the lowest remaining seed.',
-  'Final league rankings 1 through 12 also establish waitlist priority when replacing dropouts in higher tiers.',
+  'Final league rankings 1 through 12 also establish replacement priority when filling dropouts in higher tiers.',
 ];
 
 export const rules2026PayoutRows = [
-  { category: 'Per-league 1st place', amount: '$12,000', note: '$3,000 across 4 leagues' },
-  { category: 'Per-league 2nd place', amount: '$4,000', note: '$1,000 across 4 leagues' },
-  { category: 'Per-league 3rd place', amount: '$2,000', note: '$500 across 4 leagues' },
-  { category: 'Weekly cross-league prizes', amount: '$4,200', note: '14 weeks x $300' },
+  { category: 'Per-league 1st place', amount: '$9,000', note: '$3,000 across 3 leagues' },
+  { category: 'Per-league 2nd place', amount: '$3,000', note: '$1,000 across 3 leagues' },
+  { category: 'Per-league 3rd place', amount: '$1,500', note: '$500 across 3 leagues' },
+  { category: 'Weekly cross-league prizes', amount: '$2,800', note: '14 weeks x $200' },
   { category: 'Season-long scoring title', amount: '$1,000', note: 'Regular season only' },
-  { category: 'Playoff top scorer', amount: '$800', note: 'Weeks 15 to 17, all 48 teams' },
+  { category: 'Playoff top scorer', amount: '$700', note: 'Weeks 15 to 17, all 36 teams' },
 ];
 
 export const rules2026WeeklyPrizeNotes = [
-  'Top weekly scorer: $150',
-  'Second-highest weekly scorer: $75',
-  'Biggest weekly blowout: $75',
-  'Weekly prize categories can be adjusted by the commissioner as long as the total weekly pool stays at $300 and top scorer remains $150.',
+  'Top weekly scorer: $100',
+  'Second-highest weekly scorer: $50',
+  'Biggest weekly blowout: $50',
+  'Weekly prize categories can be adjusted by the commissioner as long as the total weekly pool stays at $200 and top scorer remains $100.',
   'Ties split the relevant prize evenly.',
 ];
 
 export const rules2026Governance = [
   'Buy-in is $500 per team, with a tentative payment deadline of August 18.',
-  'Unpaid teams may lose their spot to the waitlist at the commissioner’s discretion.',
+  'Unpaid teams may lose their spot to an open League 3 registration at the commissioner’s discretion.',
   'Managers can submit rule change proposals throughout the year and offseason.',
   'A proposal needs two-thirds support from active managers to pass.',
   'The commissioner can make offseason rule changes without a vote if they are announced by June 1.',
@@ -185,7 +178,7 @@ export const rules2026CommissionerPowers = [
   'Trade collusion review and adjudication',
   'Announcing offseason rule changes by June 1',
   'Finalizing promotion and relegation structure by Week 4',
-  'Managing the waitlist for expansion and dropout replacement',
+  'Managing League 3 registration and dropout replacement',
   'Administering weekly prize categories within the Section 7 payout parameters',
   'Resolving contract ambiguities in good faith with league input when appropriate',
 ];
