@@ -23,7 +23,15 @@ export const metadata = {
     'The Year Two format for The Gauntlet: three leagues, 36 teams, promotion and relegation, scoring, playoffs, payouts, and commissioner governance.',
 };
 
-function SectionHeading({ kicker, title, body }: { kicker: string; title: string; body?: string }) {
+const SectionHeading = ({
+  kicker,
+  title,
+  body,
+}: {
+  kicker: string;
+  title: string;
+  body?: string;
+}) => {
   return (
     <div className="mb-10 max-w-3xl">
       <p className="text-[#d4af37] text-xs font-semibold uppercase tracking-[0.28em] mb-3">
@@ -35,9 +43,9 @@ function SectionHeading({ kicker, title, body }: { kicker: string; title: string
       {body && <p className="mt-4 text-sm leading-7 text-white/58">{body}</p>}
     </div>
   );
-}
+};
 
-function DetailList({ items }: { items: string[] }) {
+const DetailList = ({ items }: { items: string[] }) => {
   return (
     <div className="space-y-3">
       {items.map(item => (
@@ -50,7 +58,7 @@ function DetailList({ items }: { items: string[] }) {
       ))}
     </div>
   );
-}
+};
 
 export default function Rules2026Page() {
   return (

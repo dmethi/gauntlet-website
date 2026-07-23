@@ -75,15 +75,61 @@ Build this first — Phases 2 and 3 both depend on it.
       `LEAGUE_REGISTRY['2025']`. The new season's key is deliberately absent
       (not a placeholder) with a comment pointing at `SCRATCHPAD.md`'s Blocked
       section — every accessor already treats an unregistered season as `[]`.
-- [ ] Replace the ~10+ scattered `Promise.all([fetch(AFC), fetch(NFC)])` call
-      sites (recap tools, report nodes) with iteration over the registry.
-      **`standings.ts` migrated as the proven pattern** (registry iteration in,
-      `{afc, nfc}` external shape unchanged). Remaining: `league-overview.ts`,
-      `upcoming.ts`, `composite-tools.ts`, `hall-of-shame.ts`,
-      `power-rankings.ts`, `hall-of-fame-enhanced.ts` — same mechanical pattern,
-      not yet applied. Raw-`fetch('api.sleeper.app/...')` bypass files (~10,
-      catalogued in the session that did this work) still need migrating onto
-      the hardened client — also not yet done.
+- [x] Replace the ~10+ scattered `Promise.all([fetch(AFC), fetch(NFC)])` call
+      sites (recap tools, report nodes) with iteration over the registry. All 7
+      `apps/web/src/lib/reports/recap/tools/*.ts` files (`standings.ts`,
+      `league-overview.ts`, `upcoming.ts`, `composite-tools.ts`,
+      `hall-of-shame.ts`, `power-rankings.ts`, `hall-of-fame-enhanced.ts`) now
+      iterate `getCurrentLeagues()` instead of hardcoding
+      `LEAGUE_IDS.AFC`/`.NFC` — every external return shape (`{afc, nfc}`,
+      `league: 'AFC'|'NFC'`) unchanged.
+- [x] Migrate server-side raw-`fetch('api.sleeper.app/...')` bypass files onto
+      the hardened client: `app/api/nfl-state/route.ts`,
+      `app/api/team/[id]/route.ts`, `app/api/cron/live-odds/snapshot-runner.ts`,
+      and the remaining transaction/draft calls in `lib/api-replacements.ts` now
+      go through `sleeperClient`. Only
+      `app/api/reports/[season]/[week]/route.ts` (huge legacy fallback path
+      duplicating logic already migrated in `recap/tools/*.ts`) remains
+      unmigrated — needs a live/dead-code call before a rewrite, not a
+      mechanical swap.
+- [x] Caching: `unified-client.ts`'s hardcoded `cache: 'no-store'` (Next 14
+      defaults an un-annotated `fetch()` to `force-cache`, the _opposite_ of
+      Next 15+ — this was flagged mid-session and confirmed against real route
+      files before proceeding) is gone; ~20 routes that implicitly relied on it
+      for freshness (`nfl-state`, `team/[id]`, `matchups/*`, `leagues-static`,
+      `league-direct`, `rollups/*`, `win-probability/*`, etc.) got an explicit
+      `export const dynamic = 'force-dynamic'` to compensate. `fetchFromSleeper`
+      gained an optional `next?: {revalidate}` passthrough so individual calls
+      can opt into ISR; `year-in-review/league-structure/route.ts` and
+      `lib/year-in-review/season-stats.ts` are migrated onto `sleeperClient`
+      using it, preserving their original `revalidate: 3600` behavior.
+- [x] `packages/types/src/index.ts:46`'s `Team.conference` loosened to optional
+      — **turned out to have zero real consumers** (nothing in the repo imports
+      the `Team` type; the ~17-consumer estimate in this item's original note
+      conflated it with `config/leagues.ts`'s `League.conference`, which was
+      already optional). No further changes needed; Phase 2's broader "remove
+      the AFC/NFC literal union" item (the ~15-file cluster with real consumers:
+      `features/playoffs/types.ts`, `config/leagues.ts` consumers in
+      waiver-analysis/recap tools) is unaffected and still open.
+- [x] Client/server split for `unified-client.ts`: new
+      `apps/web/src/lib/sleeper/browser-client.ts` holds the shared
+      fetch/config/error-handling logic (class `BrowserSleeperClient`) with no
+      `fs` import; `unified-client.ts` now `extends` it, overriding a
+      `tryFixture` hook to layer `SLEEPER_FIXTURES` replay back on top for
+      server code. All existing `unified-client.ts` imports/exports are
+      unchanged. A `next build` surfaced that the "no client component currently
+      imports it" assumption from the original finding was wrong —
+      `draft-data-fetcher.ts` (used by `'use client'`
+      `app/draft/analysis/page.tsx`), `useHallOfFameData.ts` (used by
+      `'use client'` `app/hall-of-fame-enhanced/page.tsx`),
+      `shared/utils/stats/compose.ts`, and all 3
+      `features/playoffs/simulations/*.ts` files were already pulling
+      `fs/promises` into client bundles before this session; all 4 are now
+      migrated onto `browser-client.ts`'s factories
+      (`createBrowserDraftClient`/`createBrowserServiceClient`/
+      `createBrowserStatsClient`/`browserSleeperClient`). Verified via a full
+      `next build` (zero webpack "Can't resolve 'fs/promises'" errors) plus
+      `pnpm test`/`type-check`/`lint`.
 - [x] Manager-history aggregation helper:
       `apps/web/src/lib/leagues/manager-history.ts`
       (`getManagerHistory(ownerId, client?, weeksPerLeague?)`), unit-tested with
@@ -104,6 +150,15 @@ Builds on Phase 1's registry.
 
 - [ ] Remove the `'AFC' | 'NFC'` literal union; replace with the generic
       league-key type from the registry, across the ~15 files found in Phase 0.
+      Note (2026-07-23, from a driveff comparison): `config/leagues.ts`'s
+      `League.conference` field is already optional, but
+      `packages/types/src/index.ts:46`'s `conference: 'AFC' | 'NFC'` is
+      non-optional — start by loosening that one, then update its ~17 consumers
+      (`features/playoffs/*`, `features/waiver-analysis/*`,
+      `lib/reports/recap/tools/*`) to treat conference as an optional label
+      rather than an exhaustive 2-way discriminant. driveff has no equivalent
+      code to port here — it deleted the multi-league concept entirely (see its
+      ADR 0001), so this is a gauntlet-only fix.
 - [ ] Redesign `cross-league-simulator.ts` for N leagues — round-robin vs.
       seeded bracket is an open design question, decide when this slice starts.
 - [ ] Fix `draft/analysis` page's hardcoded 2-column UI.

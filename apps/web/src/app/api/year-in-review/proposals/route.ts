@@ -12,7 +12,7 @@ const submitSchema = z.object({
   category: z.string().max(50).optional(),
 });
 
-export async function GET() {
+export const GET = async () => {
   try {
     const proposals = await formDb.proposal.findMany({
       where: { approved: true },
@@ -31,9 +31,9 @@ export async function GET() {
     console.error('[proposals GET]', e);
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 });
   }
-}
+};
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     const data = submitSchema.parse(body);
@@ -48,9 +48,9 @@ export async function POST(request: Request) {
     console.error('[proposals POST]', e);
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 });
   }
-}
+};
 
-export async function PATCH(request: Request) {
+export const PATCH = async (request: Request) => {
   const adminKey = request.headers.get('x-admin-key');
   if (adminKey !== process.env.ADMIN_SECRET_KEY) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
@@ -67,4 +67,4 @@ export async function PATCH(request: Request) {
     console.error('[proposals PATCH]', e);
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 });
   }
-}
+};

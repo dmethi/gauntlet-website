@@ -11,7 +11,7 @@ const schema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     const data = schema.parse(body);
@@ -30,4 +30,4 @@ export async function POST(request: Request) {
     console.error('[waitlist]', e);
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 });
   }
-}
+};

@@ -2,7 +2,7 @@
  * High-level stats dataset composition
  */
 
-import { createStatsClient } from '@/lib/sleeper/unified-client';
+import { createBrowserStatsClient as createStatsClient } from '@/lib/sleeper/browser-client';
 import { aggregatePositionPoints, getStarterPositionPoints, TRACKED_POSITIONS } from './positions';
 import { aggregateTeamPoints, getTeamAndOpponentPoints } from './teams';
 import { rank, rankWithinLeagues } from './ranks';

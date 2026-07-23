@@ -9,6 +9,8 @@ import {
 } from '@/lib/api-replacements';
 import { getCurrentLeagues } from '@/config/leagues';
 
+export const dynamic = 'force-dynamic';
+
 export const runtime = 'nodejs';
 
 export const GET = async (request: Request) => {

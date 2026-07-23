@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Example API route that bypasses database entirely
  * This replaces the expensive DB queries with direct Sleeper API calls

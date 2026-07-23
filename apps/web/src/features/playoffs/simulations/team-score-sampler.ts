@@ -5,7 +5,7 @@
  * Uses team's weekly scoring history to build a distribution and sample from it.
  */
 
-import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { browserSleeperClient as sleeperClient } from '@/lib/sleeper/browser-client';
 import { LEAGUE_IDS } from '@/lib/constants';
 import type { TeamScoringDistribution } from '../types';
 

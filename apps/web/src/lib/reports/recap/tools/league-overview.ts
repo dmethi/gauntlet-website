@@ -1,6 +1,6 @@
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 import type { SleeperMatchup } from '@gauntlet/types';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues } from '@/config/leagues';
 import type { ReportTool } from './base';
 
 /**
@@ -56,28 +56,21 @@ export const fetchLeagueDataTool: ReportTool<LeagueDataArgs, LeagueDataResult> =
   },
 
   execute: async (args: LeagueDataArgs): Promise<LeagueDataResult> => {
-    // Fetch league info for both AFC and NFC
-    const [afcLeague, nfcLeague] = await Promise.all([
-      sleeperClient.fetchLeague(LEAGUE_IDS.AFC),
-      sleeperClient.fetchLeague(LEAGUE_IDS.NFC),
-    ]);
+    // Fetch league info for every registered league (see docs/ETHOS.md —
+    // process leagues separately) and combine only for this aggregate view.
+    const leagues = await Promise.all(
+      getCurrentLeagues().map(league => sleeperClient.fetchLeague(league.id)),
+    );
 
     return {
-      season: afcLeague.season,
+      season: leagues[0].season,
       week: args.week,
-      leagues: [
-        {
-          id: LEAGUE_IDS.AFC,
-          name: afcLeague.name,
-          totalRosters: afcLeague.total_rosters,
-        },
-        {
-          id: LEAGUE_IDS.NFC,
-          name: nfcLeague.name,
-          totalRosters: nfcLeague.total_rosters,
-        },
-      ],
-      totalTeams: afcLeague.total_rosters + nfcLeague.total_rosters,
+      leagues: getCurrentLeagues().map((league, i) => ({
+        id: league.id,
+        name: leagues[i].name,
+        totalRosters: leagues[i].total_rosters,
+      })),
+      totalTeams: leagues.reduce((sum, l) => sum + l.total_rosters, 0),
     };
   },
 };
@@ -102,14 +95,14 @@ export const calculateWeekSummaryStatsTool: ReportTool<WeekStatsArgs, WeekStatsR
   },
 
   execute: async (args: WeekStatsArgs): Promise<WeekStatsResult> => {
-    // Fetch matchups for both leagues
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-    ]);
+    // Fetch matchups for every registered league, in parallel
+    const matchupsByLeague = await Promise.all(
+      getCurrentLeagues().map(league => sleeperClient.fetchMatchups(league.id, args.week)),
+    );
 
-    // Extract all scores from both leagues
-    const allScores = [...afcMatchups, ...nfcMatchups]
+    // Extract all scores across leagues
+    const allScores = matchupsByLeague
+      .flat()
       .map(m => m.points)
       .filter((p): p is number => p !== null && p !== undefined);
 
@@ -146,9 +139,7 @@ export const calculateWeekSummaryStatsTool: ReportTool<WeekStatsArgs, WeekStatsR
       return diffs;
     };
 
-    const afcDiffs = getMatchupDiffs(afcMatchups);
-    const nfcDiffs = getMatchupDiffs(nfcMatchups);
-    const allDiffs = [...afcDiffs, ...nfcDiffs];
+    const allDiffs = matchupsByLeague.flatMap(getMatchupDiffs);
 
     const closeGames = allDiffs.filter(d => d <= 10).length;
     const blowouts = allDiffs.filter(d => d >= 30).length;
@@ -211,16 +202,15 @@ export const fetchWeekHighlightsTool: ReportTool<WeekHighlightsArgs, WeekHighlig
   },
 
   execute: async (args: WeekHighlightsArgs): Promise<WeekHighlightsResult> => {
-    // Fetch matchups, rosters, and leagues for both AFC and NFC
-    const [afcMatchups, afcLeague, afcRosters, nfcMatchups, nfcLeague, nfcRosters] =
-      await Promise.all([
-        sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-        sleeperClient.fetchLeague(LEAGUE_IDS.AFC),
-        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
-        sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-        sleeperClient.fetchLeague(LEAGUE_IDS.NFC),
-        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
-      ]);
+    // Fetch matchups, rosters, and leagues for every registered league
+    const perLeagueData = await Promise.all(
+      getCurrentLeagues().map(async league => ({
+        league,
+        matchups: await sleeperClient.fetchMatchups(league.id, args.week),
+        leagueInfo: await sleeperClient.fetchLeague(league.id),
+        rosters: await sleeperClient.fetchRostersWithOwners(league.id),
+      })),
+    );
 
     // Build roster ID to team name mapping
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -234,9 +224,6 @@ export const fetchWeekHighlightsTool: ReportTool<WeekHighlightsArgs, WeekHighlig
       });
       return map;
     };
-
-    const afcTeamNames = buildTeamNameMap(afcRosters);
-    const nfcTeamNames = buildTeamNameMap(nfcRosters);
 
     // Process each league to get matchup pairs with team names
     const processLeagueMatchups = (
@@ -299,9 +286,9 @@ export const fetchWeekHighlightsTool: ReportTool<WeekHighlightsArgs, WeekHighlig
       return pairs;
     };
 
-    const afcPairs = processLeagueMatchups(afcMatchups, afcLeague.name, afcTeamNames);
-    const nfcPairs = processLeagueMatchups(nfcMatchups, nfcLeague.name, nfcTeamNames);
-    const allPairs = [...afcPairs, ...nfcPairs];
+    const allPairs = perLeagueData.flatMap(({ matchups, leagueInfo, rosters }) =>
+      processLeagueMatchups(matchups, leagueInfo.name, buildTeamNameMap(rosters)),
+    );
 
     // Find notable matchups
     const closestGame = allPairs.reduce((min, pair) => (pair.margin < min.margin ? pair : min));

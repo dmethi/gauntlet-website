@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { debugLog } from '@/lib/debug-log';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
+
+export const dynamic = 'force-dynamic';
 
 export const GET = async (request: NextRequest) => {
   try {
     debugLog('🏈 [NFL STATE API] Fetching current NFL state from Sleeper...');
 
-    const response = await fetch('https://api.sleeper.app/v1/state/nfl', {
-      headers: {
-        'User-Agent': 'Gauntlet-Website/1.0.0',
-      },
-      cache: 'no-store', // Always get fresh data
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch NFL state: ${response.status}`);
+    const nflState = await sleeperClient.fetchNFLState();
+    if (!nflState) {
+      throw new Error('Failed to fetch NFL state: empty response');
     }
-
-    const nflState = await response.json();
     debugLog('✅ [NFL STATE API] Successfully fetched NFL state:', nflState);
 
     return NextResponse.json(nflState, {

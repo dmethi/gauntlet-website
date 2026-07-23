@@ -5,6 +5,8 @@ import {
   getRostersByLeague,
 } from '@/lib/api-replacements';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async (
   _request: NextRequest,
   { params }: { params: { leagueId: string; week: string } },

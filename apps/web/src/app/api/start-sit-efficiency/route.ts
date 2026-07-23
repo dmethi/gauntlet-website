@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { analyzeStartSitEfficiency } from '@/features/start-sit/utils';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async () => {
   try {
     const data = await analyzeStartSitEfficiency();

@@ -6,7 +6,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
 import { useClientTeamStats, useClientWeeklyAverages } from './useClientCalculations';
-import type { SleeperLeague, SleeperRoster, SleeperUser } from '@gauntlet/types';
+import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
+
+const sleeperClient = createBrowserStatsClient();
 
 interface LeagueOverviewData {
   league: {
@@ -58,17 +60,6 @@ interface LeagueOverviewData {
 }
 
 /**
- * Fetch league data directly from Sleeper API
- */
-const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
-  const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Sleeper API error: ${response.status}`);
-  }
-  return response.json();
-};
-
-/**
  * Get all matchups for specific rosters
  */
 const getRosterMatchups = async (
@@ -86,14 +77,10 @@ const getRosterMatchups = async (
 
   // Fetch all weeks in parallel
   const promises = Array.from({ length: weeks }, (_, i) => i + 1).map(week =>
-    fetchSleeperData<Array<{ roster_id: number; points: number; matchup_id: number }>>(
-      `league/${leagueId}/matchups/${week}`,
-    )
+    sleeperClient
+      .fetchMatchups(leagueId, week)
       .then(matchups => ({ week, matchups }))
-      .catch(() => ({
-        week,
-        matchups: [] as Array<{ roster_id: number; points: number; matchup_id: number }>,
-      })),
+      .catch(() => ({ week, matchups: [] })),
   );
 
   const results = await Promise.all(promises);
@@ -134,13 +121,13 @@ export const useLeagueOverviewClient = (leagueId?: string): LeagueOverviewData =
     queryKey: ['league-overview-client', effectiveLeagueId],
     queryFn: async () => {
       const [league, rosters, users] = await Promise.all([
-        fetchSleeperData<SleeperLeague>(`league/${effectiveLeagueId}`),
-        fetchSleeperData<SleeperRoster[]>(`league/${effectiveLeagueId}/rosters`),
-        fetchSleeperData<SleeperUser[]>(`league/${effectiveLeagueId}/users`),
+        sleeperClient.fetchLeague(effectiveLeagueId),
+        sleeperClient.fetchRosters(effectiveLeagueId),
+        sleeperClient.fetchUsers(effectiveLeagueId),
       ]);
 
       // Get current week - only count completed weeks
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
+      const nflState = await sleeperClient.fetchNFLState();
       const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
 
       // Get matchups for all rosters (completed weeks only)

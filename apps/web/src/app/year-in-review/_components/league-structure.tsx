@@ -40,7 +40,7 @@ interface StructureData {
 
 // ─── shared ──────────────────────────────────────────────────────────────────
 
-function TierConnector() {
+const TierConnector = () => {
   return (
     <div className="flex items-center gap-2 py-0.5 text-white/18 text-[9px] uppercase tracking-widest select-none">
       <div className="flex-1 border-t border-dashed border-white/8" />
@@ -48,9 +48,9 @@ function TierConnector() {
       <div className="flex-1 border-t border-dashed border-white/8" />
     </div>
   );
-}
+};
 
-function Skeleton({ rows = 12 }: { rows?: number }) {
+const Skeleton = ({ rows = 12 }: { rows?: number }) => {
   return (
     <div className="border border-white/10 rounded-lg overflow-hidden bg-[#0d0d0d] animate-pulse">
       <div className="px-3 py-2 border-b border-white/5">
@@ -66,11 +66,11 @@ function Skeleton({ rows = 12 }: { rows?: number }) {
       </div>
     </div>
   );
-}
+};
 
 // ─── YEAR 1 (shared for both panels, shown once) ──────────────────────────────
 
-function Year1Row({ team, rank }: { team: TeamSlot; rank: number }) {
+const Year1Row = ({ team, rank }: { team: TeamSlot; rank: number }) => {
   const isConfirmed = team.isConfirmed;
   return (
     <div
@@ -103,9 +103,9 @@ function Year1Row({ team, rank }: { team: TeamSlot; rank: number }) {
       )}
     </div>
   );
-}
+};
 
-function Year1Card({
+const Year1Card = ({
   league,
   accent,
   label,
@@ -113,7 +113,7 @@ function Year1Card({
   league: LeagueBox;
   accent: string;
   label: string;
-}) {
+}) => {
   return (
     <div className={`border ${accent} rounded-lg overflow-hidden bg-[#0d0d0d] flex-1 min-w-0`}>
       <div className="px-3 py-2 border-b border-white/5">
@@ -129,11 +129,11 @@ function Year1Card({
       </div>
     </div>
   );
-}
+};
 
 // ─── STRUCTURE panel — individual rows with zone highlighting ────────────────
 
-function ZoneDivider({ label, direction }: { label: string; direction: 'up' | 'down' }) {
+const ZoneDivider = ({ label, direction }: { label: string; direction: 'up' | 'down' }) => {
   return (
     <div className="flex items-center gap-1.5 py-1">
       <div className="flex-1 h-px border-t border-dashed border-white/12" />
@@ -143,15 +143,15 @@ function ZoneDivider({ label, direction }: { label: string; direction: 'up' | 'd
       <div className="flex-1 h-px border-t border-dashed border-white/12" />
     </div>
   );
-}
+};
 
 type ZoneType = 'promotion' | 'safe' | 'relegation';
 
-function zoneFor(rank: number, promoCutoff?: number, safeEnd?: number): ZoneType {
+const zoneFor = (rank: number, promoCutoff?: number, safeEnd?: number): ZoneType => {
   if (promoCutoff && rank <= promoCutoff) return 'promotion';
   if (safeEnd && rank > safeEnd) return 'relegation';
   return 'safe';
-}
+};
 
 const ZONE_STYLES: Record<ZoneType, { row: string; bar: string; icon: string; iconColor: string }> =
   {
@@ -170,7 +170,7 @@ const ZONE_STYLES: Record<ZoneType, { row: string; bar: string; icon: string; ic
     },
   };
 
-function StructRow({ rank, zone }: { rank: number; zone: ZoneType }) {
+const StructRow = ({ rank, zone }: { rank: number; zone: ZoneType }) => {
   const s = ZONE_STYLES[zone];
   return (
     <div
@@ -181,9 +181,9 @@ function StructRow({ rank, zone }: { rank: number; zone: ZoneType }) {
       {s.icon && <span className={`text-[10px] font-bold shrink-0 ${s.iconColor}`}>{s.icon}</span>}
     </div>
   );
-}
+};
 
-function StructCard({
+const StructCard = ({
   divLabel,
   accent,
   labelColor,
@@ -199,7 +199,7 @@ function StructCard({
   promoCutoff?: number;
   safeEnd?: number;
   tier?: 1 | 2 | 3;
-}) {
+}) => {
   const tierBorder = tier === 1 ? 'border-2' : tier === 2 ? 'border' : 'border border-dashed';
   const labelSize = tier === 1 ? 'text-[11px]' : tier === 2 ? 'text-[10px]' : 'text-[9px]';
   const rows: React.ReactNode[] = [];
@@ -242,11 +242,11 @@ function StructCard({
       <div>{rows}</div>
     </div>
   );
-}
+};
 
 // ─── ROSTER panel (chips + CTAs) ─────────────────────────────────────────────
 
-function RosterRow({ team }: { team: TeamSlot }) {
+const RosterRow = ({ team }: { team: TeamSlot }) => {
   if (team.isOpen) {
     return (
       <a
@@ -307,9 +307,9 @@ function RosterRow({ team }: { team: TeamSlot }) {
       )}
     </div>
   );
-}
+};
 
-function RosterCard({
+const RosterCard = ({
   divLabel,
   accent,
   labelColor,
@@ -321,7 +321,7 @@ function RosterCard({
   labelColor: string;
   teams: TeamSlot[];
   tier?: 1 | 2 | 3;
-}) {
+}) => {
   const tierBorder = tier === 1 ? 'border-2' : tier === 2 ? 'border' : 'border border-dashed';
   const labelSize = tier === 1 ? 'text-[11px]' : tier === 2 ? 'text-[10px]' : 'text-[9px]';
   return (
@@ -339,11 +339,11 @@ function RosterCard({
       </div>
     </div>
   );
-}
+};
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-export function LeagueStructureVisual() {
+export const LeagueStructureVisual = () => {
   const [data, setData] = useState<StructureData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activePanel, setActivePanel] = useState<'structure' | 'roster'>('structure');
@@ -598,4 +598,4 @@ export function LeagueStructureVisual() {
       </div>
     </div>
   );
-}
+};

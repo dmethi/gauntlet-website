@@ -20,7 +20,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Other: 'border-white/30 text-white/50',
 };
 
-export function ProposalsDisplay() {
+export const ProposalsDisplay = () => {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,4 +80,4 @@ export function ProposalsDisplay() {
       ))}
     </div>
   );
-}
+};

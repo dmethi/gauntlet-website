@@ -10,7 +10,7 @@ const schema = z.object({
   team: z.string().min(1).max(100).optional(),
 });
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     const data = schema.parse(body);
@@ -29,4 +29,4 @@ export async function POST(request: Request) {
     console.error('[return-confirmation]', e);
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 });
   }
-}
+};

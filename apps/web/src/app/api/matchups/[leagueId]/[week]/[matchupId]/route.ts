@@ -7,6 +7,8 @@ import {
 import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
 import type { PlayerDetails, TeamRoster } from '@/features/matchups/types';
 
+export const dynamic = 'force-dynamic';
+
 interface MatchupDetails {
   matchupId: number;
   teams: [TeamRoster, TeamRoster];

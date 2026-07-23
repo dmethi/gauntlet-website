@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { calculateWinProbability, getCurrentWeek } from '@/lib/api-replacements';
 
+export const dynamic = 'force-dynamic';
+
 export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();

@@ -19,11 +19,11 @@ interface LeagueStructureResponse {
 
 const YEAR_IN_REVIEW_STRUCTURE_REFRESH_EVENT = 'year-in-review:refresh-structure';
 
-function notifyStructureRefresh() {
+const notifyStructureRefresh = () => {
   window.dispatchEvent(new Event(YEAR_IN_REVIEW_STRUCTURE_REFRESH_EVENT));
-}
+};
 
-function InputField({
+const InputField = ({
   label,
   type = 'text',
   name,
@@ -39,7 +39,7 @@ function InputField({
   required?: boolean;
   value: string;
   onChange: (v: string) => void;
-}) {
+}) => {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-semibold uppercase tracking-widest text-[#d4af37]">
@@ -57,9 +57,9 @@ function InputField({
       />
     </div>
   );
-}
+};
 
-export function ReturnForm() {
+export const ReturnForm = () => {
   const [form, setForm] = useState({ name: '', email: '', team: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [teamOptions, setTeamOptions] = useState<ReturningTeamOptionGroup[]>([]);
@@ -177,9 +177,9 @@ export function ReturnForm() {
       </button>
     </form>
   );
-}
+};
 
-export function RegistrationForm() {
+export const RegistrationForm = () => {
   const [form, setForm] = useState({ name: '', email: '', referredBy: '', notes: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
@@ -266,9 +266,9 @@ export function RegistrationForm() {
       </button>
     </form>
   );
-}
+};
 
-export function ProposalForm() {
+export const ProposalForm = () => {
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -385,4 +385,4 @@ export function ProposalForm() {
       </button>
     </form>
   );
-}
+};

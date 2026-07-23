@@ -6,6 +6,8 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 
+export const dynamic = 'force-dynamic';
+
 type User = {
   id: string;
   username?: string;

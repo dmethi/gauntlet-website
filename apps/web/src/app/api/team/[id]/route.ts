@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
-import type { SleeperLeague, SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
-const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
-  const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
-  if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-  return response.json();
-};
+export const dynamic = 'force-dynamic';
 
 export const GET = async (_req: NextRequest, { params }: { params: { id: string } }) => {
   const teamId = params.id;
@@ -27,7 +23,7 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
 
       for (const league of currentLeagues) {
         try {
-          const rosters = await fetchSleeperData<SleeperRoster[]>(`league/${league.id}/rosters`);
+          const rosters = await sleeperClient.fetchRosters(league.id);
           const targetRoster = rosters.find(r => r.roster_id === parseInt(teamId, 10));
           if (targetRoster) {
             leagueId = league.id;
@@ -46,14 +42,14 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
     }
 
     // Get current NFL week to determine how many weeks to fetch
-    const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
+    const nflState = await sleeperClient.fetchNFLState();
     const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
 
     // Fetch all necessary data
     const [league, rosters, users] = await Promise.all([
-      fetchSleeperData<SleeperLeague>(`league/${leagueId}`),
-      fetchSleeperData<SleeperRoster[]>(`league/${leagueId}/rosters`),
-      fetchSleeperData<SleeperUser[]>(`league/${leagueId}/users`),
+      sleeperClient.fetchLeague(leagueId),
+      sleeperClient.fetchRosters(leagueId),
+      sleeperClient.fetchUsers(leagueId),
     ]);
 
     // Find the specific roster
@@ -69,7 +65,8 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
     const matchupPromises = [];
     for (let week = 1; week <= completedWeeks; week++) {
       matchupPromises.push(
-        fetchSleeperData<SleeperMatchup[]>(`league/${leagueId}/matchups/${week}`)
+        sleeperClient
+          .fetchMatchups(leagueId, week)
           .then(matchups => ({ week, matchups }))
           .catch(() => ({ week, matchups: [] })),
       );

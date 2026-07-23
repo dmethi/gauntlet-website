@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { computeWeeklyRollups, getCurrentWeek } from '@/lib/api-replacements';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async (
   request: NextRequest,
   { params }: { params: { leagueId: string; season: string } },

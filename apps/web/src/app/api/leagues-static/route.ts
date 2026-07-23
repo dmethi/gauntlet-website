@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Get all leagues WITHOUT database
  * This replaces the database-dependent /api/leagues route

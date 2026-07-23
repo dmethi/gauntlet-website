@@ -6,7 +6,7 @@
  */
 
 import { LEAGUE_IDS } from '@/lib/constants';
-import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { browserSleeperClient as sleeperClient } from '@/lib/sleeper/browser-client';
 import type {
   CrossLeagueBattleResults,
   CrossLeagueMatchup,

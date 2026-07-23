@@ -4,7 +4,7 @@ import { fetchSeasonStats } from '@/lib/year-in-review/season-stats';
 export const runtime = 'nodejs';
 export const revalidate = 3600;
 
-export async function GET() {
+export const GET = async () => {
   try {
     const data = await fetchSeasonStats();
     return NextResponse.json({ ok: true, data });
@@ -12,4 +12,4 @@ export async function GET() {
     console.error('[season-stats]', e);
     return NextResponse.json({ ok: false, error: 'Failed to fetch season data' }, { status: 500 });
   }
-}
+};

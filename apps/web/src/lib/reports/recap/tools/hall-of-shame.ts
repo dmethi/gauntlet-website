@@ -1,5 +1,5 @@
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues } from '@/config/leagues';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 
@@ -121,29 +121,33 @@ export const fetchHallOfShameTool: ReportTool<{ week: number }, HallOfShameResul
   },
 
   execute: async (args: { week: number }): Promise<HallOfShameResult> => {
-    // Fetch all matchups from both leagues
-    const [afcMatchups, nfcMatchups, afcRosters, nfcRosters, players, projections] =
-      await Promise.all([
-        sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-        sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
-        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
-        sleeperClient.fetchAllPlayers(),
-        sleeperClient.fetchWeeklyProjections(args.week, '2025'),
-      ]);
+    const leagues = getCurrentLeagues();
+
+    // Fetch all matchups and rosters from every registered league
+    const [matchupsByLeague, rostersByLeague, players, projections] = await Promise.all([
+      Promise.all(leagues.map(league => sleeperClient.fetchMatchups(league.id, args.week))),
+      Promise.all(leagues.map(league => sleeperClient.fetchRostersWithOwners(league.id))),
+      sleeperClient.fetchAllPlayers(),
+      sleeperClient.fetchWeeklyProjections(args.week, '2025'),
+    ]);
 
     // Build roster lookup maps
     const rosterMap = new Map();
-    [...afcRosters, ...nfcRosters].forEach(r => {
-      const key = `${r.league_id || LEAGUE_IDS.AFC}-${r.roster_id}`;
-      rosterMap.set(key, r);
+    leagues.forEach((league, i) => {
+      rostersByLeague[i].forEach(r => {
+        const key = `${r.league_id || league.id}-${r.roster_id}`;
+        rosterMap.set(key, r);
+      });
     });
 
     // Find 3-5 worst scoring teams
-    const allMatchups = [
-      ...afcMatchups.map(m => ({ ...m, leagueId: LEAGUE_IDS.AFC, league: 'AFC' as const })),
-      ...nfcMatchups.map(m => ({ ...m, leagueId: LEAGUE_IDS.NFC, league: 'NFC' as const })),
-    ];
+    const allMatchups = leagues.flatMap((league, i) =>
+      matchupsByLeague[i].map(m => ({
+        ...m,
+        leagueId: league.id,
+        league: (league.conference || league.name) as 'AFC' | 'NFC',
+      })),
+    );
 
     const sortedByScore = [...allMatchups].sort((a, b) => (a.points || 0) - (b.points || 0));
     const worstTeams: TeamPerformance[] = sortedByScore.slice(0, 5).map((m, idx) => {

@@ -1,40 +1,13 @@
 import { CURRENT_LEAGUES } from '@/config/leagues';
+import { createStatsClient } from '@/lib/sleeper/unified-client';
+import type { SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
 
-const SLEEPER = 'https://api.sleeper.app/v1';
+const ISR_REVALIDATE = { revalidate: 3600 };
+const sleeperClient = createStatsClient();
 
-async function sleeper<T>(path: string): Promise<T> {
-  const res = await fetch(`${SLEEPER}/${path}`, { next: { revalidate: 3600 } });
-  if (!res.ok) throw new Error(`Sleeper ${path}: ${res.status}`);
-  return res.json();
-}
-
-interface SleeperRoster {
-  roster_id: number;
-  owner_id: string | null;
-  settings: {
-    wins: number;
-    losses: number;
-    ties: number;
-    fpts: number;
-    fpts_decimal: number;
-    fpts_against: number;
-    fpts_against_decimal: number;
-  };
-}
-
-interface SleeperUser {
-  user_id: string;
-  display_name: string;
-  username: string;
-  metadata?: { team_name?: string };
-}
-
-interface SleeperMatchup {
-  roster_id: number;
-  points: number;
-  matchup_id: number;
-}
-
+// Sleeper's winners_bracket endpoint returns shorthand keys (r/m/t1/t2/w/l),
+// not @gauntlet/types's SleeperPlayoffMatchup shape — same pre-existing
+// looseness as unified-client.ts's RosterWithOwner cast.
 interface BracketMatch {
   r: number;
   m: number;
@@ -94,30 +67,30 @@ export interface SeasonStats {
   };
 }
 
-function totalPoints(r: SleeperRoster): number {
+const totalPoints = (r: SleeperRoster): number => {
   return (r.settings.fpts || 0) + (r.settings.fpts_decimal || 0) / 100;
-}
+};
 
-function getTeamName(rosterId: number, rosters: SleeperRoster[], users: SleeperUser[]): string {
+const getTeamName = (rosterId: number, rosters: SleeperRoster[], users: SleeperUser[]): string => {
   const roster = rosters.find(r => r.roster_id === rosterId);
   if (!roster?.owner_id) return `Team ${rosterId}`;
   const user = users.find(u => u.user_id === roster.owner_id);
   return user?.metadata?.team_name || user?.display_name || user?.username || `Team ${rosterId}`;
-}
+};
 
-function findChampion(bracket: BracketMatch[]): number | null {
+const findChampion = (bracket: BracketMatch[]): number | null => {
   if (!bracket.length) return null;
   const maxRound = Math.max(...bracket.map(m => m.r));
   return bracket.filter(m => m.r === maxRound)[0]?.w ?? null;
-}
+};
 
-function findRunnerUp(bracket: BracketMatch[]): number | null {
+const findRunnerUp = (bracket: BracketMatch[]): number | null => {
   if (!bracket.length) return null;
   const maxRound = Math.max(...bracket.map(m => m.r));
   return bracket.filter(m => m.r === maxRound)[0]?.l ?? null;
-}
+};
 
-function findThirdPlace(bracket: BracketMatch[]): number | null {
+const findThirdPlace = (bracket: BracketMatch[]): number | null => {
   if (!bracket.length) return null;
   const maxRound = Math.max(...bracket.map(m => m.r));
   const finalRound = bracket.filter(m => m.r === maxRound);
@@ -125,20 +98,24 @@ function findThirdPlace(bracket: BracketMatch[]): number | null {
   const penultimate = bracket.filter(m => m.r === maxRound - 1);
   if (penultimate.length > 1) return penultimate[1]?.w ?? null;
   return null;
-}
+};
 
-export async function fetchSeasonStats(): Promise<SeasonStats> {
+export const fetchSeasonStats = async (): Promise<SeasonStats> => {
   const leagueData = await Promise.all(
     CURRENT_LEAGUES.map(async league => {
       const [rosters, users, bracket] = await Promise.all([
-        sleeper<SleeperRoster[]>(`league/${league.id}/rosters`),
-        sleeper<SleeperUser[]>(`league/${league.id}/users`),
-        sleeper<BracketMatch[]>(`league/${league.id}/winners_bracket`).catch(() => []),
+        sleeperClient.fetchRosters(league.id, ISR_REVALIDATE),
+        sleeperClient.fetchUsers(league.id, ISR_REVALIDATE),
+        sleeperClient
+          .fetchWinnersBracket(league.id, ISR_REVALIDATE)
+          .then(b => b as unknown as BracketMatch[])
+          .catch(() => [] as BracketMatch[]),
       ]);
 
       const weeklyMatchups = await Promise.all(
         Array.from({ length: 14 }, (_, i) => i + 1).map(week =>
-          sleeper<SleeperMatchup[]>(`league/${league.id}/matchups/${week}`)
+          sleeperClient
+            .fetchMatchups(league.id, week, ISR_REVALIDATE)
             .then(matchups => ({ week, matchups, leagueId: league.id, leagueName: league.name }))
             .catch(() => ({ week, matchups: [], leagueId: league.id, leagueName: league.name })),
         ),
@@ -327,4 +304,4 @@ export async function fetchSeasonStats(): Promise<SeasonStats> {
       biggestBlowout: biggestBlowout.margin > 0 ? biggestBlowout : null,
     },
   };
-}
+};

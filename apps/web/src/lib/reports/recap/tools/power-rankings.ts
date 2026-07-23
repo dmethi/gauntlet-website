@@ -1,5 +1,5 @@
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues } from '@/config/leagues';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 import type { PowerRanking, RankingChange, TierSummary } from '../types';
@@ -126,16 +126,18 @@ const calculateZScores = (values: number[]): number[] => {
  * This matches the formula shown in the Stats Hub "Power Rankings Evolution" section.
  */
 const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
-  // Fetch all matchups up to the given week for both leagues
-  const [afcMatchups, nfcMatchups, afcRosters, nfcRosters] = await Promise.all([
+  const leagues = getCurrentLeagues();
+
+  // Fetch all matchups up to the given week for every registered league
+  const [matchupsByLeague, rostersByLeague] = await Promise.all([
     Promise.all(
-      Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, i + 1)),
+      leagues.map(league =>
+        Promise.all(
+          Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(league.id, i + 1)),
+        ),
+      ),
     ),
-    Promise.all(
-      Array.from({ length: week }, (_, i) => sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, i + 1)),
-    ),
-    sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
-    sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
+    Promise.all(leagues.map(league => sleeperClient.fetchRostersWithOwners(league.id))),
   ]);
 
   interface TeamMetrics {
@@ -165,16 +167,14 @@ const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
   }
   const allWeeklyScores: WeeklyScore[] = [];
 
-  // Collect scores from both leagues
-  for (const { leagueId, matchups } of [
-    { leagueId: LEAGUE_IDS.AFC, matchups: afcMatchups },
-    { leagueId: LEAGUE_IDS.NFC, matchups: nfcMatchups },
-  ]) {
+  // Collect scores from every registered league
+  for (const [i, league] of leagues.entries()) {
+    const matchups = matchupsByLeague[i];
     for (let w = 0; w < week; w++) {
       matchups[w].forEach(m => {
         allWeeklyScores.push({
           rosterId: m.roster_id,
-          leagueId,
+          leagueId: league.id,
           week: w + 1,
           points: m.points || 0,
         });
@@ -183,20 +183,10 @@ const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
   }
 
   // Second pass: calculate metrics for each team
-  for (const { leagueId, league, matchups, rosters } of [
-    {
-      leagueId: LEAGUE_IDS.AFC,
-      league: 'AFC' as const,
-      matchups: afcMatchups,
-      rosters: afcRosters,
-    },
-    {
-      leagueId: LEAGUE_IDS.NFC,
-      league: 'NFC' as const,
-      matchups: nfcMatchups,
-      rosters: nfcRosters,
-    },
-  ]) {
+  for (const [i, { id: leagueId, conference }] of leagues.entries()) {
+    const league = conference as 'AFC' | 'NFC';
+    const matchups = matchupsByLeague[i];
+    const rosters = rostersByLeague[i];
     for (const roster of rosters) {
       let totalPoints = 0;
       let totalExpectedWins = 0;

@@ -7,7 +7,7 @@
  * - Seeds 7-12: Non-playoff teams (remaining teams sorted by record, then points)
  */
 
-import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { browserSleeperClient as sleeperClient } from '@/lib/sleeper/browser-client';
 import type { TeamStanding, Week14Matchup } from '../types';
 
 /**

@@ -1,31 +1,16 @@
 import { NextResponse } from 'next/server';
 import { CURRENT_LEAGUES } from '@/config/leagues';
 import { formDb } from '@/lib/form-db';
+import { createStatsClient } from '@/lib/sleeper/unified-client';
+import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const SLEEPER = 'https://api.sleeper.app/v1';
+const ISR_REVALIDATE = { revalidate: 3600 };
+const sleeperClient = createStatsClient();
 const PROMO_CUTOFF = 6; // top 6 per league -> Division I
 const BOTTOM_LEAGUE_PROMO_CUTOFF = 6;
-
-async function s<T>(path: string): Promise<T> {
-  const res = await fetch(`${SLEEPER}/${path}`, { next: { revalidate: 3600 } });
-  if (!res.ok) throw new Error(`Sleeper ${path}: ${res.status}`);
-  return res.json();
-}
-
-interface SleeperRoster {
-  roster_id: number;
-  owner_id: string | null;
-  settings: { wins: number; losses: number; fpts: number; fpts_decimal: number };
-}
-
-interface SleeperUser {
-  user_id: string;
-  display_name: string;
-  metadata?: { team_name?: string };
-}
 
 export interface TeamSlot {
   name: string;
@@ -62,24 +47,24 @@ export interface StructureData {
   };
 }
 
-function pts(roster: SleeperRoster) {
+const pts = (roster: SleeperRoster) => {
   return (roster.settings.fpts || 0) + (roster.settings.fpts_decimal || 0) / 100;
-}
+};
 
-function resolveTeamName(
+const resolveTeamName = (
   userId: string | null,
   userMap: Map<string, SleeperUser>,
   rosterId: number,
-) {
+) => {
   if (!userId) return `Team ${rosterId}`;
 
   const user = userMap.get(userId);
   return user?.metadata?.team_name?.trim() || user?.display_name || `Team ${rosterId}`;
-}
+};
 
-function normalizeTeamName(teamName: string) {
+const normalizeTeamName = (teamName: string) => {
   return teamName.trim().toLowerCase();
-}
+};
 
 const DECLINED_TEAM_NAMES = new Set(
   [
@@ -166,7 +151,7 @@ const withRegistrationSlots = (
   });
 };
 
-export async function GET() {
+export const GET = async () => {
   try {
     const [confirmedEntries, registrationEntries] = await Promise.all([
       formDb.returnConfirmation
@@ -198,8 +183,8 @@ export async function GET() {
     const leagueData = await Promise.all(
       CURRENT_LEAGUES.map(async league => {
         const [rosters, users] = await Promise.all([
-          s<SleeperRoster[]>(`league/${league.id}/rosters`),
-          s<SleeperUser[]>(`league/${league.id}/users`),
+          sleeperClient.fetchRosters(league.id, ISR_REVALIDATE),
+          sleeperClient.fetchUsers(league.id, ISR_REVALIDATE),
         ]);
 
         const userMap = new Map(users.map(user => [user.user_id, user]));
@@ -307,4 +292,4 @@ export async function GET() {
     console.error('[league-structure]', error);
     return NextResponse.json({ ok: false, error: 'Failed to load structure' }, { status: 500 });
   }
-}
+};

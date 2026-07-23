@@ -5,6 +5,8 @@ import {
   getTransactionsByWeek,
 } from '@/lib/api-replacements';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async (request: NextRequest, { params }: { params: { leagueId: string } }) => {
   try {
     const { searchParams } = new URL(request.url);

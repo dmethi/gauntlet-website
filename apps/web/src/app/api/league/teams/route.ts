@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getAllLeagues, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
 import { getCurrentLeagues } from '@/config/leagues';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async () => {
   try {
     // Get current leagues from config

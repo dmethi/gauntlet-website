@@ -17,15 +17,23 @@ they resolve rather than letting them accumulate.
   hardened Sleeper client (`unified-client.ts` + fixture replay), and the
   manager-history helper are done and tested (`pnpm test`/`type-check`/`lint`
   all clean, only pre-existing unrelated failures remain — see below).
-  `standings.ts` migrated to registry iteration as the proof point. Still open
-  before Phase 1's checklist is fully done: migrate the remaining 6 recap-tools
-  files (`league-overview.ts`, `upcoming.ts`, `composite-tools.ts`,
-  `hall-of-shame.ts`, `power-rankings.ts`, `hall-of-fame-enhanced.ts`) onto the
-  same registry-iteration pattern, and migrate the ~10 files still bypassing the
-  client with raw `fetch('api.sleeper.app/...')` calls (API routes under
-  `app/api/`, a few hooks, `lib/api-replacements.ts`, `lib/hooks.ts`,
-  `lib/year-in-review/season-stats.ts`) — explicitly excluding
-  `hooks/useHallOfFame.ts` (dead, Phase 3 deletes it),
+  `standings.ts` migrated to registry iteration as the proof point.
+- Phase 1 data layer foundation, continued (2026-07-23): the remaining 6
+  recap-tools files (`league-overview.ts`, `upcoming.ts`, `composite-tools.ts`,
+  `hall-of-shame.ts`, `power-rankings.ts`, `hall-of-fame-enhanced.ts`) are now
+  migrated onto the same registry-iteration pattern as `standings.ts` —
+  `getCurrentLeagues().map(...)` replacing every hardcoded
+  `LEAGUE_IDS.AFC`/`.NFC` pair, external shapes unchanged. `pnpm test` (same 10
+  pre-existing failures, none new), `type-check`, and `lint` all clean. Also
+  migrated onto `sleeperClient`: `app/api/nfl-state/route.ts`,
+  `app/api/team/[id]/route.ts`, `app/api/cron/live-odds/snapshot-runner.ts`, and
+  the transaction/draft raw fetches in `lib/api-replacements.ts`. 4 of the
+  originally-catalogued ~10 raw-fetch files were **not** migrated — each is a
+  real blocker, not leftover work; see "Needs a closer look" below for
+  `year-in-review/league-structure/route.ts`,
+  `lib/year-in-review/season-stats.ts`, `reports/[season]/[week]/route.ts`, and
+  the 3 client-side hooks + `lib/hooks.ts`'s `usePlayoffBracket`. Excluded as
+  previously scoped: `hooks/useHallOfFame.ts` (dead, Phase 3 deletes it),
   `scripts/generate-week4-report.ts` (one-off script), and
   `__tests__/integration/data-flow.test.ts` (unrelated fetch-mock test). Also:
   `apps/web/src/scripts/capture-sleeper-fixtures.ts` exists but hasn't been run
@@ -60,6 +68,71 @@ they resolve rather than letting them accumulate.
 - Page inventory (`ROADMAP.md` Phase 4) hasn't been run yet — "slow loading
   pages" is still an unverified, uninvestigated complaint until that audit
   produces real numbers.
+- `app/api/reports/[season]/[week]/route.ts` is a ~1000-line legacy fallback
+  path (`loadRecapReport` is tried first; this is what runs when that returns
+  null) that inline-duplicates logic already migrated into
+  `recap/tools/{standings,power-rankings,upcoming}.ts`. Not migrated onto the
+  registry — needs a live/dead-code determination (is the fallback path ever
+  actually hit in production, or could it be deleted in favor of the recap
+  tools?) before a 1000-line rewrite is worth the risk.
+
+## Session notes (2026-07-23, Phase 1 closeout: caching, conference type, client/server split)
+
+- **Caching**: the plan going in ("drop `cache: 'no-store'`, Next.js defaults
+  apply") was backwards for this repo — it's on **Next 14.1.0**, where an
+  un-annotated `fetch()` defaults to `force-cache` (cached indefinitely), not
+  `no-store` like Next 15+. Caught this before touching anything and asked the
+  user to pick a path; went with the fuller "drop no-store + explicit opt-outs"
+  option. Audited every `app/api/**/route.ts` that touches `sleeperClient`
+  (directly or via `api-replacements.ts`/feature modules) and added
+  `export const dynamic = 'force-dynamic'` to the ~20 that had no existing
+  freshness override, so removing the client's hardcoded `no-store` doesn't
+  silently cache live scores/matchups. `fetchFromSleeper` gained an optional
+  `next?: {revalidate}` passthrough; `year-in-review/league-structure` and
+  `lib/year-in-review/season-stats.ts` now go through `sleeperClient` with it,
+  closing the last Phase 1 raw-fetch gap.
+- **Conference type**: `packages/types/src/index.ts:46`'s `Team.conference`
+  loosened to optional per plan, but the "~17 consumers to fix" premise from the
+  prior driveff-comparison research was wrong — nothing in the repo actually
+  imports `Team` from `@gauntlet/types`. All the `.conference` call sites found
+  by grep (waiver-analysis, recap tools, constants.ts) read
+  `config/leagues.ts`'s separate `League.conference`, which the roadmap itself
+  already noted was optional. Lesson: a memory/roadmap claim naming a specific
+  field's consumers should be re-verified by grep before acting on it, not
+  assumed current — see the memory-system guidance about stale claims.
+- **Client/server split**: split `unified-client.ts` into a new
+  `browser-client.ts` (shared `BrowserSleeperClient` class, no `fs` import) +
+  `unified-client.ts` (`extends` it, adds `SLEEPER_FIXTURES` replay via a
+  `tryFixture` override). Zero import-path changes for existing server
+  consumers. The prior scratchpad claim "confirmed no client component currently
+  imports it" was **wrong** — a `next build` (not just `type-check`/`test`,
+  which don't catch this) turned up 4 more files already pulling `fs/promises`
+  into client bundles pre-session: `draft-data-fetcher.ts`
+  (`app/draft/analysis`, `'use client'`),
+  `features/hall-of-fame/hooks/useHallOfFameData.ts`
+  (`app/hall-of-fame-enhanced`, `'use client'`),
+  `shared/utils/stats/compose.ts`, and all 3
+  `features/playoffs/simulations/*.ts` files. All 4 migrated onto
+  `browser-client.ts`. Lesson: `next build` is the only reliable check for this
+  class of bug — `tsc --noEmit` and vitest both stay green while the client
+  bundle is silently broken.
+- Verification for all three: `pnpm test`/`type-check`/`lint` clean (same
+  4-file/10-test pre-existing failure baseline, same year-in-review func-style
+  lint debt — no new failures), plus a full `next build` for the client/server
+  split specifically.
+- At commit time, discovered the repo's pre-commit hook runs a full-repo
+  `turbo run lint` (not scoped to staged files), so the pre-existing
+  year-in-review `func-style` debt (40 errors, all predating this session)
+  blocked the commit outright — not just a "known debt, not this slice's job"
+  item anymore once it's the thing failing your own commit. Fixed all 40
+  (converted `function`/`export function`/`export async function` declarations
+  to `const ... = (...) => {}` arrow expressions across 11 files) plus one
+  unrelated `react-hooks/rules-of-hooks` violation in `client-layout.tsx` (a
+  `useQuery` call after an early `return` for `/year-in-review` paths — fixed by
+  hoisting the hook call above the early return and using
+  `enabled: !pathname.startsWith('/year-in-review')` to preserve the original
+  no-fetch-on-year-in-review behavior, not just silence the linter).
+  `pnpm test`/`type-check`/`lint` all clean after.
 
 ## Random open threads
 

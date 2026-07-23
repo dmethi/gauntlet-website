@@ -1,5 +1,5 @@
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues } from '@/config/leagues';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 import type { SleeperMatchup, SleeperRoster } from '@gauntlet/types';
@@ -174,15 +174,16 @@ export const fetchNextWeekMatchupsTool: ReportTool<UpcomingMatchupsArgs, Upcomin
 
   execute: async (args: UpcomingMatchupsArgs): Promise<UpcomingMatchupsResult> => {
     const nextWeek = args.currentWeek + 1;
+    const leagues = getCurrentLeagues();
 
-    // Fetch next week's matchups (may not be set yet early in the week)
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, nextWeek).catch(() => []),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, nextWeek).catch(() => []),
-    ]);
+    // Fetch next week's matchups for every registered league (may not be set
+    // yet early in the week)
+    const matchupsByLeague = await Promise.all(
+      leagues.map(league => sleeperClient.fetchMatchups(league.id, nextWeek).catch(() => [])),
+    );
 
     // If next week's matchups aren't available, return empty
-    if (afcMatchups.length === 0 && nfcMatchups.length === 0) {
+    if (matchupsByLeague.every(m => m.length === 0)) {
       return {
         week: nextWeek,
         available: false,
@@ -193,24 +194,35 @@ export const fetchNextWeekMatchupsTool: ReportTool<UpcomingMatchupsArgs, Upcomin
       };
     }
 
-    // Fetch rosters for both leagues
-    const [afcRosters, nfcRosters] = await Promise.all([
-      sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
-      sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
-    ]);
+    // Fetch rosters for every registered league
+    const rostersByLeague = await Promise.all(
+      leagues.map(league => sleeperClient.fetchRostersWithOwners(league.id)),
+    );
 
-    // Build upcoming matchups for both leagues
-    const [afcUpcoming, nfcUpcoming] = await Promise.all([
-      buildUpcomingMatchups(afcMatchups, afcRosters, LEAGUE_IDS.AFC, 'AFC', args.currentWeek),
-      buildUpcomingMatchups(nfcMatchups, nfcRosters, LEAGUE_IDS.NFC, 'NFC', args.currentWeek),
-    ]);
+    // Build upcoming matchups for every registered league
+    const upcomingByLeague = await Promise.all(
+      leagues.map((league, i) =>
+        buildUpcomingMatchups(
+          matchupsByLeague[i],
+          rostersByLeague[i],
+          league.id,
+          league.conference as 'AFC' | 'NFC',
+          args.currentWeek,
+        ),
+      ),
+    );
+
+    const afcIndex = leagues.findIndex(l => l.conference === 'AFC');
+    const nfcIndex = leagues.findIndex(l => l.conference === 'NFC');
+    const afcUpcoming = afcIndex === -1 ? [] : upcomingByLeague[afcIndex];
+    const nfcUpcoming = nfcIndex === -1 ? [] : upcomingByLeague[nfcIndex];
 
     return {
       week: nextWeek,
       available: true,
       afc: afcUpcoming,
       nfc: nfcUpcoming,
-      totalMatchups: afcUpcoming.length + nfcUpcoming.length,
+      totalMatchups: upcomingByLeague.reduce((sum, u) => sum + u.length, 0),
     };
   },
 };

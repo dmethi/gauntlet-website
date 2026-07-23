@@ -11,10 +11,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  if (pathname.startsWith('/year-in-review')) {
-    return <>{children}</>;
-  }
-
   const {
     data: teams,
     isLoading,
@@ -23,6 +19,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     // Keep the query so Team pages can use it later if needed,
     // but it's not used in Sidebar list anymore
     queryKey: ['teams'],
+    enabled: !pathname.startsWith('/year-in-review'),
     queryFn: async () => {
       const res = await fetch('/api/league/teams');
       if (!res.ok) {
@@ -35,6 +32,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  if (pathname.startsWith('/year-in-review')) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex h-screen">

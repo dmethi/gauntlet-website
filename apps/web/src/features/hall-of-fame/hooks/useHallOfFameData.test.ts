@@ -3,8 +3,8 @@ import { createHallOfFameDataService } from './useHallOfFameData';
 import type { EnhancedMatchup, ProcessedMatchup } from '@/features/hall-of-fame/types';
 
 // Mock the Sleeper client
-vi.mock('@/lib/sleeper/unified-client', () => ({
-  createServiceClient: vi.fn(() => ({
+vi.mock('@/lib/sleeper/browser-client', () => ({
+  createBrowserServiceClient: vi.fn(() => ({
     fetchNFLState: vi.fn().mockResolvedValue({ week: 5 }),
     fetchAllPlayers: vi.fn().mockResolvedValue({
       player1: { full_name: 'Player One', position: 'RB' },
@@ -146,8 +146,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('handles missing matchup data gracefully', async () => {
-    const { createServiceClient } = await import('@/lib/sleeper/unified-client');
-    const mockClient = vi.mocked(createServiceClient);
+    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
+    const mockClient = vi.mocked(createBrowserServiceClient);
 
     mockClient.mockReturnValue({
       ...mockClient(),
@@ -181,8 +181,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('fetches correct number of weeks based on current week', async () => {
-    const { createServiceClient } = await import('@/lib/sleeper/unified-client');
-    const mockClient = vi.mocked(createServiceClient);
+    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
+    const mockClient = vi.mocked(createBrowserServiceClient);
 
     mockClient.mockReturnValue({
       ...mockClient(),
@@ -198,8 +198,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('identifies playoff matchups correctly', async () => {
-    const { createServiceClient } = await import('@/lib/sleeper/unified-client');
-    const mockClient = vi.mocked(createServiceClient);
+    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
+    const mockClient = vi.mocked(createBrowserServiceClient);
 
     mockClient.mockReturnValue({
       ...mockClient(),
@@ -239,8 +239,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('handles API errors gracefully', async () => {
-    const { createServiceClient } = await import('@/lib/sleeper/unified-client');
-    const mockClient = vi.mocked(createServiceClient);
+    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
+    const mockClient = vi.mocked(createBrowserServiceClient);
 
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -271,8 +271,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('continues processing if one league fails', async () => {
-    const { createServiceClient } = await import('@/lib/sleeper/unified-client');
-    const mockClient = vi.mocked(createServiceClient);
+    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
+    const mockClient = vi.mocked(createBrowserServiceClient);
 
     let callCount = 0;
     mockClient.mockReturnValue({
@@ -307,8 +307,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('processes custom points if available', async () => {
-    const { createServiceClient } = await import('@/lib/sleeper/unified-client');
-    const mockClient = vi.mocked(createServiceClient);
+    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
+    const mockClient = vi.mocked(createBrowserServiceClient);
 
     mockClient.mockReturnValue({
       ...mockClient(),

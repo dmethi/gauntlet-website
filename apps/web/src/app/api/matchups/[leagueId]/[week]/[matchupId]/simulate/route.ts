@@ -6,6 +6,8 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 
+export const dynamic = 'force-dynamic';
+
 interface NFLGameState {
   team: string;
   state: 'pre' | 'in' | 'post';

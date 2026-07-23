@@ -5,8 +5,8 @@
 
 import { CACHE_DURATIONS } from '@/lib/constants';
 import { getAllSeasons, getLeaguesForSeason } from '@/config/leagues';
-import { createServiceClient } from '@/lib/sleeper/unified-client';
-import { PlayerStats } from '@/lib/sleeper/unified-client';
+import { createBrowserServiceClient as createServiceClient } from '@/lib/sleeper/browser-client';
+import { PlayerStats } from '@/lib/sleeper/browser-client';
 import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
 import type { EnhancedMatchup } from '../utils/aggregations';
 

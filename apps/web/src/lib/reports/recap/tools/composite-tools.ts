@@ -4,7 +4,7 @@
 
 import type { ReportTool } from './base';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues } from '@/config/leagues';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 
 interface LeagueOverviewResult {
@@ -49,23 +49,18 @@ export const fetchLeagueOverviewTool: ReportTool<{ week: number }, LeagueOvervie
   },
 
   execute: async (args: { week: number }): Promise<LeagueOverviewResult> => {
-    // Fetch matchups from both leagues
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
+    const leagues = getCurrentLeagues();
+
+    // Fetch matchups and rosters for every registered league, in parallel
+    const [matchupsByLeague, rostersByLeague] = await Promise.all([
+      Promise.all(leagues.map(league => sleeperClient.fetchMatchups(league.id, args.week))),
+      Promise.all(leagues.map(league => sleeperClient.fetchRostersWithOwners(league.id))),
     ]);
 
-    // Fetch rosters for owner names
-    const [afcRosters, nfcRosters] = await Promise.all([
-      sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
-      sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
-    ]);
+    const rostersByLeagueId = new Map(leagues.map((league, i) => [league.id, rostersByLeague[i]]));
 
-    // Calculate totals
-    const allScores = [
-      ...afcMatchups.map(m => m.points || 0),
-      ...nfcMatchups.map(m => m.points || 0),
-    ];
+    // Calculate totals across all leagues
+    const allScores = matchupsByLeague.flatMap(matchups => matchups.map(m => m.points || 0));
 
     const totalPoints = allScores.reduce((sum, p) => sum + p, 0);
     const averagePoints = totalPoints / allScores.length;
@@ -74,18 +69,22 @@ export const fetchLeagueOverviewTool: ReportTool<{ week: number }, LeagueOvervie
     const highestScore = Math.max(...allScores);
     const lowestScore = Math.min(...allScores);
 
-    const highestMatchup = [...afcMatchups, ...nfcMatchups].find(m => m.points === highestScore)!;
-    const lowestMatchup = [...afcMatchups, ...nfcMatchups].find(m => m.points === lowestScore)!;
+    const matchupsWithLeagueId = leagues.flatMap((league, i) =>
+      matchupsByLeague[i].map(m => ({ ...m, leagueId: league.id })),
+    );
 
-    const highestLeagueId = afcMatchups.includes(highestMatchup) ? LEAGUE_IDS.AFC : LEAGUE_IDS.NFC;
-    const lowestLeagueId = afcMatchups.includes(lowestMatchup) ? LEAGUE_IDS.AFC : LEAGUE_IDS.NFC;
+    const highestMatchup = matchupsWithLeagueId.find(m => m.points === highestScore)!;
+    const lowestMatchup = matchupsWithLeagueId.find(m => m.points === lowestScore)!;
 
-    const highestRoster = (highestLeagueId === LEAGUE_IDS.AFC ? afcRosters : nfcRosters).find(
-      r => r.roster_id === highestMatchup.roster_id,
-    )!;
-    const lowestRoster = (lowestLeagueId === LEAGUE_IDS.AFC ? afcRosters : nfcRosters).find(
-      r => r.roster_id === lowestMatchup.roster_id,
-    )!;
+    const highestLeagueId = highestMatchup.leagueId;
+    const lowestLeagueId = lowestMatchup.leagueId;
+
+    const highestRoster = rostersByLeagueId
+      .get(highestLeagueId)!
+      .find(r => r.roster_id === highestMatchup.roster_id)!;
+    const lowestRoster = rostersByLeagueId
+      .get(lowestLeagueId)!
+      .find(r => r.roster_id === lowestMatchup.roster_id)!;
 
     const highestScorer =
       getRealNameByRoster(highestLeagueId, highestMatchup.roster_id) ||
@@ -96,29 +95,16 @@ export const fetchLeagueOverviewTool: ReportTool<{ week: number }, LeagueOvervie
       lowestRoster.owner?.display_name ||
       `Team ${lowestMatchup.roster_id}`;
 
-    // Find closest and biggest blowout
-    const afcMatchupPairs = new Map<number, typeof afcMatchups>();
-    afcMatchups.forEach(m => {
-      const existing = afcMatchupPairs.get(m.matchup_id!) || [];
-      afcMatchupPairs.set(m.matchup_id!, [...existing, m]);
+    // Find closest and biggest blowout — group each league's matchups into
+    // pairs, then combine across leagues
+    const allMatchupPairs = leagues.flatMap((league, i) => {
+      const matchupPairs = new Map<number, (typeof matchupsByLeague)[number]>();
+      matchupsByLeague[i].forEach(m => {
+        const existing = matchupPairs.get(m.matchup_id!) || [];
+        matchupPairs.set(m.matchup_id!, [...existing, m]);
+      });
+      return Array.from(matchupPairs.values()).map(pair => ({ league: league.id, pair }));
     });
-
-    const nfcMatchupPairs = new Map<number, typeof nfcMatchups>();
-    nfcMatchups.forEach(m => {
-      const existing = nfcMatchupPairs.get(m.matchup_id!) || [];
-      nfcMatchupPairs.set(m.matchup_id!, [...existing, m]);
-    });
-
-    const allMatchupPairs = [
-      ...Array.from(afcMatchupPairs.values()).map(pair => ({
-        league: LEAGUE_IDS.AFC,
-        pair,
-      })),
-      ...Array.from(nfcMatchupPairs.values()).map(pair => ({
-        league: LEAGUE_IDS.NFC,
-        pair,
-      })),
-    ];
 
     let closestMargin = Infinity;
     let closestMatchup = { winner: '', loser: '', margin: 0 };
@@ -135,7 +121,7 @@ export const fetchLeagueOverviewTool: ReportTool<{ week: number }, LeagueOvervie
       const winner = (team1.points || 0) > (team2.points || 0) ? team1 : team2;
       const loser = (team1.points || 0) > (team2.points || 0) ? team2 : team1;
 
-      const rosters = league === LEAGUE_IDS.AFC ? afcRosters : nfcRosters;
+      const rosters = rostersByLeagueId.get(league)!;
       const winnerRoster = rosters.find(r => r.roster_id === winner.roster_id)!;
       const loserRoster = rosters.find(r => r.roster_id === loser.roster_id)!;
 
@@ -162,6 +148,8 @@ export const fetchLeagueOverviewTool: ReportTool<{ week: number }, LeagueOvervie
       }
     }
 
+    const conferenceByLeagueId = new Map(leagues.map(l => [l.id, l.conference]));
+
     return {
       totalPoints,
       averagePoints,
@@ -169,8 +157,8 @@ export const fetchLeagueOverviewTool: ReportTool<{ week: number }, LeagueOvervie
       lowestScore,
       highestScorer,
       lowestScorer,
-      highestScorerLeague: highestLeagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
-      lowestScorerLeague: lowestLeagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
+      highestScorerLeague: conferenceByLeagueId.get(highestLeagueId) || '',
+      lowestScorerLeague: conferenceByLeagueId.get(lowestLeagueId) || '',
       closeGames,
       blowouts,
       closestMatchup,
@@ -234,23 +222,23 @@ export const fetchMatchupDataTool: ReportTool<
       './game-schedule'
     );
 
+    const leagues = getCurrentLeagues();
+
     // Fetch all data including ESPN schedule
-    const [afcMatchups, nfcMatchups, afcRosters, nfcRosters, players, espnData] = await Promise.all(
-      [
-        sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-        sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.AFC),
-        sleeperClient.fetchRostersWithOwners(LEAGUE_IDS.NFC),
-        sleeperClient.fetchAllPlayers(),
-        fetchEspnScoreboard().catch(() => null), // Graceful fallback if ESPN fails
-      ],
-    );
+    const [matchupsByLeague, rostersByLeague, players, espnData] = await Promise.all([
+      Promise.all(leagues.map(league => sleeperClient.fetchMatchups(league.id, args.week))),
+      Promise.all(leagues.map(league => sleeperClient.fetchRostersWithOwners(league.id))),
+      sleeperClient.fetchAllPlayers(),
+      fetchEspnScoreboard().catch(() => null), // Graceful fallback if ESPN fails
+    ]);
 
     // Build game window map from ESPN data (dynamically parsed from game times)
     const gameWindowMap = espnData ? buildGameWindowMap(espnData) : new Map();
 
     // Helper to get top 3 performers from a team's starters
-    const getTopPerformers = (matchup: (typeof afcMatchups)[0]): PlayerPerformance[] => {
+    const getTopPerformers = (
+      matchup: (typeof matchupsByLeague)[number][number],
+    ): PlayerPerformance[] => {
       if (!matchup.starters || !matchup.players_points) return [];
 
       const performances = matchup.starters
@@ -274,9 +262,10 @@ export const fetchMatchupDataTool: ReportTool<
     };
 
     const processMatchups = (
-      matchups: typeof afcMatchups,
+      matchups: (typeof matchupsByLeague)[number],
       league: string,
-      rosters: typeof afcRosters,
+      leagueId: string,
+      rosters: (typeof rostersByLeague)[number],
     ) => {
       const grouped = new Map<number, typeof matchups>();
       matchups.forEach(m => {
@@ -289,8 +278,6 @@ export const fetchMatchupDataTool: ReportTool<
         .map(([team1, team2]) => {
           const roster1 = rosters.find(r => r.roster_id === team1.roster_id)!;
           const roster2 = rosters.find(r => r.roster_id === team2.roster_id)!;
-
-          const leagueId = league === 'AFC' ? LEAGUE_IDS.AFC : LEAGUE_IDS.NFC;
 
           const team1Name =
             getRealNameByRoster(leagueId, team1.roster_id) ||
@@ -350,10 +337,14 @@ export const fetchMatchupDataTool: ReportTool<
     };
 
     return {
-      matchups: [
-        ...processMatchups(afcMatchups, 'AFC', afcRosters),
-        ...processMatchups(nfcMatchups, 'NFC', nfcRosters),
-      ],
+      matchups: leagues.flatMap((league, i) =>
+        processMatchups(
+          matchupsByLeague[i],
+          league.conference || league.name,
+          league.id,
+          rostersByLeague[i],
+        ),
+      ),
     };
   },
 };

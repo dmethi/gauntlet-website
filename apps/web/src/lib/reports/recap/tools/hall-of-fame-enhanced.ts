@@ -1,5 +1,5 @@
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues, getLeagueConfig } from '@/config/leagues';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 import type { SleeperMatchup } from '@gauntlet/types';
@@ -87,7 +87,7 @@ const convertToProcessedMatchup = async (
     rosterId: matchup.roster_id,
     teamName,
     leagueId,
-    leagueName: leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
+    leagueName: getLeagueConfig(leagueId)?.conference || 'AFC',
     week,
     season: '2025',
     points: matchup.points || 0,
@@ -127,7 +127,7 @@ const checkPlayerOwnership = async (
 
     if (!owningMatchup) {
       return {
-        league: leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
+        league: getLeagueConfig(leagueId)?.conference || 'AFC',
         manager: 'Waiver',
         teamName: 'Free Agent',
         status: 'free_agent',
@@ -144,7 +144,7 @@ const checkPlayerOwnership = async (
       'Unknown';
 
     return {
-      league: leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC',
+      league: getLeagueConfig(leagueId)?.conference || 'AFC',
       manager,
       teamName: roster?.owner?.metadata?.team_name || manager,
       status: wasStarted ? 'started' : 'benched',
@@ -162,16 +162,11 @@ const getPlayerOwnershipBothLeagues = async (
   playerId: string,
   week: number,
 ): Promise<PlayerOwnership[]> => {
-  const [afcOwnership, nfcOwnership] = await Promise.all([
-    checkPlayerOwnership(playerId, LEAGUE_IDS.AFC, week),
-    checkPlayerOwnership(playerId, LEAGUE_IDS.NFC, week),
-  ]);
+  const ownerships = await Promise.all(
+    getCurrentLeagues().map(league => checkPlayerOwnership(playerId, league.id, week)),
+  );
 
-  const ownership: PlayerOwnership[] = [];
-  if (afcOwnership) ownership.push(afcOwnership);
-  if (nfcOwnership) ownership.push(nfcOwnership);
-
-  return ownership;
+  return ownerships.filter((o): o is PlayerOwnership => o !== null);
 };
 
 /**
@@ -202,33 +197,27 @@ export const checkAllHistoricalRecordsTool: ReportTool<
   },
 
   execute: async (args: { week: number }) => {
-    // Fetch Week N matchups
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-    ]);
+    const leagues = getCurrentLeagues();
+
+    // Fetch Week N matchups for every registered league
+    const matchupsByLeague = await Promise.all(
+      leagues.map(league => sleeperClient.fetchMatchups(league.id, args.week)),
+    );
 
     // Convert to ProcessedMatchup format
     const weekMatchups: ProcessedMatchup[] = [];
 
-    for (const matchup of afcMatchups) {
-      const processed = await convertToProcessedMatchup(
-        matchup,
-        LEAGUE_IDS.AFC,
-        args.week,
-        afcMatchups,
-      );
-      weekMatchups.push(processed);
-    }
-
-    for (const matchup of nfcMatchups) {
-      const processed = await convertToProcessedMatchup(
-        matchup,
-        LEAGUE_IDS.NFC,
-        args.week,
-        nfcMatchups,
-      );
-      weekMatchups.push(processed);
+    for (const [i, league] of leagues.entries()) {
+      const leagueMatchups = matchupsByLeague[i];
+      for (const matchup of leagueMatchups) {
+        const processed = await convertToProcessedMatchup(
+          matchup,
+          league.id,
+          args.week,
+          leagueMatchups,
+        );
+        weekMatchups.push(processed);
+      }
     }
 
     // Get all categories (50+ categories)
@@ -339,12 +328,11 @@ export const calculateTopPositionPerformersEnhanced: ReportTool<
   },
 
   execute: async (args: { week: number }): Promise<TopPositionPerformersResult> => {
-    const [afcMatchups, nfcMatchups] = await Promise.all([
-      sleeperClient.fetchMatchups(LEAGUE_IDS.AFC, args.week),
-      sleeperClient.fetchMatchups(LEAGUE_IDS.NFC, args.week),
-    ]);
+    const matchupsByLeague = await Promise.all(
+      getCurrentLeagues().map(league => sleeperClient.fetchMatchups(league.id, args.week)),
+    );
 
-    const allMatchups = [...afcMatchups, ...nfcMatchups];
+    const allMatchups = matchupsByLeague.flat();
     const players = await sleeperClient.fetchAllPlayers();
 
     // Collect all unique player performances (deduplicate by player ID)

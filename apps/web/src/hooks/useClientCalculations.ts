@@ -11,24 +11,10 @@ import {
   TeamSeasonStats,
 } from '@/shared/utils/calculations';
 import { CACHE_DURATIONS, CURRENT_SEASON, LEAGUE_IDS } from '@/lib/constants';
-import type {
-  SleeperLeague,
-  SleeperMatchup,
-  SleeperPlayer,
-  SleeperRoster,
-  SleeperUser,
-} from '@gauntlet/types';
+import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
+import type { SleeperMatchup, SleeperPlayer } from '@gauntlet/types';
 
-/**
- * Fetch data directly from Sleeper API
- */
-const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
-  const response = await fetch(`https://api.sleeper.app/v1/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Sleeper API error: ${response.status}`);
-  }
-  return response.json();
-};
+const sleeperClient = createBrowserStatsClient();
 
 /**
  * Get all matchups for a season
@@ -42,7 +28,8 @@ const getAllMatchups = async (
   // Fetch all weeks in parallel
   const promises = Array.from({ length: weeks }, (_, i) => i + 1).map(
     week =>
-      fetchSleeperData<SleeperMatchup[]>(`league/${leagueId}/matchups/${week}`)
+      sleeperClient
+        .fetchMatchups(leagueId, week)
         .then(matchups => ({ week, matchups }))
         .catch(() => ({ week, matchups: [] })), // Handle weeks that haven't happened yet
   );
@@ -73,14 +60,14 @@ export const useClientTeamStats = (leagueId?: string) => {
       if (cached) return cached;
 
       // Fetch all necessary data from Sleeper
-      const [league, rosters, users] = await Promise.all([
-        fetchSleeperData<SleeperLeague>(`league/${effectiveLeagueId}`),
-        fetchSleeperData<SleeperRoster[]>(`league/${effectiveLeagueId}/rosters`),
-        fetchSleeperData<SleeperUser[]>(`league/${effectiveLeagueId}/users`),
+      const [, rosters, users] = await Promise.all([
+        sleeperClient.fetchLeague(effectiveLeagueId),
+        sleeperClient.fetchRosters(effectiveLeagueId),
+        sleeperClient.fetchUsers(effectiveLeagueId),
       ]);
 
       // Get current week from NFL state
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
+      const nflState = await sleeperClient.fetchNFLState();
       // Only count completed weeks - current week minus 1 (since current week is in progress)
       const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
 
@@ -118,17 +105,17 @@ export const useClientPositionalScoring = (
       if (cached) return cached;
 
       // Get current week
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
+      const nflState = await sleeperClient.fetchNFLState();
       const currentWeek = Math.min(nflState.week, 14);
 
       // Get matchups and players
       const [matchupsByWeek, players] = await Promise.all([
         getAllMatchups(leagueId, currentWeek),
-        fetchSleeperData<Record<string, SleeperPlayer>>('players/nfl'),
+        sleeperClient.fetchAllPlayers(),
       ]);
 
       // Convert players to Map
-      const playerMap = new Map(Object.entries(players));
+      const playerMap = new Map(Object.entries(players)) as Map<string, SleeperPlayer>;
 
       // Calculate positional scoring
       const positionalScoring = calculatePositionalScoring(matchupsByWeek, playerMap, rosterId);
@@ -159,7 +146,7 @@ export const useClientWeeklyAverages = (leagueId?: string) => {
       if (cached) return cached;
 
       // Get current week
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
+      const nflState = await sleeperClient.fetchNFLState();
       const currentWeek = Math.min(nflState.week, 14);
 
       // Get all matchups

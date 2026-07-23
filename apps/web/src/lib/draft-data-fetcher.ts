@@ -7,7 +7,7 @@
  * Ported from the original sleeper-draft-fetcher.ts with full transformation logic.
  */
 
-import { createDraftClient } from './sleeper/unified-client';
+import { createBrowserDraftClient as createDraftClient } from './sleeper/browser-client';
 import { debugLog } from '@/lib/debug-log';
 import type {
   SleeperDraft,

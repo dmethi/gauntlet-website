@@ -43,7 +43,7 @@ export interface Team {
   id: string;
   name: string;
   abbreviation: string;
-  conference: 'AFC' | 'NFC';
+  conference?: 'AFC' | 'NFC';
   division: 'North' | 'South' | 'East' | 'West';
 }
 

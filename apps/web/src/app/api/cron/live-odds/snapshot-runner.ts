@@ -16,12 +16,7 @@
  * - @gauntlet/server must be in workspace dependencies
  */
 
-import type {
-  CompleteSnapshot,
-  DebugPlayer,
-  SimulationPlayer,
-  SleeperMatchup,
-} from '@gauntlet/types';
+import type { CompleteSnapshot, DebugPlayer, SimulationPlayer } from '@gauntlet/types';
 
 // Import utilities from server package
 import {
@@ -31,6 +26,7 @@ import {
   disconnect,
   saveSnapshotIfChanged,
 } from '@gauntlet/server';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 import type { MetricsSummary } from '@gauntlet/types';
 
@@ -56,10 +52,7 @@ const captureIndividualMatchup = async (
 ): Promise<CompleteSnapshot | null> => {
   try {
     // Get fresh current scores directly from Sleeper API
-    const sleeperResponse = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}/matchups/${week}`,
-    );
-    const matchups = (await sleeperResponse.json()) as SleeperMatchup[];
+    const matchups = await sleeperClient.fetchMatchups(leagueId, week);
     const matchupPair = matchups.filter(m => m.matchup_id === matchupId);
 
     if (matchupPair.length !== 2) return null;

@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentWeek } from '@gauntlet/lib';
 import { useSeasonAggregates as useSeasonalAggregatesImport } from '@/features/stats/hooks';
+import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
 import type {
   LeagueData,
   LeagueTransactionsResponse,
@@ -207,26 +208,31 @@ export const useLeagueTransactions = (leagueId?: string) => {
   });
 };
 
+const playoffBracketClient = createBrowserStatsClient();
+
 export const usePlayoffBracket = (leagueId?: string) => {
   return useQuery<PlayoffBracketResponse>({
     queryKey: ['playoffBracket', leagueId],
     queryFn: async () => {
       // Fetch both winners and losers brackets from Sleeper API
       const [winnersRes, losersRes] = await Promise.allSettled([
-        fetch(`https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`),
-        fetch(`https://api.sleeper.app/v1/league/${leagueId}/losers_bracket`),
+        playoffBracketClient.fetchWinnersBracket(leagueId!),
+        playoffBracketClient.fetchLosersBracket(leagueId!),
       ]);
 
       const result: PlayoffBracketResponse = {};
 
-      // Handle winners bracket
-      if (winnersRes.status === 'fulfilled' && winnersRes.value.ok) {
-        result.winners_bracket = await winnersRes.value.json();
+      // Handle winners bracket. Sleeper's bracket endpoints return shorthand
+      // keys (r/m/t1/t2/w/l) matching local PlayoffMatchup, not
+      // @gauntlet/types's SleeperPlayoffMatchup shape — same pre-existing
+      // looseness noted in unified-client.ts's RosterWithOwner cast.
+      if (winnersRes.status === 'fulfilled') {
+        result.winners_bracket = winnersRes.value as unknown as PlayoffMatchup[];
       }
 
       // Handle losers bracket
-      if (losersRes.status === 'fulfilled' && losersRes.value.ok) {
-        result.losers_bracket = await losersRes.value.json();
+      if (losersRes.status === 'fulfilled') {
+        result.losers_bracket = losersRes.value as unknown as PlayoffMatchup[];
       }
 
       return result;

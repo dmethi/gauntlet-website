@@ -8,6 +8,8 @@ import {
 } from '@/lib/calculate-league-projections';
 import type { LeagueWideOddsType, MatchupOdds, TeamOdds } from '@/features/matchups/types';
 
+export const dynamic = 'force-dynamic';
+
 const leagueNames: Record<string, string> = {
   '1263744209295245312': 'Gauntlet AFC',
   '1263740549504962561': 'Gauntlet NFC',

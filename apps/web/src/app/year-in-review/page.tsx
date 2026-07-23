@@ -31,7 +31,7 @@ export const metadata = {
   description: 'Season 2025 in review. Champions crowned. Money won. The Gauntlet enters Year Two.',
 };
 
-function StatCard({ value, label }: { value: string; label: string }) {
+const StatCard = ({ value, label }: { value: string; label: string }) => {
   return (
     <div className="flex flex-col items-center justify-center border border-white/10 rounded-lg p-6 bg-white/5">
       <span className="text-3xl sm:text-4xl font-bold text-[#d4af37] font-geizer tracking-wide">
@@ -42,9 +42,9 @@ function StatCard({ value, label }: { value: string; label: string }) {
       </span>
     </div>
   );
-}
+};
 
-function AwardCard({
+const AwardCard = ({
   Icon,
   award,
   winner,
@@ -54,7 +54,7 @@ function AwardCard({
   award: string;
   winner: string;
   detail?: string;
-}) {
+}) => {
   return (
     <div className="border border-white/10 hover:border-[#d4af37]/40 rounded-lg p-5 bg-white/5 transition-colors group">
       <Icon className="w-5 h-5 text-[#d4af37]/60 mb-3" strokeWidth={1.5} />
@@ -63,9 +63,9 @@ function AwardCard({
       {detail && <p className="text-white/50 text-sm mt-1">{detail}</p>}
     </div>
   );
-}
+};
 
-function ChampionCard({
+const ChampionCard = ({
   league,
   champion,
   runnerUp,
@@ -75,7 +75,7 @@ function ChampionCard({
   champion: string | null;
   runnerUp: string | null;
   thirdPlace: string | null;
-}) {
+}) => {
   const shortLeague = league.replace('Gauntlet ', '');
   return (
     <div className="border border-[#d4af37]/30 rounded-xl p-6 sm:p-8 bg-gradient-to-b from-[#d4af37]/5 to-transparent">
@@ -107,9 +107,9 @@ function ChampionCard({
       </div>
     </div>
   );
-}
+};
 
-function PayoutRow({ label, amount, note }: { label: string; amount: string; note?: string }) {
+const PayoutRow = ({ label, amount, note }: { label: string; amount: string; note?: string }) => {
   return (
     <div className="flex items-center justify-between py-3 border-b border-white/10 last:border-0">
       <div>
@@ -119,7 +119,7 @@ function PayoutRow({ label, amount, note }: { label: string; amount: string; not
       <span className="text-[#d4af37] font-bold text-sm tabular-nums">{amount}</span>
     </div>
   );
-}
+};
 
 export default async function YearInReviewPage() {
   const data: SeasonStats | null = await fetchSeasonStats().catch(() => null);

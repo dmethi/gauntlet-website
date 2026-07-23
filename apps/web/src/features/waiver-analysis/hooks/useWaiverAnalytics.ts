@@ -8,9 +8,12 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import type { SleeperTransaction } from '@gauntlet/types';
 import { CURRENT_LEAGUES } from '@/config/leagues';
+import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
 import type { WaiverAnalysisData } from '../types';
 import { type PlayerDataLoader, processWaiverData } from '../utils/process-waiver-data';
 import type { TeamInfo } from '../utils/transformations';
+
+const sleeperClient = createBrowserStatsClient();
 
 /**
  * Hook options for customizing query behavior
@@ -39,16 +42,12 @@ const fetchWeekTransactions = async (
   leagueId: string,
   week: number,
 ): Promise<SleeperTransaction[]> => {
-  const response = await fetch(
-    `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`,
-  );
-
-  if (!response.ok) {
-    console.warn(`Failed to fetch week ${week} for league ${leagueId}`);
+  try {
+    return await sleeperClient.fetchTransactions(leagueId, week);
+  } catch (error) {
+    console.warn(`Failed to fetch week ${week} for league ${leagueId}`, error);
     return [];
   }
-
-  return response.json();
 };
 
 /**

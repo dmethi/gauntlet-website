@@ -130,10 +130,7 @@ export const getPlayerById = async (playerId: string) => {
  */
 export const getTransactionsByWeek = async (leagueId: string, week: number) => {
   // Fetch from Sleeper transactions endpoint
-  const response = await fetch(
-    `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`,
-  );
-  const transactions = await response.json();
+  const transactions = await sleeperClient.fetchTransactions(leagueId, week);
 
   // Import the player data loader for real player names
   const { getPlayerById } = await import('../data/players-loader');
@@ -204,16 +201,7 @@ export const getAllTransactionsByLeague = async (leagueId: string) => {
   // Fetch transactions for all weeks (1-18)
   for (let week = 1; week <= 18; week++) {
     try {
-      const response = await fetch(
-        `https://api.sleeper.app/v1/league/${leagueId}/transactions/${week}`,
-      );
-
-      if (!response.ok) {
-        console.warn(`Failed to fetch week ${week} transactions for league ${leagueId}`);
-        continue;
-      }
-
-      const weekTransactions = await response.json();
+      const weekTransactions = await sleeperClient.fetchTransactions(leagueId, week);
 
       // Transform and add to the collection
       const transformedTransactions = weekTransactions.map((t: any) => {
@@ -295,8 +283,8 @@ export const getDraftByLeague = async (leagueId: string) => {
 
   // Fetch draft info and picks
   const [draftInfo, draftPicks] = await Promise.all([
-    fetch(`https://api.sleeper.app/v1/draft/${league.draft_id}`).then(r => r.json()),
-    fetch(`https://api.sleeper.app/v1/draft/${league.draft_id}/picks`).then(r => r.json()),
+    sleeperClient.fetchDraft(league.draft_id),
+    sleeperClient.fetchDraftPicks(league.draft_id),
   ]);
 
   return {

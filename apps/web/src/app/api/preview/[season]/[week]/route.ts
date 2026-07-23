@@ -3,6 +3,8 @@ import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/a
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 import reportData from '@/data/reports/2025/week-2';
 
+export const dynamic = 'force-dynamic';
+
 const GAUNTLET_LEAGUES = [
   { id: '1263744209295245312', name: 'Gauntlet AFC' },
   { id: '1263740549504962561', name: 'Gauntlet NFC' },

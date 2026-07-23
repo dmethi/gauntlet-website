@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPlayersByIds } from '@/data/players-loader';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 
+export const dynamic = 'force-dynamic';
+
 // Helper function to get current week
 const getCurrentWeek = async () => {
   const nflState = await sleeperClient.fetchNFLState();
