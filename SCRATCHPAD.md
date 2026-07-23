@@ -133,15 +133,22 @@ they resolve rather than letting them accumulate.
   `enabled: !pathname.startsWith('/year-in-review')` to preserve the original
   no-fetch-on-year-in-review behavior, not just silence the linter).
   `pnpm test`/`type-check`/`lint` all clean after.
+- Test debt cleanup (2026-07-23), separate from Phase 1: fixed the 9
+  pre-existing web failures noted above — `LeagueView`, `ScheduleAnalysis`, and
+  `TrendsView` had assertions that drifted from the components they cover (stale
+  heading text, ambiguous regex matches, a `teamTotal > 0` "no data yet"
+  convention the "zero scores" test didn't account for);
+  `useTransactionAnalysisModel` spied on `console.log` but `debugLog` actually
+  calls `console.warn`. Also gave `packages/models` `--passWithNoTests` since it
+  has no test files yet. `apps/web` now 876/876, `packages/models` passes with 0
+  tests. `apps/server`'s failures are untouched — see below, separate scope.
 
 ## Random open threads
 
-- Pre-existing, unrelated test failures on `main` as of 2026-07-23 (confirmed
-  via `git stash` before Phase 1 changes — not caused by this work):
-  `LeagueView.test.tsx` ("handles zero scores"), `ScheduleAnalysis.test.tsx` (3
-  tests), `TrendsView.test.tsx` (5 tests), and
-  `useTransactionAnalysisModel.test.ts` ("analyzes correct number of weeks").
-  Worth a look, separate from Phase 1.
+- 2026-07-23: `apps/server`'s `historical-data.test.ts` (13 tests) and
+  `snapshot-validator.test.ts` (10 tests) are failing — looks like a Prisma-mock
+  setup problem, not investigated yet. Separate and larger than the web-suite
+  debt above; needs its own scoping pass before starting.
 
 ## Blocked
 
