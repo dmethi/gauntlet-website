@@ -85,7 +85,9 @@ describe('ScheduleAnalysis', () => {
 
       render(<ScheduleAnalysis {...props} />);
 
-      expect(screen.getByText(/Schedule Strength/i)).toBeInTheDocument();
+      // ScheduleStrengthTable's actual heading is "Hypothetical Records Summary"
+      // (its user-facing name changed since this test was written).
+      expect(screen.getByText(/Hypothetical Records Summary/i)).toBeInTheDocument();
     });
   });
 
@@ -99,7 +101,11 @@ describe('ScheduleAnalysis', () => {
 
       render(<ScheduleAnalysis {...props} />);
 
-      expect(screen.getByText(/Schedule Difficulty/i)).toBeInTheDocument();
+      // Query by heading role: "Schedule Difficulty" also appears as an
+      // unrelated InfoCard label (h4) inside LuckDistributionSection.
+      expect(
+        screen.getByRole('heading', { name: /Schedule Difficulty Rankings/i }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -189,7 +195,9 @@ describe('ScheduleAnalysis', () => {
 
       render(<ScheduleAnalysis {...props} />);
 
-      expect(screen.getByText(/Luck Distribution/i)).toBeInTheDocument();
+      // LuckDistributionSection's actual heading is "Team Distribution Analysis"
+      // (its user-facing name changed since this test was written).
+      expect(screen.getByText(/Team Distribution Analysis/i)).toBeInTheDocument();
     });
 
     it('allows team selection for luck distribution', () => {

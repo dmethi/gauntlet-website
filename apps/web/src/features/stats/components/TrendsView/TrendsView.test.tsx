@@ -58,9 +58,12 @@ describe('TrendsView', () => {
 
       render(<TrendsView {...props} />);
 
-      // Check for section headings
+      // Check for section headings. "Weekly Performance Trends" is matched with
+      // an exact (non-regex) string since PositionPerformanceTrends renders
+      // per-position cards titled "{position} Weekly Performance Trends", which
+      // would also match a substring/regex query.
       expect(screen.getByText(/Power Rankings Evolution/i)).toBeInTheDocument();
-      expect(screen.getByText(/Weekly Performance Trends/i)).toBeInTheDocument();
+      expect(screen.getByText('Weekly Performance Trends')).toBeInTheDocument();
       expect(screen.getByText(/Team Consistency/i)).toBeInTheDocument();
     });
 
@@ -110,7 +113,7 @@ describe('TrendsView', () => {
 
       render(<TrendsView {...props} />);
 
-      expect(screen.getByText(/Weekly Performance Trends/i)).toBeInTheDocument();
+      expect(screen.getByText('Weekly Performance Trends')).toBeInTheDocument();
     });
   });
 
@@ -125,7 +128,9 @@ describe('TrendsView', () => {
 
       render(<TrendsView {...props} />);
 
-      expect(screen.getByText(/Position Performance/i)).toBeInTheDocument();
+      // PositionPerformanceTrends renders one card per position, titled
+      // "{position} Weekly Performance Trends" (e.g. "QB Weekly Performance Trends").
+      expect(screen.getByText('QB Weekly Performance Trends')).toBeInTheDocument();
     });
   });
 
@@ -153,7 +158,9 @@ describe('TrendsView', () => {
 
       render(<TrendsView {...props} />);
 
-      expect(screen.getByText(/Position Consistency/i)).toBeInTheDocument();
+      // PositionConsistencyAnalysis renders one card per position, titled
+      // "{position} Consistency Analysis" (e.g. "QB Consistency Analysis").
+      expect(screen.getByText('QB Consistency Analysis')).toBeInTheDocument();
     });
   });
 
@@ -181,7 +188,9 @@ describe('TrendsView', () => {
 
       render(<TrendsView {...props} />);
 
-      expect(screen.getByText(/Position Scoring Distribution/i)).toBeInTheDocument();
+      // PositionScoringDistribution renders one card per position, titled
+      // "{position} Scoring Distribution Analysis" (e.g. "QB Scoring Distribution Analysis").
+      expect(screen.getByText('QB Scoring Distribution Analysis')).toBeInTheDocument();
     });
   });
 

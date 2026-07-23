@@ -174,14 +174,19 @@ describe('LeagueView', () => {
       expect(screen.getByText('360.0')).toBeInTheDocument();
     });
 
-    it('handles zero scores', () => {
+    it('excludes teams with zero score (no data yet, same convention as other stats views)', () => {
       const entries = [createMockTeamEntry('team-1', 'Zero Team', 0)];
 
       const props = createProps({ allTeamEntries: entries });
 
       render(<LeagueView {...props} />);
 
-      expect(screen.getByText('0.0')).toBeInTheDocument();
+      // A team total of 0 means "no scored weeks yet" (see calculateLeagueRankings'
+      // `teamTotal > 0` filter), not a legitimate zero-point season — it's filtered
+      // out of the rankings table, same as every other week/score check in this
+      // feature (e.g. stats-content.tsx's `d.value > 0` week-played check).
+      expect(screen.getByText(/League Rankings/i)).toBeInTheDocument();
+      expect(screen.queryByText('Zero Team')).not.toBeInTheDocument();
     });
   });
 });

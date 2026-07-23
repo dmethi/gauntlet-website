@@ -348,7 +348,8 @@ describe('useTransactionAnalysisModel', () => {
   });
 
   it('analyzes correct number of weeks based on currentNflWeek', async () => {
-    const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    // debugLog (lib/debug-log.ts) logs via console.warn, not console.log.
+    const consoleLogSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     (global.fetch as any).mockImplementation((url: string) => {
       if (url.includes('/api/league/teams')) {
