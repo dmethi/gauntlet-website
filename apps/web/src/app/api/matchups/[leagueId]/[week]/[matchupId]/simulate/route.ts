@@ -5,6 +5,7 @@ import {
   calculateLeagueProjections,
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
+import { normalizeNflTeamAbbreviation } from './nfl-team';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,31 +34,6 @@ const fetchEspnScoreboard = async () => {
     console.warn('Failed to fetch ESPN scoreboard:', error);
     return null;
   }
-};
-
-const normalizeNflTeamAbbreviation = (abbreviation?: string): string | undefined => {
-  if (!abbreviation) return abbreviation;
-  // Normalize various provider codes to a consistent set (prefer ESPN/Sleeper modern codes)
-  const mapping: Record<string, string> = {
-    // Washington / Jacksonville
-    WSH: 'WAS',
-    JAC: 'JAX',
-    // Legacy franchises
-    SD: 'LAC',
-    STL: 'LAR',
-    OAK: 'LV',
-    // Occasionally-seen alternates
-    LVR: 'LV',
-    GBP: 'GB',
-    KCC: 'KC',
-    SFO: 'SF',
-    TAM: 'TB',
-    NOR: 'NO',
-    NWE: 'NE',
-    // Ambiguous LA fallback (rare in data but safe)
-    LA: 'LAR',
-  };
-  return mapping[abbreviation] || abbreviation;
 };
 
 const parseClockSeconds = (clock: unknown): number => {
