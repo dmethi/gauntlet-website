@@ -1,0 +1,14 @@
+{
+  "league_id": "1234567890123456789",
+  "name": "Fixture Test League",
+  "season": "2025",
+  "status": "in_season",
+  "sport": "nfl",
+  "season_type": "regular",
+  "settings": {
+    "playoff_week_start": 15
+  },
+  "scoring_settings": {},
+  "roster_positions": ["QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "K", "DEF"],
+  "total_rosters": 12
+}

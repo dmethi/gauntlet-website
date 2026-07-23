@@ -57,25 +57,46 @@ Findings from the pre-season audit (2026-07-23) that motivate everything below:
 
 Build this first — Phases 2 and 3 both depend on it.
 
-- [ ] Single Sleeper API client boundary: one module all Sleeper HTTP calls go
-      through, modeled on driveff's `src/lib/sleeper/client.ts`.
-- [ ] League registry: a generic `season → League[]` structure (each league =
-      Sleeper league ID + label + link to prior-season league ID), replacing
-      `LEAGUE_IDS` / `ALL_GAUNTLET_LEAGUES`. Must support a variable number of
-      leagues per season (2 for 2025, 3 for the new season, whatever comes
-      after) — not an `{afc, nfc}` shape.
-- [ ] Register known history explicitly: 2025's 2 leagues now; leave a clear
-      slot for the new season's 3 league IDs (supplied once created — tracked in
-      `SCRATCHPAD.md` as blocked).
+- [x] Single Sleeper API client boundary:
+      `apps/web/src/lib/sleeper/unified-client.ts` hardened in place (existing
+      class-based boundary kept, not rewritten) with Sleeper ID validation and
+      `SLEEPER_FIXTURES=1` fixture replay, modeled on driveff's
+      `src/lib/sleeper/client.ts`. Added `fetchTransactions`,
+      `fetchWinnersBracket`, `fetchLosersBracket`.
+- [x] League registry: `apps/web/src/config/leagues.ts` evolved in place (it
+      already existed as a flat `CURRENT_LEAGUES`/`ALL_LEAGUES` list used by 17+
+      call sites — chose to extend it rather than build a competing module) into
+      `LEAGUE_REGISTRY: Record<SeasonId, League[]>` with
+      `getLeaguesForSeason`/`getAllLeagues`/`getAllSeasons` accessors and a
+      `previousLeagueId` field per league. Old `CURRENT_LEAGUES`/`ALL_LEAGUES`/
+      `getCurrentLeagues`/`getLeagueConfig`/`getLeaguesBySeason` kept as
+      registry-backed compat shims — no call-site rewrite needed.
+- [x] Register known history explicitly: 2025's 2 leagues registered in
+      `LEAGUE_REGISTRY['2025']`. The new season's key is deliberately absent
+      (not a placeholder) with a comment pointing at `SCRATCHPAD.md`'s Blocked
+      section — every accessor already treats an unregistered season as `[]`.
 - [ ] Replace the ~10+ scattered `Promise.all([fetch(AFC), fetch(NFC)])` call
       sites (recap tools, report nodes) with iteration over the registry.
-- [ ] Manager-history aggregation helper: given a Sleeper `owner_id`, walk every
-      registered league/season and return that manager's full roster/matchup
-      history — the building block Hall of Fame and manager profile pages both
-      need.
-- [ ] Fixture-replay tests for Sleeper-dependent logic, matching driveff's
-      `concept--sleeper-client-boundary.md` /
-      `concept--sleeper-fixture-     replay.md` pattern.
+      **`standings.ts` migrated as the proven pattern** (registry iteration in,
+      `{afc, nfc}` external shape unchanged). Remaining: `league-overview.ts`,
+      `upcoming.ts`, `composite-tools.ts`, `hall-of-shame.ts`,
+      `power-rankings.ts`, `hall-of-fame-enhanced.ts` — same mechanical pattern,
+      not yet applied. Raw-`fetch('api.sleeper.app/...')` bypass files (~10,
+      catalogued in the session that did this work) still need migrating onto
+      the hardened client — also not yet done.
+- [x] Manager-history aggregation helper:
+      `apps/web/src/lib/leagues/manager-history.ts`
+      (`getManagerHistory(ownerId, client?, weeksPerLeague?)`), unit-tested with
+      a mocked client in `manager-history.test.ts`. Not wired into any UI —
+      Phase 3's job.
+- [x] Fixture-replay tests for Sleeper-dependent logic:
+      `apps/web/src/lib/sleeper/unified-client.test.ts`, modeled on driveff's
+      `client.test.ts`. A capture script
+      (`apps/web/src/scripts/capture-sleeper-fixtures.ts`) exists but has not
+      been run — it needs live network access and was intentionally left for a
+      human/agent with that access; the `fixtures/` dir only has one
+      hand-authored mechanism-test fixture so far, not real captured league
+      data.
 
 ## Phase 2 — 3-league (5-league-history) migration
 

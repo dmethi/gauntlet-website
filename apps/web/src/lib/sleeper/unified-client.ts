@@ -14,24 +14,84 @@
  * 8. Backwards compatibility critical - existing function signatures preserved
  */
 
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 import type {
   NFLState,
   PlayerIndex,
   PlayerStats,
   SleeperLeague,
   SleeperMatchup,
+  SleeperPlayoffMatchup,
   SleeperRoster,
+  SleeperTransaction,
   SleeperUser,
 } from '@gauntlet/types';
 
 // Re-export PlayerStats for backwards compatibility
 export type { PlayerStats };
 
+// The documented shape of fetchRostersWithOwners's result, used by callers
+// (e.g. manager-history.ts) that want a typed contract. NOTE: the method
+// itself still returns `Promise<any[]>` (pre-existing) rather than
+// `Promise<RosterWithOwner[]>` — narrowing that return type cascades type
+// errors into standings.ts/power-rankings.ts/matchup-data.ts, which read
+// `roster.metadata?.team_name` in ways that assume `any`, not `unknown`.
+// Fixing those is out of scope here; this type isn't enforced at the source.
+export interface RosterWithOwner extends SleeperRoster {
+  owner?: SleeperUser;
+}
+
 // Note: PlayerStats definition moved to @gauntlet/types/sleeper.ts
 // Original interface had 100+ fields covering all NFL stat categories
 
 // Base API configuration
 const SLEEPER_API_BASE = 'https://api.sleeper.app/v1';
+
+// Local-dev fixture replay (SLEEPER_FIXTURES=1) — mirrors driveff's
+// src/lib/sleeper/client.ts pattern. Fixtures live under fixtures/, mirroring
+// the endpoint path 1:1 (e.g. /league/123/rosters -> fixtures/league/123/rosters.json).
+// process.cwd() is apps/web both under `next dev`/`next start` (run from the
+// app package directory) and under vitest — unlike __dirname, which resolves
+// to a bundler-rewritten output path under Next.js and silently 404s there.
+const FIXTURES_DIR = join(process.cwd(), 'src/lib/sleeper/fixtures');
+
+const isFixturesEnabled = (): boolean => {
+  if (process.env.SLEEPER_FIXTURES !== '1') return false;
+  if (process.env.VERCEL) {
+    throw new Error(
+      'SLEEPER_FIXTURES=1 is set but this is running on Vercel (VERCEL env var present) — ' +
+        'fixture replay is local-dev-only (`next dev`). Unset SLEEPER_FIXTURES for this environment.',
+    );
+  }
+  return true;
+};
+
+const readFixture = async <T>(endpoint: string): Promise<T> => {
+  const filePath = join(FIXTURES_DIR, `${endpoint.replace(/^\//, '')}.json`);
+  let raw: string;
+  try {
+    raw = await readFile(filePath, 'utf-8');
+  } catch (error) {
+    throw new Error(
+      `No fixture recorded for ${endpoint} (looked in ${filePath}). Run ` +
+        `apps/web/src/scripts/capture-sleeper-fixtures.ts to capture it.`,
+      { cause: error },
+    );
+  }
+  try {
+    return JSON.parse(raw) as T;
+  } catch (error) {
+    throw new Error(`Fixture file is not valid JSON: ${filePath}`, { cause: error });
+  }
+};
+
+/** Sleeper IDs (league/draft) are always numeric strings. */
+const assertSleeperId = (id: string, kind: string): void => {
+  if (!/^\d+$/.test(id)) {
+    throw new Error(`Invalid Sleeper ${kind} ID: ${JSON.stringify(id)}`);
+  }
+};
 
 // Cache duration constants (from sleeper-stats-service.ts)
 export const CACHE_DURATIONS = {
@@ -142,6 +202,14 @@ export class UnifiedSleeperClient {
         this.log(`Cache hit for ${endpoint}`);
         return cached;
       }
+    }
+
+    if (isFixturesEnabled()) {
+      const data = await readFixture<T>(endpoint);
+      if (this.config.cacheStrategy === 'memory' && effectiveCacheDuration > 0) {
+        this.setCache(cacheKey, data, effectiveCacheDuration);
+      }
+      return data;
     }
 
     // Rate limiting
@@ -298,19 +366,38 @@ export class UnifiedSleeperClient {
    * Core league endpoints
    */
   async fetchLeague(leagueId: string): Promise<SleeperLeague> {
+    assertSleeperId(leagueId, 'league');
     return this.fetchFromSleeper(`/league/${leagueId}`);
   }
 
   async fetchUsers(leagueId: string): Promise<SleeperUser[]> {
+    assertSleeperId(leagueId, 'league');
     return this.fetchFromSleeper(`/league/${leagueId}/users`);
   }
 
   async fetchRosters(leagueId: string): Promise<SleeperRoster[]> {
+    assertSleeperId(leagueId, 'league');
     return this.fetchFromSleeper(`/league/${leagueId}/rosters`);
   }
 
   async fetchMatchups(leagueId: string, week: number): Promise<SleeperMatchup[]> {
+    assertSleeperId(leagueId, 'league');
     return this.fetchFromSleeper(`/league/${leagueId}/matchups/${week}`);
+  }
+
+  async fetchTransactions(leagueId: string, week: number): Promise<SleeperTransaction[]> {
+    assertSleeperId(leagueId, 'league');
+    return this.fetchFromSleeper(`/league/${leagueId}/transactions/${week}`);
+  }
+
+  async fetchWinnersBracket(leagueId: string): Promise<SleeperPlayoffMatchup[]> {
+    assertSleeperId(leagueId, 'league');
+    return this.fetchFromSleeper(`/league/${leagueId}/winners_bracket`);
+  }
+
+  async fetchLosersBracket(leagueId: string): Promise<SleeperPlayoffMatchup[]> {
+    assertSleeperId(leagueId, 'league');
+    return this.fetchFromSleeper(`/league/${leagueId}/losers_bracket`);
   }
 
   /**
@@ -383,10 +470,12 @@ export class UnifiedSleeperClient {
    * Draft endpoints
    */
   async fetchDraft(draftId: string): Promise<any> {
+    assertSleeperId(draftId, 'draft');
     return this.fetchFromSleeper(`/draft/${draftId}`);
   }
 
   async fetchDraftPicks(draftId: string): Promise<any[]> {
+    assertSleeperId(draftId, 'draft');
     return this.fetchFromSleeper(`/draft/${draftId}/picks`);
   }
 
@@ -394,6 +483,7 @@ export class UnifiedSleeperClient {
    * Enhanced methods that combine multiple calls (from sleeper-direct.ts)
    */
   async fetchRostersWithOwners(leagueId: string): Promise<any[]> {
+    assertSleeperId(leagueId, 'league');
     const [rosters, users] = await Promise.all([
       this.fetchRosters(leagueId),
       this.fetchUsers(leagueId),

@@ -3,20 +3,12 @@
  * Handles multiple leagues, historical data, and win probability
  */
 
-import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
+import { CACHE_DURATIONS } from '@/lib/constants';
+import { getAllSeasons, getLeaguesForSeason } from '@/config/leagues';
 import { createServiceClient } from '@/lib/sleeper/unified-client';
 import { PlayerStats } from '@/lib/sleeper/unified-client';
 import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
 import type { EnhancedMatchup } from '../utils/aggregations';
-
-// All Gauntlet league IDs (current and historical)
-export const ALL_GAUNTLET_LEAGUES = {
-  '2025': {
-    AFC: LEAGUE_IDS.AFC,
-    NFC: LEAGUE_IDS.NFC,
-  },
-  // Add more seasons as needed
-};
 
 export interface LiveWinProbSample {
   id: string;
@@ -414,18 +406,20 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
 
     const allMatchups: EnhancedMatchup[] = [];
 
-    // Process each season
-    for (const [season, leagues] of Object.entries(ALL_GAUNTLET_LEAGUES)) {
+    // Process each registered season, one league at a time (never merge raw
+    // matchups across leagues before this point — see docs/ETHOS.md).
+    // TODO: `season === '2025'` below assumes 2025 is "current" — should
+    // read from a CURRENT_SEASON registry concept instead (out of scope
+    // for this slice).
+    for (const season of getAllSeasons()) {
       if (!includeCurrent && season === '2025') continue;
 
-      for (const [leagueName, leagueId] of Object.entries(leagues)) {
-        if (!leagueId) continue; // Skip if no league ID
-
+      for (const league of getLeaguesForSeason(season)) {
         try {
-          const matchups = await getLeagueSeasonMatchups(leagueId, season);
+          const matchups = await getLeagueSeasonMatchups(league.id, season);
           allMatchups.push(...matchups);
         } catch (error) {
-          console.error(`Error fetching ${season} ${leagueName}:`, error);
+          console.error(`Error fetching ${season} ${league.name}:`, error);
         }
       }
     }

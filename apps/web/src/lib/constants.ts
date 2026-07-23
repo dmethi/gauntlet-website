@@ -2,10 +2,14 @@
  * Core application constants
  */
 
-// League IDs
+import { getCurrentLeagues } from '@/config/leagues';
+
+// League IDs, derived from the current season's registered leagues
+// (apps/web/src/config/leagues.ts is the source of truth).
+const currentLeagues = getCurrentLeagues();
 export const LEAGUE_IDS = {
-  AFC: '1263744209295245312',
-  NFC: '1263740549504962561',
+  AFC: currentLeagues.find(l => l.conference === 'AFC')?.id ?? '',
+  NFC: currentLeagues.find(l => l.conference === 'NFC')?.id ?? '',
 } as const;
 
 // Default league for fallback

@@ -61,11 +61,16 @@ const createMockMatchups = (leagueId: string, week: number): SleeperMatchup[] =>
 describe('Multi-League System Integration', () => {
   describe('League Configuration', () => {
     it('has two distinct league IDs', () => {
-      expect(CURRENT_LEAGUES).toHaveLength(2);
-      const [afc, nfc] = CURRENT_LEAGUES;
+      // 2025 happens to have exactly 2 leagues today, but the registry
+      // (apps/web/src/config/leagues.ts) supports a variable count per
+      // season — assert AFC/NFC presence and distinctness, not an exact
+      // length, so a future season with more leagues doesn't fail this.
+      expect(CURRENT_LEAGUES.length).toBeGreaterThanOrEqual(2);
+      const afc = CURRENT_LEAGUES.find(l => l.conference === 'AFC')!;
+      const nfc = CURRENT_LEAGUES.find(l => l.conference === 'NFC')!;
 
-      expect(afc.conference).toBe('AFC');
-      expect(nfc.conference).toBe('NFC');
+      expect(afc).toBeDefined();
+      expect(nfc).toBeDefined();
       expect(afc.id).not.toBe(nfc.id);
     });
 

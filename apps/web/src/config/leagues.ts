@@ -1,24 +1,58 @@
 /**
- * League Configuration
- * Hardcoded league IDs to eliminate database dependency
+ * League Registry
+ *
+ * The single source of truth for which Sleeper leagues exist, keyed by
+ * season. Hardcoded (no database dependency) since league membership only
+ * changes once a year when new leagues are created.
  */
 
-export const CURRENT_LEAGUES = [
-  {
-    id: '1263744209295245312',
-    name: 'Gauntlet AFC',
-    season: 2025,
-    conference: 'AFC',
-  },
-  {
-    id: '1263740549504962561',
-    name: 'Gauntlet NFC',
-    season: 2025,
-    conference: 'NFC',
-  },
-];
+export interface League {
+  id: string;
+  name: string;
+  season: number;
+  conference?: 'AFC' | 'NFC';
+  /** Sleeper league ID this league continues from, for data lineage — not walked at runtime. */
+  previousLeagueId: string | null;
+}
 
-export const ALL_LEAGUES = [...CURRENT_LEAGUES];
+export type SeasonId = string;
+export type LeagueRegistry = Record<SeasonId, League[]>;
+
+export const LEAGUE_REGISTRY: LeagueRegistry = {
+  '2025': [
+    {
+      id: '1263744209295245312',
+      name: 'Gauntlet AFC',
+      season: 2025,
+      conference: 'AFC',
+      previousLeagueId: null,
+    },
+    {
+      id: '1263740549504962561',
+      name: 'Gauntlet NFC',
+      season: 2025,
+      conference: 'NFC',
+      previousLeagueId: null,
+    },
+  ],
+  // 2026 season is BLOCKED on 3 new Sleeper league IDs not yet created — see
+  // SCRATCHPAD.md's "Blocked" section. Do not add a placeholder key with
+  // fake IDs; every accessor below already handles "season not registered"
+  // by returning [].
+};
+
+/** Leagues registered for a given season, or [] if that season isn't registered yet. */
+export const getLeaguesForSeason = (season: SeasonId): League[] => LEAGUE_REGISTRY[season] ?? [];
+
+/** Every league across every registered season. */
+export const getAllLeagues = (): League[] => Object.values(LEAGUE_REGISTRY).flat();
+
+/** Every season with at least one registered league. */
+export const getAllSeasons = (): SeasonId[] => Object.keys(LEAGUE_REGISTRY);
+
+export const CURRENT_LEAGUES: League[] = getLeaguesForSeason('2025');
+
+export const ALL_LEAGUES: League[] = getAllLeagues();
 
 /**
  * Get league by ID without database
@@ -38,5 +72,5 @@ export const getCurrentLeagues = () => {
  * Get leagues by season
  */
 export const getLeaguesBySeason = (season: number) => {
-  return ALL_LEAGUES.filter(l => l.season === season);
+  return getLeaguesForSeason(String(season));
 };

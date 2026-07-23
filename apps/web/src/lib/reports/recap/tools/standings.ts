@@ -1,5 +1,5 @@
 import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getCurrentLeagues } from '@/config/leagues';
 import { getRealNameByRoster } from '@/lib/username-mapping';
 import type { ReportTool } from './base';
 import type { Standings, StandingsEntry } from '../types';
@@ -208,11 +208,23 @@ export const fetchStandingsTool: ReportTool<StandingsArgs, StandingsResult> = {
   },
 
   execute: async (args: StandingsArgs): Promise<StandingsResult> => {
-    // Calculate standings for both leagues in parallel
-    const [afcStandings, nfcStandings] = await Promise.all([
-      calculateStandings(LEAGUE_IDS.AFC, 'AFC', args.week),
-      calculateStandings(LEAGUE_IDS.NFC, 'NFC', args.week),
-    ]);
+    // Calculate standings for every registered league in parallel, then pick
+    // AFC/NFC back out by conference (see docs/ETHOS.md — process leagues
+    // separately; never merge raw data before this point).
+    //
+    // `league.conference as 'AFC'|'NFC'` assumes every current-season league
+    // has a conference — true for 2025's 2 leagues, but League.conference is
+    // optional to allow a future conference-less 3rd league (Phase 2). If one
+    // is added here without also updating this file, its standings are
+    // silently dropped (not found by either .find() below) rather than
+    // erroring — flagged for whoever does the Phase 2 N-league migration.
+    const results = await Promise.all(
+      getCurrentLeagues().map(league =>
+        calculateStandings(league.id, league.conference as 'AFC' | 'NFC', args.week),
+      ),
+    );
+    const afcStandings = results.find(r => r.league === 'AFC')!;
+    const nfcStandings = results.find(r => r.league === 'NFC')!;
 
     return {
       afc: afcStandings,
