@@ -1,6 +1,36 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createHallOfFameDataService } from './useHallOfFameData';
 import type { EnhancedMatchup, ProcessedMatchup } from '@/features/hall-of-fame/types';
+import type { League } from '@/config/leagues';
+
+// Mock league registry with a varying number of leagues per season (0, 1, 3,
+// 2) so aggregation tests prove the service walks whatever the registry
+// contains instead of assuming exactly two current-season leagues.
+// vi.mock factories are hoisted above imports/consts, so the registry must be
+// defined via vi.hoisted to be visible inside the factory below.
+const { MOCK_LEAGUE_REGISTRY } = vi.hoisted(() => ({
+  MOCK_LEAGUE_REGISTRY: {
+    '2022': [],
+    '2023': [{ id: 'lg-2023-a', name: 'League 2023 A', season: 2023, previousLeagueId: null }],
+    '2024': [
+      { id: 'lg-2024-a', name: 'League 2024 A', season: 2024, previousLeagueId: null },
+      { id: 'lg-2024-b', name: 'League 2024 B', season: 2024, previousLeagueId: null },
+      { id: 'lg-2024-c', name: 'League 2024 C', season: 2024, previousLeagueId: null },
+    ],
+    '2025': [
+      { id: 'lg-2025-a', name: 'League 2025 A', season: 2025, previousLeagueId: 'lg-2024-a' },
+      { id: 'lg-2025-b', name: 'League 2025 B', season: 2025, previousLeagueId: 'lg-2024-b' },
+    ],
+  } as Record<string, League[]>,
+}));
+
+vi.mock('@/config/leagues', () => ({
+  getAllSeasons: () => Object.keys(MOCK_LEAGUE_REGISTRY),
+  getLeaguesForSeason: (season: string) => MOCK_LEAGUE_REGISTRY[season] ?? [],
+  // lib/constants.ts (transitively imported for CACHE_DURATIONS) also reads
+  // this at module load time to derive LEAGUE_IDS.
+  getCurrentLeagues: () => MOCK_LEAGUE_REGISTRY['2025'],
+}));
 
 // Mock the Sleeper client
 vi.mock('@/lib/sleeper/browser-client', () => ({
@@ -133,9 +163,36 @@ describe('createHallOfFameDataService', () => {
     const matchups = await service.getAllHistoricalMatchups(false);
 
     expect(matchups).toBeDefined();
-    // Should not include 2025 season
+    // Should not include 2025 season (the most recent season with registered leagues)
     const has2025 = matchups.some((m: EnhancedMatchup) => m.season === '2025');
     expect(has2025).toBe(false);
+  });
+
+  it('aggregates matchups across every league in every registered season, regardless of how many leagues a season has', async () => {
+    const matchups = await service.getAllHistoricalMatchups(true);
+
+    const leagueIds = new Set(matchups.map((m: EnhancedMatchup) => m.leagueId));
+    expect(leagueIds).toEqual(
+      new Set(['lg-2023-a', 'lg-2024-a', 'lg-2024-b', 'lg-2024-c', 'lg-2025-a', 'lg-2025-b']),
+    );
+  });
+
+  it('excludes only the leagues in the most recent played season when includeCurrent is false', async () => {
+    const matchups = await service.getAllHistoricalMatchups(false);
+
+    const leagueIds = new Set(matchups.map((m: EnhancedMatchup) => m.leagueId));
+    expect(leagueIds.has('lg-2025-a')).toBe(false);
+    expect(leagueIds.has('lg-2025-b')).toBe(false);
+    // A prior season with 3 leagues is still fully included, not treated as "current"
+    expect(leagueIds).toEqual(new Set(['lg-2023-a', 'lg-2024-a', 'lg-2024-b', 'lg-2024-c']));
+  });
+
+  it('does not error on a registered season with zero leagues', async () => {
+    // '2022' is registered in the mock registry with an empty league list
+    const matchups = await service.getAllHistoricalMatchups(true);
+
+    expect(matchups.some((m: EnhancedMatchup) => m.season === '2022')).toBe(false);
+    expect(Array.isArray(matchups)).toBe(true);
   });
 
   it('processes multiple weeks in parallel', async () => {

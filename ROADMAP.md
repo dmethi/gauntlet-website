@@ -252,9 +252,32 @@ Builds on Phase 1's registry.
       item below) explicitly wants re-run later. Left in place until that audit
       script is rebuilt on the Phase 1 registry or retired. `pnpm test` /
       `type-check` / `lint` all pass after the deletion.
-- [ ] Rebuild Hall of Fame/Shame aggregation on the Phase 1 registry so it
-      automatically covers all 5 current league instances (and future ones)
-      instead of a hardcoded per-season map.
+- [x] Rebuild Hall of Fame/Shame aggregation on the Phase 1 registry so it
+      automatically covers all currently-registered league instances (and future
+      ones) instead of a hardcoded per-season map. Turned out to already be
+      done: Phase 1's `1980825` replaced `ALL_GAUNTLET_LEAGUES`/`LEAGUE_IDS` in
+      `hooks/useHallOfFameData.ts`'s `getAllHistoricalMatchups` with
+      `getAllSeasons`/`getLeaguesForSeason` iteration over `config/leagues.ts`,
+      and `df78957`/`1c11218` closed the remaining gaps (browser-safe client
+      import, dynamic "most recent played season" detection instead of a
+      hardcoded `season === '2025'` check). Verified both real consumers still
+      resolve through this same registry-backed path: the recap tool
+      (`lib/reports/recap/tools/hall-of-fame-enhanced.ts`, dynamic-imports
+      `hallOfFameDataService`) and `hooks/useHallOfFameEnhanced.ts` (imports the
+      same service; its only page consumer,
+      `app/archive/2025/hall-of-fame/page.tsx`, is the archived 2025 recap — the
+      live `/hall-of-fame-enhanced` route currently renders a
+      `SeasonPlaceholder`, not this data path, pending the 2026 season). What
+      was actually missing and got added here: `hooks/useHallOfFameData.test.ts`
+      previously exercised `getAllHistoricalMatchups` against the real, unmocked
+      `config/leagues.ts` registry (implicitly just today's 2-league 2025
+      season), so it couldn't catch a regression back to a hardcoded league
+      count. Added a `vi.mock('@/config/leagues', ...)` fixture with 4 seasons
+      of varying league counts (0, 1, 3, 2) and 3 new tests asserting
+      aggregation walks every league in every season regardless of count, that
+      excluding "current" only drops the most-recently-registered non-empty
+      season (not just season `'2025'` by name), and that a zero-league season
+      doesn't error. `pnpm test` (899/899), `type-check`, and `lint` all pass.
 - [ ] Manager profile pages: surface full cross-league history using the Phase 1
       aggregation helper.
 - [ ] Re-run `apps/web/src/scripts/audit-hall-of-fame.ts` against real
