@@ -236,9 +236,22 @@ Builds on Phase 1's registry.
 
 ## Phase 3 — Hall of Fame / Hall of Shame + manager profiles
 
-- [ ] Delete confirmed-dead code: legacy `/hall-of-fame` page,
-      `useHallOfFame.ts`, and the 5 deprecated `lib/hall-of-fame-*.ts` shims
-      (once import-checked clean).
+- [x] Delete confirmed-dead code: a fresh repo-wide grep (app, scripts, recap
+      tooling, tests) found only 3 of the claimed candidates with zero real
+      consumers, so only those were deleted: the legacy
+      `app/hall-of-fame/page.tsx` (nothing linked to it — sidebar.tsx only links
+      `/hall-of-fame-enhanced`; the separate
+      `app/archive/2025/hall-of-fame/page.tsx` uses `useHallOfFameEnhanced` +
+      `features/hall-of-fame/utils`, not this page), `hooks/useHallOfFame.ts`
+      (only consumer was the deleted page), and `lib/hall-of-fame-categories.ts`
+      (zero references anywhere). The other 4 `lib/hall-of-fame-*.ts` "shims" —
+      `hall-of-fame-aggregations.ts`, `hall-of-fame-calculations.ts`,
+      `hall-of-fame-data-service.ts`, `hall-of-fame-expanded-categories.ts` —
+      are NOT dead: they're imported by
+      `apps/web/src/scripts/audit-hall-of-fame.ts`, which this same Phase 3 (see
+      item below) explicitly wants re-run later. Left in place until that audit
+      script is rebuilt on the Phase 1 registry or retired. `pnpm test` /
+      `type-check` / `lint` all pass after the deletion.
 - [ ] Rebuild Hall of Fame/Shame aggregation on the Phase 1 registry so it
       automatically covers all 5 current league instances (and future ones)
       instead of a hardcoded per-season map.
