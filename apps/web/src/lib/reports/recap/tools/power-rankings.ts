@@ -143,7 +143,7 @@ const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
   interface TeamMetrics {
     rosterId: number;
     leagueId: string;
-    league: 'AFC' | 'NFC';
+    league: string;
     teamName: string;
     ownerName: string;
     wins: number;
@@ -184,7 +184,7 @@ const calculateRankings = async (week: number): Promise<PowerRanking[]> => {
 
   // Second pass: calculate metrics for each team
   for (const [i, { id: leagueId, conference }] of leagues.entries()) {
-    const league = conference as 'AFC' | 'NFC';
+    const league = conference as string;
     const matchups = matchupsByLeague[i];
     const rosters = rostersByLeague[i];
     for (const roster of rosters) {

@@ -22,7 +22,7 @@ interface PlayerPerformance {
   ownedBy: {
     manager: string;
     teamName: string;
-    league: 'AFC' | 'NFC';
+    league: string;
     started: boolean;
   }[];
 }
@@ -31,7 +31,7 @@ interface TeamPerformance {
   manager: string;
   teamName: string;
   totalScore: number;
-  league: 'AFC' | 'NFC';
+  league: string;
   rank: number; // 1 = worst, 2 = 2nd worst, etc.
 }
 
@@ -145,7 +145,7 @@ export const fetchHallOfShameTool: ReportTool<{ week: number }, HallOfShameResul
       matchupsByLeague[i].map(m => ({
         ...m,
         leagueId: league.id,
-        league: (league.conference || league.name) as 'AFC' | 'NFC',
+        league: (league.conference || league.name) as string,
       })),
     );
 

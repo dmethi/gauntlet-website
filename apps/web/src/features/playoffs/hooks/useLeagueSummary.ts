@@ -63,7 +63,7 @@ const loadLeagueSummaries = async (): Promise<LeagueSummaryFile | null> => {
 /**
  * Hook to load league summary and team path data
  */
-export const useLeagueSummary = (leagueName: 'AFC' | 'NFC' | null) => {
+export const useLeagueSummary = (leagueName: string | null) => {
   return useQuery({
     queryKey: ['league-summary', leagueName],
     queryFn: async () => {
@@ -72,6 +72,9 @@ export const useLeagueSummary = (leagueName: 'AFC' | 'NFC' | null) => {
       const data = await loadLeagueSummaries();
       if (!data) return null;
 
+      // `league-summaries.json` (generate-league-summaries.ts) is shaped
+      // {afc, nfc} — a 3rd league resolves to `data.nfc` here, which is wrong,
+      // not just untyped. Flagged for the Phase 2 N-league migration.
       const leagueData = leagueName === 'AFC' ? data.afc : data.nfc;
       return {
         summary: leagueData.summary,

@@ -19,7 +19,7 @@ interface DivisionStandings {
 }
 
 interface LeagueStandingsWithDivisions {
-  league: 'AFC' | 'NFC';
+  league: string;
   divisions: DivisionStandings[];
   allTeams: StandingsEntry[]; // Flat list for backward compatibility
   playoffLine: number;
@@ -47,7 +47,7 @@ const getDivisionName = (divisionNum: number | null): string => {
  */
 const calculateStandings = async (
   leagueId: string,
-  leagueName: 'AFC' | 'NFC',
+  leagueName: string,
   week: number,
 ): Promise<LeagueStandingsWithDivisions> => {
   // Fetch all matchups up to current week
@@ -220,7 +220,7 @@ export const fetchStandingsTool: ReportTool<StandingsArgs, StandingsResult> = {
     // erroring — flagged for whoever does the Phase 2 N-league migration.
     const results = await Promise.all(
       getCurrentLeagues().map(league =>
-        calculateStandings(league.id, league.conference as 'AFC' | 'NFC', args.week),
+        calculateStandings(league.id, league.conference as string, args.week),
       ),
     );
     const afcStandings = results.find(r => r.league === 'AFC')!;

@@ -2,6 +2,13 @@
  * Cross-League Comparison Utilities
  *
  * Compare waiver spending and player prices between AFC and NFC leagues.
+ *
+ * This whole module is a two-league comparison engine end to end (every
+ * function takes exactly two positional league args and returns hardcoded
+ * afc-prefixed/nfc-prefixed fields) — loosening
+ * `whichLeagueValuesMore`/`whichLeagueSpendsMore` off the literal union does
+ * not make this N-league-safe. A real fix needs an array/map-based redesign;
+ * flagged for the Phase 2 N-league migration, not done here.
  */
 
 import type {
@@ -94,7 +101,7 @@ export const buildCrossLeaguePlayerComparisons = (
     const percentDifference = avgOfBoth > 0 ? (priceDifference / avgOfBoth) * 100 : 0;
     const competitionDifference = (afcStats?.totalAttempts ?? 0) - (nfcStats?.totalAttempts ?? 0);
 
-    let whichLeagueValuesMore: 'AFC' | 'NFC' | 'EQUAL';
+    let whichLeagueValuesMore: string;
     if (Math.abs(priceDifference) < 0.01) {
       whichLeagueValuesMore = 'EQUAL';
     } else if (priceDifference > 0) {
@@ -173,7 +180,7 @@ export const buildPositionalSpendComparison = (
     const avgDifference = afcAvg - nfcAvg;
     const countDifference = afcCount - nfcCount;
 
-    let whichLeagueSpendsMore: 'AFC' | 'NFC' | 'EQUAL';
+    let whichLeagueSpendsMore: string;
     if (Math.abs(totalDifference) < 1) {
       whichLeagueSpendsMore = 'EQUAL';
     } else if (totalDifference > 0) {

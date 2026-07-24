@@ -558,7 +558,7 @@ export interface PowerRanking {
   ownerName: string;
   record: string; // e.g., "4-1"
   pointsFor: number;
-  league: 'AFC' | 'NFC';
+  league: string;
   powerScore: number; // Normalized power score (around 100)
   tier: number; // Tier number (1 = best, dynamically assigned)
 }
@@ -615,7 +615,7 @@ export interface StandingsEntry {
  * League standings with playoff picture.
  */
 export interface Standings {
-  league: 'AFC' | 'NFC';
+  league: string;
   entries: StandingsEntry[];
   playoffLine: number; // Number of teams that make playoffs (typically 6)
 }

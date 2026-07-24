@@ -69,11 +69,13 @@ const loadStaticSummaries = async (): Promise<StaticSummariesFile | null> => {
  */
 const getTeamSummary = async (
   rosterId: number,
-  leagueName: 'AFC' | 'NFC',
+  leagueName: string,
 ): Promise<ScenarioSummaryOutput | null> => {
   const summaries = await loadStaticSummaries();
   if (!summaries) return null;
 
+  // `scenario-summaries.json` is shaped {afc, nfc} — same known 2-league
+  // limitation as useLeagueSummary.ts; flagged for the Phase 2 N-league migration.
   const leagueData = leagueName === 'AFC' ? summaries.afc : summaries.nfc;
   const teamSummary = leagueData?.teams?.[rosterId.toString()];
 
@@ -86,7 +88,7 @@ const getTeamSummary = async (
  */
 export const useScenarioSummary = (
   rosterId: number | null,
-  leagueName: 'AFC' | 'NFC' | null,
+  leagueName: string | null,
   enabled: boolean = true,
 ) => {
   return useQuery({

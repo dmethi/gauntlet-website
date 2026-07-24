@@ -148,17 +148,40 @@ Build this first — Phases 2 and 3 both depend on it.
 
 Builds on Phase 1's registry.
 
-- [ ] Remove the `'AFC' | 'NFC'` literal union; replace with the generic
-      league-key type from the registry, across the ~15 files found in Phase 0.
-      Note (2026-07-23, from a driveff comparison): `config/leagues.ts`'s
-      `League.conference` field is already optional, but
-      `packages/types/src/index.ts:46`'s `conference: 'AFC' | 'NFC'` is
-      non-optional — start by loosening that one, then update its ~17 consumers
-      (`features/playoffs/*`, `features/waiver-analysis/*`,
-      `lib/reports/recap/tools/*`) to treat conference as an optional label
-      rather than an exhaustive 2-way discriminant. driveff has no equivalent
-      code to port here — it deleted the multi-league concept entirely (see its
-      ADR 0001), so this is a gauntlet-only fix.
+- [x] Remove the `'AFC' | 'NFC'` literal union; replace with `string` (a
+      generic, non-exhaustive league label) across every real consumer found by
+      a fresh grep (not the stale ~15-file estimate — `draft/analysis` had moved
+      to `app/archive/2025/draft-analysis/` and turned out to have no
+      literal-union type declarations at all, just runtime string checks, so it
+      wasn't a consumer): `packages/types/src/index.ts` (`Team.conference`,
+      confirmed zero real consumers), `config/leagues.ts` (`League.conference`,
+      the source type), `features/playoffs/types.ts`, `ScenarioBuilder.tsx`,
+      `useScenarioSummary.ts`, `useLeagueSummary.ts`, `seeding-simulator.ts`,
+      `features/waiver-analysis/types.ts` + `cross-league.ts` (3-way
+      `'AFC'|'NFC'|'EQUAL'` also loosened), `lib/reports/recap/types.ts`, and
+      recap tools `standings.ts`, `hall-of-shame.ts`,
+      `hall-of-fame-enhanced.ts`, `power-rankings.ts`, `upcoming.ts` — plus
+      their now-redundant `as 'AFC' | 'NFC'` assertions. Deleted
+      `packages/types/src/index.d.ts`/`index.js`, stray compiled build artifacts
+      checked into `src/` (package.json's `types`/`main` point at
+      `dist/src/...`; nothing imported from `src/`) that duplicated the old
+      non-optional union and would have confused future greps.
+      Type-signature-only change — zero runtime logic touched;
+      `pnpm     type-check`/`lint`/`test` all pass (876/876, one pre-existing
+      unseeded k-means test flake unrelated to this change, confirmed flaky on
+      `main` too). **Flagged, not fixed here** (real 2-way runtime logic, not
+      just typing — needs the N-league redesign, separate slice):
+      `useLeagueSummary.ts` and `useScenarioSummary.ts` read static JSON shaped
+      `{afc, nfc}`
+      (`generate-league-summaries.ts`/`generate-scenario-summaries.ts`); all of
+      `waiver-analysis/utils/cross-league.ts` is a two-argument comparison
+      engine with hardcoded afc-/nfc-prefixed fields; `recap/tools/standings.ts`
+      and `upcoming.ts` return `{afc, nfc}` and drop a 3rd league via
+      `.find(l => l.conference === 'AFC'|'NFC')` (both now have an inline
+      comment saying so). `hall-of-shame.ts`, `power-rankings.ts`, and
+      `hall-of-fame-enhanced.ts` were re-checked and do **not** have this
+      problem — they already return flat per-league arrays from Phase 1's
+      registry iteration.
 - [ ] Redesign `cross-league-simulator.ts` for N leagues — round-robin vs.
       seeded bracket is an open design question, decide when this slice starts.
 - [ ] Fix `draft/analysis` page's hardcoded 2-column UI.

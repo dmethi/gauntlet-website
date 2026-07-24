@@ -233,7 +233,7 @@ export interface CrossLeaguePlayerComparison {
   absoluteDifference: number; // |priceDifference|
   percentDifference: number; // (priceDifference / avgOfBoth) * 100
   competitionDifference: number; // AFC attempts - NFC attempts
-  whichLeagueValuesMore: 'AFC' | 'NFC' | 'EQUAL';
+  whichLeagueValuesMore: string;
 }
 
 /**
@@ -264,7 +264,7 @@ export interface PositionalSpendComparison {
   totalDifference: number; // AFC - NFC
   avgDifference: number;
   countDifference: number;
-  whichLeagueSpendsMore: 'AFC' | 'NFC' | 'EQUAL';
+  whichLeagueSpendsMore: string;
 }
 
 /**

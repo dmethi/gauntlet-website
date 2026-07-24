@@ -10,7 +10,7 @@ export interface League {
   id: string;
   name: string;
   season: number;
-  conference?: 'AFC' | 'NFC';
+  conference?: string;
   /** Sleeper league ID this league continues from, for data lineage — not walked at runtime. */
   previousLeagueId: string | null;
 }

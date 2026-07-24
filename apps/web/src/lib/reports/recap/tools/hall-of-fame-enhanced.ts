@@ -14,7 +14,7 @@ import type { HallOfFameRecord, ProcessedMatchup } from '@/features/hall-of-fame
  */
 
 interface PlayerOwnership {
-  league: 'AFC' | 'NFC';
+  league: string;
   manager: string;
   teamName: string;
   status: 'started' | 'benched' | 'free_agent';

@@ -9,7 +9,7 @@ import type { Week14Matchup } from '../../types';
 
 interface ScenarioBuilderProps {
   readonly matchups: readonly Week14Matchup[];
-  readonly leagueName: 'AFC' | 'NFC';
+  readonly leagueName: string;
   readonly lockedOutcomes: Record<number, 'team1' | 'team2' | null>;
   readonly onLockOutcome: (matchupId: number, winner: 'team1' | 'team2' | null) => void;
   readonly onResetAll: () => void;

@@ -16,7 +16,7 @@ interface UpcomingMatchupsArgs {
 interface UpcomingMatchup {
   matchupId: number;
   leagueId: string;
-  league: 'AFC' | 'NFC';
+  league: string;
   team1: {
     rosterId: number;
     teamName: string;
@@ -103,7 +103,7 @@ const buildUpcomingMatchups = async (
   matchups: SleeperMatchup[],
   rosters: SleeperRoster[],
   leagueId: string,
-  leagueName: 'AFC' | 'NFC',
+  leagueName: string,
   currentWeek: number,
 ): Promise<UpcomingMatchup[]> => {
   const upcoming: UpcomingMatchup[] = [];
@@ -206,12 +206,15 @@ export const fetchNextWeekMatchupsTool: ReportTool<UpcomingMatchupsArgs, Upcomin
           matchupsByLeague[i],
           rostersByLeague[i],
           league.id,
-          league.conference as 'AFC' | 'NFC',
+          league.conference as string,
           args.currentWeek,
         ),
       ),
     );
 
+    // `{afc, nfc}` result shape assumes exactly 2 conference-tagged leagues —
+    // a 3rd (conference-less) league is silently dropped here (same known gap
+    // as recap/tools/standings.ts; flagged for the Phase 2 N-league migration).
     const afcIndex = leagues.findIndex(l => l.conference === 'AFC');
     const nfcIndex = leagues.findIndex(l => l.conference === 'NFC');
     const afcUpcoming = afcIndex === -1 ? [] : upcomingByLeague[afcIndex];

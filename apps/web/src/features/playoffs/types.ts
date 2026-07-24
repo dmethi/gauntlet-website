@@ -199,7 +199,7 @@ export interface TeamSeedingProbabilities {
  */
 export interface LeagueSeedingResults {
   readonly leagueId: string;
-  readonly leagueName: 'AFC' | 'NFC';
+  readonly leagueName: string;
   readonly teams: readonly TeamSeedingProbabilities[];
   readonly week14Matchups: readonly Week14Matchup[];
   readonly simulationCount: number;

@@ -1209,7 +1209,7 @@ const calculateScenarios = (
  */
 export const runSeedingSimulation = async (
   leagueId: string,
-  leagueName: 'AFC' | 'NFC',
+  leagueName: string,
   throughWeek: number = 13,
   config: SeedingSimulationConfig = DEFAULT_CONFIG,
 ): Promise<LeagueSeedingResults> => {
