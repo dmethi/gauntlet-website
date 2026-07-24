@@ -294,6 +294,7 @@ export const getDraftByLeague = async (leagueId: string) => {
     type: draftInfo.type,
     settings: draftInfo.settings,
     startTime: draftInfo.start_time,
+    slotToRosterId: draftInfo.slot_to_roster_id ?? {},
     picks: draftPicks.map((pick: any) => ({
       id: `${league.draft_id}-${pick.pick_no}`,
       draftId: league.draft_id,
