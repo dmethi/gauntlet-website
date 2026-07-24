@@ -89,7 +89,14 @@ export const CLIENT_CONFIGS = {
     userAgent: 'Gauntlet-Fantasy/1.0',
     errorStrategy: 'graceful' as ErrorStrategy,
     debugStrategy: 'environment' as DebugStrategy,
-    cacheStrategy: 'none' as CacheStrategy,
+    // 'memory' (not 'none'): endpoints below with no explicit cache duration
+    // (league/rosters/users/matchups/NFL state) keep defaultCacheDuration:
+    // NONE, so they stay always-live. Only fetchAllPlayers/fetchPlayersIndex,
+    // fetchWeeklyPlayerStats/fetchWeeklyProjections, and fetchSeasonStats pass
+    // an explicit duration — those were silently never caching under 'none'
+    // despite the durations being coded for them, causing e.g. start-sit to
+    // refetch identical weekly stats/projections once per league per week.
+    cacheStrategy: 'memory' as CacheStrategy,
     rateLimit: 0,
     defaultCacheDuration: CACHE_DURATIONS.NONE,
   },
@@ -99,7 +106,8 @@ export const CLIENT_CONFIGS = {
     userAgent: 'Gauntlet-Stats-Hub/1.0',
     errorStrategy: 'throw' as ErrorStrategy,
     debugStrategy: 'always' as DebugStrategy,
-    cacheStrategy: 'none' as CacheStrategy,
+    // See 'direct' above — same reasoning.
+    cacheStrategy: 'memory' as CacheStrategy,
     rateLimit: 0,
     defaultCacheDuration: CACHE_DURATIONS.NONE,
   },

@@ -32,6 +32,51 @@ describe('UnifiedSleeperClient ID validation', () => {
   });
 });
 
+describe('memory caching for expensive endpoints', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('caches fetchWeeklyPlayerStats so repeat calls for the same week/season do not refetch', async () => {
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ '1': { pts: 10 } }), { status: 200 }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const client = createStatsClient();
+    await client.fetchWeeklyPlayerStats(1, '2025');
+    await client.fetchWeeklyPlayerStats(1, '2025');
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('still fetches fresh data for a different week', async () => {
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ '1': { pts: 10 } }), { status: 200 }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const client = createStatsClient();
+    await client.fetchWeeklyPlayerStats(1, '2025');
+    await client.fetchWeeklyPlayerStats(2, '2025');
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not cache endpoints with no explicit cache duration, e.g. fetchLeague', async () => {
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ league_id: '123' }), { status: 200 }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const client = createStatsClient();
+    await client.fetchLeague('123');
+    await client.fetchLeague('123');
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe('SLEEPER_FIXTURES replay', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
