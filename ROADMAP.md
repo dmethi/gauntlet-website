@@ -278,8 +278,66 @@ Builds on Phase 1's registry.
       excluding "current" only drops the most-recently-registered non-empty
       season (not just season `'2025'` by name), and that a zero-league season
       doesn't error. `pnpm test` (899/899), `type-check`, and `lint` all pass.
-- [ ] Manager profile pages: surface full cross-league history using the Phase 1
-      aggregation helper.
+- [x] Manager profile pages: surface full cross-league history using the Phase 1
+      aggregation helper. Turned out to already be substantially done:
+      `lib/leagues/manager-history.ts`'s `getManagerHistory` already walked
+      every registered season/league for a given `owner_id`, and
+      `app/managers/[ownerId]/page.tsx` already rendered it (career record, win
+      %, points for/against, season-by-season table), linked from
+      `app/team/[id]/page.tsx:216-221`. What was actually missing/broken: -
+      **Real bug, fixed**: `manager-history.ts:18` defined a local
+      `REGULAR_SEASON_WEEKS = 17` that disagreed with the real constant in
+      `lib/constants.ts` (`14`) and, unlike Hall of Fame's
+      `useHallOfFameData.ts` (which calls
+      `resolveCompletedWeeks(league,       nflState)` per league), had no
+      awareness of each league's `playoff_week_start` or in-progress-season
+      state. With 17 as the default, playoff-week matchups would have been
+      counted as part of the regular-season win/loss record. Fixed by adopting
+      `resolveCompletedWeeks` (from `shared/utils/season-weeks.ts`) as the
+      default per-league week count — `getManagerHistory` now fetches each
+      matched league's `SleeperLeague` + `NFLState` (via two new
+      `SleeperHistoryClient` methods, `fetchLeague`/`fetchNFLState`, backed by
+      the existing `UnifiedSleeperClient`) and calls `resolveCompletedWeeks` per
+      league, only when no explicit `weeksPerLeagueOverride` is passed.
+      Confirmed Sleeper's `/league/{id}/matchups/{week}` returns `[]` for weeks
+      not yet played (not an error), so `computeSeasonRecord`'s
+      `if (!team) continue` already handles out-of-range weeks safely — no
+      additional guard needed. Added a regression test
+      (`manager-history.test.ts`: "without an override, stops at each league's
+      playoff cutoff via `resolveCompletedWeeks`") asserting a
+      `playoff_week_start: 15` league stops at week 14 and never fetches
+      week 15. - **Missing test coverage, added**:
+      `app/managers/[ownerId]/page.tsx` had no test at all (only the helper was
+      tested). Added `app/managers/[ownerId]/page.test.tsx` (3 tests: renders
+      career record + season table for a known manager, resolves a
+      Promise-wrapped `params` object, renders the not-found state for an
+      unregistered owner). - **Gaps identified but deliberately left open**: (1)
+      no browse/index page listing all managers — the only discovery path is the
+      deep link from a team page; building an index means enumerating distinct
+      `owner_id`s across every registered league/season, which is new scope
+      beyond wiring up the existing helper/page, so it's not done here. (2) Hall
+      of Fame records don't link manager names to `/managers/[ownerId]` — the
+      only real consumer with a live route, `hooks/useHallOfFameEnhanced.ts`, is
+      currently only rendered by the archived
+      `app/archive/2025/hall-of-fame/page.tsx` (a `'use client'` page still on
+      the old hardcoded `LEAGUE_IDS`, not the Phase 1 registry); the live
+      `/hall-of-fame-enhanced` route renders a `SeasonPlaceholder` and doesn't
+      reach this code path yet. Linking names there is deferred until that page
+      is un-archived/rebuilt on the registry, per the existing Phase 3
+      audit-script item above. `pnpm test` (903/903, up from 899), `type-check`,
+      and `lint` all pass.
+- [ ] Design pass on `app/managers/[ownerId]/page.tsx` — it currently renders
+      with generic card/table markup (plain `border-border`/`bg-card` boxes, a
+      bare `<table>` for season history), no visual distinction between
+      seasons/leagues, and no per-league branding (AFC vs. NFC colors, league
+      logos). Candidate improvements: a proper header/hero treating the manager
+      like a real profile (avatar, tenure, standout stat), a season-by-season
+      view that reads as a timeline/history rather than a spreadsheet row,
+      visual highlighting of best/worst seasons, and a browse/index entry point
+      (see the deferred gap noted above) so the page is discoverable outside the
+      team-page deep link. Should be sequenced with — or folded into — Phase
+      4/5's page-by-page redesign pass rather than done in isolation, since it
+      needs the same font/token/palette decisions Phase 5 is meant to settle.
 - [ ] Re-run `apps/web/src/scripts/audit-hall-of-fame.ts` against real
       multi-league data before season launch to catch data-completeness gaps.
 

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { getManagerHistory, type SleeperHistoryClient } from './manager-history';
 
 vi.mock('@/config/leagues', () => ({
+  getCurrentLeagues: () => [],
   getAllSeasons: () => ['2025', '2024'],
   getLeaguesForSeason: (season: string) =>
     season === '2025'
@@ -37,6 +38,12 @@ const OWNER_ID = 'owner_42';
 const makeClient = (overrides: Partial<SleeperHistoryClient> = {}): SleeperHistoryClient => ({
   fetchRostersWithOwners: vi.fn().mockResolvedValue([]),
   fetchMatchups: vi.fn().mockResolvedValue([]),
+  fetchLeague: vi
+    .fn()
+    .mockRejectedValue(new Error('fetchLeague should not be called with an override')),
+  fetchNFLState: vi
+    .fn()
+    .mockRejectedValue(new Error('fetchNFLState should not be called with an override')),
   ...overrides,
 });
 
@@ -119,5 +126,40 @@ describe('getManagerHistory', () => {
     expect(result!.career.pointsFor).toBe(180);
     expect(result!.career.pointsAgainst).toBe(185);
     expect(result!.career.winPct).toBe(0.5);
+  });
+
+  it("without an override, stops at each league's playoff cutoff via resolveCompletedWeeks", async () => {
+    const fetchMatchups = vi.fn().mockImplementation(async (leagueId: string, week: number) => {
+      if (leagueId !== 'league_2025_afc') return [];
+      // A playoff-week (week 15) matchup that must NOT count toward the record.
+      return [
+        { roster_id: 1, matchup_id: week, points: 100 + week },
+        { roster_id: 2, matchup_id: week, points: 50 },
+      ];
+    });
+
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [{ roster_id: 1, owner_id: OWNER_ID, owner: { display_name: 'Manager' } }];
+        }
+        return [];
+      }),
+      fetchMatchups,
+      // playoff_week_start: 15 -> regular season is weeks 1-14, matching
+      // apps/web/src/lib/constants.ts's REGULAR_SEASON_WEEKS.
+      fetchLeague: vi.fn().mockResolvedValue({
+        league_id: 'league_2025_afc',
+        season: '2025',
+        status: 'complete',
+        settings: { playoff_week_start: 15 },
+      }),
+      fetchNFLState: vi.fn().mockResolvedValue({ week: 18, season: '2026', league_season: '2026' }),
+    });
+
+    const result = await getManagerHistory(OWNER_ID, client);
+
+    expect(result!.seasons[0]!.wins).toBe(14);
+    expect(fetchMatchups).not.toHaveBeenCalledWith('league_2025_afc', 15);
   });
 });

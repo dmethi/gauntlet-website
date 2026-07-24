@@ -3,19 +3,18 @@
  *
  * Given a Sleeper owner_id, walks every registered season/league (see
  * apps/web/src/config/leagues.ts) and returns that manager's full
- * roster/matchup history. This is a standalone primitive — nothing wires it
- * into UI yet; Hall of Fame and manager profile pages will consume it later.
+ * roster/matchup history. Consumed by app/managers/[ownerId]/page.tsx.
  *
  * Per docs/ETHOS.md's "process leagues separately" rule: each league's
  * rosters/matchups are fully fetched and reduced to this manager's row
  * before moving to the next league — raw per-league arrays are never merged.
  */
 
+import type { NFLState, SleeperLeague } from '@gauntlet/types';
 import type { RosterWithOwner } from '@/lib/sleeper/unified-client';
 import { createServiceClient } from '@/lib/sleeper/unified-client';
 import { getAllSeasons, getLeaguesForSeason, type SeasonId } from '@/config/leagues';
-
-const REGULAR_SEASON_WEEKS = 17;
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export interface SleeperHistoryClient {
   fetchRostersWithOwners(leagueId: string): Promise<RosterWithOwner[]>;
@@ -23,6 +22,8 @@ export interface SleeperHistoryClient {
     leagueId: string,
     week: number,
   ): Promise<{ roster_id: number; matchup_id: number; points: number | null }[]>;
+  fetchLeague(leagueId: string): Promise<SleeperLeague>;
+  fetchNFLState(): Promise<NFLState>;
 }
 
 export interface ManagerLeagueSeasonHistory {
@@ -106,11 +107,19 @@ const computeSeasonRecord = async (
 export const getManagerHistory = async (
   ownerId: string,
   client: SleeperHistoryClient = createServiceClient(),
-  weeksPerLeague: number = REGULAR_SEASON_WEEKS,
+  /**
+   * Overrides the per-league completed-weeks calculation (used by tests to
+   * avoid mocking `fetchLeague`/`fetchNFLState`). When omitted, each league's
+   * week count is resolved via `resolveCompletedWeeks`, matching Hall of
+   * Fame's cutoff so playoff-week matchups never get counted as regular-season
+   * games.
+   */
+  weeksPerLeagueOverride?: number,
 ): Promise<ManagerHistory | null> => {
   const seasons = [...getAllSeasons()].sort().reverse(); // newest first
   const seasonHistories: ManagerLeagueSeasonHistory[] = [];
   let displayName: string | null = null;
+  let nflState: NFLState | null = null;
 
   for (const season of seasons) {
     for (const league of getLeaguesForSeason(season)) {
@@ -122,7 +131,14 @@ export const getManagerHistory = async (
         displayName = roster.owner?.metadata?.team_name ?? roster.owner?.display_name ?? null;
       }
 
-      const record = await computeSeasonRecord(client, league.id, roster.roster_id, weeksPerLeague);
+      let weeks = weeksPerLeagueOverride;
+      if (weeks === undefined) {
+        const sleeperLeague = await client.fetchLeague(league.id);
+        if (!nflState) nflState = await client.fetchNFLState();
+        weeks = resolveCompletedWeeks(sleeperLeague, nflState);
+      }
+
+      const record = await computeSeasonRecord(client, league.id, roster.roster_id, weeks);
 
       seasonHistories.push({
         season,
