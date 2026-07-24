@@ -145,10 +145,27 @@ they resolve rather than letting them accumulate.
 
 ## Random open threads
 
-- 2026-07-23: `apps/server`'s `historical-data.test.ts` (13 tests) and
-  `snapshot-validator.test.ts` (10 tests) are failing — looks like a Prisma-mock
-  setup problem, not investigated yet. Separate and larger than the web-suite
-  debt above; needs its own scoping pass before starting.
+- 2026-07-23: RESOLVED — `apps/server`'s `historical-data.test.ts` (13 tests)
+  and `snapshot-validator.test.ts` (10 tests) failures fixed. Root causes: (1)
+  `historical-data.test.ts`'s `vi.mock('../../generated/prisma-historical')`
+  resolved to a nonexistent `src/generated/` path (one `../` short of the real
+  `apps/server/generated/prisma-historical`), so the mock never intercepted the
+  real Prisma client and every call blew up on missing `DATABASE_URL`; fixed the
+  mock path. (2) `snapshot-validator.test.ts`'s
+  `vi.mock('@/lib/historical-data', ...)` used a different specifier than
+  `snapshot-validator.ts`'s own `'./historical-data.js'` relative import —
+  Vitest treated them as separate module records, so the mock silently never
+  applied and real Prisma calls ran underneath; fixed by mocking the same
+  relative specifier the module under test actually imports. (3)
+  `hasSignificantChange` never compared `spread`/ `total` at all, even though
+  they're median-based betting lines that can diverge from the mean-based
+  `simulatedMean` projection under skewed live score distributions (confirmed in
+  `apps/sim-engine/src/models/matchup.ts`) — added a >=1.0-point spread/total
+  check as a real logic fix, not just a test edit. Also fixed two tests whose
+  deltas were too small to cross the documented 10% projection threshold, and a
+  stale `select` expectation in `getMatchupWinProbTimeSeries`'s test that
+  predated `rosterAId`/`rosterBId` being added to the query. All 62
+  `apps/server` tests, lint, and `tsc` build are clean.
 
 ## Blocked
 

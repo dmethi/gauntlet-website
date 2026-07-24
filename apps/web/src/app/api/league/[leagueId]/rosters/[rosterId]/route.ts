@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  getCurrentWeek,
-  getMatchupsByWeek,
-  getRostersByLeague,
-  getUsersByLeague,
-} from '@/lib/api-replacements';
+import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
+import { getPlayerById } from '@/data/players-loader';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,11 +19,13 @@ export const GET = async (
     }
 
     // Fetch basic roster and user data
-    const [rosters, users, currentWeek] = await Promise.all([
+    const [rosters, users, league, nflState] = await Promise.all([
       getRostersByLeague(leagueId),
       getUsersByLeague(leagueId),
-      getCurrentWeek(),
+      sleeperClient.fetchLeague(leagueId),
+      sleeperClient.fetchNFLState(),
     ]);
+    const currentWeek = resolveCompletedWeeks(league, nflState, { includeCurrentWeek: true });
 
     // Find the specific roster
     const roster = rosters.find((r: any) => r.rosterId === rosterIdNumber);
@@ -110,7 +110,15 @@ export const GET = async (
         avatar: owner?.avatar || null,
         metadata: owner?.metadata || {},
       },
-      players: roster.players || [],
+      players: ((roster.players || []) as string[]).map((playerId: string) => {
+        const player = getPlayerById(playerId);
+        return {
+          id: playerId,
+          fullName: player?.full_name || `Player ${playerId}`,
+          position: player?.position || 'UNKNOWN',
+          team: player?.team ?? null,
+        };
+      }),
       starters: roster.starters || [],
       settings: roster.settings || {},
 

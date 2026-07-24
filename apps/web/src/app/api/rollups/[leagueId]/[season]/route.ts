@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { computeWeeklyRollups, getCurrentWeek } from '@/lib/api-replacements';
+import { computeWeeklyRollups } from '@/lib/api-replacements';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,7 +37,11 @@ export const GET = async (
     }
 
     // Compute rollups for all weeks up to current week
-    const currentWeek = await getCurrentWeek();
+    const [league, nflState] = await Promise.all([
+      sleeperClient.fetchLeague(leagueId),
+      sleeperClient.fetchNFLState(),
+    ]);
+    const currentWeek = resolveCompletedWeeks(league, nflState, { includeCurrentWeek: true });
     const weeks = Array.from({ length: Math.min(currentWeek, 18) }, (_, i) => i + 1);
 
     // Compute rollups for each week in parallel
@@ -60,6 +66,7 @@ export const GET = async (
     const allLeagueWeekSummaries = validRollups.map(r => r.leagueWeekSummary);
 
     return NextResponse.json({
+      ok: true,
       season,
       leagueId,
       currentWeek,
@@ -71,6 +78,7 @@ export const GET = async (
       weeksComputed: validRollups.length,
       dbQueries: 0,
       dataSource: 'sleeper-api-computed',
+      meta: { weeksComputed: validRollups.length, dataSource: 'sleeper-api-computed' },
     });
   } catch (error) {
     console.error('Error computing rollups:', error);

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentLeagues } from '@/config/leagues';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
+import { calculateTeamStats } from '@/shared/utils/calculations';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,16 +43,16 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
       }
     }
 
-    // Get current NFL week to determine how many weeks to fetch
-    const nflState = await sleeperClient.fetchNFLState();
-    const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
-
     // Fetch all necessary data
-    const [league, rosters, users] = await Promise.all([
+    const [nflState, league, rosters, users] = await Promise.all([
+      sleeperClient.fetchNFLState(),
       sleeperClient.fetchLeague(leagueId),
       sleeperClient.fetchRosters(leagueId),
       sleeperClient.fetchUsers(leagueId),
     ]);
+
+    // Determine how many weeks to fetch
+    const completedWeeks = resolveCompletedWeeks(league, nflState);
 
     // Find the specific roster
     const roster = rosters.find(r => r.roster_id === rosterId);
@@ -73,6 +75,12 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
     }
 
     const allMatchupData = await Promise.all(matchupPromises);
+
+    // Expected wins/luck need every roster's score for the week, not just this
+    // roster's — reuse the same computation the standings page uses.
+    const matchupsByWeek = new Map(allMatchupData.map(({ week, matchups }) => [week, matchups]));
+    const allTeamStats = calculateTeamStats(rosters, matchupsByWeek, users);
+    const teamWeeklyResults = allTeamStats.find(t => t.rosterId === rosterId)?.weeklyResults ?? [];
 
     // Process matchups for this specific roster
     const matchups = [];
@@ -102,20 +110,33 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
           matchupId: teamMatchup.matchup_id,
         });
 
-        // Calculate basic weekly metrics
-        // For now, use simplified calculations since we don't have historical expected wins
-        const expectedWins = teamPoints > 100 ? 0.6 : 0.4; // Simplified
-        const luckRating = result === 'W' ? expectedWins - 0.5 : 0.5 - expectedWins;
+        const weeklyResult = teamWeeklyResults.find(wr => wr.week === week);
 
         weeklyMetrics.push({
           week,
           totalPoints: teamPoints,
-          expectedWins,
-          luckRating,
+          expectedWins: weeklyResult?.expectedWins ?? 0,
+          luckRating: weeklyResult?.luck ?? 0,
           opponentPoints,
         });
       }
     }
+
+    const userMap = new Map(users.map(u => [u.user_id, u]));
+    const rostersForResponse = rosters.map(r => {
+      const rosterOwner = userMap.get(r.owner_id);
+      return {
+        id: r.roster_id,
+        owner: {
+          displayName: rosterOwner?.display_name || rosterOwner?.username || 'Unknown',
+          username: rosterOwner?.username || 'Unknown',
+          metadata: {
+            team_name: rosterOwner?.metadata?.team_name || '',
+            ...rosterOwner?.metadata,
+          },
+        },
+      };
+    });
 
     // Build the response in the expected format
     const teamData = {
@@ -136,6 +157,7 @@ export const GET = async (_req: NextRequest, { params }: { params: { id: string 
         name: league.name,
         ownerId: '', // Not used
         teams: [], // Not used
+        rosters: rostersForResponse,
         settings: league.settings || {},
         season: parseInt(league.season, 10),
         currentWeek: nflState.week,

@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  computeWeeklyRollups,
-  getCurrentWeek,
-  getRostersByLeague,
-  getUsersByLeague,
-} from '@/lib/api-replacements';
+import { computeWeeklyRollups, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,11 +17,13 @@ export const GET = async (
     }
 
     // Get current week and basic league data
-    const [currentWeek, rosters, users] = await Promise.all([
-      getCurrentWeek(),
+    const [league, nflState, rosters, users] = await Promise.all([
+      sleeperClient.fetchLeague(leagueId),
+      sleeperClient.fetchNFLState(),
       getRostersByLeague(leagueId),
       getUsersByLeague(leagueId),
     ]);
+    const currentWeek = resolveCompletedWeeks(league, nflState, { includeCurrentWeek: true });
 
     const weeks = Array.from({ length: Math.min(currentWeek, 18) }, (_, i) => i + 1);
 

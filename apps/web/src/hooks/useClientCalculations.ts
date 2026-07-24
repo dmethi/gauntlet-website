@@ -12,6 +12,7 @@ import {
 } from '@/shared/utils/calculations';
 import { CACHE_DURATIONS, CURRENT_SEASON, LEAGUE_IDS } from '@/lib/constants';
 import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type { SleeperMatchup, SleeperPlayer } from '@gauntlet/types';
 
 const sleeperClient = createBrowserStatsClient();
@@ -60,7 +61,7 @@ export const useClientTeamStats = (leagueId?: string) => {
       if (cached) return cached;
 
       // Fetch all necessary data from Sleeper
-      const [, rosters, users] = await Promise.all([
+      const [league, rosters, users] = await Promise.all([
         sleeperClient.fetchLeague(effectiveLeagueId),
         sleeperClient.fetchRosters(effectiveLeagueId),
         sleeperClient.fetchUsers(effectiveLeagueId),
@@ -68,8 +69,9 @@ export const useClientTeamStats = (leagueId?: string) => {
 
       // Get current week from NFL state
       const nflState = await sleeperClient.fetchNFLState();
-      // Only count completed weeks - current week minus 1 (since current week is in progress)
-      const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
+      // Only count completed weeks. For a finished/past-season league, this
+      // is the full regular season, not live NFL state (see season-weeks.ts).
+      const completedWeeks = resolveCompletedWeeks(league, nflState);
 
       // Get all matchups for completed weeks only
       const matchupsByWeek = await getAllMatchups(effectiveLeagueId, completedWeeks);
@@ -146,8 +148,11 @@ export const useClientWeeklyAverages = (leagueId?: string) => {
       if (cached) return cached;
 
       // Get current week
-      const nflState = await sleeperClient.fetchNFLState();
-      const currentWeek = Math.min(nflState.week, 14);
+      const [league, nflState] = await Promise.all([
+        sleeperClient.fetchLeague(effectiveLeagueId),
+        sleeperClient.fetchNFLState(),
+      ]);
+      const currentWeek = resolveCompletedWeeks(league, nflState, { includeCurrentWeek: true });
 
       // Get all matchups
       const matchupsByWeek = await getAllMatchups(effectiveLeagueId, currentWeek);

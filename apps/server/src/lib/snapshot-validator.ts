@@ -21,6 +21,8 @@ import type {
  * 1. ANY change in actual scores → save (games are happening!)
  * 2. NO score change + projections changed <10% → skip (just simulation noise)
  * 3. NO score change + projections changed ≥10% → save (meaningful projection shift)
+ * 4. Spread/total (median-based) moved meaningfully → save (they can diverge
+ *    from the mean-based projections above under skewed live distributions)
  *
  * @param previous - Previous snapshot data from database
  * @param current - Current snapshot data to validate
@@ -78,7 +80,18 @@ export const hasSignificantChange = (
     return true;
   }
 
-  // 4. No significant changes detected - skip this snapshot
+  // 4. Check spread/total changes (>=1.0 point movement is meaningful)
+  // These are median-based betting lines and can move independently of the
+  // mean-based projections checked above under skewed live distributions.
+  const LINE_THRESHOLD = 1.0;
+  const spreadChanged = Math.abs(previous.spread - current.spread) >= LINE_THRESHOLD;
+  const totalChanged = Math.abs(previous.total - current.total) >= LINE_THRESHOLD;
+
+  if (spreadChanged || totalChanged) {
+    return true;
+  }
+
+  // 5. No significant changes detected - skip this snapshot
   return false;
 };
 

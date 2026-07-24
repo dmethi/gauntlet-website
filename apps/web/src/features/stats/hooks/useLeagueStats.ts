@@ -20,8 +20,9 @@ import { useSeasonAggregates } from './useSeasonAggregates';
  *
  * @returns Promise resolving to league data
  */
-const getLeagueData = async (): Promise<LeagueData> => {
-  const res = await fetch('/api/league/overview');
+const getLeagueData = async (leagueId?: string): Promise<LeagueData> => {
+  const url = leagueId ? `/api/league/overview?leagueId=${leagueId}` : '/api/league/overview';
+  const res = await fetch(url);
   if (!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -58,18 +59,18 @@ export interface LeagueStatsResult {
  * return <StatsTable teams={teamStats} />;
  * ```
  */
-export const useLeagueStats = (): LeagueStatsResult => {
+export const useLeagueStats = (leagueId?: string): LeagueStatsResult => {
   const { data: league, isLoading: loading } = useQuery<LeagueData>({
-    queryKey: ['leagueData'],
-    queryFn: getLeagueData,
+    queryKey: ['leagueData', leagueId],
+    queryFn: () => getLeagueData(leagueId),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
   });
 
   // Fetch seasonal aggregates for authoritative record data
-  const leagueId = league?.id ? String(league.id) : undefined;
+  const seasonalLeagueId = league?.id ? String(league.id) : undefined;
   const season = league?.season ? String(league.season) : undefined;
-  const { data: seasonal } = useSeasonAggregates(leagueId, season);
+  const { data: seasonal } = useSeasonAggregates(seasonalLeagueId, season);
 
   const teamStats = useMemo((): TeamStats[] => {
     if (!league || !seasonal?.ok) return [];

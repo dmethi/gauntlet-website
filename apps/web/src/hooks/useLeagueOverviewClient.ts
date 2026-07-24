@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
 import { useClientTeamStats, useClientWeeklyAverages } from './useClientCalculations';
 import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 const sleeperClient = createBrowserStatsClient();
 
@@ -128,7 +129,7 @@ export const useLeagueOverviewClient = (leagueId?: string): LeagueOverviewData =
 
       // Get current week - only count completed weeks
       const nflState = await sleeperClient.fetchNFLState();
-      const completedWeeks = Math.min(Math.max(nflState.week - 1, 1), 14);
+      const completedWeeks = resolveCompletedWeeks(league, nflState);
 
       // Get matchups for all rosters (completed weeks only)
       const rosterIds = rosters.map(r => r.roster_id);

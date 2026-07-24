@@ -5,10 +5,12 @@ import {
   type CompleteSnapshot,
   type PreviousSnapshot,
 } from '@/lib';
-import * as historicalData from '@/lib/historical-data';
+import * as historicalData from '../historical-data.js';
 
-// Mock the historical data module
-vi.mock('@/lib/historical-data', () => ({
+// Mock the historical data module using the same relative specifier
+// snapshot-validator.ts imports it with ('./historical-data.js'), so the
+// mock resolves to the same module record Vitest intercepts.
+vi.mock('../historical-data.js', () => ({
   saveLiveWinProbSample: vi.fn(),
   getLastWinProbSample: vi.fn(),
 }));
@@ -72,9 +74,11 @@ describe('snapshot-validator', () => {
     });
 
     it('should return true when projected final changes', () => {
+      // Must exceed the 10% projection threshold (12.55 for a base of 125.5)
+      // to register as significant, per hasSignificantChange's documented behavior.
       const current = {
         ...baseCurrent,
-        team1: { ...baseCurrent.team1, simulatedMean: 130.0 },
+        team1: { ...baseCurrent.team1, simulatedMean: 145.0 },
       };
       const result = hasSignificantChange(basePrevious, current);
       expect(result).toBe(true);
@@ -220,11 +224,13 @@ describe('snapshot-validator', () => {
     });
 
     it('should save when projections have changed significantly', async () => {
+      // Must exceed the 10% projection threshold for each team
+      // (11.5 for A's previous value of 115.0, 11.0 for B's 110.0).
       const previousSnapshot: PreviousSnapshot = {
         currentScoreA: 100.0,
         currentScoreB: 95.0,
-        projectedFinalA: 115.0, // Changed from 125.5
-        projectedFinalB: 110.0, // Changed from 120.2
+        projectedFinalA: 100.0, // Changed from 125.5 (diff 25.5 > 10.0 threshold)
+        projectedFinalB: 100.0, // Changed from 120.2 (diff 20.2 > 10.0 threshold)
         spread: -3.5,
         total: 245.7,
       };

@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import {
   getAllLeagues,
-  getCurrentWeek,
   getLeagueById,
   getMatchupsByWeek,
   getRostersByLeague,
   getUsersByLeague,
 } from '@/lib/api-replacements';
 import { getCurrentLeagues } from '@/config/leagues';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,12 +39,19 @@ export const GET = async (request: Request) => {
     }
 
     // Fetch additional data
-    const currentWeek = await getCurrentWeek();
-    const [rosters, users, matchups] = await Promise.all([
+    const [nflState, rosters, users] = await Promise.all([
+      sleeperClient.fetchNFLState(),
       getRostersByLeague(selectedLeagueId),
       getUsersByLeague(selectedLeagueId),
-      getMatchupsByWeek(selectedLeagueId, currentWeek),
     ]);
+    const currentWeek = resolveCompletedWeeks(league as any, nflState, {
+      includeCurrentWeek: true,
+    });
+    const weeks = Array.from({ length: Math.min(currentWeek, 18) }, (_, i) => i + 1);
+    const matchupsByWeek = await Promise.all(
+      weeks.map(week => getMatchupsByWeek(selectedLeagueId, week).catch(() => [])),
+    );
+    const matchups = matchupsByWeek.flat();
 
     // Map users to rosters and add matchup data
     const usersMap = new Map(users.map((u: any) => [u.id, u]));

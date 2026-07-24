@@ -8,7 +8,7 @@ import {
 } from '@/lib';
 
 // Mock the Prisma client
-vi.mock('../../generated/prisma-historical', () => {
+vi.mock('../../../generated/prisma-historical', () => {
   const mockPrismaClient = {
     liveWinProbSample: {
       create: vi.fn(),
@@ -30,7 +30,7 @@ vi.mock('../../generated/prisma-historical', () => {
 });
 
 // Import after mocking to get mocked instance
-import { PrismaClient } from '../../generated/prisma-historical';
+import { PrismaClient } from '../../../generated/prisma-historical';
 
 describe('historical-data', () => {
   let mockPrisma: any;
@@ -261,6 +261,8 @@ describe('historical-data', () => {
         orderBy: { timestamp: 'asc' },
         select: {
           timestamp: true,
+          rosterAId: true,
+          rosterBId: true,
           winProbA: true,
           winProbB: true,
           currentScoreA: true,

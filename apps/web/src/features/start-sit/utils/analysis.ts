@@ -4,6 +4,7 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 import { CURRENT_LEAGUES } from '@/config/leagues';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type {
   AlternativePlayer,
   ManagerEfficiencyDetailed as ManagerEfficiency,
@@ -431,34 +432,27 @@ const resolveSeasonAndWeeks = async (options?: {
   let season = options?.season;
   let weeks = options?.weeks && options.weeks.length > 0 ? options.weeks : [];
 
-  try {
-    const state = await sleeperClient.fetchNFLState();
+  // Our registered leagues (config/leagues.ts) are the source of truth for
+  // which season is "current", not Sleeper's live global NFL state — during
+  // the off-season that resets to the upcoming season's week 1, which would
+  // otherwise point this analysis at the wrong season with almost no weeks.
+  const referenceLeague = CURRENT_LEAGUES[0];
 
-    if (!season) {
-      const stateSeason = (state as any)?.season;
-      if (stateSeason) {
-        season = String(stateSeason);
-      }
+  try {
+    if (!season && referenceLeague) {
+      season = String(referenceLeague.season);
     }
 
-    if (weeks.length === 0) {
-      const previousWeek = Number((state as any)?.previous_week);
-      const currentWeek = Number((state as any)?.week);
-
-      let latestCompletedWeek: number | null = null;
-      if (Number.isInteger(previousWeek) && previousWeek > 0) {
-        latestCompletedWeek = previousWeek;
-      } else if (Number.isInteger(currentWeek) && currentWeek > 0) {
-        latestCompletedWeek = Math.max(currentWeek - 1, 1);
-      }
-
-      if (latestCompletedWeek != null && latestCompletedWeek > 0) {
-        const cappedWeek = Math.min(latestCompletedWeek, 18);
-        weeks = Array.from({ length: cappedWeek }, (_, index) => index + 1);
-      }
+    if (weeks.length === 0 && referenceLeague) {
+      const [league, nflState] = await Promise.all([
+        sleeperClient.fetchLeague(referenceLeague.id),
+        sleeperClient.fetchNFLState(),
+      ]);
+      const completedWeeks = resolveCompletedWeeks(league, nflState);
+      weeks = Array.from({ length: completedWeeks }, (_, index) => index + 1);
     }
   } catch (error) {
-    console.warn('Failed to determine current NFL state, falling back to default weeks:', error);
+    console.warn('Failed to determine current league week, falling back to default weeks:', error);
   }
 
   return {

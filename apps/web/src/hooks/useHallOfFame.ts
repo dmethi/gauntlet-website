@@ -13,7 +13,14 @@ import {
 } from '@/features/hall-of-fame/utils';
 import { CACHE_DURATIONS, LEAGUE_IDS } from '@/lib/constants';
 import { calculationCache } from '@/shared/utils/calculations';
-import type { SleeperLeague, SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
+import type {
+  NFLState,
+  SleeperLeague,
+  SleeperMatchup,
+  SleeperRoster,
+  SleeperUser,
+} from '@gauntlet/types';
 
 /**
  * Fetch data from Sleeper API
@@ -29,14 +36,18 @@ const fetchSleeperData = async <T>(endpoint: string): Promise<T> => {
 /**
  * Get all matchups for a league and season
  */
-const getLeagueMatchups = async (leagueId: string, weeks: number): Promise<ProcessedMatchup[]> => {
+const getLeagueMatchups = async (leagueId: string): Promise<ProcessedMatchup[]> => {
   // Fetch league, rosters, users, and player data
-  const [league, rosters, users, playersData] = await Promise.all([
+  const [league, rosters, users, playersData, nflState] = await Promise.all([
     fetchSleeperData<SleeperLeague>(`league/${leagueId}`),
     fetchSleeperData<SleeperRoster[]>(`league/${leagueId}/rosters`),
     fetchSleeperData<SleeperUser[]>(`league/${leagueId}/users`),
     fetchSleeperData<Record<string, any>>('players/nfl').catch(() => ({})),
+    fetchSleeperData<NFLState>('state/nfl'),
   ]);
+  // For a finished/past-season league, live NFL state is irrelevant — use
+  // the league's own full regular season instead (see season-weeks.ts).
+  const weeks = resolveCompletedWeeks(league, nflState);
 
   // Convert players object to Map for easier access
   const playerMap = new Map(Object.entries(playersData));
@@ -123,14 +134,8 @@ export const useHallOfFame = () => {
       // Get all league IDs
       const leagueIds = [LEAGUE_IDS.AFC, LEAGUE_IDS.NFC];
 
-      // Get current week from NFL state
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
-      const currentWeek = Math.min(nflState.week, 14); // Cap at regular season
-
       // Fetch matchups from all leagues in parallel
-      const allMatchupsPromises = leagueIds.map(leagueId =>
-        getLeagueMatchups(leagueId, currentWeek),
-      );
+      const allMatchupsPromises = leagueIds.map(leagueId => getLeagueMatchups(leagueId));
 
       const allMatchupsArrays = await Promise.all(allMatchupsPromises);
       const allMatchups = allMatchupsArrays.flat();
@@ -165,12 +170,8 @@ export const useLeagueHallOfFame = (leagueId: string) => {
       const cached = calculationCache.get(cacheKey);
       if (cached) return cached;
 
-      // Get current week
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
-      const currentWeek = Math.min(nflState.week, 14);
-
       // Fetch matchups for this league
-      const matchups = await getLeagueMatchups(leagueId, currentWeek);
+      const matchups = await getLeagueMatchups(leagueId);
 
       // Calculate Hall of Fame records
       const recordsByCategory = calculateHallOfFameRecords(matchups);
@@ -207,12 +208,8 @@ export const useTeamHallOfFame = (leagueId: string, rosterId: number) => {
       const cached = calculationCache.get(cacheKey);
       if (cached) return cached;
 
-      // Get current week
-      const nflState = await fetchSleeperData<{ week: number }>('state/nfl');
-      const currentWeek = Math.min(nflState.week, 14);
-
       // Fetch matchups for the league
-      const allMatchups = await getLeagueMatchups(leagueId, currentWeek);
+      const allMatchups = await getLeagueMatchups(leagueId);
 
       // Filter for this team's matchups
       const teamMatchups = allMatchups.filter(m => m.rosterId === rosterId);

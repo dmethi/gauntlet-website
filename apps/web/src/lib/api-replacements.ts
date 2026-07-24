@@ -431,6 +431,19 @@ export const computeWeeklyRollups = async (leagueId: string, week: number) => {
     });
   }
 
+  // Sum a matchup's starter points by position (e.g. { QB: 24.3, RB: 18.1, ... })
+  const { getPlayerById } = await import('../data/players-loader');
+  const positionalPointsFor = (m: { starters?: string[]; starterPoints?: number[] }) => {
+    const positionalPoints: Record<string, number> = {};
+    (m.starters || []).forEach((playerId, idx) => {
+      const player = getPlayerById(playerId);
+      if (!player?.position) return;
+      const points = m.starterPoints?.[idx] || 0;
+      positionalPoints[player.position] = (positionalPoints[player.position] || 0) + points;
+    });
+    return positionalPoints;
+  };
+
   // Roster Week Aggregates (more complex calculations)
   const rosterWeekAggregates = [];
   for (const matchup of matchups) {
@@ -466,6 +479,8 @@ export const computeWeeklyRollups = async (leagueId: string, week: number) => {
       won: opponent ? (matchup.points || 0) > (opponent.points || 0) : null,
       expectedWins,
       luck: null, // Could calculate luck rating here
+      positionalPoints: positionalPointsFor(matchup),
+      opponentPositionalPoints: opponent ? positionalPointsFor(opponent) : {},
       // Add more fields as needed
     });
   }
