@@ -343,14 +343,155 @@ Builds on Phase 1's registry.
 
 ## Phase 4 — Page inventory audit
 
-Own phase, done before any redesign work starts.
+Own phase, done before any redesign work starts (2026-07-24). Audited via 4
+parallel read-only passes over every `page.tsx`/`page.ts` under
+`apps/web/src/app` (`api/` routes skipped, per this phase's scope). No code
+changed in this phase.
 
-- [ ] Enumerate every route/page in `apps/web/src/app`.
-- [ ] Quick pass/fail per page on three axes: design (generic vs. on-brand),
-      performance (rough load-time/waterfall check), tech debt (dead code,
-      duplicated logic, stale patterns).
-- [ ] Output a prioritized list — input to Phase 5, not a commitment to fix
-      everything at once.
+- [x] Enumerated every route: 35 pages total. Status split: - **Live** (22):
+      `page.tsx` (root redirect), `competition/playoff-scenarios`,
+      `competition/preview/2025/week-3`, `competition/reports`,
+      `competition/reports/[season]/[slug]`, `competition/reports/2025/[slug]`,
+      `competition/reports/2025/week-1..4` (4 routes), `live`,
+      `matchup/[matchupId]`, `matchups/[leagueId]/[week]/[matchupId]`,
+      `start-sit`, `team/[id]`, `team/[id]/stats`, `league/draft` (broken, see
+      below), `league/overview`, `league/transactions`, `managers/[ownerId]`,
+      `year-in-review`, `year-in-review/2026-rules`. - **Placeholder** (5, all
+      render `<SeasonPlaceholder>` gating on the un-started 2026 season):
+      `competition`, `stats`, `matchups`, `draft/analysis`,
+      `hall-of-fame-enhanced`. `competition` is the highest-visibility one — the
+      root `/` redirects straight into it, so the entire app's landing
+      experience is currently a stub. - **Archived** (6, linked from
+      `sidebar.tsx`'s "2025 Archive" item): `archive/2025`,
+      `archive/2025/competition`, `archive/2025/draft-analysis`,
+      `archive/2025/hall-of-fame`, `archive/2025/matchups`,
+      `archive/2025/stats`. - **Unlinked / dev-only** (2, reachable at their URL
+      but absent from `sidebar.tsx`'s nav list — Competition, Stats Hub,
+      Matchups, Hall of Fame, Draft Analysis, Year in Review, 2025 Archive is
+      the full nav): `charts`, `playground`. Both are component/data scaffolding
+      sitting directly in the shipped `app/` route tree with no route-group
+      isolation or env-gate — publicly reachable in production despite being
+      unlinked.
+- [x] Design/performance/tech-debt pass-fail audit, one pass per page (findings
+      below are the significant ones — see Phase 0 for the shared root causes:
+      unloaded `--font-avenir`, no semantic win/loss/grade token layer, two
+      uncoordinated team-color palettes): - **Design**: on-brand (real
+      `font-geizer`/gold/crimson, not just a stray accent link) on only 6 of 35
+      pages: `year-in-review/page.tsx`, `year-in-review/2026-rules/page.tsx`,
+      `archive/2025/page.tsx`, `competition/reports/[season]/[slug]` +
+      `2025/[slug]` (both delegate to `RecapReportView.tsx`, which uses
+      `font-geizer` at lines 61, 97, 219, 355, 427, 624), and
+      `playground/page.tsx` (ironic — the one page nobody sees is the most
+      faithful to the brand system). Every other live page is stock shadcn
+      "new-york/stone" (`bg-card`/`border-border`, default
+      `Table`/`Badge`/`Card`) with at best a stray `text-gauntlet-crimson` link
+      color. `live/page.tsx` is the least on-brand page found — zero
+      crimson/gold/Geizer, pure Tailwind yellow/blue/gray. Color coding is
+      inconsistent even within the brand palette: AFC/NFC toggle buttons on
+      `competition/playoff-scenarios/page.tsx:89,97` hardcode raw
+      `bg-red-500`/`bg-blue-500` (a _third_ uncoordinated color source alongside
+      `brand/team-colors.json` and `tailwind.config.js`'s `viz.team`), and
+      AFC=red/NFC=blue on `archive/2025/draft-analysis/page.tsx:852,957` is
+      inverted vs. AFC=blue/NFC=red on `archive/2025/hall-of-fame/page.tsx`'s
+      `getLeagueBadgeColor` (lines 81-85). - **Performance**: the widespread
+      "slow page loads" complaint from Phase 0 is now root-caused for at least
+      one page: `features/start-sit/utils/analysis.ts:484-498` (backing
+      `start-sit/page.tsx`) awaits leagues and weeks in nested sequential loops
+      instead of flattening into one `Promise.all` — ~34 sequential round trips
+      (2 leagues × up to 17 weeks) for a single page load, matching the page's
+      own "This usually takes 15-30 seconds" disclaimer
+      (`start-sit/page.tsx:73`). The same sequential-`await`-in-a-loop pattern
+      recurs independently in `league/transactions/page.tsx:62-77` (manual
+      pagination loop, no `Promise.all`), `archive/2025/matchups/page.tsx:75-84`
+      (per-league `fetch` in a `for...of`), and
+      `archive/2025/draft-analysis/page.tsx:230-232` (3 independent precompute
+      fetches awaited one at a time). Separately, several "archived" pages do
+      live client fetches instead of static rendering for data that can never
+      change again: `competition/preview/2025/week-3/page.tsx:156-166`
+      explicitly sets `cache: 'no-store'`; `archive/2025/stats/page.tsx:50` also
+      uses `cache: 'no-store'` and then hand-rolls a buggy `sessionStorage`
+      cache workaround (lines 25-46);
+      `archive/2025/competition/page.tsx:238-246` fetches live Sleeper data via
+      `useLeagueOverviewClient` for a finished season; `archive/2025/matchups`
+      even calls the live `/api/nfl-state` endpoint (lines 169-192) to guess
+      "the current NFL week" for a season that's over, falling back to a
+      hardcoded `week 2` if that fails. `archive/2025/page.tsx` (server
+      component, static registry read, zero client fetches) is the model the
+      other 5 archive pages should follow instead. - **Tech debt**: one page is
+      outright broken — `league/draft/page.tsx:92` fetches `/api/league/draft`
+      with no `leagueId` param anywhere in the file, but
+      `api/league/draft/route.ts:9-13` 400s without one; even supplied, the
+      route's response shape (`{draft, dbQueries, dataSource}`) doesn't match
+      what the page expects (`{league, draft, picks}`) — this page can never
+      render real content. Two duplicate-route pairs found:
+      `matchup/[matchupId]/page.tsx` vs.
+      `matchups/[leagueId]/[week]/[matchupId]/page.tsx` (same matchup-detail
+      feature, two competing implementations — the `matchups/[leagueId]/...` one
+      is the better candidate to keep, it uses brand fonts and batches its
+      fetch); `competition/reports/2025/[slug]/page.tsx` vs. the generic
+      `competition/reports/[season]/[slug]/page.tsx` (near-identical code,
+      `2025/[slug]` also lacks `generateStaticParams` and has a leftover
+      module-scope `console.log` at line 8) — and both are shadowed for weeks
+      1-4 by the literal `competition/reports/2025/week-1..4` routes anyway, so
+      the `[slug]` machinery only serves week 5+. The `getConference()` helper
+      is independently reimplemented 5 times across
+      `competition/preview/2025/week-3/page.tsx:90-92` and all 4
+      `competition/reports/2025/week-*/page.tsx` files. Hardcoded league IDs
+      bypassing the Phase 1 registry (`config/leagues.ts`) recur across the live
+      surface, not just archive pages: `matchup/[matchupId]/page.tsx:305` and
+      `matchups/[leagueId]/[week]/[matchupId]/page.tsx:137` (literal
+      `'1263744209295245312'`/name lookup), `charts/page.tsx:6` (a _third_,
+      stale sample league ID that doesn't match either real league), and
+      `hooks/useLeagueOverviewClient.ts:109` (`leagueId || LEAGUE_IDS.AFC`,
+      feeding both `league/overview` and `league/transactions`) — this last one
+      is a landmine, since `LEAGUE_IDS` is a mutable "current season" alias that
+      will silently repoint once 2026 leagues are registered. Same landmine
+      independently confirmed in `archive/2025/hall-of-fame/page.tsx:37` and
+      `archive/2025/stats/page.tsx:6`, both of which resolve "2025" through the
+      mutable `CURRENT_LEAGUES`/`LEAGUE_IDS` alias instead of an explicit
+      `getLeaguesForSeason('2025')` call — an archive page that will mislabel
+      2025 data once the season rolls over. AFC/NFC roster-ID offset math
+      (`id >= 2000 ? id-2000 : id >= 1000 ? id-1000 : id`) is copy-pasted
+      verbatim in `team/[id]/page.tsx:682-687` and
+      `league/overview/page.tsx:384-392` instead of a shared helper.
+      `archive/2025/hall-of-fame/page.tsx` was also confirmed to be genuinely
+      stale, not just unstyled: its season dropdown only offers 2023/2024 (never
+      2025), and it's the old _all-time_ Hall of Fame view dropped in verbatim
+      under the `/archive/2025` route, now orphaned since the live
+      `/hall-of-fame-enhanced` page it used to back was replaced by
+      `SeasonPlaceholder` — a dead-code risk if anyone assumes
+      `useHallOfFameEnhanced`/`features/hall-of-fame/utils` are unused.
+- [x] Prioritized list for Phase 5 (impact-ordered, not a fix commitment): 1.
+      **Fix `league/draft/page.tsx`** — currently broken for every user who
+      reaches it (missing `leagueId` param, mismatched API response shape).
+      Correctness bug, not a style/perf nit. 2. **Un-stub
+      `competition/page.tsx`** — the app's landing page (root `/` redirects
+      here) is a placeholder; every other finding is invisible to a new visitor
+      until this ships. 3. **Root-cause fix for `start-sit`'s sequential
+      per-league/per-week fetch loop** (`analysis.ts:484-498`) — the one page
+      with concretely diagnosed, self-reported ("15-30 seconds") slowness from
+      Phase 0's "widespread complaint." 4. **Consolidate the duplicate
+      matchup-detail routes** (`matchup/[matchupId]` vs.
+      `matchups/[leagueId]/[week]/[matchupId]`) and the duplicate reports routes
+      (`reports/2025/[slug]` vs. `reports/[season]/[slug]`) — two maintenance
+      burdens masquerading as one feature each. 5. **Load `--font-avenir` (or
+      drop the class references) and land a semantic win/loss/grade token
+      layer** — blocks real design fixes on every page in the "generic shadcn"
+      bucket (29 of 35) rather than doing it piecemeal per page. 6. **Fix the
+      `LEAGUE_IDS`/`CURRENT_LEAGUES` mutable-alias landmine** in
+      `useLeagueOverviewClient.ts:109`, `archive/2025/hall-of-fame/page.tsx`,
+      and `archive/2025/stats/page.tsx` before the 2026 season is registered —
+      currently latent, will silently corrupt 2025 archive data the moment Phase
+      2's "bump `CURRENT_SEASON`" item lands. 7. **Design pass on the 22 live,
+      non-placeholder pages currently on stock shadcn** — start with the
+      highest-traffic ones (`team/[id]`, `league/overview`,
+      `matchups/[leagueId]/...`, `managers/[ownerId]`, already tracked in
+      Phase 3) rather than the archive pages, which are lower-traffic and, per
+      the archive-specific findings above, have a correctness problem (live data
+      leaking into frozen pages) that should be fixed before or instead of
+      restyling. 8. **Decide the fate of `charts`/`playground`** — remove,
+      env-gate, or formally adopt as an internal design-system preview route;
+      currently shipping unlinked to production with no policy either way.
 
 ## Phase 5 — Page-by-page remediation
 
