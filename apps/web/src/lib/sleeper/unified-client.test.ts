@@ -63,6 +63,33 @@ describe('memory caching for expensive endpoints', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
+  it('shares one in-flight request across concurrent callers for the same endpoint', async () => {
+    let resolveFetch: (value: Response) => void;
+    const fetchMock = vi.fn(
+      () =>
+        new Promise<Response>(resolve => {
+          resolveFetch = resolve;
+        }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const client = createStatsClient();
+    const first = client.fetchWeeklyPlayerStats(1, '2025');
+    const second = client.fetchWeeklyPlayerStats(1, '2025');
+
+    // Let the microtask queue drain so both calls reach the fetch() call
+    // site before we assert only one network request was made.
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    resolveFetch!(new Response(JSON.stringify({ '1': { pts: 10 } }), { status: 200 }));
+    const [firstResult, secondResult] = await Promise.all([first, second]);
+
+    expect(firstResult).toEqual(secondResult);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it('does not cache endpoints with no explicit cache duration, e.g. fetchLeague', async () => {
     const fetchMock = vi.fn(
       async () => new Response(JSON.stringify({ league_id: '123' }), { status: 200 }),

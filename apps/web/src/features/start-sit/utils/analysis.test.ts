@@ -1,15 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 /**
  * Start/Sit Analysis Utilities Tests
- *
- * Note: The main export analyzeStartSitEfficiency is an async function that fetches
- * data from multiple APIs. Integration tests would require mocking:
- * - Sleeper API client
- * - League data
- * - Player projections
- *
- * These tests serve as a placeholder for future comprehensive testing.
  */
 
 describe('Start/Sit Analysis Utilities', () => {
@@ -19,17 +11,6 @@ describe('Start/Sit Analysis Utilities', () => {
       expect(analyzeStartSitEfficiency).toBeDefined();
       expect(typeof analyzeStartSitEfficiency).toBe('function');
     });
-
-    // TODO: Add integration tests with mocked API responses
-    // Example test structure:
-    // it('calculates efficiency correctly with mocked data', async () => {
-    //   const result = await analyzeStartSitEfficiency({
-    //     season: '2025',
-    //     weeks: [1, 2],
-    //   });
-    //   expect(result).toHaveProperty('managerEfficiency');
-    //   expect(result).toHaveProperty('positionBreakdown');
-    // });
   });
 
   describe('Position Weights', () => {
@@ -56,20 +37,79 @@ describe('Start/Sit Analysis Utilities', () => {
   });
 });
 
-/**
- * Future Test Coverage Recommendations:
- *
- * 1. Unit Tests for Helper Functions:
- *    - calculateFantasyPoints()
- *    - Position eligibility matching
- *    - Replacement level calculations
- *
- * 2. Integration Tests:
- *    - Full analysis pipeline with mocked data
- *    - Edge cases (bye weeks, injuries, no projections)
- *    - Position-specific decision quality
- *
- * 3. Performance Tests:
- *    - Large dataset handling (full season, all teams)
- *    - Optimization of repeated calculations
- */
+// Two fake leagues, mirroring the AFC/NFC shape without hitting real config.
+const FAKE_LEAGUES = [
+  { id: 'league-a', name: 'League A', season: 2025, conference: 'AFC' },
+  { id: 'league-b', name: 'League B', season: 2025, conference: 'NFC' },
+];
+vi.mock('@/config/leagues', () => ({
+  CURRENT_LEAGUES: FAKE_LEAGUES,
+  getCurrentLeagues: () => FAKE_LEAGUES,
+}));
+
+const fetchLeague = vi.fn(async () => ({ scoring_settings: { rec: 1 } }));
+const fetchAllPlayers = vi.fn(async () => ({
+  p1: { position: 'QB' },
+  p2: { position: 'QB' },
+}));
+const fetchMatchups = vi.fn(async () => [
+  { roster_id: 1, starters: ['p1'], players: ['p1', 'p2'] },
+]);
+const fetchWeeklyProjections = vi.fn(async () => ({ p1: { rec: 5 }, p2: { rec: 5 } }));
+const fetchWeeklyPlayerStats = vi.fn(async () => ({ p1: { rec: 4 }, p2: { rec: 6 } }));
+const fetchUsers = vi.fn(async () => [{ user_id: 'u1', display_name: 'Manager One' }]);
+const fetchRosters = vi.fn(async () => [{ roster_id: 1, owner_id: 'u1' }]);
+
+vi.mock('@/lib/sleeper/unified-client', () => ({
+  sleeperClient: {
+    fetchLeague: (...args: unknown[]) => fetchLeague(...args),
+    fetchAllPlayers: (...args: unknown[]) => fetchAllPlayers(...args),
+    fetchMatchups: (...args: unknown[]) => fetchMatchups(...args),
+    fetchWeeklyProjections: (...args: unknown[]) => fetchWeeklyProjections(...args),
+    fetchWeeklyPlayerStats: (...args: unknown[]) => fetchWeeklyPlayerStats(...args),
+    fetchUsers: (...args: unknown[]) => fetchUsers(...args),
+    fetchRosters: (...args: unknown[]) => fetchRosters(...args),
+  },
+}));
+
+describe('analyzeStartSitEfficiency (parallel league/week processing)', () => {
+  beforeEach(() => {
+    fetchLeague.mockClear();
+    fetchAllPlayers.mockClear();
+    fetchMatchups.mockClear();
+    fetchWeeklyProjections.mockClear();
+    fetchWeeklyPlayerStats.mockClear();
+    fetchUsers.mockClear();
+    fetchRosters.mockClear();
+  });
+
+  it('aggregates decisions from every league/week pair, not just the first', async () => {
+    const { analyzeStartSitEfficiency } = await import('./analysis');
+
+    const result = await analyzeStartSitEfficiency({ season: '2025', weeks: [1, 2] });
+
+    // 2 leagues x 2 weeks x 1 roster with a swappable bench alternative.
+    expect(result.leagueStats.totalDecisions).toBe(4);
+
+    const leagueIds = new Set(result.worstDecisions.map(d => d.leagueId));
+    const weeks = new Set(result.worstDecisions.map(d => d.week));
+    expect(leagueIds).toEqual(new Set(['league-a', 'league-b']));
+    expect(weeks).toEqual(new Set([1, 2]));
+  });
+
+  it('fetches league scoring settings once per league, not once per league-week', async () => {
+    const { analyzeStartSitEfficiency } = await import('./analysis');
+
+    await analyzeStartSitEfficiency({ season: '2025', weeks: [1, 2] });
+
+    expect(fetchLeague).toHaveBeenCalledTimes(2);
+  });
+
+  it('fetches players once regardless of the number of league/week pairs', async () => {
+    const { analyzeStartSitEfficiency } = await import('./analysis');
+
+    await analyzeStartSitEfficiency({ season: '2025', weeks: [1, 2] });
+
+    expect(fetchAllPlayers).toHaveBeenCalledTimes(1);
+  });
+});

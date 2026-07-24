@@ -461,6 +461,109 @@ const resolveSeasonAndWeeks = async (options?: {
   };
 };
 
+const processLeagueWeek = async (
+  league: { id: string },
+  week: number,
+  season: string,
+  scoringSettingsByLeague: Map<string, ScoringSettings>,
+  playerPositions: Map<string, string>,
+): Promise<PositionDecision[]> => {
+  const scoringSettings = scoringSettingsByLeague.get(league.id) || {};
+
+  const [matchups, projections, stats, users, rosters] = await Promise.all([
+    sleeperClient.fetchMatchups(league.id, week),
+    sleeperClient.fetchWeeklyProjections(week, season),
+    sleeperClient.fetchWeeklyPlayerStats(week, season),
+    sleeperClient.fetchUsers(league.id),
+    sleeperClient.fetchRosters(league.id),
+  ]);
+
+  const userMap = new Map((users || []).map((u: any) => [u.user_id, u]));
+  const rosterToOwner = new Map((rosters || []).map((r: any) => [r.roster_id, r.owner_id]));
+
+  // Build projections map with calculated points
+  const allProjections = new Map<string, PlayerProjection>();
+
+  // Projections and stats can be an object keyed by playerId; convert while preserving IDs
+  const entries = projections
+    ? Array.isArray(projections)
+      ? (projections as any[]).map((p: any) => [String(p.player_id), p] as const)
+      : Object.entries(projections as Record<string, any>)
+    : [];
+
+  for (const [playerId, rawProjection] of entries) {
+    const rawStat = (stats || ({} as any))[playerId];
+    if (!rawProjection || !rawStat) continue;
+
+    const projectedPoints = calculateFantasyPoints(rawProjection, scoringSettings);
+    const actualPoints = calculateFantasyPoints(rawStat, scoringSettings);
+    if (projectedPoints <= 0) continue;
+
+    allProjections.set(String(playerId), {
+      playerId: String(playerId),
+      projectedPoints,
+      actualPoints,
+      rawProjection,
+      rawStats: rawStat,
+    });
+  }
+
+  const rosteredPlayers = getRosteredPlayers(matchups || []);
+  const weekDecisions: PositionDecision[] = [];
+
+  for (const matchup of matchups || []) {
+    const rosterId = matchup.roster_id;
+    const ownerId = rosterToOwner.get(rosterId);
+    const user = userMap.get(ownerId);
+    const managerName = user?.display_name || `Manager ${rosterId}`;
+    const starters: string[] = (matchup.starters || []).map((s: any) => String(s));
+    const roster: string[] = (matchup.players || []).map((p: any) => String(p));
+
+    const managerDecisions: PositionDecision[] = [];
+    for (let i = 0; i < starters.length; i++) {
+      const playerId = starters[i];
+      if (!playerId) continue;
+
+      const rosterSlot = ROSTER_POSITIONS[i];
+      if (!rosterSlot) continue;
+
+      const playerPos = playerPositions.get(playerId);
+      if (!playerPos) continue;
+
+      const selectedProjection = allProjections.get(playerId);
+      if (!selectedProjection) continue;
+
+      const alternatives = buildAlternativesPool(
+        roster,
+        starters,
+        rosteredPlayers,
+        rosterSlot,
+        selectedProjection,
+        allProjections,
+        playerPositions,
+      );
+
+      if (alternatives.length === 0) continue;
+
+      const decision = analyzePositionDecision(
+        ownerId || String(rosterId),
+        managerName,
+        league.id,
+        week,
+        rosterSlot,
+        selectedProjection,
+        alternatives,
+      );
+      managerDecisions.push(decision);
+    }
+
+    const deduped = deduplicateManagerDecisions(managerDecisions);
+    weekDecisions.push(...deduped);
+  }
+
+  return weekDecisions;
+};
+
 export const analyzeStartSitEfficiency = async (options?: {
   season?: string;
   weeks?: number[];
@@ -478,108 +581,32 @@ export const analyzeStartSitEfficiency = async (options?: {
     }
   }
 
-  const allDecisions: PositionDecision[] = [];
+  // Fetch scoring settings for every league up front, in parallel.
+  const scoringSettingsByLeague = new Map<string, ScoringSettings>();
+  await Promise.all(
+    CURRENT_LEAGUES.map(async league => {
+      const leagueDetails = await sleeperClient.fetchLeague(league.id);
+      scoringSettingsByLeague.set(
+        league.id,
+        ((leagueDetails as any)?.scoring_settings as ScoringSettings) || {},
+      );
+    }),
+  );
 
-  // Process each league separately, then combine results
-  for (const league of CURRENT_LEAGUES) {
-    // Fetch league for scoring settings
-    const leagueDetails = await sleeperClient.fetchLeague(league.id);
-    const scoringSettings: ScoringSettings =
-      ((leagueDetails as any)?.scoring_settings as ScoringSettings) || {};
+  // Every (league, week) pair is independent — process them all in parallel
+  // instead of awaiting one at a time. fetchWeeklyProjections/PlayerStats are
+  // per-week only (not per-league), so the in-flight request de-dupe in
+  // BrowserSleeperClient collapses the two leagues' identical calls for the
+  // same week into a single network request.
+  const leagueWeekResults = await Promise.all(
+    CURRENT_LEAGUES.flatMap(league =>
+      weeks.map(week =>
+        processLeagueWeek(league, week, season, scoringSettingsByLeague, playerPositions),
+      ),
+    ),
+  );
 
-    for (const week of weeks) {
-      // Parallel fetch per league-week
-      const [matchups, projections, stats, users, rosters] = await Promise.all([
-        sleeperClient.fetchMatchups(league.id, week),
-        sleeperClient.fetchWeeklyProjections(week, season),
-        sleeperClient.fetchWeeklyPlayerStats(week, season),
-        sleeperClient.fetchUsers(league.id),
-        sleeperClient.fetchRosters(league.id),
-      ]);
-
-      const userMap = new Map((users || []).map((u: any) => [u.user_id, u]));
-      const rosterToOwner = new Map((rosters || []).map((r: any) => [r.roster_id, r.owner_id]));
-
-      // Build projections map with calculated points
-      const allProjections = new Map<string, PlayerProjection>();
-
-      // Projections and stats can be an object keyed by playerId; convert while preserving IDs
-      const entries = projections
-        ? Array.isArray(projections)
-          ? (projections as any[]).map((p: any) => [String(p.player_id), p] as const)
-          : Object.entries(projections as Record<string, any>)
-        : [];
-
-      for (const [playerId, rawProjection] of entries) {
-        const rawStat = (stats || ({} as any))[playerId];
-        if (!rawProjection || !rawStat) continue;
-
-        const projectedPoints = calculateFantasyPoints(rawProjection, scoringSettings);
-        const actualPoints = calculateFantasyPoints(rawStat, scoringSettings);
-        if (projectedPoints <= 0) continue;
-
-        allProjections.set(String(playerId), {
-          playerId: String(playerId),
-          projectedPoints,
-          actualPoints,
-          rawProjection,
-          rawStats: rawStat,
-        });
-      }
-
-      const rosteredPlayers = getRosteredPlayers(matchups || []);
-
-      for (const matchup of matchups || []) {
-        const rosterId = matchup.roster_id;
-        const ownerId = rosterToOwner.get(rosterId);
-        const user = userMap.get(ownerId);
-        const managerName = user?.display_name || `Manager ${rosterId}`;
-        const starters: string[] = (matchup.starters || []).map((s: any) => String(s));
-        const roster: string[] = (matchup.players || []).map((p: any) => String(p));
-
-        const managerDecisions: PositionDecision[] = [];
-        for (let i = 0; i < starters.length; i++) {
-          const playerId = starters[i];
-          if (!playerId) continue;
-
-          const rosterSlot = ROSTER_POSITIONS[i];
-          if (!rosterSlot) continue;
-
-          const playerPos = playerPositions.get(playerId);
-          if (!playerPos) continue;
-
-          const selectedProjection = allProjections.get(playerId);
-          if (!selectedProjection) continue;
-
-          const alternatives = buildAlternativesPool(
-            roster,
-            starters,
-            rosteredPlayers,
-            rosterSlot,
-            selectedProjection,
-            allProjections,
-            playerPositions,
-          );
-
-          if (alternatives.length === 0) continue;
-
-          const decision = analyzePositionDecision(
-            ownerId || String(rosterId),
-            managerName,
-            league.id,
-            week,
-            rosterSlot,
-            selectedProjection,
-            alternatives,
-          );
-          managerDecisions.push(decision);
-        }
-
-        const deduped = deduplicateManagerDecisions(managerDecisions);
-        allDecisions.push(...deduped);
-      }
-    }
-  }
+  const allDecisions: PositionDecision[] = leagueWeekResults.flat();
 
   const managerEfficiencies = calculateManagerEfficiency(allDecisions);
   const worstDecisions = getWorstDecisions(allDecisions, 999);

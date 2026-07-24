@@ -142,6 +142,12 @@ interface CacheEntry {
 export class BrowserSleeperClient {
   protected config: SleeperClientConfig;
   private cache = new Map<string, CacheEntry>();
+  // In-flight request de-dupe: when callers running concurrently (e.g. a
+  // parallelized per-league/per-week loop) ask for the same endpoint before
+  // the first call has resolved, they share that one pending request instead
+  // of each firing their own — otherwise memory caching only helps *after*
+  // the first request lands, and concurrent callers would stampede the API.
+  private pending = new Map<string, Promise<any>>();
   private lastRequestTime = 0;
 
   constructor(config: SleeperClientConfig) {
@@ -165,7 +171,6 @@ export class BrowserSleeperClient {
     cacheDuration?: number,
     next?: { revalidate?: number | false },
   ): Promise<T> {
-    const url = endpoint.startsWith('http') ? endpoint : `${SLEEPER_API_BASE}${endpoint}`;
     const cacheKey = `${this.config.userAgent}-${endpoint}`;
     const effectiveCacheDuration = cacheDuration ?? this.config.defaultCacheDuration;
 
@@ -176,7 +181,31 @@ export class BrowserSleeperClient {
         this.log(`Cache hit for ${endpoint}`);
         return cached;
       }
+
+      const inFlight = this.pending.get(cacheKey);
+      if (inFlight) {
+        this.log(`Joining in-flight request for ${endpoint}`);
+        return inFlight;
+      }
     }
+
+    const requestPromise = this.performFetch<T>(endpoint, cacheKey, effectiveCacheDuration, next);
+
+    if (this.config.cacheStrategy === 'memory' && effectiveCacheDuration > 0) {
+      this.pending.set(cacheKey, requestPromise);
+      requestPromise.finally(() => this.pending.delete(cacheKey));
+    }
+
+    return requestPromise;
+  }
+
+  private async performFetch<T>(
+    endpoint: string,
+    cacheKey: string,
+    effectiveCacheDuration: number,
+    next?: { revalidate?: number | false },
+  ): Promise<T> {
+    const url = endpoint.startsWith('http') ? endpoint : `${SLEEPER_API_BASE}${endpoint}`;
 
     const fixtureData = await this.tryFixture<T>(endpoint);
     if (fixtureData !== undefined) {
