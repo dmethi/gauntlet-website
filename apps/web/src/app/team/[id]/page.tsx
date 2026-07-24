@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/table';
 import { MatchupLink } from '@/components/matchup-link';
 import { VALID_POSITIONS } from '@/lib/constants';
+import Link from 'next/link';
 
 const TeamPageLoader = () => (
   <ContentLoader
@@ -64,8 +65,8 @@ const TeamPageLoader = () => (
 
 export default function TeamPage({ params }: { params: { id: string } }) {
   const { team, loading, error } = useTeamData(params.id);
-  const { weeklyAverages, league } = useLeagueData();
   const leagueIdForHooks = team?.league?.id ? String(team.league.id) : undefined;
+  const { weeklyAverages, league } = useLeagueData(leagueIdForHooks);
   const seasonForHooks = team?.league?.season ? String(team.league.season) : undefined;
   const rosterIdForHooks = team?.id != null ? Number(team.id) : undefined;
   const { data: seasonal } = useSeasonalAggregates(leagueIdForHooks, seasonForHooks);
@@ -211,6 +212,14 @@ export default function TeamPage({ params }: { params: { id: string } }) {
           </div>
           <div>
             <PageHeader title={name} subtitle={`League: ${team.league?.name} • ${ownersText}`} />
+            {team.ownerId && (
+              <Link
+                href={`/managers/${team.ownerId}`}
+                className="text-sm text-gauntlet-crimson hover:underline"
+              >
+                View manager's career history &rarr;
+              </Link>
+            )}
           </div>
         </div>
       </div>

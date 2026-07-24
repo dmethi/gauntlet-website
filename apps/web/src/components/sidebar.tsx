@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { BarChart3, Home, Menu, Scroll, Star, Swords, X } from 'lucide-react';
+import { Archive, BarChart3, Home, Menu, Scroll, Star, Swords, X } from 'lucide-react';
 import { GauntletLogo } from './gauntlet-logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -210,6 +210,20 @@ const SidebarNavigationWithSearchParams = ({
       >
         <Scroll className="h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110" />
         <span className="flex-1 text-left">Year in Review</span>
+      </Link>
+
+      {/* 2025 Archive */}
+      <Link
+        href="/archive/2025"
+        onClick={onItemClick}
+        className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium font-avenir min-h-[44px] text-left transition-all duration-200 ease ${
+          pathname.startsWith('/archive/2025')
+            ? 'bg-gauntlet-crimson text-white shadow-sm'
+            : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
+        }`}
+      >
+        <Archive className="h-4 w-4 flex-shrink-0 transition-transform duration-200 ease motion-reduce:group-hover:scale-100 group-hover:scale-110" />
+        <span className="flex-1 text-left">2025 Archive</span>
       </Link>
 
       {/* Theme Toggle */}

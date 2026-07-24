@@ -36,9 +36,12 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
     },
   ],
   // 2026 season is BLOCKED on 3 new Sleeper league IDs not yet created — see
-  // SCRATCHPAD.md's "Blocked" section. Do not add a placeholder key with
-  // fake IDs; every accessor below already handles "season not registered"
-  // by returning [].
+  // SCRATCHPAD.md's "Blocked" section. Deliberately registered as an empty
+  // array (season exists, no leagues yet) rather than left unregistered, so
+  // getAllSeasons() and cross-season aggregation (manager-history.ts) know
+  // 2026 is a real season. Do not add fake league IDs — every accessor below
+  // already handles an empty league list by returning [].
+  '2026': [],
 };
 
 /** Leagues registered for a given season, or [] if that season isn't registered yet. */

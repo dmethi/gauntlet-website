@@ -258,7 +258,7 @@ export default function DraftPage() {
           subtitle={league ? `Season ${league.season}` : ''}
         />
         <div className="flex gap-2">
-          <Link href="/draft/analysis">
+          <Link href="/archive/2025/draft-analysis">
             <Button variant="default" size="sm">
               Mock Draft Analysis
             </Button>

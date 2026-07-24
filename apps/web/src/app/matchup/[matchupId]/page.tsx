@@ -368,7 +368,7 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
       <Container className="py-8">
         <PageHeader title="Error Loading Matchup" subtitle="Failed to load matchup data" />
         <div className="mt-4 text-destructive">{String(error)}</div>
-        <Link href="/matchups">
+        <Link href="/archive/2025/matchups">
           <Button variant="outline" className="mt-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Matchups
@@ -382,7 +382,7 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
     return (
       <Container className="py-8">
         <PageHeader title="Matchup Not Found" subtitle="Unable to load matchup data" />
-        <Link href="/matchups">
+        <Link href="/archive/2025/matchups">
           <Button variant="outline" className="mt-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Matchups
@@ -403,7 +403,7 @@ const MatchupDetailPageContent = ({ params }: { params: { matchupId: string } })
   return (
     <Container className="py-4 md:py-8 max-w-7xl">
       <div className="mb-6">
-        <Link href="/matchups">
+        <Link href="/archive/2025/matchups">
           <Button variant="outline" className="text-sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Back to Matchups</span>

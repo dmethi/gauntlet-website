@@ -7,6 +7,7 @@ import { CACHE_DURATIONS } from '@/lib/constants';
 import { getAllSeasons, getLeaguesForSeason } from '@/config/leagues';
 import { createBrowserServiceClient as createServiceClient } from '@/lib/sleeper/browser-client';
 import { PlayerStats } from '@/lib/sleeper/browser-client';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
 import type { EnhancedMatchup } from '../utils/aggregations';
 
@@ -68,18 +69,6 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
    */
   const setCache = (key: string, data: any, maxAge: number = CACHE_DURATIONS.ONE_HOUR): void => {
     cache.set(key, { data, timestamp: Date.now() });
-  };
-
-  /**
-   * Get current NFL week
-   */
-  const getCurrentWeek = async (): Promise<number> => {
-    try {
-      const state = await sleeperClient.fetchNFLState();
-      return state.week || 1;
-    } catch {
-      return 1;
-    }
   };
 
   /**
@@ -358,15 +347,18 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
     if (cached) return cached;
 
     // Fetch basic matchup data from Sleeper
-    const [league, rosters, users] = await Promise.all([
+    const [league, rosters, users, nflState] = await Promise.all([
       sleeperClient.fetchLeague(leagueId),
       sleeperClient.fetchRosters(leagueId),
       sleeperClient.fetchUsers(leagueId),
+      sleeperClient.fetchNFLState(),
     ]);
 
-    // Determine number of weeks
-    const currentWeek = await getCurrentWeek();
-    const weeksToFetch = season === '2025' ? Math.min(currentWeek, 18) : 18;
+    // Determine number of weeks. For a finished/past-season league, live NFL
+    // state is irrelevant — use the league's own full regular season instead
+    // (see season-weeks.ts); it would otherwise collapse to the off-season's
+    // reset week.
+    const weeksToFetch = resolveCompletedWeeks(league, nflState);
 
     // Create roster/user mapping for team names
     const rosterToUser = new Map<number, any>();
@@ -408,11 +400,17 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
 
     // Process each registered season, one league at a time (never merge raw
     // matchups across leagues before this point — see docs/ETHOS.md).
-    // TODO: `season === '2025'` below assumes 2025 is "current" — should
-    // read from a CURRENT_SEASON registry concept instead (out of scope
-    // for this slice).
-    for (const season of getAllSeasons()) {
-      if (!includeCurrent && season === '2025') continue;
+    const allSeasons = getAllSeasons();
+    // "Current" means the most recent season that actually has leagues
+    // registered — a season can exist in the registry (e.g. 2026, pending
+    // real league IDs) with no leagues yet, which isn't "current" for the
+    // purposes of excluding it from historical stats.
+    const mostRecentPlayedSeason = [...allSeasons]
+      .filter(season => getLeaguesForSeason(season).length > 0)
+      .sort()
+      .at(-1);
+    for (const season of allSeasons) {
+      if (!includeCurrent && season === mostRecentPlayedSeason) continue;
 
       for (const league of getLeaguesForSeason(season)) {
         try {

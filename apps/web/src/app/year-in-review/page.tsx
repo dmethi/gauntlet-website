@@ -512,7 +512,7 @@ export default async function YearInReviewPage() {
             {/* Backlink to the app */}
             <div className="mt-10 flex items-center justify-center">
               <Link
-                href="/competition"
+                href="/archive/2025/competition"
                 className="inline-flex items-center gap-2 border border-white/15 hover:border-white/30 rounded-lg px-6 py-3 text-white/60 hover:text-white text-sm transition-all group"
               >
                 Explore the Year One platform
@@ -666,7 +666,7 @@ export default async function YearInReviewPage() {
         </div>
         <p className="text-white/30 text-xs">
           High-stakes fantasy football ·{' '}
-          <Link href="/competition" className="hover:text-white/60 transition-colors">
+          <Link href="/archive/2025/competition" className="hover:text-white/60 transition-colors">
             Enter the app
           </Link>
         </p>

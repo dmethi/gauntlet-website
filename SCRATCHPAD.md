@@ -173,6 +173,28 @@ they resolve rather than letting them accumulate.
   the upcoming season — to be supplied once those leagues are created. Phase 1
   (data layer foundation) is NOT blocked on this and should start first
   regardless.
+- 2025 archive/2026 shell/owner-linkage slice (2026-07-23) landed
+  (`/archive/2025`, `/managers/[ownerId]`, `LEAGUE_REGISTRY['2026']: []`)
+  without real 2026 league IDs, per user decision. Same-day follow-up superseded
+  the "primary nav still points at 2025" decision: the 5 primary nav pages
+  (`/competition`, `/stats`, `/matchups`, `/hall-of-fame-enhanced`,
+  `/draft/analysis`) were physically relocated to
+  `/archive/2025/{competition,stats,matchups,hall-of-fame,draft-analysis}`, and
+  the old top-level paths now render a shared `SeasonPlaceholder` component
+  (`apps/web/src/components/season-placeholder.tsx`) instead — primary nav is
+  now a 2026-default by construction, so the standalone `/2026` shell route was
+  deleted as redundant. `app/stats/`'s support files (`stats-content.tsx`,
+  `components/`, `constants/`, `utils/`, `types.ts`) deliberately stayed at
+  their original path since they're imported externally by
+  `features/transactions`/`features/stats`/`shared/utils` — only
+  `stats/page.tsx` moved, with its one relative import fixed to
+  `@/app/stats/stats-content`. `competition/reports/*` and
+  `competition/playoff-scenarios` also deliberately stayed put (reachable via
+  the moved competition page's own absolute links), to avoid touching the
+  `generateStaticParams`-driven reports system. Follow-up once real 2026 IDs
+  land: (1) register the 3 real leagues in `LEAGUE_REGISTRY['2026']`; (2)
+  replace the 5 `SeasonPlaceholder` pages with real 2026 feature
+  implementations.
 
 ## Next session
 

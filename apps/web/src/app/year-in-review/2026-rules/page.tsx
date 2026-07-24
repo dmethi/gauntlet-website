@@ -475,7 +475,7 @@ export default function Rules2026Page() {
             Back to the year in review
           </Link>
           {' · '}
-          <Link href="/competition" className="transition-colors hover:text-white/60">
+          <Link href="/archive/2025/competition" className="transition-colors hover:text-white/60">
             Enter the app
           </Link>
         </p>
