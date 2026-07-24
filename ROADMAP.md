@@ -192,12 +192,47 @@ Builds on Phase 1's registry.
       `/competition/playoff-scenarios` (now renders the Seeding view directly,
       no `Tabs` wrapper for a single remaining tab). The round-robin-vs-bracket
       question this item was tracking is moot now that the feature is gone.
-- [ ] Fix `draft/analysis` page's hardcoded 2-column UI.
+- [x] Retired this item rather than fixing it: the hardcoded 2-column UI
+      (`draft1`/`draft2`, `AFC`/`NFC` labels) no longer lives at
+      `app/draft/analysis/page.tsx` — that route is now just a
+      `SeasonPlaceholder` stub for the 2026 season with no draft data rendering
+      at all. The actual 2-column code lives at
+      `app/archive/2025/draft-analysis/page.tsx`, a frozen archive of the 2025
+      season, which genuinely had exactly 2 leagues (AFC/NFC). Hardcoding that
+      there is accurate history, not tech debt — the same reasoning as the
+      Cross-League retirement above. Building an N-league draft analysis page
+      for the live 2026 route is new feature work, not a fix to existing code;
+      not scoped here.
 - [ ] Bump `CURRENT_SEASON`; wire in the new season's leagues once IDs are
       provided.
-- [ ] Land multi-league safety tests (see `GITHUB_ISSUES.md`'s existing,
-      unimplemented "Add Multi-League Safety Tests" item — fold it in here
-      rather than tracking it twice).
+- [x] Landed multi-league safety tests (folds in `GITHUB_ISSUES.md`'s "Add
+      Multi-League Safety Tests" item — see GITHUB_ISSUES.md:104-116 for its 4
+      asks). Confirmed which flagged 2-way combination points from this phase's
+      first checklist item are already N-league-safe vs. not before writing
+      tests: `config/leagues.ts` (registry) and `recap/tools/power-rankings.ts`
+      (composite `{leagueId, rosterId}` throughout, cross-league z-score
+      combination happens only after per-league fetch) are safe;
+      `recap/tools/standings.ts`/`upcoming.ts`'s final `{afc, nfc}` pick-out
+      step, `useLeagueSummary.ts`/ `useScenarioSummary.ts` (static JSON shaped
+      `{afc, nfc}`), and all of `waiver-analysis/utils/cross-league.ts`
+      (two-positional-arg design) remain 2-league-only, unchanged here (still
+      tracked as a separate N-league redesign). Added 4 new test suites against
+      real production code, each verified to catch a real regression
+      (mutation-tested: broke the composite-key match / merged leagues before
+      grouping, confirmed the new test failed, then reverted):
+      `config/leagues.test.ts` (season separation, composite-key/ID uniqueness
+      across the real registry), `recap/tools/power-rankings.test.ts` and
+      `recap/tools/standings.test.ts` (colliding `roster_id` fixtures across 2
+      mocked leagues — each league fetched/computed separately, no cross-league
+      leakage, `{afc, nfc}`/movement-tracking combination happens only at the
+      presentation-layer step), `waiver-analysis/utils/cross-league.test.ts` (a
+      `playerId` present in both leagues' transactions stays two separate stat
+      blocks, never summed). The existing
+      `__tests__/integration/multi-league.test.ts` was left as-is — it tests
+      hand-rolled synthetic patterns, not real production functions, which is
+      exactly the gap these 4 new suites close. 19 new tests, all green; full
+      suite 895/896 (same pre-existing unseeded k-means flake noted above,
+      unrelated to this change); `pnpm type-check`/`lint` clean.
 
 ## Phase 3 — Hall of Fame / Hall of Shame + manager profiles
 
