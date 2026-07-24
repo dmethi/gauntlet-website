@@ -182,8 +182,16 @@ Builds on Phase 1's registry.
       `hall-of-fame-enhanced.ts` were re-checked and do **not** have this
       problem — they already return flat per-league arrays from Phase 1's
       registry iteration.
-- [ ] Redesign `cross-league-simulator.ts` for N leagues — round-robin vs.
-      seeded bracket is an open design question, decide when this slice starts.
+- [x] Retired the Week 14 Cross-League Championship feature rather than
+      redesigning it for N leagues: the user confirmed it isn't running again
+      this season, so an N-league redesign would have built support for a
+      feature that won't be used. Deleted `cross-league-simulator.ts`,
+      `CrossLeagueBattle.tsx`, `useCrossLeagueBattle.ts`, their
+      `CrossLeaguePlayer`/`CrossLeagueMatchup`/`CrossLeagueBattleResults`/
+      `CrossLeagueSimulationConfig` types, and the "Cross-League" tab on
+      `/competition/playoff-scenarios` (now renders the Seeding view directly,
+      no `Tabs` wrapper for a single remaining tab). The round-robin-vs-bracket
+      question this item was tracking is moot now that the feature is gone.
 - [ ] Fix `draft/analysis` page's hardcoded 2-column UI.
 - [ ] Bump `CURRENT_SEASON`; wire in the new season's leagues once IDs are
       provided.

@@ -18,9 +18,6 @@ export {
 // Seeding simulation
 export { runSeedingSimulation, runBothLeagueSimulations } from './seeding-simulator';
 
-// Cross-league battle simulation
-export { runCrossLeagueBattle } from './cross-league-simulator';
-
 // AI-powered scenario summarization
 export {
   generateTeamScenarioSummary,

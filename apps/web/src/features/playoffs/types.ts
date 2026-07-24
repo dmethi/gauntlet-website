@@ -207,60 +207,6 @@ export interface LeagueSeedingResults {
 }
 
 // ============================================================================
-// CROSS-LEAGUE BATTLE TYPES
-// ============================================================================
-
-/**
- * Player info for cross-league roster display
- */
-export interface CrossLeaguePlayer {
-  readonly playerId: string;
-  readonly name: string;
-  readonly position: string;
-  readonly team: string | null;
-  readonly projection: number;
-  readonly currentScore: number;
-}
-
-/**
- * Individual cross-league matchup between corresponding seeds
- */
-export interface CrossLeagueMatchup {
-  readonly seed: number; // 1-12
-  readonly afcTeam: {
-    readonly rosterId: number;
-    readonly teamName: string;
-    readonly ownerName: string;
-    readonly roster?: readonly CrossLeaguePlayer[];
-  };
-  readonly nfcTeam: {
-    readonly rosterId: number;
-    readonly teamName: string;
-    readonly ownerName: string;
-    readonly roster?: readonly CrossLeaguePlayer[];
-  };
-  readonly afcWinProbability: number;
-  readonly nfcWinProbability: number;
-  readonly projectedAfcScore: number;
-  readonly projectedNfcScore: number;
-}
-
-/**
- * Full cross-league battle simulation results
- */
-export interface CrossLeagueBattleResults {
-  readonly afcWinProbability: number;
-  readonly nfcWinProbability: number;
-  readonly expectedAfcWins: number; // Out of 12
-  readonly expectedNfcWins: number;
-  readonly expectedAfcTotalPoints: number;
-  readonly expectedNfcTotalPoints: number;
-  readonly matchups: readonly CrossLeagueMatchup[];
-  readonly simulationCount: number;
-  readonly generatedAt: string;
-}
-
-// ============================================================================
 // SCENARIO BUILDER TYPES
 // ============================================================================
 
@@ -302,12 +248,4 @@ export const POINTS_CONSTRAINTS = {
 export interface SeedingSimulationConfig {
   readonly iterations: number;
   readonly lockedOutcomes?: Record<number, 'team1' | 'team2'>;
-}
-
-/**
- * Configuration for cross-league battle simulation
- */
-export interface CrossLeagueSimulationConfig {
-  readonly iterations: number;
-  readonly useProjections: boolean; // true = use week 14 projections, false = use historical only
 }

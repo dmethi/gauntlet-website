@@ -58,9 +58,6 @@ they resolve rather than letting them accumulate.
 
 ## Needs a closer look
 
-- `cross-league-simulator.ts`'s redesign approach for N leagues — round-robin
-  vs. seeded bracket — deliberately left open in `ROADMAP.md` Phase 2, decide
-  when that slice starts.
 - `apps/web/src/scripts/audit-hall-of-fame.ts` — re-run once Phase 1's league
   registry and the new season's leagues are wired in; it already flags
   data-completeness gaps (missing player stats/win-prob coverage) that are worth

@@ -26,12 +26,9 @@ export type {
   PathSummary,
   TeamSeedingProbabilities,
   LeagueSeedingResults,
-  CrossLeagueMatchup,
-  CrossLeagueBattleResults,
   LockedOutcome,
   ScenarioBuilderState,
   SeedingSimulationConfig,
-  CrossLeagueSimulationConfig,
 } from './types';
 
 // Export constants

@@ -1,23 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle, RefreshCw, Swords, Trophy } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Container, PageHeader } from '@gauntlet/ui';
-import {
-  CrossLeagueBattle,
-  ScenarioBuilder,
-  SeedingTable,
-} from '@/features/playoffs/components/scenarios';
-import {
-  useCrossLeagueBattle,
-  usePlayoffSeedingWithScenarios,
-  useWeek14Scenarios,
-} from '@/features/playoffs/hooks';
+import { ScenarioBuilder, SeedingTable } from '@/features/playoffs/components/scenarios';
+import { usePlayoffSeedingWithScenarios, useWeek14Scenarios } from '@/features/playoffs/hooks';
 
 /**
  * Loading skeleton for seeding section
@@ -30,17 +21,6 @@ const SeedingLoadingSkeleton = () => (
         <Skeleton key={i} className="h-48 w-full" />
       ))}
     </div>
-  </div>
-);
-
-/**
- * Loading skeleton for cross-league section
- */
-const CrossLeagueLoadingSkeleton = () => (
-  <div className="space-y-4">
-    <Skeleton className="h-8 w-64" />
-    <Skeleton className="h-40 w-full" />
-    <Skeleton className="h-64 w-full" />
   </div>
 );
 
@@ -88,14 +68,6 @@ export default function PlayoffScenariosPage() {
       : nfcScenarios.getSimulationLockedOutcomes,
   );
 
-  // Fetch cross-league battle data
-  const {
-    data: crossLeagueData,
-    isLoading: crossLeagueLoading,
-    error: crossLeagueError,
-    refetch: refetchCrossLeague,
-  } = useCrossLeagueBattle(currentWeek);
-
   // Get current league data and scenarios
   const currentSeedingData = activeLeague === 'afc' ? seedingData?.afc : seedingData?.nfc;
   const currentScenarios = activeLeague === 'afc' ? afcScenarios : nfcScenarios;
@@ -105,99 +77,68 @@ export default function PlayoffScenariosPage() {
 
   return (
     <Container className="py-8">
-      <PageHeader
-        title="Playoff Scenarios"
-        subtitle="Week 14 seeding probabilities and cross-league championship"
-      />
+      <PageHeader title="Playoff Scenarios" subtitle="Week 14 seeding probabilities" />
 
-      <Tabs defaultValue="seeding" className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="seeding" className="flex items-center gap-2">
-            <Trophy className="h-4 w-4" />
-            Seeding
-          </TabsTrigger>
-          <TabsTrigger value="cross-league" className="flex items-center gap-2">
-            <Swords className="h-4 w-4" />
-            Cross-League
-          </TabsTrigger>
-        </TabsList>
+      <div className="space-y-6">
+        {/* League selector */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant={activeLeague === 'afc' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveLeague('afc')}
+            className={activeLeague === 'afc' ? 'bg-red-500 hover:bg-red-600' : ''}
+          >
+            AFC
+          </Button>
+          <Button
+            variant={activeLeague === 'nfc' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveLeague('nfc')}
+            className={activeLeague === 'nfc' ? 'bg-blue-500 hover:bg-blue-600' : ''}
+          >
+            NFC
+          </Button>
+          {currentScenarios.hasLockedOutcomes && (
+            <Badge variant="secondary" className="ml-2">
+              {currentScenarios.lockedCount} outcomes locked
+            </Badge>
+          )}
+        </div>
 
-        {/* Seeding Probabilities Tab */}
-        <TabsContent value="seeding" className="space-y-6">
-          {/* League selector */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant={activeLeague === 'afc' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveLeague('afc')}
-              className={activeLeague === 'afc' ? 'bg-red-500 hover:bg-red-600' : ''}
-            >
-              AFC
-            </Button>
-            <Button
-              variant={activeLeague === 'nfc' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveLeague('nfc')}
-              className={activeLeague === 'nfc' ? 'bg-blue-500 hover:bg-blue-600' : ''}
-            >
-              NFC
-            </Button>
-            {currentScenarios.hasLockedOutcomes && (
-              <Badge variant="secondary" className="ml-2">
-                {currentScenarios.lockedCount} outcomes locked
-              </Badge>
-            )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Scenario Builder */}
+          <div className="lg:col-span-1">
+            {seedingLoading ? (
+              <Skeleton className="h-96 w-full" />
+            ) : currentMatchups.length > 0 ? (
+              <ScenarioBuilder
+                matchups={currentMatchups}
+                leagueName={activeLeague === 'afc' ? 'AFC' : 'NFC'}
+                lockedOutcomes={currentScenarios.lockedOutcomes as any}
+                onLockOutcome={(matchupId, winner) =>
+                  currentScenarios.lockOutcome(matchupId, winner)
+                }
+                onResetAll={currentScenarios.resetAllOutcomes}
+                isLoading={seedingLoading}
+              />
+            ) : null}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Scenario Builder */}
-            <div className="lg:col-span-1">
-              {seedingLoading ? (
-                <Skeleton className="h-96 w-full" />
-              ) : currentMatchups.length > 0 ? (
-                <ScenarioBuilder
-                  matchups={currentMatchups}
-                  leagueName={activeLeague === 'afc' ? 'AFC' : 'NFC'}
-                  lockedOutcomes={currentScenarios.lockedOutcomes as any}
-                  onLockOutcome={(matchupId, winner) =>
-                    currentScenarios.lockOutcome(matchupId, winner)
-                  }
-                  onResetAll={currentScenarios.resetAllOutcomes}
-                  isLoading={seedingLoading}
-                />
-              ) : null}
-            </div>
-
-            {/* Seeding Table */}
-            <div className="lg:col-span-2">
-              {seedingLoading ? (
-                <SeedingLoadingSkeleton />
-              ) : seedingError ? (
-                <ErrorDisplay
-                  message="Failed to load seeding data"
-                  onRetry={() => refetchSeeding()}
-                />
-              ) : currentSeedingData ? (
-                <SeedingTable results={currentSeedingData} />
-              ) : null}
-            </div>
+          {/* Seeding Table */}
+          <div className="lg:col-span-2">
+            {seedingLoading ? (
+              <SeedingLoadingSkeleton />
+            ) : seedingError ? (
+              <ErrorDisplay
+                message="Failed to load seeding data"
+                onRetry={() => refetchSeeding()}
+              />
+            ) : currentSeedingData ? (
+              <SeedingTable results={currentSeedingData} />
+            ) : null}
           </div>
-        </TabsContent>
-
-        {/* Cross-League Battle Tab */}
-        <TabsContent value="cross-league" className="space-y-6">
-          {crossLeagueLoading ? (
-            <CrossLeagueLoadingSkeleton />
-          ) : crossLeagueError ? (
-            <ErrorDisplay
-              message="Failed to load cross-league data"
-              onRetry={() => refetchCrossLeague()}
-            />
-          ) : crossLeagueData ? (
-            <CrossLeagueBattle results={crossLeagueData} />
-          ) : null}
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
 
       {/* Footer note */}
       <div className="mt-8 text-center text-xs text-muted-foreground">
