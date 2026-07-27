@@ -7,7 +7,7 @@
 
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import type { SleeperTransaction } from '@gauntlet/types';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
 import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
 import type { WaiverAnalysisData } from '../types';
 import { type PlayerDataLoader, processWaiverData } from '../utils/process-waiver-data';
@@ -172,8 +172,11 @@ export const useWaiverAnalytics = (
     gcTime = 30 * 60 * 1000, // 30 minutes
   } = options;
 
-  const [afcLeague] = CURRENT_LEAGUES.filter(l => l.conference === 'AFC');
-  const [nfcLeague] = CURRENT_LEAGUES.filter(l => l.conference === 'NFC');
+  // Only reachable via the 2025 archive stats page today — pin explicitly
+  // rather than reading whatever CURRENT_LEAGUES becomes.
+  const archiveLeagues = getLeaguesForSeason('2025');
+  const [afcLeague] = archiveLeagues.filter(l => l.conference === 'AFC');
+  const [nfcLeague] = archiveLeagues.filter(l => l.conference === 'NFC');
 
   const queryResult = useQuery<WaiverAnalysisData, Error>({
     queryKey: ['waiver-analytics', currentWeek],

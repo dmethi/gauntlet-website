@@ -29,6 +29,6 @@ export const VALID_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'DEF'] as const;
 export const ALL_POSITIONS_WITH_KICKER = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const;
 
 // Season configuration
-export const CURRENT_SEASON = '2024';
+export const CURRENT_SEASON = '2026';
 export const REGULAR_SEASON_WEEKS = 14;
 export const PLAYOFF_WEEK_START = 15;

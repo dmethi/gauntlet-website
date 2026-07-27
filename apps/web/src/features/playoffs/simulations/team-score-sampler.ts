@@ -6,7 +6,7 @@
  */
 
 import { browserSleeperClient as sleeperClient } from '@/lib/sleeper/browser-client';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getLeaguesForSeason } from '@/config/leagues';
 import type { TeamScoringDistribution } from '../types';
 
 /**
@@ -141,9 +141,15 @@ export const fetchBothLeagueDistributions = async (
   afc: Map<number, TeamScoringDistribution>;
   nfc: Map<number, TeamScoringDistribution>;
 }> => {
+  // Same 2025 pin as seeding-simulator.ts's runBothLeagueSimulations, kept
+  // consistent even though this function is currently unused (zero callers).
+  const scenarioLeagues = getLeaguesForSeason('2025');
+  const afcLeagueId = scenarioLeagues.find(l => l.conference === 'AFC')?.id ?? '';
+  const nfcLeagueId = scenarioLeagues.find(l => l.conference === 'NFC')?.id ?? '';
+
   const [afcDistributions, nfcDistributions] = await Promise.all([
-    buildTeamScoringDistributions(LEAGUE_IDS.AFC, throughWeek),
-    buildTeamScoringDistributions(LEAGUE_IDS.NFC, throughWeek),
+    buildTeamScoringDistributions(afcLeagueId, throughWeek),
+    buildTeamScoringDistributions(nfcLeagueId, throughWeek),
   ]);
 
   return {

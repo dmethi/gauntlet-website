@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { buildStatsDataset, serializeStatsDataset } from '@/shared/utils/stats';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -49,9 +49,11 @@ const getStartSitEfficiencyData = async () => {
 
 export const GET = async () => {
   try {
-    // Use existing league configuration
-    const leagueIds = CURRENT_LEAGUES.map(l => l.id);
-    const labels = CURRENT_LEAGUES.map(l => l.name);
+    // This route is only consumed by the 2025 archive stats page — pin
+    // explicitly rather than reading whatever CURRENT_LEAGUES becomes.
+    const archiveLeagues = getLeaguesForSeason('2025');
+    const leagueIds = archiveLeagues.map(l => l.id);
+    const labels = archiveLeagues.map(l => l.name);
 
     // Fetch stats dataset and start/sit efficiency data in parallel
     const [dataset, startSitData] = await Promise.all([

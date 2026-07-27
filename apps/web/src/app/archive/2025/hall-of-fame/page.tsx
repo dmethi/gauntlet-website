@@ -34,7 +34,13 @@ import {
   Zap,
 } from 'lucide-react';
 import Link from 'next/link';
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getLeaguesForSeason } from '@/config/leagues';
+
+// Archived 2025 season data — pinned explicitly so this page keeps showing
+// the correct league IDs regardless of which season becomes "current".
+const ARCHIVE_2025_LEAGUES = getLeaguesForSeason('2025');
+const AFC_LEAGUE_ID = ARCHIVE_2025_LEAGUES.find(l => l.conference === 'AFC')?.id ?? '';
+const NFC_LEAGUE_ID = ARCHIVE_2025_LEAGUES.find(l => l.conference === 'NFC')?.id ?? '';
 
 const HallOfFameLoader = () => (
   <ContentLoader
@@ -79,13 +85,13 @@ const getGroupIcon = (groupKey: string) => {
 };
 
 const getLeagueBadgeColor = (leagueId: string): string => {
-  return leagueId === LEAGUE_IDS.AFC
+  return leagueId === AFC_LEAGUE_ID
     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
     : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
 };
 
 const getLeagueShortName = (leagueId: string): string => {
-  return leagueId === LEAGUE_IDS.AFC ? 'AFC' : 'NFC';
+  return leagueId === AFC_LEAGUE_ID ? 'AFC' : 'NFC';
 };
 
 // Component for rolling window records
@@ -295,8 +301,8 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Leagues</SelectItem>
-                <SelectItem value={LEAGUE_IDS.AFC}>AFC</SelectItem>
-                <SelectItem value={LEAGUE_IDS.NFC}>NFC</SelectItem>
+                <SelectItem value={AFC_LEAGUE_ID}>AFC</SelectItem>
+                <SelectItem value={NFC_LEAGUE_ID}>NFC</SelectItem>
               </SelectContent>
             </Select>
             <Select value={seasonFilter} onValueChange={setSeasonFilter}>

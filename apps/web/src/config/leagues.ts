@@ -13,6 +13,8 @@ export interface League {
   conference?: string;
   /** Sleeper league ID this league continues from, for data lineage — not walked at runtime. */
   previousLeagueId: string | null;
+  /** Path under /public to this league's logo, if one exists. */
+  logo?: string;
 }
 
 export type SeasonId = string;
@@ -35,13 +37,32 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
       previousLeagueId: null,
     },
   ],
-  // 2026 season is BLOCKED on 3 new Sleeper league IDs not yet created — see
-  // SCRATCHPAD.md's "Blocked" section. Deliberately registered as an empty
-  // array (season exists, no leagues yet) rather than left unregistered, so
-  // getAllSeasons() and cross-season aggregation (manager-history.ts) know
-  // 2026 is a real season. Do not add fake league IDs — every accessor below
-  // already handles an empty league list by returning [].
-  '2026': [],
+  '2026': [
+    {
+      id: '1387520086092312576',
+      name: 'Legion I: The Throne',
+      season: 2026,
+      conference: 'Legion I',
+      previousLeagueId: null,
+      logo: '/leagues/legion-i-throne.svg',
+    },
+    {
+      id: '1387520168866885632',
+      name: 'Legion II: The Keep',
+      season: 2026,
+      conference: 'Legion II',
+      previousLeagueId: null,
+      logo: '/leagues/legion-ii-keep.svg',
+    },
+    {
+      id: '1387520236663615488',
+      name: 'Legion III: The Forge',
+      season: 2026,
+      conference: 'Legion III',
+      previousLeagueId: null,
+      logo: '/leagues/legion-iii-forge.svg',
+    },
+  ],
 };
 
 /** Leagues registered for a given season, or [] if that season isn't registered yet. */
@@ -53,7 +74,7 @@ export const getAllLeagues = (): League[] => Object.values(LEAGUE_REGISTRY).flat
 /** Every season with at least one registered league. */
 export const getAllSeasons = (): SeasonId[] => Object.keys(LEAGUE_REGISTRY);
 
-export const CURRENT_LEAGUES: League[] = getLeaguesForSeason('2025');
+export const CURRENT_LEAGUES: League[] = getLeaguesForSeason('2026');
 
 export const ALL_LEAGUES: League[] = getAllLeagues();
 

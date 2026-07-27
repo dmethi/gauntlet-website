@@ -203,8 +203,23 @@ Builds on Phase 1's registry.
       Cross-League retirement above. Building an N-league draft analysis page
       for the live 2026 route is new feature work, not a fix to existing code;
       not scoped here.
-- [ ] Bump `CURRENT_SEASON`; wire in the new season's leagues once IDs are
-      provided.
+- [x] Bump `CURRENT_SEASON`; wire in the new season's leagues once IDs are
+      provided. Real IDs supplied and registered in `LEAGUE_REGISTRY['2026']`
+      (`1387520086092312576` Legion I: The Throne, `1387520168866885632` Legion
+      II: The Keep, `1387520236663615488` Legion III: The Forge; no 2025
+      lineage). **Done (2026-07-27):** `CURRENT_LEAGUES`/`CURRENT_SEASON`
+      flipped to 2026. Flipping was blocked on 8 call sites that read
+      `CURRENT_LEAGUES`/`LEAGUE_IDS.AFC`/`.NFC` but were actually pinned in
+      intent to the 2025 archive/lookback views (stats archive, waiver analysis,
+      transaction analysis, year-in-review, playoff-scenarios) — all 8 now
+      explicitly call `getLeaguesForSeason('2025')` instead of trusting
+      "current". See `SCRATCHPAD.md`'s "Active" section (2026-07-27 entry) for
+      the file-by-file list, the two tests that needed the same fix, and what
+      was deliberately left on the old hardcoded AFC/NFC pattern (the
+      recap/report-generation pipeline — cron/offline-only, out of scope, slated
+      for a full rebuild borrowing from DriveFF per its own roadmap item — plus
+      the one-off `scripts/*.ts` and the frozen `useLeagueSummary.ts` static
+      JSON).
 - [x] Landed multi-league safety tests (folds in `GITHUB_ISSUES.md`'s "Add
       Multi-League Safety Tests" item — see GITHUB_ISSUES.md:104-116 for its 4
       asks). Confirmed which flagged 2-way combination points from this phase's
@@ -492,6 +507,20 @@ changed in this phase.
       restyling. 8. **Decide the fate of `charts`/`playground`** — remove,
       env-gate, or formally adopt as an internal design-system preview route;
       currently shipping unlinked to production with no policy either way.
+- [x] Prioritized-list item 6 fixed (2026-07-27): the two `archive/2025/*` pages
+      (`hall-of-fame/page.tsx`, `stats/page.tsx`) now resolve their league IDs
+      via an explicit `getLeaguesForSeason('2025')` call, pinned module-scope,
+      instead of aliasing the mutable `LEAGUE_IDS`/`CURRENT_LEAGUES` "current
+      season" constants — immune to whatever season `config/leagues.ts` treats
+      as current going forward. `useLeagueOverviewClient.ts:109`'s fallback
+      (used when no `leagueId` is passed, feeding both `league/overview` and
+      `league/transactions`) now reads `getLeaguesForSeason('2026')`, per user
+      decision to treat 2026 as current now rather than wait for real league IDs
+      — with a **temporary** fallback to `getLeaguesForSeason('2025')` since
+      `LEAGUE_REGISTRY['2026']` is still `[]` (blocked, see `SCRATCHPAD.md`), so
+      the live pages don't break today. That fallback must be deleted once real
+      2026 league IDs land. `pnpm type-check`, `pnpm lint`, and `pnpm test`
+      (910/910) all pass; dev server smoke-tested on all three routes (200s).
 
 ## Phase 5 — Page-by-page remediation
 

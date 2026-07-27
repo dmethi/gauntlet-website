@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import type { GradeTxn, TeamInfo } from '@/features/transactions/types';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
 import { buildFacts } from '@/features/transactions/utils';
 import { computeTransactionGradesForStatsHub } from '@/app/stats/utils/computeTransactionGradesForStatsHub';
 import { assignLetterGrades } from './utils';
@@ -80,8 +80,9 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
         setTeamsLoaded(true);
         const allTransactions: GradeTxn[] = [];
 
-        // Process each league
-        for (const league of CURRENT_LEAGUES) {
+        // Only reachable via the 2025 archive stats page today — pin
+        // explicitly rather than reading whatever CURRENT_LEAGUES becomes.
+        for (const league of getLeaguesForSeason('2025')) {
           if (cancelled) return;
 
           setLoadingStep(`Processing ${league.name} transactions and calculating VORP...`);

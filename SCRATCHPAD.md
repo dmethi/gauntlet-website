@@ -6,6 +6,86 @@ they resolve rather than letting them accumulate.
 
 ## Active
 
+- `CURRENT_LEAGUES`/`CURRENT_SEASON` flipped to 2026 (2026-07-27, follow-up to
+  the entry below same day): fixed the 8 call sites that read `CURRENT_LEAGUES`
+  or `LEAGUE_IDS.AFC`/`.NFC` but were actually about a fixed 2025
+  archive/lookback view, pinning each to `getLeaguesForSeason('2025')` instead —
+  `app/api/stats/route.ts` (only consumer: `archive/2025/stats`),
+  `useWaiverAnalytics.ts` and `useTransactionAnalysisModel.ts` (only reachable
+  via `stats-content.tsx`, itself only reachable via the archive page — verified
+  `app/stats/page.tsx` is still the `SeasonPlaceholder` stub before relying on
+  that), `lib/year-in-review/season-stats.ts` and
+  `api/year-in-review/league-structure/route.ts` (feed `/year-in-review`, whose
+  metadata literally says "Season 2025 in review" — the `[0]`/`[1]` Year-1
+  indexing in `league-structure` is intentional historical logic, left alone,
+  only the season pin changed), `seeding-simulator.ts`'s
+  `runBothLeagueSimulations` and `team-score-sampler.ts`'s
+  `fetchBothLeagueDistributions` (feeds/would-feed
+  `/competition/playoff-scenarios`; the latter confirmed still has zero callers
+  — kept the literal `'AFC'`/`'NFC'` string labels since `useLeagueSummary.ts`
+  keys off those against frozen static JSON, only the league-ID lookup moved off
+  `LEAGUE_IDS`), and `useClientCalculations.ts`'s `LEAGUE_IDS.AFC` fallback
+  (dead code today, fixed for consistency, same pattern as
+  `useLeagueOverviewClient.ts`). Also fixed two tests that broke on the flip
+  because they read `CURRENT_LEAGUES` directly instead of pinning to 2025 like
+  the code they exercise: `__tests__/integration/multi-league.test.ts`'s "has
+  two distinct league IDs" (asserted `conference === 'AFC'/'NFC'` presence,
+  which 2026's Legion I/II/III leagues don't have) and
+  `useTransactionAnalysisModel.test.ts`'s "processes transactions from both
+  leagues" (mocked fetch URLs off `CURRENT_LEAGUES` ids that no longer matched
+  what the hook — now pinned to 2025 — actually requests).
+  `pnpm type-check`/`lint`/`test` all clean (910/910, same as baseline); dev
+  server smoke-tested on port 3411 — `/archive/2025/stats`,
+  `/archive/2025/hall-of-fame`, `/year-in-review`, `/competition`,
+  `/competition/playoff-scenarios`, `/league/overview`, `/start-sit` all 200, no
+  new console/server errors; `/competition` now renders 3 "Legion" leagues, no
+  leftover "Gauntlet AFC"/"NFC" strings. Untouched per the recap-pipeline scope:
+  `lib/reports/recap/nodes/standings-node.ts`,
+  `batch-matchup-narratives-node.ts`, `recap/orchestrator.ts`,
+  `recap/integration.ts`, `api/cron/recap-report/runner.ts`, the one-off
+  `scripts/*.ts` (including `collect-weekly-context.ts`,
+  `generate-weekly-enrichment.ts` which still read `CURRENT_LEAGUES`),
+  `useLeagueSummary.ts`/its static JSON, and
+  `recap/tools/standings.ts`/`upcoming.ts`'s `{afc,nfc}` pick-out — all still
+  hardcoded 2-league, as intended, cron/offline-only or explicitly frozen. Noted
+  but not touched: `shared/utils/calculations/index.ts` imports `LEAGUE_IDS`
+  from `@/lib/constants` but never references it in the file body (pre-existing
+  dead import, unrelated to this flip — flagging in case a future cleanup wants
+  it). `lib/constants.ts`'s `LEAGUE_IDS`/`DEFAULT_LEAGUE_ID` still have real
+  consumers (the recap pipeline above) so were not removed.
+- 2026 league IDs registered, `CURRENT_LEAGUES` flip deferred (2026-07-27): real
+  Sleeper IDs for the 3 new 2026 leagues supplied by the user —
+  `1387520086092312576` (Legion I: The Throne), `1387520168866885632` (Legion
+  II: The Keep), `1387520236663615488` (Legion III: The Forge), all
+  `previousLeagueId: null` (no 2025 lineage) — and registered in
+  `LEAGUE_REGISTRY['2026']`. `CURRENT_LEAGUES`/`CURRENT_SEASON` deliberately
+  **not** flipped to 2026 yet: `LEAGUE_IDS.AFC`/`.NFC` (in `lib/constants.ts`)
+  look up by `conference === 'AFC'|'NFC'`, and 2026's leagues are labeled
+  `'Legion I'|'II'|'III'` instead — flipping today would silently resolve
+  `LEAGUE_IDS.AFC`/`.NFC` to `''` in every consumer that still hardcodes them as
+  a 2-way split: `features/playoffs/simulations/seeding-simulator.ts` (feeds the
+  live `/competition/playoff-scenarios` page's hardcoded AFC/NFC 2-button
+  selector), `team-score-sampler.ts` (dead code, no callers, harmless),
+  `lib/reports/recap/nodes/standings-node.ts` (downstream of
+  `recap/tools/standings.ts`, already flagged in Phase 2 as 2-league-only, plus
+  a hardcoded LLM prompt template literally saying "cover BOTH leagues (AFC and
+  NFC)"), `lib/reports/recap/nodes/batch-matchup-narratives-node.ts` (hardcodes
+  "12 matchups (6 AFC + 6 NFC)" — assumes exactly 6 matchups/league), and
+  `hooks/useClientCalculations.ts`'s `leagueId || LEAGUE_IDS.AFC` fallback (same
+  pattern already fixed in `useLeagueOverviewClient.ts` this session). Going one
+  layer deeper, `SeedingTable.tsx`'s "Week 14 Preview" narrative section reads a
+  **pre-generated static JSON** (`data/league-summaries.json`, built offline by
+  `scripts/generate-league-summaries.ts`, itself hardcoded `{afc, nfc}` with an
+  existing inline comment flagging the gap) — and since these are brand-new
+  leagues, there's no real season data yet to regenerate that file against
+  anyway. **User decision: scrap the N-league redesign of all of the above for
+  now** rather than presolve for a feature that needs real season data to be
+  meaningful — revisit once the season is underway and this can be
+  auto-generated/verified against real data. `useLeagueOverviewClient.ts`'s
+  default-league fallback was corrected to stay pinned to
+  `getLeaguesForSeason ('2025')` (matching `CURRENT_LEAGUES`) rather than the
+  premature 2026-first-with-2025-fallback logic from earlier in this session.
+  `pnpm type-check`/`lint`/`test` (910/910) all clean.
 - Pre-season roadmap seeding (2026-07-23): `ROADMAP.md` created, modeled on
   driveff's phased structure, covering the data-layer foundation, 3-league
   (5-league-history) migration, Hall of Fame consolidation, and a page inventory
@@ -166,10 +246,11 @@ they resolve rather than letting them accumulate.
 
 ## Blocked
 
-- Phase 2 (3-league migration) is blocked on the 3 new Sleeper league IDs for
-  the upcoming season — to be supplied once those leagues are created. Phase 1
-  (data layer foundation) is NOT blocked on this and should start first
-  regardless.
+- Phase 2's remaining "bump CURRENT_SEASON" item is now unblocked on IDs
+  (2026-07-27: real league IDs supplied, registered in
+  `LEAGUE_REGISTRY['2026']`) but still blocked on the N-league redesign of
+  several hardcoded-to-2-leagues call sites — see the 2026-07-27 Active entry
+  below for what's actually gating the `CURRENT_LEAGUES` flip.
 - 2025 archive/2026 shell/owner-linkage slice (2026-07-23) landed
   (`/archive/2025`, `/managers/[ownerId]`, `LEAGUE_REGISTRY['2026']: []`)
   without real 2026 league IDs, per user decision. Same-day follow-up superseded

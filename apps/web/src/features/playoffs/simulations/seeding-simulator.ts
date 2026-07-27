@@ -10,7 +10,7 @@
  * - Shows ALL paths to each seed with expandable details
  */
 
-import { LEAGUE_IDS } from '@/lib/constants';
+import { getLeaguesForSeason } from '@/config/leagues';
 import type {
   LeagueSeedingResults,
   PathCondition,
@@ -1343,9 +1343,17 @@ export const runBothLeagueSimulations = async (
   afc: LeagueSeedingResults;
   nfc: LeagueSeedingResults;
 }> => {
+  // This feeds the 2025 Week-14 /competition/playoff-scenarios tool — pin
+  // the league-ID source to 2025 explicitly rather than CURRENT_LEAGUES.
+  // The 'AFC'/'NFC' string labels stay literal: useLeagueSummary.ts keys off
+  // them against pre-generated static 2025 JSON, unrelated to this lookup.
+  const scenarioLeagues = getLeaguesForSeason('2025');
+  const afcLeagueId = scenarioLeagues.find(l => l.conference === 'AFC')?.id ?? '';
+  const nfcLeagueId = scenarioLeagues.find(l => l.conference === 'NFC')?.id ?? '';
+
   const [afcResults, nfcResults] = await Promise.all([
-    runSeedingSimulation(LEAGUE_IDS.AFC, 'AFC', throughWeek, config),
-    runSeedingSimulation(LEAGUE_IDS.NFC, 'NFC', throughWeek, config),
+    runSeedingSimulation(afcLeagueId, 'AFC', throughWeek, config),
+    runSeedingSimulation(nfcLeagueId, 'NFC', throughWeek, config),
   ]);
 
   return {

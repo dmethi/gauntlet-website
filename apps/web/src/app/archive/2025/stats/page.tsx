@@ -3,7 +3,11 @@
 import { Suspense, useEffect, useState } from 'react';
 import { StatsContent } from '@/app/stats/stats-content';
 import { type PlainStatsDataset } from '@/shared/utils/stats';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
+
+// Archived 2025 season data — pinned explicitly so this page keeps showing
+// the correct leagues regardless of which season becomes "current".
+const ARCHIVE_2025_LEAGUES = getLeaguesForSeason('2025');
 import { useSearchParams } from 'next/navigation';
 
 interface StatsPageProps {
@@ -179,7 +183,7 @@ const StatsPageContent = ({ searchParams }: StatsPageProps) => {
           <StatsContent
             dataset={dataset}
             searchParams={clientSearchParams}
-            leagues={CURRENT_LEAGUES}
+            leagues={ARCHIVE_2025_LEAGUES}
           />
         )}
       </div>

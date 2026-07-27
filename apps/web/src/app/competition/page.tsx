@@ -35,6 +35,7 @@ interface LeagueStandings {
   name: string;
   conference?: string;
   season: number;
+  logo?: string;
   rows: StandingRow[];
 }
 
@@ -52,6 +53,7 @@ const loadLeagueStandings = async (league: {
   name: string;
   conference?: string;
   season: number;
+  logo?: string;
 }): Promise<LeagueStandings | null> => {
   try {
     const [leagueData, rosters] = await Promise.all([
@@ -78,6 +80,7 @@ const loadLeagueStandings = async (league: {
       name: league.name,
       conference: league.conference,
       season: league.season,
+      logo: league.logo,
       rows,
     };
   } catch (error) {
@@ -150,7 +153,12 @@ export default async function CompetitionPage() {
             <Card key={league.id}>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>{league.name}</CardTitle>
+                  <div className="flex items-center gap-2">
+                    {league.logo && (
+                      <img src={league.logo} alt="" width={28} height={28} className="shrink-0" />
+                    )}
+                    <CardTitle>{league.name}</CardTitle>
+                  </div>
                   {league.conference && <Badge variant="outline">{league.conference}</Badge>}
                 </div>
                 <CardDescription>Season {league.season} standings</CardDescription>

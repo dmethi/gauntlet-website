@@ -1,4 +1,4 @@
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
 import { createStatsClient } from '@/lib/sleeper/unified-client';
 import type { SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
 
@@ -101,8 +101,10 @@ const findThirdPlace = (bracket: BracketMatch[]): number | null => {
 };
 
 export const fetchSeasonStats = async (): Promise<SeasonStats> => {
+  // This feeds /year-in-review, which is unambiguously about the 2025 season
+  // (see its page metadata) — pin explicitly, don't read CURRENT_LEAGUES.
   const leagueData = await Promise.all(
-    CURRENT_LEAGUES.map(async league => {
+    getLeaguesForSeason('2025').map(async league => {
       const [rosters, users, bracket] = await Promise.all([
         sleeperClient.fetchRosters(league.id, ISR_REVALIDATE),
         sleeperClient.fetchUsers(league.id, ISR_REVALIDATE),

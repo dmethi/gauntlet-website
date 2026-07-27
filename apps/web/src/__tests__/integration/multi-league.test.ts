@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SleeperLeague, SleeperMatchup, SleeperRoster } from '@gauntlet/types';
 import { MatchupFactory, TeamFactory } from '@/test';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { CURRENT_LEAGUES, getLeaguesForSeason } from '@/config/leagues';
 
 /**
  * Integration Tests: Multi-League System
@@ -61,13 +61,14 @@ const createMockMatchups = (leagueId: string, week: number): SleeperMatchup[] =>
 describe('Multi-League System Integration', () => {
   describe('League Configuration', () => {
     it('has two distinct league IDs', () => {
-      // 2025 happens to have exactly 2 leagues today, but the registry
-      // (apps/web/src/config/leagues.ts) supports a variable count per
-      // season — assert AFC/NFC presence and distinctness, not an exact
-      // length, so a future season with more leagues doesn't fail this.
-      expect(CURRENT_LEAGUES.length).toBeGreaterThanOrEqual(2);
-      const afc = CURRENT_LEAGUES.find(l => l.conference === 'AFC')!;
-      const nfc = CURRENT_LEAGUES.find(l => l.conference === 'NFC')!;
+      // This test is specifically about the 2025 AFC/NFC shape (see the
+      // file-level doc comment) — CURRENT_LEAGUES moved on to 2026's
+      // Legion I/II/III leagues, which don't have AFC/NFC conference
+      // labels at all, so pin explicitly to 2025 rather than "current".
+      const leagues2025 = getLeaguesForSeason('2025');
+      expect(leagues2025.length).toBeGreaterThanOrEqual(2);
+      const afc = leagues2025.find(l => l.conference === 'AFC')!;
+      const nfc = leagues2025.find(l => l.conference === 'NFC')!;
 
       expect(afc).toBeDefined();
       expect(nfc).toBeDefined();

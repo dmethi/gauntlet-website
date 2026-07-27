@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useTransactionAnalysisModel } from './useTransactionAnalysisModel';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
 
 // Mock dependencies
 vi.mock('@/features/transactions/utils', () => ({
@@ -148,7 +148,9 @@ describe('useTransactionAnalysisModel', () => {
   });
 
   it('processes transactions from both leagues', async () => {
-    const [afc, nfc] = CURRENT_LEAGUES;
+    // The hook under test pins to 2025 explicitly (see
+    // useTransactionAnalysisModel.ts) — match that here, not CURRENT_LEAGUES.
+    const [afc, nfc] = getLeaguesForSeason('2025');
 
     const mockTeamsResponse = {
       teams: [

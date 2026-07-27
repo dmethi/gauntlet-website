@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { getLeaguesForSeason } from '@/config/leagues';
 import { formDb } from '@/lib/form-db';
 import { createStatsClient } from '@/lib/sleeper/unified-client';
 import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
@@ -180,8 +180,10 @@ export const GET = async () => {
       ]),
     );
 
+    // This computes the real historical Year-1-to-Year-2 promotion/relegation
+    // structure from the actual 2 Year-1 (2025) leagues — pin explicitly.
     const leagueData = await Promise.all(
-      CURRENT_LEAGUES.map(async league => {
+      getLeaguesForSeason('2025').map(async league => {
         const [rosters, users] = await Promise.all([
           sleeperClient.fetchRosters(league.id, ISR_REVALIDATE),
           sleeperClient.fetchUsers(league.id, ISR_REVALIDATE),
