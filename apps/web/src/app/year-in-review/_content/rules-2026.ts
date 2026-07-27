@@ -151,8 +151,8 @@ export const rules2026PayoutRows = [
   { category: 'Per-league 2nd place', amount: '$3,000', note: '$1,000 across 3 leagues' },
   { category: 'Per-league 3rd place', amount: '$1,500', note: '$500 across 3 leagues' },
   { category: 'Weekly cross-league prizes', amount: '$3,150', note: '14 weeks x $225' },
-  { category: 'Season-long scoring champ', amount: '$600', note: 'Regular season only' },
-  { category: 'Playoff scoring champ', amount: '$750', note: 'Weeks 15 to 17, all 36 teams' },
+  { category: 'Season-long scoring champ', amount: '$750', note: 'Regular season only' },
+  { category: 'Playoff scoring champ', amount: '$600', note: 'Weeks 15 to 17, all 36 teams' },
 ];
 
 export const rules2026WeeklyPrizeNotes = [
