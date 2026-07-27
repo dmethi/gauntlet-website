@@ -595,6 +595,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                     <TableRow key={`reg-${matchup.week}`} className="hover:bg-muted/50">
                       <TableCell>
                         <MatchupLink
+                          leagueId={String(team.league.id)}
                           matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
                           week={matchup.week}
                           variant="compact"
@@ -646,6 +647,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
                     <TableRow key={`po-${matchup.week}`} className="hover:bg-muted/50">
                       <TableCell>
                         <MatchupLink
+                          leagueId={String(team.league.id)}
                           matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
                           week={matchup.week}
                           variant="compact"

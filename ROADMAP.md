@@ -504,6 +504,18 @@ Driven by Phase 4's prioritized list.
       fetches, missing caching/memoization, oversized payloads — diagnosed per
       page, not assumed).
 - [ ] Tech debt: clean up per-page issues Phase 4 flags as pages are touched.
+  - [x] Consolidated the duplicate matchup-detail routes and duplicate reports
+        routes (Phase 4 prioritized-list item 4, 2026-07-27). Deleted
+        `matchup/[matchupId]/page.tsx`; `matchup-link.tsx` now links straight to
+        `matchups/[leagueId]/[week]/[matchupId]`, with `next.config.js`
+        permanent redirects covering old bookmarked `/matchup/:matchupId` URLs
+        (with/without `leagueId`/`week` query params, defaulting to the Gauntlet
+        AFC league and week 1 to match the old route's own defaults). Also
+        deleted `competition/reports/2025/[slug]/page.tsx` — no redirect needed,
+        since `competition/reports/[season]/[slug]/page.tsx` already generically
+        handles any season and Next's static-segment-over-dynamic-segment
+        resolution means `/competition/reports/2025/week-N` URLs are unchanged.
+        `tsc --noEmit`, lint, and all 910 `apps/web` vitest tests clean.
 
 ## Explicitly out of scope (for now)
 

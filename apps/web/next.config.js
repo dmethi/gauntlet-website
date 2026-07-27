@@ -18,6 +18,34 @@ const nextConfig = {
     // Ignore ESLint errors during builds to prevent deployment failures from existing warnings
     ignoreDuringBuilds: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/matchup/:matchupId',
+        has: [
+          { type: 'query', key: 'leagueId', value: '(?<leagueId>.*)' },
+          { type: 'query', key: 'week', value: '(?<week>.*)' },
+        ],
+        destination: '/matchups/:leagueId/:week/:matchupId',
+        permanent: true,
+      },
+      {
+        // Old route defaulted to the Gauntlet AFC league when leagueId was omitted.
+        source: '/matchup/:matchupId',
+        has: [{ type: 'query', key: 'week', value: '(?<week>.*)' }],
+        missing: [{ type: 'query', key: 'leagueId' }],
+        destination: '/matchups/1263744209295245312/:week/:matchupId',
+        permanent: true,
+      },
+      {
+        // Old route defaulted to week 1 when the week query param was omitted.
+        source: '/matchup/:matchupId',
+        missing: [{ type: 'query', key: 'week' }],
+        destination: '/matchups/1263744209295245312/1/:matchupId',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

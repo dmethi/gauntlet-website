@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
 interface MatchupLinkProps {
+  leagueId: string;
   matchupId: number;
   week: number;
   teamA?: {
@@ -19,6 +20,7 @@ interface MatchupLinkProps {
 }
 
 export const MatchupLink = ({
+  leagueId,
   matchupId,
   week,
   teamA,
@@ -26,7 +28,7 @@ export const MatchupLink = ({
   className = '',
   variant = 'compact',
 }: MatchupLinkProps) => {
-  const href = `/matchup/${matchupId}?week=${week}`;
+  const href = `/matchups/${leagueId}/${week}/${matchupId}`;
 
   if (variant === 'badge-only') {
     return (
