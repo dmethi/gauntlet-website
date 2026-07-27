@@ -6,7 +6,10 @@ they resolve rather than letting them accumulate.
 
 ## Active
 
-Nothing in flight right now.
+Modern War Room visual identity rework (`ROADMAP.md` Phase 6). Nav/header/
+loader pattern settled via `/playground/war-room` iteration with the user; next
+up is extracting the settled pieces into real `packages/ui` components, killing
+the persistent `Sidebar`, and porting Competition to real data.
 
 ## Needs a closer look
 
@@ -42,7 +45,8 @@ Nothing in flight right now.
 
 ## Next session
 
-Phase 5 item 7 — design pass on the 22 live pages still on stock shadcn — is
-next, but per user request (2026-07-27) it needs its own research/scoping pass
-first (font wiring, semantic win/loss/grade token layer, reconciling the two
-team-color palettes) rather than diving straight into page-by-page changes.
+Phase 5 item 7's scoping pass happened (2026-07-27) — see `ROADMAP.md` Phase 6
+for the settled direction, palette, and pattern. Next session should pick up
+Phase 6's first unchecked item: extract the nav/header/loader/card primitives
+validated in `/playground/war-room` into real `packages/ui` components, then
+kill the persistent `Sidebar` app-wide before porting Competition to real data.

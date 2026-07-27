@@ -558,6 +558,74 @@ Driven by Phase 4's prioritized list.
         resolution means `/competition/reports/2025/week-N` URLs are unchanged.
         `tsc --noEmit`, lint, and all 910 `apps/web` vitest tests clean.
 
+## Phase 6 — Modern War Room visual identity (Phase 5 item 7 execution)
+
+Executes Phase 5's deferred item 7 ("design pass on the 22 live pages still on
+stock shadcn") — the research/scoping pass `SCRATCHPAD.md` flagged as needed
+before touching real pages (2026-07-27). Direction: "Modern War Room" —
+charcoal-based, data-first, crimson/gold accent language, crest/iconography as
+the source of edge, motion via transform/opacity only.
+
+Working method for every page in this phase: build a throwaway
+`/playground/<page>` clone seeded with mock/historical data, iterate on it live
+with the user, then port the settled pattern into the real route with real data
+and delete the throwaway. Validated on Competition (`/playground/war-room`)
+before being adopted as the standing process for every subsequent page in this
+phase.
+
+- [x] Global tokens rewritten to the Modern War Room palette
+      (`apps/web/src/app/globals.css` `:root`/`.dark`): dark is primary
+      (charcoal `#0F1115` / slate `#1A1D22` / graphite `#24272E` / warm bone
+      `#F4F5F7` / crimson `#C8102E` / gold `#D4AF37`); light is a derived
+      complementary theme using the same crimson/gold accent language, not the
+      old beige/parchment. Added a `success` semantic token. Deliberately left
+      the raw `gauntlet.*` Tailwind swatch (old crimson `#8B1538`) untouched —
+      it's baked into the pinned 2025 archive/report pages; a global swap would
+      have quietly redated history.
+- [x] Nav/header/loader pattern settled via iteration on
+      `apps/web/src/app/playground/war-room/page.tsx` (Competition-overview
+      clone, mock data): desktop gets a real sticky top nav bar (icon+label
+      tabs, crimson active-state underline, logomark only, no wordmark); mobile
+      gets a floating logomark-only trigger that opens a tap-toggled drawer over
+      a backdrop — never hover-only (doesn't exist on touch), never reserves
+      layout space (first mobile pass broke exactly this way: a hardcoded
+      `pl-64` pushed all content right regardless of viewport). Page header
+      pattern: crimson accent bar + large low-opacity crest watermark + bottom
+      divider for visual weight, content trimmed to title only — no filler
+      eyebrow line/subheading/status-strip (see `feedback_ui_content_discipline`
+      project memory: don't fill a layout slot just because it exists). Loader
+      combines the glow-pulse-behind-logo technique with legion glyphs orbiting
+      the mark, each individually counter-rotated so they stay upright instead
+      of tumbling. Also validated: icon+label tabs on a top nav are not an
+      antipattern, added back per user request after initially dropping them.
+- [ ] Extract the settled pieces into real shared components in `packages/ui`:
+      desktop top nav, mobile drawer nav, compact theme toggle (must be globally
+      accessible, not buried in a menu), page header (accent bar + crest
+      watermark + divider), legion/stat card patterns, the aurora+crest loader.
+- [ ] Kill the real persistent `Sidebar` — `client-layout.tsx` still wraps every
+      live page in the old full-height left column
+      (`apps/web/src/components/sidebar.tsx` / `main-content.tsx`). Replace with
+      the new nav app-wide, not just on the prototype routes.
+- [ ] Port Competition: wire `apps/web/src/app/competition/page.tsx` to the
+      extracted primitives with its existing real data (replace
+      `/playground/war-room`'s mock `LEGIONS`/`MATCHUPS`/`ACTIVITY` arrays with
+      the page's actual query/fetch logic), then delete `/playground/identity`
+      and `/playground/war-room`.
+- [ ] Port Stats Hub (`apps/web/src/app/stats/`) — currently a
+      `SeasonPlaceholder` stub (Phase 4 finding); build its real 2026 content
+      directly on the new primitives rather than stub-then-restyle.
+- [ ] Port Matchups (`apps/web/src/app/matchups/`) — also currently a
+      `SeasonPlaceholder` stub; same approach as Stats Hub.
+- [ ] Decide `defaultTheme` in `apps/web/src/components/providers.tsx`
+      (currently `"system"`) — flip to `"dark"` so first-time visitors land on
+      the primary Modern War Room identity, or leave on `system`. Open question,
+      not yet decided.
+- [ ] Beyond the 3 pages above, Phase 4's existing prioritized order still
+      applies for further rollout: `team/[id]`, `league/overview`,
+      `matchups/[leagueId]/[week]/[matchupId]`, `managers/[ownerId]` (already
+      flagged for a design pass in Phase 3), then `hall-of-fame-enhanced` once
+      it has real 2026 content.
+
 ## Explicitly out of scope (for now)
 
 - GitHub Issues as the tracking mechanism — this file is the tracker.

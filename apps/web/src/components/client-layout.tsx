@@ -33,7 +33,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  if (pathname.startsWith('/year-in-review')) {
+  // Full-bleed prototype pages render their own chrome — skip the real shell.
+  const bypassesShell =
+    pathname.startsWith('/year-in-review') ||
+    pathname.startsWith('/playground/identity') ||
+    pathname.startsWith('/playground/war-room');
+
+  if (bypassesShell) {
     return <>{children}</>;
   }
 
