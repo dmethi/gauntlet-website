@@ -507,20 +507,26 @@ changed in this phase.
       restyling. 8. **Decide the fate of `charts`/`playground`** — remove,
       env-gate, or formally adopt as an internal design-system preview route;
       currently shipping unlinked to production with no policy either way.
-- [x] Prioritized-list item 6 fixed (2026-07-27): the two `archive/2025/*` pages
-      (`hall-of-fame/page.tsx`, `stats/page.tsx`) now resolve their league IDs
-      via an explicit `getLeaguesForSeason('2025')` call, pinned module-scope,
-      instead of aliasing the mutable `LEAGUE_IDS`/`CURRENT_LEAGUES` "current
-      season" constants — immune to whatever season `config/leagues.ts` treats
-      as current going forward. `useLeagueOverviewClient.ts:109`'s fallback
-      (used when no `leagueId` is passed, feeding both `league/overview` and
-      `league/transactions`) now reads `getLeaguesForSeason('2026')`, per user
-      decision to treat 2026 as current now rather than wait for real league IDs
-      — with a **temporary** fallback to `getLeaguesForSeason('2025')` since
-      `LEAGUE_REGISTRY['2026']` is still `[]` (blocked, see `SCRATCHPAD.md`), so
-      the live pages don't break today. That fallback must be deleted once real
-      2026 league IDs land. `pnpm type-check`, `pnpm lint`, and `pnpm test`
-      (910/910) all pass; dev server smoke-tested on all three routes (200s).
+- [x] Prioritized-list item 6 fixed (2026-07-27, closed out same day): the
+      `archive/2025/*` pages (`hall-of-fame/page.tsx`, `stats/page.tsx`) and
+      `useLeagueOverviewClient.ts`'s default-league fallback now resolve their
+      league IDs via an explicit `getLeaguesForSeason('2025')` call, pinned
+      module-scope, instead of aliasing the mutable `LEAGUE_IDS`/
+      `CURRENT_LEAGUES` "current season" constants. Real 2026 league IDs (Legion
+      I/II/III) landed later the same day and `CURRENT_LEAGUES`/
+      `CURRENT_SEASON` were flipped to 2026 — at which point the 2025 pin on
+      these lookback-view consumers turned out to be the **permanent, correct**
+      answer, not a temporary stand-in: they're archive/lookback views by
+      intent, and per user decision the N-league redesign of the still-2-league
+      consumers (`useLeagueSummary.ts`/`useScenarioSummary.ts` static JSON,
+      `waiver-analysis/utils/cross-league.ts`, `recap/tools/standings.ts`/
+      `upcoming.ts`'s `{afc, nfc}` pick-out) is deferred until real 2026 season
+      data exists to redesign against — see `SCRATCHPAD.md`'s 2026-07-27 Active
+      entries for the full file list. No dangling fallback to delete.
+      `pnpm type-check`, `pnpm lint`, and `pnpm test` (910/910) all pass; dev
+      server smoke-tested across archive, current-season, and league-overview
+      routes (200s, 3 "Legion" leagues rendering, no leftover AFC/NFC strings on
+      live pages).
 - [x] Prioritized-list item 8 fixed (2026-07-27): deleted `app/charts/` outright
       — a scratch prototype pointed at a stale sample league ID
       (`1049321550490456064`, not a real Gauntlet league) and calling an

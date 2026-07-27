@@ -246,11 +246,6 @@ they resolve rather than letting them accumulate.
 
 ## Blocked
 
-- Phase 2's remaining "bump CURRENT_SEASON" item is now unblocked on IDs
-  (2026-07-27: real league IDs supplied, registered in
-  `LEAGUE_REGISTRY['2026']`) but still blocked on the N-league redesign of
-  several hardcoded-to-2-leagues call sites — see the 2026-07-27 Active entry
-  below for what's actually gating the `CURRENT_LEAGUES` flip.
 - 2025 archive/2026 shell/owner-linkage slice (2026-07-23) landed
   (`/archive/2025`, `/managers/[ownerId]`, `LEAGUE_REGISTRY['2026']: []`)
   without real 2026 league IDs, per user decision. Same-day follow-up superseded
@@ -269,10 +264,12 @@ they resolve rather than letting them accumulate.
   `@/app/stats/stats-content`. `competition/reports/*` and
   `competition/playoff-scenarios` also deliberately stayed put (reachable via
   the moved competition page's own absolute links), to avoid touching the
-  `generateStaticParams`-driven reports system. Follow-up once real 2026 IDs
-  land: (1) register the 3 real leagues in `LEAGUE_REGISTRY['2026']`; (2)
-  replace the 5 `SeasonPlaceholder` pages with real 2026 feature
-  implementations.
+  `generateStaticParams`-driven reports system. Real 2026 league IDs landed
+  2026-07-27 and are registered in `LEAGUE_REGISTRY['2026']`; `/competition` was
+  wired to real 2026 data the same day. Still open: replace the remaining 4
+  `SeasonPlaceholder` pages (`/stats`, `/matchups`, `/hall-of-fame-enhanced`,
+  `/draft/analysis`) with real 2026 feature implementations — tracked under
+  `ROADMAP.md` Phase 4/5, not this item.
 
 ## Next session
 
