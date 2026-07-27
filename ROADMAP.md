@@ -213,13 +213,12 @@ Builds on Phase 1's registry.
       intent to the 2025 archive/lookback views (stats archive, waiver analysis,
       transaction analysis, year-in-review, playoff-scenarios) — all 8 now
       explicitly call `getLeaguesForSeason('2025')` instead of trusting
-      "current". See `SCRATCHPAD.md`'s "Active" section (2026-07-27 entry) for
-      the file-by-file list, the two tests that needed the same fix, and what
-      was deliberately left on the old hardcoded AFC/NFC pattern (the
-      recap/report-generation pipeline — cron/offline-only, out of scope, slated
-      for a full rebuild borrowing from DriveFF per its own roadmap item — plus
-      the one-off `scripts/*.ts` and the frozen `useLeagueSummary.ts` static
-      JSON).
+      "current" (see commit `72e5dd5` for the exhaustive file-by-file list and
+      the two tests that needed the same fix). Deliberately left on the old
+      hardcoded AFC/NFC pattern: the recap/report-generation pipeline —
+      cron/offline-only, out of scope, slated for a full rebuild borrowing from
+      DriveFF per its own roadmap item — plus the one-off `scripts/*.ts` and the
+      frozen `useLeagueSummary.ts` static JSON.
 - [x] Landed multi-league safety tests (folds in `GITHUB_ISSUES.md`'s "Add
       Multi-League Safety Tests" item — see GITHUB_ISSUES.md:104-116 for its 4
       asks). Confirmed which flagged 2-way combination points from this phase's
@@ -521,12 +520,11 @@ changed in this phase.
       consumers (`useLeagueSummary.ts`/`useScenarioSummary.ts` static JSON,
       `waiver-analysis/utils/cross-league.ts`, `recap/tools/standings.ts`/
       `upcoming.ts`'s `{afc, nfc}` pick-out) is deferred until real 2026 season
-      data exists to redesign against — see `SCRATCHPAD.md`'s 2026-07-27 Active
-      entries for the full file list. No dangling fallback to delete.
-      `pnpm type-check`, `pnpm lint`, and `pnpm test` (910/910) all pass; dev
-      server smoke-tested across archive, current-season, and league-overview
-      routes (200s, 3 "Legion" leagues rendering, no leftover AFC/NFC strings on
-      live pages).
+      data exists to redesign against (see commit `72e5dd5` for the full file
+      list). No dangling fallback to delete. `pnpm type-check`, `pnpm lint`, and
+      `pnpm test` (910/910) all pass; dev server smoke-tested across archive,
+      current-season, and league-overview routes (200s, 3 "Legion" leagues
+      rendering, no leftover AFC/NFC strings on live pages).
 - [x] Prioritized-list item 8 fixed (2026-07-27): deleted `app/charts/` outright
       — a scratch prototype pointed at a stale sample league ID
       (`1049321550490456064`, not a real Gauntlet league) and calling an
