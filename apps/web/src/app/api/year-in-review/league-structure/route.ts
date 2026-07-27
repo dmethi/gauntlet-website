@@ -86,7 +86,6 @@ const DECLINED_TEAM_NAMES = new Set(
     'adam',
     'nacua matata',
     'lazy9669',
-    'dhruv modi',
   ].map(normalizeTeamName),
 );
 
@@ -110,7 +109,7 @@ const FALLBACK_PREREGISTRATION_NAMES = [
   'Pauras Swami',
 ];
 
-const TEMPORARILY_REMOVED_REGISTRATION_NAMES = new Set(['dhruv modi'].map(normalizeTeamName));
+const TEMPORARILY_REMOVED_REGISTRATION_NAMES = new Set<string>();
 
 const bySeasonFinish = (a: TeamSlot, b: TeamSlot) => {
   return b.wins - a.wins || b.pts - a.pts;
