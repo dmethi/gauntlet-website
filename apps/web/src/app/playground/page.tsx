@@ -1,5 +1,6 @@
 'use client';
 
+import { notFound } from 'next/navigation';
 import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +21,10 @@ const Swatch = ({ label, hex }: { label?: string; hex: string }) => {
 };
 
 export default function Playground(): JSX.Element {
+  if (process.env.NODE_ENV === 'production') {
+    notFound();
+  }
+
   return (
     <Container className="py-8">
       <div className="flex items-center justify-between mb-6">

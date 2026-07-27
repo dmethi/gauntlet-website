@@ -521,6 +521,14 @@ changed in this phase.
       the live pages don't break today. That fallback must be deleted once real
       2026 league IDs land. `pnpm type-check`, `pnpm lint`, and `pnpm test`
       (910/910) all pass; dev server smoke-tested on all three routes (200s).
+- [x] Prioritized-list item 8 fixed (2026-07-27): deleted `app/charts/` outright
+      — a scratch prototype pointed at a stale sample league ID
+      (`1049321550490456064`, not a real Gauntlet league) and calling an
+      `/api/charts/[leagueId]/[week]` endpoint that no longer exists, so it was
+      already broken in production. `app/playground/` (design-token/component
+      preview) has real ongoing value, so it stays but now calls Next's
+      `notFound()` when `NODE_ENV === 'production'`, making it dev-only instead
+      of publicly reachable. Per user decision.
 
 ## Phase 5 — Page-by-page remediation
 
