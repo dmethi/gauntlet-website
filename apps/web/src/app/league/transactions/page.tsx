@@ -32,7 +32,6 @@ const LeagueTransactionsContent = () => {
 
   const { league } = leagueIdParam ? leagueDataById : leagueDataDefault;
   const leagueId = league?.id ? String(league.id) : undefined;
-  const [allData, setAllData] = useState<GradeTxn[]>([]);
   const [rawTransactions, setRawTransactions] = useState<RawTxn[]>([]);
   const [loading, setLoading] = useState(true);
   const [pos, setPos] = useState('ALL');
@@ -47,7 +46,12 @@ const LeagueTransactionsContent = () => {
   const [factsLoading, setFactsLoading] = useState(true);
   const [factsError, setFactsError] = useState<string | null>(null);
 
-  // Fetch ALL transactions once and compute grades from local facts
+  // Fetch ALL transactions once. Only `leagueId`/`type` require a network
+  // refetch (`type` is server-side filtered via the API query param); `team`
+  // and `pos` are pure client-side filters applied in the grading memo below,
+  // so they intentionally don't appear in this effect's dependencies — no
+  // network round-trip (and no full-page loader) when the user just changes
+  // a filter over data that's already in memory.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -83,372 +87,13 @@ const LeagueTransactionsContent = () => {
         // Filter out failed transactions
         const validTransactions = raw.filter(t => t.status !== 'failed');
 
-        // Store raw transactions for trade parsing
-        setRawTransactions(validTransactions);
-
-        // Build quick lookup for positions/names
-        const idToPlayer = new Map<string, { name: string; position: string }>();
-        validTransactions.forEach(t => {
-          if (t.adds && Array.isArray(t.adds)) {
-            t.adds.forEach(a =>
-              a.players?.forEach(p =>
-                idToPlayer.set(p.id, { name: p.fullName, position: p.position }),
-              ),
-            );
-          }
-          if (t.drops && Array.isArray(t.drops)) {
-            t.drops.forEach(d =>
-              d.players?.forEach(p =>
-                idToPlayer.set(p.id, { name: p.fullName, position: p.position }),
-              ),
-            );
-          }
-        });
-
-        const filterByTeam = (t: RawTxn) =>
-          team === 'ALL' ? true : (t.rosterIds || []).includes(Number(team));
-        const filterByPos = (pid: string) =>
-          pos === 'ALL'
-            ? true
-            : (idToPlayer.get(pid)?.position || '').toUpperCase() === pos.toUpperCase();
-
-        const compute = (txns: RawTxn[]): GradeTxn[] => {
-          if (!facts) return [];
-          const f = facts;
-          const graded: GradeTxn[] = [];
-
-          // Calculate position-specific replacement levels
-          const positionReplacementLevels = new Map<string, number>(); // `${week}:${position}`
-
-          for (const week of f.weeks) {
-            const weekPositionPoints: Record<string, number[]> = {};
-
-            // Collect all starter points by position for this week
-            for (const [weekRosterKey, starters] of f.weekRosterStarters.entries()) {
-              const [weekStr] = weekRosterKey.split(':');
-              if (Number(weekStr) !== week) continue;
-
-              for (const playerId of starters) {
-                const playerInfo = idToPlayer.get(playerId);
-                if (!playerInfo) continue;
-
-                const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
-                const position = playerInfo.position.toUpperCase();
-
-                if (!weekPositionPoints[position]) weekPositionPoints[position] = [];
-                weekPositionPoints[position].push(points);
-              }
-            }
-
-            // Calculate median (replacement level) for each position
-            for (const [position, pointsArray] of Object.entries(weekPositionPoints)) {
-              if (pointsArray.length > 0) {
-                pointsArray.sort((a, b) => a - b);
-                const median = pointsArray[Math.floor(pointsArray.length / 2)];
-                positionReplacementLevels.set(`${week}:${position}`, median);
-              }
-            }
-
-            // Calculate FLEX replacement as average of RB and WR medians
-            const rbRepl = positionReplacementLevels.get(`${week}:RB`) || 0;
-            const wrRepl = positionReplacementLevels.get(`${week}:WR`) || 0;
-            const flexRepl = (rbRepl + wrRepl) / 2;
-            positionReplacementLevels.set(`${week}:FLEX`, flexRepl);
-          }
-
-          const weekHintFromDate = (iso: string) => {
-            const d = new Date(iso);
-            const m = d.getMonth() + 1; // 1-12
-            if (m <= 8) return 0; // preseason
-            if (m === 9) return 1;
-            if (m === 10) return 5;
-            if (m === 11) return 10;
-            if (m === 12) return 14;
-            // January postseason spillover
-            return 18;
-          };
-          const filteredTxns = txns.filter(filterByTeam);
-
-          for (const t of filteredTxns) {
-            const createdAt = new Date(t.createdAt).toISOString();
-            const txnWeekHint = weekHintFromDate(createdAt);
-            const playersOut: GradeTxn['players'] = [];
-
-            const addPairs: Array<{ rosterId: number; playerId: string }> = [];
-            if (t.adds && Array.isArray(t.adds)) {
-              t.adds.forEach(a =>
-                a.players?.forEach(p => addPairs.push({ rosterId: a.rosterId, playerId: p.id })),
-              );
-            }
-
-            const dropPairs: Array<{ rosterId: number; playerId: string }> = [];
-            if (t.drops && Array.isArray(t.drops)) {
-              t.drops.forEach(d =>
-                d.players?.forEach(p => dropPairs.push({ rosterId: d.rosterId, playerId: p.id })),
-              );
-            }
-
-            debugLog('Transaction pairs - adds:', addPairs.length, 'drops:', dropPairs.length);
-
-            // Adds
-            debugLog('Processing', addPairs.length, 'add pairs');
-            for (const { rosterId, playerId } of addPairs) {
-              debugLog('Processing add:', playerId, 'for roster:', rosterId);
-              if (!filterByPos(playerId)) {
-                debugLog('Add filtered out by position:', playerId);
-                continue;
-              }
-              const info = idToPlayer.get(playerId);
-              debugLog('Player info:', info);
-              const w0 = firstOwnedWeek(f, rosterId, playerId);
-              debugLog('First owned week for', playerId, 'on roster', rosterId, ':', w0);
-              const forYou = { starts: 0, points: 0, weightedPoints: 0 } as NonNullable<
-                GradeTxn['players'][number]['forYou']
-              >;
-              if (w0 != null) {
-                debugLog('Processing weeks for add, w0:', w0, 'txnWeekHint:', txnWeekHint);
-                for (const w of f.weeks) {
-                  debugLog('Checking week', w, 'against threshold', Math.max(w0, txnWeekHint));
-                  if (w < Math.max(w0, txnWeekHint)) continue;
-                  debugLog('Processing week', w, 'for player', playerId, 'on roster', rosterId);
-                  const starters = f.weekRosterStarters.get(`${w}:${rosterId}`);
-                  debugLog(
-                    'Starters for week',
-                    w,
-                    'roster',
-                    rosterId,
-                    ':',
-                    starters?.size || 0,
-                    'players',
-                  );
-                  if (starters && starters.has(playerId)) {
-                    const pts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
-                    const playerPos = info?.position?.toUpperCase() || 'FLEX';
-                    const replLevel = positionReplacementLevels.get(`${w}:${playerPos}`) || 0;
-                    const vorp = pts - replLevel; // Value Over Replacement Player
-
-                    forYou.starts += 1;
-                    forYou.points += pts; // Keep raw points for display
-                    forYou.weightedPoints += playoffWeight(w) * vorp; // Use VORP for scoring
-                  }
-                }
-              }
-              // Build weekly points breakdown for added player
-              const weeklyPoints: Array<{
-                week: number;
-                points: number;
-                started: boolean;
-                weight: number;
-              }> = [];
-              const firstW = w0; // Use the same w0 we calculated above
-              debugLog('Weekly points bounds: firstW:', firstW, 'txnWeekHint:', txnWeekHint);
-              for (const w of f.weeks) {
-                debugLog('Building weekly point for week', w);
-                if (firstW != null && w < firstW) {
-                  debugLog('Week', w, 'skipped - before firstW', firstW);
-                  continue;
-                }
-                if (w < txnWeekHint) {
-                  debugLog('Week', w, 'skipped - before txnWeekHint', txnWeekHint);
-                  continue;
-                }
-                const points = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
-                const started =
-                  f.weekRosterStarters.get(`${w}:${rosterId}`)?.has(playerId) || false;
-                const weight = playoffWeight(w);
-                debugLog('Week', w, '- points:', points, 'started:', started, 'weight:', weight);
-                weeklyPoints.push({ week: w, points, started, weight });
-              }
-
-              debugLog('Built weekly points for add:', weeklyPoints.length, 'weeks');
-              const playerOut = {
-                playerId,
-                name: info?.name || playerId,
-                position: info?.position || 'UNK',
-                role: 'add' as const,
-                pre: { ppg: 0, pps: 0, total: 0 },
-                post: { poPts: 0 },
-                forYou,
-                weeklyPoints,
-              };
-              debugLog('Adding player to playersOut:', playerOut.playerId, playerOut.name);
-              playersOut.push(playerOut);
-            }
-
-            // Drops
-            debugLog('Processing', dropPairs.length, 'drop pairs');
-            for (const { rosterId, playerId } of dropPairs) {
-              debugLog('Processing drop:', playerId, 'for roster:', rosterId);
-              if (!filterByPos(playerId)) {
-                debugLog('Drop filtered out by position:', playerId);
-                continue;
-              }
-              const info = idToPlayer.get(playerId);
-              const lastW = lastOwnedWeek(f, rosterId, playerId);
-              const afterDrop = {
-                selfHarm: 0,
-                oppHarm: 0,
-                selfHarmWeighted: 0,
-                oppHarmWeighted: 0,
-              } as NonNullable<GradeTxn['players'][number]['afterDrop']>;
-              const posUp = (info?.position || 'UNK').toUpperCase();
-              for (const w of f.weeks) {
-                if (lastW != null && w <= lastW) continue;
-                if (w < txnWeekHint) continue;
-                // self-harm: only count if dropped player would have displaced worst starter
-                const yourStarters = f.weekRosterStarters.get(`${w}:${rosterId}`);
-                if (yourStarters && yourStarters.size) {
-                  // Get all same-position players you started that week
-                  const samePositionStarters: Array<{ playerId: string; points: number }> = [];
-                  for (const pid of yourStarters) {
-                    const ppos = idToPlayer.get(pid)?.position?.toUpperCase();
-                    if (ppos === posUp) {
-                      const pts = f.playerWeekPoints.get(`${w}:${pid}`) || 0;
-                      samePositionStarters.push({ playerId: pid, points: pts });
-                    }
-                  }
-
-                  if (samePositionStarters.length > 0) {
-                    // Sort by points to find worst starter
-                    samePositionStarters.sort((a, b) => a.points - b.points);
-                    const worstStarterPoints = samePositionStarters[0].points;
-                    const droppedPts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
-
-                    // Only count self-harm if dropped player would have displaced worst starter
-                    if (droppedPts > worstStarterPoints) {
-                      const delta = droppedPts - worstStarterPoints;
-                      afterDrop.selfHarm += delta;
-                      afterDrop.selfHarmWeighted += playoffWeight(w) * delta;
-                    }
-                  }
-                }
-                // opponent harm: check if ANY opponent (not just direct opponent) started the player
-                let anyOpponentStarted = false;
-                for (const [weekRosterKey, starters] of f.weekRosterStarters.entries()) {
-                  const [weekStr, rosterIdStr] = weekRosterKey.split(':');
-                  if (Number(weekStr) !== w) continue;
-                  const checkRosterId = Number(rosterIdStr);
-                  if (checkRosterId === rosterId) continue; // Skip the roster that dropped the player
-
-                  if (starters.has(playerId)) {
-                    anyOpponentStarted = true;
-                    break;
-                  }
-                }
-
-                if (anyOpponentStarted) {
-                  const oppPts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
-                  const repl = positionReplacementLevels.get(`${w}:${posUp}`) || 0;
-                  const harm = Math.max(0, oppPts - repl);
-                  afterDrop.oppHarm += harm;
-                  afterDrop.oppHarmWeighted += playoffWeight(w) * harm;
-                }
-              }
-              // Build weekly points breakdown for dropped player
-              const weeklyPoints: Array<{
-                week: number;
-                points: number;
-                started: boolean;
-                weight: number;
-              }> = [];
-              for (const w of f.weeks) {
-                if (lastW != null && w <= lastW) continue;
-                if (w < txnWeekHint) continue;
-                const points = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
-                // Check if any opponent started this player
-                let anyOpponentStarted = false;
-                for (const [weekRosterKey, starters] of f.weekRosterStarters.entries()) {
-                  const [weekStr, rosterIdStr] = weekRosterKey.split(':');
-                  if (Number(weekStr) !== w) continue;
-                  const checkRosterId = Number(rosterIdStr);
-                  if (checkRosterId === rosterId) continue;
-                  if (starters.has(playerId)) {
-                    anyOpponentStarted = true;
-                    break;
-                  }
-                }
-                const weight = playoffWeight(w);
-                weeklyPoints.push({ week: w, points, started: anyOpponentStarted, weight });
-              }
-
-              playersOut.push({
-                playerId,
-                name: info?.name || playerId,
-                position: info?.position || 'UNK',
-                role: 'drop',
-                pre: { ppg: 0, pps: 0, total: 0 },
-                post: { poPts: 0 },
-                afterDrop,
-                weeklyPoints,
-              });
-            }
-
-            debugLog('Final transaction processing - playersOut:', playersOut.length);
-            const contribution = playersOut
-              .filter(p => p.role === 'add' && p.forYou)
-              .reduce((s, p) => s + (p.forYou?.weightedPoints || 0), 0);
-            const penalties = playersOut
-              .filter(p => p.role === 'drop' && p.afterDrop)
-              .reduce(
-                (s, p) =>
-                  s + (p.afterDrop?.selfHarmWeighted || 0) + (p.afterDrop?.oppHarmWeighted || 0),
-                0,
-              );
-            const score = contribution - penalties;
-            debugLog('Transaction scoring:', { contribution, penalties, score });
-            const gradedTxn = {
-              id: t.id,
-              type: t.type,
-              createdAt,
-              rosterIds: t.rosterIds,
-              players: playersOut,
-              score,
-              grade: 'N/A',
-            };
-            debugLog(
-              'Created graded transaction:',
-              gradedTxn.id,
-              'players:',
-              playersOut.length,
-              'score:',
-              score,
-            );
-            graded.push(gradedTxn);
-          }
-
-          // Letter grades by z-score
-          const vals = graded.map(g => g.score);
-          const n = vals.length || 1;
-          const mean = vals.reduce((a, b) => a + b, 0) / n;
-          const variance = vals.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, n - 1);
-          const std = Math.sqrt(variance);
-          graded.forEach(g => {
-            const z = std > 0 ? (g.score - mean) / std : 0;
-            const pct = 50 + 40 * Math.tanh(z);
-            g.grade =
-              pct >= 88
-                ? 'A+'
-                : pct >= 82
-                  ? 'A'
-                  : pct >= 70
-                    ? 'B'
-                    : pct >= 55
-                      ? 'C'
-                      : pct >= 40
-                        ? 'D'
-                        : 'F';
-          });
-          return graded;
-        };
-
-        const graded = compute(validTransactions);
         if (!cancelled) {
-          setAllData(graded);
+          setRawTransactions(validTransactions);
           setCurrentPage(0);
         }
       } catch {
         if (!cancelled) {
-          setAllData([]);
+          setRawTransactions([]);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -457,7 +102,359 @@ const LeagueTransactionsContent = () => {
     return () => {
       cancelled = true;
     };
-  }, [leagueId, type, facts, factsLoading, team, pos]);
+  }, [leagueId, type, facts, factsLoading]);
+
+  // Grade the already-fetched raw transactions against local facts. Pure,
+  // synchronous, in-memory — runs on every `team`/`pos` change without ever
+  // touching the network or `loading`, so filter clicks feel instant.
+  const allData = useMemo<GradeTxn[]>(() => {
+    if (!facts || rawTransactions.length === 0) return [];
+    const f = facts;
+    const graded: GradeTxn[] = [];
+
+    // Build quick lookup for positions/names
+    const idToPlayer = new Map<string, { name: string; position: string }>();
+    rawTransactions.forEach(t => {
+      if (t.adds && Array.isArray(t.adds)) {
+        t.adds.forEach(a =>
+          a.players?.forEach(p => idToPlayer.set(p.id, { name: p.fullName, position: p.position })),
+        );
+      }
+      if (t.drops && Array.isArray(t.drops)) {
+        t.drops.forEach(d =>
+          d.players?.forEach(p => idToPlayer.set(p.id, { name: p.fullName, position: p.position })),
+        );
+      }
+    });
+
+    const filterByTeam = (t: RawTxn) =>
+      team === 'ALL' ? true : (t.rosterIds || []).includes(Number(team));
+    const filterByPos = (pid: string) =>
+      pos === 'ALL'
+        ? true
+        : (idToPlayer.get(pid)?.position || '').toUpperCase() === pos.toUpperCase();
+
+    // Calculate position-specific replacement levels
+    const positionReplacementLevels = new Map<string, number>(); // `${week}:${position}`
+
+    for (const week of f.weeks) {
+      const weekPositionPoints: Record<string, number[]> = {};
+
+      // Collect all starter points by position for this week
+      for (const [weekRosterKey, starters] of f.weekRosterStarters.entries()) {
+        const [weekStr] = weekRosterKey.split(':');
+        if (Number(weekStr) !== week) continue;
+
+        for (const playerId of starters) {
+          const playerInfo = idToPlayer.get(playerId);
+          if (!playerInfo) continue;
+
+          const points = f.playerWeekPoints.get(`${week}:${playerId}`) || 0;
+          const position = playerInfo.position.toUpperCase();
+
+          if (!weekPositionPoints[position]) weekPositionPoints[position] = [];
+          weekPositionPoints[position].push(points);
+        }
+      }
+
+      // Calculate median (replacement level) for each position
+      for (const [position, pointsArray] of Object.entries(weekPositionPoints)) {
+        if (pointsArray.length > 0) {
+          pointsArray.sort((a, b) => a - b);
+          const median = pointsArray[Math.floor(pointsArray.length / 2)];
+          positionReplacementLevels.set(`${week}:${position}`, median);
+        }
+      }
+
+      // Calculate FLEX replacement as average of RB and WR medians
+      const rbRepl = positionReplacementLevels.get(`${week}:RB`) || 0;
+      const wrRepl = positionReplacementLevels.get(`${week}:WR`) || 0;
+      const flexRepl = (rbRepl + wrRepl) / 2;
+      positionReplacementLevels.set(`${week}:FLEX`, flexRepl);
+    }
+
+    const weekHintFromDate = (iso: string) => {
+      const d = new Date(iso);
+      const m = d.getMonth() + 1; // 1-12
+      if (m <= 8) return 0; // preseason
+      if (m === 9) return 1;
+      if (m === 10) return 5;
+      if (m === 11) return 10;
+      if (m === 12) return 14;
+      // January postseason spillover
+      return 18;
+    };
+    const filteredTxns = rawTransactions.filter(filterByTeam);
+
+    for (const t of filteredTxns) {
+      const createdAt = new Date(t.createdAt).toISOString();
+      const txnWeekHint = weekHintFromDate(createdAt);
+      const playersOut: GradeTxn['players'] = [];
+
+      const addPairs: Array<{ rosterId: number; playerId: string }> = [];
+      if (t.adds && Array.isArray(t.adds)) {
+        t.adds.forEach(a =>
+          a.players?.forEach(p => addPairs.push({ rosterId: a.rosterId, playerId: p.id })),
+        );
+      }
+
+      const dropPairs: Array<{ rosterId: number; playerId: string }> = [];
+      if (t.drops && Array.isArray(t.drops)) {
+        t.drops.forEach(d =>
+          d.players?.forEach(p => dropPairs.push({ rosterId: d.rosterId, playerId: p.id })),
+        );
+      }
+
+      debugLog('Transaction pairs - adds:', addPairs.length, 'drops:', dropPairs.length);
+
+      // Adds
+      debugLog('Processing', addPairs.length, 'add pairs');
+      for (const { rosterId, playerId } of addPairs) {
+        debugLog('Processing add:', playerId, 'for roster:', rosterId);
+        if (!filterByPos(playerId)) {
+          debugLog('Add filtered out by position:', playerId);
+          continue;
+        }
+        const info = idToPlayer.get(playerId);
+        debugLog('Player info:', info);
+        const w0 = firstOwnedWeek(f, rosterId, playerId);
+        debugLog('First owned week for', playerId, 'on roster', rosterId, ':', w0);
+        const forYou = { starts: 0, points: 0, weightedPoints: 0 } as NonNullable<
+          GradeTxn['players'][number]['forYou']
+        >;
+        if (w0 != null) {
+          debugLog('Processing weeks for add, w0:', w0, 'txnWeekHint:', txnWeekHint);
+          for (const w of f.weeks) {
+            debugLog('Checking week', w, 'against threshold', Math.max(w0, txnWeekHint));
+            if (w < Math.max(w0, txnWeekHint)) continue;
+            debugLog('Processing week', w, 'for player', playerId, 'on roster', rosterId);
+            const starters = f.weekRosterStarters.get(`${w}:${rosterId}`);
+            debugLog(
+              'Starters for week',
+              w,
+              'roster',
+              rosterId,
+              ':',
+              starters?.size || 0,
+              'players',
+            );
+            if (starters && starters.has(playerId)) {
+              const pts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
+              const playerPos = info?.position?.toUpperCase() || 'FLEX';
+              const replLevel = positionReplacementLevels.get(`${w}:${playerPos}`) || 0;
+              const vorp = pts - replLevel; // Value Over Replacement Player
+
+              forYou.starts += 1;
+              forYou.points += pts; // Keep raw points for display
+              forYou.weightedPoints += playoffWeight(w) * vorp; // Use VORP for scoring
+            }
+          }
+        }
+        // Build weekly points breakdown for added player
+        const weeklyPoints: Array<{
+          week: number;
+          points: number;
+          started: boolean;
+          weight: number;
+        }> = [];
+        const firstW = w0; // Use the same w0 we calculated above
+        debugLog('Weekly points bounds: firstW:', firstW, 'txnWeekHint:', txnWeekHint);
+        for (const w of f.weeks) {
+          debugLog('Building weekly point for week', w);
+          if (firstW != null && w < firstW) {
+            debugLog('Week', w, 'skipped - before firstW', firstW);
+            continue;
+          }
+          if (w < txnWeekHint) {
+            debugLog('Week', w, 'skipped - before txnWeekHint', txnWeekHint);
+            continue;
+          }
+          const points = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
+          const started = f.weekRosterStarters.get(`${w}:${rosterId}`)?.has(playerId) || false;
+          const weight = playoffWeight(w);
+          debugLog('Week', w, '- points:', points, 'started:', started, 'weight:', weight);
+          weeklyPoints.push({ week: w, points, started, weight });
+        }
+
+        debugLog('Built weekly points for add:', weeklyPoints.length, 'weeks');
+        const playerOut = {
+          playerId,
+          name: info?.name || playerId,
+          position: info?.position || 'UNK',
+          role: 'add' as const,
+          pre: { ppg: 0, pps: 0, total: 0 },
+          post: { poPts: 0 },
+          forYou,
+          weeklyPoints,
+        };
+        debugLog('Adding player to playersOut:', playerOut.playerId, playerOut.name);
+        playersOut.push(playerOut);
+      }
+
+      // Drops
+      debugLog('Processing', dropPairs.length, 'drop pairs');
+      for (const { rosterId, playerId } of dropPairs) {
+        debugLog('Processing drop:', playerId, 'for roster:', rosterId);
+        if (!filterByPos(playerId)) {
+          debugLog('Drop filtered out by position:', playerId);
+          continue;
+        }
+        const info = idToPlayer.get(playerId);
+        const lastW = lastOwnedWeek(f, rosterId, playerId);
+        const afterDrop = {
+          selfHarm: 0,
+          oppHarm: 0,
+          selfHarmWeighted: 0,
+          oppHarmWeighted: 0,
+        } as NonNullable<GradeTxn['players'][number]['afterDrop']>;
+        const posUp = (info?.position || 'UNK').toUpperCase();
+        for (const w of f.weeks) {
+          if (lastW != null && w <= lastW) continue;
+          if (w < txnWeekHint) continue;
+          // self-harm: only count if dropped player would have displaced worst starter
+          const yourStarters = f.weekRosterStarters.get(`${w}:${rosterId}`);
+          if (yourStarters && yourStarters.size) {
+            // Get all same-position players you started that week
+            const samePositionStarters: Array<{ playerId: string; points: number }> = [];
+            for (const pid of yourStarters) {
+              const ppos = idToPlayer.get(pid)?.position?.toUpperCase();
+              if (ppos === posUp) {
+                const pts = f.playerWeekPoints.get(`${w}:${pid}`) || 0;
+                samePositionStarters.push({ playerId: pid, points: pts });
+              }
+            }
+
+            if (samePositionStarters.length > 0) {
+              // Sort by points to find worst starter
+              samePositionStarters.sort((a, b) => a.points - b.points);
+              const worstStarterPoints = samePositionStarters[0].points;
+              const droppedPts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
+
+              // Only count self-harm if dropped player would have displaced worst starter
+              if (droppedPts > worstStarterPoints) {
+                const delta = droppedPts - worstStarterPoints;
+                afterDrop.selfHarm += delta;
+                afterDrop.selfHarmWeighted += playoffWeight(w) * delta;
+              }
+            }
+          }
+          // opponent harm: check if ANY opponent (not just direct opponent) started the player
+          let anyOpponentStarted = false;
+          for (const [weekRosterKey, starters] of f.weekRosterStarters.entries()) {
+            const [weekStr, rosterIdStr] = weekRosterKey.split(':');
+            if (Number(weekStr) !== w) continue;
+            const checkRosterId = Number(rosterIdStr);
+            if (checkRosterId === rosterId) continue; // Skip the roster that dropped the player
+
+            if (starters.has(playerId)) {
+              anyOpponentStarted = true;
+              break;
+            }
+          }
+
+          if (anyOpponentStarted) {
+            const oppPts = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
+            const repl = positionReplacementLevels.get(`${w}:${posUp}`) || 0;
+            const harm = Math.max(0, oppPts - repl);
+            afterDrop.oppHarm += harm;
+            afterDrop.oppHarmWeighted += playoffWeight(w) * harm;
+          }
+        }
+        // Build weekly points breakdown for dropped player
+        const weeklyPoints: Array<{
+          week: number;
+          points: number;
+          started: boolean;
+          weight: number;
+        }> = [];
+        for (const w of f.weeks) {
+          if (lastW != null && w <= lastW) continue;
+          if (w < txnWeekHint) continue;
+          const points = f.playerWeekPoints.get(`${w}:${playerId}`) || 0;
+          // Check if any opponent started this player
+          let anyOpponentStarted = false;
+          for (const [weekRosterKey, starters] of f.weekRosterStarters.entries()) {
+            const [weekStr, rosterIdStr] = weekRosterKey.split(':');
+            if (Number(weekStr) !== w) continue;
+            const checkRosterId = Number(rosterIdStr);
+            if (checkRosterId === rosterId) continue;
+            if (starters.has(playerId)) {
+              anyOpponentStarted = true;
+              break;
+            }
+          }
+          const weight = playoffWeight(w);
+          weeklyPoints.push({ week: w, points, started: anyOpponentStarted, weight });
+        }
+
+        playersOut.push({
+          playerId,
+          name: info?.name || playerId,
+          position: info?.position || 'UNK',
+          role: 'drop',
+          pre: { ppg: 0, pps: 0, total: 0 },
+          post: { poPts: 0 },
+          afterDrop,
+          weeklyPoints,
+        });
+      }
+
+      debugLog('Final transaction processing - playersOut:', playersOut.length);
+      const contribution = playersOut
+        .filter(p => p.role === 'add' && p.forYou)
+        .reduce((s, p) => s + (p.forYou?.weightedPoints || 0), 0);
+      const penalties = playersOut
+        .filter(p => p.role === 'drop' && p.afterDrop)
+        .reduce(
+          (s, p) => s + (p.afterDrop?.selfHarmWeighted || 0) + (p.afterDrop?.oppHarmWeighted || 0),
+          0,
+        );
+      const score = contribution - penalties;
+      debugLog('Transaction scoring:', { contribution, penalties, score });
+      const gradedTxn = {
+        id: t.id,
+        type: t.type,
+        createdAt,
+        rosterIds: t.rosterIds,
+        players: playersOut,
+        score,
+        grade: 'N/A',
+      };
+      debugLog(
+        'Created graded transaction:',
+        gradedTxn.id,
+        'players:',
+        playersOut.length,
+        'score:',
+        score,
+      );
+      graded.push(gradedTxn);
+    }
+
+    // Letter grades by z-score
+    const vals = graded.map(g => g.score);
+    const n = vals.length || 1;
+    const mean = vals.reduce((a, b) => a + b, 0) / n;
+    const variance = vals.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, n - 1);
+    const std = Math.sqrt(variance);
+    graded.forEach(g => {
+      const z = std > 0 ? (g.score - mean) / std : 0;
+      const pct = 50 + 40 * Math.tanh(z);
+      g.grade =
+        pct >= 88
+          ? 'A+'
+          : pct >= 82
+            ? 'A'
+            : pct >= 70
+              ? 'B'
+              : pct >= 55
+                ? 'C'
+                : pct >= 40
+                  ? 'D'
+                  : 'F';
+    });
+    return graded;
+  }, [rawTransactions, facts, team, pos]);
 
   const filteredAndSorted = useMemo(() => {
     const filtered = allData.filter(t => {
