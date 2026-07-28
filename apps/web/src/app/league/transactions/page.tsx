@@ -1,7 +1,8 @@
 'use client';
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
-import { Container, PageHeader } from '@gauntlet/ui';
+import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
+import { GauntletLogo } from '@/components/gauntlet-logo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -602,228 +603,219 @@ const LeagueTransactionsContent = () => {
 
   return (
     <TooltipProvider>
-      <Container className="py-8">
-        <div className="flex items-start justify-between mb-6">
-          <PageHeader
-            title="Transactions"
-            subtitle={`${league?.name || 'League'} - Transaction feed with grades`}
-          />
-        </div>
-
-        <div className="mb-3 flex items-center gap-2 flex-wrap">
-          <div className="text-sm text-muted-foreground">Position:</div>
-          {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
-            <Button
-              key={p}
-              size="sm"
-              variant={pos === p ? 'default' : 'outline'}
-              onClick={() => {
-                setPos(p);
-                setCurrentPage(0);
-              }}
-              className="h-7 px-2"
-            >
-              {p}
-            </Button>
-          ))}
-          <label className="ml-4 text-sm text-muted-foreground" htmlFor="team-filter">
-            Team:
-          </label>
-          <select
-            id="team-filter"
-            className="border border-border rounded px-2 py-1 bg-background text-sm max-w-xs"
-            value={team === 'ALL' ? 'ALL' : String(team)}
-            onChange={e => {
-              const v = e.target.value;
-              setTeam(v === 'ALL' ? 'ALL' : Number(v));
-              setCurrentPage(0);
-            }}
-          >
-            <option value="ALL">ALL</option>
-            {(league?.rosters || []).map(r => (
-              <option key={r.id} value={String(r.id)}>
-                {r.owner?.metadata?.team_name ||
-                  r.owner?.displayName ||
-                  r.owner?.username ||
-                  `Team ${r.id}`}
-              </option>
+      <div className="max-w-7xl mx-auto">
+        <PageHeaderHero
+          title="Transactions"
+          subtitle={`${league?.name || 'League'} - Transaction feed with grades`}
+          crestSrc="/gauntlet_logo.svg"
+        />
+        <div className="px-6 py-8">
+          <div className="mb-3 flex items-center gap-2 flex-wrap">
+            <div className="text-sm text-muted-foreground">Position:</div>
+            {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
+              <Button
+                key={p}
+                size="sm"
+                variant={pos === p ? 'default' : 'outline'}
+                onClick={() => {
+                  setPos(p);
+                  setCurrentPage(0);
+                }}
+                className="h-7 px-2"
+              >
+                {p}
+              </Button>
             ))}
-          </select>
-          <div className="ml-4 text-sm text-muted-foreground">Type:</div>
-          {['ALL', 'free_agent', 'waiver', 'trade'].map(t => (
-            <Button
-              key={t}
-              size="sm"
-              variant={type === t ? 'default' : 'outline'}
-              onClick={() => {
-                setType(t);
+            <label className="ml-4 text-sm text-muted-foreground" htmlFor="team-filter">
+              Team:
+            </label>
+            <select
+              id="team-filter"
+              className="border border-border rounded px-2 py-1 bg-background text-sm max-w-xs"
+              value={team === 'ALL' ? 'ALL' : String(team)}
+              onChange={e => {
+                const v = e.target.value;
+                setTeam(v === 'ALL' ? 'ALL' : Number(v));
                 setCurrentPage(0);
               }}
-              className="h-7 px-2"
             >
-              {t === 'ALL' ? 'ALL' : t.replace('_', ' ')}
-            </Button>
-          ))}
-          <label className="ml-4 text-sm text-muted-foreground" htmlFor="txn-sort">
-            Sort:
-          </label>
-          <select
-            id="txn-sort"
-            className="border border-border rounded px-2 py-1 bg-background text-sm"
-            value={sort}
-            onChange={e => setSort(e.target.value as any)}
-          >
-            <option value="date_desc">Most Recent</option>
-            <option value="score_desc">Score (best)</option>
-            <option value="score_asc">Score (worst)</option>
-          </select>
-          <div className="ml-4 text-sm text-muted-foreground">View:</div>
-          {(['paged', 'all'] as const).map(v => (
-            <Button
-              key={v}
-              size="sm"
-              variant={view === v ? 'default' : 'outline'}
-              onClick={() => {
-                setView(v);
-                setCurrentPage(0);
-              }}
-              className="h-7 px-2"
+              <option value="ALL">ALL</option>
+              {(league?.rosters || []).map(r => (
+                <option key={r.id} value={String(r.id)}>
+                  {r.owner?.metadata?.team_name ||
+                    r.owner?.displayName ||
+                    r.owner?.username ||
+                    `Team ${r.id}`}
+                </option>
+              ))}
+            </select>
+            <div className="ml-4 text-sm text-muted-foreground">Type:</div>
+            {['ALL', 'free_agent', 'waiver', 'trade'].map(t => (
+              <Button
+                key={t}
+                size="sm"
+                variant={type === t ? 'default' : 'outline'}
+                onClick={() => {
+                  setType(t);
+                  setCurrentPage(0);
+                }}
+                className="h-7 px-2"
+              >
+                {t === 'ALL' ? 'ALL' : t.replace('_', ' ')}
+              </Button>
+            ))}
+            <label className="ml-4 text-sm text-muted-foreground" htmlFor="txn-sort">
+              Sort:
+            </label>
+            <select
+              id="txn-sort"
+              className="border border-border rounded px-2 py-1 bg-background text-sm"
+              value={sort}
+              onChange={e => setSort(e.target.value as any)}
             >
-              {v === 'paged' ? 'Paged' : 'Show all'}
-            </Button>
-          ))}
-        </div>
-
-        {factsLoading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
-            <div className="text-sm text-muted-foreground">Loading matchup data...</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Fetching 17 weeks of lineup data
-            </div>
+              <option value="date_desc">Most Recent</option>
+              <option value="score_desc">Score (best)</option>
+              <option value="score_asc">Score (worst)</option>
+            </select>
+            <div className="ml-4 text-sm text-muted-foreground">View:</div>
+            {(['paged', 'all'] as const).map(v => (
+              <Button
+                key={v}
+                size="sm"
+                variant={view === v ? 'default' : 'outline'}
+                onClick={() => {
+                  setView(v);
+                  setCurrentPage(0);
+                }}
+                className="h-7 px-2"
+              >
+                {v === 'paged' ? 'Paged' : 'Show all'}
+              </Button>
+            ))}
           </div>
-        ) : factsError ? (
-          <div className="text-sm text-red-500">Error loading matchup data: {factsError}</div>
-        ) : loading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
-            <div className="text-sm text-muted-foreground">Computing transaction grades...</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Calculating VORP for all transactions
-            </div>
-          </div>
-        ) : rows.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No transactions found.</div>
-        ) : (
-          <div className="overflow-x-auto rounded-md border border-border bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Players</TableHead>
-                  <TableHead className="text-right">Grade</TableHead>
-                  <TableHead className="text-right">Score</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map(t => (
-                  <TableRow key={t.id}>
-                    <TableCell>{new Date(t.createdAt).toLocaleString()}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <div>{t.type.replace('_', ' ')}</div>
-                        {!!(t.rosterIds && t.rosterIds.length) && (
-                          <div className="text-xs text-muted-foreground">
-                            {(t.rosterIds || [])
-                              .map(rid => rosterMap.get(Number(rid)) || `Team ${rid}`)
-                              .join(' • ')}
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        {t.type === 'trade'
-                          ? // For trades, show which team got which player with unidirectional arrows
-                            (() => {
-                              // Find the corresponding raw transaction for trade details
-                              const rawTxn = rawTransactions.find(rt => rt.id === t.id);
-                              if (!rawTxn) {
-                                // Fallback to old logic if raw transaction not found
-                                const addedPlayers = t.players.filter(p => p.role === 'add');
-                                return addedPlayers.map(p => (
-                                  <div key={p.playerId} className="text-sm text-muted-foreground">
-                                    {p.name} ({p.position}) • Trade
-                                  </div>
-                                ));
-                              }
 
-                              // Use raw transaction data to show specific destinations
-                              return (rawTxn.adds || []).flatMap(addGroup =>
-                                (addGroup.players || []).map(player => {
-                                  const teamName =
-                                    rosterMap.get(Number(addGroup.rosterId)) ||
-                                    `Team ${addGroup.rosterId}`;
-                                  return (
-                                    <div key={player.id} className="text-sm text-muted-foreground">
-                                      {player.fullName} ({player.position}) → {teamName}
-                                    </div>
-                                  );
-                                }),
-                              );
-                            })()
-                          : // For non-trades, show traditional format with team context
-                            t.players.map(p => (
-                              <div key={p.playerId} className="text-sm text-muted-foreground">
-                                {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
-                              </div>
-                            ))}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2"
-                        onClick={() => setSelected(t)}
-                      >
-                        <Badge>{t.grade}</Badge>
-                      </Button>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {(() => {
-                        const bg = getDivergingBg(t.score / (scoreRange || 1));
-                        const fg = getTextColorForBg(bg);
-                        return (
-                          <span
-                            className="px-2 py-0.5 rounded"
-                            style={{ backgroundColor: bg, color: fg }}
-                          >
-                            {t.score.toFixed(2)}
-                          </span>
-                        );
-                      })()}
-                    </TableCell>
+          {factsLoading ? (
+            <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
+          ) : factsError ? (
+            <div className="text-sm text-red-500">Error loading matchup data: {factsError}</div>
+          ) : loading ? (
+            <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
+          ) : rows.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No transactions found.</div>
+          ) : (
+            <div className="overflow-x-auto rounded-md border border-border bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Players</TableHead>
+                    <TableHead className="text-right">Grade</TableHead>
+                    <TableHead className="text-right">Score</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-        {view === 'paged' && hasMorePages && (
-          <div className="mt-4 flex justify-center">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(p => p + 1)}
-              disabled={loading || !leagueId}
-            >
-              Load more
-            </Button>
-          </div>
-        )}
-      </Container>
+                </TableHeader>
+                <TableBody>
+                  {rows.map(t => (
+                    <TableRow key={t.id}>
+                      <TableCell>{new Date(t.createdAt).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <div>{t.type.replace('_', ' ')}</div>
+                          {!!(t.rosterIds && t.rosterIds.length) && (
+                            <div className="text-xs text-muted-foreground">
+                              {(t.rosterIds || [])
+                                .map(rid => rosterMap.get(Number(rid)) || `Team ${rid}`)
+                                .join(' • ')}
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          {t.type === 'trade'
+                            ? // For trades, show which team got which player with unidirectional arrows
+                              (() => {
+                                // Find the corresponding raw transaction for trade details
+                                const rawTxn = rawTransactions.find(rt => rt.id === t.id);
+                                if (!rawTxn) {
+                                  // Fallback to old logic if raw transaction not found
+                                  const addedPlayers = t.players.filter(p => p.role === 'add');
+                                  return addedPlayers.map(p => (
+                                    <div key={p.playerId} className="text-sm text-muted-foreground">
+                                      {p.name} ({p.position}) • Trade
+                                    </div>
+                                  ));
+                                }
+
+                                // Use raw transaction data to show specific destinations
+                                return (rawTxn.adds || []).flatMap(addGroup =>
+                                  (addGroup.players || []).map(player => {
+                                    const teamName =
+                                      rosterMap.get(Number(addGroup.rosterId)) ||
+                                      `Team ${addGroup.rosterId}`;
+                                    return (
+                                      <div
+                                        key={player.id}
+                                        className="text-sm text-muted-foreground"
+                                      >
+                                        {player.fullName} ({player.position}) → {teamName}
+                                      </div>
+                                    );
+                                  }),
+                                );
+                              })()
+                            : // For non-trades, show traditional format with team context
+                              t.players.map(p => (
+                                <div key={p.playerId} className="text-sm text-muted-foreground">
+                                  {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
+                                </div>
+                              ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2"
+                          onClick={() => setSelected(t)}
+                        >
+                          <Badge>{t.grade}</Badge>
+                        </Button>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {(() => {
+                          const bg = getDivergingBg(t.score / (scoreRange || 1));
+                          const fg = getTextColorForBg(bg);
+                          return (
+                            <span
+                              className="px-2 py-0.5 rounded"
+                              style={{ backgroundColor: bg, color: fg }}
+                            >
+                              {t.score.toFixed(2)}
+                            </span>
+                          );
+                        })()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+          {view === 'paged' && hasMorePages && (
+            <div className="mt-4 flex justify-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(p => p + 1)}
+                disabled={loading || !leagueId}
+              >
+                Load more
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
 
       <Dialog open={!!selected} onOpenChange={open => !open && setSelected(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -1110,13 +1102,7 @@ const LeagueTransactionsContent = () => {
 
 export default function LeagueTransactionsPage() {
   return (
-    <Suspense
-      fallback={
-        <Container className="py-8">
-          <PageHeader title="Loading..." subtitle="Fetching transactions..." />
-        </Container>
-      }
-    >
+    <Suspense fallback={<WarRoomLoader show logo={<GauntletLogo size="lg" />} />}>
       <LeagueTransactionsContent />
     </Suspense>
   );

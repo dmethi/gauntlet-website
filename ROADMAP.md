@@ -775,17 +775,36 @@ phase.
         2026 season data (zero real console errors) in both light and dark mode,
         and the `/team/[id]` not-found/error states (tested via an unmatched
         roster id).
-  - Loaders remaining: `league/transactions/page.tsx:697-712` (two
-    blue/`border-primary` spinners); `matchups/matchups-view.tsx` and
+  - [x] `league/transactions/page.tsx` (2026-07-28) — the two blue
+        `animate-spin`/`border-primary` spinners (facts-loading and
+        grades-computing states) replaced with
+        `<WarRoomLoader show logo={<GauntletLogo size="lg" />} />`, matching
+        `live`/`start-sit`/`team/[id]`. Header was also on the old plain
+        `PageHeader`; ported onto `PageHeaderHero` (accent bar + crest
+        watermark + divider), keeping the existing
+        `${league?.name} -     Transaction feed with grades` text as the
+        `subtitle` (real information, not filler). Outer `Container` wrapper
+        swapped for the `max-w-7xl mx-auto` + inner `px-6 py-8` shell used by
+        other ported pages, and the `Suspense` fallback now also renders
+        `WarRoomLoader` instead of the old `Container`/`PageHeader` pair.
+        Filters, sorting, the transaction table, and the details `Dialog` were
+        untouched — this was loader/chrome only, no data or grading-logic
+        changes. Verified: `pnpm type-check`/`lint`/`test` (910/910) all clean,
+        plus a real Playwright/Chrome pass in both light and dark mode against
+        real 2025 transaction data (`?leagueId=1263744209295245312`, since the
+        default 2026 league has no transactions yet) — loader, header, table,
+        and the transaction-details dialog all render correctly with zero
+        console errors.
+  - Loaders remaining: `matchups/matchups-view.tsx` and
     `matchups/[leagueId]/[week]/[matchupId]/page.tsx:396-406` (plain shadcn
     `<Skeleton>`, at least visually neutral); `year-in-review/_components/`
     (`league-structure.tsx:53-58,384-439`, `proposals-display.tsx:40` —
     hand-rolled `animate-pulse` blocks, lower priority/seasonal page).
   - Navigation: `league/draft/page.tsx:169-174` — same generic shadcn `<Tabs>`
     pattern Stats Hub had, 3 items (less urgent than Stats Hub's 8 was).
-  - Other stock-shadcn pages worth a pass when touched: `league/transactions`,
-    `managers/[ownerId]` (old `PageHeader`, plain `border-border` stat tiles).
-    `team/[id]` + `team/[id]/stats` done above.
+  - Other stock-shadcn pages worth a pass when touched: `managers/[ownerId]`
+    (old `PageHeader`, plain `border-border` stat tiles). `team/[id]` +
+    `team/[id]/stats` and `league/transactions` done above.
 - [ ] Beyond the pages above, Phase 4's existing prioritized order still applies
       for further rollout: `league/overview`,
       `matchups/[leagueId]/[week]/[matchupId]`, `managers/[ownerId]` (already
