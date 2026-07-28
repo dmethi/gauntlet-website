@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/features/matchups/components/MatchupSimulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
@@ -13,6 +12,8 @@ import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/match
 import { ScoreChart, WinProbChart } from '@/components/matchup-charts';
 import { useMatchupTimeSeries } from '@/features/matchups/hooks';
 import { SwingPointsDisplay } from '@/features/matchups/components/SwingPointsDisplay';
+import { WarRoomLoader } from '@gauntlet/ui';
+import { GauntletLogo } from '@/components/gauntlet-logo';
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'FLEX', 'K', 'DEF'];
 
@@ -394,19 +395,7 @@ export default function MatchupDetailPage(): JSX.Element {
 }
 
 const LoadingSkeleton = () => {
-  return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <Skeleton className="h-10 w-32" />
-        <Skeleton className="h-24 w-full" />
-        <Skeleton className="h-32 w-full" />
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <Skeleton className="h-96 w-full" />
-          <Skeleton className="h-96 w-full" />
-        </div>
-      </div>
-    </div>
-  );
+  return <WarRoomLoader show logo={<GauntletLogo size="lg" />} />;
 };
 
 const TeamScore = ({ team, isLeading }: { team: TeamRoster; isLeading: boolean }) => {

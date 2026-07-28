@@ -795,9 +795,28 @@ phase.
         default 2026 league has no transactions yet) — loader, header, table,
         and the transaction-details dialog all render correctly with zero
         console errors.
-  - Loaders remaining: `matchups/matchups-view.tsx` and
-    `matchups/[leagueId]/[week]/[matchupId]/page.tsx:396-406` (plain shadcn
-    `<Skeleton>`, at least visually neutral); `year-in-review/_components/`
+  - [x] `matchups/matchups-view.tsx` and
+        `matchups/[leagueId]/[week]/[matchupId]/page.tsx` (2026-07-28) — the
+        plain shadcn `<Skeleton>` loaders (init-load, per-week-fetch, and the
+        outer `Suspense` fallback in `matchups-view.tsx`; the full-page
+        `LoadingSkeleton` in the matchup-detail page) all replaced with
+        `<WarRoomLoader show logo={<GauntletLogo size="lg" />} />`, matching
+        `live`/`start-sit`/`team/[id]`/`league/transactions`. Checked both
+        files' headers against the old plain `PageHeader` condition that drove
+        the `team/[id]`/`league/transactions` header ports — neither file
+        imports `PageHeader` (both use bespoke hand-rolled `<h1>`/`Card` headers
+        instead), so that specific trigger didn't apply here and headers were
+        deliberately left untouched — audit-only, loader/chrome scope, no header
+        redesign invented beyond what was flagged. No data or logic changes.
+        `matchups-view.tsx` is shared by the live `/matchups?preview=2025` route
+        and the frozen `/archive/2025/matchups` page, so both were checked, not
+        just one. Verified: `pnpm type-check`/`lint`/`test` (910/910) all clean,
+        plus a real Playwright/Chrome pass in both light and dark mode against
+        real 2025 data on `/matchups?preview=2025` (including a week change to
+        exercise the per-fetch loader) and `/archive/2025/matchups`, plus the
+        matchup-detail page (`/matchups/1263744209295245312/3/1`) — zero console
+        errors on any of them.
+  - Loaders remaining: `year-in-review/_components/`
     (`league-structure.tsx:53-58,384-439`, `proposals-display.tsx:40` —
     hand-rolled `animate-pulse` blocks, lower priority/seasonal page).
   - Navigation: `league/draft/page.tsx:169-174` — same generic shadcn `<Tabs>`

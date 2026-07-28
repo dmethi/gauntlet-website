@@ -12,13 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Clock, Swords, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { MatchupOddsPreview } from '@/features/matchups';
 import { LeagueWideOdds } from '@/components/league-wide-odds';
 import type { LeagueMatchups, MatchupData, MatchupTeam } from '@/features/matchups/types';
 import { debugLog } from '@/lib/debug-log';
+import { WarRoomLoader } from '@gauntlet/ui';
+import { GauntletLogo } from '@/components/gauntlet-logo';
 
 export interface MatchupsLeague {
   id: string;
@@ -219,30 +220,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
 
   // Show loading during initialization to prevent flash of wrong data
   if (isInitializing || selectedWeek === 0) {
-    return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-3xl font-bold font-geizer tracking-wide text-foreground">
-                  Matchups
-                </h1>
-                <p className="text-muted-foreground mt-2 font-avenir">
-                  Loading current NFL week...
-                </p>
-              </div>
-              <Skeleton className="h-10 w-32" />
-            </div>
-          </div>
-          <div className="grid gap-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-32 w-full" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <WarRoomLoader show logo={<GauntletLogo size="lg" />} />;
   }
 
   if (error) {
@@ -310,25 +288,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
         <LeagueWideOdds week={selectedWeek} className="mb-8" />
 
         {/* Loading State */}
-        {loading && (
-          <div className="space-y-8">
-            {filteredLeagues.map(league => (
-              <Card key={league.id}>
-                <CardHeader>
-                  <Skeleton className="h-7 w-48" />
-                  <Skeleton className="h-4 w-32" />
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {[1, 2, 3, 4, 5, 6].map(i => (
-                      <Skeleton key={i} className="h-32 w-full" />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        {loading && <WarRoomLoader show logo={<GauntletLogo size="lg" />} />}
 
         {/* Matchups by League */}
         {!loading &&
@@ -491,20 +451,7 @@ const TeamRow = ({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) 
 };
 
 export const MatchupsView = ({ leagues }: { leagues: MatchupsLeague[] }): JSX.Element => (
-  <Suspense
-    fallback={
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <Skeleton className="h-12 w-64" />
-          <Skeleton className="h-32 w-full" />
-          <div className="space-y-8">
-            <Skeleton className="h-96 w-full" />
-            <Skeleton className="h-96 w-full" />
-          </div>
-        </div>
-      </div>
-    }
-  >
+  <Suspense fallback={<WarRoomLoader show logo={<GauntletLogo size="lg" />} />}>
     <MatchupsViewContent leagues={leagues} />
   </Suspense>
 );
