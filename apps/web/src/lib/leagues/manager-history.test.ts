@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getManagerHistory, type SleeperHistoryClient } from './manager-history';
+import { getManagerHistory, listManagers, type SleeperHistoryClient } from './manager-history';
 
 vi.mock('@/config/leagues', () => ({
   getCurrentLeagues: () => [],
@@ -161,5 +161,101 @@ describe('getManagerHistory', () => {
 
     expect(result!.seasons[0]!.wins).toBe(14);
     expect(fetchMatchups).not.toHaveBeenCalledWith('league_2025_afc', 15);
+  });
+
+  it('resolves avatarUrl, preferring roster (team) avatar over owner avatar', async () => {
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [
+            {
+              roster_id: 1,
+              owner_id: OWNER_ID,
+              owner: { display_name: 'Manager', avatar: 'user_avatar_hash' },
+              metadata: { avatar: 'team_avatar_hash' },
+            },
+          ];
+        }
+        return [];
+      }),
+    });
+
+    const result = await getManagerHistory(OWNER_ID, client, 0);
+
+    expect(result!.avatarUrl).toBe('https://sleepercdn.com/avatars/team_avatar_hash');
+  });
+
+  it('falls back to owner avatar, passed through unmodified if already a full URL', async () => {
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [
+            {
+              roster_id: 1,
+              owner_id: OWNER_ID,
+              owner: { display_name: 'Manager', avatar: 'https://example.com/avatar.png' },
+            },
+          ];
+        }
+        return [];
+      }),
+    });
+
+    const result = await getManagerHistory(OWNER_ID, client, 0);
+
+    expect(result!.avatarUrl).toBe('https://example.com/avatar.png');
+  });
+});
+
+describe('listManagers', () => {
+  it('returns one summary per distinct owner_id, deduped across leagues/seasons', async () => {
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [
+            { roster_id: 1, owner_id: 'owner_a', owner: { display_name: 'Alice' } },
+            { roster_id: 2, owner_id: 'owner_b', owner: { display_name: 'Bob' } },
+          ];
+        }
+        if (leagueId === 'league_2025_nfc') {
+          return [{ roster_id: 3, owner_id: 'owner_a', owner: { display_name: 'Alice' } }];
+        }
+        if (leagueId === 'league_2024_afc') {
+          return [{ roster_id: 1, owner_id: 'owner_a', owner: { display_name: 'Old Alice' } }];
+        }
+        return [];
+      }),
+    });
+
+    const result = await listManagers(client);
+
+    expect(result).toHaveLength(2);
+    const alice = result.find(m => m.ownerId === 'owner_a');
+    expect(alice).toEqual({
+      ownerId: 'owner_a',
+      displayName: 'Alice',
+      avatarUrl: null,
+      seasonsPlayed: 3,
+      firstSeason: '2024',
+      lastSeason: '2025',
+    });
+  });
+
+  it('sorts managers alphabetically by display name', async () => {
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [
+            { roster_id: 1, owner_id: 'owner_z', owner: { display_name: 'Zeke' } },
+            { roster_id: 2, owner_id: 'owner_a', owner: { display_name: 'Amy' } },
+          ];
+        }
+        return [];
+      }),
+    });
+
+    const result = await listManagers(client);
+
+    expect(result.map(m => m.displayName)).toEqual(['Amy', 'Zeke']);
   });
 });

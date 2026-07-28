@@ -13,6 +13,7 @@ const mockGetManagerHistory = vi.mocked(getManagerHistory);
 const HISTORY: ManagerHistory = {
   ownerId: 'owner_42',
   displayName: 'The Commish',
+  avatarUrl: null,
   seasons: [
     {
       season: '2025',
@@ -81,5 +82,64 @@ describe('ManagerProfilePage', () => {
     render(jsx);
 
     expect(screen.getByText('Manager not found')).toBeInTheDocument();
+  });
+
+  it('renders best/worst season highlights and excludes unplayed (0-0) seasons from ranking', async () => {
+    const historyWithUnplayedSeason: ManagerHistory = {
+      ...HISTORY,
+      seasons: [
+        {
+          season: '2026',
+          leagueId: 'league_2026_legion',
+          leagueLabel: 'Legion I: The Throne',
+          rosterId: 1,
+          wins: 0,
+          losses: 0,
+          ties: 0,
+          pointsFor: 0,
+          pointsAgainst: 0,
+          teamName: null,
+        },
+        ...HISTORY.seasons,
+      ],
+    };
+    mockGetManagerHistory.mockResolvedValue(historyWithUnplayedSeason);
+
+    const jsx = await ManagerProfilePage({ params: { ownerId: 'owner_42' } });
+    render(jsx);
+
+    expect(screen.getByText('Best Season')).toBeInTheDocument();
+    expect(screen.getByText('Toughest Season')).toBeInTheDocument();
+    // The unplayed 2026 season must never be marked best or worst.
+    const badges = screen.getAllByText(/Best season|Toughest season/);
+    expect(badges).toHaveLength(2);
+  });
+
+  it('shows no best/worst highlight when only one season has been played', async () => {
+    const singlePlayedSeason: ManagerHistory = {
+      ...HISTORY,
+      seasons: [
+        {
+          season: '2026',
+          leagueId: 'league_2026_legion',
+          leagueLabel: 'Legion I: The Throne',
+          rosterId: 1,
+          wins: 0,
+          losses: 0,
+          ties: 0,
+          pointsFor: 0,
+          pointsAgainst: 0,
+          teamName: null,
+        },
+        HISTORY.seasons[0]!,
+      ],
+    };
+    mockGetManagerHistory.mockResolvedValue(singlePlayedSeason);
+
+    const jsx = await ManagerProfilePage({ params: { ownerId: 'owner_42' } });
+    render(jsx);
+
+    expect(screen.queryByText('Best Season')).not.toBeInTheDocument();
+    expect(screen.queryByText('Toughest Season')).not.toBeInTheDocument();
   });
 });

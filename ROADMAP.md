@@ -350,18 +350,41 @@ Builds on Phase 1's registry.
       is un-archived/rebuilt on the registry, per the existing Phase 3
       audit-script item above. `pnpm test` (903/903, up from 899), `type-check`,
       and `lint` all pass.
-- [ ] Design pass on `app/managers/[ownerId]/page.tsx` — it currently renders
-      with generic card/table markup (plain `border-border`/`bg-card` boxes, a
-      bare `<table>` for season history), no visual distinction between
-      seasons/leagues, and no per-league branding (AFC vs. NFC colors, league
-      logos). Candidate improvements: a proper header/hero treating the manager
-      like a real profile (avatar, tenure, standout stat), a season-by-season
-      view that reads as a timeline/history rather than a spreadsheet row,
-      visual highlighting of best/worst seasons, and a browse/index entry point
-      (see the deferred gap noted above) so the page is discoverable outside the
-      team-page deep link. Should be sequenced with — or folded into — Phase
-      4/5's page-by-page redesign pass rather than done in isolation, since it
-      needs the same font/token/palette decisions Phase 5 is meant to settle.
+- [x] Design pass on `app/managers/[ownerId]/page.tsx` (2026-07-28) — content
+      redesign on top of the earlier `PageHeaderHero` chrome-only pass. (1)
+      Header: added an avatar (real Sleeper avatar URL if present, initials
+      fallback), tenure (`N seasons · firstYear–lastYear`) as the subtitle, and
+      two highlight tiles ("Best Season" / "Toughest Season") computed from
+      `history.seasons` — success/destructive semantic tokens, not raw colors.
+      (2) Season-by-season table replaced with a vertical timeline: connecting
+      line + per-season dot, a league badge via `stat-colors.ts`'s
+      `leagueBadgeClass`, and a point-differential figure via `deltaTextClass`.
+      Best/worst season rows get a colored border + "Best season"/"Toughest
+      season" pill. (3) New `/managers` browse index (`app/managers/page.tsx`)
+      listing every distinct `owner_id` across the league registry — added
+      `listManagers()` to `manager-history.ts` (additive only, doesn't touch the
+      existing tested `getManagerHistory`/`computeSeasonRecord` logic), walking
+      rosters only (no per-week matchup fetches) so it stays cheap. Added a
+      "Managers" entry to the global nav (`client-layout.tsx`). **Real bug
+      caught via live data, not just type-check**: the initial best/worst
+      ranking used _all_ seasons, so an in-progress 2026 season sitting at 0-0
+      (no games played yet) got marked "Toughest Season" purely because 0% win
+      rate beat a played season's 50%. Fixed by ranking only seasons with
+      `wins + losses + ties > 0`; a 2+ season manager with only one played
+      season now shows no best/worst tiles at all (regression test added).
+      **Hall of Fame/archive scoping decision**: this page does _not_ link into
+      `hall-of-fame-enhanced`'s badge system — that page is still on a stub
+      (`SeasonPlaceholder`) per the Phase 3 audit above, so wiring to it would
+      mean inventing data. Instead, "best/worst season" is derived entirely from
+      `ManagerHistory` (already fetched, no new dependency) — revisit linking
+      real Hall of Fame badges once that page is un-archived. No separate
+      archive/drill-down view was built: season-count-per-manager is small (≤4
+      today), so the single timeline view covers "recent" and "historical"
+      without needing to split them. Verified with
+      `pnpm type-check`/`lint`/`test` (new tests for `listManagers`, avatar
+      resolution, and the unplayed-season ranking bug) plus a live Chrome pass
+      against real Sleeper data in both light and dark mode (`/managers` index
+      and a 4-season real manager profile), zero console errors.
 - [ ] Re-run `apps/web/src/scripts/audit-hall-of-fame.ts` against real
       multi-league data before season launch to catch data-completeness gaps.
 
