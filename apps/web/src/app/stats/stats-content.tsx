@@ -151,7 +151,7 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
   };
 
   return (
-    <div className="md:grid md:grid-cols-[200px_1fr] md:gap-6">
+    <div className="md:grid md:grid-cols-[200px_minmax(0,1fr)] md:gap-6">
       {/* Below md: horizontal scrollable strip, never a squeezed sidebar.
           At md+: persistent vertical rail, icon+label, left-border active state.
           Validated live against real 2025 data in /playground/stats before porting. */}
@@ -171,7 +171,7 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
           </button>
         ))}
       </nav>
-      <div>{renderView()}</div>
+      <div className="min-w-0">{renderView()}</div>
     </div>
   );
 };

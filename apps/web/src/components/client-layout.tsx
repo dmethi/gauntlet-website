@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { AppNav, type NavItem } from '@gauntlet/ui';
@@ -18,8 +19,17 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
-  const isDark = theme === 'dark';
+  const { resolvedTheme, setTheme } = useTheme();
+
+  // `useTheme()` reads localStorage/system preference synchronously on the
+  // client's very first render (for no-flash correctness), so it can already
+  // disagree with the server's render before hydration even starts. Gating on
+  // `mounted` keeps the first client paint identical to the server (both
+  // render the light/moon icon) and only swaps to the real theme after
+  // hydration completes, avoiding a hydration-mismatch on the toggle icon.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === 'dark';
 
   // Full-bleed prototype/standalone pages render their own chrome — skip the real shell.
   const bypassesShell =

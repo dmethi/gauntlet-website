@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { WarRoomLoader } from '@gauntlet/ui';
+import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 import { StatsContent } from '@/app/stats/stats-content';
 import { type PlainStatsDataset } from '@/shared/utils/stats';
@@ -126,17 +126,16 @@ const StatsSeasonViewContent = ({ season, searchParams }: StatsSeasonViewProps) 
   }, [season]);
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto max-w-7xl mx-auto">
       <WarRoomLoader show={isLoading} logo={<GauntletLogo size="lg" />} />
 
-      <div className="container mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Stats Hub</h1>
-          <p className="text-muted-foreground mt-2">
-            Individual team analysis and weekly performance breakdowns
-          </p>
-        </div>
+      <PageHeaderHero
+        title="Stats Hub"
+        subtitle="Individual team analysis and weekly performance breakdowns"
+        crestSrc="/gauntlet_logo.svg"
+      />
 
+      <div className="px-6 py-8">
         {error && (
           <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6">
             <div className="flex items-center gap-2">
