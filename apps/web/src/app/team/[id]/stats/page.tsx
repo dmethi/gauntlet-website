@@ -4,66 +4,38 @@ import Link from 'next/link';
 import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
 import { useTeamData } from '@/lib/hooks';
 import type { Roster } from '@/shared/types';
-import ContentLoader from 'react-content-loader';
-import { Container, PageHeader } from '@gauntlet/ui';
+import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { Button } from '@/components/ui/button';
-
-const TeamStatsPageLoader = () => (
-  <ContentLoader
-    speed={2}
-    width={1200}
-    height={1000}
-    viewBox="0 0 1200 1000"
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-  >
-    {/* Title and Subtitle */}
-    <rect x="16" y="32" rx="3" ry="3" width="400" height="36" />
-    <rect x="16" y="72" rx="3" ry="3" width="300" height="20" />
-
-    {/* Stat Cards */}
-    <rect x="16" y="128" rx="8" ry="8" width="280" height="100" />
-    <rect x="312" y="128" rx="8" ry="8" width="280" height="100" />
-    <rect x="608" y="128" rx="8" ry="8" width="280" height="100" />
-
-    {/* Weekly Performance Chart */}
-    <rect x="16" y="260" rx="3" ry="3" width="300" height="28" />
-    <rect x="16" y="300" rx="8" ry="8" width="1168" height="200" />
-
-    {/* Expected vs Actual Chart */}
-    <rect x="16" y="540" rx="3" ry="3" width="400" height="28" />
-    <rect x="16" y="580" rx="8" ry="8" width="1168" height="200" />
-
-    {/* Matchups Table */}
-    <rect x="16" y="820" rx="3" ry="3" width="250" height="28" />
-    <rect x="16" y="860" rx="8" ry="8" width="1168" height="120" />
-  </ContentLoader>
-);
+import { GauntletLogo } from '@/components/gauntlet-logo';
 
 export default function TeamStatsPage({ params }: { params: { id: string } }) {
   const { team, loading, error } = useTeamData(params.id);
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <TeamStatsPageLoader />
-      </div>
-    );
+    return <WarRoomLoader show logo={<GauntletLogo size="lg" />} />;
   }
 
   if (error) {
     return (
-      <Container className="py-8">
-        <PageHeader title="Team not found" subtitle="Failed to load team data" />
-      </Container>
+      <div className="max-w-7xl mx-auto">
+        <PageHeaderHero
+          title="Team not found"
+          subtitle="Failed to load team data"
+          crestSrc="/gauntlet_logo.svg"
+        />
+      </div>
     );
   }
 
   if (!team) {
     return (
-      <Container className="py-8">
-        <PageHeader title="Team not found" subtitle="No team data available" />
-      </Container>
+      <div className="max-w-7xl mx-auto">
+        <PageHeaderHero
+          title="Team not found"
+          subtitle="No team data available"
+          crestSrc="/gauntlet_logo.svg"
+        />
+      </div>
     );
   }
 
@@ -148,57 +120,56 @@ export default function TeamStatsPage({ params }: { params: { id: string } }) {
   const initials = getInitials(name);
 
   return (
-    <Container className="py-8">
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold">
+    <div className="max-w-7xl mx-auto">
+      <PageHeaderHero
+        title={`${name} • Stats`}
+        subtitle={`League: ${team.league?.name} • ${ownersText}`}
+        crestSrc="/gauntlet_logo.svg"
+        avatar={
+          <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold flex-shrink-0">
             {avatarUrl ? (
               <img src={avatarUrl} alt={`${name} avatar`} className="h-full w-full object-cover" />
             ) : (
               <span>{initials}</span>
             )}
           </div>
-          <div>
-            <PageHeader
-              title={`${name} • Stats`}
-              subtitle={`League: ${team.league?.name} • ${ownersText}`}
-            />
-          </div>
-        </div>
-        <div className="pt-2">
+        }
+        actions={
           <Link href={`/team/${team.id}`}>
             <Button variant="secondary" size="sm">
               Back to Team
             </Button>
           </Link>
-        </div>
-      </div>
+        }
+      />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-md border border-border bg-card p-4">
-          <h3 className="text-sm font-medium text-muted-foreground">Total Points</h3>
-          <p className="text-3xl font-bold">{totalPoints.toFixed(2)}</p>
-          <p className="text-xs text-muted-foreground">Avg: {averagePoints.toFixed(2)}</p>
+      <div className="px-6 py-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-md border border-border bg-card p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Total Points</h3>
+            <p className="text-3xl font-bold">{totalPoints.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">Avg: {averagePoints.toFixed(2)}</p>
+          </div>
+          <div className="rounded-md border border-border bg-card p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Expected Wins</h3>
+            <p className="text-3xl font-bold">{totalExpectedWins.toFixed(1)}</p>
+          </div>
+          <div className="rounded-md border border-border bg-card p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Luck Rating</h3>
+            <p className="text-3xl font-bold">{totalLuckRating.toFixed(2)}</p>
+          </div>
         </div>
-        <div className="rounded-md border border-border bg-card p-4">
-          <h3 className="text-sm font-medium text-muted-foreground">Expected Wins</h3>
-          <p className="text-3xl font-bold">{totalExpectedWins.toFixed(1)}</p>
-        </div>
-        <div className="rounded-md border border-border bg-card p-4">
-          <h3 className="text-sm font-medium text-muted-foreground">Luck Rating</h3>
-          <p className="text-3xl font-bold">{totalLuckRating.toFixed(2)}</p>
-        </div>
-      </div>
 
-      <div className="mt-8">
-        <h2 className="mb-4 text-2xl font-bold">Weekly Performance</h2>
-        <TeamPerformanceChart weeklyData={weeklyData} />
-      </div>
+        <div className="mt-8">
+          <h2 className="mb-4 text-2xl font-bold">Weekly Performance</h2>
+          <TeamPerformanceChart weeklyData={weeklyData} />
+        </div>
 
-      <div className="mt-8">
-        <h2 className="mb-4 text-2xl font-bold">Expected vs Actual Performance</h2>
-        <TeamExpectedPerformanceChart weeklyData={weeklyData} />
+        <div className="mt-8">
+          <h2 className="mb-4 text-2xl font-bold">Expected vs Actual Performance</h2>
+          <TeamExpectedPerformanceChart weeklyData={weeklyData} />
+        </div>
       </div>
-    </Container>
+    </div>
   );
 }

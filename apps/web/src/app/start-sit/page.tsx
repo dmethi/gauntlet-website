@@ -3,25 +3,20 @@
 import { useEffect, useState } from 'react';
 import { StartSitEfficiency } from '@/features/start-sit/components/StartSitEfficiency';
 import { Card, CardContent } from '@/components/ui/card';
+import { GauntletLogo } from '@/components/gauntlet-logo';
+import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import type { StartSitData } from '@/features/start-sit/types';
-
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center space-x-2">
-    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-    <span>Analyzing start/sit decisions...</span>
-  </div>
-);
 
 const ErrorMessage = ({ error, onRetry }: { error: string; onRetry: () => void }) => (
   <Card className="max-w-2xl mx-auto mt-8">
     <CardContent className="pt-6 text-center">
-      <div className="text-red-600 mb-4">
+      <div className="text-destructive mb-4">
         <h3 className="text-lg font-semibold">Analysis Failed</h3>
         <p className="text-sm mt-2">{error}</p>
       </div>
       <button
         onClick={onRetry}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+        className="bg-primary text-primary-foreground px-4 py-2 rounded hover:opacity-90 transition-opacity"
       >
         Retry Analysis
       </button>
@@ -30,35 +25,16 @@ const ErrorMessage = ({ error, onRetry }: { error: string; onRetry: () => void }
 );
 
 const LoadingScreen = () => (
-  <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-    <div className="max-w-md text-center space-y-6">
-      <div className="text-3xl font-bold text-gray-900">Start/Sit Efficiency</div>
+  <div className="max-w-7xl mx-auto">
+    <PageHeaderHero title="Start/Sit Efficiency" crestSrc="/gauntlet_logo.svg" />
+    <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
 
-      <Card className="p-6">
-        <CardContent className="space-y-4">
-          <LoadingSpinner />
-
-          <div className="text-sm text-gray-600 space-y-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-              <span>Fetching roster and matchup data...</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse animation-delay-200"></div>
-              <span>Calculating projections vs actual performance...</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse animation-delay-400"></div>
-              <span>Analyzing alternative player options...</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse animation-delay-600"></div>
-              <span>Computing weighted efficiency scores...</span>
-            </div>
-          </div>
-
-          <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded">
-            <strong>What we're analyzing:</strong>
+    <div className="px-6 py-8 max-w-md mx-auto text-center space-y-6">
+      <Card>
+        <CardContent className="pt-6 space-y-4 text-sm text-muted-foreground">
+          <p>Analyzing start/sit decisions...</p>
+          <div className="text-xs bg-muted/40 p-3 rounded text-left">
+            <strong className="text-foreground">What we&apos;re analyzing:</strong>
             <br />
             • Your start/sit decisions across all positions
             <br />
@@ -70,7 +46,7 @@ const LoadingScreen = () => (
         </CardContent>
       </Card>
 
-      <p className="text-sm text-gray-500">This usually takes 15-30 seconds...</p>
+      <p className="text-sm text-muted-foreground">This usually takes 15-30 seconds...</p>
     </div>
   </div>
 );
@@ -142,7 +118,7 @@ export default function StartSitPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <ErrorMessage error={error} onRetry={fetchData} />
       </div>
     );
@@ -150,13 +126,13 @@ export default function StartSitPage() {
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">No Data Available</h2>
-          <p className="text-gray-600 mt-2">Unable to load start/sit efficiency data</p>
+          <h2 className="text-xl font-semibold">No Data Available</h2>
+          <p className="text-muted-foreground mt-2">Unable to load start/sit efficiency data</p>
           <button
             onClick={fetchData}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+            className="mt-4 bg-primary text-primary-foreground px-4 py-2 rounded hover:opacity-90 transition-opacity"
           >
             Try Again
           </button>
@@ -166,11 +142,11 @@ export default function StartSitPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="fixed top-4 right-4 z-50">
         <button
           onClick={forceRefresh}
-          className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition-colors shadow-lg"
+          className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm hover:opacity-90 transition-opacity shadow-lg"
           disabled={loading}
         >
           {loading ? '⟳' : '↻'} Refresh

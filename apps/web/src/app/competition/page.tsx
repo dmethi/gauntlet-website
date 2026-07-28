@@ -1,16 +1,7 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Container, PageHeader } from '@gauntlet/ui';
+import { LegionStandingsCard, PageHeaderHero } from '@gauntlet/ui';
 import { getCurrentLeagues } from '@/config/leagues';
 import { getLeagueById, getRostersByLeague } from '@/lib/api-replacements';
 import { ChevronRight } from 'lucide-react';
@@ -129,100 +120,72 @@ export default async function CompetitionPage() {
   );
 
   return (
-    <Container className="py-8">
-      <PageHeader
-        title="The Gauntlet Competition"
-        subtitle="Two leagues, one ultimate championship"
-      />
+    <div className="max-w-7xl mx-auto">
+      <PageHeaderHero title="Competition" crestSrc="/gauntlet_logo.svg" />
 
-      {standings.length === 0 ? (
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <p className="text-muted-foreground">
-              No leagues are live yet for the current season. Check out the{' '}
-              <Link href="/archive/2025/competition" className="text-primary hover:underline">
-                2025 archive
-              </Link>{' '}
-              in the meantime.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="mb-8 grid gap-6 lg:grid-cols-2">
-          {standings.map(league => (
-            <Card key={league.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {league.logo && (
-                      <img src={league.logo} alt="" width={28} height={28} className="shrink-0" />
-                    )}
-                    <CardTitle>{league.name}</CardTitle>
-                  </div>
-                  {league.conference && <Badge variant="outline">{league.conference}</Badge>}
-                </div>
-                <CardDescription>Season {league.season} standings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto rounded-md border border-border bg-card">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[60px]">Rank</TableHead>
-                        <TableHead>Team</TableHead>
-                        <TableHead>Record</TableHead>
-                        <TableHead>Points</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {league.rows.map((row, index) => (
-                        <TableRow key={row.rosterId}>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell className="font-medium">{row.name}</TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">
-                              {row.wins}-{row.losses}
-                              {row.ties ? `-${row.ties}` : ''}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{row.pointsFor.toFixed(2)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-                <div className="mt-4">
-                  <Button asChild variant="outline" size="sm">
-                    <Link href={`/league/overview?leagueId=${league.id}`}>
-                      Full standings
-                      <ChevronRight className="h-3 w-3 ml-1" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <div className="py-8 space-y-10">
+        {standings.length === 0 ? (
+          <Card>
+            <CardContent className="pt-6 text-center">
+              <p className="text-muted-foreground">
+                No leagues are live yet for the current season. Check out the{' '}
+                <Link href="/archive/2025/competition" className="text-primary hover:underline">
+                  2025 archive
+                </Link>{' '}
+                in the meantime.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {standings.map(league => (
+              <LegionStandingsCard
+                key={league.id}
+                title={league.name}
+                icon={
+                  league.logo ? (
+                    <img src={league.logo} alt="" width={20} height={20} className="shrink-0" />
+                  ) : undefined
+                }
+                badge={
+                  league.conference ? (
+                    <Badge variant="outline" className="text-[10px]">
+                      {league.conference}
+                    </Badge>
+                  ) : undefined
+                }
+                caption={`Season ${league.season} Standings`}
+                rows={league.rows.map((row, index) => ({
+                  rank: index + 1,
+                  team: row.name,
+                  record: `${row.wins}-${row.losses}${row.ties ? `-${row.ties}` : ''}`,
+                  points: row.pointsFor,
+                }))}
+                footer={{ href: `/league/overview?leagueId=${league.id}`, label: 'Full standings' }}
+              />
+            ))}
+          </div>
+        )}
 
-      <div>
-        <h2 className="mb-4 text-2xl font-bold">Explore</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {EXPLORE_LINKS.map(link => (
-            <Link key={link.href} href={link.href}>
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between text-base">
-                    {link.label}
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </CardTitle>
-                  <CardDescription>{link.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
+        <div>
+          <h2 className="mb-4 text-2xl font-bold">Explore</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {EXPLORE_LINKS.map(link => (
+              <Link key={link.href} href={link.href}>
+                <Card className="h-full hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between text-base">
+                      {link.label}
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </CardTitle>
+                    <CardDescription>{link.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 }

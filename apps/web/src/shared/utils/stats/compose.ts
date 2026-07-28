@@ -206,26 +206,53 @@ export const buildStatsDataset = async ({
 
   const rosterLeagueMap = buildRosterLeagueMap(leaguesData, rostersMap);
 
-  // 5. Fetch matchups for all weeks in range - keep leagues separated
-  const allMatchups = new Map<number, Map<string, SleeperMatchup[]>>();
+  // Real season/season_type for these leagues, straight from Sleeper's own
+  // league object (already fetched above) — not hardcoded, so weekly player
+  // stats stay correct no matter which season's leagueIds were passed in.
+  const statsSeason = leaguesData[0]?.league?.season;
+  const statsSeasonType = leaguesData[0]?.league?.season_type;
 
+  // 5. Fetch matchups for all weeks in range - keep leagues separated.
+  // Fired as one Promise.all across every (week, league) pair rather than
+  // two nested sequential loops — was 34 round trips awaited one at a time.
+  const weeks: number[] = [];
   for (let week = actualRange.from; week <= actualRange.to; week++) {
-    const weekLeagueMatchups = new Map<string, SleeperMatchup[]>();
-
-    for (let i = 0; i < leagueIds.length; i++) {
-      const leagueId = leagueIds[i];
-      const matchups = await statsClient.fetchMatchups(leagueId, week);
-      weekLeagueMatchups.set(leagueId, matchups);
-    }
-
-    allMatchups.set(week, weekLeagueMatchups);
+    weeks.push(week);
   }
 
-  // 5.5. Fetch weekly player stats for player breakdowns
-  const weeklyPlayerStatsMap = new Map<number, Record<string, any>>();
+  const [matchupResults, weeklyPlayerStatsResults] = await Promise.all([
+    Promise.all(
+      weeks.flatMap(week =>
+        leagueIds.map(async leagueId => ({
+          week,
+          leagueId,
+          matchups: await statsClient.fetchMatchups(leagueId, week),
+        })),
+      ),
+    ),
+    // 5.5. Fetch weekly player stats for player breakdowns — same fix, was
+    // 17 sequential round trips. Must pass the real season/seasonType
+    // through explicitly: fetchWeeklyPlayerStats defaults to season '2025',
+    // which would silently mismatch once these leagueIds are ever a
+    // different season.
+    Promise.all(
+      weeks.map(async week => ({
+        week,
+        playerStats: await statsClient.fetchWeeklyPlayerStats(week, statsSeason, statsSeasonType),
+      })),
+    ),
+  ]);
 
-  for (let week = actualRange.from; week <= actualRange.to; week++) {
-    const playerStats = await statsClient.fetchWeeklyPlayerStats(week);
+  const allMatchups = new Map<number, Map<string, SleeperMatchup[]>>();
+  for (const week of weeks) {
+    allMatchups.set(week, new Map());
+  }
+  for (const { week, leagueId, matchups } of matchupResults) {
+    allMatchups.get(week)!.set(leagueId, matchups);
+  }
+
+  const weeklyPlayerStatsMap = new Map<number, Record<string, any>>();
+  for (const { week, playerStats } of weeklyPlayerStatsResults) {
     weeklyPlayerStatsMap.set(week, playerStats);
   }
 

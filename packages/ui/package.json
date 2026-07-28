@@ -11,6 +11,9 @@
   ],
   "peerDependencies": {
     "@gauntlet/tokens": "workspace:*",
+    "framer-motion": ">=11",
+    "lucide-react": ">=0.3",
+    "next": ">=14",
     "react": ">=18",
     "react-dom": ">=18",
     "tailwindcss": ">=3"
@@ -32,7 +35,7 @@
     "@vitest/coverage-v8": "^3.2.4"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup",
     "clean": "rimraf dist",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

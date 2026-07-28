@@ -7,6 +7,16 @@ context between sessions, and `docs/AGENTS.md` for hard constraints (especially:
 leagues must be processed separately until the presentation layer — Phase 1/2
 below exist because that constraint is currently violated).
 
+## Cross-cutting website audit
+
+- [ ] Website Specification audit — run `https://specification.website/` and its
+      checklist against the Gauntlet web app/public routes. Cover foundations,
+      SEO, accessibility, security headers, well-known URIs, agent readiness
+      (`/llms.txt` where appropriate), performance, privacy, resilience/error
+      pages, and internationalisation assumptions. Record findings as separate
+      scoped follow-ups so the audit does not get mixed into the active
+      league-registry/season-readiness work.
+
 ## Phase 0 — Season readiness findings (context, not actionable)
 
 Findings from the pre-season audit (2026-07-23) that motivate everything below:
@@ -544,6 +554,26 @@ Driven by Phase 4's prioritized list.
 - [ ] Performance: root-cause the slow-loading pages Phase 4 flags (waterfalled
       fetches, missing caching/memoization, oversized payloads — diagnosed per
       page, not assumed).
+  - [x] Stats Hub (`shared/utils/stats/compose.ts`'s `buildStatsDataset`,
+        2026-07-27): found while using the new `?preview=2025` mode — two nested
+        sequential loops fetched matchups (17 weeks × 2 leagues = 34 round
+        trips) and weekly player stats (17 more) one `await` at a time, same
+        anti-pattern as the already-fixed start-sit case. Flattened both into a
+        single `Promise.all` across all (week, league) pairs. Confirmed the
+        underlying Sleeper client has no rate-limit delay for this config
+        (`rateLimit: 0`), so parallelizing is safe. `/api/stats?season=2025`:
+        ~3.1s → ~0.45-0.5s warm (~1.07s cold). Verified identical output (same
+        team totals/ranks) and all 151 `shared/utils/stats` vitest tests still
+        pass.
+  - [x] Fixed the `fetchWeeklyPlayerStats` season-mismatch bug noted above
+        (2026-07-27): `compose.ts` now derives the real `season`/`season_type`
+        from the already-fetched `SleeperLeague` object
+        (`leaguesData[0].league.season`/`.season_type` — real Sleeper data, not
+        a guess) and passes it through explicitly, instead of relying on
+        `fetchWeeklyPlayerStats`'s `'2025'` default. No call-site changes needed
+        (only 3 callers, none pass season explicitly today). Re-verified after
+        this change: same ~0.43-0.5s warm latency, identical output, all 151
+        `shared/utils/stats` tests pass.
 - [ ] Tech debt: clean up per-page issues Phase 4 flags as pages are touched.
   - [x] Consolidated the duplicate matchup-detail routes and duplicate reports
         routes (Phase 4 prioritized-list item 4, 2026-07-27). Deleted
@@ -598,33 +628,171 @@ phase.
       the mark, each individually counter-rotated so they stay upright instead
       of tumbling. Also validated: icon+label tabs on a top nav are not an
       antipattern, added back per user request after initially dropping them.
-- [ ] Extract the settled pieces into real shared components in `packages/ui`:
-      desktop top nav, mobile drawer nav, compact theme toggle (must be globally
-      accessible, not buried in a menu), page header (accent bar + crest
-      watermark + divider), legion/stat card patterns, the aurora+crest loader.
-- [ ] Kill the real persistent `Sidebar` — `client-layout.tsx` still wraps every
-      live page in the old full-height left column
-      (`apps/web/src/components/sidebar.tsx` / `main-content.tsx`). Replace with
-      the new nav app-wide, not just on the prototype routes.
-- [ ] Port Competition: wire `apps/web/src/app/competition/page.tsx` to the
-      extracted primitives with its existing real data (replace
-      `/playground/war-room`'s mock `LEGIONS`/`MATCHUPS`/`ACTIVITY` arrays with
-      the page's actual query/fetch logic), then delete `/playground/identity`
-      and `/playground/war-room`.
-- [ ] Port Stats Hub (`apps/web/src/app/stats/`) — currently a
-      `SeasonPlaceholder` stub (Phase 4 finding); build its real 2026 content
-      directly on the new primitives rather than stub-then-restyle.
-- [ ] Port Matchups (`apps/web/src/app/matchups/`) — also currently a
-      `SeasonPlaceholder` stub; same approach as Stats Hub.
-- [ ] Decide `defaultTheme` in `apps/web/src/components/providers.tsx`
-      (currently `"system"`) — flip to `"dark"` so first-time visitors land on
-      the primary Modern War Room identity, or leave on `system`. Open question,
-      not yet decided.
-- [ ] Beyond the 3 pages above, Phase 4's existing prioritized order still
-      applies for further rollout: `team/[id]`, `league/overview`,
+- [x] Extract the settled pieces into real shared components in `packages/ui`:
+      `src/nav/` (`TopNav`, `MobileNav`, `AppNav`, `CompactThemeToggle`),
+      `src/layout/page-header-hero.tsx` (accent bar + crest watermark + divider,
+      alongside the existing plain `PageHeader`), `src/cards/`
+      (`LegionStandingsCard`, `StatTile`), `src/loader/war-room-loader.tsx`.
+      Added `next`/`next-themes`/`framer-motion`/`lucide-react` as peer deps of
+      `@gauntlet/ui` (single Next.js consumer, already used transitively
+      everywhere). tsup bundles the package into one file and strips per-file
+      `"use client"` directives in the process, so `tsup.config.ts` re-adds a
+      single `"use client"` banner to the whole bundle.
+- [x] Killed the real persistent `Sidebar` — `client-layout.tsx` now renders
+      `AppNav` from `@gauntlet/ui` with the full real route list (Competition,
+      Stats Hub, Matchups, Hall of Fame, Draft Analysis, Year in Review,
+      Archive) for every route except `/year-in-review` and `/playground/*`,
+      which still render their own chrome. Deleted `sidebar.tsx` /
+      `main-content.tsx` (no longer referenced anywhere).
+- [x] Ported Competition: `apps/web/src/app/competition/page.tsx` now uses
+      `PageHeaderHero` + `LegionStandingsCard` with its existing real
+      `getCurrentLeagues`/`getLeagueById`/`getRostersByLeague` data — no new
+      data fetching invented, and no matchups/activity feed added since the real
+      page has no such data source. Deleted `/playground/identity` and
+      `/playground/war-room`.
+- [x] Verified: `pnpm type-check` and `pnpm lint` pass for `apps/web`;
+      dev-server smoke test confirmed `/competition`, `/stats`, `/matchups`,
+      `/archive/2025`, and `/archive/2025/competition` all render 200 with the
+      new nav and no console errors.
+- [x] Port Stats Hub (`apps/web/src/app/stats/`) and Matchups
+      (`apps/web/src/app/matchups/`) — both are genuine "2026 season not live
+      yet" placeholders with no real data to port (confirmed:
+      `stats-content.tsx` is a fully-built but dormant feature requiring a
+      season dataset that doesn't exist yet; inventing fake stats/matchups data
+      was out of scope). Restyled the shared
+      `apps/web/src/components/season-placeholder.tsx` onto `PageHeaderHero`
+      instead — this single component is used by Stats Hub, Matchups, Draft
+      Analysis, _and_ Hall of Fame Enhanced, so all four got the new header
+      (accent bar + crest watermark + divider) in one pass. Added an opt-in
+      `subtitle` prop to `PageHeaderHero` for this case specifically — "2026
+      season — coming soon" is real information the user needs (why the page is
+      empty), not decorative filler, so it doesn't conflict with
+      `feedback_ui_content_discipline`. Swapped the placeholder's link color
+      from the raw `gauntlet-crimson` swatch to the semantic `text-primary`
+      token (this file isn't a frozen archive page, so the swatch-freeze
+      decision doesn't apply here). Verified with `pnpm type-check`/`lint` plus
+      a Playwright pass over all 4 routes (200s, zero console errors,
+      screenshots confirmed nav active-state + header render correctly).
+- [x] Decided `defaultTheme`: staying on `"system"`
+      (`apps/web/src/components/providers.tsx` already had this) — first-time
+      visitors get whichever theme their OS prefers rather than being forced
+      into dark. No code change needed.
+- [x] Added a dev-only real-data preview mode for Stats Hub and Matchups
+      (`?preview=2025` on `/stats` and `/matchups`, gated behind
+      `NODE_ENV !== 'production'`), so the real UI can be visually checked
+      against real 2025 data before the 2026 season has any data of its own — no
+      seeded/fake data factories, reusing the real pipeline instead. Extracted
+      `StatsSeasonView` (`apps/web/src/app/stats/stats-season-view.tsx`) and
+      `MatchupsView` (`apps/web/src/app/matchups/matchups-view.tsx`) out of the
+      2025 archive pages, parameterized by `season`/`leagues` respectively, so
+      the archive pages and the new preview mode share one implementation
+      instead of duplicating it. Parameterized `/api/stats` with a `?season=`
+      query param (default `2025`, unchanged for existing callers) —
+      `/api/matchups/[leagueId]/[week]` was already fully generic, no backend
+      change needed there. Verified with `pnpm type-check`/`lint` and a
+      Playwright pass: both preview routes render full real UI (team stats, odds
+      tables) with zero console errors, and the refactored archive pages were
+      regression-checked against their pre-refactor behavior (identical,
+      confirmed via `git show HEAD`) — the only console noise on
+      `/archive/2025/matchups` is a pre-existing, unrelated bare-avatar-hash 404
+      that predates this change.
+- [x] Redesigned Stats Hub's navigation shell (2026-07-28): the user flagged the
+      stale gradient-bar loader and the 8-item shadcn `<Tabs>` row as not
+      fitting the new system. Explored 3 IA options live against real 2025 data
+      in `/playground/stats` (grouped sub-nav, sidebar sub-nav, overview +
+      drill-in) — user picked sidebar sub-nav after checking it responsively;
+      the first mobile pass broke exactly like the global nav warning predicts
+      (fixed `grid-cols-[200px_1fr]` squeezed into an unreadable column), fixed
+      by collapsing to a horizontal scrollable pill strip below `md` (same
+      "never reserve awkward space" rule as `AppNav`). Ported into
+      `apps/web/src/app/stats/stats-content.tsx` (replacing the `Tabs` shell)
+      and `stats-season-view.tsx` (replacing the gradient-bar/skeleton loader
+      with `WarRoomLoader`), then deleted `/playground/stats`. Verified:
+      `pnpm type-check`/`lint`/`test` (910/910) all clean, Playwright pass over
+      desktop + mobile on both `/stats?preview=2025` and the regression-checked
+      `/archive/2025/stats` (identical, shared component), zero console errors.
+  - [x] Found and fixed two real bugs in `shared/utils/stats/compose.ts`'s
+        `buildStatsDataset` while exercising it live via `?preview=2025` (not
+        cosmetic — both pre-existed this session's changes): (1) two nested
+        sequential-`await` loops fetching matchups (34 round trips) and weekly
+        player stats (17 more) one at a time, same anti-pattern as the
+        already-fixed start-sit case — flattened into a single `Promise.all`,
+        cutting `/api/stats?season=2025` from ~3.1s to ~0.45-0.5s warm; (2)
+        `fetchWeeklyPlayerStats` silently defaulted `season` to `'2025'`
+        regardless of which season's leagueIds were requested — now derives the
+        real `season`/`season_type` from the already-fetched `SleeperLeague`
+        object instead. Both re-verified with identical output and all 151
+        `shared/utils/stats` tests passing.
+- [ ] Stale-loader/stock-shadcn audit (2026-07-28, read-only inventory — not yet
+      fixed): while investigating the Stats Hub loader, a broader pass over
+      every live (non-placeholder, non-archive) page found the same class of
+      pre-War-Room patterns elsewhere. Not yet scheduled/fixed — listed here so
+      it doesn't get lost, highest-traffic first:
+  - [x] `live/page.tsx` (2026-07-28) — had zero War Room styling despite
+        game-day traffic (raw `bg-yellow-100`/`bg-blue-500`/gray borders, no
+        nav-aware layout). Restyled onto `PageHeaderHero` (title + week
+        subtitle) and `WarRoomLoader` for the loading state; the "no live data"
+        and matchup-card states now use `Card`/`CardContent` with semantic
+        tokens (`text-success`/`text-secondary`/`text-destructive` for
+        win-probability tiers) instead of raw Tailwind colors. Underlying data
+        logic untouched — `getLiveData` is still a stub returning nulls, so real
+        live-score wiring stays out of scope for this pass. Verified:
+        `pnpm type-check`/`lint` clean, plus a real Playwright/Chrome pass in
+        both light and dark mode (crest watermark, loader overlay, semantic
+        token colors all render correctly, zero console errors).
+  - [x] `start-sit/page.tsx` (2026-07-28) — loading screen's blue `animate-spin`
+        ring and blue pulsing-dot list, plus gray-50 error/no-data/page shells,
+        replaced with `PageHeaderHero` + `WarRoomLoader` for the loading state
+        and semantic tokens (`text-destructive`, `bg-primary`,
+        `text-muted-foreground`) elsewhere. The "what we're analyzing" info list
+        is kept (real information, not filler) but reskinned onto a `Card`.
+        Didn't touch `StartSitEfficiency`'s inner content components — out of
+        scope for this pass, only `page.tsx`'s loading/error/shell chrome was
+        flagged. Verified: `pnpm type-check`/`lint` clean, plus a real
+        Playwright/Chrome pass in both light and dark mode (loader overlay
+        renders correctly mid-fetch, zero console errors — the extension's "3
+        errors" badge was just Vercel Analytics debug-mode logs).
+  - [x] `team/[id]/page.tsx` and `team/[id]/stats/page.tsx` (2026-07-28) — both
+        had `react-content-loader` shimmer skeletons (hardcoded
+        `hsl(var(--muted))`/`#f3f3f3` hex greys) and the old plain `PageHeader`.
+        Fixed in one pass since both were flagged by the stale-loader audit
+        _and_ the Phase 4 rollout order. Loading state now
+        `<WarRoomLoader show logo={<GauntletLogo size="lg" />} />` (matches
+        `live`/`start-sit`); header ported onto `PageHeaderHero`, which gained a
+        new optional `avatar` prop
+        (`packages/ui/src/layout/page-header-hero.tsx`) to carry the team
+        avatar/initials circle next to the title — no existing consumer passes
+        it, so all other `PageHeaderHero` call sites are visually unchanged. The
+        team page's "View manager's career history" link and the stats page's
+        "Back to Team" button now render via the `actions` slot;
+        `text-gauntlet-crimson` swapped for semantic `text-primary` (this page
+        isn't a frozen archive page). Outer `Container` wrapper swapped for the
+        `max-w-7xl mx-auto` + inner `px-6 py-8` shell used by other ported
+        pages, since `PageHeaderHero` needs to be full-bleed above the content
+        padding. No data-fetching or business logic touched. Verified:
+        `pnpm type-check`/`lint`/`test` (910/910) all clean, plus a real
+        Playwright/Chrome pass on `/team/1` and `/team/1/stats` against real
+        2026 season data (zero real console errors) in both light and dark mode,
+        and the `/team/[id]` not-found/error states (tested via an unmatched
+        roster id).
+  - Loaders remaining: `league/transactions/page.tsx:697-712` (two
+    blue/`border-primary` spinners); `matchups/matchups-view.tsx` and
+    `matchups/[leagueId]/[week]/[matchupId]/page.tsx:396-406` (plain shadcn
+    `<Skeleton>`, at least visually neutral); `year-in-review/_components/`
+    (`league-structure.tsx:53-58,384-439`, `proposals-display.tsx:40` —
+    hand-rolled `animate-pulse` blocks, lower priority/seasonal page).
+  - Navigation: `league/draft/page.tsx:169-174` — same generic shadcn `<Tabs>`
+    pattern Stats Hub had, 3 items (less urgent than Stats Hub's 8 was).
+  - Other stock-shadcn pages worth a pass when touched: `league/transactions`,
+    `managers/[ownerId]` (old `PageHeader`, plain `border-border` stat tiles).
+    `team/[id]` + `team/[id]/stats` done above.
+- [ ] Beyond the pages above, Phase 4's existing prioritized order still applies
+      for further rollout: `league/overview`,
       `matchups/[leagueId]/[week]/[matchupId]`, `managers/[ownerId]` (already
-      flagged for a design pass in Phase 3), then `hall-of-fame-enhanced` once
-      it has real 2026 content.
+      flagged for a design pass in Phase 3; `team/[id]`/`team/[id]/stats` done
+      above). `hall-of-fame-enhanced` and `draft/analysis` now share the
+      restyled placeholder header above, but still need their real 2026 content
+      built out once data exists.
 
 ## Explicitly out of scope (for now)
 

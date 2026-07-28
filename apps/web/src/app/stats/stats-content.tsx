@@ -1,9 +1,18 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import {
+  ArrowLeftRight,
+  Calendar,
+  ClipboardCheck,
+  ScatterChart,
+  Shuffle,
+  TrendingUp,
+  Trophy,
+  Users,
+} from 'lucide-react';
 import type { PlainStatsDataset } from '@/shared/utils/stats';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StartSitEfficiencyTab from '@/components/stats/StartSitEfficiencyTab';
 import { TransactionAnalysis } from '@/features/transactions/components/TransactionAnalysis';
 import { LeagueView } from '@/features/stats/components/LeagueView';
@@ -13,23 +22,36 @@ import { TrendsView } from './components/TrendsView';
 import { TeamView } from '@/features/stats/components/TeamView';
 import { WaiverAnalysisHub } from '@/features/waiver-analysis/components';
 
+type ViewKey =
+  | 'team'
+  | 'league'
+  | 'schedule'
+  | 'trends'
+  | 'scatter'
+  | 'transactions'
+  | 'start-sit'
+  | 'waiver-analysis';
+
 interface StatsContentProps {
   dataset: PlainStatsDataset & { startSitEfficiency?: any };
   searchParams: {
     team?: string;
-    view?:
-      | 'team'
-      | 'league'
-      | 'schedule'
-      | 'trends'
-      | 'scatter'
-      | 'transactions'
-      | 'start-sit'
-      | 'waiver-analysis';
+    view?: ViewKey;
     week?: string;
   };
   leagues: Array<{ id: string; name: string; season: number }>;
 }
+
+const VIEWS: { key: ViewKey; label: string; Icon: typeof Users }[] = [
+  { key: 'team', label: 'Team Analysis', Icon: Users },
+  { key: 'league', label: 'League View', Icon: Trophy },
+  { key: 'schedule', label: 'Schedule', Icon: Calendar },
+  { key: 'trends', label: 'Trends', Icon: TrendingUp },
+  { key: 'scatter', label: 'Scatter', Icon: ScatterChart },
+  { key: 'transactions', label: 'Transactions', Icon: ArrowLeftRight },
+  { key: 'waiver-analysis', label: 'Waiver', Icon: Shuffle },
+  { key: 'start-sit', label: 'Start/Sit', Icon: ClipboardCheck },
+];
 
 export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
   const teamsMap = useMemo(() => new Map(dataset.teams), [dataset.teams]);
@@ -47,28 +69,7 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
   );
 
   const [selectedTeamKey] = useState<string>(searchParams.team || teamOptions[0]?.key || '');
-
-  const [currentView, setCurrentView] = useState<
-    | 'team'
-    | 'league'
-    | 'schedule'
-    | 'trends'
-    | 'scatter'
-    | 'transactions'
-    | 'start-sit'
-    | 'waiver-analysis'
-  >(
-    (searchParams.view as
-      | 'team'
-      | 'league'
-      | 'schedule'
-      | 'trends'
-      | 'scatter'
-      | 'transactions'
-      | 'start-sit'
-      | 'waiver-analysis') || 'team',
-  );
-
+  const [currentView, setCurrentView] = useState<ViewKey>(searchParams.view || 'team');
   const [selectedWeek, setSelectedWeek] = useState<string>(searchParams.week || 'season');
 
   // Available weeks for dropdown
@@ -102,36 +103,10 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
   const fromWeek = Math.min(...validWeeks, dataset.weekRange.from);
   const toWeek = Math.max(...validWeeks, Math.min(dataset.weekRange.to, dataset.currentWeek - 1)); // Exclude current week if it's incomplete
 
-  return (
-    <div className="space-y-6">
-      <Tabs
-        value={currentView}
-        onValueChange={v =>
-          setCurrentView(
-            v as
-              | 'team'
-              | 'league'
-              | 'schedule'
-              | 'trends'
-              | 'scatter'
-              | 'transactions'
-              | 'start-sit'
-              | 'waiver-analysis',
-          )
-        }
-      >
-        <TabsList>
-          <TabsTrigger value="team">Team Analysis</TabsTrigger>
-          <TabsTrigger value="league">League View</TabsTrigger>
-          <TabsTrigger value="schedule">Schedule Analysis</TabsTrigger>
-          <TabsTrigger value="trends">Performance Trends</TabsTrigger>
-          <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
-          <TabsTrigger value="transactions">Transaction Analysis</TabsTrigger>
-          <TabsTrigger value="waiver-analysis">Waiver Analysis</TabsTrigger>
-          <TabsTrigger value="start-sit">Start/Sit Efficiency</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="team">
+  const renderView = () => {
+    switch (currentView) {
+      case 'team':
+        return (
           <TeamView
             allTeamEntries={allTeamEntries}
             positionsMap={positionsMap}
@@ -140,9 +115,9 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
             toWeek={toWeek}
             availableWeeks={availableWeeks}
           />
-        </TabsContent>
-
-        <TabsContent value="league">
+        );
+      case 'league':
+        return (
           <LeagueView
             selectedWeek={selectedWeek}
             allTeamEntries={allTeamEntries}
@@ -153,36 +128,50 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
             fromWeek={fromWeek}
             toWeek={toWeek}
           />
-        </TabsContent>
-
-        <TabsContent value="schedule">
-          <ScheduleAnalysis allTeamEntries={allTeamEntries} dataset={dataset} />
-        </TabsContent>
-
-        <TabsContent value="trends">
+        );
+      case 'schedule':
+        return <ScheduleAnalysis allTeamEntries={allTeamEntries} dataset={dataset} />;
+      case 'trends':
+        return (
           <TrendsView
             allTeamEntries={allTeamEntries}
             positionsMap={positionsMap}
             dataset={dataset}
           />
-        </TabsContent>
+        );
+      case 'scatter':
+        return <ScatterAnalysis allTeamEntries={allTeamEntries} positionsMap={positionsMap} />;
+      case 'transactions':
+        return <TransactionAnalysis currentWeek={dataset.currentWeek} />;
+      case 'waiver-analysis':
+        return <WaiverAnalysisHub currentWeek={dataset.currentWeek} />;
+      case 'start-sit':
+        return <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} />;
+    }
+  };
 
-        <TabsContent value="scatter">
-          <ScatterAnalysis allTeamEntries={allTeamEntries} positionsMap={positionsMap} />
-        </TabsContent>
-
-        <TabsContent value="transactions">
-          <TransactionAnalysis currentWeek={dataset.currentWeek} />
-        </TabsContent>
-
-        <TabsContent value="waiver-analysis">
-          <WaiverAnalysisHub currentWeek={dataset.currentWeek} />
-        </TabsContent>
-
-        <TabsContent value="start-sit">
-          <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} />
-        </TabsContent>
-      </Tabs>
+  return (
+    <div className="md:grid md:grid-cols-[200px_1fr] md:gap-6">
+      {/* Below md: horizontal scrollable strip, never a squeezed sidebar.
+          At md+: persistent vertical rail, icon+label, left-border active state.
+          Validated live against real 2025 data in /playground/stats before porting. */}
+      <nav className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 pb-3 md:pb-0 mb-4 md:mb-0 md:border-r md:border-border md:pr-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {VIEWS.map(v => (
+          <button
+            key={v.key}
+            onClick={() => setCurrentView(v.key)}
+            className={`flex items-center gap-2 md:gap-2.5 shrink-0 px-3 py-1.5 md:px-2.5 md:py-2 rounded-full md:rounded-md text-xs font-semibold uppercase tracking-wide transition-colors text-left ${
+              currentView === v.key
+                ? 'bg-primary/10 text-primary md:border-l-2 md:border-primary md:-ml-[2px] md:pl-[calc(0.625rem+2px)]'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+            }`}
+          >
+            <v.Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+            {v.label}
+          </button>
+        ))}
+      </nav>
+      <div>{renderView()}</div>
     </div>
   );
 };

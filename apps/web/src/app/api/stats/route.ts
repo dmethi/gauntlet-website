@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { buildStatsDataset, serializeStatsDataset } from '@/shared/utils/stats';
 import { getLeaguesForSeason } from '@/config/leagues';
 import { readFileSync } from 'fs';
@@ -47,13 +47,15 @@ const getStartSitEfficiencyData = async () => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
   try {
-    // This route is only consumed by the 2025 archive stats page — pin
-    // explicitly rather than reading whatever CURRENT_LEAGUES becomes.
-    const archiveLeagues = getLeaguesForSeason('2025');
-    const leagueIds = archiveLeagues.map(l => l.id);
-    const labels = archiveLeagues.map(l => l.name);
+    // Defaults to 2025 (the archive stats page's original behavior). Any
+    // other registered season can be requested via ?season= — used by the
+    // dev-only Stats Hub preview to render against real archived data.
+    const season = request.nextUrl.searchParams.get('season') || '2025';
+    const seasonLeagues = getLeaguesForSeason(season);
+    const leagueIds = seasonLeagues.map(l => l.id);
+    const labels = seasonLeagues.map(l => l.name);
 
     // Fetch stats dataset and start/sit efficiency data in parallel
     const [dataset, startSitData] = await Promise.all([

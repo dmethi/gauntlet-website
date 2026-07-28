@@ -1,58 +1,46 @@
 'use client';
 
-import { Sidebar } from '@/components/sidebar';
-import { useState } from 'react';
-import { SidebarTeam } from '@gauntlet/types';
-import { MainContent } from '@/components/main-content';
-import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
+import { AppNav, type NavItem } from '@gauntlet/ui';
+import { Archive, BarChart3, ClipboardList, Home, Scroll, Star, Swords } from 'lucide-react';
+import { GauntletLogo } from '@/components/gauntlet-logo';
+
+const NAV_ITEMS: NavItem[] = [
+  { label: 'Competition', href: '/competition', icon: Home, match: 'prefix' },
+  { label: 'Stats Hub', href: '/stats', icon: BarChart3, match: 'prefix' },
+  { label: 'Matchups', href: '/matchups', icon: Swords, match: 'prefix' },
+  { label: 'Hall of Fame', href: '/hall-of-fame-enhanced', icon: Star },
+  { label: 'Draft Analysis', href: '/draft/analysis', icon: ClipboardList },
+  { label: 'Year in Review', href: '/year-in-review', icon: Scroll },
+  { label: 'Archive', href: '/archive/2025', icon: Archive, match: 'prefix' },
+];
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === 'dark';
 
-  const {
-    data: teams,
-    isLoading,
-    isError,
-  } = useQuery<SidebarTeam[]>({
-    // Keep the query so Team pages can use it later if needed,
-    // but it's not used in Sidebar list anymore
-    queryKey: ['teams'],
-    enabled: !pathname.startsWith('/year-in-review'),
-    queryFn: async () => {
-      const res = await fetch('/api/league/teams');
-      if (!res.ok) {
-        throw new Error('Failed to fetch teams');
-      }
-      return res.json();
-    },
-  });
-
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  // Full-bleed prototype pages render their own chrome — skip the real shell.
+  // Full-bleed prototype/standalone pages render their own chrome — skip the real shell.
   const bypassesShell =
-    pathname.startsWith('/year-in-review') ||
-    pathname.startsWith('/playground/identity') ||
-    pathname.startsWith('/playground/war-room');
+    pathname.startsWith('/year-in-review') || pathname.startsWith('/playground');
 
   if (bypassesShell) {
     return <>{children}</>;
   }
 
   return (
-    <div className="flex h-screen">
-      <Sidebar
-        teams={teams}
-        isMobileOpen={isMobileMenuOpen}
-        onMobileToggle={handleMobileMenuToggle}
-        isLoading={isLoading}
-        isError={isError}
+    <div className="min-h-screen bg-background text-foreground">
+      <AppNav
+        items={NAV_ITEMS}
+        logo={<GauntletLogo size="sm" />}
+        isDark={isDark}
+        onToggleTheme={() => setTheme(isDark ? 'light' : 'dark')}
       />
-      <MainContent onMobileMenuToggle={handleMobileMenuToggle}>{children}</MainContent>
+      <main className="min-w-0 w-full">
+        {/* Extra top padding on mobile clears the floating nav trigger. */}
+        <div className="pt-20 px-4 pb-4 md:pt-6 md:px-6 md:pb-6 min-w-0 w-full">{children}</div>
+      </main>
     </div>
   );
 }

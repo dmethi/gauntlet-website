@@ -81,7 +81,7 @@ importers:
         version: 8.38.0(eslint@8.57.1)(typescript@5.8.3)
       '@vitest/coverage-v8':
         specifier: ^3.2.4
-        version: 3.2.4(@vitest/browser@3.2.4(vitest@3.2.4))(vitest@3.2.4(@types/node@18.19.121)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))
+        version: 3.2.4(@vitest/browser@3.2.4(vite@6.4.0(@types/node@18.19.121)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4))(vitest@3.2.4(@types/node@18.19.121)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))
       '@vitest/ui':
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4)
@@ -430,6 +430,15 @@ importers:
       '@gauntlet/tokens':
         specifier: workspace:*
         version: link:../tokens
+      framer-motion:
+        specifier: '>=11'
+        version: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lucide-react:
+        specifier: '>=0.3'
+        version: 0.323.0(react@18.3.1)
+      next:
+        specifier: '>=14'
+        version: 14.1.0(@babel/core@7.28.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: '>=18'
         version: 18.3.1
@@ -7552,6 +7561,24 @@ snapshots:
       - utf-8-validate
       - vite
 
+  '@vitest/browser@3.2.4(vite@6.4.0(@types/node@18.19.121)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)':
+    dependencies:
+      '@testing-library/dom': 10.4.1
+      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
+      '@vitest/mocker': 3.2.4(vite@6.4.0(@types/node@18.19.121)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))
+      '@vitest/utils': 3.2.4
+      magic-string: 0.30.17
+      sirv: 3.0.1
+      tinyrainbow: 2.0.0
+      vitest: 3.2.4(@types/node@18.19.121)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0)
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
+
   '@vitest/browser@3.2.4(vite@6.4.0(@types/node@20.19.9)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)':
     dependencies:
       '@testing-library/dom': 10.4.1
@@ -7606,6 +7633,27 @@ snapshots:
       vitest: 3.2.4(@types/node@20.19.9)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0)
     optionalDependencies:
       '@vitest/browser': 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@20.19.9)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vitest/coverage-v8@3.2.4(@vitest/browser@3.2.4(vite@6.4.0(@types/node@18.19.121)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4))(vitest@3.2.4(@types/node@18.19.121)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@bcoe/v8-coverage': 1.0.2
+      ast-v8-to-istanbul: 0.3.4
+      debug: 4.4.1(supports-color@5.5.0)
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.1.7
+      magic-string: 0.30.17
+      magicast: 0.3.5
+      std-env: 3.9.0
+      test-exclude: 7.0.1
+      tinyrainbow: 2.0.0
+      vitest: 3.2.4(@types/node@18.19.121)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0)
+    optionalDependencies:
+      '@vitest/browser': 3.2.4(vite@6.4.0(@types/node@18.19.121)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -7712,7 +7760,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@20.19.9)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0)
+      vitest: 3.2.4(@types/node@18.19.121)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@12.10.3)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -9876,6 +9924,31 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  next@14.1.0(@babel/core@7.28.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001731
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.28.0)(react@18.3.1)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
   next@14.1.0(@babel/core@7.28.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.1.0
@@ -10757,6 +10830,13 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
+  styled-jsx@5.1.1(@babel/core@7.28.0)(react@18.3.1):
+    dependencies:
+      client-only: 0.0.1
+      react: 18.3.1
+    optionalDependencies:
+      '@babel/core': 7.28.0
+
   styled-jsx@5.1.1(@babel/core@7.28.4)(react@18.3.1):
     dependencies:
       client-only: 0.0.1
@@ -11307,7 +11387,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 18.19.121
-      '@vitest/browser': 3.2.4(vitest@3.2.4)
+      '@vitest/browser': 3.2.4(vite@6.4.0(@types/node@18.19.121)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       happy-dom: 12.10.3
     transitivePeerDependencies:
