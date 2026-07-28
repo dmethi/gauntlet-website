@@ -18,6 +18,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ArrowUpDown, Search } from 'lucide-react';
+import { leagueBadgeClass, neutralBadgeClass } from '@/lib/stat-colors';
 import type { CrossLeaguePlayerComparison } from '../../types';
 
 interface PlayerPriceComparisonTableProps {
@@ -169,7 +170,9 @@ export const PlayerPriceComparisonTable = memo<PlayerPriceComparisonTableProps>(
                     <TableRow key={player.playerId}>
                       <TableCell className="font-medium">{player.playerName}</TableCell>
                       <TableCell>
-                        <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+                        <span
+                          className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${neutralBadgeClass}`}
+                        >
                           {player.position}
                         </span>
                       </TableCell>
@@ -179,9 +182,9 @@ export const PlayerPriceComparisonTable = memo<PlayerPriceComparisonTableProps>(
                         <span
                           className={
                             absDiff > 10
-                              ? 'text-red-600 font-semibold'
+                              ? 'text-destructive font-semibold'
                               : absDiff > 5
-                                ? 'text-orange-600'
+                                ? 'text-secondary'
                                 : 'text-muted-foreground'
                           }
                         >
@@ -193,11 +196,9 @@ export const PlayerPriceComparisonTable = memo<PlayerPriceComparisonTableProps>(
                           <span className="text-muted-foreground text-sm">Equal</span>
                         ) : (
                           <span
-                            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                              player.whichLeagueValuesMore === 'AFC'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-green-100 text-green-700'
-                            }`}
+                            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${leagueBadgeClass(
+                              player.whichLeagueValuesMore,
+                            )}`}
                           >
                             {player.whichLeagueValuesMore}
                           </span>

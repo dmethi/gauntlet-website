@@ -28,22 +28,22 @@ export const TransactionSummary = memo<TransactionSummaryProps>(props => {
   const stats = calculateTransactionStats(transactions);
 
   return (
-    <div className="grid grid-cols-4 gap-4 text-center">
-      <div className="bg-green-50 p-3 rounded-lg">
-        <div className="text-2xl font-bold text-green-600">{stats.positive}</div>
-        <div className="text-xs text-green-700">Positive</div>
+    <div className="flex divide-x divide-border text-center">
+      <div className="pl-0 pr-4">
+        <div className="text-2xl font-bold text-success">{stats.positive}</div>
+        <div className="text-xs text-muted-foreground">Positive</div>
       </div>
-      <div className="bg-red-50 p-3 rounded-lg">
-        <div className="text-2xl font-bold text-red-600">{stats.negative}</div>
-        <div className="text-xs text-red-700">Negative</div>
+      <div className="px-4">
+        <div className="text-2xl font-bold text-destructive">{stats.negative}</div>
+        <div className="text-xs text-muted-foreground">Negative</div>
       </div>
-      <div className="bg-gray-50 p-3 rounded-lg">
-        <div className="text-2xl font-bold text-gray-600">{stats.neutral}</div>
-        <div className="text-xs text-gray-700">Neutral</div>
+      <div className="px-4">
+        <div className="text-2xl font-bold text-muted-foreground">{stats.neutral}</div>
+        <div className="text-xs text-muted-foreground">Neutral</div>
       </div>
-      <div className="bg-blue-50 p-3 rounded-lg">
-        <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-        <div className="text-xs text-blue-700">Total</div>
+      <div className="px-4">
+        <div className="text-2xl font-bold text-foreground">{stats.total}</div>
+        <div className="text-xs text-muted-foreground">Total</div>
       </div>
     </div>
   );

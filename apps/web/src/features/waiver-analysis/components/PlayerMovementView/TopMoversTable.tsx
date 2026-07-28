@@ -18,6 +18,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowUpDown } from 'lucide-react';
+import { neutralBadgeClass } from '@/lib/stat-colors';
 import type { PlayerMovement } from '../../types';
 
 interface TopMoversTableProps {
@@ -145,7 +146,9 @@ export const TopMoversTable = memo<TopMoversTableProps>(props => {
                   </TableCell>
                   <TableCell className="font-medium">{player.playerName}</TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+                    <span
+                      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${neutralBadgeClass}`}
+                    >
                       {player.position}
                     </span>
                   </TableCell>

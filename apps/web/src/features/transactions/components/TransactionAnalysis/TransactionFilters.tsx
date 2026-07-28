@@ -121,13 +121,13 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <input
             type="text"
             placeholder="Search players..."
             value={searchTerm}
             onChange={e => onSearchChange(e.target.value)}
-            className="pl-10 pr-4 py-2 w-full border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="pl-10 pr-4 py-2 w-full border border-border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
@@ -135,7 +135,7 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
       {/* Sort Controls */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Sort by:</span>
+          <span className="text-sm text-muted-foreground">Sort by:</span>
           <Select value={sortBy} onValueChange={onSortByChange}>
             <SelectTrigger className="w-32">
               <SelectValue />
@@ -150,13 +150,13 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
           <button
             title="Sort"
             onClick={onSortOrderToggle}
-            className="p-2 hover:bg-gray-100 rounded-md"
+            className="p-2 hover:bg-muted rounded-md"
           >
             <ArrowUpDown className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground">
           Showing {filteredCount} of {totalCount} transactions
         </div>
       </div>

@@ -29,15 +29,8 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-foreground">Start/Sit Efficiency Analysis</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Skill-weighted decision making across {data.leagueStats.totalDecisions} tracked decisions
-        </p>
-      </div>
-
       <Tabs defaultValue="overall" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
           <TabsTrigger value="overall">Overall Scores</TabsTrigger>
           <TabsTrigger value="positions">Position Breakdown</TabsTrigger>
           <TabsTrigger value="context">Team Context</TabsTrigger>
@@ -75,7 +68,7 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
             <CardContent className="space-y-4 py-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
                   Loading roster context...
                 </div>
               ) : (
@@ -90,7 +83,7 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
             <CardContent className="space-y-4 py-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
                   Loading decision details...
                 </div>
               ) : (
@@ -105,7 +98,7 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
             <CardContent className="space-y-4 py-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
                   Loading decision details...
                 </div>
               ) : (

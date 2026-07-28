@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
+import { deltaTextClass } from '@/lib/stat-colors';
 import type { GradeTxn, TeamInfo } from '../types';
 import { ManagerDetailModal } from './ManagerDetailModal';
 
@@ -117,19 +118,19 @@ export const ManagerRankings = ({
                     onClick={() => setSelectedManager(manager.teamName)}
                   >
                     <td className="p-2 font-medium">#{index + 1}</td>
-                    <td className="p-2 font-medium text-blue-600 hover:text-blue-800">
+                    <td className="p-2 font-medium text-primary hover:underline">
                       {manager.teamName}
                     </td>
                     <td
-                      className={`p-2 text-right font-mono font-bold ${manager.netVORP >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                      className={`p-2 text-right font-mono font-bold ${deltaTextClass(manager.netVORP)}`}
                     >
                       {manager.netVORP >= 0 ? '+' : ''}
                       {manager.netVORP.toFixed(1)}
                     </td>
-                    <td className="p-2 text-right text-green-600 font-medium">
+                    <td className="p-2 text-right text-success font-medium">
                       {manager.positiveTransactions}
                     </td>
-                    <td className="p-2 text-right text-red-600 font-medium">
+                    <td className="p-2 text-right text-destructive font-medium">
                       {manager.negativeTransactions}
                     </td>
                     <td className="p-2 text-right">{manager.totalTransactions}</td>

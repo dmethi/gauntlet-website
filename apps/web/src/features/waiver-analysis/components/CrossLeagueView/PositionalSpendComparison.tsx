@@ -48,9 +48,9 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
                     <span
                       className={
                         pos.whichLeagueSpendsMore === 'AFC'
-                          ? 'text-blue-600'
+                          ? 'text-primary'
                           : pos.whichLeagueSpendsMore === 'NFC'
-                            ? 'text-green-600'
+                            ? 'text-secondary'
                             : 'text-muted-foreground'
                       }
                     >
@@ -64,15 +64,15 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
                 {/* AFC Bar */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-blue-700 font-medium">AFC</span>
+                    <span className="text-primary font-medium">AFC</span>
                     <span className="text-muted-foreground">
                       ${pos.afcSpend.total} • {pos.afcSpend.count} pickups • avg $
                       {pos.afcSpend.avg.toFixed(1)}
                     </span>
                   </div>
-                  <div className="h-6 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-6 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
+                      className="h-full bg-primary rounded-full transition-all duration-300 flex items-center justify-end pr-2"
                       style={{ width: `${afcPercent}%` }}
                     >
                       {afcPercent > 15 && (
@@ -87,15 +87,15 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
                 {/* NFC Bar */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-green-700 font-medium">NFC</span>
+                    <span className="text-secondary font-medium">NFC</span>
                     <span className="text-muted-foreground">
                       ${pos.nfcSpend.total} • {pos.nfcSpend.count} pickups • avg $
                       {pos.nfcSpend.avg.toFixed(1)}
                     </span>
                   </div>
-                  <div className="h-6 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-6 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-green-500 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
+                      className="h-full bg-secondary rounded-full transition-all duration-300 flex items-center justify-end pr-2"
                       style={{ width: `${nfcPercent}%` }}
                     >
                       {nfcPercent > 15 && (
@@ -127,13 +127,13 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
         {/* Summary Stats */}
         <div className="mt-6 pt-6 border-t grid grid-cols-2 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold text-primary">
               ${comparisons.reduce((sum, p) => sum + p.afcSpend.total, 0)}
             </div>
             <div className="text-sm text-muted-foreground">AFC Total Spent</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-secondary">
               ${comparisons.reduce((sum, p) => sum + p.nfcSpend.total, 0)}
             </div>
             <div className="text-sm text-muted-foreground">NFC Total Spent</div>

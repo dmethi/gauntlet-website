@@ -1,11 +1,12 @@
 import { memo } from 'react';
+import { deltaTextClass } from '@/lib/stat-colors';
 import type { SummaryMetrics } from './utils';
 
 interface EfficiencySummaryCardProps {
   summary: SummaryMetrics;
 }
 
-const MetricCard = ({
+const MetricTile = ({
   title,
   value,
   subtitle,
@@ -16,7 +17,7 @@ const MetricCard = ({
   subtitle: string;
   colorClass: string;
 }) => (
-  <div className="rounded-lg bg-muted p-4 text-center">
+  <div className="flex-1 px-4 py-3 text-center first:pl-0 last:pr-0">
     <div className={`text-2xl font-bold ${colorClass}`}>{value}</div>
     <div className="text-sm font-medium text-foreground">{title}</div>
     <div className="text-xs text-muted-foreground">{subtitle}</div>
@@ -25,24 +26,24 @@ const MetricCard = ({
 
 export const EfficiencySummaryCard = memo(({ summary }: EfficiencySummaryCardProps) => {
   return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <MetricCard
+    <div className="flex divide-x divide-border">
+      <MetricTile
         title="Avg Weighted Score"
         subtitle="Skill-adjusted decision rate"
         value={`${(summary.averageWeightedScore * 100).toFixed(1)}%`}
-        colorClass="text-blue-600"
+        colorClass="text-primary"
       />
-      <MetricCard
+      <MetricTile
         title="Avg Points Impact"
         subtitle="Points vs league median"
         value={summary.averagePointsImpact.toFixed(1)}
-        colorClass="text-green-600"
+        colorClass={deltaTextClass(summary.averagePointsImpact)}
       />
-      <MetricCard
+      <MetricTile
         title="Total Decisions"
         subtitle={`${summary.managerCount} managers evaluated`}
         value={summary.totalDecisions.toString()}
-        colorClass="text-purple-600"
+        colorClass="text-foreground"
       />
     </div>
   );

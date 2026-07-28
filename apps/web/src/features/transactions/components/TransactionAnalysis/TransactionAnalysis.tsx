@@ -139,7 +139,7 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
               <div className="text-muted-foreground">No transactions match your filters</div>
               <button
                 onClick={handleClearFilters}
-                className="mt-2 text-blue-600 hover:text-blue-800 text-sm"
+                className="mt-2 text-primary hover:underline text-sm"
               >
                 Clear all filters
               </button>

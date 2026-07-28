@@ -181,6 +181,38 @@ export default [
     },
   },
   {
+    // Stats Hub feature surfaces - enforce semantic design tokens over raw Tailwind
+    // palette classes. Raw classes (bg-blue-100, text-red-600, ...) have no dark-mode
+    // variant in this codebase, so they silently break in the "Modern War Room" dark
+    // theme. See docs/solutions/patterns/critical-patterns.md and src/lib/stat-colors.ts.
+    files: [
+      'src/features/waiver-analysis/**/*.{ts,tsx}',
+      'src/features/transactions/**/*.{ts,tsx}',
+      'src/features/start-sit/**/*.{ts,tsx}',
+      'src/components/stats/StartSitEfficiencyTab.tsx',
+      'src/app/stats/components/ManagerRankings.tsx',
+      'src/app/stats/components/ManagerDetailModal.tsx',
+    ],
+    ignores: ['**/*.test.{ts,tsx}', '**/*.test.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'Literal[value=/(^|\\s)(bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|accent|caret|shadow)-(red|blue|green|purple|orange|yellow|pink|indigo|cyan|teal|slate|gray|grey|zinc|neutral|stone|lime|emerald|sky|violet|fuchsia|rose|amber)-[0-9]{2,3}(\\s|$)/]',
+          message:
+            'Raw Tailwind palette classes have no dark-mode variant here. Use semantic tokens (text-success, text-destructive, text-primary, text-secondary, bg-muted, ...) or the helpers in src/lib/stat-colors.ts instead. See docs/solutions/patterns/critical-patterns.md.',
+        },
+        {
+          selector:
+            'TemplateElement[value.raw=/(^|\\s)(bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|accent|caret|shadow)-(red|blue|green|purple|orange|yellow|pink|indigo|cyan|teal|slate|gray|grey|zinc|neutral|stone|lime|emerald|sky|violet|fuchsia|rose|amber)-[0-9]{2,3}(\\s|$)/]',
+          message:
+            'Raw Tailwind palette classes have no dark-mode variant here. Use semantic tokens (text-success, text-destructive, text-primary, text-secondary, bg-muted, ...) or the helpers in src/lib/stat-colors.ts instead. See docs/solutions/patterns/critical-patterns.md.',
+        },
+      ],
+    },
+  },
+  {
     ignores: [
       'node_modules/',
       '.next/',

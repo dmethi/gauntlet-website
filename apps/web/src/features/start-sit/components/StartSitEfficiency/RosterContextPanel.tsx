@@ -145,7 +145,9 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
                           </td>
                           <td className="py-1 text-center">
                             {diff > 0 ? (
-                              <span className="font-semibold text-red-600">+{diff.toFixed(1)}</span>
+                              <span className="font-semibold text-destructive">
+                                +{diff.toFixed(1)}
+                              </span>
                             ) : (
                               <span className="text-muted-foreground">0</span>
                             )}
@@ -164,7 +166,7 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
                 <button
                   type="button"
                   onClick={() => toggleExpanded(toggleKey)}
-                  className="text-blue-600 hover:text-blue-700"
+                  className="text-primary hover:text-primary/80"
                 >
                   {isExpanded ? '▼ Collapse' : '▶ Show All'}
                 </button>
@@ -172,7 +174,7 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
 
               <div className="grid gap-3 md:grid-cols-2 text-sm">
                 <div>
-                  <div className="font-medium text-blue-600">
+                  <div className="font-medium text-primary">
                     Bench ({context.benchPlayers.length})
                   </div>
                   <div className="space-y-1 text-muted-foreground">
@@ -197,7 +199,7 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
                 </div>
 
                 <div>
-                  <div className="font-medium text-orange-600">
+                  <div className="font-medium text-secondary">
                     Waiver Wire ({context.waiverAlternatives.length})
                   </div>
                   <div className="space-y-1 text-muted-foreground">

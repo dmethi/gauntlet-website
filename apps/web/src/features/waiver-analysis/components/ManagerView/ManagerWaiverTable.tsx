@@ -32,6 +32,7 @@ import {
   TrendingDown,
   TrendingUp,
 } from 'lucide-react';
+import { deltaTextClass, leagueBadgeClass, tieredBadgeClass } from '@/lib/stat-colors';
 import type { ManagerWaiverStats, WaiverTransaction } from '../../types';
 
 interface ManagerWaiverTableProps {
@@ -301,11 +302,9 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                         {/* League */}
                         <TableCell className="text-center" onClick={() => toggleRow(rowKey)}>
                           <span
-                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
-                              manager.leagueName.includes('AFC')
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-green-100 text-green-700'
-                            }`}
+                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${leagueBadgeClass(
+                              manager.leagueName,
+                            )}`}
                           >
                             {manager.leagueName.includes('AFC') ? 'AFC' : 'NFC'}
                           </span>
@@ -330,13 +329,10 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                         {/* Percent Spent */}
                         <TableCell className="text-center" onClick={() => toggleRow(rowKey)}>
                           <span
-                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                              manager.percentSpent > 75
-                                ? 'bg-red-100 text-red-700'
-                                : manager.percentSpent > 50
-                                  ? 'bg-orange-100 text-orange-700'
-                                  : 'bg-slate-100 text-slate-600'
-                            }`}
+                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tieredBadgeClass(
+                              manager.percentSpent,
+                              { low: 50, high: 75 },
+                            )}`}
                           >
                             {manager.percentSpent.toFixed(0)}%
                           </span>
@@ -353,11 +349,15 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                         {/* Net Excess Spend */}
                         <TableCell className="text-right" onClick={() => toggleRow(rowKey)}>
                           {manager.netExcessSpend > 5 ? (
-                            <span className="text-red-600 font-mono font-semibold">
+                            <span
+                              className={`font-mono font-semibold ${deltaTextClass(-manager.netExcessSpend)}`}
+                            >
                               +${manager.netExcessSpend.toFixed(0)}
                             </span>
                           ) : manager.netExcessSpend < -5 ? (
-                            <span className="text-green-600 font-mono font-semibold">
+                            <span
+                              className={`font-mono font-semibold ${deltaTextClass(-manager.netExcessSpend)}`}
+                            >
                               ${manager.netExcessSpend.toFixed(0)}
                             </span>
                           ) : (
@@ -427,11 +427,15 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                                                 Excess
                                               </div>
                                               {txn.excessSpend > 5 ? (
-                                                <span className="text-red-600 font-mono text-sm font-semibold">
+                                                <span
+                                                  className={`font-mono text-sm font-semibold ${deltaTextClass(-txn.excessSpend)}`}
+                                                >
                                                   +${txn.excessSpend.toFixed(0)}
                                                 </span>
                                               ) : txn.excessSpend < -5 ? (
-                                                <span className="text-green-600 font-mono text-sm font-semibold">
+                                                <span
+                                                  className={`font-mono text-sm font-semibold ${deltaTextClass(-txn.excessSpend)}`}
+                                                >
                                                   ${txn.excessSpend.toFixed(0)}
                                                 </span>
                                               ) : (

@@ -1,6 +1,6 @@
 import { memo, useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { deltaTextClass, neutralBadgeClass } from '@/lib/stat-colors';
 import type { ManagerEfficiency } from '@/features/start-sit/types';
 import { calculatePositionalEfficiency, getLeagueLabel } from './utils';
 import { ManagerSelector } from './ManagerSelector';
@@ -15,10 +15,10 @@ interface PositionBreakdownProps {
 const PositionBadge = ({ position, weight }: { position: string; weight: number }) => {
   const variant =
     weight >= 0.9
-      ? 'bg-blue-600 text-white'
+      ? 'bg-primary text-primary-foreground'
       : weight >= 0.7
-        ? 'bg-slate-200 text-slate-900'
-        : 'bg-slate-100 text-slate-600';
+        ? 'bg-secondary/20 text-secondary'
+        : neutralBadgeClass;
   return (
     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${variant}`}>
       {position} ({weight.toFixed(1)}x)
@@ -79,7 +79,7 @@ export const PositionBreakdown = memo(
                 onClick={() => setViewMode('rankings')}
                 className={`rounded-lg px-3 py-1 text-sm transition-colors ${
                   viewMode === 'rankings'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
@@ -90,7 +90,7 @@ export const PositionBreakdown = memo(
                 onClick={() => setViewMode('manager')}
                 className={`rounded-lg px-3 py-1 text-sm transition-colors ${
                   viewMode === 'manager'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
@@ -157,24 +157,20 @@ export const PositionBreakdown = memo(
                           </div>
                           <div className="flex items-center gap-4">
                             <div className="text-right">
-                              <div className="text-sm font-semibold text-blue-600">
+                              <div className="text-sm font-semibold text-primary">
                                 {(entry.metrics.decisionRate * 100).toFixed(1)}%
                               </div>
                               <div className="text-xs text-muted-foreground">Correct</div>
                             </div>
                             <div className="text-right">
                               <div
-                                className={`text-sm font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}
+                                className={`text-sm font-semibold ${deltaTextClass(entry.metrics.pointsLostVsMedian)}`}
                               >
                                 {isPositive ? '+' : ''}
                                 {entry.metrics.pointsLostVsMedian.toFixed(1)}
                               </div>
                               <div className="text-xs text-muted-foreground">vs Median</div>
                             </div>
-                            <Progress
-                              value={entry.metrics.decisionRate * 100}
-                              className="h-2 w-16"
-                            />
                           </div>
                         </div>
                       );
@@ -210,11 +206,10 @@ export const PositionBreakdown = memo(
                           {(metrics.decisionRate * 100).toFixed(1)}%
                         </span>
                       </div>
-                      <Progress value={metrics.decisionRate * 100} className="h-2" />
                       <div className="flex justify-between text-sm">
                         <span>vs Median</span>
                         <span
-                          className={`font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}
+                          className={`font-semibold ${deltaTextClass(metrics.pointsLostVsMedian)}`}
                         >
                           {isPositive ? '+' : ''}
                           {metrics.pointsLostVsMedian.toFixed(1)} pts

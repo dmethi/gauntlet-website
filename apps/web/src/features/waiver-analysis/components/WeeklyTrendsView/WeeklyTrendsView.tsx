@@ -47,7 +47,7 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
                   <div className="flex gap-2 items-end h-12">
                     <div
                       className={`flex-1 ${
-                        trends.leagueName.includes('AFC') ? 'bg-blue-500' : 'bg-green-500'
+                        trends.leagueName.includes('AFC') ? 'bg-primary' : 'bg-secondary'
                       } rounded-t-md transition-all duration-300 flex items-end justify-center pb-1`}
                       style={{ height: `${Math.max(spendHeight, 5)}%` }}
                     >
@@ -79,10 +79,10 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
                     ${pos.totalSpent} • {pos.transactionCount} txns • avg ${pos.avgCost.toFixed(1)}
                   </div>
                 </div>
-                <div className="h-6 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-6 bg-muted rounded-full overflow-hidden">
                   <div
                     className={`h-full ${
-                      trends.leagueName.includes('AFC') ? 'bg-blue-500' : 'bg-green-500'
+                      trends.leagueName.includes('AFC') ? 'bg-primary' : 'bg-secondary'
                     } rounded-full transition-all duration-300 flex items-center justify-center`}
                     style={{ width: `${pos.percentOfTotalSpend}%` }}
                   >
@@ -116,7 +116,7 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
               <div className="text-sm text-muted-foreground">Failed Waivers</div>
             </div>
             {trends.mostContestedPlayer && (
-              <div className="col-span-2 text-center p-4 border rounded-lg bg-slate-50">
+              <div className="col-span-2 text-center p-4 border rounded-lg bg-muted">
                 <div className="font-semibold">{trends.mostContestedPlayer.playerName}</div>
                 <div className="text-sm text-muted-foreground">
                   Most Contested ({trends.mostContestedPlayer.bidCount} bids)

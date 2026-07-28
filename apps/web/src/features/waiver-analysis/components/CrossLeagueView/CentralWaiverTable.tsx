@@ -18,6 +18,12 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { ChevronDown, ChevronRight, Search, TrendingDown, TrendingUp } from 'lucide-react';
+import {
+  deltaTextClass,
+  leagueBadgeClass,
+  neutralBadgeClass,
+  tieredBadgeClass,
+} from '@/lib/stat-colors';
 import type { WaiverAnalysisData, WaiverTransaction } from '../../types';
 
 interface CentralWaiverTableProps {
@@ -327,6 +333,9 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                             <button
                               onClick={() => toggleRow(txn.transactionId)}
                               className="text-muted-foreground hover:text-foreground"
+                              aria-label={
+                                isExpanded ? 'Collapse competing bids' : 'Show competing bids'
+                              }
                             >
                               {isExpanded ? (
                                 <ChevronDown className="h-4 w-4" />
@@ -342,7 +351,9 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
 
                         {/* Position */}
                         <td className="px-3 py-2 text-center">
-                          <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                          <span
+                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${neutralBadgeClass}`}
+                          >
                             {txn.position}
                           </span>
                         </td>
@@ -353,11 +364,9 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                         {/* League Badge */}
                         <td className="px-3 py-2 text-center">
                           <span
-                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
-                              txn.leagueName.includes('AFC')
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-green-100 text-green-700'
-                            }`}
+                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${leagueBadgeClass(
+                              txn.leagueName,
+                            )}`}
                           >
                             {txn.leagueName.includes('AFC') ? 'AFC' : 'NFC'}
                           </span>
@@ -383,13 +392,10 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                         <td className="px-3 py-2 text-center">
                           {txn.transactionType === 'waiver' ? (
                             <span
-                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                                (txn.totalCompetition ?? 0) > 3
-                                  ? 'bg-red-100 text-red-700'
-                                  : (txn.totalCompetition ?? 0) > 1
-                                    ? 'bg-orange-100 text-orange-700'
-                                    : 'bg-slate-100 text-slate-600'
-                              }`}
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tieredBadgeClass(
+                                txn.totalCompetition ?? 0,
+                                { low: 1, high: 3 },
+                              )}`}
                             >
                               {txn.totalCompetition}
                             </span>
@@ -404,15 +410,23 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                             <div className="flex items-center justify-end gap-1">
                               {txn.excessSpend > 5 ? (
                                 <>
-                                  <TrendingUp className="h-3 w-3 text-red-500" />
-                                  <span className="text-red-600 font-mono font-semibold">
+                                  <TrendingUp
+                                    className={`h-3 w-3 ${deltaTextClass(-txn.excessSpend)}`}
+                                  />
+                                  <span
+                                    className={`font-mono font-semibold ${deltaTextClass(-txn.excessSpend)}`}
+                                  >
                                     +${txn.excessSpend.toFixed(0)}
                                   </span>
                                 </>
                               ) : txn.excessSpend < -5 ? (
                                 <>
-                                  <TrendingDown className="h-3 w-3 text-green-500" />
-                                  <span className="text-green-600 font-mono font-semibold">
+                                  <TrendingDown
+                                    className={`h-3 w-3 ${deltaTextClass(-txn.excessSpend)}`}
+                                  />
+                                  <span
+                                    className={`font-mono font-semibold ${deltaTextClass(-txn.excessSpend)}`}
+                                  >
                                     ${txn.excessSpend.toFixed(0)}
                                   </span>
                                 </>
@@ -433,15 +447,23 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                             <div className="flex items-center justify-center gap-1">
                               {crossLeagueDelta > 0 ? (
                                 <>
-                                  <TrendingUp className="h-3 w-3 text-blue-500" />
-                                  <span className="text-blue-600 font-mono font-semibold">
+                                  <TrendingUp
+                                    className={`h-3 w-3 ${deltaTextClass(crossLeagueDelta)}`}
+                                  />
+                                  <span
+                                    className={`font-mono font-semibold ${deltaTextClass(crossLeagueDelta)}`}
+                                  >
                                     +${Math.abs(crossLeagueDelta).toFixed(0)}
                                   </span>
                                 </>
                               ) : crossLeagueDelta < 0 ? (
                                 <>
-                                  <TrendingDown className="h-3 w-3 text-purple-500" />
-                                  <span className="text-purple-600 font-mono font-semibold">
+                                  <TrendingDown
+                                    className={`h-3 w-3 ${deltaTextClass(crossLeagueDelta)}`}
+                                  />
+                                  <span
+                                    className={`font-mono font-semibold ${deltaTextClass(crossLeagueDelta)}`}
+                                  >
                                     -${Math.abs(crossLeagueDelta).toFixed(0)}
                                   </span>
                                 </>
@@ -468,7 +490,9 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                                   <div key={idx} className="flex items-center gap-2">
                                     <span className="text-muted-foreground">#{idx + 1}</span>
                                     <span className="font-medium">{bid.teamName}</span>
-                                    <span className="font-mono text-red-600">${bid.amount}</span>
+                                    <span className="font-mono text-destructive">
+                                      ${bid.amount}
+                                    </span>
                                     <span className="text-muted-foreground italic">
                                       ({bid.failureReason})
                                     </span>

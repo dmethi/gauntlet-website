@@ -86,15 +86,15 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xl font-bold text-green-600">
+                  <div className="text-xl font-bold text-success">
                     +{(decision.actualOutcome || 0).toFixed(1)} pts
                   </div>
                   <div className="text-xs text-muted-foreground">Risky Payoff</div>
                 </div>
               </div>
 
-              <div className="rounded-lg bg-emerald-50 p-3">
-                <div className="font-medium text-emerald-800">Risky Pick: {selectedName}</div>
+              <div className="rounded-lg bg-success/10 p-3">
+                <div className="font-medium text-success">Risky Pick: {selectedName}</div>
                 <div className="text-sm">
                   Projected: {decision.selectedPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
                   {decision.selectedPlayer.actualPoints.toFixed(1)}
@@ -122,16 +122,14 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
                             {altName} ({alt.source === 'waiver' ? 'waiver' : 'bench'})
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="font-medium text-orange-600">
+                            <span className="font-medium text-secondary">
                               {alt.projectedPoints.toFixed(1)} ({projDiff >= 0 ? '+' : ''}
                               {projDiff.toFixed(1)})
                             </span>
                             <span className="font-medium text-foreground">
                               {alt.actualPoints.toFixed(1)}
                             </span>
-                            <span className="font-medium text-green-600">
-                              +{outcome.toFixed(1)}
-                            </span>
+                            <span className="font-medium text-success">+{outcome.toFixed(1)}</span>
                           </div>
                         </div>
                       );

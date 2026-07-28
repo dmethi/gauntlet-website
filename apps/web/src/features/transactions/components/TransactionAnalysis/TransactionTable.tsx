@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { GradeTxn } from '@/features/transactions/types';
 import { getDivergingBg, getTextColorForBg } from '@/shared/utils/colors';
+import { deltaTextClass, gradeBadgeClass } from '@/lib/stat-colors';
 import { calculateScoreRange } from './utils';
 
 /**
@@ -98,17 +99,13 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
                       </div>
                     </div>
                   ) : (
-                    <div className="text-xs text-green-600 font-medium">FREE</div>
+                    <div className="text-xs text-success font-medium">FREE</div>
                   )}
                 </TableCell>
                 <TableCell className="text-right">
                   {txn.rawScore !== undefined ? (
                     <div className="flex flex-col items-end">
-                      <div
-                        className={`font-mono font-medium ${
-                          txn.rawScore >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}
-                      >
+                      <div className={`font-mono font-medium ${deltaTextClass(txn.rawScore)}`}>
                         {txn.rawScore >= 0 ? '+' : ''}
                         {txn.rawScore.toFixed(1)}
                       </div>
@@ -129,7 +126,7 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
                       {txn.score.toFixed(1)}
                     </span>
                     {txn.faabCost && txn.faabCost > 0 && (
-                      <div className="text-xs text-red-400 font-mono">
+                      <div className="text-xs text-destructive font-mono">
                         -{txn.costPenalty?.toFixed(1) || '0.0'}
                       </div>
                     )}
@@ -145,7 +142,7 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
                       onTransactionClick(txn);
                     }}
                   >
-                    <Badge>{txn.grade}</Badge>
+                    <Badge className={gradeBadgeClass(txn.grade)}>{txn.grade}</Badge>
                   </Button>
                 </TableCell>
               </TableRow>

@@ -30,79 +30,83 @@ export const buildFacts = async (
   const replacementByWeekPos = new Map<string, number>();
   const rosterPlayerWeeks = new Map<string, Set<number>>();
 
-  for (const week of seasonWeeks) {
-    try {
-      const res = await fetch(`/api/matchups/${leagueId}/${week}`);
-      if (!res.ok) {
-        if (week <= 4) debugLog(`[buildFacts] Week ${week} failed: ${res.status}`);
-        continue;
-      }
-      const json = (await res.json()) as { matchups: ApiMatchup[] };
-
-      if (week <= 4) {
-        debugLog(`[buildFacts] Week ${week} success:`, {
-          matchupsCount: json.matchups?.length || 0,
-          hasMatchups: !!json.matchups,
-          structure: json.matchups?.[0] ? Object.keys(json.matchups[0]) : 'no matchups',
-        });
-      }
-
-      const startersPtsByPos: Record<string, number[]> = {};
-
-      for (const m of json.matchups) {
-        if (m.teams.length === 2) {
-          const a = m.teams[0];
-          const b = m.teams[1];
-          weekOpponent.set(`${week}:${a.rosterId}`, b.rosterId);
-          weekOpponent.set(`${week}:${b.rosterId}`, a.rosterId);
+  // Fetch every week's matchups in parallel instead of one at a time - each week
+  // is an independent request, and awaiting them sequentially in a loop was adding
+  // up to ~17 round-trips per league (the dominant cost of loading this tab).
+  await Promise.all(
+    seasonWeeks.map(async week => {
+      try {
+        const res = await fetch(`/api/matchups/${leagueId}/${week}`);
+        if (!res.ok) {
+          if (week <= 4) debugLog(`[buildFacts] Week ${week} failed: ${res.status}`);
+          return;
         }
-        for (const t of m.teams) {
-          weekRosterPlayers.set(`${week}:${t.rosterId}`, new Set(t.players.map(String)));
-          weekRosterStarters.set(`${week}:${t.rosterId}`, new Set(t.starters.map(String)));
+        const json = (await res.json()) as { matchups: ApiMatchup[] };
 
-          // FIX: Use starterActualPoints instead of playersPoints
-          const playerPoints = t.starterActualPoints || t.playersPoints || {};
+        if (week <= 4) {
+          debugLog(`[buildFacts] Week ${week} success:`, {
+            matchupsCount: json.matchups?.length || 0,
+            hasMatchups: !!json.matchups,
+            structure: json.matchups?.[0] ? Object.keys(json.matchups[0]) : 'no matchups',
+          });
+        }
 
-          // Debug logging for Drake Maye specifically
-          if (t.starters.includes('11564')) {
-            debugLog(
-              `[buildFacts] Week ${week}: Drake Maye (11564) started by roster ${t.rosterId}`,
-            );
-            debugLog(`[buildFacts] Drake Maye points: ${playerPoints['11564'] || 'N/A'}`);
+        const startersPtsByPos: Record<string, number[]> = {};
+
+        for (const m of json.matchups) {
+          if (m.teams.length === 2) {
+            const a = m.teams[0];
+            const b = m.teams[1];
+            weekOpponent.set(`${week}:${a.rosterId}`, b.rosterId);
+            weekOpponent.set(`${week}:${b.rosterId}`, a.rosterId);
           }
+          for (const t of m.teams) {
+            weekRosterPlayers.set(`${week}:${t.rosterId}`, new Set(t.players.map(String)));
+            weekRosterStarters.set(`${week}:${t.rosterId}`, new Set(t.starters.map(String)));
 
-          for (const pid of t.players) {
-            const points = Number(playerPoints[String(pid)] || 0);
-            playerWeekPoints.set(`${week}:${String(pid)}`, points);
-            const k = `${t.rosterId}:${String(pid)}`;
-            if (!rosterPlayerWeeks.has(k)) rosterPlayerWeeks.set(k, new Set<number>());
-            rosterPlayerWeeks.get(k)!.add(week);
+            // FIX: Use starterActualPoints instead of playersPoints
+            const playerPoints = t.starterActualPoints || t.playersPoints || {};
 
-            // Debug Drake Maye specifically
-            if (String(pid) === '11564' && points > 0) {
+            // Debug logging for Drake Maye specifically
+            if (t.starters.includes('11564')) {
               debugLog(
-                `[buildFacts] Week ${week}: Drake Maye (${pid}) points set to ${points} for roster ${t.rosterId}`,
+                `[buildFacts] Week ${week}: Drake Maye (11564) started by roster ${t.rosterId}`,
               );
+              debugLog(`[buildFacts] Drake Maye points: ${playerPoints['11564'] || 'N/A'}`);
+            }
+
+            for (const pid of t.players) {
+              const points = Number(playerPoints[String(pid)] || 0);
+              playerWeekPoints.set(`${week}:${String(pid)}`, points);
+              const k = `${t.rosterId}:${String(pid)}`;
+              if (!rosterPlayerWeeks.has(k)) rosterPlayerWeeks.set(k, new Set<number>());
+              rosterPlayerWeeks.get(k)!.add(week);
+
+              // Debug Drake Maye specifically
+              if (String(pid) === '11564' && points > 0) {
+                debugLog(
+                  `[buildFacts] Week ${week}: Drake Maye (${pid}) points set to ${points} for roster ${t.rosterId}`,
+                );
+              }
+            }
+            // Store all starter points for position-specific replacement calculation
+            for (const pid of t.starters) {
+              const pts = Number(playerPoints[String(pid)] || 0);
+              const rkey = `${week}:ALL_STARTERS`;
+              if (!startersPtsByPos[rkey]) startersPtsByPos[rkey] = [];
+              startersPtsByPos[rkey].push(pts);
             }
           }
-          // Store all starter points for position-specific replacement calculation
-          for (const pid of t.starters) {
-            const pts = Number(playerPoints[String(pid)] || 0);
-            const rkey = `${week}:ALL_STARTERS`;
-            if (!startersPtsByPos[rkey]) startersPtsByPos[rkey] = [];
-            startersPtsByPos[rkey].push(pts);
-          }
         }
-      }
 
-      for (const [k, arr] of Object.entries(startersPtsByPos)) {
-        replacementByWeekPos.set(k, median(arr));
+        for (const [k, arr] of Object.entries(startersPtsByPos)) {
+          replacementByWeekPos.set(k, median(arr));
+        }
+      } catch {
+        // console.error('Failed to build facts:', e);
       }
-    } catch {
-      // console.error('Failed to build facts:', e);
-      continue;
-    }
-  }
+    }),
+  );
 
   return {
     weeks: seasonWeeks,

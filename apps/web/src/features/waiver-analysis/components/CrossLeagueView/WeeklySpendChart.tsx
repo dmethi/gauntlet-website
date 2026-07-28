@@ -56,7 +56,7 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
                   <div className="flex-1 flex flex-col justify-end">
                     <div className="flex items-end justify-center">
                       <div
-                        className="w-full bg-blue-500 rounded-t-md transition-all duration-300 flex flex-col items-center justify-end pb-1"
+                        className="w-full bg-primary rounded-t-md transition-all duration-300 flex flex-col items-center justify-end pb-1"
                         style={{ height: `${Math.max(afcHeight, 5)}%` }}
                       >
                         {week.afcData.totalSpent > 0 && (
@@ -66,14 +66,14 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
                         )}
                       </div>
                     </div>
-                    <div className="text-xs text-center text-blue-700 font-medium mt-1">AFC</div>
+                    <div className="text-xs text-center text-primary font-medium mt-1">AFC</div>
                   </div>
 
                   {/* NFC Bar */}
                   <div className="flex-1 flex flex-col justify-end">
                     <div className="flex items-end justify-center">
                       <div
-                        className="w-full bg-green-500 rounded-t-md transition-all duration-300 flex flex-col items-center justify-end pb-1"
+                        className="w-full bg-secondary rounded-t-md transition-all duration-300 flex flex-col items-center justify-end pb-1"
                         style={{ height: `${Math.max(nfcHeight, 5)}%` }}
                       >
                         {week.nfcData.totalSpent > 0 && (
@@ -83,7 +83,7 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
                         )}
                       </div>
                     </div>
-                    <div className="text-xs text-center text-green-700 font-medium mt-1">NFC</div>
+                    <div className="text-xs text-center text-secondary font-medium mt-1">NFC</div>
                   </div>
                 </div>
 
@@ -110,13 +110,13 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-sm text-muted-foreground">Total AFC Spent</div>
-              <div className="text-xl font-bold text-blue-600">
+              <div className="text-xl font-bold text-primary">
                 ${comparisons.reduce((sum, w) => sum + w.afcData.totalSpent, 0)}
               </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">Total NFC Spent</div>
-              <div className="text-xl font-bold text-green-600">
+              <div className="text-xl font-bold text-secondary">
                 ${comparisons.reduce((sum, w) => sum + w.nfcData.totalSpent, 0)}
               </div>
             </div>

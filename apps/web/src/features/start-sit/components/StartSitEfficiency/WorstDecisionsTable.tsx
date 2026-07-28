@@ -89,7 +89,7 @@ export const WorstDecisionsTable = memo(({ decisions, players }: DecisionTablePr
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xl font-bold text-red-600">
+                  <div className="text-xl font-bold text-destructive">
                     +{(decision.pointsLeft || 0).toFixed(1)} pts
                   </div>
                   <div className="text-xs text-muted-foreground">Points Left</div>
@@ -97,8 +97,8 @@ export const WorstDecisionsTable = memo(({ decisions, players }: DecisionTablePr
               </div>
 
               <div className="grid gap-3 md:grid-cols-2">
-                <div className="rounded-lg bg-red-50 p-3">
-                  <div className="font-medium text-red-700">
+                <div className="rounded-lg bg-destructive/10 p-3">
+                  <div className="font-medium text-destructive">
                     Started: {selectedName} ({decision.selectedPlayer.projectedPoints.toFixed(1)}{' '}
                     proj.)
                   </div>
@@ -106,8 +106,8 @@ export const WorstDecisionsTable = memo(({ decisions, players }: DecisionTablePr
                     Actual: {decision.selectedPlayer.actualPoints.toFixed(1)} pts
                   </div>
                 </div>
-                <div className="rounded-lg bg-emerald-50 p-3">
-                  <div className="font-medium text-emerald-700">
+                <div className="rounded-lg bg-success/10 p-3">
+                  <div className="font-medium text-success">
                     Optimal: {optimalName}{' '}
                     {decision.optimalPlayer?.source === 'waiver' ? '(waiver*)' : '(bench)'}
                   </div>
@@ -148,7 +148,7 @@ export const WorstDecisionsTable = memo(({ decisions, players }: DecisionTablePr
                             </span>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="font-medium text-orange-600">
+                            <span className="font-medium text-secondary">
                               {alt.projectedPoints.toFixed(1)} ({projDiff >= 0 ? '+' : ''}
                               {projDiff.toFixed(1)})
                             </span>
@@ -160,7 +160,7 @@ export const WorstDecisionsTable = memo(({ decisions, players }: DecisionTablePr
                                 </span>
                               )}
                             </span>
-                            <span className="font-medium text-emerald-600">
+                            <span className="font-medium text-success">
                               +{actualDiff.toFixed(1)}
                             </span>
                           </div>

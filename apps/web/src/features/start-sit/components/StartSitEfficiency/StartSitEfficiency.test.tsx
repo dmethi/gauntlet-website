@@ -184,7 +184,7 @@ describe('StartSitEfficiency component', () => {
     const data = createStartSitData();
     render(<StartSitEfficiency data={data} />);
 
-    expect(screen.getByText(/Start\/Sit Efficiency Analysis/)).toBeInTheDocument();
+    expect(screen.getByText(/Manager Rankings/)).toBeInTheDocument();
     expect(screen.getByText(/Manager One/)).toBeInTheDocument();
     expect(screen.getByText(/Worst Decisions/)).toBeInTheDocument();
   });

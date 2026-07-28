@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import type { GradeTxn } from '@/features/transactions/types';
 import { getDivergingBg, getTextColorForBg } from '@/shared/utils/colors';
+import { deltaTextClass } from '@/lib/stat-colors';
 import { calculateScoreBreakdown, calculateScoreRange } from './utils';
 
 /**
@@ -75,27 +76,25 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
             <h3 className="font-semibold text-base">Score Breakdown</h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
               <div className="text-center">
-                <div className="font-medium text-green-600">Contribution</div>
+                <div className="font-medium text-success">Contribution</div>
                 <div className="text-lg font-bold">+{breakdown.contribution.toFixed(1)}</div>
                 <div className="text-muted-foreground">Playoff-weighted VORP when started</div>
               </div>
               <div className="text-center">
-                <div className="font-medium text-red-600">Self-Harm</div>
+                <div className="font-medium text-destructive">Self-Harm</div>
                 <div className="text-lg font-bold">-{breakdown.selfHarm.toFixed(1)}</div>
                 <div className="text-muted-foreground">Points lost vs your best starter</div>
               </div>
               <div className="text-center">
-                <div className="font-medium text-orange-600">Opponent-Harm</div>
+                <div className="font-medium text-secondary">Opponent-Harm</div>
                 <div className="text-lg font-bold">-{breakdown.oppHarm.toFixed(1)}</div>
                 <div className="text-muted-foreground">
                   Points above replacement by any opponent
                 </div>
               </div>
               <div className="text-center">
-                <div className="font-medium text-blue-600">Net Score</div>
-                <div
-                  className={`text-lg font-bold ${transaction.score >= 0 ? 'text-green-600' : 'text-red-600'}`}
-                >
+                <div className="font-medium text-primary">Net Score</div>
+                <div className={`text-lg font-bold ${deltaTextClass(transaction.score)}`}>
                   {transaction.score >= 0 ? '+' : ''}
                   {transaction.score.toFixed(1)}
                 </div>
@@ -113,8 +112,8 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
                 key={player.playerId}
                 className={`rounded-lg p-3 border ${
                   player.role === 'add'
-                    ? 'bg-green-50 border-green-200'
-                    : 'bg-red-50 border-red-200'
+                    ? 'bg-success/10 border-success/30'
+                    : 'bg-destructive/10 border-destructive/30'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
@@ -126,7 +125,7 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
                   </div>
                   <div
                     className={`text-lg font-bold ${
-                      player.role === 'add' ? 'text-green-600' : 'text-red-600'
+                      player.role === 'add' ? 'text-success' : 'text-destructive'
                     }`}
                   >
                     {player.role === 'add'
@@ -178,9 +177,9 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
                             className={`min-w-16 text-center p-2 rounded text-sm ${
                               week.started
                                 ? player.role === 'add'
-                                  ? 'bg-green-500 text-white'
-                                  : 'bg-red-500 text-white'
-                                : 'bg-gray-200 text-gray-600'
+                                  ? 'bg-success text-success-foreground'
+                                  : 'bg-destructive text-destructive-foreground'
+                                : 'bg-muted text-muted-foreground'
                             }`}
                             title={
                               showVORP
