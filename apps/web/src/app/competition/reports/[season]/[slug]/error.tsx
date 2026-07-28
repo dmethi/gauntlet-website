@@ -1,5 +1,8 @@
 /**
- * Error boundary for recap report pages
+ * Error boundary for the dynamic recap report route.
+ *
+ * Surfaces an upstream failure (report storage unreachable, malformed report
+ * payload) instead of letting the page render as an empty successful report.
  */
 
 'use client';

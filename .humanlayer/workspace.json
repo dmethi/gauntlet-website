@@ -1,0 +1,13 @@
+{
+  "pathTemplate": "~/.humanlayer/workspaces/{{ TASKSLUG }}/{{ REPOBASENAME }}",
+  "branchTemplate": "{{ TASKSLUG }}",
+  "sourceRef": "main",
+  "setupCommand": "pnpm install",
+  "repos": [
+    {
+      "localPath": ".",
+      "description": "Gauntlet website",
+      "primary": true
+    }
+  ]
+}

@@ -129,3 +129,6 @@ temp/
 
 *storybook.log
 storybook-static
+
+# Riptide artifacts (cloud-synced)
+.humanlayer/tasks/

@@ -1,5 +1,8 @@
 /**
- * 404 page for non-existent recap reports
+ * 404 boundary for the dynamic recap report route.
+ *
+ * Lives beside `page.tsx` so it catches the `notFound()` calls that page makes
+ * for an unparseable week slug or a report that has not been generated yet.
  */
 
 import Link from 'next/link';
