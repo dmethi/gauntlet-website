@@ -11,6 +11,8 @@ import { memo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeftRight, DollarSign, TrendingUp, Users } from 'lucide-react';
+import { WarRoomLoader } from '@gauntlet/ui';
+import { GauntletLogo } from '@/components/gauntlet-logo';
 import { useWaiverAnalytics } from '../hooks';
 import { CrossLeagueView } from './CrossLeagueView';
 import { ManagerView } from './ManagerView';
@@ -41,48 +43,7 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
 
   // Loading state
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5" />
-            Waiver Analysis
-          </CardTitle>
-          <CardDescription>Loading waiver data and FAAB spending analysis...</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center justify-center h-64 space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"></div>
-              <div
-                className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"
-                style={{ animationDelay: '0.1s' }}
-              ></div>
-              <div
-                className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"
-                style={{ animationDelay: '0.2s' }}
-              ></div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-medium text-muted-foreground mb-1">
-                Analyzing Waiver Transactions
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Processing {currentWeek} weeks of data across both leagues...
-              </div>
-            </div>
-
-            {/* Progress indicator */}
-            <div className="w-full max-w-md bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300 animate-pulse"
-                style={{ width: '60%' }}
-              ></div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <WarRoomLoader show logo={<GauntletLogo size="lg" />} />;
   }
 
   // Error state

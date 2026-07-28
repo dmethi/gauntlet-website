@@ -54,7 +54,8 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
         // Load team information
         const teamsData = new Map<string, TeamInfo>();
         try {
-          const teamsRes = await fetch('/api/league/teams');
+          // Matches the hardcoded 2025 leagues this model fetches transactions from below.
+          const teamsRes = await fetch('/api/league/teams?season=2025');
           if (teamsRes.ok) {
             const teamsResponse = await teamsRes.json();
             const teams = teamsResponse.teams || [];

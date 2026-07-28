@@ -19,7 +19,8 @@ describe('TransactionAnalysis', () => {
     });
 
     render(<TransactionAnalysis currentWeek={7} />);
-    expect(screen.getByText('Loading Transaction Analysis')).toBeInTheDocument();
+    // Loading state renders the WarRoomLoader overlay instead of the loaded content.
+    expect(screen.queryByText('Transaction Analysis')).not.toBeInTheDocument();
   });
 
   it('renders transaction table when data is loaded', () => {
@@ -60,7 +61,9 @@ describe('TransactionAnalysis', () => {
     });
 
     render(<TransactionAnalysis currentWeek={7} />);
-    expect(screen.getByText('Loading transaction efficiency rankings...')).toBeInTheDocument();
+    // Empty allData is treated the same as still-loading by the component,
+    // so it renders the WarRoomLoader overlay rather than the loaded content.
+    expect(screen.queryByText('Transaction Analysis')).not.toBeInTheDocument();
   });
 
   describe('Filtering', () => {

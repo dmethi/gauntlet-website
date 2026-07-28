@@ -1,11 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { analyzeStartSitEfficiency } from '@/features/start-sit/utils';
+import { getLeaguesForSeason } from '@/config/leagues';
 
 export const dynamic = 'force-dynamic';
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
   try {
-    const data = await analyzeStartSitEfficiency();
+    const season = request.nextUrl.searchParams.get('season') || undefined;
+    const leagues = season ? getLeaguesForSeason(season) : undefined;
+    const data = await analyzeStartSitEfficiency({ season, leagues });
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error running start/sit efficiency analysis:', error);
@@ -20,10 +23,12 @@ export const GET = async () => {
 };
 
 // Force refresh the analysis (ignores cache)
-export const POST = async () => {
+export const POST = async (request: NextRequest) => {
   try {
+    const season = request.nextUrl.searchParams.get('season') || undefined;
+    const leagues = season ? getLeaguesForSeason(season) : undefined;
     console.log('🔄 Force refreshing start/sit efficiency analysis (server-computed)...');
-    const data = await analyzeStartSitEfficiency();
+    const data = await analyzeStartSitEfficiency({ season, leagues });
     return NextResponse.json({
       message: 'Analysis regeneration completed',
       timestamp: new Date().toISOString(),

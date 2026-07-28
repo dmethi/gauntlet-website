@@ -53,7 +53,8 @@ const VIEWS: { key: ViewKey; label: string; Icon: typeof Users }[] = [
   { key: 'start-sit', label: 'Start/Sit', Icon: ClipboardCheck },
 ];
 
-export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
+export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentProps) => {
+  const season = leagues[0]?.season ? String(leagues[0].season) : undefined;
   const teamsMap = useMemo(() => new Map(dataset.teams), [dataset.teams]);
   const allTeamEntries = useMemo(() => Array.from(teamsMap.entries()), [teamsMap]);
 
@@ -146,7 +147,9 @@ export const StatsContent = ({ dataset, searchParams }: StatsContentProps) => {
       case 'waiver-analysis':
         return <WaiverAnalysisHub currentWeek={dataset.currentWeek} />;
       case 'start-sit':
-        return <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} />;
+        return (
+          <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} season={season} />
+        );
     }
   };
 

@@ -3,7 +3,7 @@ import {
   calculateLeagueProjection,
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
-import { CURRENT_LEAGUES } from '@/config/leagues';
+import { CURRENT_LEAGUES, type League } from '@/config/leagues';
 import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type {
   AlternativePlayer,
@@ -425,10 +425,10 @@ const getRosteredPlayers = (matchups: any[]): Set<string> => {
   return rostered;
 };
 
-const resolveSeasonAndWeeks = async (options?: {
-  season?: string;
-  weeks?: number[];
-}): Promise<{ season: string; weeks: number[] }> => {
+const resolveSeasonAndWeeks = async (
+  options: { season?: string; weeks?: number[] } | undefined,
+  leagues: League[],
+): Promise<{ season: string; weeks: number[] }> => {
   let season = options?.season;
   let weeks = options?.weeks && options.weeks.length > 0 ? options.weeks : [];
 
@@ -436,7 +436,7 @@ const resolveSeasonAndWeeks = async (options?: {
   // which season is "current", not Sleeper's live global NFL state — during
   // the off-season that resets to the upcoming season's week 1, which would
   // otherwise point this analysis at the wrong season with almost no weeks.
-  const referenceLeague = CURRENT_LEAGUES[0];
+  const referenceLeague = leagues[0];
 
   try {
     if (!season && referenceLeague) {
@@ -567,8 +567,11 @@ const processLeagueWeek = async (
 export const analyzeStartSitEfficiency = async (options?: {
   season?: string;
   weeks?: number[];
+  leagues?: League[];
 }): Promise<StartSitData> => {
-  const { season, weeks } = await resolveSeasonAndWeeks(options);
+  const leagues =
+    options?.leagues && options.leagues.length > 0 ? options.leagues : CURRENT_LEAGUES;
+  const { season, weeks } = await resolveSeasonAndWeeks(options, leagues);
 
   // Fetch massive static data once (players)
   const allPlayers = await sleeperClient.fetchAllPlayers();
@@ -584,7 +587,7 @@ export const analyzeStartSitEfficiency = async (options?: {
   // Fetch scoring settings for every league up front, in parallel.
   const scoringSettingsByLeague = new Map<string, ScoringSettings>();
   await Promise.all(
-    CURRENT_LEAGUES.map(async league => {
+    leagues.map(async league => {
       const leagueDetails = await sleeperClient.fetchLeague(league.id);
       scoringSettingsByLeague.set(
         league.id,
@@ -599,7 +602,7 @@ export const analyzeStartSitEfficiency = async (options?: {
   // BrowserSleeperClient collapses the two leagues' identical calls for the
   // same week into a single network request.
   const leagueWeekResults = await Promise.all(
-    CURRENT_LEAGUES.flatMap(league =>
+    leagues.flatMap(league =>
       weeks.map(week =>
         processLeagueWeek(league, week, season, scoringSettingsByLeague, playerPositions),
       ),

@@ -85,7 +85,8 @@ const fetchAllLeagueTransactions = async (
  * Fetch team information for both leagues
  */
 const fetchTeamInfo = async (): Promise<Map<string, TeamInfo>> => {
-  const response = await fetch('/api/league/teams');
+  // Matches the hardcoded 2025 leagues this hook fetches transactions from below.
+  const response = await fetch('/api/league/teams?season=2025');
 
   if (!response.ok) {
     throw new Error('Failed to fetch team information');

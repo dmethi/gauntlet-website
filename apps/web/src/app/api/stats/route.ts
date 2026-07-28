@@ -7,8 +7,13 @@ import { join } from 'path';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// Fetch cached start/sit efficiency data (same logic as the API route)
-const getStartSitEfficiencyData = async () => {
+// Fetch cached start/sit efficiency data (same logic as the API route). The
+// on-disk cache is always generated for CURRENT_LEAGUES (see
+// scripts/start-sit-efficiency-analysis.ts) — only serve it when the
+// requested season actually matches what it was generated for, otherwise
+// return null so the client falls back to its own season-scoped fetch
+// (StartSitEfficiencyTab -> /api/start-sit-efficiency?season=...).
+const getStartSitEfficiencyData = async (season: string) => {
   try {
     const currentDir = process.cwd();
     const projectRoot = currentDir.endsWith('/apps/web') ? currentDir.slice(0, -9) : currentDir;
@@ -32,8 +37,14 @@ const getStartSitEfficiencyData = async () => {
       const fileTime = parseInt(latestFile.match(/start-sit-analysis-(\d+)\.json/)?.[1] || '0');
 
       if (now - fileTime < cacheValidDuration) {
-        console.log(`[Stats] Using cached start/sit data from ${latestFile}`);
         const data = JSON.parse(readFileSync(join(projectRoot, latestFile), 'utf8'));
+        if (String(data?.configuration?.season) !== season) {
+          console.log(
+            `[Stats] Cached start/sit data is for season ${data?.configuration?.season}, not requested season ${season} — skipping`,
+          );
+          return null;
+        }
+        console.log(`[Stats] Using cached start/sit data from ${latestFile}`);
         return data;
       }
     }
@@ -64,7 +75,7 @@ export const GET = async (request: NextRequest) => {
         labels,
         weekRange: { from: 1, to: 18 }, // Get all available weeks
       }),
-      getStartSitEfficiencyData(),
+      getStartSitEfficiencyData(season),
     ]);
 
     const serializedDataset = serializeStatsDataset(dataset);
