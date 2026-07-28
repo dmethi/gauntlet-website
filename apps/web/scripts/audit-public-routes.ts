@@ -18,6 +18,7 @@
 
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, relative, sep } from 'path';
+import { isIndexable } from '../src/lib/site';
 
 type RouteKind = 'page' | 'api';
 type Rendering = 'server' | 'client';
@@ -123,12 +124,14 @@ const classifySensitivity = (path: string): DataSensitivity => {
 };
 
 /**
- * Pre-Phase-2 default: HTML pages are treated as canonical and route handlers
- * as excluded from indexing. Phase 2 replaces this with the shared indexing
- * policy in `src/lib/site.ts` so the inventory and `robots.ts` cannot disagree.
+ * Reads the shared indexing policy in `src/lib/site.ts`, so this column and
+ * `robots.ts` cannot disagree. Route handlers are `excluded` regardless — they
+ * serve no document to index — and a page the policy denies is `noindex`.
  */
-const classifyIndexability = (kind: RouteKind): Indexability =>
-  kind === 'api' ? 'excluded' : 'canonical';
+const classifyIndexability = (kind: RouteKind, path: string): Indexability => {
+  if (kind === 'api') return 'excluded';
+  return isIndexable(path) ? 'canonical' : 'noindex';
+};
 
 export const enumerateRoutes = (appDir: string): PublicRoute[] => {
   const routes: PublicRoute[] = [];
@@ -148,7 +151,7 @@ export const enumerateRoutes = (appDir: string): PublicRoute[] => {
         kind,
         file: relative(APPS_WEB_ROOT, entry).split(sep).join('/'),
         rendering: detectRendering(entry),
-        indexability: classifyIndexability(kind),
+        indexability: classifyIndexability(kind, path),
         dataSensitivity: classifySensitivity(path),
       });
     }

@@ -17,10 +17,14 @@ import {
   rules2026WeeklyPrizeNotes,
 } from '../_content/rules-2026';
 
+// Campaign content, not durable public record: excluded from indexing by the
+// policy in `@/lib/site`. `robots.ts` disallows the path; this states the same
+// thing in the document for crawlers that reach the URL from a shared link.
 export const metadata = {
   title: '2026 Rules & Format — The Gauntlet',
   description:
     'The Year Two format for The Gauntlet: three leagues, 36 teams, promotion and relegation, scoring, playoffs, payouts, and commissioner governance.',
+  robots: { index: false, follow: false },
 };
 
 const SectionHeading = ({
