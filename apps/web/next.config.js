@@ -44,6 +44,15 @@ const nextConfig = {
         destination: '/matchups/1263744209295245312/1/:matchupId',
         permanent: true,
       },
+      {
+        // Hall of Fame data was never season-scoped (it always spans every
+        // registered season), so the "2025 archive" was just a duplicate of
+        // the live page under a different URL. Redirect instead of
+        // maintaining two copies of the same view.
+        source: '/archive/2025/hall-of-fame',
+        destination: '/hall-of-fame-enhanced',
+        permanent: true,
+      },
     ];
   },
 };

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-import { BarChart3, ClipboardList, Home, Star, Swords } from 'lucide-react';
+import { BarChart3, ClipboardList, Home, Swords } from 'lucide-react';
 import { Container, PageHeader } from '@gauntlet/ui';
 import { getLeaguesForSeason } from '@/config/leagues';
 
@@ -65,12 +65,6 @@ const Archive2025Page = () => {
           title="Matchups"
           description="Every week's matchups across both leagues."
           href="/archive/2025/matchups"
-        />
-        <ArchiveLink
-          Icon={Star}
-          title="Hall of Fame"
-          description="The best (and worst) performances of the season."
-          href="/archive/2025/hall-of-fame"
         />
         <ArchiveLink
           Icon={ClipboardList}

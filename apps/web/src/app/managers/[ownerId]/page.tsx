@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { PageHeaderHero } from '@gauntlet/ui';
 import { getManagerHistory, type ManagerLeagueSeasonHistory } from '@/lib/leagues/manager-history';
 import { deltaTextClass, leagueBadgeClass } from '@/lib/stat-colors';
+import { ManagerHallOfFameBadges } from './manager-hall-of-fame-badges';
 
 interface PageProps {
   params: { ownerId: string } | Promise<{ ownerId: string }>;
@@ -141,6 +142,10 @@ const ManagerProfilePage = async ({ params }: PageProps) => {
             )}
           </div>
         )}
+
+        <ManagerHallOfFameBadges
+          rosterKeys={history.seasons.map(s => ({ leagueId: s.leagueId, rosterId: s.rosterId }))}
+        />
 
         <h2 className="text-xl font-semibold text-card-foreground mb-4">Season by season</h2>
         <div className="relative pl-6">

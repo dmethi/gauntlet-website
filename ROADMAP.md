@@ -385,6 +385,114 @@ Builds on Phase 1's registry.
       resolution, and the unplayed-season ranking bug) plus a live Chrome pass
       against real Sleeper data in both light and dark mode (`/managers` index
       and a 4-season real manager profile), zero console errors.
+- [x] Un-archive Hall of Fame: make `/hall-of-fame-enhanced` a live, evergreen
+      page instead of a `SeasonPlaceholder` stub (2026-07-28). Moved the real
+      1,262-line implementation from `app/archive/2025/hall-of-fame/page.tsx`
+      into `app/hall-of-fame-enhanced/hall-of-fame-view.tsx` (a `'use client'`
+      component), with a thin server `page.tsx` wrapper so `metadata` export
+      still works. Did not touch `getAllHistoricalMatchups`/
+      `useHallOfFameEnhanced`/`features/hall-of-fame/utils/*` calculation logic
+      — verified before starting that the hook was already registry-driven
+      (spans every season/league in `config/leagues.ts`), so this was purely
+      presentational. **Filter-default design decision**: the old
+      `AFC_LEAGUE_ID`/`NFC_LEAGUE_ID` constants pinned to 2025 no longer make
+      sense — the registry now has 5 leagues across 2 seasons (2025 AFC/NFC,
+      2026 Legion I/II/III). Replaced with league/season dropdowns built
+      dynamically from `getAllLeagues()`/`getAllSeasons()`. Also discovered the
+      old filters were pure decoration — `leagueFilter`/ `seasonFilter` state
+      existed but was never applied to any rendered data. Wired them up for real
+      (a `matchesFilters(league, season)` generic over the `{leagueId, season}`
+      shape shared by every HOF record type), since a broken filter is worse
+      than none per [[feedback_ui_content_discipline]]. **Chrome swap**:
+      `react-content-loader` → `WarRoomLoader`; `Container`/`PageHeader` →
+      `PageHeaderHero`; the binary AFC=blue/NFC=red badge helper and raw
+      green/red Hall-of-Fame/Hall-of-Shame headers → `stat-colors.ts`'s
+      `leagueBadgeClass`/`deltaTextClass`. Added `app/hall-of-fame-enhanced` to
+      the scoped ESLint `no-restricted-syntax` list and the
+      `design-tokens.test.ts` `SCOPED_DIRS` list so the raw-color guard now
+      covers this surface (7/7 tests pass). Removed `any[]` prop types picked up
+      during the move (hard constraint, `docs/AGENTS.md`) in favor of the real
+      `RollingWindowData`/`StreakData`/ `SeasonalData` types. Found and fixed a
+      **pre-existing React key bug** while doing this (surfaced as a console
+      warning during Chrome verification): weekly-record and
+      rolling/streak/seasonal card keys used `teamId`/`rosterId` without
+      `leagueId` — since roster IDs are only unique within a league, two
+      different teams in different leagues with the same roster ID collided.
+      Fixed by prefixing every key with `leagueId`.
+      **`/archive/2025/hall-of-fame` decision**: unlike Matchups (where the
+      archive is a genuinely different data slice — 2025-only matchups vs.
+      current-season matchups), Hall of Fame's data was never season-scoped: the
+      archive page and the live page would now render byte-identical content.
+      The "shared parameterized component consumed by two routes" pattern from
+      `matchups-view.tsx` doesn't apply here because there's no second real use
+      case — so instead of keeping (or duplicating) a second copy, added a
+      permanent redirect (`/archive/2025/hall-of-fame` →
+      `/hall-of-fame-enhanced`) in `next.config.js`, deleted the old page file,
+      and removed the now-dead "Hall of Fame" tile from the `/archive/2025`
+      index (it pointed at 2025-only copy that no longer exists as a distinct
+      view). Verified with `pnpm type-check`/`lint`/`test` (0 errors, 116/116
+      relevant tests pass) plus a live Chrome pass in both themes: real data
+      renders (336 matchups, 2 leagues currently played, 5 leagues registered),
+      league/ season filters actually narrow the results, all three tabs
+      (Weekly/Rolling/Seasonal) render, the archive URL redirects, and no
+      console errors/warnings after the key fix.
+- [x] Manager-page Hall of Fame badges (2026-07-28), first half of the redesign
+      pass below. Added `findManagerHallOfFameBadges` to
+      `hooks/useHallOfFameEnhanced.ts`: a pure function that takes the full
+      `ComprehensiveHallOfFameData` plus a manager's `(leagueId, rosterId)`
+      pairs (from `ManagerHistory.seasons`) and returns every #1 record-book
+      entry — weekly, rolling-window, streak, and seasonal — that manager holds.
+      **Update (same day)**: extended from #1-only to the full top-5 per
+      category (each source array is already sliced to 5), with a `rank` field
+      on `ManagerHallOfFameBadge` and badges sorted best-rank-first; the
+      component now renders `getRankEmoji(rank)` (🥇🥈🥉/"4."/"5.", the same
+      helper the Hall of Fame page itself uses) instead of a flat trophy icon,
+      so e.g. Drake Maye Lover went from 5 badges to 16. **Scope decision**:
+      deliberately limited to single-team categories
+      (weekly/rolling/streak/seasonal); matchup and positional-difference
+      records involve two teams and don't reduce to a single "this manager holds
+      it" badge, so those are left for a future pass if wanted. Rendered via a
+      new client component,
+      `app/managers/[ownerId]/manager-hall-of-fame-badges.tsx` (`'use client'`
+      since it calls the `useQuery`-backed `useHallOfFameEnhanced`), added
+      alongside — not replacing — the existing self-computed Best/Toughest
+      Season tiles: those measure season win%, this measures record-book
+      achievements, and a manager can have either without the other. Renders
+      nothing while loading or when a manager holds zero records (most
+      managers), so it never shows an empty section. Badges use `stat-colors.ts`
+      semantic tokens (`border-secondary`/`bg-secondary`), not raw colors.
+      **Test-infra fix required**: adding a client component with `useQuery` to
+      `app/managers/[ownerId]/page.tsx` broke its existing test file, which
+      rendered with plain `render()` (no `QueryClientProvider`) — switched to
+      the pre-existing but previously-unused `renderWithProviders` helper
+      (`test/utils/test-wrapper.tsx`) and mocked `useHallOfFameEnhanced` in that
+      test (irrelevant to what it asserts, and hitting the real Sleeper-backed
+      service in a unit test would be slow/flaky). Added direct unit coverage
+      for `findManagerHallOfFameBadges` (`hooks/useHallOfFameEnhanced.test.ts`,
+      6 tests: no-match, no-roster-keys, #1-match, #2-is-not-#1, streak match,
+      seasonal match). Verified with `pnpm type-check`/`lint`/`test` (129/129)
+      plus a live Chrome pass in both themes against a manager with 5 real
+      badges (Drake Maye Lover: Highest Team Points, Highest Top 3 Starters,
+      Highest Combined Score, Best Yards per Rush, Single Player Score Record)
+      and one with 3 "lowest-value" record badges (2 Dolla Balla$: QB Points,
+      Lowest Bottom 3 Starters, Lowest Combined DEF Score — confirmed this is
+      correct, not a bug: categories whose `type` is `'lowest'` already treat
+      the smallest value as the notable record throughout the HOF page itself,
+      and the badge logic just surfaces whichever end of the ranking that
+      category defines as rank #1).
+- [ ] Hall of Fame/Shame redesign pass, remaining scope. Two parts: (1)
+      **HOF-page-side badges** — the above only added badges to manager
+      profiles; the Hall of Fame page itself (`hall-of-fame-view.tsx`) still
+      doesn't link its per-category winner/loser entries to
+      `/managers/[ownerId]` (team names there link to `/team/[id]` only). (2)
+      **Revisit the categories** — `features/hall-of-fame/utils/categories.ts`
+      and `categories-expanded.ts` (592 + 720 lines) currently define the full
+      category set; audit them for what's actually worth surfacing prominently
+      vs. what's noise, and whether the weekly/rolling/streak/seasonal/
+      positional-diff taxonomy still makes sense once the page has 3 leagues
+      (not 2) and multiple seasons of real history to draw on, per
+      [[feedback_ui_content_discipline]] (a category shouldn't get a tab just
+      because the data exists — it needs to be worth a manager's attention).
 - [ ] Re-run `apps/web/src/scripts/audit-hall-of-fame.ts` against real
       multi-league data before season launch to catch data-completeness gaps.
 

@@ -7,13 +7,14 @@ import {
   getCategoryInfo,
   getCategoryInfoExpanded,
   getRankEmoji,
+  type RollingWindowData,
+  type SeasonalData,
+  type StreakData,
 } from '@/features/hall-of-fame/utils';
-import { Container, PageHeader } from '@gauntlet/ui';
-import ContentLoader from 'react-content-loader';
+import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -21,81 +22,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Calendar,
-  Clock,
-  Filter,
-  Sparkles,
-  Swords,
-  Target,
-  TrendingDown,
-  Trophy,
-  Users,
-  Zap,
-} from 'lucide-react';
+import { Calendar, Clock, Filter, TrendingDown, Trophy } from 'lucide-react';
 import Link from 'next/link';
-import { getLeaguesForSeason } from '@/config/leagues';
+import { getAllLeagues, getAllSeasons, getLeagueConfig } from '@/config/leagues';
+import { deltaTextClass, leagueBadgeClass } from '@/lib/stat-colors';
+import { GauntletLogo } from '@/components/gauntlet-logo';
 
-// Archived 2025 season data — pinned explicitly so this page keeps showing
-// the correct league IDs regardless of which season becomes "current".
-const ARCHIVE_2025_LEAGUES = getLeaguesForSeason('2025');
-const AFC_LEAGUE_ID = ARCHIVE_2025_LEAGUES.find(l => l.conference === 'AFC')?.id ?? '';
-const NFC_LEAGUE_ID = ARCHIVE_2025_LEAGUES.find(l => l.conference === 'NFC')?.id ?? '';
+const ALL_LEAGUES = getAllLeagues();
+const ALL_SEASONS = [...getAllSeasons()].sort().reverse();
 
-const HallOfFameLoader = () => (
-  <ContentLoader
-    speed={2}
-    width={1200}
-    height={800}
-    viewBox="0 0 1200 800"
-    backgroundColor="hsl(var(--muted))"
-    foregroundColor="hsl(var(--muted-foreground))"
-    uniqueKey="hall-of-fame-loader"
-  >
-    <rect x="16" y="32" rx="3" ry="3" width="400" height="36" />
-    <rect x="16" y="72" rx="3" ry="3" width="200" height="20" />
-    <rect x="16" y="120" rx="8" ry="8" width="600" height="40" />
-    <rect x="16" y="180" rx="8" ry="8" width="380" height="250" />
-    <rect x="410" y="180" rx="8" ry="8" width="380" height="250" />
-    <rect x="804" y="180" rx="8" ry="8" width="380" height="250" />
-  </ContentLoader>
+// Short badge label for a league: "AFC" / "Legion I" / etc, falling back to
+// the full name if a league ID isn't in the registry (shouldn't happen).
+const getLeagueShortName = (leagueId: string): string => {
+  const league = getLeagueConfig(leagueId);
+  return league?.conference ?? league?.name ?? leagueId;
+};
+
+const LeagueBadge = ({ leagueId }: { leagueId: string }) => (
+  <Badge variant="outline" className={leagueBadgeClass(getLeagueConfig(leagueId)?.name ?? '')}>
+    {getLeagueShortName(leagueId)}
+  </Badge>
 );
 
-const getGroupIcon = (groupKey: string) => {
-  switch (groupKey) {
-    case 'Score & Margin':
-      return <Trophy className="h-5 w-5" />;
-    case 'Lineup Quality':
-      return <Target className="h-5 w-5" />;
-    case 'Positional Splits':
-      return <Zap className="h-5 w-5" />;
-    case 'Player Records':
-      return <Users className="h-5 w-5" />;
-    case 'Win Probability':
-      return <Sparkles className="h-5 w-5" />;
-    case 'Rolling Windows':
-      return <Clock className="h-5 w-5" />;
-    case 'Season Records':
-      return <Calendar className="h-5 w-5" />;
-    case 'Matchup Records':
-      return <Swords className="h-5 w-5" />;
-    default:
-      return <Trophy className="h-5 w-5" />;
-  }
-};
+// A record from any of the Hall of Fame data shapes — everything is scoped
+// to a league and a season, which is what the filters below operate on.
+interface Filterable {
+  leagueId: string;
+  season: string;
+}
 
-const getLeagueBadgeColor = (leagueId: string): string => {
-  return leagueId === AFC_LEAGUE_ID
-    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-};
-
-const getLeagueShortName = (leagueId: string): string => {
-  return leagueId === AFC_LEAGUE_ID ? 'AFC' : 'NFC';
-};
+const matchesFilters =
+  (leagueFilter: string, seasonFilter: string) =>
+  <T extends Filterable>(record: T): boolean =>
+    (leagueFilter === 'all' || record.leagueId === leagueFilter) &&
+    (seasonFilter === 'all' || record.season === seasonFilter);
 
 // Component for rolling window records
-const RollingWindowCard = ({ title, windows }: { title: string; windows: any[] }) => {
+const RollingWindowCard = ({ title, windows }: { title: string; windows: RollingWindowData[] }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -105,7 +68,7 @@ const RollingWindowCard = ({ title, windows }: { title: string; windows: any[] }
         <div className="space-y-3">
           {windows.map((window, index) => (
             <div
-              key={`${window.rosterId}-${window.startWeek}`}
+              key={`${window.leagueId}-${window.rosterId}-${window.startWeek}`}
               className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
             >
               <div className="flex items-start gap-2 flex-1">
@@ -118,11 +81,9 @@ const RollingWindowCard = ({ title, windows }: { title: string; windows: any[] }
                     {window.teamName}
                   </Link>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className={getLeagueBadgeColor(window.leagueId)}>
-                      {getLeagueShortName(window.leagueId)}
-                    </Badge>
+                    <LeagueBadge leagueId={window.leagueId} />
                     <span className="text-xs text-muted-foreground">
-                      Weeks {window.startWeek}-{window.endWeek}
+                      {window.season} • Weeks {window.startWeek}-{window.endWeek}
                     </span>
                   </div>
                 </div>
@@ -142,7 +103,7 @@ const RollingWindowCard = ({ title, windows }: { title: string; windows: any[] }
 };
 
 // Component for streak records
-const StreakCard = ({ title, streaks, type }: { title: string; streaks: any[]; type: string }) => {
+const StreakCard = ({ title, streaks }: { title: string; streaks: StreakData[] }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -152,7 +113,7 @@ const StreakCard = ({ title, streaks, type }: { title: string; streaks: any[]; t
         <div className="space-y-3">
           {streaks.map((streak, index) => (
             <div
-              key={`${streak.rosterId}-${streak.startWeek}`}
+              key={`${streak.leagueId}-${streak.rosterId}-${streak.startWeek}`}
               className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
             >
               <div className="flex items-start gap-2 flex-1">
@@ -165,9 +126,7 @@ const StreakCard = ({ title, streaks, type }: { title: string; streaks: any[]; t
                     {streak.teamName}
                   </Link>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className={getLeagueBadgeColor(streak.leagueId)}>
-                      {getLeagueShortName(streak.leagueId)}
-                    </Badge>
+                    <LeagueBadge leagueId={streak.leagueId} />
                     <span className="text-xs text-muted-foreground">
                       {streak.season} • Weeks {streak.startWeek}-{streak.endWeek}
                     </span>
@@ -186,6 +145,8 @@ const StreakCard = ({ title, streaks, type }: { title: string; streaks: any[]; t
 };
 
 // Component for seasonal records
+type SeasonalNumericKey = 'wins' | 'totalPoints' | 'luckDelta' | 'totalDonuts' | 'blowoutWins';
+
 const SeasonalCard = ({
   title,
   records,
@@ -193,8 +154,8 @@ const SeasonalCard = ({
   formatFn,
 }: {
   title: string;
-  records: any[];
-  statKey: string;
+  records: SeasonalData[];
+  statKey: SeasonalNumericKey;
   formatFn: (value: number) => string;
 }) => {
   return (
@@ -206,7 +167,7 @@ const SeasonalCard = ({
         <div className="space-y-3">
           {records.map((record, index) => (
             <div
-              key={`${record.rosterId}-${record.season}`}
+              key={`${record.leagueId}-${record.rosterId}-${record.season}`}
               className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
             >
               <div className="flex items-start gap-2 flex-1">
@@ -219,9 +180,7 @@ const SeasonalCard = ({
                     {record.teamName}
                   </Link>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className={getLeagueBadgeColor(record.leagueId)}>
-                      {getLeagueShortName(record.leagueId)}
-                    </Badge>
+                    <LeagueBadge leagueId={record.leagueId} />
                     <span className="text-xs text-muted-foreground">{record.season} Season</span>
                   </div>
                 </div>
@@ -237,36 +196,65 @@ const SeasonalCard = ({
   );
 };
 
-export default function EnhancedHallOfFamePage(): JSX.Element {
+const ViewMatchupLink = ({
+  leagueId,
+  week,
+  matchupId,
+}: {
+  leagueId: string;
+  week: number;
+  matchupId: number;
+}) => (
+  <Link
+    href={`/matchups/${leagueId}/${week}/${matchupId}`}
+    className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+  >
+    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+      />
+    </svg>
+    View Matchup
+  </Link>
+);
+
+export const HallOfFameView = (): JSX.Element => {
   const { data, isLoading, error } = useHallOfFameEnhanced();
   const [activeTab, setActiveTab] = useState<string>('weekly');
   const [leagueFilter, setLeagueFilter] = useState<string>('all');
   const [seasonFilter, setSeasonFilter] = useState<string>('all');
 
   if (isLoading) {
-    return (
-      <Container className="py-8">
-        <HallOfFameLoader />
-      </Container>
-    );
+    return <WarRoomLoader show logo={<GauntletLogo size="lg" />} />;
   }
 
   if (error) {
     return (
-      <Container className="py-8">
-        <PageHeader title="Hall of Fame & Shame" subtitle="Failed to load records" />
+      <div className="max-w-7xl mx-auto py-8">
+        <PageHeaderHero
+          title="Hall of Fame"
+          subtitle="Failed to load records"
+          crestSrc="/gauntlet_logo.svg"
+        />
         <div className="text-center mt-8 text-muted-foreground">
           {error instanceof Error ? error.message : 'An error occurred'}
         </div>
-      </Container>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <Container className="py-8">
-        <PageHeader title="Hall of Fame & Shame" subtitle="No records available" />
-      </Container>
+      <div className="max-w-7xl mx-auto py-8">
+        <PageHeaderHero
+          title="Hall of Fame"
+          subtitle="No records available"
+          crestSrc="/gauntlet_logo.svg"
+        />
+      </div>
     );
   }
 
@@ -281,14 +269,19 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
     totalLeagues,
   } = data;
 
+  const passesFilters = matchesFilters(leagueFilter, seasonFilter);
+  const getWeeklyRecords = (categoryId: string) =>
+    weeklyRecords.get(categoryId)?.filter(passesFilters);
+
   return (
-    <Container className="py-8">
+    <div className="max-w-7xl mx-auto py-8">
       <div className="mb-8">
-        <PageHeader
+        <PageHeaderHero
           title="Hall of Fame & Shame"
-          subtitle="Comprehensive records across all Gauntlet leagues"
+          subtitle="Records across every Gauntlet league and season"
+          crestSrc="/gauntlet_logo.svg"
         />
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between flex-wrap gap-3">
           <div className="text-sm text-muted-foreground">
             {totalMatchups.toLocaleString()} matchups • {totalLeagues} leagues • {totalSeasons}{' '}
             seasons
@@ -296,13 +289,16 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
             <Select value={leagueFilter} onValueChange={setLeagueFilter}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="All Leagues" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Leagues</SelectItem>
-                <SelectItem value={AFC_LEAGUE_ID}>AFC</SelectItem>
-                <SelectItem value={NFC_LEAGUE_ID}>NFC</SelectItem>
+                {ALL_LEAGUES.map(league => (
+                  <SelectItem key={league.id} value={league.id}>
+                    {league.season} {league.conference ?? league.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <Select value={seasonFilter} onValueChange={setSeasonFilter}>
@@ -311,8 +307,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Seasons</SelectItem>
-                <SelectItem value="2024">2024</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
+                {ALL_SEASONS.map(season => (
+                  <SelectItem key={season} value={season}>
+                    {season}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -350,7 +349,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                   'most_points_loss',
                   'fewest_points_win',
                 ].map(categoryId => {
-                  const records = weeklyRecords.get(categoryId);
+                  const records = getWeeklyRecords(categoryId);
                   const category = getCategoryInfo(categoryId);
                   if (!records || !category || records.length === 0) return null;
                   return (
@@ -381,14 +380,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                       {record.teamName}
                                     </Link>
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                      <Badge
-                                        variant="outline"
-                                        className={getLeagueBadgeColor(record.leagueId)}
-                                      >
-                                        {getLeagueShortName(record.leagueId)}
-                                      </Badge>
+                                      <LeagueBadge leagueId={record.leagueId} />
                                       <span className="text-xs text-muted-foreground">
-                                        Week {record.week}
+                                        {record.season} • Week {record.week}
                                       </span>
                                       {record.opponent && (
                                         <span className="text-xs text-muted-foreground">
@@ -396,25 +390,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                         </span>
                                       )}
                                       {matchupId && (
-                                        <Link
-                                          href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                        >
-                                          <svg
-                                            className="h-3 w-3"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth={2}
-                                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                            />
-                                          </svg>
-                                          View Matchup
-                                        </Link>
+                                        <ViewMatchupLink
+                                          leagueId={record.leagueId}
+                                          week={record.week!}
+                                          matchupId={matchupId}
+                                        />
                                       )}
                                     </div>
                                   </div>
@@ -445,13 +425,12 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                   'def_points_weekly',
                   'highest_single_player_score',
                 ].map(categoryId => {
-                  const records = weeklyRecords.get(categoryId);
+                  const records = getWeeklyRecords(categoryId);
                   const category = getCategoryInfo(categoryId);
                   if (!records || !category || records.length === 0) return null;
 
-                  // Check if this is a "both" type category (has both high and low records)
                   const isBothType = category.type === 'both';
-                  const topRecords = isBothType ? records.slice(0, 5) : records.slice(0, 5);
+                  const topRecords = records.slice(0, 5);
                   // For hall of shame, we want the worst (lowest) at the top, so don't reverse
                   const bottomRecords = isBothType ? records.slice(-5) : [];
 
@@ -464,14 +443,16 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                       <CardContent className="space-y-6">
                         {/* Hall of Fame (Top 5) */}
                         <div>
-                          <h4 className="font-semibold text-sm text-green-600 dark:text-green-400 mb-3 flex items-center gap-2">
+                          <h4
+                            className={`font-semibold text-sm mb-3 flex items-center gap-2 ${deltaTextClass(1)}`}
+                          >
                             <Trophy className="h-4 w-4" />
                             Hall of Fame
                           </h4>
                           <div className="space-y-3">
                             {topRecords.map((record, index) => (
                               <div
-                                key={`${record.teamId}-${record.week}-high-${categoryId}`}
+                                key={`${record.leagueId}-${record.teamId}-${record.week}-high-${categoryId}`}
                                 className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                               >
                                 <div className="flex items-start gap-2 flex-1">
@@ -486,14 +467,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                       {record.teamName}
                                     </Link>
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                      <Badge
-                                        variant="outline"
-                                        className={getLeagueBadgeColor(record.leagueId)}
-                                      >
-                                        {getLeagueShortName(record.leagueId)}
-                                      </Badge>
+                                      <LeagueBadge leagueId={record.leagueId} />
                                       <span className="text-xs text-muted-foreground">
-                                        Week {record.week}
+                                        {record.season} • Week {record.week}
                                       </span>
                                       {record.opponent && (
                                         <span className="text-xs text-muted-foreground">
@@ -501,25 +477,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                         </span>
                                       )}
                                       {record.contextData?.matchupId && (
-                                        <Link
-                                          href={`/matchups/${record.leagueId}/${record.week}/${record.contextData.matchupId}`}
-                                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                        >
-                                          <svg
-                                            className="h-3 w-3"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth={2}
-                                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                            />
-                                          </svg>
-                                          View Matchup
-                                        </Link>
+                                        <ViewMatchupLink
+                                          leagueId={record.leagueId}
+                                          week={record.week!}
+                                          matchupId={record.contextData.matchupId}
+                                        />
                                       )}
                                     </div>
                                   </div>
@@ -535,7 +497,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                         {/* Hall of Shame (Bottom 5) - only show for "both" type categories */}
                         {isBothType && bottomRecords.length > 0 && (
                           <div>
-                            <h4 className="font-semibold text-sm text-red-600 dark:text-red-400 mb-3 flex items-center gap-2">
+                            <h4
+                              className={`font-semibold text-sm mb-3 flex items-center gap-2 ${deltaTextClass(-1)}`}
+                            >
                               <TrendingDown className="h-4 w-4" />
                               Hall of Shame
                             </h4>
@@ -545,7 +509,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
 
                                 return (
                                   <div
-                                    key={`${record.teamId}-${record.week}-low-${categoryId}`}
+                                    key={`${record.leagueId}-${record.teamId}-${record.week}-low-${categoryId}`}
                                     className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                                   >
                                     <div className="flex items-start gap-2 flex-1">
@@ -560,14 +524,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                           {record.teamName}
                                         </Link>
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <Badge
-                                            variant="outline"
-                                            className={getLeagueBadgeColor(record.leagueId)}
-                                          >
-                                            {getLeagueShortName(record.leagueId)}
-                                          </Badge>
+                                          <LeagueBadge leagueId={record.leagueId} />
                                           <span className="text-xs text-muted-foreground">
-                                            Week {record.week}
+                                            {record.season} • Week {record.week}
                                           </span>
                                           {record.opponent && (
                                             <span className="text-xs text-muted-foreground">
@@ -575,25 +534,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                             </span>
                                           )}
                                           {matchupId && (
-                                            <Link
-                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                            >
-                                              <svg
-                                                className="h-3 w-3"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                              >
-                                                <path
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                  strokeWidth={2}
-                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                                />
-                                              </svg>
-                                              View Matchup
-                                            </Link>
+                                            <ViewMatchupLink
+                                              leagueId={record.leagueId}
+                                              week={record.week!}
+                                              matchupId={matchupId}
+                                            />
                                           )}
                                         </div>
                                       </div>
@@ -637,14 +582,12 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                   'highest_top3_sum',
                   'lowest_bottom3_sum',
                 ].map(categoryId => {
-                  const records = weeklyRecords.get(categoryId);
+                  const records = getWeeklyRecords(categoryId);
                   const category = getCategoryInfoExpanded(categoryId);
                   if (!records || !category || records.length === 0) return null;
 
-                  // Check if this is a "both" type category (has both high and low records)
                   const isBothType = category.type === 'both';
-                  const topRecords = isBothType ? records.slice(0, 5) : records.slice(0, 5);
-                  // For hall of shame, we want the worst (lowest) at the top, so don't reverse
+                  const topRecords = records.slice(0, 5);
                   const bottomRecords = isBothType ? records.slice(-5) : [];
 
                   return (
@@ -657,7 +600,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                         {/* Hall of Fame (Top 5) */}
                         <div>
                           {isBothType && (
-                            <h4 className="font-semibold text-sm text-green-600 dark:text-green-400 mb-3 flex items-center gap-2">
+                            <h4
+                              className={`font-semibold text-sm mb-3 flex items-center gap-2 ${deltaTextClass(1)}`}
+                            >
                               <Trophy className="h-4 w-4" />
                               Hall of Fame
                             </h4>
@@ -665,7 +610,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                           <div className="space-y-3">
                             {topRecords.map((record, index) => (
                               <div
-                                key={`${record.teamId}-${record.week}-high-${categoryId}`}
+                                key={`${record.leagueId}-${record.teamId}-${record.week}-high-${categoryId}`}
                                 className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                               >
                                 <div className="flex items-start gap-2 flex-1">
@@ -680,14 +625,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                       {record.teamName}
                                     </Link>
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                      <Badge
-                                        variant="outline"
-                                        className={getLeagueBadgeColor(record.leagueId)}
-                                      >
-                                        {getLeagueShortName(record.leagueId)}
-                                      </Badge>
+                                      <LeagueBadge leagueId={record.leagueId} />
                                       <span className="text-xs text-muted-foreground">
-                                        Week {record.week}
+                                        {record.season} • Week {record.week}
                                       </span>
                                       {record.opponent && (
                                         <span className="text-xs text-muted-foreground">
@@ -695,25 +635,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                         </span>
                                       )}
                                       {record.contextData?.matchupId && (
-                                        <Link
-                                          href={`/matchups/${record.leagueId}/${record.week}/${record.contextData.matchupId}`}
-                                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                        >
-                                          <svg
-                                            className="h-3 w-3"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth={2}
-                                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                            />
-                                          </svg>
-                                          View Matchup
-                                        </Link>
+                                        <ViewMatchupLink
+                                          leagueId={record.leagueId}
+                                          week={record.week!}
+                                          matchupId={record.contextData.matchupId}
+                                        />
                                       )}
                                     </div>
                                   </div>
@@ -729,7 +655,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                         {/* Hall of Shame (Bottom 5) - only show for "both" type categories */}
                         {isBothType && bottomRecords.length > 0 && (
                           <div>
-                            <h4 className="font-semibold text-sm text-red-600 dark:text-red-400 mb-3 flex items-center gap-2">
+                            <h4
+                              className={`font-semibold text-sm mb-3 flex items-center gap-2 ${deltaTextClass(-1)}`}
+                            >
                               <TrendingDown className="h-4 w-4" />
                               Hall of Shame
                             </h4>
@@ -739,7 +667,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
 
                                 return (
                                   <div
-                                    key={`${record.teamId}-${record.week}-low-${categoryId}`}
+                                    key={`${record.leagueId}-${record.teamId}-${record.week}-low-${categoryId}`}
                                     className="flex items-start justify-between gap-2 pb-2 border-b last:border-0"
                                   >
                                     <div className="flex items-start gap-2 flex-1">
@@ -754,14 +682,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                           {record.teamName}
                                         </Link>
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <Badge
-                                            variant="outline"
-                                            className={getLeagueBadgeColor(record.leagueId)}
-                                          >
-                                            {getLeagueShortName(record.leagueId)}
-                                          </Badge>
+                                          <LeagueBadge leagueId={record.leagueId} />
                                           <span className="text-xs text-muted-foreground">
-                                            Week {record.week}
+                                            {record.season} • Week {record.week}
                                           </span>
                                           {record.opponent && (
                                             <span className="text-xs text-muted-foreground">
@@ -769,25 +692,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                             </span>
                                           )}
                                           {matchupId && (
-                                            <Link
-                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                            >
-                                              <svg
-                                                className="h-3 w-3"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                              >
-                                                <path
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                  strokeWidth={2}
-                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                                />
-                                              </svg>
-                                              View Matchup
-                                            </Link>
+                                            <ViewMatchupLink
+                                              leagueId={record.leagueId}
+                                              week={record.week!}
+                                              matchupId={matchupId}
+                                            />
                                           )}
                                         </div>
                                       </div>
@@ -832,7 +741,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                   'highest_combined_def',
                   'lowest_combined_def',
                 ].map(categoryId => {
-                  const records = weeklyRecords.get(categoryId);
+                  const records = getWeeklyRecords(categoryId);
                   const category = getCategoryInfo(categoryId);
                   if (!records || !category || records.length === 0) return null;
                   return (
@@ -877,35 +786,16 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                           </Link>
                                         </div>
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <Badge
-                                            variant="outline"
-                                            className={getLeagueBadgeColor(record.leagueId)}
-                                          >
-                                            {getLeagueShortName(record.leagueId)}
-                                          </Badge>
+                                          <LeagueBadge leagueId={record.leagueId} />
                                           <span className="text-xs text-muted-foreground">
-                                            Week {record.week}
+                                            {record.season} • Week {record.week}
                                           </span>
                                           {matchupId && (
-                                            <Link
-                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                            >
-                                              <svg
-                                                className="h-3 w-3"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                              >
-                                                <path
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                  strokeWidth={2}
-                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                                />
-                                              </svg>
-                                              View Matchup
-                                            </Link>
+                                            <ViewMatchupLink
+                                              leagueId={record.leagueId}
+                                              week={record.week!}
+                                              matchupId={matchupId}
+                                            />
                                           )}
                                         </div>
                                         <div className="text-xs text-muted-foreground mt-1">
@@ -923,14 +813,9 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                           {record.teamName}
                                         </Link>
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <Badge
-                                            variant="outline"
-                                            className={getLeagueBadgeColor(record.leagueId)}
-                                          >
-                                            {getLeagueShortName(record.leagueId)}
-                                          </Badge>
+                                          <LeagueBadge leagueId={record.leagueId} />
                                           <span className="text-xs text-muted-foreground">
-                                            Week {record.week}
+                                            {record.season} • Week {record.week}
                                           </span>
                                           {record.opponent && (
                                             <span className="text-xs text-muted-foreground">
@@ -938,25 +823,11 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                             </span>
                                           )}
                                           {matchupId && (
-                                            <Link
-                                              href={`/matchups/${record.leagueId}/${record.week}/${matchupId}`}
-                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                            >
-                                              <svg
-                                                className="h-3 w-3"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                              >
-                                                <path
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                  strokeWidth={2}
-                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                                />
-                                              </svg>
-                                              View Matchup
-                                            </Link>
+                                            <ViewMatchupLink
+                                              leagueId={record.leagueId}
+                                              week={record.week!}
+                                              matchupId={matchupId}
+                                            />
                                           )}
                                         </div>
                                       </div>
@@ -985,7 +856,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
               </p>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {(['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const).map(position => {
-                  const records = positionalDifferences[position];
+                  const records = positionalDifferences[position].filter(passesFilters);
                   if (!records || records.length === 0) return null;
 
                   return (
@@ -1011,48 +882,29 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                   <div className="font-medium text-sm">
                                     <Link
                                       href={`/team/${record.teamId}`}
-                                      className="hover:underline text-green-600 dark:text-green-400"
+                                      className={`hover:underline ${deltaTextClass(1)}`}
                                     >
                                       {record.teamName}
                                     </Link>
                                     <span className="text-muted-foreground mx-1">vs</span>
                                     <Link
                                       href={`/team/${record.opponentId}`}
-                                      className="hover:underline text-red-600 dark:text-red-400"
+                                      className={`hover:underline ${deltaTextClass(-1)}`}
                                     >
                                       {record.opponentName}
                                     </Link>
                                   </div>
                                   <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                    <Badge
-                                      variant="outline"
-                                      className={getLeagueBadgeColor(record.leagueId)}
-                                    >
-                                      {getLeagueShortName(record.leagueId)}
-                                    </Badge>
+                                    <LeagueBadge leagueId={record.leagueId} />
                                     <span className="text-xs text-muted-foreground">
-                                      Week {record.week}
+                                      {record.season} • Week {record.week}
                                     </span>
                                     {record.matchupId && (
-                                      <Link
-                                        href={`/matchups/${record.leagueId}/${record.week}/${record.matchupId}`}
-                                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                                      >
-                                        <svg
-                                          className="h-3 w-3"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                          />
-                                        </svg>
-                                        View Matchup
-                                      </Link>
+                                      <ViewMatchupLink
+                                        leagueId={record.leagueId}
+                                        week={record.week}
+                                        matchupId={record.matchupId}
+                                      />
                                     )}
                                   </div>
                                   <div className="text-xs text-muted-foreground mt-1">
@@ -1062,7 +914,7 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
                                 </div>
                               </div>
                               <div className="text-right">
-                                <div className="font-bold text-sm text-green-600 dark:text-green-400">
+                                <div className={`font-bold text-sm ${deltaTextClass(1)}`}>
                                   +{record.difference.toFixed(1)}
                                 </div>
                                 <div className="text-xs text-muted-foreground">diff</div>
@@ -1082,51 +934,43 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
         {/* Rolling Windows Tab */}
         <TabsContent value="rolling" className="mt-6">
           <div className="space-y-6">
-            {rollingWindows.threeWeek.highest.length > 0 ||
-            rollingWindows.threeWeek.lowest.length > 0 ? (
-              <div>
-                <h3 className="text-lg font-semibold mb-4">3-Week Windows</h3>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <RollingWindowCard
-                    title="Highest 3-Week Totals"
-                    windows={rollingWindows.threeWeek.highest}
-                  />
-                  <RollingWindowCard
-                    title="Lowest 3-Week Totals"
-                    windows={rollingWindows.threeWeek.lowest}
-                  />
+            {(() => {
+              const highest = rollingWindows.threeWeek.highest.filter(passesFilters);
+              const lowest = rollingWindows.threeWeek.lowest.filter(passesFilters);
+              return highest.length > 0 || lowest.length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">3-Week Windows</h3>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <RollingWindowCard title="Highest 3-Week Totals" windows={highest} />
+                    <RollingWindowCard title="Lowest 3-Week Totals" windows={lowest} />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Not enough weeks of data for 3-week rolling windows</p>
-                <p className="text-sm mt-2">Need at least 3 weeks of matchups</p>
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No 3-week rolling windows match the current filters</p>
+                </div>
+              );
+            })()}
 
-            {rollingWindows.fiveWeek.highest.length > 0 ||
-            rollingWindows.fiveWeek.lowest.length > 0 ? (
-              <div>
-                <h3 className="text-lg font-semibold mb-4">5-Week Windows</h3>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <RollingWindowCard
-                    title="Highest 5-Week Totals"
-                    windows={rollingWindows.fiveWeek.highest}
-                  />
-                  <RollingWindowCard
-                    title="Lowest 5-Week Totals"
-                    windows={rollingWindows.fiveWeek.lowest}
-                  />
+            {(() => {
+              const highest = rollingWindows.fiveWeek.highest.filter(passesFilters);
+              const lowest = rollingWindows.fiveWeek.lowest.filter(passesFilters);
+              return highest.length > 0 || lowest.length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">5-Week Windows</h3>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <RollingWindowCard title="Highest 5-Week Totals" windows={highest} />
+                    <RollingWindowCard title="Lowest 5-Week Totals" windows={lowest} />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Not enough weeks of data for 5-week rolling windows</p>
-                <p className="text-sm mt-2">Need at least 5 weeks of matchups</p>
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No 5-week rolling windows match the current filters</p>
+                </div>
+              );
+            })()}
           </div>
         </TabsContent>
 
@@ -1139,37 +983,37 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <SeasonalCard
                   title="Most Wins"
-                  records={seasonal.mostWins}
+                  records={seasonal.mostWins.filter(passesFilters)}
                   statKey="wins"
                   formatFn={v => `${v} wins`}
                 />
                 <SeasonalCard
                   title="Most Points"
-                  records={seasonal.mostPoints}
+                  records={seasonal.mostPoints.filter(passesFilters)}
                   statKey="totalPoints"
                   formatFn={v => `${v.toFixed(2)} pts`}
                 />
                 <SeasonalCard
                   title="Luckiest Teams"
-                  records={seasonal.luckiest}
+                  records={seasonal.luckiest.filter(passesFilters)}
                   statKey="luckDelta"
                   formatFn={v => `+${v.toFixed(2)} luck`}
                 />
                 <SeasonalCard
                   title="Unluckiest Teams"
-                  records={seasonal.unluckiest}
+                  records={seasonal.unluckiest.filter(passesFilters)}
                   statKey="luckDelta"
                   formatFn={v => `${v.toFixed(2)} luck`}
                 />
                 <SeasonalCard
                   title="Most Donuts"
-                  records={seasonal.mostDonuts}
+                  records={seasonal.mostDonuts.filter(passesFilters)}
                   statKey="totalDonuts"
                   formatFn={v => `${v} donuts`}
                 />
                 <SeasonalCard
                   title="Most Blowout Wins"
-                  records={seasonal.mostBlowouts}
+                  records={seasonal.mostBlowouts.filter(passesFilters)}
                   statKey="blowoutWins"
                   formatFn={v => `${v} blowouts`}
                 />
@@ -1180,11 +1024,13 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
             <div>
               <h3 className="text-lg font-semibold mb-4">Winning & Losing Streaks</h3>
               <div className="grid gap-6 md:grid-cols-2">
-                <StreakCard title="Longest Win Streaks" streaks={streaks.winStreaks} type="win" />
+                <StreakCard
+                  title="Longest Win Streaks"
+                  streaks={streaks.winStreaks.filter(passesFilters)}
+                />
                 <StreakCard
                   title="Longest Losing Streaks"
-                  streaks={streaks.lossStreaks}
-                  type="loss"
+                  streaks={streaks.lossStreaks.filter(passesFilters)}
                 />
               </div>
             </div>
@@ -1201,14 +1047,14 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
           <CardContent>
             <div className="text-2xl font-bold">
               {(() => {
-                const highestScoreRecords = weeklyRecords.get('highest_team_points');
+                const highestScoreRecords = getWeeklyRecords('highest_team_points');
                 if (!highestScoreRecords || highestScoreRecords.length === 0) return 'N/A';
                 return formatRecord(highestScoreRecords[0]);
               })()}
             </div>
             <p className="text-xs text-muted-foreground">
               {(() => {
-                const highestScoreRecords = weeklyRecords.get('highest_team_points');
+                const highestScoreRecords = getWeeklyRecords('highest_team_points');
                 if (!highestScoreRecords || highestScoreRecords.length === 0) return '';
                 const record = highestScoreRecords[0];
                 return `${record.teamName} • Week ${record.week}`;
@@ -1222,10 +1068,17 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
             <CardTitle className="text-sm font-medium">Longest Win Streak</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{streaks.winStreaks[0]?.length || 0} games</div>
-            <p className="text-xs text-muted-foreground">
-              {streaks.winStreaks[0]?.teamName || 'N/A'}
-            </p>
+            {(() => {
+              const winStreaks = streaks.winStreaks.filter(passesFilters);
+              return (
+                <>
+                  <div className="text-2xl font-bold">{winStreaks[0]?.length || 0} games</div>
+                  <p className="text-xs text-muted-foreground">
+                    {winStreaks[0]?.teamName || 'N/A'}
+                  </p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
 
@@ -1234,12 +1087,17 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
             <CardTitle className="text-sm font-medium">Best 3-Week Run</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {rollingWindows.threeWeek.highest[0]?.totalPoints.toFixed(2) || 'N/A'} pts
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {rollingWindows.threeWeek.highest[0]?.teamName || 'N/A'}
-            </p>
+            {(() => {
+              const highest = rollingWindows.threeWeek.highest.filter(passesFilters);
+              return (
+                <>
+                  <div className="text-2xl font-bold">
+                    {highest[0]?.totalPoints.toFixed(2) || 'N/A'} pts
+                  </div>
+                  <p className="text-xs text-muted-foreground">{highest[0]?.teamName || 'N/A'}</p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
 
@@ -1248,15 +1106,22 @@ export default function EnhancedHallOfFamePage(): JSX.Element {
             <CardTitle className="text-sm font-medium">Season Points Record</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {seasonal.mostPoints[0]?.totalPoints.toFixed(2) || 'N/A'} pts
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {seasonal.mostPoints[0]?.teamName || 'N/A'} • {seasonal.mostPoints[0]?.season || ''}
-            </p>
+            {(() => {
+              const mostPoints = seasonal.mostPoints.filter(passesFilters);
+              return (
+                <>
+                  <div className="text-2xl font-bold">
+                    {mostPoints[0]?.totalPoints.toFixed(2) || 'N/A'} pts
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {mostPoints[0]?.teamName || 'N/A'} • {mostPoints[0]?.season || ''}
+                  </p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
-    </Container>
+    </div>
   );
-}
+};

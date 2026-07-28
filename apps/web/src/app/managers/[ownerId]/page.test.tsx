@@ -1,11 +1,21 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import { renderWithProviders as render } from '@/test/utils/test-wrapper';
 import ManagerProfilePage from './page';
 import { getManagerHistory } from '@/lib/leagues/manager-history';
 import type { ManagerHistory } from '@/lib/leagues/manager-history';
 
 vi.mock('@/lib/leagues/manager-history', () => ({
   getManagerHistory: vi.fn(),
+}));
+
+// ManagerHallOfFameBadges (rendered by the page) calls useHallOfFameEnhanced,
+// which needs a QueryClientProvider (via renderWithProviders) and hits the
+// real Sleeper-backed hall-of-fame data service — irrelevant to what these
+// tests assert, so it's mocked to stay loading and render nothing.
+vi.mock('@/hooks/useHallOfFameEnhanced', () => ({
+  useHallOfFameEnhanced: () => ({ data: undefined, isLoading: true, error: null }),
+  findManagerHallOfFameBadges: vi.fn(() => []),
 }));
 
 const mockGetManagerHistory = vi.mocked(getManagerHistory);

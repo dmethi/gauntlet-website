@@ -192,6 +192,7 @@ export default [
       'src/components/stats/StartSitEfficiencyTab.tsx',
       'src/app/stats/components/ManagerRankings.tsx',
       'src/app/stats/components/ManagerDetailModal.tsx',
+      'src/app/hall-of-fame-enhanced/**/*.{ts,tsx}',
     ],
     ignores: ['**/*.test.{ts,tsx}', '**/*.test.tsx'],
     rules: {

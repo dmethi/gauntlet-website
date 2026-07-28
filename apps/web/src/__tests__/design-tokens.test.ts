@@ -18,6 +18,7 @@ const SCOPED_DIRS = [
   'src/features/waiver-analysis',
   'src/features/transactions',
   'src/features/start-sit',
+  'src/app/hall-of-fame-enhanced',
 ];
 
 const SCOPED_FILES = [
