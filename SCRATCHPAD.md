@@ -6,10 +6,10 @@ they resolve rather than letting them accumulate.
 
 ## Active
 
-Modern War Room visual identity rework (`ROADMAP.md` Phase 6). Nav/header/
-loader pattern settled via `/playground/war-room` iteration with the user; next
-up is extracting the settled pieces into real `packages/ui` components, killing
-the persistent `Sidebar`, and porting Competition to real data.
+Modern War Room visual identity rework (`ROADMAP.md` Phase 6). The chrome/loader
+audit backlog and the content-level design pass on Waiver/Transactions/Start-Sit
+are both closed out (2026-07-28, commit `ddce119`). No active slice right now —
+see "Next session" below for unblocked candidates.
 
 ## Needs a closer look
 
@@ -45,8 +45,19 @@ the persistent `Sidebar`, and porting Competition to real data.
 
 ## Next session
 
-Phase 5 item 7's scoping pass happened (2026-07-27) — see `ROADMAP.md` Phase 6
-for the settled direction, palette, and pattern. Next session should pick up
-Phase 6's first unchecked item: extract the nav/header/loader/card primitives
-validated in `/playground/war-room` into real `packages/ui` components, then
-kill the persistent `Sidebar` app-wide before porting Competition to real data.
+Phase 6's chrome + content design passes are both done (2026-07-28). Remaining
+open, _unblocked_ items (not gated on 2026 season data) — pick one, this isn't
+prioritized:
+
+- `ROADMAP.md` line ~12: Website Specification audit
+  (`https://specification.website/` checklist) — standalone, cross-cutting,
+  never started.
+- `ROADMAP.md` line ~353: content design pass on
+  `app/managers/[ownerId]/page.tsx` — its chrome got `PageHeaderHero` in the
+  stale-loader audit, but the actual content redesign (timeline-style season
+  history instead of a bare table, best/worst-season highlighting, a
+  browse/index entry point) is still open.
+
+Everything else left unchecked in `ROADMAP.md` (hall-of-fame-enhanced/
+draft-analysis real content, the hall-of-fame audit script re-run) is blocked on
+real 2026 season data existing — see the Blocked section above.

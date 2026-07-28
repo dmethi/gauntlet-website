@@ -574,6 +574,23 @@ Driven by Phase 4's prioritized list.
         (only 3 callers, none pass season explicitly today). Re-verified after
         this change: same ~0.43-0.5s warm latency, identical output, all 151
         `shared/utils/stats` tests pass.
+  - [x] Transaction Analysis tab (`features/transactions/utils/facts.ts` +
+        `useTransactionAnalysisModel.ts`, 2026-07-28): found while investigating
+        a user-reported slow load on `?view=transactions`. Same
+        sequential-`await`-in-a-loop anti-pattern as the two cases above:
+        `buildFacts` awaited one `/api/matchups/{league}/{week}` request at a
+        time (up to 17 weeks), and the 2 leagues were processed one after
+        another too — up to ~34+ serialized round trips before anything
+        rendered. Parallelized both with `Promise.all`; confirmed via the
+        browser's network waterfall that matchup requests now genuinely overlap
+        instead of queuing. Warm load: ~11.3s → ~8.8s. Remaining time is
+        dominated by the ~78 individual requests' own latency (Next dev-mode
+        route compilation + backend work per request), not sequential queuing —
+        a real fix, but smaller than the Stats Hub case above since this route
+        has no server-side caching/precomputation to fall back on; flagged as a
+        follow-up if further speedup is wanted. Verified: all 70
+        `features/transactions` tests + full 929-test suite pass,
+        `type-check`/`lint` clean.
 - [ ] Tech debt: clean up per-page issues Phase 4 flags as pages are touched.
   - [x] Consolidated the duplicate matchup-detail routes and duplicate reports
         routes (Phase 4 prioritized-list item 4, 2026-07-27). Deleted
@@ -891,6 +908,22 @@ phase.
         site-wide light/dark-toggleable semantic-token system this page
         intentionally opts out of. This closes out the stale-loader/stock-shadcn
         audit backlog in full.
+- [x] Content-level design pass on Waiver/Transactions/Start-Sit tabs
+      (2026-07-28) — distinct from the stale-loader audit above, which was
+      explicitly chrome/loader-only. This pass covered the actual data-table
+      content on all three Stats Hub sub-tabs, first possible once they started
+      rendering real dense 2025 data (the season-data-wiring fix landed the same
+      day, commit `0d77442`). Full findings and fixes tracked under Phase 5's
+      Performance item (the Transaction Analysis slow-load fix) and as a
+      standalone commit `ddce119`: replaced 97 raw Tailwind palette classes with
+      a new shared token helper (`apps/web/src/lib/stat-colors.ts`), fixed a
+      duplicated Start/Sit heading, replaced 2 hero-metric-tile-grid stat rows
+      with unified rows, fixed a grade-badge color collision, removed 2
+      redundant progress bars, added a missing `aria-label`, fixed a
+      non-responsive `grid-cols-5` tab list. New enforcement: scoped ESLint
+      rule + `apps/web/src/__tests__/design-tokens.test.ts`, documented in
+      `docs/solutions/patterns/critical-patterns.md` (this repo's first entry
+      under `docs/solutions/` — the directory didn't exist before this).
 - [ ] Beyond the pages above, Phase 4's existing prioritized order still applies
       for further rollout: `matchups/[leagueId]/[week]/[matchupId]` done above;
       `league/overview` and `managers/[ownerId]` (already flagged for a design
