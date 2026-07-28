@@ -723,11 +723,11 @@ phase.
         real `season`/`season_type` from the already-fetched `SleeperLeague`
         object instead. Both re-verified with identical output and all 151
         `shared/utils/stats` tests passing.
-- [ ] Stale-loader/stock-shadcn audit (2026-07-28, read-only inventory — not yet
-      fixed): while investigating the Stats Hub loader, a broader pass over
+- [x] Stale-loader/stock-shadcn audit (2026-07-28, read-only inventory; fixed
+      2026-07-28): while investigating the Stats Hub loader, a broader pass over
       every live (non-placeholder, non-archive) page found the same class of
-      pre-War-Room patterns elsewhere. Not yet scheduled/fixed — listed here so
-      it doesn't get lost, highest-traffic first:
+      pre-War-Room patterns elsewhere. Backlog fully cleared, highest-traffic
+      first:
   - [x] `live/page.tsx` (2026-07-28) — had zero War Room styling despite
         game-day traffic (raw `bg-yellow-100`/`bg-blue-500`/gray borders, no
         nav-aware layout). Restyled onto `PageHeaderHero` (title + week
@@ -816,18 +816,85 @@ phase.
         exercise the per-fetch loader) and `/archive/2025/matchups`, plus the
         matchup-detail page (`/matchups/1263744209295245312/3/1`) — zero console
         errors on any of them.
-  - Loaders remaining: `year-in-review/_components/`
-    (`league-structure.tsx:53-58,384-439`, `proposals-display.tsx:40` —
-    hand-rolled `animate-pulse` blocks, lower priority/seasonal page).
-  - Navigation: `league/draft/page.tsx:169-174` — same generic shadcn `<Tabs>`
-    pattern Stats Hub had, 3 items (less urgent than Stats Hub's 8 was).
-  - Other stock-shadcn pages worth a pass when touched: `managers/[ownerId]`
-    (old `PageHeader`, plain `border-border` stat tiles). `team/[id]` +
-    `team/[id]/stats` and `league/transactions` done above.
+  - [x] `league/overview/page.tsx` (2026-07-28) — the `react-content-loader`
+        `LeagueOverviewLoader` + `ChartContainer`/`ChartSkeleton` loading state
+        and the old plain `PageHeader`
+        (`title={league.name} subtitle="Season     ..."`) both replaced,
+        following the `league/transactions` pattern:
+        `<WarRoomLoader show logo={<GauntletLogo size="lg" />} />` for loading
+        (including the `Suspense` fallback), `PageHeaderHero` for the header.
+        Outer `Container` swapped for `max-w-7xl mx-auto` + inner `px-6 py-8`.
+        Team rankings table, scoring chart, and the recent-transactions widget
+        untouched — loader/chrome only. Verified:
+        `pnpm type-check`/`lint`/`test` (910/910) all clean, plus a real
+        Playwright/Chrome pass in both light and dark mode against real 2025
+        data (`?leagueId=1263744209295245312`) — header, table, chart, and
+        transaction feed all render correctly, zero console errors.
+  - [x] `managers/[ownerId]/page.tsx` (2026-07-28) — old plain `PageHeader`
+        (both the not-found branch and the real view) ported onto
+        `PageHeaderHero`; the "back to 2025 archive" link swapped from raw
+        `text-gauntlet-crimson` to semantic `text-primary` (not a frozen archive
+        page). No loading state exists here (server component, no
+        `useState`/`useEffect`), so no `WarRoomLoader` needed. Checked the stat
+        tiles against `team/[id]`'s reference styling as instructed — they were
+        already on the same `rounded-md border border-border bg-card p-4`
+        pattern, so no card-style changes were needed. Verified:
+        `pnpm     type-check`/`lint`/`test` (910/910) all clean, plus a real
+        Playwright/Chrome pass on `/managers/465307317622009856` in both light
+        and dark mode, zero console errors.
+  - [x] `league/draft/page.tsx` (2026-07-28) — same generic shadcn `<Tabs>`
+        pattern Stats Hub had, but with only 3 items ("Pick by Pick"/"Team by
+        Team"/"All Picks") a lighter pill-row replaced it instead of the full
+        sidebar-nav treatment Stats Hub got: local `activeView` state +
+        `DraftViewPills`, styled like Stats Hub's active-pill state
+        (`bg-primary/10 text-primary`, `rounded-full`, uppercase tracking-wide)
+        but as a single always-horizontal row (`overflow-x-auto`, hidden
+        scrollbar, `shrink-0` pills) since 3 short labels never need Stats Hub's
+        mobile-collapse logic. Deliberately did **not** touch the shared
+        `components/ui/tabs.tsx` — it's still used by the frozen
+        `archive/2025/hall-of-fame` page and several live feature components, so
+        this page's `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent` imports were
+        dropped in favor of plain conditional rendering, scoped to this page
+        only. Also ported the page's old `Container`/`PageHeader` (with a
+        "Loading…" subtitle) onto `PageHeaderHero` + `WarRoomLoader` and moved
+        the "Mock Draft Analysis"/"Back to Overview" buttons into
+        `PageHeaderHero`'s `actions` slot — judgment call to include this since
+        the page was on the same stale `Container`/`PageHeader` pattern as every
+        other item in this backlog, and leaving it half-migrated would have been
+        inconsistent with its sibling audit items. Verified:
+        `pnpm     type-check`/`lint`/`test` (910/910) all clean, plus a real
+        Playwright/Chrome pass on all 3 views in both light and dark mode
+        against real 2025 draft data (`?leagueId=1263744209295245312`), zero
+        console errors. (Attempted an explicit mobile-viewport check via the
+        browser tool's `resize_window`, but the tab's reported viewport didn't
+        actually change in this session's browser — relying instead on the
+        code-level guarantee that a short `overflow-x-auto` pill row with no
+        fixed-width siblings can't reproduce the `pl-64`/squeezed-sidebar
+        failure mode Stats Hub hit.)
+  - [x] `year-in-review/_components/league-structure.tsx` and
+        `proposals-display.tsx` (2026-07-28) — investigated per the instruction
+        to check whether `/year-in-review` is even meant to pick up shared
+        chrome before touching it. Confirmed via `client-layout.tsx` (and by
+        loading the real page) that it deliberately renders its own chrome, not
+        `AppNav` — it was the original design inspiration for "Modern War Room"
+        this whole phase, not a laggard needing to catch up. Its hand-rolled
+        `animate-pulse` skeletons
+        (`bg-white/5 border border-white/10     rounded-lg` bars in
+        `proposals-display.tsx`, `bg-[#0d0d0d] border     border-white/10` boxes
+        in `league-structure.tsx`) already exactly match the bordered-card
+        visual language of the real loaded content beneath them (verified
+        visually against the live page) — this is bespoke, purpose-built
+        Tailwind consistent with the page's own self-contained dark palette, not
+        a stock-shadcn or off-brand pattern like the other items in this
+        backlog. **Judgment call: no code change made** — porting
+        `WarRoomLoader` here would have been wrong, since it's styled for the
+        site-wide light/dark-toggleable semantic-token system this page
+        intentionally opts out of. This closes out the stale-loader/stock-shadcn
+        audit backlog in full.
 - [ ] Beyond the pages above, Phase 4's existing prioritized order still applies
-      for further rollout: `league/overview`,
-      `matchups/[leagueId]/[week]/[matchupId]`, `managers/[ownerId]` (already
-      flagged for a design pass in Phase 3; `team/[id]`/`team/[id]/stats` done
+      for further rollout: `matchups/[leagueId]/[week]/[matchupId]` done above;
+      `league/overview` and `managers/[ownerId]` (already flagged for a design
+      pass in Phase 3) done above too; `team/[id]`/`team/[id]/stats` done
       above). `hall-of-fame-enhanced` and `draft/analysis` now share the
       restyled placeholder header above, but still need their real 2026 content
       built out once data exists.

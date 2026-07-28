@@ -4,8 +4,8 @@ import { LeagueChart } from '@/components/league-chart';
 import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
 import type { LeagueData } from '@/shared/types';
-import { ChartContainer, ChartSkeleton, Container, PageHeader } from '@gauntlet/ui';
-import ContentLoader from 'react-content-loader';
+import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
+import { GauntletLogo } from '@/components/gauntlet-logo';
 import { Suspense, useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
@@ -22,29 +22,6 @@ import {
 } from '@/components/ui/table';
 import { TransactionList } from '@/components/transactions';
 import { useSearchParams } from 'next/navigation';
-
-const LeagueOverviewLoader = () => (
-  <ContentLoader
-    speed={2}
-    width={1200}
-    height={800}
-    viewBox="0 0 1200 800"
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-  >
-    {/* Title and Subtitle */}
-    <rect x="16" y="32" rx="3" ry="3" width="300" height="36" />
-    <rect x="16" y="72" rx="3" ry="3" width="150" height="20" />
-
-    {/* Team Rankings Table */}
-    <rect x="16" y="128" rx="3" ry="3" width="200" height="28" />
-    <rect x="16" y="168" rx="8" ry="8" width="1168" height="400" />
-
-    {/* League Scoring Trends Chart */}
-    <rect x="16" y="600" rx="3" ry="3" width="250" height="28" />
-    <rect x="16" y="640" rx="8" ry="8" width="1168" height="150" />
-  </ContentLoader>
-);
 
 const LeagueOverviewContent = () => {
   const searchParams = useSearchParams();
@@ -111,20 +88,7 @@ const LeagueOverviewContent = () => {
   };
 
   if (loading) {
-    return (
-      <Container className="py-8">
-        <LeagueOverviewLoader />
-        <div className="mt-8">
-          <ChartContainer
-            title="League Scoring Trends"
-            description="Average points by week"
-            height={384}
-          >
-            <ChartSkeleton height={320} />
-          </ChartContainer>
-        </div>
-      </Container>
-    );
+    return <WarRoomLoader show logo={<GauntletLogo size="lg" />} />;
   }
 
   if (!league) {
@@ -151,150 +115,153 @@ const LeagueOverviewContent = () => {
   };
 
   return (
-    <Container className="py-8">
-      <div className="mb-8">
-        <PageHeader title={league.name} subtitle={`Season ${league.season}`} />
-      </div>
-
-      <div className="mb-8">
-        <h2 className="mb-4 text-2xl font-bold">Team Rankings</h2>
-        <div className="overflow-x-auto rounded-md border border-border bg-card">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[60px]">Rank</TableHead>
-                <TableHead>
-                  <button
-                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => onSort('team')}
-                    aria-label="Sort by Team"
-                  >
-                    <span>Team</span>
-                    {sortKey === 'team' &&
-                      (sortDir === 'asc' ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
-                      ))}
-                  </button>
-                </TableHead>
-                <TableHead className="w-[80px]">Division</TableHead>
-                <TableHead>
-                  <button
-                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => onSort('record')}
-                    aria-label="Sort by Record"
-                  >
-                    <span>Record</span>
-                    {sortKey === 'record' &&
-                      (sortDir === 'asc' ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
-                      ))}
-                  </button>
-                </TableHead>
-                <TableHead>
-                  <button
-                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => onSort('points')}
-                    aria-label="Sort by Points For"
-                  >
-                    <span>Points For</span>
-                    {sortKey === 'points' &&
-                      (sortDir === 'asc' ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
-                      ))}
-                  </button>
-                </TableHead>
-                <TableHead>
-                  <button
-                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => onSort('expectedWins')}
-                    aria-label="Sort by Expected Wins"
-                  >
-                    <span>Expected Wins</span>
-                    {sortKey === 'expectedWins' &&
-                      (sortDir === 'asc' ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
-                      ))}
-                  </button>
-                </TableHead>
-                <TableHead>
-                  <button
-                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => onSort('luck')}
-                    aria-label="Sort by Luck"
-                  >
-                    <span>Luck</span>
-                    {sortKey === 'luck' &&
-                      (sortDir === 'asc' ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
-                      ))}
-                  </button>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedTeamStats.map(team => (
-                <TableRow
-                  key={team.id}
-                  className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
-                  onClick={() => {
-                    router.push(`/team/${team.id}`);
-                  }}
-                >
-                  <TableCell>{team.canonicalRank}</TableCell>
-                  <TableCell className="font-medium">{team.name}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="text-xs">
-                      {getDivisionName(team.division)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">
-                      {team.wins}-{team.losses}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
-                  <TableCell>{team.expectedWins.toFixed(2)}</TableCell>
-                  <TableCell>{team.luckRating.toFixed(2)}</TableCell>
+    <div className="max-w-7xl mx-auto">
+      <PageHeaderHero
+        title={league.name}
+        subtitle={`Season ${league.season}`}
+        crestSrc="/gauntlet_logo.svg"
+      />
+      <div className="px-6 py-8">
+        <div className="mb-8">
+          <h2 className="mb-4 text-2xl font-bold">Team Rankings</h2>
+          <div className="overflow-x-auto rounded-md border border-border bg-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[60px]">Rank</TableHead>
+                  <TableHead>
+                    <button
+                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                      onClick={() => onSort('team')}
+                      aria-label="Sort by Team"
+                    >
+                      <span>Team</span>
+                      {sortKey === 'team' &&
+                        (sortDir === 'asc' ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        ))}
+                    </button>
+                  </TableHead>
+                  <TableHead className="w-[80px]">Division</TableHead>
+                  <TableHead>
+                    <button
+                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                      onClick={() => onSort('record')}
+                      aria-label="Sort by Record"
+                    >
+                      <span>Record</span>
+                      {sortKey === 'record' &&
+                        (sortDir === 'asc' ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        ))}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                      onClick={() => onSort('points')}
+                      aria-label="Sort by Points For"
+                    >
+                      <span>Points For</span>
+                      {sortKey === 'points' &&
+                        (sortDir === 'asc' ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        ))}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                      onClick={() => onSort('expectedWins')}
+                      aria-label="Sort by Expected Wins"
+                    >
+                      <span>Expected Wins</span>
+                      {sortKey === 'expectedWins' &&
+                        (sortDir === 'asc' ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        ))}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                      onClick={() => onSort('luck')}
+                      aria-label="Sort by Luck"
+                    >
+                      <span>Luck</span>
+                      {sortKey === 'luck' &&
+                        (sortDir === 'asc' ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        ))}
+                    </button>
+                  </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {sortedTeamStats.map(team => (
+                  <TableRow
+                    key={team.id}
+                    className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => {
+                      router.push(`/team/${team.id}`);
+                    }}
+                  >
+                    <TableCell>{team.canonicalRank}</TableCell>
+                    <TableCell className="font-medium">{team.name}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="text-xs">
+                        {getDivisionName(team.division)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">
+                        {team.wins}-{team.losses}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
+                    <TableCell>{team.expectedWins.toFixed(2)}</TableCell>
+                    <TableCell>{team.luckRating.toFixed(2)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <LeagueChart data={weeklyAverages} />
+        </div>
+
+        {/* Recent Transactions */}
+        <div className="mt-12">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-2xl font-bold">Recent Transactions</h2>
+            <Link href={`/league/transactions?leagueId=${league.id}`}>
+              <Button size="sm" variant="outline">
+                View All
+              </Button>
+            </Link>
+          </div>
+          <RecentTransactionsWidget league={league} />
         </div>
       </div>
-
-      <div className="mt-12">
-        <LeagueChart data={weeklyAverages} />
-      </div>
-
-      {/* Recent Transactions */}
-      <div className="mt-12">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-2xl font-bold">Recent Transactions</h2>
-          <Link href={`/league/transactions?leagueId=${league.id}`}>
-            <Button size="sm" variant="outline">
-              View All
-            </Button>
-          </Link>
-        </div>
-        <RecentTransactionsWidget league={league} />
-      </div>
-    </Container>
+    </div>
   );
 };
 
 export default function LeagueOverview() {
   return (
-    <Suspense fallback={<LeagueOverviewLoader />}>
+    <Suspense fallback={<WarRoomLoader show logo={<GauntletLogo size="lg" />} />}>
       <LeagueOverviewContent />
     </Suspense>
   );
