@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { debugLog } from '@/lib/debug-log';
+import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
+
+const replayGate = createFixedWindowGate({ limit: 1, windowMs: 60_000 });
 
 /**
  * Cron endpoint for weekly recap report generation
@@ -23,13 +26,22 @@ import { debugLog } from '@/lib/debug-log';
  *   -H "Authorization: Bearer $CRON_SECRET"
  * ```
  */
-export const GET = async (request: NextRequest) => {
-  // Verify the request is from authorized cron service
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+export const POST = async (request: NextRequest) => {
+  const authorization = authorizeBearer(
+    request.headers.get('authorization'),
+    process.env.CRON_SECRET,
+  );
+  if (authorization === 'misconfigured') {
+    return NextResponse.json({ error: 'Cron authentication unavailable' }, { status: 503 });
+  }
+  if (authorization === 'unauthorized') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!replayGate.allow('recap-report')) {
+    return NextResponse.json(
+      { error: 'Cron command recently accepted' },
+      { status: 429, headers: { 'retry-after': '60' } },
+    );
   }
 
   const startTime = Date.now();
@@ -38,7 +50,6 @@ export const GET = async (request: NextRequest) => {
     debugLog('📰 [CRON] Starting weekly recap generation...');
 
     // Dynamic import to avoid bundling unnecessarily
-    // @ts-ignore - ESLint has issues with dynamic imports but TypeScript resolves it correctly
     const { runRecapGeneration } = await import('./runner');
 
     const result = await runRecapGeneration();
@@ -60,27 +71,20 @@ export const GET = async (request: NextRequest) => {
       duration,
       triggeredAt: new Date().toISOString(),
     });
-  } catch (error) {
+  } catch {
     const duration = Date.now() - startTime;
-    console.error('❌ [CRON] Weekly recap generation failed:', error);
+    console.error('❌ [CRON] Weekly recap generation failed');
 
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: 'Recap generation failed',
         duration,
         triggeredAt: new Date().toISOString(),
       },
       { status: 500 },
     );
   }
-};
-
-/**
- * Allow manual triggers via POST
- */
-export const POST = async (request: NextRequest) => {
-  return GET(request);
 };
 
 /**

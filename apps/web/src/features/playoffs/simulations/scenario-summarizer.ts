@@ -16,7 +16,7 @@ import type { SeedPath, SeedScenario, TeamStanding, Week14Matchup } from '../typ
 const GEMINI_CONFIG = {
   model: 'gemini-2.0-flash',
   temperature: 0.3, // Lower temperature for factual summarization
-  maxOutputTokens: 2048,
+  maxOutputTokens: 1024,
 } as const;
 
 /**
@@ -215,8 +215,8 @@ export const generateTeamScenarioSummary = async (
     const content = response.content.toString();
 
     return parseGeminiResponse(content, input.teamName);
-  } catch (error) {
-    console.error(`Error generating summary for ${input.teamName}:`, error);
+  } catch {
+    console.error('Scenario summary generation failed');
     return {
       teamName: input.teamName,
       overallSummary: 'Error generating summary',

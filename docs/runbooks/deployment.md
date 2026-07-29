@@ -107,12 +107,13 @@ vercel --prod
 
 Set these in Vercel Dashboard → Project Settings → Environment Variables:
 
-| Variable         | Required    | Description                                      | Example                                     |
-| ---------------- | ----------- | ------------------------------------------------ | ------------------------------------------- |
-| `DATABASE_URL`   | Yes         | PostgreSQL connection string                     | `postgresql://user:pass@host:5432/gauntlet` |
-| `CRON_SECRET`    | Yes         | Secret for cron authentication                   | `your-random-secret-key`                    |
-| `API_SECRET`     | Yes         | General API authentication                       | `your-api-secret`                           |
-| `GEMINI_API_KEY` | Conditional | AI-generated recaps (required for recap feature) | `your-gemini-api-key`                       |
+| Variable              | Required    | Description                                      | Example                                     |
+| --------------------- | ----------- | ------------------------------------------------ | ------------------------------------------- |
+| `DATABASE_URL`        | Yes         | PostgreSQL connection string                     | `postgresql://user:pass@host:5432/gauntlet` |
+| `CRON_SECRET`         | Yes         | Secret for cron authentication                   | `your-random-secret-key`                    |
+| `API_SECRET`          | Yes         | General API authentication                       | `your-api-secret`                           |
+| `GEMINI_API_KEY`      | Conditional | AI-generated recaps (required for recap feature) | `your-gemini-api-key`                       |
+| `AI_SUMMARIZE_SECRET` | Conditional | Bearer capability for playoff scenario summaries | `your-random-capability-key`                |
 
 ### GitHub Actions Secrets
 
@@ -133,6 +134,7 @@ For local cron testing, create `.env.local` in `apps/web/`:
 # apps/web/.env.local
 CRON_SECRET=your-local-test-secret
 GEMINI_API_KEY=your-gemini-key  # Required for recap testing
+AI_SUMMARIZE_SECRET=your-local-capability-secret
 ```
 
 ## Cron Job Setup

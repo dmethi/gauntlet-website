@@ -54,9 +54,8 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 - **Purpose**: Vercel API route handler for cron endpoint
 - **Auth**: Requires `CRON_SECRET` in Authorization header
 - **Timeout**: 5 minutes (300 seconds) for AI generation
-- **Methods**:
-  - `GET` - Called by Vercel Cron
-  - `POST` - Manual triggers
+- **Method**: `POST` only; state-changing `GET` requests are rejected by routing
+- **Replay control**: Duplicate requests within 60 seconds are rejected
 
 ### `runner.ts`
 
@@ -364,8 +363,10 @@ Cron syntax: `minute hour day month day-of-week`
 ### Authentication
 
 - All requests must include `Authorization: Bearer ${CRON_SECRET}`
-- Secret is verified before any processing
+- A missing server-side secret fails closed with 503
+- The bearer secret is verified with a constant-time comparison before any processing
 - 401 response if auth fails
+- 429 response if the command was already accepted within the replay window
 
 ### Best Practices
 

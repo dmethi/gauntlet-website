@@ -366,6 +366,26 @@ breaking changes before they cause runtime errors.
 
 ---
 
+## Command and AI Route Boundaries
+
+Internal cron routes are `POST`-only commands. They must fail closed when
+`CRON_SECRET` is absent, compare bearer credentials in constant time, and reject
+immediate duplicate executions. The current duplicate guard is deliberately
+process-local because this application has no shared cache; durable
+cross-instance locking requires a separately authorized infrastructure slice.
+
+The playoff scenario Gemini route is a capability endpoint. It requires a
+separate `AI_SUMMARIZE_SECRET`, validates a strict bounded schema before
+invoking Gemini, caps request and response size, rate-limits each forwarded
+caller, and does not log request data or provider errors. `GEMINI_API_KEY` alone
+never grants callers access.
+
+These controls are abuse foundations, not user identity. A future public product
+surface must add its own authenticated authorization model instead of sharing
+these server-to-server capabilities.
+
+---
+
 ## Changing Integration Contracts
 
 Before modifying any pattern in this doc:

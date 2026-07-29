@@ -8,48 +8,161 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { SeedScenario, TeamStanding, Week14Matchup } from '@/features/playoffs/types';
-import {
-  generateTeamScenarioSummary,
-  ScenarioSummaryInput,
-} from '@/features/playoffs/simulations/scenario-summarizer';
+import { z } from 'zod';
+import { generateTeamScenarioSummary } from '@/features/playoffs/simulations/scenario-summarizer';
+import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
 
-interface RequestBody {
-  teamName: string;
-  ownerName: string;
-  currentRecord: string;
-  currentPoints: number;
-  division: number;
-  scenarios: SeedScenario[];
-  standings: TeamStanding[];
-  matchups: Week14Matchup[];
-}
+const MAX_REQUEST_BYTES = 48 * 1024;
+const requestGate = createFixedWindowGate({ limit: 10, windowMs: 60_000 });
+const shortText = z.string().trim().min(1).max(120);
+const boundedNumber = z.number().finite().min(0).max(1_000_000);
+
+const scenarioConditionSchema = z
+  .object({
+    type: z.enum(['win', 'lose', 'other_team_wins', 'other_team_loses', 'points_margin']),
+    teamName: shortText,
+    rosterId: z.number().int().min(1).max(10_000),
+    marginRequired: z.number().finite().min(-1_000).max(1_000).optional(),
+  })
+  .strict();
+
+const pathConditionSchema = z
+  .object({
+    type: z.enum(['win', 'lose', 'other_result', 'points_margin']),
+    teamName: shortText,
+    rosterId: z.number().int().min(1).max(10_000),
+    opponentName: shortText.optional(),
+    opponentRosterId: z.number().int().min(1).max(10_000).optional(),
+    wins: z.boolean().optional(),
+    marginRequired: z.number().finite().min(-1_000).max(1_000).optional(),
+    vsTeamName: shortText.optional(),
+  })
+  .strict();
+
+const seedPathSchema = z
+  .object({
+    outcomeId: z.number().int().min(0).max(1_000),
+    conditions: z.array(pathConditionSchema).max(12),
+  })
+  .strict();
+
+const pathSummarySchema = z
+  .object({
+    type: z.enum(['guaranteed', 'conditional', 'impossible']),
+    requiresWin: z.boolean().nullable(),
+    description: z.string().trim().min(1).max(500),
+    additionalConditions: z.array(z.string().trim().min(1).max(200)).max(12).optional(),
+    pathCount: z.number().int().min(0).max(1_000),
+    winPathCount: z.number().int().min(0).max(1_000),
+    losePathCount: z.number().int().min(0).max(1_000),
+  })
+  .strict();
+
+const requestBodySchema = z
+  .object({
+    teamName: shortText,
+    ownerName: shortText,
+    currentRecord: z.string().trim().min(1).max(16),
+    currentPoints: boundedNumber,
+    division: z.number().int().min(1).max(12),
+    scenarios: z
+      .array(
+        z
+          .object({
+            seed: z.number().int().min(1).max(12),
+            probability: z.number().finite().min(0).max(1),
+            conditions: z.array(scenarioConditionSchema).max(12),
+            paths: z.array(seedPathSchema).max(64).optional(),
+            summary: pathSummarySchema.optional(),
+          })
+          .strict(),
+      )
+      .max(12),
+    standings: z
+      .array(
+        z
+          .object({
+            rosterId: z.number().int().min(1).max(10_000),
+            teamName: shortText,
+            ownerName: shortText,
+            division: z.number().int().min(1).max(12),
+            wins: z.number().int().min(0).max(30),
+            losses: z.number().int().min(0).max(30),
+            pointsFor: boundedNumber,
+            leagueId: shortText,
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(12),
+    matchups: z
+      .array(
+        z
+          .object({
+            matchupId: z.number().int().min(1).max(10_000),
+            team1RosterId: z.number().int().min(1).max(10_000),
+            team2RosterId: z.number().int().min(1).max(10_000),
+            team1Name: shortText,
+            team2Name: shortText,
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(6),
+  })
+  .strict();
 
 export const POST = async (request: NextRequest) => {
-  try {
-    const body: RequestBody = await request.json();
+  const authorization = authorizeBearer(
+    request.headers.get('authorization'),
+    process.env.AI_SUMMARIZE_SECRET,
+  );
+  if (authorization === 'misconfigured') {
+    return NextResponse.json({ error: 'AI summarization unavailable' }, { status: 503 });
+  }
+  if (authorization === 'unauthorized') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-    // Validate required fields
-    if (!body.teamName || !body.standings || !body.matchups || !body.scenarios) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  const caller = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  if (!requestGate.allow(caller)) {
+    return NextResponse.json(
+      { error: 'Too many summarization requests' },
+      { status: 429, headers: { 'retry-after': '60' } },
+    );
+  }
+
+  const contentLength = Number(request.headers.get('content-length'));
+  if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
+    return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
+  }
+
+  if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) {
+    return NextResponse.json({ error: 'JSON request body required' }, { status: 415 });
+  }
+
+  try {
+    const rawBody = await request.text();
+    if (Buffer.byteLength(rawBody, 'utf8') > MAX_REQUEST_BYTES) {
+      return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
     }
 
-    const input: ScenarioSummaryInput = {
-      teamName: body.teamName,
-      ownerName: body.ownerName,
-      currentRecord: body.currentRecord,
-      currentPoints: body.currentPoints,
-      division: body.division,
-      scenarios: body.scenarios,
-      standings: body.standings,
-      matchups: body.matchups,
-    };
+    let parsedJson: unknown;
+    try {
+      parsedJson = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON request body' }, { status: 400 });
+    }
+    const parsedBody = requestBodySchema.safeParse(parsedJson);
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
 
-    const summary = await generateTeamScenarioSummary(input);
+    const summary = await generateTeamScenarioSummary(parsedBody.data);
 
     return NextResponse.json(summary);
-  } catch (error) {
-    console.error('Error generating scenario summary:', error);
+  } catch {
+    console.error('Scenario summary request failed');
     return NextResponse.json({ error: 'Failed to generate summary' }, { status: 500 });
   }
 };
