@@ -674,6 +674,10 @@ export default async function YearInReviewPage() {
           <Link href="/archive/2025/competition" className="hover:text-white/60 transition-colors">
             Enter the app
           </Link>
+          {' · '}
+          <Link href="/privacy" className="hover:text-white/60 transition-colors">
+            Privacy Notice
+          </Link>
         </p>
       </footer>
     </div>

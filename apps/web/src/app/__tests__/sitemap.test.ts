@@ -59,6 +59,7 @@ describe('sitemap.xml', () => {
     expect(paths).toContain('/archive/2025');
     expect(paths).toContain('/hall-of-fame-enhanced');
     expect(paths).toContain('/managers');
+    expect(paths).toContain('/privacy');
   });
 
   it('lists every published recap report', async () => {

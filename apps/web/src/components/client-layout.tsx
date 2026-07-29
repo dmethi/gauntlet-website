@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes';
 import { AppNav, type NavItem } from '@gauntlet/ui';
 import { Archive, BarChart3, ClipboardList, Home, Scroll, Star, Swords, Users } from 'lucide-react';
 import { GauntletLogo } from '@/components/gauntlet-logo';
+import { SiteFooter } from '@/components/site-footer';
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Competition', href: '/competition', icon: Home, match: 'prefix' },
@@ -52,6 +53,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {/* Extra top padding on mobile clears the floating nav trigger. */}
         <div className="pt-20 px-4 pb-4 md:pt-6 md:px-6 md:pb-6 min-w-0 w-full">{children}</div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

@@ -24,6 +24,14 @@ const DEVELOPMENT_ORIGIN = 'http://localhost:3000';
 
 export const SITE_NAME = 'The Gauntlet';
 
+/**
+ * Contact address published on the privacy notice (`/privacy`) and, by hand,
+ * in `public/.well-known/security.txt` — that file is static and cannot
+ * import this module, so it is the one place this constant does not reach.
+ * Keep the two in step if this changes.
+ */
+export const CONTACT_EMAIL = 'dmethi@gmail.com';
+
 const stripTrailingSlash = (value: string): string => value.replace(/\/+$/, '');
 
 /**
@@ -87,6 +95,7 @@ export const CANONICAL_STATIC_PATHS: readonly string[] = [
   '/archive/2025',
   '/hall-of-fame-enhanced',
   '/managers',
+  '/privacy',
 ];
 
 /**
