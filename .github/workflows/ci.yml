@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build web workspace dependencies
+        run: pnpm --filter "@gauntlet/web^..." build
+
       - name: Type check
         run: pnpm type-check
 
