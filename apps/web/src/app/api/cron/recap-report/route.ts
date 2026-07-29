@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { debugLog } from '@/lib/debug-log';
 import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
 
-const replayGate = createFixedWindowGate({ limit: 1, windowMs: 60_000 });
+const replayGate = createFixedWindowGate({ limit: 1, windowMs: 6 * 60_000 });
 
 /**
  * Cron endpoint for weekly recap report generation
@@ -40,7 +40,7 @@ export const POST = async (request: NextRequest) => {
   if (!replayGate.allow('recap-report')) {
     return NextResponse.json(
       { error: 'Cron command recently accepted' },
-      { status: 429, headers: { 'retry-after': '60' } },
+      { status: 429, headers: { 'retry-after': '360' } },
     );
   }
 

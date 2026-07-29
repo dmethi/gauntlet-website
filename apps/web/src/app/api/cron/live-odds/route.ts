@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { debugLog } from '@/lib/debug-log';
 import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
 
-const replayGate = createFixedWindowGate({ limit: 1, windowMs: 60_000 });
+const replayGate = createFixedWindowGate({ limit: 1, windowMs: 2 * 60_000 });
 
 /**
  * Authenticated POST endpoint for live odds snapshots
@@ -28,7 +28,7 @@ export const POST = async (request: NextRequest) => {
   if (!replayGate.allow('live-odds')) {
     return NextResponse.json(
       { error: 'Cron command recently accepted' },
-      { status: 429, headers: { 'retry-after': '60' } },
+      { status: 429, headers: { 'retry-after': '120' } },
     );
   }
 

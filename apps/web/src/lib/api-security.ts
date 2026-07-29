@@ -35,6 +35,41 @@ export interface FixedWindowGate {
   readonly allow: (key: string, now?: number) => boolean;
 }
 
+export type BoundedBodyResult =
+  | { readonly status: 'ok'; readonly text: string }
+  | { readonly status: 'too-large' };
+
+export const readBoundedBody = async (
+  body: globalThis.ReadableStream<Uint8Array> | null,
+  maxBytes: number,
+): Promise<BoundedBodyResult> => {
+  if (!body) return { status: 'ok', text: '' };
+
+  const reader = body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  let chunk = await reader.read();
+  while (!chunk.done) {
+    totalBytes += chunk.value.byteLength;
+    if (totalBytes > maxBytes) {
+      await reader.cancel();
+      return { status: 'too-large' };
+    }
+    chunks.push(chunk.value);
+    chunk = await reader.read();
+  }
+
+  const combined = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    combined.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return { status: 'ok', text: new TextDecoder().decode(combined) };
+};
+
 export const createFixedWindowGate = ({
   limit,
   windowMs,

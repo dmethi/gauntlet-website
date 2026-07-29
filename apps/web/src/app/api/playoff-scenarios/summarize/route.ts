@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { generateTeamScenarioSummary } from '@/features/playoffs/simulations/scenario-summarizer';
-import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
+import { authorizeBearer, createFixedWindowGate, readBoundedBody } from '@/lib/api-security';
 
 const MAX_REQUEST_BYTES = 48 * 1024;
 const requestGate = createFixedWindowGate({ limit: 10, windowMs: 60_000 });
@@ -198,13 +198,6 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (!requestGate.allow('global')) {
-    return NextResponse.json(
-      { error: 'Too many summarization requests' },
-      { status: 429, headers: { 'retry-after': '60' } },
-    );
-  }
-
   const contentLength = Number(request.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
     return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
@@ -215,20 +208,27 @@ export const POST = async (request: NextRequest) => {
   }
 
   try {
-    const rawBody = await request.text();
-    if (Buffer.byteLength(rawBody, 'utf8') > MAX_REQUEST_BYTES) {
+    const boundedBody = await readBoundedBody(request.body, MAX_REQUEST_BYTES);
+    if (boundedBody.status === 'too-large') {
       return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
     }
 
     let parsedJson: unknown;
     try {
-      parsedJson = JSON.parse(rawBody);
+      parsedJson = JSON.parse(boundedBody.text);
     } catch {
       return NextResponse.json({ error: 'Invalid JSON request body' }, { status: 400 });
     }
     const parsedBody = requestBodySchema.safeParse(parsedJson);
     if (!parsedBody.success) {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+
+    if (!requestGate.allow('global')) {
+      return NextResponse.json(
+        { error: 'Too many summarization requests' },
+        { status: 429, headers: { 'retry-after': '60' } },
+      );
     }
 
     const summary = await generateTeamScenarioSummary(parsedBody.data);

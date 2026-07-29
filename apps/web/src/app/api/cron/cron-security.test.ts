@@ -77,7 +77,9 @@ describe.each([
     const route = await load();
 
     expect((await route.POST(request(path, 'a-secure-cron-secret'))).status).toBe(200);
-    expect((await route.POST(request(path, 'a-secure-cron-secret'))).status).toBe(429);
+    const replay = await route.POST(request(path, 'a-secure-cron-secret'));
+    expect(replay.status).toBe(429);
+    expect(Number(replay.headers.get('retry-after'))).toBeGreaterThanOrEqual(120);
     expect(runner).toHaveBeenCalledTimes(1);
   });
 });

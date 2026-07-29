@@ -1,3 +1,5 @@
+// @vitest-environment node
+
 import { NextRequest } from 'next/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -163,6 +165,19 @@ describe('playoff scenario summarization boundary', () => {
 
     expect(response.status).toBe(400);
     expect(generateTeamScenarioSummary).not.toHaveBeenCalled();
+  });
+
+  it('does not let invalid requests consume the provider-call allowance', async () => {
+    const { POST } = await import('./route');
+
+    for (let index = 0; index < 10; index += 1) {
+      expect(
+        (await POST(request({ ...validBody, unknown: index }, 'a-secure-ai-capability'))).status,
+      ).toBe(400);
+    }
+
+    expect((await POST(request(validBody, 'a-secure-ai-capability'))).status).toBe(200);
+    expect(generateTeamScenarioSummary).toHaveBeenCalledTimes(1);
   });
 
   it('accepts a bounded authorized request', async () => {

@@ -55,7 +55,7 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 - **Auth**: Requires `CRON_SECRET` in Authorization header
 - **Timeout**: 5 minutes (300 seconds) for AI generation
 - **Method**: `POST` only; state-changing `GET` requests are rejected by routing
-- **Replay control**: Duplicate requests within 60 seconds are rejected
+- **Replay control**: Duplicate requests within the route's six-minute execution window are rejected
 
 ### `runner.ts`
 
