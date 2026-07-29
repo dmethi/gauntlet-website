@@ -36,10 +36,6 @@ vi.mock('@/config/leagues', () => ({
 vi.mock('@/lib/sleeper/browser-client', () => ({
   createBrowserServiceClient: vi.fn(() => ({
     fetchNFLState: vi.fn().mockResolvedValue({ week: 5 }),
-    fetchAllPlayers: vi.fn().mockResolvedValue({
-      player1: { full_name: 'Player One', position: 'RB' },
-      player2: { full_name: 'Player Two', position: 'WR' },
-    }),
     fetchLeague: vi.fn().mockResolvedValue({
       name: 'Test League',
       season: '2024',
@@ -101,6 +97,19 @@ describe('createHallOfFameDataService', () => {
   let service: ReturnType<typeof createHallOfFameDataService>;
 
   beforeEach(() => {
+    // enhanceMatchupsWithStats now fetches only the players referenced by a
+    // batch of matchups via POST /api/players/batch, instead of the entire
+    // player database via sleeperClient.fetchAllPlayers().
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        players: {
+          player1: { full_name: 'Player One', position: 'RB' },
+          player2: { full_name: 'Player Two', position: 'WR' },
+        },
+      }),
+    });
+
     service = createHallOfFameDataService();
     vi.clearAllMocks();
   });

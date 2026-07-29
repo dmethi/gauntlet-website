@@ -9,13 +9,38 @@ below exist because that constraint is currently violated).
 
 ## Cross-cutting website audit
 
-- [ ] Website Specification audit — run `https://specification.website/` and its
-      checklist against the Gauntlet web app/public routes. Cover foundations,
-      SEO, accessibility, security headers, well-known URIs, agent readiness
-      (`/llms.txt` where appropriate), performance, privacy, resilience/error
-      pages, and internationalisation assumptions. Record findings as separate
-      scoped follow-ups so the audit does not get mixed into the active
-      league-registry/season-readiness work.
+- [x] Website Specification audit (2026-07-28) — ran
+      `https://specification.website/` checklist against every publicly
+      reachable Gauntlet route. Six phases: audit spine + public surface
+      inventory + App Router failure boundaries; canonical
+      origin/robots/sitemap; baseline security headers + fail-closed cron auth +
+      security.txt; privacy notice + telemetry disclosure; skip link + global
+      reduced-motion rule; performance evidence (Lighthouse + bundle sizes) and
+      backlog wiring. Shipped every approved low-lift fix with tests; filed the
+      remaining 14 findings as execution-ready briefs in
+      `docs/humanlayer-tasks.md` (bullets below). Phase 6's own Lighthouse pass
+      surfaced one more low-lift bug (not among the 14 briefs) and it was fixed
+      the same day: `/managers/[ownerId]` was fetching the entire 2.4 MB NFL
+      player database from the browser on every visit instead of using the
+      static dataset/`/api/players/batch` endpoint already built for this; total
+      page weight dropped 7.37 MB → 5.39 MB
+      (`apps/web/src/features/hall-of-fame/hooks/useHallOfFameData.ts`). Full
+      evidence, matrix, and verification record in
+      `.humanlayer/tasks/gauntlet-website-specification-audit/05-audit-public-web-findings.md`.
+  - [ ] [Soft 404s on detail routes](docs/humanlayer-tasks.md#brief-1-soft-404s)
+  - [ ] [Server-side root redirect](docs/humanlayer-tasks.md#brief-2-server-side-root-redirect)
+  - [ ] [Distinguish empty from failed time-series](docs/humanlayer-tasks.md#brief-3-empty-vs-failed-time-series)
+  - [ ] [Streaming fallbacks on dynamic server routes](docs/humanlayer-tasks.md#brief-4-streaming-fallbacks)
+  - [ ] [Retire static week pages shadowing the dynamic report route](docs/humanlayer-tasks.md#brief-5-retire-static-week-pages)
+  - [ ] [Per-page canonical and `og:url` ownership](docs/humanlayer-tasks.md#brief-6-per-page-canonical-og-url)
+  - [ ] [`noindex` for client-only excluded routes](docs/humanlayer-tasks.md#brief-7-noindex-client-only-routes)
+  - [ ] [Open Graph share image](docs/humanlayer-tasks.md#brief-8-open-graph-share-image)
+  - [ ] [JSON-LD and `llms.txt`](docs/humanlayer-tasks.md#brief-9-jsonld-and-llms-txt)
+  - [ ] [Admin approval endpoint authorizes on an empty secret](docs/humanlayer-tasks.md#brief-10-admin-empty-secret)
+  - [ ] [Content Security Policy, report-only first](docs/humanlayer-tasks.md#brief-11-csp-report-only)
+  - [ ] [Public-form abuse controls](docs/humanlayer-tasks.md#brief-12-public-form-abuse-controls)
+  - [ ] [`Cache-Control` on personal-data API responses](docs/humanlayer-tasks.md#brief-13-cache-control-personal-data)
+  - [ ] [Post-deploy header diff](docs/humanlayer-tasks.md#brief-14-post-deploy-header-diff)
 
 ## Phase 0 — Season readiness findings (context, not actionable)
 

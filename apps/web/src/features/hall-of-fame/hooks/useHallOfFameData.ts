@@ -186,6 +186,37 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
   };
 
   /**
+   * Fetch only the players referenced by a set of matchups (starters + full
+   * roster), instead of the entire 11,400+ player database. Routes through
+   * the static `/api/players/batch` endpoint (backed by the repo's
+   * pre-exported player dataset, `@/data/players-loader`) rather than
+   * `sleeperClient.fetchAllPlayers()`, which pulls Sleeper's ~2.4 MB
+   * `/players/nfl` payload straight into the browser on every cold visit to
+   * a manager profile.
+   */
+  const fetchPlayersForMatchups = async (
+    matchups: ProcessedMatchup[],
+  ): Promise<Map<string, any>> => {
+    const playerIds = new Set<string>();
+    matchups.forEach(m => {
+      m.starters?.forEach(id => playerIds.add(id));
+      m.players?.forEach(id => playerIds.add(id));
+    });
+
+    if (playerIds.size === 0) return new Map();
+
+    const response = await fetch('/api/players/batch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerIds: Array.from(playerIds) }),
+    });
+    if (!response.ok) return new Map();
+
+    const { players } = (await response.json()) as { players: Record<string, any> };
+    return new Map(Object.entries(players));
+  };
+
+  /**
    * Enhance matchups with player stats and projections
    */
   const enhanceMatchupsWithStats = async (
@@ -195,8 +226,7 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
     leagueName: string,
   ): Promise<EnhancedMatchup[]> => {
     // Fetch player data for position mapping
-    const playersData = await sleeperClient.fetchAllPlayers();
-    const playerDataMap = new Map(Object.entries(playersData));
+    const playerDataMap = await fetchPlayersForMatchups(matchups);
     const enhanced: EnhancedMatchup[] = [];
 
     // Group matchups by week for efficient stat fetching
