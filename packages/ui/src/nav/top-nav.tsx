@@ -22,7 +22,7 @@ export function TopNav({ items, logo, isDark, onToggleTheme }: Props) {
     <div className='hidden md:flex sticky top-0 z-40 items-center justify-between px-6 py-3 border-b border-border bg-card/90 backdrop-blur-md'>
       <div className='flex items-center gap-8'>
         {logo}
-        <nav className='flex items-center gap-6'>
+        <nav aria-label='Main navigation' className='flex items-center gap-6'>
           {items.map(item => {
             const active = isNavItemActive(item, pathname);
             const Icon = item.icon;

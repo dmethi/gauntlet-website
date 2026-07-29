@@ -43,13 +43,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
       <AppNav
         items={NAV_ITEMS}
         logo={<GauntletLogo size="sm" />}
         isDark={isDark}
         onToggleTheme={() => setTheme(isDark ? 'light' : 'dark')}
       />
-      <main className="min-w-0 w-full">
+      <main id="main-content" className="min-w-0 w-full">
         {/* Extra top padding on mobile clears the floating nav trigger. */}
         <div className="pt-20 px-4 pb-4 md:pt-6 md:px-6 md:pb-6 min-w-0 w-full">{children}</div>
       </main>
