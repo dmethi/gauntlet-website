@@ -37,7 +37,7 @@ interface RecapGenerationResult {
 /**
  * Run the weekly recap generation
  *
- * This is the main entry point called by the Vercel cron endpoint.
+ * This is the main entry point called by the authenticated cron endpoint.
  * It detects the current week and generates the recap report.
  */
 export const runRecapGeneration = async (): Promise<RecapGenerationResult> => {
@@ -92,7 +92,6 @@ export const runRecapGeneration = async (): Promise<RecapGenerationResult> => {
     console.warn('⚠️ [RECAP] Report generation had issues:', {
       week: currentWeek,
       season: currentSeason,
-      error: result.error,
       duration: `${duration}ms`,
     });
 
@@ -101,13 +100,13 @@ export const runRecapGeneration = async (): Promise<RecapGenerationResult> => {
       season: currentSeason,
       status: 'failed',
       saved: false,
-      errors: result.error ? [result.error] : undefined,
+      errors: ['Report generation failed'],
       duration,
     };
-  } catch (error) {
+  } catch {
     const duration = Date.now() - jobStartTime;
 
-    console.error('❌ [RECAP] Report generation failed with exception:', error);
+    console.error('❌ [RECAP] Report generation failed with exception');
 
     // Try to get week for error reporting
     let week = 0;
@@ -122,7 +121,7 @@ export const runRecapGeneration = async (): Promise<RecapGenerationResult> => {
       season: new Date().getFullYear(),
       status: 'failed',
       saved: false,
-      errors: [error instanceof Error ? error.message : String(error)],
+      errors: ['Report generation failed'],
       duration,
     };
   }

@@ -13,7 +13,7 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        Vercel Cron                              │
+│                     cron-job.org POST                           │
 │                  (Tuesday 10am ET / 2pm UTC)                    │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
@@ -54,9 +54,8 @@ This API endpoint enables automated weekly recap reports every Tuesday at 10am E
 - **Purpose**: Vercel API route handler for cron endpoint
 - **Auth**: Requires `CRON_SECRET` in Authorization header
 - **Timeout**: 5 minutes (300 seconds) for AI generation
-- **Methods**:
-  - `GET` - Called by Vercel Cron
-  - `POST` - Manual triggers
+- **Method**: `POST` only; state-changing `GET` requests are rejected by routing
+- **Replay control**: Duplicate requests within the route's six-minute execution window are rejected
 
 ### `runner.ts`
 
@@ -255,8 +254,8 @@ View cron execution logs in Vercel:
 
 1. Verify `GEMINI_API_KEY` is set in Vercel
 2. Check Gemini API quota/limits
-3. Review error message in response
-4. Check function logs in Vercel dashboard
+3. Check the Gemini provider status and quota dashboard
+4. Check the sanitized function status in Vercel logs
 
 ### Problem: Timeout (Function exceeded 5 minutes)
 
@@ -324,19 +323,8 @@ if (result.success) {
 
 ### Changing Schedule
 
-Edit `apps/web/vercel.json`:
-
-```json
-{
-  "crons": [
-    {
-      "schedule": "0 12 * * 3" // Wednesday at noon UTC
-    }
-  ]
-}
-```
-
-Cron syntax: `minute hour day month day-of-week`
+Edit the schedule in cron-job.org. Native Vercel Cron invokes routes with GET,
+so it is not compatible with these POST-only command endpoints.
 
 ## Performance
 
@@ -355,7 +343,7 @@ Cron syntax: `minute hour day month day-of-week`
 
 ### Rate Limits
 
-- Vercel Cron: Hobby plan allows 1 cron job
+- cron-job.org: plan limits depend on the configured account
 - Gemini API: 15 RPM, 1M TPM, 1500 RPD (free tier)
 - Report generation fits well within free tier limits
 
@@ -364,8 +352,10 @@ Cron syntax: `minute hour day month day-of-week`
 ### Authentication
 
 - All requests must include `Authorization: Bearer ${CRON_SECRET}`
-- Secret is verified before any processing
+- A missing server-side secret fails closed with 503
+- The bearer secret is verified with a constant-time comparison before any processing
 - 401 response if auth fails
+- 429 response if the command was already accepted within the replay window
 
 ### Best Practices
 

@@ -13,8 +13,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,6 +22,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build web workspace dependencies
+        run: pnpm --filter "@gauntlet/web^..." build
 
       - name: Type check
         run: pnpm type-check

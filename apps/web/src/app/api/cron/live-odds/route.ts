@@ -1,23 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { debugLog } from '@/lib/debug-log';
+import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
+
+const replayGate = createFixedWindowGate({ limit: 1, windowMs: 2 * 60_000 });
 
 /**
- * Vercel Cron endpoint for live odds snapshots
+ * Authenticated POST endpoint for live odds snapshots
  *
  * Executes the live snapshot script directly in the API route
  * Called every 10 minutes during NFL game windows
  *
- * Vercel Cron is more reliable than GitHub Actions for scheduled tasks
+ * The scheduler must support POST requests with an Authorization header.
  *
  * @see apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts
  */
-export const GET = async (request: NextRequest) => {
-  // Verify the request is from Vercel Cron
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+export const POST = async (request: NextRequest) => {
+  const authorization = authorizeBearer(
+    request.headers.get('authorization'),
+    process.env.CRON_SECRET,
+  );
+  if (authorization === 'misconfigured') {
+    return NextResponse.json({ error: 'Cron authentication unavailable' }, { status: 503 });
+  }
+  if (authorization === 'unauthorized') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!replayGate.allow('live-odds')) {
+    return NextResponse.json(
+      { error: 'Cron command recently accepted' },
+      { status: 429, headers: { 'retry-after': '120' } },
+    );
   }
 
   const startTime = Date.now();
@@ -43,25 +55,20 @@ export const GET = async (request: NextRequest) => {
       ...result,
       triggeredAt: new Date().toISOString(),
     });
-  } catch (error) {
+  } catch {
     const duration = Date.now() - startTime;
-    console.error('❌ [CRON] Live odds snapshot failed:', error);
+    console.error('❌ [CRON] Live odds snapshot failed');
 
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: 'Live odds snapshot failed',
         duration,
         triggeredAt: new Date().toISOString(),
       },
       { status: 500 },
     );
   }
-};
-
-// Optionally allow manual triggers
-export const POST = async (request: NextRequest) => {
-  return GET(request);
 };
 
 // Set max duration for Vercel serverless function

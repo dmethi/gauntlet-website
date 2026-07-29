@@ -15,7 +15,7 @@ production.
          │              │                 │
          ▼              ▼                 ▼
 ┌─────────────────┐  ┌──────────┐   ┌──────────────┐
-│  Vercel Cron    │  │cron-job. │   │  GitHub      │
+│ External POST   │  │cron-job. │   │  GitHub      │
 │  (Live Odds)    │  │   org    │   │  Actions     │
 └─────────────────┘  │ (Recaps) │   │(Variance)    │
                      └──────────┘   └──────────────┘
@@ -107,12 +107,13 @@ vercel --prod
 
 Set these in Vercel Dashboard → Project Settings → Environment Variables:
 
-| Variable         | Required    | Description                                      | Example                                     |
-| ---------------- | ----------- | ------------------------------------------------ | ------------------------------------------- |
-| `DATABASE_URL`   | Yes         | PostgreSQL connection string                     | `postgresql://user:pass@host:5432/gauntlet` |
-| `CRON_SECRET`    | Yes         | Secret for cron authentication                   | `your-random-secret-key`                    |
-| `API_SECRET`     | Yes         | General API authentication                       | `your-api-secret`                           |
-| `GEMINI_API_KEY` | Conditional | AI-generated recaps (required for recap feature) | `your-gemini-api-key`                       |
+| Variable              | Required    | Description                                      | Example                                     |
+| --------------------- | ----------- | ------------------------------------------------ | ------------------------------------------- |
+| `DATABASE_URL`        | Yes         | PostgreSQL connection string                     | `postgresql://user:pass@host:5432/gauntlet` |
+| `CRON_SECRET`         | Yes         | Secret for cron authentication                   | `your-random-secret-key`                    |
+| `API_SECRET`          | Yes         | General API authentication                       | `your-api-secret`                           |
+| `GEMINI_API_KEY`      | Conditional | AI-generated recaps (required for recap feature) | `your-gemini-api-key`                       |
+| `AI_SUMMARIZE_SECRET` | Conditional | Bearer capability for playoff scenario summaries | `your-random-capability-key`                |
 
 ### GitHub Actions Secrets
 
@@ -133,36 +134,28 @@ For local cron testing, create `.env.local` in `apps/web/`:
 # apps/web/.env.local
 CRON_SECRET=your-local-test-secret
 GEMINI_API_KEY=your-gemini-key  # Required for recap testing
+AI_SUMMARIZE_SECRET=your-local-capability-secret
 ```
 
 ## Cron Job Setup
 
 The application uses three different cron mechanisms:
 
-### 1. Vercel Cron (Live Odds)
+### 1. Authenticated POST Scheduler (Live Odds)
 
 **Purpose**: Captures live win probability snapshots during NFL games
 
-**Endpoint**: `GET /api/cron/live-odds`
+**Endpoint**: `POST /api/cron/live-odds`
 
 **Configuration**:
 
-- Configured in `vercel.json` (cron expression)
+- Configure an external scheduler that supports POST and custom headers
+- Set `Authorization: Bearer YOUR_CRON_SECRET`
 - Max duration: 60 seconds
 - Runs during NFL game windows
 
-**Current config** (update `vercel.json`):
-
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron/live-odds",
-      "schedule": "*/10 * * * *"
-    }
-  ]
-}
-```
+Native Vercel Cron sends GET requests and is intentionally incompatible with
+these POST-only command routes.
 
 **Testing locally**:
 
@@ -308,10 +301,10 @@ Monitor at GitHub → Actions tab:
 - Built-in email notifications for failures
 - Execution history and logs
 
-**Vercel Cron**:
+**External live-odds scheduler**:
 
-- View in Vercel Dashboard → Cron Jobs
-- Failed executions logged in Functions tab
+- Use the scheduler's execution history and failure alerts
+- Function failures remain visible in Vercel logs
 
 ## Common Commands
 
