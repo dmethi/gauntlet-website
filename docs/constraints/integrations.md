@@ -376,9 +376,10 @@ cross-instance locking requires a separately authorized infrastructure slice.
 
 The playoff scenario Gemini route is a capability endpoint. It requires a
 separate `AI_SUMMARIZE_SECRET`, validates a strict bounded schema before
-invoking Gemini, caps request and response size, rate-limits each forwarded
-caller, and does not log request data or provider errors. `GEMINI_API_KEY` alone
-never grants callers access.
+invoking Gemini, enforces single-league and matchup referential integrity, caps
+request and provider-response size, and uses a global process-local rate gate.
+Forwarding headers are not trusted as caller identity. Request data and provider
+errors are not logged. `GEMINI_API_KEY` alone never grants callers access.
 
 These controls are abuse foundations, not user identity. A future public product
 surface must add its own authenticated authorization model instead of sharing

@@ -7,7 +7,19 @@
  */
 
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import { z } from 'zod';
 import type { SeedPath, SeedScenario, TeamStanding, Week14Matchup } from '../types';
+
+const MAX_PROVIDER_RESPONSE_BYTES = 8 * 1024;
+const summaryTextSchema = z.string().trim().min(1).max(500);
+const providerResponseSchema = z
+  .object({
+    overallSummary: summaryTextSchema,
+    seedSummaries: z
+      .record(z.string().regex(/^[1-6]$/), summaryTextSchema)
+      .refine(summaries => Object.keys(summaries).length <= 6),
+  })
+  .strict();
 
 /**
  * Configuration for Gemini API client for scenario summarization.
@@ -162,8 +174,12 @@ Keep each seed summary to 1-2 sentences. Be conversational but precise. Use team
 /**
  * Parse Gemini's response into structured output
  */
-const parseGeminiResponse = (response: string, teamName: string): ScenarioSummaryOutput => {
+export const parseGeminiResponse = (response: string, teamName: string): ScenarioSummaryOutput => {
   try {
+    if (Buffer.byteLength(response, 'utf8') > MAX_PROVIDER_RESPONSE_BYTES) {
+      throw new Error('Provider response exceeded the parser limit');
+    }
+
     // Remove markdown code blocks if present
     let cleaned = response.trim();
     if (cleaned.startsWith('```json')) {
@@ -176,19 +192,18 @@ const parseGeminiResponse = (response: string, teamName: string): ScenarioSummar
     }
     cleaned = cleaned.trim();
 
-    const parsed = JSON.parse(cleaned);
+    const parsedJson: unknown = JSON.parse(cleaned);
+    const parsed = providerResponseSchema.parse(parsedJson);
 
     // Convert string keys to numbers for seedSummaries
     const seedSummaries: Record<number, string> = {};
-    if (parsed.seedSummaries) {
-      Object.entries(parsed.seedSummaries).forEach(([key, value]) => {
-        seedSummaries[parseInt(key)] = value as string;
-      });
-    }
+    Object.entries(parsed.seedSummaries).forEach(([key, value]) => {
+      seedSummaries[Number(key)] = value;
+    });
 
     return {
       teamName,
-      overallSummary: parsed.overallSummary || 'Playoff scenarios being calculated...',
+      overallSummary: parsed.overallSummary,
       seedSummaries,
     };
   } catch {

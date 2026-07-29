@@ -40,6 +40,7 @@ describe.each([
   },
 ])('$name cron command', ({ path, load, runner }) => {
   beforeEach(() => {
+    vi.resetModules();
     process.env.CRON_SECRET = 'a-secure-cron-secret';
     runner.mockClear();
   });
@@ -78,5 +79,41 @@ describe.each([
     expect((await route.POST(request(path, 'a-secure-cron-secret'))).status).toBe(200);
     expect((await route.POST(request(path, 'a-secure-cron-secret'))).status).toBe(429);
     expect(runner).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('recap response sanitization', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    process.env.CRON_SECRET = 'a-secure-cron-secret';
+    runRecapGeneration.mockClear();
+  });
+
+  afterEach(() => {
+    delete process.env.CRON_SECRET;
+  });
+
+  it('does not expose runner error details', async () => {
+    runRecapGeneration.mockResolvedValueOnce({
+      week: 1,
+      season: 2026,
+      status: 'failed',
+      saved: false,
+      errors: ['provider response contained a private detail'],
+    });
+    const { POST } = await import('./recap-report/route');
+
+    const response = await POST(request('/api/cron/recap-report', 'a-secure-cron-secret'));
+    const body: unknown = await response.json();
+
+    expect(body).toEqual({
+      success: true,
+      week: 1,
+      season: 2026,
+      status: 'failed',
+      saved: false,
+      duration: expect.any(Number),
+      triggeredAt: expect.any(String),
+    });
   });
 });

@@ -15,7 +15,7 @@ production.
          │              │                 │
          ▼              ▼                 ▼
 ┌─────────────────┐  ┌──────────┐   ┌──────────────┐
-│  Vercel Cron    │  │cron-job. │   │  GitHub      │
+│ External POST   │  │cron-job. │   │  GitHub      │
 │  (Live Odds)    │  │   org    │   │  Actions     │
 └─────────────────┘  │ (Recaps) │   │(Variance)    │
                      └──────────┘   └──────────────┘
@@ -141,30 +141,21 @@ AI_SUMMARIZE_SECRET=your-local-capability-secret
 
 The application uses three different cron mechanisms:
 
-### 1. Vercel Cron (Live Odds)
+### 1. Authenticated POST Scheduler (Live Odds)
 
 **Purpose**: Captures live win probability snapshots during NFL games
 
-**Endpoint**: `GET /api/cron/live-odds`
+**Endpoint**: `POST /api/cron/live-odds`
 
 **Configuration**:
 
-- Configured in `vercel.json` (cron expression)
+- Configure an external scheduler that supports POST and custom headers
+- Set `Authorization: Bearer YOUR_CRON_SECRET`
 - Max duration: 60 seconds
 - Runs during NFL game windows
 
-**Current config** (update `vercel.json`):
-
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron/live-odds",
-      "schedule": "*/10 * * * *"
-    }
-  ]
-}
-```
+Native Vercel Cron sends GET requests and is intentionally incompatible with
+these POST-only command routes.
 
 **Testing locally**:
 
@@ -310,10 +301,10 @@ Monitor at GitHub → Actions tab:
 - Built-in email notifications for failures
 - Execution history and logs
 
-**Vercel Cron**:
+**External live-odds scheduler**:
 
-- View in Vercel Dashboard → Cron Jobs
-- Failed executions logged in Functions tab
+- Use the scheduler's execution history and failure alerts
+- Function failures remain visible in Vercel logs
 
 ## Common Commands
 

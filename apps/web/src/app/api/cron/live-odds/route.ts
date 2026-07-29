@@ -5,12 +5,12 @@ import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
 const replayGate = createFixedWindowGate({ limit: 1, windowMs: 60_000 });
 
 /**
- * Vercel Cron endpoint for live odds snapshots
+ * Authenticated POST endpoint for live odds snapshots
  *
  * Executes the live snapshot script directly in the API route
  * Called every 10 minutes during NFL game windows
  *
- * Vercel Cron is more reliable than GitHub Actions for scheduled tasks
+ * The scheduler must support POST requests with an Authorization header.
  *
  * @see apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts
  */

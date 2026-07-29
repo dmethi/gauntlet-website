@@ -29,6 +29,16 @@ const validBody = {
       pointsFor: 1234.5,
       leagueId: 'league-one',
     },
+    {
+      rosterId: 2,
+      teamName: 'Other Team',
+      ownerName: 'Other Owner',
+      division: 2,
+      wins: 7,
+      losses: 6,
+      pointsFor: 1100,
+      leagueId: 'league-one',
+    },
   ],
   matchups: [
     {
@@ -54,6 +64,7 @@ const request = (body: unknown, token?: string, caller = '203.0.113.1'): NextReq
 
 describe('playoff scenario summarization boundary', () => {
   beforeEach(() => {
+    vi.resetModules();
     process.env.AI_SUMMARIZE_SECRET = 'a-secure-ai-capability';
     generateTeamScenarioSummary.mockClear();
   });
@@ -98,6 +109,34 @@ describe('playoff scenario summarization boundary', () => {
     expect(generateTeamScenarioSummary).not.toHaveBeenCalled();
   });
 
+  it('rejects mixed-league standings before prompt construction', async () => {
+    const { POST } = await import('./route');
+    const mixedLeague = {
+      ...validBody,
+      standings: validBody.standings.map((standing, index) =>
+        index === 1 ? { ...standing, leagueId: 'league-two' } : standing,
+      ),
+    };
+
+    const response = await POST(request(mixedLeague, 'a-secure-ai-capability'));
+
+    expect(response.status).toBe(400);
+    expect(generateTeamScenarioSummary).not.toHaveBeenCalled();
+  });
+
+  it('rejects matchup and target references inconsistent with the standings', async () => {
+    const { POST } = await import('./route');
+    const unknownRoster = {
+      ...validBody,
+      matchups: [{ ...validBody.matchups[0], team2RosterId: 999 }],
+    };
+    const mismatchedTarget = { ...validBody, ownerName: 'Different Owner' };
+
+    expect((await POST(request(unknownRoster, 'a-secure-ai-capability'))).status).toBe(400);
+    expect((await POST(request(mismatchedTarget, 'a-secure-ai-capability'))).status).toBe(400);
+    expect(generateTeamScenarioSummary).not.toHaveBeenCalled();
+  });
+
   it('rejects request bodies larger than the input cap', async () => {
     const { POST } = await import('./route');
     const oversized = { ...validBody, teamName: 'x'.repeat(60_000) };
@@ -135,12 +174,13 @@ describe('playoff scenario summarization boundary', () => {
     expect(generateTeamScenarioSummary).toHaveBeenCalledTimes(1);
   });
 
-  it('rate limits repeated authorized requests from one caller', async () => {
+  it('uses a global process-local rate gate that spoofed forwarding headers cannot bypass', async () => {
     const { POST } = await import('./route');
-    const caller = '203.0.113.99';
 
     const responses = await Promise.all(
-      Array.from({ length: 11 }, () => POST(request(validBody, 'a-secure-ai-capability', caller))),
+      Array.from({ length: 11 }, (_, index) =>
+        POST(request(validBody, 'a-secure-ai-capability', `203.0.113.${index + 1}`)),
+      ),
     );
 
     expect(responses.slice(0, 10).every(response => response.status === 200)).toBe(true);

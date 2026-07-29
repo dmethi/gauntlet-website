@@ -77,6 +77,7 @@ const requestBodySchema = z
           })
           .strict(),
       )
+      .min(1)
       .max(12),
     standings: z
       .array(
@@ -110,7 +111,80 @@ const requestBodySchema = z
       .min(1)
       .max(6),
   })
-  .strict();
+  .strict()
+  .superRefine((body, context) => {
+    const leagueIds = new Set(body.standings.map(standing => standing.leagueId));
+    if (leagueIds.size !== 1) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Standings must belong to one league',
+        path: ['standings'],
+      });
+    }
+
+    const standingsByRoster = new Map<number, (typeof body.standings)[number]>();
+    for (const [index, standing] of body.standings.entries()) {
+      if (standingsByRoster.has(standing.rosterId)) {
+        context.addIssue({
+          code: 'custom',
+          message: 'Roster IDs must be unique within the league',
+          path: ['standings', index, 'rosterId'],
+        });
+      }
+      standingsByRoster.set(standing.rosterId, standing);
+    }
+
+    const targetStandings = body.standings.filter(standing => standing.teamName === body.teamName);
+    const target = targetStandings[0];
+    if (
+      targetStandings.length !== 1 ||
+      !target ||
+      target.ownerName !== body.ownerName ||
+      `${target.wins}-${target.losses}` !== body.currentRecord ||
+      target.pointsFor !== body.currentPoints ||
+      target.division !== body.division
+    ) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Target team must match one standings entry',
+        path: ['teamName'],
+      });
+    }
+
+    const seenRosterIds = new Set<number>();
+    const seenMatchupIds = new Set<number>();
+    for (const [index, matchup] of body.matchups.entries()) {
+      const team1 = standingsByRoster.get(matchup.team1RosterId);
+      const team2 = standingsByRoster.get(matchup.team2RosterId);
+      if (
+        !team1 ||
+        !team2 ||
+        team1.teamName !== matchup.team1Name ||
+        team2.teamName !== matchup.team2Name ||
+        matchup.team1RosterId === matchup.team2RosterId ||
+        seenRosterIds.has(matchup.team1RosterId) ||
+        seenRosterIds.has(matchup.team2RosterId) ||
+        seenMatchupIds.has(matchup.matchupId)
+      ) {
+        context.addIssue({
+          code: 'custom',
+          message: 'Matchups must reference unique standings teams in the same league',
+          path: ['matchups', index],
+        });
+      }
+      seenRosterIds.add(matchup.team1RosterId);
+      seenRosterIds.add(matchup.team2RosterId);
+      seenMatchupIds.add(matchup.matchupId);
+    }
+
+    if (target && !seenRosterIds.has(target.rosterId)) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Target team must appear in exactly one matchup',
+        path: ['matchups'],
+      });
+    }
+  });
 
 export const POST = async (request: NextRequest) => {
   const authorization = authorizeBearer(
@@ -124,8 +198,7 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const caller = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!requestGate.allow(caller)) {
+  if (!requestGate.allow('global')) {
     return NextResponse.json(
       { error: 'Too many summarization requests' },
       { status: 429, headers: { 'retry-after': '60' } },

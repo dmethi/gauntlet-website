@@ -177,7 +177,7 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
 
     jobLogger.info({
       event: 'job_started',
-      message: `Starting live odds snapshot for week ${week} (Vercel Cron)`,
+      message: `Starting scheduled live odds snapshot for week ${week}`,
     });
 
     // Capture individual matchups for detailed data
@@ -230,7 +230,7 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
       failedCount,
       totalProcessed: savedCount + skippedCount + failedCount,
       metrics: summary,
-      message: 'Live odds snapshot finished (Vercel Cron)',
+      message: 'Scheduled live odds snapshot finished',
     });
 
     return {

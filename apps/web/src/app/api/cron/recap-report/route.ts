@@ -67,7 +67,10 @@ export const POST = async (request: NextRequest) => {
 
     return NextResponse.json({
       success: true,
-      ...result,
+      week: result.week,
+      season: result.season,
+      status: result.status,
+      saved: result.saved,
       duration,
       triggeredAt: new Date().toISOString(),
     });
