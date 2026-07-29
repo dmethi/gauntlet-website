@@ -36,5 +36,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Workspace packages resolve through `main: dist/index.js`, which
+      # `pnpm install` does not produce. Without this, @gauntlet/web test
+      # files that import @gauntlet/lib or @gauntlet/ui fail to resolve. It
+      # passes locally only because everyone already has a dist/ lying around.
+      # `^...` builds the matrix package's dependencies, not the package.
+      - name: Build workspace dependencies
+        run: pnpm turbo run build --filter="${{ matrix.package }}^..."
+
       - name: Run coverage with thresholds
         run: pnpm --filter "${{ matrix.package }}" test:coverage
