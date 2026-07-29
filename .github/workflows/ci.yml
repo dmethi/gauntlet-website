@@ -2,6 +2,9 @@ name: CI
 
 on:
   pull_request:
+  # Matches Quality Gates, so a toolchain change to this file can be exercised
+  # without pushing a commit to open a pull request against.
+  workflow_dispatch:
 
 jobs:
   validate:
