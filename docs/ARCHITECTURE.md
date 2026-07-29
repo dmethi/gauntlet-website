@@ -13,8 +13,8 @@ decisions, consult the README in each `apps/*` or `packages/*` directory.
 
 ## Core Problem
 
-**Fantasy football analysis across two separate Sleeper leagues (AFC + NFC) with
-24 total teams.**
+**Fantasy football analysis across a registry-defined set of separate Sleeper
+leagues.** The 2026 season has three leagues; later seasons may add more.
 
 Key challenges:
 
@@ -183,7 +183,7 @@ See `.cursorrules` for detailed workflow.
 
 ---
 
-### Why Separate AFC/NFC League Processing?
+### Why Separate Per-League Processing?
 
 **Context**: Sleeper API returns data per-league. Early bugs came from merging
 data too early (matchup ID collisions).
@@ -193,9 +193,8 @@ presentation layer.
 
 ```typescript
 // Process each league independently
-const afcResults = processLeague(afcMatchups);
-const nfcResults = processLeague(nfcMatchups);
-const combined = [...afcResults, ...nfcResults];
+const results = leagueInputs.map(input => processLeague(input));
+const combined = results.flat();
 ```
 
 **Tradeoffs**:
@@ -210,6 +209,23 @@ const combined = [...afcResults, ...nfcResults];
 keys: `${leagueId}-${rosterId}`.
 
 See `docs/constraints/multi-league.md` for detailed patterns.
+
+### Shared Reporting Infrastructure with DriveFF
+
+**Decision**: Gauntlet and DriveFF should use substantially the same reporting
+infrastructure. Deterministic analysis produces a structured context blob;
+narrative generation, persistence, and rendering operate against that boundary.
+
+Gauntlet produces one combined weekly artifact with clearly separated league
+sections. Its context blob may contain richer commissioner-authored lore because
+the people and league history are known. That richer context is input data, not
+a reason to fork the reporting pipeline.
+
+**Constraint**: Provider ingestion and per-league calculations remain outside
+the shared reporting core. Gauntlet must process every league independently and
+combine only presentation-ready results. Historical artifacts remain browsable,
+but new reports should use the fresh canonical routes rather than preserving a
+duplicate legacy generation path.
 
 ---
 

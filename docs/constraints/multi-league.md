@@ -2,14 +2,15 @@
 
 ## Problem
 
-Gauntlet tracks **two separate Sleeper leagues** (AFC + NFC) with 24 total
-teams. IDs from Sleeper API are **only unique within a league**, not globally.
+Gauntlet tracks a registry-defined set of separate Sleeper leagues. The 2026
+season has **three leagues**, and future seasons may add more. IDs from the
+Sleeper API are **only unique within a league**, not globally.
 
 **Critical invariants**:
 
-- Matchup IDs repeat across leagues (both use 1-6)
+- Matchup IDs repeat across leagues
 - Roster IDs only unique within a league
-- Processing data from both leagues simultaneously creates ID collisions
+- Processing data from multiple leagues simultaneously creates ID collisions
 
 ---
 
@@ -17,14 +18,15 @@ teams. IDs from Sleeper API are **only unique within a league**, not globally.
 
 ```typescript
 // ❌ WRONG: Merges too early, loses league context
-const allMatchups = [...afcMatchups, ...nfcMatchups];
+const allMatchups = leagueInputs.flatMap(input => input.matchups);
 const grouped = groupBy(allMatchups, m => m.matchup_id);
-// Result: 6 groups with 4 teams each (collision!)
+// Result: unrelated matchups share groups (collision!)
 
 // ✅ CORRECT: Process leagues independently
-const afcResults = processLeague(afcMatchups, 'afc');
-const nfcResults = processLeague(nfcMatchups, 'nfc');
-const combined = [...afcResults, ...nfcResults];
+const results = leagueInputs.map(({ leagueId, matchups }) =>
+  processLeague(matchups, leagueId)
+);
+const combined = results.flat();
 ```
 
 **Rationale**: Data must maintain league context throughout processing pipeline.
@@ -58,14 +60,17 @@ in logs/debugging.
 
 ```typescript
 // Always fetch leagues in parallel, keep separate
-const [afcLeague, nfcLeague] = await Promise.all([
-  sleeperClient.getLeague(AFC_LEAGUE_ID),
-  sleeperClient.getLeague(NFC_LEAGUE_ID),
-]);
+const leagueData = await Promise.all(
+  leagueRefs.map(async ({ leagueId }) => ({
+    leagueId,
+    data: await sleeperClient.getLeague(leagueId),
+  }))
+);
 
-// Process with league context attached
-const afcData = await processLeagueData(afcLeague, 'afc');
-const nfcData = await processLeagueData(nfcLeague, 'nfc');
+// Process each league with its context attached
+const results = await Promise.all(
+  leagueData.map(({ leagueId, data }) => processLeagueData(data, leagueId))
+);
 ```
 
 **Never** create a generic "league processor" that loses track of which league
@@ -83,7 +88,8 @@ const matchupKey = ['matchup', week, matchupId];
 const matchupKey = ['matchup', leagueId, week, matchupId];
 ```
 
-**Rationale**: Prevents cache collisions when displaying data from both leagues.
+**Rationale**: Prevents cache collisions when displaying data from multiple
+leagues.
 
 ---
 
@@ -126,8 +132,9 @@ const groups = groupBy(all, m => m.matchup_id);
 ```typescript
 // ❌ Roster lookup loses league context
 const rosterMap = new Map<number, Roster>();
-afcRosters.forEach(r => rosterMap.set(r.roster_id, r));
-nfcRosters.forEach(r => rosterMap.set(r.roster_id, r)); // Overwrites!
+leagueRosters
+  .flatMap(input => input.rosters)
+  .forEach(r => rosterMap.set(r.roster_id, r)); // Overwrites!
 ```
 
 **Fix**: Use composite keys or nested maps:
@@ -135,11 +142,15 @@ nfcRosters.forEach(r => rosterMap.set(r.roster_id, r)); // Overwrites!
 ```typescript
 // Option A: Composite key
 const rosterMap = new Map<string, Roster>();
-afcRosters.forEach(r => rosterMap.set(`afc-${r.roster_id}`, r));
+leagueRosters.forEach(({ leagueId, rosters }) =>
+  rosters.forEach(r => rosterMap.set(`${leagueId}-${r.roster_id}`, r))
+);
 
 // Option B: Nested map (preferred for frequent league-based lookups)
 const rostersByLeague = new Map<string, Map<number, Roster>>();
-rostersByLeague.set('afc', new Map(afcRosters.map(r => [r.roster_id, r])));
+leagueRosters.forEach(({ leagueId, rosters }) =>
+  rostersByLeague.set(leagueId, new Map(rosters.map(r => [r.roster_id, r])))
+);
 ```
 
 ---
@@ -173,21 +184,24 @@ consumers will need it. Attach early.
 Every function that processes league data should have tests covering:
 
 1. **Single league** - Verify logic works correctly in isolation
-2. **Both leagues** - Verify no cross-league contamination
+2. **Multiple leagues** - Verify no cross-league contamination
 3. **ID collisions** - Explicitly test that same IDs from different leagues
    don't conflict
 
 ```typescript
 describe('processMatchups', () => {
   it('handles same matchup_id across leagues', () => {
-    const afcMatchups = [{ matchup_id: 1, roster_id: 1 }];
-    const nfcMatchups = [{ matchup_id: 1, roster_id: 1 }];
+    const leagueOne = [{ matchup_id: 1, roster_id: 1 }];
+    const leagueTwo = [{ matchup_id: 1, roster_id: 1 }];
 
-    const results = processMultiLeague(afcMatchups, nfcMatchups);
+    const results = processMultiLeague([
+      { leagueId: 'league-one', matchups: leagueOne },
+      { leagueId: 'league-two', matchups: leagueTwo },
+    ]);
 
     expect(results).toHaveLength(2); // Not 1!
-    expect(results[0].key).toBe('afc-1-1');
-    expect(results[1].key).toBe('nfc-1-1');
+    expect(results[0].key).toBe('league-one-1-1');
+    expect(results[1].key).toBe('league-two-1-1');
   });
 });
 ```
@@ -200,19 +214,14 @@ Only merge when:
 
 - Displaying combined standings (with league indicator in UI)
 - Aggregate statistics (total points across all teams)
-- Cross-league comparisons (AFC vs. NFC rankings)
+- Cross-league comparisons across registered leagues
 
 **UI Requirement**: Always show league context (badge, color, icon) when
 displaying merged data.
 
 ---
 
-## Future Considerations
-
-If we ever support arbitrary number of leagues (not just AFC/NFC):
-
-- Replace hardcoded `AFC_LEAGUE_ID`/`NFC_LEAGUE_ID` with config array
-- Add league registry pattern
-- Ensure all composite key patterns scale (they should)
+The league registry is the source of truth for the season's league set. Do not
+encode a maximum count or fall back to AFC/NFC-shaped contracts.
 
 **Constraint remains the same**: Process separately, combine last.
