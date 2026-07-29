@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createHallOfFameDataService } from './useHallOfFameData';
+import { createBrowserServiceClient } from '@/lib/sleeper/browser-client';
 import type { EnhancedMatchup, ProcessedMatchup } from '@/features/hall-of-fame/types';
 import type { League } from '@/config/leagues';
 
@@ -8,7 +9,7 @@ import type { League } from '@/config/leagues';
 // contains instead of assuming exactly two current-season leagues.
 // vi.mock factories are hoisted above imports/consts, so the registry must be
 // defined via vi.hoisted to be visible inside the factory below.
-const { MOCK_LEAGUE_REGISTRY } = vi.hoisted(() => ({
+const { MOCK_LEAGUE_REGISTRY, createMockSleeperClient } = vi.hoisted(() => ({
   MOCK_LEAGUE_REGISTRY: {
     '2022': [],
     '2023': [{ id: 'lg-2023-a', name: 'League 2023 A', season: 2023, previousLeagueId: null }],
@@ -22,19 +23,13 @@ const { MOCK_LEAGUE_REGISTRY } = vi.hoisted(() => ({
       { id: 'lg-2025-b', name: 'League 2025 B', season: 2025, previousLeagueId: 'lg-2024-b' },
     ],
   } as Record<string, League[]>,
-}));
 
-vi.mock('@/config/leagues', () => ({
-  getAllSeasons: () => Object.keys(MOCK_LEAGUE_REGISTRY),
-  getLeaguesForSeason: (season: string) => MOCK_LEAGUE_REGISTRY[season] ?? [],
-  // lib/constants.ts (transitively imported for CACHE_DURATIONS) also reads
-  // this at module load time to derive LEAGUE_IDS.
-  getCurrentLeagues: () => MOCK_LEAGUE_REGISTRY['2025'],
-}));
-
-// Mock the Sleeper client
-vi.mock('@/lib/sleeper/browser-client', () => ({
-  createBrowserServiceClient: vi.fn(() => ({
+  // A factory, not a shared object: tests that need one failing endpoint
+  // override it with `{ ...createMockSleeperClient(), fetchX: ... }`, and
+  // `vi.clearAllMocks()` does not undo `mockReturnValue`. Without a fresh
+  // default per test, one test's override silently became every later test's
+  // client.
+  createMockSleeperClient: () => ({
     fetchNFLState: vi.fn().mockResolvedValue({ week: 5 }),
     fetchLeague: vi.fn().mockResolvedValue({
       name: 'Test League',
@@ -90,28 +85,55 @@ vi.mock('@/lib/sleeper/browser-client', () => ({
       player1: { pts_half_ppr: 22.0 },
       player2: { pts_half_ppr: 15.0 },
     }),
-  })),
+  }),
+}));
+
+type MockSleeperClient = ReturnType<typeof createMockSleeperClient>;
+
+/** Install a client mock without an `any` cast at every call site. */
+const useSleeperClient = (client: Partial<MockSleeperClient>): void => {
+  vi.mocked(createBrowserServiceClient).mockReturnValue({
+    ...createMockSleeperClient(),
+    ...client,
+  } as unknown as ReturnType<typeof createBrowserServiceClient>);
+};
+
+const PLAYER_BATCH_RESPONSE = {
+  players: {
+    player1: { full_name: 'Player One', position: 'RB' },
+    player2: { full_name: 'Player Two', position: 'WR' },
+  },
+};
+
+vi.mock('@/config/leagues', () => ({
+  getAllSeasons: () => Object.keys(MOCK_LEAGUE_REGISTRY),
+  getLeaguesForSeason: (season: string) => MOCK_LEAGUE_REGISTRY[season] ?? [],
+  // lib/constants.ts (transitively imported for CACHE_DURATIONS) also reads
+  // this at module load time to derive LEAGUE_IDS.
+  getCurrentLeagues: () => MOCK_LEAGUE_REGISTRY['2025'],
+}));
+
+// Mock the Sleeper client
+vi.mock('@/lib/sleeper/browser-client', () => ({
+  createBrowserServiceClient: vi.fn(() => createMockSleeperClient()),
 }));
 
 describe('createHallOfFameDataService', () => {
   let service: ReturnType<typeof createHallOfFameDataService>;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    useSleeperClient({});
+
     // enhanceMatchupsWithStats now fetches only the players referenced by a
     // batch of matchups via POST /api/players/batch, instead of the entire
     // player database via sleeperClient.fetchAllPlayers().
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({
-        players: {
-          player1: { full_name: 'Player One', position: 'RB' },
-          player2: { full_name: 'Player Two', position: 'WR' },
-        },
-      }),
+      json: async () => PLAYER_BATCH_RESPONSE,
     });
 
     service = createHallOfFameDataService();
-    vi.clearAllMocks();
   });
 
   it('creates service with all methods', () => {
@@ -212,13 +234,7 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('handles missing matchup data gracefully', async () => {
-    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
-    const mockClient = vi.mocked(createBrowserServiceClient);
-
-    mockClient.mockReturnValue({
-      ...mockClient(),
-      fetchMatchups: vi.fn().mockResolvedValue([]),
-    } as any);
+    useSleeperClient({ fetchMatchups: vi.fn().mockResolvedValue([]) });
 
     const testService = createHallOfFameDataService();
     const matchups = await testService.getLeagueSeasonMatchups('league123', '2024');
@@ -247,13 +263,7 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('fetches correct number of weeks based on current week', async () => {
-    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
-    const mockClient = vi.mocked(createBrowserServiceClient);
-
-    mockClient.mockReturnValue({
-      ...mockClient(),
-      fetchNFLState: vi.fn().mockResolvedValue({ week: 3 }),
-    } as any);
+    useSleeperClient({ fetchNFLState: vi.fn().mockResolvedValue({ week: 3 }) });
 
     const testService = createHallOfFameDataService();
     await testService.getLeagueSeasonMatchups('league123', '2025');
@@ -264,11 +274,7 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('identifies playoff matchups correctly', async () => {
-    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
-    const mockClient = vi.mocked(createBrowserServiceClient);
-
-    mockClient.mockReturnValue({
-      ...mockClient(),
+    useSleeperClient({
       fetchMatchups: vi.fn().mockImplementation((leagueId, week) => {
         if (week >= 15) {
           return Promise.resolve([
@@ -285,7 +291,7 @@ describe('createHallOfFameDataService', () => {
         }
         return Promise.resolve([]);
       }),
-    } as any);
+    });
 
     const testService = createHallOfFameDataService();
     const matchups = await testService.getLeagueSeasonMatchups('league123', '2024');
@@ -305,15 +311,9 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('handles API errors gracefully', async () => {
-    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
-    const mockClient = vi.mocked(createBrowserServiceClient);
-
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    mockClient.mockReturnValue({
-      ...mockClient(),
-      fetchLeague: vi.fn().mockRejectedValue(new Error('API Error')),
-    } as any);
+    useSleeperClient({ fetchLeague: vi.fn().mockRejectedValue(new Error('API Error')) });
 
     const testService = createHallOfFameDataService();
 
@@ -337,12 +337,8 @@ describe('createHallOfFameDataService', () => {
   });
 
   it('continues processing if one league fails', async () => {
-    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
-    const mockClient = vi.mocked(createBrowserServiceClient);
-
     let callCount = 0;
-    mockClient.mockReturnValue({
-      ...mockClient(),
+    useSleeperClient({
       fetchLeague: vi.fn().mockImplementation(() => {
         callCount++;
         if (callCount === 1) {
@@ -350,7 +346,7 @@ describe('createHallOfFameDataService', () => {
         }
         return Promise.resolve({ name: 'Test League', season: '2024' });
       }),
-    } as any);
+    });
 
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -372,12 +368,137 @@ describe('createHallOfFameDataService', () => {
     expect(matchups1).toBe(matchups2);
   });
 
-  it('processes custom points if available', async () => {
-    const { createBrowserServiceClient } = await import('@/lib/sleeper/browser-client');
-    const mockClient = vi.mocked(createBrowserServiceClient);
+  describe('player batch lookup failures', () => {
+    // A degraded-but-successful return here is the dangerous case: an empty
+    // player map zeroes every positional record, and the result looks like a
+    // legitimately quiet season rather than a fetch failure.
+    const expectNoSilentDegradation = async (fetchImpl: () => Promise<unknown>) => {
+      global.fetch = vi.fn().mockImplementation(fetchImpl);
+      const testService = createHallOfFameDataService();
 
-    mockClient.mockReturnValue({
-      ...mockClient(),
+      await expect(testService.getLeagueSeasonMatchups('league123', '2024')).rejects.toThrow();
+
+      return testService;
+    };
+
+    it('throws on a non-2xx player batch response instead of returning an empty player map', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: false,
+        status: 500,
+        json: async () => ({ error: 'Internal server error' }),
+      }));
+    });
+
+    it('throws when the player batch payload has no `players` field', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => ({ count: 0, dataSource: 'static-player-data' }),
+      }));
+    });
+
+    it('throws when `players` is not an object of player records', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => ({ players: ['player1', 'player2'] }),
+      }));
+    });
+
+    it('throws when a `players` entry is not a player record', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => ({ players: { player1: 'RB' } }),
+      }));
+    });
+
+    it('throws when the player batch response body is not JSON', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => {
+          throw new SyntaxError('Unexpected token < in JSON at position 0');
+        },
+      }));
+    });
+
+    it('does not cache the failed league, so a later successful call is served fresh', async () => {
+      const testService = await expectNoSilentDegradation(async () => ({
+        ok: false,
+        status: 503,
+        json: async () => ({ error: 'Service unavailable' }),
+      }));
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          players: {
+            player1: { full_name: 'Player One', position: 'RB' },
+            player2: { full_name: 'Player Two', position: 'WR' },
+          },
+        }),
+      });
+
+      const matchups = await testService.getLeagueSeasonMatchups('league123', '2024');
+
+      expect(matchups.length).toBeGreaterThan(0);
+      expect(matchups[0].playerData?.get('player1')).toEqual({
+        full_name: 'Player One',
+        position: 'RB',
+      });
+    });
+
+    it('does not cache the aggregate sweep when a league failed', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => ({ error: 'Internal server error' }),
+      });
+
+      const testService = createHallOfFameDataService();
+
+      // Every league fails its player lookup, so the sweep returns empty.
+      const failed = await testService.getAllHistoricalMatchups(true);
+      expect(failed).toEqual([]);
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          players: {
+            player1: { full_name: 'Player One', position: 'RB' },
+            player2: { full_name: 'Player Two', position: 'WR' },
+          },
+        }),
+      });
+
+      // A week-long cache entry from the failed sweep would pin `[]` here.
+      const recovered = await testService.getAllHistoricalMatchups(true);
+      expect(recovered.length).toBeGreaterThan(0);
+
+      consoleErrorSpy.mockRestore();
+    });
+  });
+
+  it('expires the per-league cache on its own duration rather than the aggregate one', async () => {
+    vi.useFakeTimers();
+    try {
+      const testService = createHallOfFameDataService();
+      const first = await testService.getLeagueSeasonMatchups('league123', '2024');
+
+      // Inside ONE_DAY: same array instance, served from cache.
+      vi.advanceTimersByTime(23 * 60 * 60 * 1000);
+      expect(await testService.getLeagueSeasonMatchups('league123', '2024')).toBe(first);
+
+      // Past ONE_DAY but well inside ONE_WEEK: must be refetched, not held
+      // until the aggregate's week-long expiry.
+      vi.advanceTimersByTime(2 * 60 * 60 * 1000);
+      expect(await testService.getLeagueSeasonMatchups('league123', '2024')).not.toBe(first);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('processes custom points if available', async () => {
+    useSleeperClient({
       fetchMatchups: vi.fn().mockResolvedValue([
         {
           roster_id: 1,
@@ -390,7 +511,7 @@ describe('createHallOfFameDataService', () => {
           players_points: [25.5],
         },
       ]),
-    } as any);
+    });
 
     const testService = createHallOfFameDataService();
     const matchups = await testService.getLeagueSeasonMatchups('league123', '2024');

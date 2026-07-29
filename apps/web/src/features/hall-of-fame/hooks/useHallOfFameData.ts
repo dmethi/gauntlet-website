@@ -9,7 +9,28 @@ import { createBrowserServiceClient as createServiceClient } from '@/lib/sleeper
 import { PlayerStats } from '@/lib/sleeper/browser-client';
 import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
+import type { PlayerIndex } from '@gauntlet/types';
 import type { EnhancedMatchup } from '../utils/aggregations';
+
+/**
+ * The only player fields the Hall of Fame calculations read off `playerData`
+ * (position, for the positional splits in `utils/categories.ts`,
+ * `utils/aggregations.ts`, and `useHallOfFameEnhanced.ts`). `PlayerIndex` in
+ * `@gauntlet/types` already models exactly this shape.
+ */
+type PlayerIndexEntry = PlayerIndex[string];
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/**
+ * Structural check on an untrusted `/api/players/batch` payload. Every field
+ * of a `PlayerIndex` entry is optional, so this validates the container —
+ * a player-id-keyed object of objects — and deliberately asserts nothing
+ * about individual fields it cannot actually verify.
+ */
+const isPlayerIndex = (value: unknown): value is PlayerIndex =>
+  isPlainObject(value) && Object.values(value).every(isPlainObject);
 
 export interface LiveWinProbSample {
   id: string;
@@ -31,8 +52,15 @@ export interface LiveWinProbSample {
 }
 
 interface CacheEntry {
-  data: any;
+  data: EnhancedMatchup[];
   timestamp: number;
+  /**
+   * Stored per entry rather than read from a single constant at lookup time:
+   * every caller already passes the duration it wants, but `getFromCache`
+   * used to expire everything at `ONE_WEEK`, so the per-league `ONE_DAY`
+   * argument had no effect.
+   */
+  maxAge: number;
 }
 
 export interface HallOfFameDataService {
@@ -51,12 +79,12 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
   /**
    * Get from cache
    */
-  const getFromCache = (key: string): any | null => {
+  const getFromCache = (key: string): EnhancedMatchup[] | null => {
     const cached = cache.get(key);
     if (!cached) return null;
 
     const age = Date.now() - cached.timestamp;
-    if (age > CACHE_DURATIONS.ONE_WEEK) {
+    if (age > cached.maxAge) {
       cache.delete(key);
       return null;
     }
@@ -67,8 +95,12 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
   /**
    * Set cache
    */
-  const setCache = (key: string, data: any, maxAge: number = CACHE_DURATIONS.ONE_HOUR): void => {
-    cache.set(key, { data, timestamp: Date.now() });
+  const setCache = (
+    key: string,
+    data: EnhancedMatchup[],
+    maxAge: number = CACHE_DURATIONS.ONE_HOUR,
+  ): void => {
+    cache.set(key, { data, timestamp: Date.now(), maxAge });
   };
 
   /**
@@ -193,10 +225,15 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
    * `sleeperClient.fetchAllPlayers()`, which pulls Sleeper's ~2.4 MB
    * `/players/nfl` payload straight into the browser on every cold visit to
    * a manager profile.
+   *
+   * Failures throw rather than degrading to an empty map. An empty map is
+   * indistinguishable from "these players have no positions", which silently
+   * zeroes every positional Hall of Fame record — and the caller would then
+   * cache that plausible-looking wrong answer.
    */
   const fetchPlayersForMatchups = async (
     matchups: ProcessedMatchup[],
-  ): Promise<Map<string, any>> => {
+  ): Promise<Map<string, PlayerIndexEntry>> => {
     const playerIds = new Set<string>();
     matchups.forEach(m => {
       m.starters?.forEach(id => playerIds.add(id));
@@ -205,15 +242,47 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
 
     if (playerIds.size === 0) return new Map();
 
+    // Server-side callers (the recap report cron, via
+    // `lib/reports/recap/tools/hall-of-fame-enhanced.ts`) have no origin to
+    // resolve a root-relative URL against, so they read the same static
+    // dataset the endpoint wraps instead of making an HTTP hop back into this
+    // deployment. `typeof window` is a build-time constant in Next's client
+    // compilation, so this branch is eliminated there rather than pulling the
+    // 18 MB dataset in behind a manager profile — verified by rebuilding and
+    // diffing `.next/static/chunks` (no new chunk, unchanged hashes).
+    if (typeof window === 'undefined') {
+      const { getPlayersByIds } = await import('@/data/players-loader');
+      const players = getPlayersByIds(Array.from(playerIds));
+      return new Map(
+        Object.entries(players).map(([id, player]) => [
+          id,
+          {
+            position: player.position,
+            full_name: player.full_name,
+            team: player.team ?? undefined,
+          },
+        ]),
+      );
+    }
+
     const response = await fetch('/api/players/batch', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ playerIds: Array.from(playerIds) }),
     });
-    if (!response.ok) return new Map();
+    if (!response.ok) {
+      throw new Error(`Player batch lookup failed with HTTP ${response.status}`);
+    }
 
-    const { players } = (await response.json()) as { players: Record<string, any> };
-    return new Map(Object.entries(players));
+    const payload: unknown = await response.json();
+    if (typeof payload !== 'object' || payload === null || !('players' in payload)) {
+      throw new Error('Player batch lookup returned a payload with no `players` field');
+    }
+    if (!isPlayerIndex(payload.players)) {
+      throw new Error('Player batch lookup returned a malformed `players` field');
+    }
+
+    return new Map(Object.entries(payload.players));
   };
 
   /**
@@ -427,6 +496,7 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
     if (cached) return cached;
 
     const allMatchups: EnhancedMatchup[] = [];
+    let anyLeagueFailed = false;
 
     // Process each registered season, one league at a time (never merge raw
     // matchups across leagues before this point — see docs/ETHOS.md).
@@ -447,12 +517,19 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
           const matchups = await getLeagueSeasonMatchups(league.id, season);
           allMatchups.push(...matchups);
         } catch (error) {
+          anyLeagueFailed = true;
           console.error(`Error fetching ${season} ${league.name}:`, error);
         }
       }
     }
 
-    setCache(cacheKey, allMatchups, CACHE_DURATIONS.ONE_WEEK);
+    // Only a complete sweep is worth caching. Pinning a partial result here
+    // would serve an all-time record set that silently omits a league for a
+    // full week, and the omission is invisible downstream — every record is
+    // still a real record, just ranked against the wrong population.
+    if (!anyLeagueFailed) {
+      setCache(cacheKey, allMatchups, CACHE_DURATIONS.ONE_WEEK);
+    }
     return allMatchups;
   };
 
