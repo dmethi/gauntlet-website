@@ -2,6 +2,9 @@ name: CI
 
 on:
   pull_request:
+  # Matches Quality Gates, so a toolchain change to this file can be exercised
+  # without pushing a commit to open a pull request against.
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -11,15 +14,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # No `version:` input on purpose. `packageManager` in the root
+      # package.json is the single source of truth; declaring a version here
+      # too makes action-setup@v4 fail with "Multiple versions of pnpm
+      # specified" rather than pick one.
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          # 22, not 18: @vitejs/plugin-react v5 is ESM-only and vitest.config.ts
+          # loads it through require(), which only works on Node >= 22.12.
+          node-version: '22'
           cache: 'pnpm'
 
       - name: Install dependencies

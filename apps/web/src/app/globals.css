@@ -283,6 +283,27 @@
   animation: orb-drift-c 22s ease-in-out infinite;
 }
 
+/* Respect the OS "reduce motion" preference globally. Scattered
+   `motion-reduce:` utilities only cover the elements that opt in; this
+   neutralises every animation/transition duration site-wide and fully stops
+   the infinite hero-orb drift above, rather than merely shortening it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-orb-a,
+  .hero-orb-b,
+  .hero-orb-c {
+    animation: none !important;
+  }
+}
+
 /* Ensure proper viewport behavior on mobile */
 @supports (-webkit-touch-callout: none) {
   /* iOS Safari specific fixes */

@@ -1,0 +1,15 @@
+# Security contact for The Gauntlet.
+# Format: RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116).
+#
+# Served as a static file from apps/web/public/.well-known/. There is no route
+# handler and therefore no import of src/lib/site.ts, so the contact address
+# below is maintained by hand. Update it here and in the privacy notice
+# together.
+#
+# Expires is 12 months out; RFC 9116 section 2.5.5 asks for less than a year
+# and says a stale file should be treated as untrustworthy. Refresh it before
+# the date below.
+
+Contact: mailto:dmethi@gmail.com
+Expires: 2027-07-28T00:00:00.000Z
+Preferred-Languages: en

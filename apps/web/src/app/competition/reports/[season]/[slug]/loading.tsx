@@ -1,5 +1,5 @@
 /**
- * Loading state for recap report pages
+ * Loading skeleton for the dynamic recap report route.
  */
 
 import { PageHeader } from '@gauntlet/ui';

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireCronAuth } from '@/lib/cron-auth';
 import { debugLog } from '@/lib/debug-log';
 
 /**
@@ -24,13 +25,11 @@ import { debugLog } from '@/lib/debug-log';
  * ```
  */
 export const GET = async (request: NextRequest) => {
-  // Verify the request is from authorized cron service
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  // Verify the request is from an authorized cron service. Fails closed when
+  // CRON_SECRET is unset - see src/lib/cron-auth.ts. This job spends AI tokens,
+  // so an unauthenticated trigger costs money as well as data.
+  const unauthorized = requireCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const startTime = Date.now();
 

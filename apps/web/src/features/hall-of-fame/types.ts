@@ -35,6 +35,12 @@ export interface HallOfFameCategory {
   scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime';
 }
 
+export interface HallOfFamePlayerMetadata {
+  position: string;
+  full_name?: string;
+  team?: string;
+}
+
 export interface ProcessedMatchup {
   rosterId: number;
   teamName: string;
@@ -52,7 +58,7 @@ export interface ProcessedMatchup {
   starters_points?: number[];
   players?: string[];
   players_points?: Record<string, number>;
-  playerData?: Map<string, any>; // Player metadata including position
+  playerData?: Map<string, HallOfFamePlayerMetadata>;
   matchupId?: number;
   isPlayoff?: boolean;
   custom_points?: number; // For optimal lineup calculations

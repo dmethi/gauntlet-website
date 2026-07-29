@@ -26,9 +26,14 @@ import { GauntletLogo } from '@/components/gauntlet-logo';
 import { fetchSeasonStats } from '@/lib/year-in-review/season-stats';
 import type { SeasonStats } from '@/lib/year-in-review/season-stats';
 
+// Campaign page with three forms that collect names and emails: excluded from
+// indexing by the policy in `@/lib/site`. `robots.ts` disallows the path; this
+// states the same thing in the document for crawlers that reach the URL from a
+// shared link.
 export const metadata = {
   title: 'Year One — The Gauntlet',
   description: 'Season 2025 in review. Champions crowned. Money won. The Gauntlet enters Year Two.',
+  robots: { index: false, follow: false },
 };
 
 const StatCard = ({ value, label }: { value: string; label: string }) => {
@@ -668,6 +673,10 @@ export default async function YearInReviewPage() {
           High-stakes fantasy football ·{' '}
           <Link href="/archive/2025/competition" className="hover:text-white/60 transition-colors">
             Enter the app
+          </Link>
+          {' · '}
+          <Link href="/privacy" className="hover:text-white/60 transition-colors">
+            Privacy Notice
           </Link>
         </p>
       </footer>

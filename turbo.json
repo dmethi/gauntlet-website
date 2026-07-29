@@ -17,7 +17,12 @@
       "cache": false
     },
     "type-check": {
-      "dependsOn": ["^type-check"]
+      // `^build`, not `^type-check`: packages consume each other through the
+      // built `dist/index.d.ts`, and the upstream packages that produce those
+      // declarations (@gauntlet/lib, @gauntlet/ui, @gauntlet/tokens) have no
+      // `type-check` script of their own to depend on. With `^type-check`,
+      // turbo had nothing to run and tsc could not resolve them.
+      "dependsOn": ["^build"]
     },
     "test": {
       "dependsOn": ["^test"],
