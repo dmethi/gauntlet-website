@@ -1,15 +1,15 @@
 # Scratchpad
 
-Ephemeral working memory, not an archive. Settled facts go to module cards
-(`docs/modules/*.md`) or a promoted `ROADMAP.md` item — prune entries here as
-they resolve rather than letting them accumulate.
+Ephemeral working memory, not an archive. Committed work goes to Studio Linear,
+uncommitted possibilities go to `docs/IDEAS.md`, and settled facts go to the
+appropriate repository documentation. Prune entries as they resolve.
 
 ## Active
 
-Modern War Room visual identity rework (`ROADMAP.md` Phase 6). The chrome/loader
-audit backlog and the content-level design pass on Waiver/Transactions/Start-Sit
-are both closed out (2026-07-28, commit `ddce119`). No active slice right now —
-see "Next session" below for unblocked candidates.
+Modern War Room visual identity rework. The chrome/loader audit backlog and the
+content-level design pass on Waiver/Transactions/Start-Sit are both closed out
+(2026-07-28, commit `ddce119`). No active slice right now — see "Next session"
+below for unblocked candidates.
 
 ## Needs a closer look
 
@@ -41,23 +41,9 @@ see "Next session" below for unblocked candidates.
   `/competition` was wired to real 2026 data the same day. Still open: replace
   the remaining 4 `SeasonPlaceholder` pages (`/stats`, `/matchups`,
   `/hall-of-fame-enhanced`, `/draft/analysis`) with real 2026 feature
-  implementations — tracked under `ROADMAP.md` Phase 4/5, not this item.
+  implementations — tracked in Studio Linear, not this item.
 
 ## Next session
 
-Phase 6's chrome + content design passes are both done (2026-07-28). Remaining
-open, _unblocked_ items (not gated on 2026 season data) — pick one, this isn't
-prioritized:
-
-- `ROADMAP.md` line ~12: Website Specification audit
-  (`https://specification.website/` checklist) — standalone, cross-cutting,
-  never started.
-- `ROADMAP.md` line ~353: content design pass on
-  `app/managers/[ownerId]/page.tsx` — its chrome got `PageHeaderHero` in the
-  stale-loader audit, but the actual content redesign (timeline-style season
-  history instead of a bare table, best/worst-season highlighting, a
-  browse/index entry point) is still open.
-
-Everything else left unchecked in `ROADMAP.md` (hall-of-fame-enhanced/
-draft-analysis real content, the hall-of-fame audit script re-run) is blocked on
-real 2026 season data existing — see the Blocked section above.
+No work should be selected from this file. Use Studio Linear for committed work
+and `docs/IDEAS.md` for possibilities awaiting promotion.

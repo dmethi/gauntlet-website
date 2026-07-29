@@ -101,6 +101,9 @@ jspm_packages/
 # Vercel
 .vercel
 
+# HumanLayer local overrides
+.humanlayer/workspace.local.json
+
 # Local development
 .DS_Store
 .DS_Store?
@@ -129,3 +132,6 @@ temp/
 
 *storybook.log
 storybook-static
+
+# Riptide artifacts (cloud-synced)
+.humanlayer/tasks/

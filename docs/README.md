@@ -4,8 +4,9 @@
 
 - High-stakes fantasy football companion that automates the league analysis and
   weekly recap reports the commissioner previously crafted manually.
-- Two Sleeper leagues (AFC/NFC) form a unified 24-team experience; features
-  surface cross-league insights while respecting league-specific identifiers.
+- Three Sleeper leagues form the 2026 experience; the registry can expand in
+  later seasons. Features surface cross-league insights while processing each
+  league independently and preserving league-specific identifiers.
 - Built to practice enterprise-quality full-stack patterns and accelerate
   AI-assisted development without sacrificing maintainability.
 
@@ -62,11 +63,11 @@
 - Avoid filesystem writes at runtime on Vercel; use providers (S3, Supabase)
   when durable storage is required.
 
-## Roadmap Themes
+## Planning
 
-- Finish migrating mega-pages to feature modules with typed data loaders.
-- Unify design system + rebrand assets, prioritizing mobile responsiveness.
-- Expand analytics (variance models, playoff projections, external APIs) while
-  keeping simulation logic isolated for possible Rust rewrite.
-- Capture design decisions per module (see the README in each `apps/*` and
-  `packages/*` directory).
+- Project intake and idea promotion follow
+  `../../shared-agent-config/portfolio/STUDIO_LINEAR.md`.
+- Committed work lives in the Studio Linear workspace.
+- Uncommitted possibilities live in `docs/IDEAS.md` and are removed when
+  promoted to Linear.
+- Durable decisions stay in this documentation set.

@@ -6,15 +6,17 @@ building) for Gauntlet.
 ## What Gauntlet Is
 
 A **fantasy football companion application** that automates league analysis,
-live win-probability simulations, and weekly recap reports for a unique
-two-league (AFC + NFC) Sleeper setup.
+live win-probability simulations, and weekly preview/recap reports for a private
+multi-league Sleeper group. The 2026 season has three leagues. The registry may
+grow in later seasons and is not expected to shrink back to a fixed AFC/NFC
+pair.
 
 ### Core Value Propositions
 
 1. **Automated Analysis**
    - Replace manual commissioner work
    - Generate weekly recap reports automatically
-   - Surface insights across 24 teams
+   - Surface insights across every registered league
 
 2. **Live Win Probability**
    - Monte Carlo simulations during games
@@ -22,7 +24,7 @@ two-league (AFC + NFC) Sleeper setup.
    - Historical snapshots for analysis
 
 3. **Cross-League Insights**
-   - Unified view of AFC + NFC leagues
+   - Unified presentation across registered leagues
    - Compare performance across leagues
    - League-wide statistics and rankings
 
@@ -52,7 +54,9 @@ two-league (AFC + NFC) Sleeper setup.
 
 **Weekly Recaps:**
 
-- Automated narrative generation (Gemini)
+- One combined weekly artifact with visibly separate league sections
+- Monday-night recap and Thursday-morning preview generation
+- Narrative generation from a structured context blob
 - Statistical highlights
 - Performance summaries
 - Matchup recaps
@@ -128,7 +132,7 @@ two-league (AFC + NFC) Sleeper setup.
 ### 1. Matchups (`features/matchups/`)
 
 **Owns:** Matchup display, head-to-head analysis, live scores **Data:** Sleeper
-API (matchups, rosters, players) **Constraint:** Process AFC/NFC separately,
+API (matchups, rosters, players) **Constraint:** Process each league separately,
 then combine
 
 ### 2. Statistics (`features/stats/`)
@@ -199,8 +203,8 @@ matchup context **Constraint:** <200ms response time, 10k iterations
 
 ### The Problem
 
-- Two Sleeper leagues: AFC (12 teams) + NFC (12 teams)
-- Matchup IDs 1-6 repeat in BOTH leagues
+- Three Sleeper leagues are registered for 2026; later seasons may add more
+- Matchup IDs repeat across leagues
 - Roster IDs only unique within a league
 
 ### The Solution
@@ -211,12 +215,11 @@ matchup context **Constraint:** <200ms response time, 10k iterations
 
 ```typescript
 // ✅ CORRECT: Process separately, then combine
-const afcResults = processLeague(afcMatchups);
-const nfcResults = processLeague(nfcMatchups);
-const combined = [...afcResults, ...nfcResults];
+const results = leagueInputs.map(input => processLeague(input));
+const combined = results.flat();
 
 // ❌ WRONG: Combine first, then process
-const all = [...afcMatchups, ...nfcMatchups];
+const all = leagueInputs.flatMap(input => input.matchups);
 const grouped = groupBy(all, m => m.matchup_id); // BUG!
 ```
 
@@ -251,6 +254,6 @@ See `docs/constraints/multi-league.md` for detailed patterns.
 
 ---
 
-**Key Takeaway:** Gauntlet is an analysis and reporting tool for a specific
-two-league Sleeper setup. It's not a fantasy platform, betting app, or league
-management tool.
+**Key Takeaway:** Gauntlet is an analysis and reporting tool for a private,
+registry-defined set of Sleeper leagues. It is not a fantasy platform, betting
+app, or league-management tool.
