@@ -6,12 +6,12 @@
  */
 
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import type { SleeperTransaction } from '@gauntlet/types';
+import type { PlayerIndex, SleeperTransaction } from '@gauntlet/types';
 import { getLeaguesForSeason } from '@/config/leagues';
 import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
 import type { WaiverAnalysisData } from '../types';
 import { type PlayerDataLoader, processWaiverData } from '../utils/process-waiver-data';
-import type { TeamInfo } from '../utils/transformations';
+import type { PlayerInfo, TeamInfo } from '../utils/transformations';
 
 const sleeperClient = createBrowserStatsClient();
 
@@ -109,37 +109,68 @@ const fetchTeamInfo = async (): Promise<Map<string, TeamInfo>> => {
   return teamsMap;
 };
 
-/**
- * Create player data loader using local player data
- */
-const createPlayerLoader = (): PlayerDataLoader => {
-  // Dynamically import player data
-  let playerData: any = null;
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
-  return (playerId: string) => {
-    if (!playerData) {
-      // Lazy load player data
-      try {
-        const { getPlayerById } = require('@/data/players-loader');
-        playerData = { getPlayerById };
-      } catch (error) {
-        console.error('Failed to load player data:', error);
-        return null;
-      }
-    }
+const isCompletePlayerIndex = (
+  value: unknown,
+  requestedIds: readonly string[],
+): value is PlayerIndex =>
+  isPlainObject(value) &&
+  Object.values(value).every(isPlainObject) &&
+  requestedIds.every(playerId => isPlainObject(value[playerId]));
 
-    const player = playerData.getPlayerById(playerId);
+/** Fetch only players that occur in these transactions, keeping the full static dataset server-side. */
+export const fetchPlayerLoader = async (
+  playerIds: ReadonlySet<string>,
+): Promise<PlayerDataLoader> => {
+  if (playerIds.size === 0) return () => null;
 
-    if (!player) {
-      return null;
-    }
+  const requestedIds = Array.from(playerIds);
+  const response = await fetch('/api/players/batch', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ playerIds: requestedIds }),
+  });
+  if (!response.ok) {
+    throw new Error(`Player batch lookup failed with HTTP ${response.status}`);
+  }
 
-    return {
+  const payload: unknown = await response.json();
+  if (!isPlainObject(payload)) {
+    throw new Error('Player batch lookup returned a malformed `players` field');
+  }
+  const playerIndex = payload.players;
+  if (!isCompletePlayerIndex(playerIndex, requestedIds)) {
+    throw new Error('Player batch lookup returned incomplete or malformed player data');
+  }
+
+  const players = new Map<string, PlayerInfo>();
+  requestedIds.forEach(playerId => {
+    const player = playerIndex[playerId];
+    if (!player) return;
+    players.set(playerId, {
       playerId,
       playerName: player.full_name || `Player ${playerId}`,
       position: player.position || 'UNKNOWN',
-    };
-  };
+    });
+  });
+
+  return playerId => players.get(playerId) ?? null;
+};
+
+const getAddedPlayerIds = (
+  ...leagueTransactions: ReadonlyArray<Map<number, SleeperTransaction[]>>
+): Set<string> => {
+  const playerIds = new Set<string>();
+  leagueTransactions.forEach(weeklyTransactions => {
+    weeklyTransactions.forEach(transactions => {
+      transactions.forEach(transaction => {
+        Object.keys(transaction.adds ?? {}).forEach(playerId => playerIds.add(playerId));
+      });
+    });
+  });
+  return playerIds;
 };
 
 /**
@@ -195,8 +226,9 @@ export const useWaiverAnalytics = (
         fetchAllLeagueTransactions(nfcLeague.id, currentWeek),
       ]);
 
-      // Create player loader
-      const playerLoader = createPlayerLoader();
+      const playerLoader = await fetchPlayerLoader(
+        getAddedPlayerIds(afcTransactions, nfcTransactions),
+      );
 
       // Process data (handles multi-league logic internally)
       const analysisData = await processWaiverData(

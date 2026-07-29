@@ -8,29 +8,32 @@ import { getAllSeasons, getLeaguesForSeason } from '@/config/leagues';
 import { createBrowserServiceClient as createServiceClient } from '@/lib/sleeper/browser-client';
 import { PlayerStats } from '@/lib/sleeper/browser-client';
 import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
-import type { ProcessedMatchup } from '@/features/hall-of-fame/types';
-import type { PlayerIndex } from '@gauntlet/types';
+import type { HallOfFamePlayerMetadata, ProcessedMatchup } from '@/features/hall-of-fame/types';
 import type { EnhancedMatchup } from '../utils/aggregations';
-
-/**
- * The only player fields the Hall of Fame calculations read off `playerData`
- * (position, for the positional splits in `utils/categories.ts`,
- * `utils/aggregations.ts`, and `useHallOfFameEnhanced.ts`). `PlayerIndex` in
- * `@gauntlet/types` already models exactly this shape.
- */
-type PlayerIndexEntry = PlayerIndex[string];
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
- * Structural check on an untrusted `/api/players/batch` payload. Every field
- * of a `PlayerIndex` entry is optional, so this validates the container —
- * a player-id-keyed object of objects — and deliberately asserts nothing
- * about individual fields it cannot actually verify.
+ * Hall of Fame positional records require a position for every player in the
+ * matchup. Validate that complete contract at the API boundary so a partial
+ * response cannot turn into plausible-looking zeroes.
  */
-const isPlayerIndex = (value: unknown): value is PlayerIndex =>
-  isPlainObject(value) && Object.values(value).every(isPlainObject);
+const isCompletePlayerIndex = (
+  value: unknown,
+  requestedPlayerIds: ReadonlySet<string>,
+): value is Record<string, HallOfFamePlayerMetadata> => {
+  if (!isPlainObject(value)) return false;
+
+  return Array.from(requestedPlayerIds).every(playerId => {
+    const player = value[playerId];
+    return (
+      isPlainObject(player) &&
+      typeof player.position === 'string' &&
+      player.position.trim().length > 0
+    );
+  });
+};
 
 export interface LiveWinProbSample {
   id: string;
@@ -233,7 +236,7 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
    */
   const fetchPlayersForMatchups = async (
     matchups: ProcessedMatchup[],
-  ): Promise<Map<string, PlayerIndexEntry>> => {
+  ): Promise<Map<string, HallOfFamePlayerMetadata>> => {
     const playerIds = new Set<string>();
     matchups.forEach(m => {
       m.starters?.forEach(id => playerIds.add(id));
@@ -252,17 +255,11 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
     // diffing `.next/static/chunks` (no new chunk, unchanged hashes).
     if (typeof window === 'undefined') {
       const { getPlayersByIds } = await import('@/data/players-loader');
-      const players = getPlayersByIds(Array.from(playerIds));
-      return new Map(
-        Object.entries(players).map(([id, player]) => [
-          id,
-          {
-            position: player.position,
-            full_name: player.full_name,
-            team: player.team ?? undefined,
-          },
-        ]),
-      );
+      const players: unknown = getPlayersByIds(Array.from(playerIds));
+      if (!isCompletePlayerIndex(players, playerIds)) {
+        throw new Error('Static player lookup returned incomplete position metadata');
+      }
+      return new Map(Object.entries(players));
     }
 
     const response = await fetch('/api/players/batch', {
@@ -278,8 +275,8 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
     if (typeof payload !== 'object' || payload === null || !('players' in payload)) {
       throw new Error('Player batch lookup returned a payload with no `players` field');
     }
-    if (!isPlayerIndex(payload.players)) {
-      throw new Error('Player batch lookup returned a malformed `players` field');
+    if (!isCompletePlayerIndex(payload.players, playerIds)) {
+      throw new Error('Player batch lookup returned incomplete or malformed position metadata');
     }
 
     return new Map(Object.entries(payload.players));

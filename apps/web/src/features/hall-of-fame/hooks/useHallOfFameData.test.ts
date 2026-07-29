@@ -410,6 +410,39 @@ describe('createHallOfFameDataService', () => {
       }));
     });
 
+    it('throws when the batch omits a requested player', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => ({
+          players: { player1: { full_name: 'Player One', position: 'RB' } },
+        }),
+      }));
+    });
+
+    it('throws when a requested player has no position', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => ({
+          players: {
+            player1: { full_name: 'Player One' },
+            player2: { full_name: 'Player Two', position: 'WR' },
+          },
+        }),
+      }));
+    });
+
+    it('throws when a requested player has an invalid position', async () => {
+      await expectNoSilentDegradation(async () => ({
+        ok: true,
+        json: async () => ({
+          players: {
+            player1: { full_name: 'Player One', position: '   ' },
+            player2: { full_name: 'Player Two', position: 42 },
+          },
+        }),
+      }));
+    });
+
     it('throws when the player batch response body is not JSON', async () => {
       await expectNoSilentDegradation(async () => ({
         ok: true,
