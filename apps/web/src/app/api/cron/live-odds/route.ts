@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireCronAuth } from '@/lib/cron-auth';
 import { debugLog } from '@/lib/debug-log';
 
 /**
@@ -12,13 +13,10 @@ import { debugLog } from '@/lib/debug-log';
  * @see apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts
  */
 export const GET = async (request: NextRequest) => {
-  // Verify the request is from Vercel Cron
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  // Verify the request is from Vercel Cron. Fails closed when CRON_SECRET is
+  // unset - see src/lib/cron-auth.ts.
+  const unauthorized = requireCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const startTime = Date.now();
 
