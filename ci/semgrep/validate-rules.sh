@@ -27,12 +27,15 @@ import sys
 
 expected = {
     "gauntlet.no-direct-cron-secret-comparison",
+    "gauntlet.no-bracket-cron-secret-comparison",
     "gauntlet.require-gemini-output-bound",
     "gauntlet.require-gemini-output-bound-variable",
     "gauntlet.no-secret-default",
+    "gauntlet.no-bracket-secret-default",
     "gauntlet.no-secret-default-through-env-alias",
     "gauntlet.no-indirect-cron-secret-comparison",
     "gauntlet.no-expected-header-cron-secret-comparison",
+    "gauntlet.no-secret-default-through-global-env-alias",
 }
 with open(sys.argv[1], encoding="utf-8") as result:
     found = {item["check_id"] for item in json.load(result)["results"]}

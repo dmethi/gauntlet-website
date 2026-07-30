@@ -1,15 +1,15 @@
 # Semgrep CE policy
 
 The pull-request workflow runs Semgrep Community Edition from a versioned,
-digest-pinned container on the GitHub runner. It uses no Semgrep account, token, cloud rules, source upload,
-SARIF, or GitHub Advanced Security permission.
+digest-pinned container on the GitHub runner. It uses no Semgrep account, token,
+cloud rules, source upload, SARIF, or GitHub Advanced Security permission.
 
 Only the reviewed rules vendored in `.semgrep.yml` block pull requests. Keep
 them narrow and high-confidence. Every rule must have an unsafe fixture in this
-directory and remain covered by `validate-rules.sh`; the production scan excludes
-those fixtures. The invalid configuration fixture also proves unknown rule
-fields fail closed. Broad registry rules are not blocking until their findings have
-owners and their false-positive policy has been reviewed.
+directory and remain covered by `validate-rules.sh`; the production scan
+excludes those fixtures. The invalid configuration fixture also proves unknown
+rule fields fail closed. Broad registry rules are not blocking until their
+findings have owners and their false-positive policy has been reviewed.
 
 These custom rules are narrow defense-in-depth checks. Native invariant tests
 and repository lint remain authoritative for privacy and application behavior;

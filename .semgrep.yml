@@ -7,6 +7,14 @@ rules:
       - pattern: '$REQUEST.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`'
       - pattern: '$REQUEST.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`'
 
+  - id: gauntlet.no-bracket-cron-secret-comparison
+    message: Use the fail-closed cron authorization helper; bracketed env access can accept Bearer undefined.
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-either:
+      - pattern: '$REQUEST.headers.get("authorization") === `Bearer ${process.env["CRON_SECRET"]}`'
+      - pattern: '$REQUEST.headers.get("authorization") !== `Bearer ${process.env["CRON_SECRET"]}`'
+
   - id: gauntlet.require-gemini-output-bound
     message: Gemini clients must set maxOutputTokens to bound cost and response size.
     severity: ERROR
@@ -50,6 +58,21 @@ rules:
           metavariable: $DEFAULT
           regex: .+
 
+  - id: gauntlet.no-bracket-secret-default
+    message: Bracketed cron and AI secrets must fail closed instead of using a hard-coded fallback.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-either:
+          - pattern: process.env[$NAME] || "$DEFAULT"
+          - pattern: process.env[$NAME] ?? "$DEFAULT"
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: ^["'](?i:.*(cron_secret|api_key|access_token|private_key).*)["']$
+      - metavariable-regex:
+          metavariable: $DEFAULT
+          regex: .+
+
   - id: gauntlet.no-secret-default-through-env-alias
     message: Aliasing process.env must not bypass fail-closed secret configuration.
     severity: ERROR
@@ -65,6 +88,32 @@ rules:
       - pattern-either:
           - pattern: $ENV.$NAME || "$DEFAULT"
           - pattern: $ENV.$NAME ?? "$DEFAULT"
+          - pattern: $ENV[$NAME] || "$DEFAULT"
+          - pattern: $ENV[$NAME] ?? "$DEFAULT"
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i).*(cron_secret|api_key|access_token|private_key).*
+      - metavariable-regex:
+          metavariable: $DEFAULT
+          regex: .+
+
+  - id: gauntlet.no-secret-default-through-global-env-alias
+    message: Aliasing globalThis.process.env must not bypass fail-closed secret configuration.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-either:
+          - pattern-inside: |
+              const $ENV = globalThis.process.env;
+              ...
+          - pattern-inside: |
+              let $ENV = globalThis.process.env;
+              ...
+      - pattern-either:
+          - pattern: $ENV.$NAME || "$DEFAULT"
+          - pattern: $ENV.$NAME ?? "$DEFAULT"
+          - pattern: $ENV[$NAME] || "$DEFAULT"
+          - pattern: $ENV[$NAME] ?? "$DEFAULT"
       - metavariable-regex:
           metavariable: $NAME
           regex: (?i).*(cron_secret|api_key|access_token|private_key).*
