@@ -7,12 +7,13 @@ export const metadata = {
 };
 
 interface MatchupsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     preview?: string;
-  };
+  }>;
 }
 
-export default function MatchupsPage({ searchParams }: MatchupsPageProps) {
+export default async function MatchupsPage(props: MatchupsPageProps) {
+  const searchParams = await props.searchParams;
   // Dev-only: `?preview=2025` renders this page against real archived data,
   // via the same MatchupsView the 2025 archive page uses, so the real UI
   // can be checked before the 2026 season has any data of its own.

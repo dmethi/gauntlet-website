@@ -3,8 +3,9 @@ import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine/mode
 
 export const GET = async (
   request: NextRequest,
-  { params }: { params: { leagueId: string; week: string; matchupId: string } },
+  props: { params: Promise<{ leagueId: string; week: string; matchupId: string }> },
 ) => {
+  const params = await props.params;
   try {
     const { leagueId, week, matchupId } = params;
     const weekNumber = parseInt(week);

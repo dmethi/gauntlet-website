@@ -50,8 +50,9 @@ const resolveTeamName = (roster: any, owner: any): string => {
 
 export const GET = async (
   _request: NextRequest,
-  { params }: { params: { leagueId: string; week: string } },
+  props: { params: Promise<{ leagueId: string; week: string }> },
 ): Promise<NextResponse> => {
+  const params = await props.params;
   try {
     const leagueId = params.leagueId;
     const weekNumber = parseInt(params.week, 10);

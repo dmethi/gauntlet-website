@@ -47,7 +47,8 @@ const sampleScore = (mean: number, p10: number, p90: number): number => {
   return mean + z * std;
 };
 
-export const GET = async (_req: NextRequest, { params }: { params: { week: string } }) => {
+export const GET = async (_req: NextRequest, props: { params: Promise<{ week: string }> }) => {
+  const params = await props.params;
   const week = parseInt(params.week, 10);
   if (!Number.isFinite(week) || week < 1 || week > 18) {
     return NextResponse.json({ error: 'Invalid week' }, { status: 400 });

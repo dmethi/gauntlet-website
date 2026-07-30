@@ -5,7 +5,7 @@ import { deltaTextClass, leagueBadgeClass } from '@/lib/stat-colors';
 import { ManagerHallOfFameBadges } from './manager-hall-of-fame-badges';
 
 interface PageProps {
-  params: { ownerId: string } | Promise<{ ownerId: string }>;
+  params: Promise<{ ownerId: string } | Promise<{ ownerId: string }>>;
 }
 
 export const dynamic = 'force-dynamic';
@@ -30,7 +30,8 @@ const getInitials = (name: string): string => {
   return (first + last).toUpperCase() || name.slice(0, 2).toUpperCase();
 };
 
-const ManagerProfilePage = async ({ params }: PageProps) => {
+const ManagerProfilePage = async (props: PageProps) => {
+  const params = await props.params;
   const resolvedParams = params instanceof Promise ? await params : params;
   const { ownerId } = resolvedParams;
 

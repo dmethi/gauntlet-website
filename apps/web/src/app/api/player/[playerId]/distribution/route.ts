@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPlayerById } from '@/data/players-loader';
 import { getPlayerOutcomes, getPositionDistribution } from '@gauntlet/sim-engine/data';
 
-export const GET = async (_request: NextRequest, { params }: { params: { playerId: string } }) => {
+export const GET = async (
+  _request: NextRequest,
+  props: { params: Promise<{ playerId: string }> },
+) => {
+  const params = await props.params;
   try {
     const playerId = params.playerId;
 

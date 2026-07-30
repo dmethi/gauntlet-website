@@ -6,7 +6,7 @@ export const metadata = {
 };
 
 interface StatsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     preview?: string;
     team?: string;
     view?:
@@ -19,10 +19,11 @@ interface StatsPageProps {
       | 'start-sit'
       | 'waiver-analysis';
     week?: string;
-  };
+  }>;
 }
 
-export default function StatsPage({ searchParams }: StatsPageProps) {
+export default async function StatsPage(props: StatsPageProps) {
+  const searchParams = await props.searchParams;
   // Dev-only: `?preview=2025` renders this page against real archived data,
   // via the same StatsSeasonView the 2025 archive page uses, so the real UI
   // can be checked before the 2026 season has any data of its own.

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { use, useMemo, useState } from 'react';
 import {
   TeamExpectedPerformanceChart,
   TeamPerformanceChart,
@@ -30,7 +30,8 @@ import { MatchupLink } from '@/components/matchup-link';
 import { VALID_POSITIONS } from '@/lib/constants';
 import Link from 'next/link';
 
-export default function TeamPage({ params }: { params: { id: string } }) {
+export default function TeamPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const { team, loading, error } = useTeamData(params.id);
   const leagueIdForHooks = team?.league?.id ? String(team.league.id) : undefined;
   const { weeklyAverages, league } = useLeagueData(leagueIdForHooks);

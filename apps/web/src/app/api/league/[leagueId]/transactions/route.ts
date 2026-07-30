@@ -7,7 +7,11 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-export const GET = async (request: NextRequest, { params }: { params: { leagueId: string } }) => {
+export const GET = async (
+  request: NextRequest,
+  props: { params: Promise<{ leagueId: string }> },
+) => {
+  const params = await props.params;
   try {
     const { searchParams } = new URL(request.url);
     const leagueId = params.leagueId;

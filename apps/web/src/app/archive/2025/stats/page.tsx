@@ -1,7 +1,7 @@
 import { StatsSeasonView } from '@/app/stats/stats-season-view';
 
 interface StatsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     team?: string;
     view?:
       | 'team'
@@ -13,9 +13,10 @@ interface StatsPageProps {
       | 'start-sit'
       | 'waiver-analysis';
     week?: string;
-  };
+  }>;
 }
 
-export default function StatsPage({ searchParams }: StatsPageProps) {
+export default async function StatsPage(props: StatsPageProps) {
+  const searchParams = await props.searchParams;
   return <StatsSeasonView season="2025" searchParams={searchParams} />;
 }
