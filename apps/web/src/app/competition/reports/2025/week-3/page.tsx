@@ -289,7 +289,7 @@ export default function Week3Report2025() {
       </div>
 
       {/* Data-driven Matchup Details */}
-      <h2 className="text-lg font-semibold">Matchup Details & Box Scores</h2>
+      <h2 className="text-lg font-semibold">Matchup Details &amp; Box Scores</h2>
       {data?.ok && data.data ? (
         <div className="space-y-8">
           {(data.data.leagues || []).map(l => (

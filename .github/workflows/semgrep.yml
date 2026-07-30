@@ -1,0 +1,25 @@
+name: Semgrep CE
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: Targeted rules
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    container:
+      image: semgrep/semgrep:1.136.0@sha256:cda1b566fafbf6010a02a3ea1d265b1c8eba4380e489a13891a102243d81ca6f
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Prove local rules detect their regression fixtures
+        run: ci/semgrep/validate-rules.sh
+      - name: Enforce targeted rules
+        run: semgrep scan --strict --config .semgrep.yml --error --metrics=off --disable-version-check --exclude ci/semgrep/fixtures
