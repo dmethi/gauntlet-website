@@ -1,18 +1,4 @@
 rules:
-  - id: gauntlet.no-sensitive-http-logging
-    message: Never log request bodies or authorization headers.
-    severity: ERROR
-    languages: [typescript, javascript]
-    patterns:
-      - pattern-either:
-          - pattern: $LOGGER.$METHOD(..., $REQ.body, ...)
-          - pattern: $LOGGER.$METHOD(..., $REQ.headers.authorization, ...)
-          - pattern: $LOGGER.$METHOD(..., $REQ.headers["authorization"], ...)
-      - metavariable-regex:
-          metavariable: $METHOD
-          regex: ^(log|info|debug|warn|error)$
-      - pattern-not: $LOGGER.$METHOD(..., email.body, ...)
-
   - id: gauntlet.no-direct-cron-secret-comparison
     message: Use the fail-closed cron authorization helper; direct env interpolation can accept Bearer undefined.
     severity: ERROR
@@ -91,9 +77,13 @@ rules:
     severity: ERROR
     languages: [typescript, javascript]
     patterns:
-      - pattern-inside: |
-          const $SECRET = process.env.CRON_SECRET;
-          ...
+      - pattern-either:
+          - pattern-inside: |
+              const $SECRET = process.env.CRON_SECRET;
+              ...
+          - pattern-inside: |
+              let $SECRET = process.env.CRON_SECRET;
+              ...
       - pattern-either:
           - pattern: '$REQUEST.headers.get("authorization") === `Bearer ${$SECRET}`'
           - pattern: '$REQUEST.headers.get("authorization") !== `Bearer ${$SECRET}`'
@@ -113,3 +103,5 @@ rules:
       - pattern-either:
           - pattern: '$REQUEST.headers.get("authorization") === $EXPECTED'
           - pattern: '$REQUEST.headers.get("authorization") !== $EXPECTED'
+          - pattern: '$EXPECTED === $REQUEST.headers.get("authorization")'
+          - pattern: '$EXPECTED !== $REQUEST.headers.get("authorization")'

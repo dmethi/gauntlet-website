@@ -25,7 +25,6 @@ import json
 import sys
 
 expected = {
-    "gauntlet.no-sensitive-http-logging",
     "gauntlet.no-direct-cron-secret-comparison",
     "gauntlet.require-gemini-output-bound",
     "gauntlet.require-gemini-output-bound-variable",

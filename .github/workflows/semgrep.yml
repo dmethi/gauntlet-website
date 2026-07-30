@@ -22,4 +22,4 @@ jobs:
       - name: Prove local rules detect their regression fixtures
         run: ci/semgrep/validate-rules.sh
       - name: Enforce targeted rules
-        run: semgrep scan --strict --config .semgrep.yml --error --metrics=off --disable-version-check --exclude ci/semgrep/fixtures --exclude apps/web/src/app/competition/reports/2025/week-3/page.tsx
+        run: semgrep scan --strict --config .semgrep.yml --error --metrics=off --disable-version-check --exclude ci/semgrep/fixtures

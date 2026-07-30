@@ -11,15 +11,17 @@ those fixtures. The invalid configuration fixture also proves unknown rule
 fields fail closed. Broad registry rules are not blocking until their findings have
 owners and their false-positive policy has been reviewed.
 
-The Week 3 report page is excluded because Semgrep 1.136 cannot parse its valid
-JSX text containing a raw ampersand. The exception is exact and can be removed
-when the pinned parser handles that syntax.
+These custom rules are narrow defense-in-depth checks. Native invariant tests
+and repository lint remain authoritative for privacy and application behavior;
+this policy does not claim generic sensitive-logging coverage.
+
+The Week 3 report uses the render-equivalent `&amp;` JSX entity so the pinned
+Semgrep parser can scan the complete product file without an exclusion.
 
 To run locally with Semgrep 1.136.0 on `PATH`:
 
 ```bash
 ci/semgrep/validate-rules.sh
 semgrep scan --strict --config .semgrep.yml --error --metrics=off \
-  --disable-version-check --exclude ci/semgrep/fixtures \
-  --exclude apps/web/src/app/competition/reports/2025/week-3/page.tsx
+  --disable-version-check --exclude ci/semgrep/fixtures
 ```
