@@ -11,9 +11,7 @@ rules:
       - metavariable-regex:
           metavariable: $METHOD
           regex: ^(log|info|debug|warn|error)$
-      - metavariable-regex:
-          metavariable: $REQ
-          regex: ^(req|request)$
+      - pattern-not: $LOGGER.$METHOD(..., email.body, ...)
 
   - id: gauntlet.no-direct-cron-secret-comparison
     message: Use the fail-closed cron authorization helper; direct env interpolation can accept Bearer undefined.
@@ -31,6 +29,26 @@ rules:
       - pattern: 'new ChatGoogleGenerativeAI({ ... })'
       - pattern-not: 'new ChatGoogleGenerativeAI({ ..., maxOutputTokens: $LIMIT, ... })'
 
+  - id: gauntlet.require-gemini-output-bound-variable
+    message: Gemini options passed through a variable must set maxOutputTokens.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: new ChatGoogleGenerativeAI($OPTIONS)
+      - pattern-either:
+          - pattern-inside: |
+              const $OPTIONS = { ... };
+              ...
+          - pattern-inside: |
+              let $OPTIONS = { ... };
+              ...
+      - pattern-not-inside: |
+          const $OPTIONS = { ..., maxOutputTokens: $LIMIT, ... };
+          ...
+      - pattern-not-inside: |
+          let $OPTIONS = { ..., maxOutputTokens: $LIMIT, ... };
+          ...
+
   - id: gauntlet.no-secret-default
     message: Cron and AI secrets must fail closed instead of using a hard-coded fallback.
     severity: ERROR
@@ -45,3 +63,53 @@ rules:
       - metavariable-regex:
           metavariable: $DEFAULT
           regex: .+
+
+  - id: gauntlet.no-secret-default-through-env-alias
+    message: Aliasing process.env must not bypass fail-closed secret configuration.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-either:
+          - pattern-inside: |
+              const $ENV = process.env;
+              ...
+          - pattern-inside: |
+              let $ENV = process.env;
+              ...
+      - pattern-either:
+          - pattern: $ENV.$NAME || "$DEFAULT"
+          - pattern: $ENV.$NAME ?? "$DEFAULT"
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i).*(cron_secret|api_key|access_token|private_key).*
+      - metavariable-regex:
+          metavariable: $DEFAULT
+          regex: .+
+
+  - id: gauntlet.no-indirect-cron-secret-comparison
+    message: Use the fail-closed cron authorization helper; aliasing the secret must not bypass review.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-inside: |
+          const $SECRET = process.env.CRON_SECRET;
+          ...
+      - pattern-either:
+          - pattern: '$REQUEST.headers.get("authorization") === `Bearer ${$SECRET}`'
+          - pattern: '$REQUEST.headers.get("authorization") !== `Bearer ${$SECRET}`'
+
+  - id: gauntlet.no-expected-header-cron-secret-comparison
+    message: Use the fail-closed cron authorization helper; a stored expected header must not bypass review.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-either:
+          - pattern-inside: |
+              const $EXPECTED = `Bearer ${process.env.CRON_SECRET}`;
+              ...
+          - pattern-inside: |
+              let $EXPECTED = `Bearer ${process.env.CRON_SECRET}`;
+              ...
+      - pattern-either:
+          - pattern: '$REQUEST.headers.get("authorization") === $EXPECTED'
+          - pattern: '$REQUEST.headers.get("authorization") !== $EXPECTED'

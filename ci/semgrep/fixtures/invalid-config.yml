@@ -1,0 +1,7 @@
+rules:
+  - id: fixture.invalid-field
+    message: This configuration must be rejected.
+    severity: ERROR
+    languages: [typescript]
+    pattern: console.log(...)
+    unknown_policy_field: true
