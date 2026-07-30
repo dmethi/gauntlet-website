@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_root="$(git rev-parse --show-toplevel)"
+script_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(CDPATH= cd -- "$script_dir/../.." && pwd)"
 result_file="$(mktemp)"
 safe_result_file="$(mktemp)"
 trap 'rm -f "$result_file" "$safe_result_file"' EXIT
