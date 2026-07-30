@@ -1,0 +1,47 @@
+rules:
+  - id: gauntlet.no-sensitive-http-logging
+    message: Never log request bodies or authorization headers.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-either:
+          - pattern: $LOGGER.$METHOD(..., $REQ.body, ...)
+          - pattern: $LOGGER.$METHOD(..., $REQ.headers.authorization, ...)
+          - pattern: $LOGGER.$METHOD(..., $REQ.headers["authorization"], ...)
+      - metavariable-regex:
+          metavariable: $METHOD
+          regex: ^(log|info|debug|warn|error)$
+      - metavariable-regex:
+          metavariable: $REQ
+          regex: ^(req|request)$
+
+  - id: gauntlet.no-direct-cron-secret-comparison
+    message: Use the fail-closed cron authorization helper; direct env interpolation can accept Bearer undefined.
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-either:
+      - pattern: '$REQUEST.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`'
+      - pattern: '$REQUEST.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`'
+
+  - id: gauntlet.require-gemini-output-bound
+    message: Gemini clients must set maxOutputTokens to bound cost and response size.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: 'new ChatGoogleGenerativeAI({ ... })'
+      - pattern-not: 'new ChatGoogleGenerativeAI({ ..., maxOutputTokens: $LIMIT, ... })'
+
+  - id: gauntlet.no-secret-default
+    message: Cron and AI secrets must fail closed instead of using a hard-coded fallback.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern-either:
+          - pattern: process.env.$NAME || "$DEFAULT"
+          - pattern: process.env.$NAME ?? "$DEFAULT"
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i).*(cron_secret|api_key|access_token|private_key).*
+      - metavariable-regex:
+          metavariable: $DEFAULT
+          regex: .+

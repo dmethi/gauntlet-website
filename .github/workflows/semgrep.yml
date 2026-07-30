@@ -1,0 +1,28 @@
+name: Semgrep CE
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: Targeted rules
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install pinned Semgrep CE
+        run: |
+          python3 -m venv "$RUNNER_TEMP/semgrep"
+          "$RUNNER_TEMP/semgrep/bin/pip" install --disable-pip-version-check semgrep==1.136.0 setuptools==75.8.0
+          echo "$RUNNER_TEMP/semgrep/bin" >> "$GITHUB_PATH"
+      - name: Prove local rules detect their regression fixtures
+        run: ci/semgrep/validate-rules.sh
+      - name: Enforce targeted rules
+        run: semgrep scan --config .semgrep.yml --error --metrics=off --disable-version-check --exclude ci/semgrep/fixtures
