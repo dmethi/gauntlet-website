@@ -291,8 +291,8 @@ export default function MatchupDetailPage(): JSX.Element {
 
         {/* Live Odds & Simulation */}
         <MatchupSimulation
-          leagueId={Array.isArray(leagueId) ? leagueId[0] : leagueId}
-          week={parseInt(Array.isArray(week) ? week[0] : week)}
+          leagueId={matchup.leagueId}
+          week={matchup.week}
           matchupId={matchup.matchupId}
         />
 
