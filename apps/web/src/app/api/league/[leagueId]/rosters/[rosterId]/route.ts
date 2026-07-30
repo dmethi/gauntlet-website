@@ -8,8 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export const GET = async (
   _request: NextRequest,
-  { params }: { params: { leagueId: string; rosterId: string } },
+  props: { params: Promise<{ leagueId: string; rosterId: string }> },
 ) => {
+  const params = await props.params;
   try {
     const { leagueId, rosterId } = params;
     const rosterIdNumber = parseInt(rosterId, 10);

@@ -222,8 +222,9 @@ const getPlayerData = async (
 
 export const GET = async (
   _request: NextRequest,
-  { params }: { params: { season: string; week: string } },
+  props: { params: Promise<{ season: string; week: string }> },
 ) => {
+  const params = await props.params;
   try {
     const season = params.season;
     const weekNumber = parseInt(params.week, 10);

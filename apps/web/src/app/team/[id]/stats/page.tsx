@@ -1,4 +1,5 @@
 'use client';
+import { use } from 'react';
 
 import Link from 'next/link';
 import { TeamExpectedPerformanceChart, TeamPerformanceChart } from '@/components/team-charts';
@@ -8,7 +9,8 @@ import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { Button } from '@/components/ui/button';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 
-export default function TeamStatsPage({ params }: { params: { id: string } }) {
+export default function TeamStatsPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const { team, loading, error } = useTeamData(params.id);
 
   if (loading) {

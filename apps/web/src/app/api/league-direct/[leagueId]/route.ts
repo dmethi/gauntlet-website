@@ -7,7 +7,11 @@ export const dynamic = 'force-dynamic';
  * Example API route that bypasses database entirely
  * This replaces the expensive DB queries with direct Sleeper API calls
  */
-export const GET = async (request: NextRequest, { params }: { params: { leagueId: string } }) => {
+export const GET = async (
+  request: NextRequest,
+  props: { params: Promise<{ leagueId: string }> },
+) => {
+  const params = await props.params;
   console.log(`[API] Fetching league data for ${params.leagueId} WITHOUT database`);
 
   try {

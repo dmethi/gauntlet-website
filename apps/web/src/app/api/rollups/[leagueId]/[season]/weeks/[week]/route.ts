@@ -5,8 +5,9 @@ export const dynamic = 'force-dynamic';
 
 export const GET = async (
   _request: NextRequest,
-  { params }: { params: { leagueId: string; season: string; week: string } },
+  props: { params: Promise<{ leagueId: string; season: string; week: string }> },
 ) => {
+  const params = await props.params;
   try {
     const { leagueId, season, week } = params;
     const weekNumber = parseInt(week, 10);

@@ -450,8 +450,9 @@ const getDefaultNarratives = () => {
 // eslint-disable-next-line func-style
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { season: string; week: string } },
+  props: { params: Promise<{ season: string; week: string }> },
 ) {
+  const params = await props.params;
   const week = parseInt(params.week, 10);
   const season = parseInt(params.season, 10);
 

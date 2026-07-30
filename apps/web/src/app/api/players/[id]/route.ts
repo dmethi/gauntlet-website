@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayerById } from '@/data/players-loader';
 
-export const GET = async (_request: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = async (_request: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   try {
     const playerId = params.id;
 

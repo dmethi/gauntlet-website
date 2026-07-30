@@ -197,8 +197,9 @@ const toLineupPlayersWithMinutes = (
 
 export const GET = async (
   _req: NextRequest,
-  { params }: { params: { leagueId: string; week: string; matchupId: string } },
+  props: { params: Promise<{ leagueId: string; week: string; matchupId: string }> },
 ) => {
+  const params = await props.params;
   try {
     const leagueId = params.leagueId;
     const week = parseInt(params.week, 10);

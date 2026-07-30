@@ -10,7 +10,7 @@ import { RecapReportView } from '@/components/reports/RecapReportView';
 import { getStaticReportParams, loadRecapReport } from '@/lib/reports/recap/utils/report-loader';
 
 interface PageProps {
-  params:
+  params: Promise<
     | Promise<{
         season: string;
         slug: string;
@@ -18,7 +18,8 @@ interface PageProps {
     | {
         season: string;
         slug: string;
-      };
+      }
+  >;
 }
 
 const parseWeekFromSlug = (slug: string): string | null => {
@@ -26,7 +27,8 @@ const parseWeekFromSlug = (slug: string): string | null => {
   return match ? match[1] : null;
 };
 
-export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
+export const generateMetadata = async (props: PageProps): Promise<Metadata> => {
+  const params = await props.params;
   const resolvedParams = params instanceof Promise ? await params : params;
   const { season, slug } = resolvedParams;
   const week = parseWeekFromSlug(slug);
@@ -68,7 +70,8 @@ export const generateStaticParams = async (): Promise<{ season: string; slug: st
   }
 };
 
-const RecapReportPage = async ({ params }: PageProps) => {
+const RecapReportPage = async (props: PageProps) => {
+  const params = await props.params;
   const resolvedParams = params instanceof Promise ? await params : params;
   const { season, slug } = resolvedParams;
   const week = parseWeekFromSlug(slug);

@@ -19,8 +19,9 @@ interface MatchupDetails {
 
 export const GET = async (
   _req: NextRequest,
-  { params }: { params: { leagueId: string; week: string; matchupId: string } },
+  props: { params: Promise<{ leagueId: string; week: string; matchupId: string }> },
 ) => {
+  const params = await props.params;
   try {
     const { leagueId, week, matchupId } = params;
     const weekNumber = parseInt(week, 10);

@@ -6,7 +6,8 @@ import { calculateTeamStats } from '@/shared/utils/calculations';
 
 export const dynamic = 'force-dynamic';
 
-export const GET = async (_req: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = async (_req: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const teamId = params.id;
 
   try {
