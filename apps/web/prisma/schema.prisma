@@ -8,20 +8,22 @@ datasource db {
 }
 
 model ReturnConfirmation {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  team      String?
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  team        String?
+  buyInStatus String   @default("UNPAID")
+  createdAt   DateTime @default(now())
 }
 
 model WaitlistEntry {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  name       String
-  referredBy String?
-  notes      String?
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  referredBy  String?
+  notes       String?
+  buyInStatus String   @default("UNPAID")
+  createdAt   DateTime @default(now())
 }
 
 model Proposal {
