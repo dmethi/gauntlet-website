@@ -1,6 +1,6 @@
 export * from './constants';
 export * from './components';
-export * from './directory';
+export * from './manager-profiles';
 export * from './repository';
 export * from './service';
 export * from './team-options';

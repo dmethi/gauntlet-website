@@ -72,6 +72,31 @@ describe('getManagerHistory', () => {
     expect(result!.seasons[0]!.leagueId).toBe('league_2025_afc');
   });
 
+  it('gives a co-manager the history of their shared roster', async () => {
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [
+            {
+              roster_id: 3,
+              owner_id: 'primary-owner',
+              co_owners: [OWNER_ID],
+              owner: { display_name: 'Shared Team' },
+            },
+          ];
+        }
+        return [];
+      }),
+      fetchMatchups: vi.fn().mockResolvedValue([]),
+    });
+
+    const result = await getManagerHistory(OWNER_ID, client, 1);
+
+    expect(result?.ownerId).toBe(OWNER_ID);
+    expect(result?.seasons).toHaveLength(1);
+    expect(result?.seasons[0]?.rosterId).toBe(3);
+  });
+
   it('uses the most recently seen name across seasons (newest season first)', async () => {
     const client = makeClient({
       fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
@@ -257,5 +282,28 @@ describe('listManagers', () => {
     const result = await listManagers(client);
 
     expect(result.map(m => m.displayName)).toEqual(['Amy', 'Zeke']);
+  });
+
+  it('lists primary owners and co-managers as distinct people on the same roster', async () => {
+    const client = makeClient({
+      fetchRostersWithOwners: vi.fn().mockImplementation(async (leagueId: string) => {
+        if (leagueId === 'league_2025_afc') {
+          return [
+            {
+              roster_id: 1,
+              owner_id: 'owner_a',
+              co_owners: ['owner_b'],
+              owner: { display_name: 'Shared Team' },
+            },
+          ];
+        }
+        return [];
+      }),
+    });
+
+    const result = await listManagers(client);
+
+    expect(result.map(manager => manager.ownerId)).toEqual(['owner_a', 'owner_b']);
+    expect(result.every(manager => manager.seasonsPlayed === 1)).toBe(true);
   });
 });

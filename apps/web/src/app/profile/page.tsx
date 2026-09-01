@@ -22,7 +22,7 @@ const ProfilePage = async ({ searchParams }: ProfilePageProps) => {
     <div className="mx-auto max-w-6xl">
       <PageHeaderHero
         title="Your profile"
-        subtitle="Keep your directory details current without changing your Sleeper account."
+        subtitle="Keep your manager details current without changing your Sleeper account."
         crestSrc="/gauntlet_logo.svg"
       />
       <div className="px-2 py-10 sm:px-6">
@@ -31,7 +31,7 @@ const ProfilePage = async ({ searchParams }: ProfilePageProps) => {
             className="mb-8 rounded-md border border-success/30 bg-success/10 px-4 py-3 text-sm text-success"
             role="status"
           >
-            Profile saved. Your directory card is up to date.
+            Profile saved. Your manager page is up to date.
           </p>
         )}
         <ProfileForm

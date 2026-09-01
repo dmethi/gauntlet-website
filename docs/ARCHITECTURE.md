@@ -229,9 +229,9 @@ duplicate legacy generation path.
 
 ### Why Clerk Identity + Application-Owned Profiles?
 
-**Context**: Gauntlet needs a small authenticated member directory, including
-co-managers on the same Sleeper roster, without becoming an identity provider or
-copying all league data into Postgres.
+**Context**: Gauntlet needs optional authenticated personal details on its
+existing manager pages, including co-managers on the same Sleeper roster,
+without becoming an identity provider or copying all league data into Postgres.
 
 **Decision**: Clerk owns sign-in, sessions, and uploaded profile images. The web
 app owns one small Prisma `Profile` record per person. Sleeper remains the
@@ -268,7 +268,7 @@ never accept a profile owner ID from the browser. `clerkUserId` and
 ├─────────────────────────────────────────────────────────┤
 │ • Feature modules (matchups, stats, profiles, playoffs) │
 │ • API routes (simulations, reports, cron)               │
-│ • Public analytics + authenticated member directory      │
+│ • Public analytics/history + signed-in manager details   │
 └─────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────┐

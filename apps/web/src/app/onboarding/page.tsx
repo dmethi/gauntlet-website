@@ -19,7 +19,7 @@ const OnboardingPage = async () => {
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeaderHero
-        title="Enter the directory"
+        title="Create your manager profile"
         subtitle="Connect your Sleeper seat, then add the details that make an introduction easy."
         crestSrc="/gauntlet_logo.svg"
       />

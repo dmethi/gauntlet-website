@@ -24,14 +24,12 @@ export interface ProfileTeamOption {
   sleeperAvatarUrl: string | null;
 }
 
-export interface MemberDirectoryEntry {
-  id: string;
+export interface ManagerProfileDetails {
   fullName: string;
   jobTitle: string | null;
   city: string | null;
   favoriteNflTeam: string | null;
   favoritePlayer: string | null;
-  leagueName: string;
   teamName: string;
   sleeperDisplayName: string;
   profileImageUrl: string | null;

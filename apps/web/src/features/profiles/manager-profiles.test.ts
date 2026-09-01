@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { GauntletProfile, ProfileTeamOption } from '@gauntlet/types';
-import { buildMemberDirectory } from './directory';
+import { buildManagerProfilesBySleeperId } from './manager-profiles';
 
 const profile: GauntletProfile = {
   id: 'profile-1',
@@ -28,24 +28,24 @@ const identity: ProfileTeamOption = {
   sleeperAvatarUrl: 'https://example.com/sleeper.png',
 };
 
-describe('buildMemberDirectory', () => {
+describe('buildManagerProfilesBySleeperId', () => {
   it('prefers an uploaded Clerk image over the Sleeper avatar', () => {
-    const [member] = buildMemberDirectory(
+    const profiles = buildManagerProfilesBySleeperId(
       [profile],
       [identity],
       [{ id: 'clerk-1', hasImage: true, imageUrl: 'https://example.com/clerk.png' }],
     );
 
-    expect(member.profileImageUrl).toBe('https://example.com/clerk.png');
+    expect(profiles.get('sleeper-1')?.profileImageUrl).toBe('https://example.com/clerk.png');
   });
 
   it('uses the Sleeper avatar when Clerk only has a generated avatar', () => {
-    const [member] = buildMemberDirectory(
+    const profiles = buildManagerProfilesBySleeperId(
       [profile],
       [identity],
       [{ id: 'clerk-1', hasImage: false, imageUrl: 'https://example.com/generated.png' }],
     );
 
-    expect(member.profileImageUrl).toBe('https://example.com/sleeper.png');
+    expect(profiles.get('sleeper-1')?.profileImageUrl).toBe('https://example.com/sleeper.png');
   });
 });

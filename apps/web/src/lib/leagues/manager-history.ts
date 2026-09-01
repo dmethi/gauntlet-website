@@ -14,6 +14,7 @@ import type { NFLState, SleeperLeague } from '@gauntlet/types';
 import type { RosterWithOwner } from '@/lib/sleeper/unified-client';
 import { createServiceClient } from '@/lib/sleeper/unified-client';
 import { getAllSeasons, getLeaguesForSeason, type SeasonId } from '@/config/leagues';
+import { getRosterManagerIds } from '@/lib/sleeper/roster-managers';
 import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export interface SleeperHistoryClient {
@@ -148,7 +149,7 @@ export const getManagerHistory = async (
   for (const season of seasons) {
     for (const league of getLeaguesForSeason(season)) {
       const rosters = await client.fetchRostersWithOwners(league.id);
-      const roster = rosters.find(r => r.owner_id === ownerId);
+      const roster = rosters.find(r => getRosterManagerIds(r).includes(ownerId));
       if (!roster) continue;
 
       if (!displayName) {
@@ -218,24 +219,24 @@ export const listManagers = async (
       const rosters = await client.fetchRostersWithOwners(league.id);
 
       for (const roster of rosters) {
-        if (!roster.owner_id) continue;
+        for (const managerId of getRosterManagerIds(roster)) {
+          const existing = byOwner.get(managerId);
+          if (!existing) {
+            byOwner.set(managerId, {
+              ownerId: managerId,
+              displayName: roster.owner?.metadata?.team_name ?? roster.owner?.display_name ?? null,
+              avatarUrl: resolveAvatarUrl(roster),
+              seasonsPlayed: 1,
+              firstSeason: season,
+              lastSeason: season,
+            });
+            continue;
+          }
 
-        const existing = byOwner.get(roster.owner_id);
-        if (!existing) {
-          byOwner.set(roster.owner_id, {
-            ownerId: roster.owner_id,
-            displayName: roster.owner?.metadata?.team_name ?? roster.owner?.display_name ?? null,
-            avatarUrl: resolveAvatarUrl(roster),
-            seasonsPlayed: 1,
-            firstSeason: season,
-            lastSeason: season,
-          });
-          continue;
+          existing.seasonsPlayed += 1;
+          if (season < existing.firstSeason) existing.firstSeason = season;
+          if (season > existing.lastSeason) existing.lastSeason = season;
         }
-
-        existing.seasonsPlayed += 1;
-        if (season < existing.firstSeason) existing.firstSeason = season;
-        if (season > existing.lastSeason) existing.lastSeason = season;
       }
     }
   }

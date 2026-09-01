@@ -1,5 +1,9 @@
 import Link from 'next/link';
+import { auth } from '@clerk/nextjs/server';
+import type { ManagerProfileDetails } from '@gauntlet/types';
 import { PageHeaderHero } from '@gauntlet/ui';
+import { ManagerPersonalDetails } from '@/features/profiles/components/manager-personal-details';
+import { getManagerProfilesBySleeperId } from '@/features/profiles/manager-profiles';
 import { getManagerHistory, type ManagerLeagueSeasonHistory } from '@/lib/leagues/manager-history';
 import { deltaTextClass, leagueBadgeClass } from '@/lib/stat-colors';
 import { ManagerHallOfFameBadges } from './manager-hall-of-fame-badges';
@@ -35,7 +39,14 @@ const ManagerProfilePage = async (props: PageProps) => {
   const resolvedParams = params instanceof Promise ? await params : params;
   const { ownerId } = resolvedParams;
 
-  const history = await getManagerHistory(ownerId);
+  const { userId } = await auth();
+  const profilesPromise = userId
+    ? getManagerProfilesBySleeperId()
+    : Promise.resolve(new Map<string, ManagerProfileDetails>());
+  const [history, profilesBySleeperId] = await Promise.all([
+    getManagerHistory(ownerId),
+    profilesPromise,
+  ]);
 
   if (!history) {
     return (
@@ -55,7 +66,9 @@ const ManagerProfilePage = async (props: PageProps) => {
   }
 
   const { career } = history;
-  const displayName = history.displayName ?? 'Unknown manager';
+  const profile = profilesBySleeperId.get(ownerId);
+  const displayName = profile?.fullName ?? history.displayName ?? 'Unknown manager';
+  const avatarUrl = profile?.profileImageUrl ?? history.avatarUrl;
 
   // Seasons come back newest-first from getManagerHistory; keep that order for the timeline.
   const seasonYears = [...history.seasons.map(s => s.season)].sort();
@@ -82,9 +95,9 @@ const ManagerProfilePage = async (props: PageProps) => {
         crestSrc="/gauntlet_logo.svg"
         avatar={
           <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center text-base font-semibold flex-shrink-0">
-            {history.avatarUrl ? (
+            {avatarUrl ? (
               <img
-                src={history.avatarUrl}
+                src={avatarUrl}
                 alt={`${displayName} avatar`}
                 className="h-full w-full aspect-square object-cover rounded-full"
               />
@@ -95,6 +108,21 @@ const ManagerProfilePage = async (props: PageProps) => {
         }
       />
       <div className="px-6 py-8">
+        {profile && (
+          <section className="mb-10 border-y border-border py-6">
+            <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+              <div>
+                <p className="font-display text-sm uppercase tracking-[0.2em] text-secondary">
+                  Beyond fantasy
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Sleeper: {profile.sleeperDisplayName} · {profile.teamName}
+                </p>
+              </div>
+              <ManagerPersonalDetails profile={profile} />
+            </div>
+          </section>
+        )}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
           <div className="rounded-md border border-border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Career Record</h3>

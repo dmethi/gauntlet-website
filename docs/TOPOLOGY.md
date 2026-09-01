@@ -80,14 +80,13 @@ pair.
 - League-wide analytics
 - Variance and consistency metrics
 
-**Member Profiles:**
+**Manager Profiles:**
 
 - Email one-time-code authentication
 - One editable profile per authenticated person
 - Profiles linked to a current Sleeper owner or co-owner identity
 - Multiple managers may share one Sleeper roster
-- Signed-in member directory with basic professional, location, and NFL
-  interests
+- Personal details folded into existing manager routes for signed-in viewers
 
 ### ❌ Explicitly Out of Scope
 
@@ -115,7 +114,7 @@ pair.
 - No comments or discussion
 - No trade chat
 - No direct messaging, follows, or activity feeds
-- Gauntlet profiles are a lightweight directory; Sleeper still handles league
+- Gauntlet profiles lightly enrich manager pages; Sleeper still handles league
   social activity
 
 **Mobile App:**
@@ -174,9 +173,10 @@ matchup context **Constraint:** <200ms response time, 10k iterations
 ### 7. Profiles (`features/profiles/`)
 
 **Owns:** Profile validation, Sleeper identity claims, profile persistence, and
-member-directory presentation **Data:** Clerk identity, Gauntlet Postgres,
-current-season Sleeper rosters/users **Constraint:** One profile per Clerk user,
-one profile per Sleeper user, and no uniqueness constraint on the team key
+personal details composed into manager presentation **Data:** Clerk identity,
+Gauntlet Postgres, current-season Sleeper rosters/users **Constraint:** One
+profile per Clerk user, one profile per Sleeper user, and no uniqueness
+constraint on the team key
 
 ## System Boundaries
 
@@ -195,7 +195,7 @@ one profile per Sleeper user, and no uniqueness constraint on the team key
 ├─────────────────────────────────────────────────────────┤
 │ • Feature modules (matchups, stats, profiles, playoffs) │
 │ • API routes (simulations, reports, cron)               │
-│ • Public analytics + authenticated member directory      │
+│ • Public analytics/history + signed-in manager details   │
 └─────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────┐

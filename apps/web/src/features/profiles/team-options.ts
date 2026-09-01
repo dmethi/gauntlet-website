@@ -1,5 +1,6 @@
 import type { ProfileTeamOption, SleeperRoster, SleeperUser } from '@gauntlet/types';
 import { CURRENT_LEAGUES, type League } from '@/config/leagues';
+import { getRosterManagerIds } from '@/lib/sleeper/roster-managers';
 import { createServiceClient } from '@/lib/sleeper/unified-client';
 
 export interface ProfileSleeperClient {
@@ -33,13 +34,10 @@ export const buildLeagueProfileTeamOptions = (
   const usersById = new Map(users.map(user => [user.user_id, user]));
 
   return rosters.flatMap(roster => {
-    const managerIds = [roster.owner_id, ...(roster.co_owners ?? [])].filter((id): id is string =>
-      Boolean(id),
-    );
     const owner = usersById.get(roster.owner_id);
     const rosterTeamName = teamName(roster, owner);
 
-    return [...new Set(managerIds)].flatMap(sleeperUserId => {
+    return getRosterManagerIds(roster).flatMap(sleeperUserId => {
       const user = usersById.get(sleeperUserId);
       if (!user) return [];
 

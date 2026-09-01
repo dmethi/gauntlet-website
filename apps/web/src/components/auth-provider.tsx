@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <ClerkProvider
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
-      signInFallbackRedirectUrl="/members"
+      signInFallbackRedirectUrl="/managers"
       signUpFallbackRedirectUrl="/onboarding"
     >
       {children}

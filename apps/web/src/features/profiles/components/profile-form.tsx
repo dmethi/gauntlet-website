@@ -25,7 +25,7 @@ const fieldClassName =
   'min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
 
 const destinationForMode = (mode: ProfileFormProps['mode']): string =>
-  mode === 'create' ? '/members' : '/profile?saved=1';
+  mode === 'create' ? '/managers' : '/profile?saved=1';
 
 export const ProfileForm = ({ mode, teamOptions, defaults }: ProfileFormProps) => {
   const router = useRouter();
@@ -210,7 +210,7 @@ export const ProfileForm = ({ mode, teamOptions, defaults }: ProfileFormProps) =
         <p className="font-display text-sm uppercase tracking-[0.2em] text-secondary">Portrait</p>
         <h2 className="mt-1 text-xl font-bold">Choose how you appear</h2>
         <p className="mt-2 mb-5 text-sm leading-relaxed text-muted-foreground">
-          Upload a photo here, or keep your Sleeper avatar as the directory fallback.
+          Upload a photo here, or keep your Sleeper avatar as the manager-page fallback.
         </p>
         <ProfilePhotoField />
       </aside>

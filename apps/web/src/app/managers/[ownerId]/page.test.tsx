@@ -1,12 +1,19 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
+import { auth } from '@clerk/nextjs/server';
+import type { ManagerProfileDetails } from '@gauntlet/types';
 import { renderWithProviders as render } from '@/test/utils/test-wrapper';
 import ManagerProfilePage from './page';
+import { getManagerProfilesBySleeperId } from '@/features/profiles/manager-profiles';
 import { getManagerHistory } from '@/lib/leagues/manager-history';
 import type { ManagerHistory } from '@/lib/leagues/manager-history';
 
+vi.mock('@clerk/nextjs/server', () => ({ auth: vi.fn() }));
 vi.mock('@/lib/leagues/manager-history', () => ({
   getManagerHistory: vi.fn(),
+}));
+vi.mock('@/features/profiles/manager-profiles', () => ({
+  getManagerProfilesBySleeperId: vi.fn(),
 }));
 
 // ManagerHallOfFameBadges (rendered by the page) calls useHallOfFameEnhanced,
@@ -19,6 +26,8 @@ vi.mock('@/hooks/useHallOfFameEnhanced', () => ({
 }));
 
 const mockGetManagerHistory = vi.mocked(getManagerHistory);
+const mockAuth = vi.mocked(auth);
+const mockGetManagerProfiles = vi.mocked(getManagerProfilesBySleeperId);
 
 const HISTORY: ManagerHistory = {
   ownerId: 'owner_42',
@@ -60,8 +69,22 @@ const HISTORY: ManagerHistory = {
   },
 };
 
+const PROFILE: ManagerProfileDetails = {
+  fullName: 'Dhruv Methi',
+  jobTitle: 'Founder',
+  city: 'New York',
+  favoriteNflTeam: 'NYJ',
+  favoritePlayer: 'Garrett Wilson',
+  teamName: "Commish's Crew",
+  sleeperDisplayName: 'commish',
+  profileImageUrl: 'https://example.com/dhruv.png',
+};
+
 describe('ManagerProfilePage', () => {
+  beforeEach(() => vi.clearAllMocks());
+
   it('renders career record and season-by-season history for a known manager', async () => {
+    mockAuth.mockResolvedValue({ userId: null } as Awaited<ReturnType<typeof auth>>);
     mockGetManagerHistory.mockResolvedValue(HISTORY);
 
     const jsx = await ManagerProfilePage({ params: { ownerId: 'owner_42' } });
@@ -76,6 +99,7 @@ describe('ManagerProfilePage', () => {
   });
 
   it('resolves a Promise-wrapped params object (Next.js async params)', async () => {
+    mockAuth.mockResolvedValue({ userId: null } as Awaited<ReturnType<typeof auth>>);
     mockGetManagerHistory.mockResolvedValue(HISTORY);
 
     const jsx = await ManagerProfilePage({ params: Promise.resolve({ ownerId: 'owner_42' }) });
@@ -86,6 +110,7 @@ describe('ManagerProfilePage', () => {
   });
 
   it('renders a not-found state when the owner has no registered-league history', async () => {
+    mockAuth.mockResolvedValue({ userId: null } as Awaited<ReturnType<typeof auth>>);
     mockGetManagerHistory.mockResolvedValue(null);
 
     const jsx = await ManagerProfilePage({ params: { ownerId: 'unknown_owner' } });
@@ -95,6 +120,7 @@ describe('ManagerProfilePage', () => {
   });
 
   it('renders best/worst season highlights and excludes unplayed (0-0) seasons from ranking', async () => {
+    mockAuth.mockResolvedValue({ userId: null } as Awaited<ReturnType<typeof auth>>);
     const historyWithUnplayedSeason: ManagerHistory = {
       ...HISTORY,
       seasons: [
@@ -126,6 +152,7 @@ describe('ManagerProfilePage', () => {
   });
 
   it('shows no best/worst highlight when only one season has been played', async () => {
+    mockAuth.mockResolvedValue({ userId: null } as Awaited<ReturnType<typeof auth>>);
     const singlePlayedSeason: ManagerHistory = {
       ...HISTORY,
       seasons: [
@@ -151,5 +178,31 @@ describe('ManagerProfilePage', () => {
 
     expect(screen.queryByText('Best Season')).not.toBeInTheDocument();
     expect(screen.queryByText('Toughest Season')).not.toBeInTheDocument();
+  });
+
+  it('shows the matching personal profile to signed-in viewers', async () => {
+    mockAuth.mockResolvedValue({ userId: 'viewer-1' } as Awaited<ReturnType<typeof auth>>);
+    mockGetManagerHistory.mockResolvedValue(HISTORY);
+    mockGetManagerProfiles.mockResolvedValue(new Map([['owner_42', PROFILE]]));
+
+    const jsx = await ManagerProfilePage({ params: { ownerId: 'owner_42' } });
+    render(jsx);
+
+    expect(screen.getByText('Dhruv Methi')).toBeInTheDocument();
+    expect(screen.getByText('Founder')).toBeInTheDocument();
+    expect(screen.getByText('New York')).toBeInTheDocument();
+    expect(screen.getByText('New York Jets')).toBeInTheDocument();
+    expect(screen.getByText('Garrett Wilson')).toBeInTheDocument();
+  });
+
+  it('does not load personal profiles for signed-out viewers', async () => {
+    mockAuth.mockResolvedValue({ userId: null } as Awaited<ReturnType<typeof auth>>);
+    mockGetManagerHistory.mockResolvedValue(HISTORY);
+
+    const jsx = await ManagerProfilePage({ params: { ownerId: 'owner_42' } });
+    render(jsx);
+
+    expect(mockGetManagerProfiles).not.toHaveBeenCalled();
+    expect(screen.queryByText('Founder')).not.toBeInTheDocument();
   });
 });
