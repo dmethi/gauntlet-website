@@ -227,6 +227,29 @@ combine only presentation-ready results. Historical artifacts remain browsable,
 but new reports should use the fresh canonical routes rather than preserving a
 duplicate legacy generation path.
 
+### Why Clerk Identity + Application-Owned Profiles?
+
+**Context**: Gauntlet needs a small authenticated member directory, including
+co-managers on the same Sleeper roster, without becoming an identity provider or
+copying all league data into Postgres.
+
+**Decision**: Clerk owns sign-in, sessions, and uploaded profile images. The web
+app owns one small Prisma `Profile` record per person. Sleeper remains the
+source of truth for current league, roster, owner, and co-owner relationships.
+
+**Tradeoffs**:
+
+- ✅ Email-code authentication and image upload stay outside application code
+- ✅ Profile fields remain queryable in the existing Postgres database
+- ✅ One roster naturally supports multiple profiles
+- ❌ Authentication depends on Clerk availability
+- ❌ Current-team identity must be revalidated against Sleeper
+
+**Constraints**: Profile mutations derive the Clerk user ID from the server
+session, validate the selected identity against current registered leagues, and
+never accept a profile owner ID from the browser. `clerkUserId` and
+`sleeperUserId` are unique; `(leagueId, rosterId)` is indexed but not unique.
+
 ---
 
 ## System Boundaries
@@ -237,14 +260,15 @@ duplicate legacy generation path.
 ├─────────────────────────────────────────────────────────┤
 │ Sleeper API (rosters, matchups, players, transactions)  │
 │ Gemini API (narrative synthesis for recap reports)      │
+│ Clerk (authentication, sessions, profile images)         │
 └─────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────┐
 │                   apps/web (Next.js)                     │
 ├─────────────────────────────────────────────────────────┤
-│ • Feature modules (matchups, stats, draft, playoffs)    │
+│ • Feature modules (matchups, stats, profiles, playoffs) │
 │ • API routes (simulations, reports, cron)               │
-│ • UI rendering                                           │
+│ • Public analytics + authenticated member directory      │
 └─────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -271,13 +295,14 @@ duplicate legacy generation path.
 | Technology       | Purpose             | Why This Choice                                |
 | ---------------- | ------------------- | ---------------------------------------------- |
 | **TypeScript**   | Type safety         | Catches multi-league bugs at compile time      |
-| **Next.js 14**   | Web framework       | Server components + API routes in one stack    |
+| **Next.js 15**   | Web framework       | Server components + API routes in one stack    |
 | **Turborepo**    | Build orchestration | Caches builds, coordinates multi-package tasks |
 | **pnpm**         | Package manager     | Fast, disk-efficient, strict peer dependencies |
 | **Vitest**       | Testing             | Fast, TypeScript-native, ESM-first             |
 | **React Query**  | Data fetching       | Caching + invalidation without boilerplate     |
 | **Tailwind CSS** | Styling             | Utility-first, consistent with design tokens   |
 | **Prisma**       | Database ORM        | Type-safe queries, great DX for Postgres       |
+| **Clerk**        | Authentication      | Managed email codes, sessions, and user images |
 
 ---
 

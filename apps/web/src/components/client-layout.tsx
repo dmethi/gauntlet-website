@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes';
 import { AppNav, type NavItem } from '@gauntlet/ui';
 import { Archive, BarChart3, ClipboardList, Home, Scroll, Star, Swords, Users } from 'lucide-react';
 import { GauntletLogo } from '@/components/gauntlet-logo';
+import { AccountControls } from '@/components/account-controls';
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Competition', href: '/competition', icon: Home, match: 'prefix' },
@@ -47,6 +48,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         logo={<GauntletLogo size="sm" />}
         isDark={isDark}
         onToggleTheme={() => setTheme(isDark ? 'light' : 'dark')}
+        account={<AccountControls />}
       />
       <main className="min-w-0 w-full">
         {/* Extra top padding on mobile clears the floating nav trigger. */}

@@ -26,7 +26,7 @@ production.
 | Tool                                      | Version  | Required | Notes               |
 | ----------------------------------------- | -------- | -------- | ------------------- |
 | [Vercel CLI](https://vercel.com/docs/cli) | Latest   | Yes      | For deployments     |
-| [Node.js](https://nodejs.org/)            | ≥ 18.0.0 | Yes      | LTS recommended     |
+| [Node.js](https://nodejs.org/)            | ≥ 20.9.0 | Yes      | LTS recommended     |
 | [pnpm](https://pnpm.io/)                  | ≥ 9.0.0  | Yes      | Package manager     |
 | [Git](https://git-scm.com/)               | Latest   | Yes      | For version control |
 | PostgreSQL                                | 14+      | Yes      | Production database |
@@ -107,13 +107,15 @@ vercel --prod
 
 Set these in Vercel Dashboard → Project Settings → Environment Variables:
 
-| Variable              | Required    | Description                                      | Example                                     |
-| --------------------- | ----------- | ------------------------------------------------ | ------------------------------------------- |
-| `DATABASE_URL`        | Yes         | PostgreSQL connection string                     | `postgresql://user:pass@host:5432/gauntlet` |
-| `CRON_SECRET`         | Yes         | Secret for cron authentication                   | `your-random-secret-key`                    |
-| `API_SECRET`          | Yes         | General API authentication                       | `your-api-secret`                           |
-| `GEMINI_API_KEY`      | Conditional | AI-generated recaps (required for recap feature) | `your-gemini-api-key`                       |
-| `AI_SUMMARIZE_SECRET` | Conditional | Bearer capability for playoff scenario summaries | `your-random-capability-key`                |
+| Variable                            | Required    | Description                                      | Example                                     |
+| ----------------------------------- | ----------- | ------------------------------------------------ | ------------------------------------------- |
+| `DATABASE_URL`                      | Yes         | PostgreSQL connection string                     | `postgresql://user:pass@host:5432/gauntlet` |
+| `CRON_SECRET`                       | Yes         | Secret for cron authentication                   | `your-random-secret-key`                    |
+| `API_SECRET`                        | Yes         | General API authentication                       | `your-api-secret`                           |
+| `GEMINI_API_KEY`                    | Conditional | AI-generated recaps (required for recap feature) | `your-gemini-api-key`                       |
+| `AI_SUMMARIZE_SECRET`               | Conditional | Bearer capability for playoff scenario summaries | `your-random-capability-key`                |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Yes         | Clerk browser key                                | `pk_live_...`                               |
+| `CLERK_SECRET_KEY`                  | Yes         | Clerk server key                                 | `sk_live_...`                               |
 
 ### GitHub Actions Secrets
 
@@ -331,6 +333,16 @@ Monitor at GitHub → Actions tab:
 | ------------------------------------------------------ | ---------------------- |
 | `pnpm --filter @gauntlet/server prisma:migrate:deploy` | Deploy migrations      |
 | `pnpm --filter @gauntlet/server prisma:generate`       | Generate Prisma client |
+
+The web and server Prisma schemas currently share the production database but do
+not share one migration history. Do not run `prisma migrate deploy` against
+`apps/web/prisma` until those histories are unified. Apply a reviewed web
+migration directly and atomically instead:
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 --single-transaction \
+  -f apps/web/prisma/migrations/<migration>/migration.sql
+```
 
 ## Troubleshooting
 

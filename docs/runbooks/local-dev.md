@@ -6,10 +6,10 @@ Complete guide for setting up the Gauntlet monorepo on your local machine.
 
 | Tool                                  | Version  | Required | Notes                                       |
 | ------------------------------------- | -------- | -------- | ------------------------------------------- |
-| [Node.js](https://nodejs.org/)        | ≥ 18.0.0 | Yes      | LTS recommended                             |
+| [Node.js](https://nodejs.org/)        | ≥ 20.9.0 | Yes      | LTS recommended                             |
 | [pnpm](https://pnpm.io/)              | ≥ 9.0.0  | Yes      | Package manager (see install below)         |
 | [Git](https://git-scm.com/)           | Latest   | Yes      | For cloning                                 |
-| [PostgreSQL](https://postgresql.org/) | 14+      | Optional | Only for `apps/server` historical snapshots |
+| [PostgreSQL](https://postgresql.org/) | 14+      | Optional | Required for profiles, forms, and snapshots |
 
 ### Installing pnpm
 
@@ -55,14 +55,20 @@ This installs all dependencies across the monorepo using pnpm workspaces.
 The web app works without environment variables for basic development, but some
 features require configuration.
 
-#### For `apps/web` (optional)
+#### For `apps/web`
 
-Create `apps/web/.env.local`:
+Link the repository to the Gauntlet Clerk application and pull development keys,
+then add the database URL used by profile and year-in-review records:
 
 ```bash
-# Optional: Gemini API for AI-generated recaps
-# GEMINI_API_KEY=your_key_here
+cd apps/web
+clerk env pull --instance dev --file .env.local
+
+# Add to apps/web/.env.local
+DATABASE_URL=postgresql://user:password@localhost:5432/gauntlet
 ```
+
+Gemini remains optional for AI-generated recaps.
 
 #### For `apps/server` (only if using historical snapshots)
 

@@ -10,14 +10,27 @@ type Props = {
   logo: React.ReactNode;
   isDark: boolean;
   onToggleTheme: () => void;
+  account?: React.ReactNode;
 };
 
 /** Renders the desktop sticky top nav and the mobile floating drawer nav together. */
-export function AppNav({ items, logo, isDark, onToggleTheme }: Props) {
+export function AppNav({ items, logo, isDark, onToggleTheme, account }: Props) {
   return (
     <>
-      <TopNav items={items} logo={logo} isDark={isDark} onToggleTheme={onToggleTheme} />
-      <MobileNav items={items} logo={logo} isDark={isDark} onToggleTheme={onToggleTheme} />
+      <TopNav
+        items={items}
+        logo={logo}
+        isDark={isDark}
+        onToggleTheme={onToggleTheme}
+        account={account}
+      />
+      <MobileNav
+        items={items}
+        logo={logo}
+        isDark={isDark}
+        onToggleTheme={onToggleTheme}
+        account={account}
+      />
     </>
   );
 }

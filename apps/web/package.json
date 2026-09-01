@@ -48,6 +48,7 @@
     "precompute:real-dev": "npm run precompute:real && npm run dev"
   },
   "dependencies": {
+    "@clerk/nextjs": "7.8.3",
     "@gauntlet/lib": "workspace:*",
     "@gauntlet/server": "workspace:*",
     "@gauntlet/sim-engine": "workspace:*",

@@ -12,10 +12,11 @@ type Props = {
   logo: React.ReactNode;
   isDark: boolean;
   onToggleTheme: () => void;
+  account?: React.ReactNode;
 };
 
 /** Desktop sticky top nav: icon+label tabs, crimson active-state underline. Hidden below md. */
-export function TopNav({ items, logo, isDark, onToggleTheme }: Props) {
+export function TopNav({ items, logo, isDark, onToggleTheme, account }: Props) {
   const pathname = usePathname();
 
   return (
@@ -43,7 +44,10 @@ export function TopNav({ items, logo, isDark, onToggleTheme }: Props) {
           })}
         </nav>
       </div>
-      <CompactThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+      <div className='flex items-center gap-3'>
+        {account}
+        <CompactThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+      </div>
     </div>
   );
 }

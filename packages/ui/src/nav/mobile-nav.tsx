@@ -14,6 +14,7 @@ type Props = {
   logo: React.ReactNode;
   isDark: boolean;
   onToggleTheme: () => void;
+  account?: React.ReactNode;
 };
 
 /**
@@ -21,7 +22,7 @@ type Props = {
  * backdrop. Never hover (doesn't exist on touch), never reserves layout
  * space — the trigger and drawer are both `fixed`.
  */
-export function MobileNav({ items, logo, isDark, onToggleTheme }: Props) {
+export function MobileNav({ items, logo, isDark, onToggleTheme, account }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -77,6 +78,7 @@ export function MobileNav({ items, logo, isDark, onToggleTheme }: Props) {
                   );
                 })}
               </div>
+              {account && <div className='border-t border-border p-3'>{account}</div>}
             </motion.nav>
           </>
         )}

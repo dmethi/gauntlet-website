@@ -80,6 +80,15 @@ pair.
 - League-wide analytics
 - Variance and consistency metrics
 
+**Member Profiles:**
+
+- Email one-time-code authentication
+- One editable profile per authenticated person
+- Profiles linked to a current Sleeper owner or co-owner identity
+- Multiple managers may share one Sleeper roster
+- Signed-in member directory with basic professional, location, and NFL
+  interests
+
 ### ❌ Explicitly Out of Scope
 
 **Betting & Gambling:**
@@ -103,10 +112,11 @@ pair.
 
 **Social Features:**
 
-- No user accounts (beyond Sleeper)
 - No comments or discussion
 - No trade chat
-- Sleeper handles social
+- No direct messaging, follows, or activity feeds
+- Gauntlet profiles are a lightweight directory; Sleeper still handles league
+  social activity
 
 **Mobile App:**
 
@@ -161,6 +171,13 @@ domains **Constraint:** Gemini API for narrative synthesis
 **Owns:** Monte Carlo simulation, win probability **Data:** Player projections,
 matchup context **Constraint:** <200ms response time, 10k iterations
 
+### 7. Profiles (`features/profiles/`)
+
+**Owns:** Profile validation, Sleeper identity claims, profile persistence, and
+member-directory presentation **Data:** Clerk identity, Gauntlet Postgres,
+current-season Sleeper rosters/users **Constraint:** One profile per Clerk user,
+one profile per Sleeper user, and no uniqueness constraint on the team key
+
 ## System Boundaries
 
 ```
@@ -169,15 +186,16 @@ matchup context **Constraint:** <200ms response time, 10k iterations
 ├─────────────────────────────────────────────────────────┤
 │ Sleeper API ─────── Primary data (rosters, matchups)    │
 │ Gemini API ──────── Narrative synthesis for recaps      │
+│ Clerk ────────────── Authentication and profile images   │
 │ NFL Data ────────── Player projections (if needed)      │
 └─────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────┐
 │                   apps/web (Next.js)                     │
 ├─────────────────────────────────────────────────────────┤
-│ • Feature modules (matchups, stats, draft, playoffs)    │
+│ • Feature modules (matchups, stats, profiles, playoffs) │
 │ • API routes (simulations, reports, cron)               │
-│ • UI rendering                                           │
+│ • Public analytics + authenticated member directory      │
 └─────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -237,12 +255,13 @@ See `docs/constraints/multi-league.md` for detailed patterns.
 
 ## Data Sources
 
-| Source          | Purpose                    | Refresh                |
-| --------------- | -------------------------- | ---------------------- |
-| **Sleeper API** | Rosters, matchups, players | Real-time during games |
-| **Gauntlet DB** | Historical snapshots       | Cron-scheduled         |
-| **Gemini API**  | Narrative generation       | On-demand (reports)    |
-| **Static JSON** | Precomputed data           | Build-time             |
+| Source          | Purpose                               | Refresh                   |
+| --------------- | ------------------------------------- | ------------------------- |
+| **Sleeper API** | Rosters, matchups, players            | Real-time during games    |
+| **Gauntlet DB** | Profiles, forms, historical snapshots | On mutation / cron        |
+| **Clerk**       | Authentication, profile images        | On sign-in / profile edit |
+| **Gemini API**  | Narrative generation                  | On-demand (reports)       |
+| **Static JSON** | Precomputed data                      | Build-time                |
 
 ## Success Metrics
 
