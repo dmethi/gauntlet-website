@@ -294,6 +294,7 @@ describe('listManagers', () => {
               owner_id: 'owner_a',
               co_owners: ['owner_b'],
               owner: { display_name: 'Shared Team' },
+              coOwners: [{ user_id: 'owner_b', display_name: 'Co-manager Bob' }],
             },
           ];
         }
@@ -303,7 +304,10 @@ describe('listManagers', () => {
 
     const result = await listManagers(client);
 
-    expect(result.map(manager => manager.ownerId)).toEqual(['owner_a', 'owner_b']);
+    expect(result.map(manager => manager.ownerId).sort()).toEqual(['owner_a', 'owner_b']);
+    expect(result.find(manager => manager.ownerId === 'owner_b')?.displayName).toBe(
+      'Co-manager Bob',
+    );
     expect(result.every(manager => manager.seasonsPlayed === 1)).toBe(true);
   });
 });

@@ -77,6 +77,29 @@ const resolveAvatarUrl = (roster: RosterWithOwner): string | null => {
   return avatar.startsWith('http') ? avatar : `https://sleepercdn.com/avatars/${avatar}`;
 };
 
+const managerIdentity = (
+  roster: RosterWithOwner,
+  managerId: string,
+): Pick<ManagerSummary, 'displayName' | 'avatarUrl'> => {
+  if (roster.owner_id === managerId) {
+    return {
+      displayName: roster.owner?.metadata?.team_name ?? roster.owner?.display_name ?? null,
+      avatarUrl: resolveAvatarUrl(roster),
+    };
+  }
+
+  const coManager = roster.coOwners?.find(user => user.user_id === managerId);
+  const avatar = coManager?.avatar;
+  return {
+    displayName: coManager?.display_name ?? null,
+    avatarUrl: avatar
+      ? avatar.startsWith('http')
+        ? avatar
+        : `https://sleepercdn.com/avatars/${avatar}`
+      : null,
+  };
+};
+
 /**
  * Computes one manager's record within a single league, from that league's
  * own rosters + matchups. Never combined with another league's data.
@@ -153,8 +176,9 @@ export const getManagerHistory = async (
       if (!roster) continue;
 
       if (!displayName) {
-        displayName = roster.owner?.metadata?.team_name ?? roster.owner?.display_name ?? null;
-        avatarUrl = resolveAvatarUrl(roster);
+        const identity = managerIdentity(roster, ownerId);
+        displayName = identity.displayName;
+        avatarUrl = identity.avatarUrl;
       }
 
       let weeks = weeksPerLeagueOverride;
@@ -222,10 +246,10 @@ export const listManagers = async (
         for (const managerId of getRosterManagerIds(roster)) {
           const existing = byOwner.get(managerId);
           if (!existing) {
+            const identity = managerIdentity(roster, managerId);
             byOwner.set(managerId, {
               ownerId: managerId,
-              displayName: roster.owner?.metadata?.team_name ?? roster.owner?.display_name ?? null,
-              avatarUrl: resolveAvatarUrl(roster),
+              ...identity,
               seasonsPlayed: 1,
               firstSeason: season,
               lastSeason: season,

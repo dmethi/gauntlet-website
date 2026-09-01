@@ -46,7 +46,12 @@ const ManagersIndexPage = async () => {
                   : `${manager.firstSeason}–${manager.lastSeason}`;
 
               return (
-                <Link key={manager.ownerId} href={`/managers/${manager.ownerId}`} className="group">
+                <Link
+                  key={manager.ownerId}
+                  href={`/managers/${manager.ownerId}`}
+                  aria-label={`View ${name} manager profile`}
+                  className="group"
+                >
                   <article className="h-full border-t border-border pt-5 transition-colors group-hover:border-primary/50">
                     <div className="flex items-start gap-4">
                       <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-sm font-semibold">

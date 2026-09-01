@@ -34,6 +34,7 @@ export type { PlayerStats };
 // Fixing those is out of scope here; this type isn't enforced at the source.
 export interface RosterWithOwner extends SleeperRoster {
   owner?: SleeperUser;
+  coOwners?: SleeperUser[];
 }
 
 // Base API configuration
@@ -520,6 +521,10 @@ export class BrowserSleeperClient {
     return rosters.map((roster: any) => ({
       ...roster,
       owner: usersMap.get(roster.owner_id),
+      coOwners: (roster.co_owners ?? []).flatMap((userId: string) => {
+        const user = usersMap.get(userId);
+        return user ? [user] : [];
+      }),
     }));
   }
 }

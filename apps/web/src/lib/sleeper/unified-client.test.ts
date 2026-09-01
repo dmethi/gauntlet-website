@@ -30,6 +30,28 @@ describe('UnifiedSleeperClient ID validation', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     vi.unstubAllGlobals();
   });
+
+  it('attaches primary and co-manager users to roster data', async () => {
+    const fetchMock = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      const data = url.endsWith('/rosters')
+        ? [{ roster_id: 1, owner_id: 'owner-1', co_owners: ['owner-2'] }]
+        : [
+            { user_id: 'owner-1', display_name: 'Primary' },
+            { user_id: 'owner-2', display_name: 'Co-manager' },
+          ];
+      return new Response(JSON.stringify(data), { status: 200 });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const [roster] = await createStatsClient().fetchRostersWithOwners('123');
+
+    expect(roster.owner.display_name).toBe('Primary');
+    expect(roster.coOwners.map((user: { display_name: string }) => user.display_name)).toEqual([
+      'Co-manager',
+    ]);
+    vi.unstubAllGlobals();
+  });
 });
 
 describe('memory caching for expensive endpoints', () => {

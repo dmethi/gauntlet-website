@@ -61,7 +61,7 @@ describe('ManagersIndexPage', () => {
 
     expect(screen.getByText('Alice')).toBeInTheDocument();
     expect(screen.getByText('Bob')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Alice/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'View Alice manager profile' })).toHaveAttribute(
       'href',
       '/managers/owner_1',
     );
