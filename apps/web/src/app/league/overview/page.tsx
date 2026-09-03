@@ -220,6 +220,8 @@ const LeagueOverviewContent = () => {
               <TableBody>
                 {sortedTeamStats.map(team => {
                   const division = divisionConfig.find(item => item.id === team.division);
+                  const divisionLabel =
+                    division?.name ?? (team.division ? `Division ${team.division}` : 'N/A');
 
                   return (
                     <TableRow
@@ -232,11 +234,16 @@ const LeagueOverviewContent = () => {
                       <TableCell>{team.canonicalRank}</TableCell>
                       <TableCell className="font-medium">{team.name}</TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="gap-1.5 pl-1 text-xs">
+                        <Badge
+                          variant="outline"
+                          className={division?.logo ? 'h-8 w-8 justify-center p-0' : 'text-xs'}
+                          title={divisionLabel}
+                        >
                           {division?.logo ? (
-                            <Image src={division.logo} alt="" width={20} height={20} />
-                          ) : null}
-                          {division?.name ?? (team.division ? `Division ${team.division}` : 'N/A')}
+                            <Image src={division.logo} alt={divisionLabel} width={24} height={24} />
+                          ) : (
+                            divisionLabel
+                          )}
                         </Badge>
                       </TableCell>
                       <TableCell>
