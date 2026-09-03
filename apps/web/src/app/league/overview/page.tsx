@@ -12,6 +12,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { getLeagueConfig } from '@/config/leagues';
+import Image from 'next/image';
 import {
   Table,
   TableBody,
@@ -102,28 +104,36 @@ const LeagueOverviewContent = () => {
     );
   }
 
-  // Division name mapping
-  const getDivisionName = (divisionNum: number | null | undefined) => {
-    const divisionNames = {
-      1: 'North',
-      2: 'South',
-      3: 'East',
-    };
-    return divisionNum
-      ? divisionNames[divisionNum as keyof typeof divisionNames] || `Division ${divisionNum}`
-      : 'N/A';
-  };
+  const leagueConfig = getLeagueConfig(league.id);
+  const divisionConfig = leagueConfig?.divisions ?? [];
 
   return (
     <div className="max-w-7xl mx-auto">
       <PageHeaderHero
         title={league.name}
         subtitle={`Season ${league.season}`}
-        crestSrc="/gauntlet_logo.svg"
+        crestSrc={leagueConfig?.logo ?? '/gauntlet_logo.svg'}
       />
       <div className="px-6 py-8">
         <div className="mb-8">
-          <h2 className="mb-4 text-2xl font-bold">Team Rankings</h2>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="text-2xl font-bold">Team Rankings</h2>
+            {divisionConfig.length > 0 ? (
+              <div className="flex flex-wrap gap-2" aria-label="League divisions">
+                {divisionConfig.map(division => (
+                  <div
+                    key={division.id}
+                    className="flex items-center gap-2 rounded-md border border-border bg-card px-2 py-1 text-xs font-medium"
+                  >
+                    {division.logo ? (
+                      <Image src={division.logo} alt="" width={28} height={28} />
+                    ) : null}
+                    <span>{division.name}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <div className="overflow-x-auto rounded-md border border-border bg-card">
             <Table>
               <TableHeader>
@@ -208,31 +218,38 @@ const LeagueOverviewContent = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedTeamStats.map(team => (
-                  <TableRow
-                    key={team.id}
-                    className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => {
-                      router.push(`/team/${team.id}`);
-                    }}
-                  >
-                    <TableCell>{team.canonicalRank}</TableCell>
-                    <TableCell className="font-medium">{team.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs">
-                        {getDivisionName(team.division)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">
-                        {team.wins}-{team.losses}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
-                    <TableCell>{team.expectedWins.toFixed(2)}</TableCell>
-                    <TableCell>{team.luckRating.toFixed(2)}</TableCell>
-                  </TableRow>
-                ))}
+                {sortedTeamStats.map(team => {
+                  const division = divisionConfig.find(item => item.id === team.division);
+
+                  return (
+                    <TableRow
+                      key={team.id}
+                      className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
+                      onClick={() => {
+                        router.push(`/team/${team.id}`);
+                      }}
+                    >
+                      <TableCell>{team.canonicalRank}</TableCell>
+                      <TableCell className="font-medium">{team.name}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="gap-1.5 pl-1 text-xs">
+                          {division?.logo ? (
+                            <Image src={division.logo} alt="" width={20} height={20} />
+                          ) : null}
+                          {division?.name ?? (team.division ? `Division ${team.division}` : 'N/A')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">
+                          {team.wins}-{team.losses}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
+                      <TableCell>{team.expectedWins.toFixed(2)}</TableCell>
+                      <TableCell>{team.luckRating.toFixed(2)}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

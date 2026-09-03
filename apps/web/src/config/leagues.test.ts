@@ -3,6 +3,7 @@ import {
   ALL_LEAGUES,
   getAllLeagues,
   getAllSeasons,
+  getDivisionConfig,
   getLeagueConfig,
   getLeaguesForSeason,
   LEAGUE_REGISTRY,
@@ -37,6 +38,43 @@ describe('League registry: seasons kept separate', () => {
     );
 
     expect(totalFromSeasons).toBe(getAllLeagues().length);
+  });
+});
+
+describe('League registry: 2026 division branding', () => {
+  const expectedDivisions = {
+    '1387520086092312576': [
+      ['The Crown', '/divisions/legion-i-the-crown.png'],
+      ['The Scepter', '/divisions/legion-i-the-scepter.png'],
+      ['The Royal Seal', '/divisions/legion-i-the-royal-seal.png'],
+    ],
+    '1387520168866885632': [
+      ['The Ramparts', '/divisions/legion-ii-the-ramparts.png'],
+      ['The Gatehouse', '/divisions/legion-ii-the-gatehouse.png'],
+      ['The Battlements', '/divisions/legion-ii-the-battlements.png'],
+    ],
+    '1387520236663615488': [
+      ['The Anvil', '/divisions/legion-iii-the-anvil.png'],
+      ['The Crucible', '/divisions/legion-iii-the-crucible.png'],
+      ['The Bellows', '/divisions/legion-iii-the-bellows.png'],
+    ],
+  } as const;
+
+  it('maps each Sleeper division number to its approved name and logo', () => {
+    for (const [leagueId, expected] of Object.entries(expectedDivisions)) {
+      expect(expected.map((_, index) => getDivisionConfig(leagueId, index + 1))).toEqual(
+        expected.map(([name, logo], index) => ({
+          id: index + 1,
+          name,
+          logo,
+        })),
+      );
+    }
+  });
+
+  it('returns undefined for an unknown league or division number', () => {
+    expect(getDivisionConfig('does-not-exist', 1)).toBeUndefined();
+    expect(getDivisionConfig('1387520086092312576', 4)).toBeUndefined();
   });
 });
 
