@@ -6,6 +6,14 @@
  * changes once a year when new leagues are created.
  */
 
+export interface Division {
+  /** One-based Sleeper division number. */
+  id: number;
+  name: string;
+  /** Path under /public to this division's logo, if one exists. */
+  logo?: string;
+}
+
 export interface League {
   id: string;
   name: string;
@@ -15,6 +23,8 @@ export interface League {
   previousLeagueId: string | null;
   /** Path under /public to this league's logo, if one exists. */
   logo?: string;
+  /** Division branding keyed by Sleeper's one-based division number. */
+  divisions?: Division[];
 }
 
 export type SeasonId = string;
@@ -28,6 +38,11 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
       season: 2025,
       conference: 'AFC',
       previousLeagueId: null,
+      divisions: [
+        { id: 1, name: 'North' },
+        { id: 2, name: 'South' },
+        { id: 3, name: 'East' },
+      ],
     },
     {
       id: '1263740549504962561',
@@ -35,6 +50,11 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
       season: 2025,
       conference: 'NFC',
       previousLeagueId: null,
+      divisions: [
+        { id: 1, name: 'North' },
+        { id: 2, name: 'South' },
+        { id: 3, name: 'East' },
+      ],
     },
   ],
   '2026': [
@@ -45,6 +65,11 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
       conference: 'Legion I',
       previousLeagueId: null,
       logo: '/leagues/legion-i-throne.svg',
+      divisions: [
+        { id: 1, name: 'The Crown', logo: '/divisions/legion-i-the-crown.png' },
+        { id: 2, name: 'The Scepter', logo: '/divisions/legion-i-the-scepter.png' },
+        { id: 3, name: 'The Royal Seal', logo: '/divisions/legion-i-the-royal-seal.png' },
+      ],
     },
     {
       id: '1387520168866885632',
@@ -53,6 +78,15 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
       conference: 'Legion II',
       previousLeagueId: null,
       logo: '/leagues/legion-ii-keep.svg',
+      divisions: [
+        { id: 1, name: 'The Ramparts', logo: '/divisions/legion-ii-the-ramparts.png' },
+        { id: 2, name: 'The Gatehouse', logo: '/divisions/legion-ii-the-gatehouse.png' },
+        {
+          id: 3,
+          name: 'The Battlements',
+          logo: '/divisions/legion-ii-the-battlements.png',
+        },
+      ],
     },
     {
       id: '1387520236663615488',
@@ -61,6 +95,11 @@ export const LEAGUE_REGISTRY: LeagueRegistry = {
       conference: 'Legion III',
       previousLeagueId: null,
       logo: '/leagues/legion-iii-forge.svg',
+      divisions: [
+        { id: 1, name: 'The Anvil', logo: '/divisions/legion-iii-the-anvil.png' },
+        { id: 2, name: 'The Crucible', logo: '/divisions/legion-iii-the-crucible.png' },
+        { id: 3, name: 'The Bellows', logo: '/divisions/legion-iii-the-bellows.png' },
+      ],
     },
   ],
 };
@@ -83,6 +122,11 @@ export const ALL_LEAGUES: League[] = getAllLeagues();
  */
 export const getLeagueConfig = (leagueId: string) => {
   return ALL_LEAGUES.find(l => l.id === leagueId);
+};
+
+/** Resolve the name and branding for a Sleeper division number. */
+export const getDivisionConfig = (leagueId: string, divisionId: number): Division | undefined => {
+  return getLeagueConfig(leagueId)?.divisions?.find(division => division.id === divisionId);
 };
 
 /**
