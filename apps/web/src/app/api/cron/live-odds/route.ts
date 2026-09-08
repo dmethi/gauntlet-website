@@ -5,16 +5,14 @@ import { authorizeBearer, createFixedWindowGate } from '@/lib/api-security';
 const replayGate = createFixedWindowGate({ limit: 1, windowMs: 2 * 60_000 });
 
 /**
- * Authenticated POST endpoint for live odds snapshots
+ * Authenticated endpoint for live odds snapshots.
  *
  * Executes the live snapshot script directly in the API route
- * Called every 10 minutes during NFL game windows
- *
- * The scheduler must support POST requests with an Authorization header.
+ * Vercel Cron invokes GET; POST remains available for authenticated manual runs.
  *
  * @see apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts
  */
-export const POST = async (request: NextRequest) => {
+const runSnapshot = async (request: NextRequest) => {
   const authorization = authorizeBearer(
     request.headers.get('authorization'),
     process.env.CRON_SECRET,
@@ -71,6 +69,9 @@ export const POST = async (request: NextRequest) => {
   }
 };
 
+export const GET = runSnapshot;
+export const POST = runSnapshot;
+
 // Set max duration for Vercel serverless function
-export const maxDuration = 60; // 60 seconds
+export const maxDuration = 300;
 export const dynamic = 'force-dynamic'; // Don't cache this route

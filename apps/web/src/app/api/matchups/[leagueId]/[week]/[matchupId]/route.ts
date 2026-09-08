@@ -6,6 +6,7 @@ import {
 } from '@/lib/calculate-league-projections';
 import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
 import type { PlayerDetails, TeamRoster } from '@/features/matchups/types';
+import { getLeagueConfig } from '@/config/leagues';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +27,8 @@ export const GET = async (
     const { leagueId, week, matchupId } = params;
     const weekNumber = parseInt(week, 10);
     const targetMatchupId = parseInt(matchupId, 10);
+    const leagueConfig = getLeagueConfig(leagueId);
+    const projectionSeason = String(leagueConfig?.season ?? new Date().getFullYear());
 
     // Fetch all required data
     const [league, matchups, users, rosters, rawProjections, playersData] = await Promise.all([
@@ -33,7 +36,7 @@ export const GET = async (
       sleeperClient.fetchMatchups(leagueId, weekNumber),
       sleeperClient.fetchUsers(leagueId),
       sleeperClient.fetchRosters(leagueId),
-      sleeperClient.fetchWeeklyProjections(weekNumber, '2025'),
+      sleeperClient.fetchWeeklyProjections(weekNumber, projectionSeason),
       sleeperClient.fetchAllPlayers(),
     ]);
 
@@ -179,6 +182,7 @@ export const GET = async (
       matchup: matchupDetails,
       week: weekNumber,
       leagueId,
+      leagueName: leagueConfig?.name || league?.name || 'The Gauntlet',
     });
   } catch (error) {
     console.error('Error fetching individual matchup:', error);

@@ -21,8 +21,11 @@ export const PlayerMovementView = memo<PlayerMovementViewProps>(props => {
     <div className="space-y-6">
       <TopMoversTable
         topMovers={data.topMovers}
-        afcTopMovers={data.topMoversByLeague.afc}
-        nfcTopMovers={data.topMoversByLeague.nfc}
+        leagueMovers={data.leagueTrends.map(league => ({
+          leagueId: league.leagueId,
+          leagueName: league.leagueName,
+          players: data.topMoversByLeague[league.leagueId] ?? [],
+        }))}
       />
     </div>
   );

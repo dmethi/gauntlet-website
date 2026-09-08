@@ -97,6 +97,7 @@ export interface MatchupDetails {
 export interface LeagueMatchups {
   leagueId: string;
   leagueName: string;
+  logo?: string;
   week?: number;
   matchups: MatchupData[];
 }
@@ -216,6 +217,7 @@ export interface MatchupOddsPreviewProps {
  */
 export interface TeamOdds {
   teamId: string;
+  matchupId: number;
   teamName: string;
   leagueId: string;
   leagueName: string;

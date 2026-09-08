@@ -6,6 +6,8 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 import { normalizeNflTeamAbbreviation } from './nfl-team';
+import { getLeagueConfig } from '@/config/leagues';
+import { resolveMatchupTeamIdentity } from '@/features/matchups/team-identity';
 
 export const dynamic = 'force-dynamic';
 
@@ -207,15 +209,19 @@ export const GET = async (
     if (!leagueId || !Number.isFinite(week) || !Number.isFinite(matchupId)) {
       return NextResponse.json({ success: false, error: 'Invalid params' }, { status: 400 });
     }
+    const projectionSeason = String(getLeagueConfig(leagueId)?.season ?? new Date().getFullYear());
 
     // Fetch data from Sleeper + ESPN
-    const [matchups, rawProjections, players, league, espnScoreboard] = await Promise.all([
-      sleeperClient.fetchMatchups(leagueId, week),
-      sleeperClient.fetchWeeklyProjections(week, '2025'),
-      sleeperClient.fetchAllPlayers(),
-      sleeperClient.fetchLeague(leagueId),
-      fetchEspnScoreboard(),
-    ]);
+    const [matchups, rawProjections, players, league, espnScoreboard, rosters, users] =
+      await Promise.all([
+        sleeperClient.fetchMatchups(leagueId, week),
+        sleeperClient.fetchWeeklyProjections(week, projectionSeason),
+        sleeperClient.fetchAllPlayers(),
+        sleeperClient.fetchLeague(leagueId),
+        fetchEspnScoreboard(),
+        sleeperClient.fetchRosters(leagueId),
+        sleeperClient.fetchUsers(leagueId),
+      ]);
 
     // Build NFL game state map for minutes-based projections
     const nflGameStates = buildNflGameStateMap(espnScoreboard);
@@ -255,6 +261,8 @@ export const GET = async (
     }
 
     const [team1, team2] = pair;
+    const team1Identity = resolveMatchupTeamIdentity(team1.roster_id, rosters, users);
+    const team2Identity = resolveMatchupTeamIdentity(team2.roster_id, rosters, users);
     const playersMap: Record<string, any> = players || {};
     const team1Players = toLineupPlayersWithMinutes(
       team1.starters || [],
@@ -318,8 +326,16 @@ export const GET = async (
         medianMargin: Math.abs(sim.team1Scores.median - sim.team2Scores.median),
         impliedOdds: sim.impliedOdds,
         teams: [
-          { rosterId: team1.roster_id, teamName: `Team ${team1.roster_id}`, players: team1Players },
-          { rosterId: team2.roster_id, teamName: `Team ${team2.roster_id}`, players: team2Players },
+          {
+            rosterId: team1.roster_id,
+            ...team1Identity,
+            players: team1Players,
+          },
+          {
+            rosterId: team2.roster_id,
+            ...team2Identity,
+            players: team2Players,
+          },
         ],
         iterations: 20000,
         computeTimeMs: 0,

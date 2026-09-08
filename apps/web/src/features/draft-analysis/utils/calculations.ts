@@ -172,18 +172,12 @@ export const kMeansCluster = (
   const n = data.length;
   const d = data[0].length;
 
-  // Initialize centroids randomly
-  const centroids: number[][] = [];
-  for (let i = 0; i < k; i++) {
-    const centroid: number[] = [];
-    for (let j = 0; j < d; j++) {
-      const values = data.map(point => point[j]);
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      centroid.push(Math.random() * (max - min) + min);
-    }
-    centroids.push(centroid);
-  }
+  // Seed from evenly spaced data points so report clusters are reproducible and
+  // every initial centroid is a valid observation.
+  const centroids = Array.from({ length: k }, (_, index) => {
+    const pointIndex = Math.min(Math.floor(((index + 0.5) * n) / k), n - 1);
+    return [...data[pointIndex]];
+  });
 
   const assignments = new Array(n).fill(0);
 

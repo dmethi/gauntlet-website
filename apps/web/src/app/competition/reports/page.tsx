@@ -1,178 +1,62 @@
-'use client';
-
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { Archive, ChevronRight } from 'lucide-react';
 import { Container, PageHeader } from '@gauntlet/ui';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { AlertCircle, Calendar, ChevronRight, FileText } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { REPORT_ARCHIVE_LINK, REPORT_HUB_SECTIONS } from '../competition-links';
+import { ReportList } from './report-list';
 
-interface ReportListItem {
-  title: string;
-  href: string;
-  date: string; // ISO
-  week: number;
-  season: number;
-  tags: string[];
-  status: 'success' | 'partial' | 'failed';
-  description?: string;
-}
-
-interface ReportsResponse {
-  success: boolean;
-  count: number;
-  reports: ReportListItem[];
-}
-
-const fetchReports = async (): Promise<ReportsResponse> => {
-  const response = await fetch('/api/reports/list');
-  if (!response.ok) {
-    throw new Error('Failed to fetch reports');
-  }
-  return response.json();
-};
-
-const getStatusBadge = (status: 'success' | 'partial' | 'failed') => {
-  const configs = {
-    success: { variant: 'default' as const, label: 'Complete' },
-    partial: { variant: 'secondary' as const, label: 'Partial' },
-    failed: { variant: 'destructive' as const, label: 'Failed' },
-  };
-
-  const config = configs[status] || configs.success;
-  return <Badge variant={config.variant}>{config.label}</Badge>;
-};
-
-export default function ReportsFeedPage() {
-  const {
-    data: reportsData,
-    isLoading,
-    error,
-  } = useQuery<ReportsResponse>({
-    queryKey: ['reports'],
-    queryFn: fetchReports,
-  });
-
-  const reports = reportsData?.reports || [];
-
-  if (isLoading) {
-    return (
-      <Container className="py-8">
-        <PageHeader title="Reports" subtitle="Weekly recaps and analysis" />
-        <div className="space-y-4">
-          {[1, 2, 3, 4].map(i => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-[200px]" />
-                <Skeleton className="h-4 w-[150px] mt-2" />
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-2 mb-4">
-                  <Skeleton className="h-6 w-16" />
-                  <Skeleton className="h-6 w-16" />
-                  <Skeleton className="h-6 w-16" />
-                </div>
-                <Skeleton className="h-4 w-[100px]" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container className="py-8">
-        <PageHeader title="Reports" subtitle="Weekly recaps and analysis" />
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
-              <p>Failed to load reports. Please try again later.</p>
-            </div>
-          </CardContent>
-        </Card>
-      </Container>
-    );
-  }
-
-  if (reports.length === 0) {
-    return (
-      <Container className="py-8">
-        <PageHeader title="Reports" subtitle="Weekly recaps and analysis" />
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-lg font-semibold mb-2">No Reports Yet</h3>
-            <p className="text-muted-foreground">
-              Reports will be automatically generated each week once the season starts.
-            </p>
-          </CardContent>
-        </Card>
-      </Container>
-    );
-  }
-
+export default function ReportsPage() {
   return (
     <Container className="py-8">
-      <PageHeader
-        title="Reports"
-        subtitle={`${reports.length} weekly recap${reports.length !== 1 ? 's' : ''} and analysis`}
-      />
+      <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <PageHeader
+          title="Reports"
+          subtitle="Previews, recaps, and live coverage for the 2026 Gauntlet season"
+        />
+        <Button asChild variant="outline" className="shrink-0 self-start">
+          <Link href={REPORT_ARCHIVE_LINK.href}>
+            <Archive className="h-4 w-4" />
+            {REPORT_ARCHIVE_LINK.label}
+          </Link>
+        </Button>
+      </div>
 
-      <div className="space-y-4">
-        {reports.map((report, index) => (
-          <Card key={report.href} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <CardTitle className="font-geizer">{report.title}</CardTitle>
-                    {index === 0 && (
-                      <Badge variant="default" className="bg-gauntlet-gold text-black">
-                        Latest
-                      </Badge>
-                    )}
-                    {report.status !== 'success' && getStatusBadge(report.status)}
-                  </div>
-                  <CardDescription className="mt-1 flex items-center gap-2">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(report.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {report.description && (
-                <p className="text-sm text-muted-foreground mb-4">{report.description}</p>
-              )}
-              <div className="flex flex-wrap gap-2 mb-4">
-                {report.tags.map(tag => (
-                  <Badge key={tag} variant="secondary">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              <div className="flex items-center justify-between">
-                <Link
-                  href={report.href}
-                  className="inline-flex items-center text-primary hover:underline font-medium"
-                >
-                  Read full report <ChevronRight className="h-4 w-4 ml-1" />
+      <div className="space-y-12">
+        {REPORT_HUB_SECTIONS.map(section => (
+          <section key={section.id} aria-labelledby={`${section.id}-heading`}>
+            <div className="mb-4 border-b pb-3">
+              <h2 id={`${section.id}-heading`} className="text-xl font-bold">
+                {section.title}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">{section.description}</p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {section.links.map(link => (
+                <Link key={link.href} href={link.href}>
+                  <Card className="h-full transition-shadow hover:shadow-md">
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-4 text-base">
+                        {link.label}
+                        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      </CardTitle>
+                      <CardDescription>{link.description}</CardDescription>
+                    </CardHeader>
+                  </Card>
                 </Link>
-                <div className="text-xs text-muted-foreground">
-                  Week {report.week} • {report.season} Season
-                </div>
+              ))}
+            </div>
+
+            {section.id === 'recaps' && (
+              <div className="mt-6">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Weekly recaps
+                </h3>
+                <ReportList season={2026} />
               </div>
-            </CardContent>
-          </Card>
+            )}
+          </section>
         ))}
       </div>
     </Container>

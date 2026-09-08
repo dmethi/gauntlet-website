@@ -190,6 +190,14 @@ describe('TeamView component', () => {
 
       expect(screen.getAllByText(/Alpha.*Premier/)).not.toHaveLength(0);
     });
+
+    it('shows a clear pre-kickoff state when no week has scoring data', () => {
+      const props = buildProps();
+      render(<TeamView {...props} availableWeeks={[]} fromWeek={1} toWeek={1} />);
+
+      expect(screen.getByText('Week 1 scoring has not started')).toBeInTheDocument();
+      expect(screen.queryByText(/Weeks 1-0/)).not.toBeInTheDocument();
+    });
   });
 
   describe('Team Selection', () => {

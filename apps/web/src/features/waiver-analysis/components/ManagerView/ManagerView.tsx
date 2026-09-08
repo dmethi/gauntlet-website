@@ -17,8 +17,7 @@ interface ManagerViewProps {
 export const ManagerView = memo<ManagerViewProps>(props => {
   const { data } = props;
 
-  // Combine managers from both leagues
-  const allManagers = [...data.afcTrends.managers, ...data.nfcTrends.managers];
+  const allManagers = data.leagueTrends.flatMap(league => league.managers);
 
   return (
     <div className="space-y-6">

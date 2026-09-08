@@ -61,7 +61,7 @@ describe('useTransactionAnalysisModel', () => {
     const { result } = renderHook(() => useTransactionAnalysisModel(5));
 
     expect(result.current.loading).toBe(true);
-    expect(result.current.loadingStep).toBe('Loading team information from both leagues...');
+    expect(result.current.loadingStep).toBe('Loading team information from all leagues...');
     expect(result.current.allData).toEqual([]);
     expect(result.current.teamsLoaded).toBe(false);
     expect(result.current.transactionsProcessed).toBe(false);
@@ -116,6 +116,28 @@ describe('useTransactionAnalysisModel', () => {
       ownerName: 'Owner One',
       leagueId: 'league1',
       leagueName: 'AFC',
+    });
+  });
+
+  it('scopes team and transaction requests to the selected 2026 season', async () => {
+    (global.fetch as any).mockImplementation((url: string) => {
+      if (url.includes('/api/league/teams')) {
+        return Promise.resolve({ ok: true, json: async () => ({ teams: [] }) });
+      }
+      if (url.includes('/transactions')) {
+        return Promise.resolve({ ok: true, json: async () => ({ data: [] }) });
+      }
+      return Promise.reject(new Error('Unknown URL'));
+    });
+
+    const { result } = renderHook(() => useTransactionAnalysisModel(1, '2026'));
+
+    await waitFor(() => expect(result.current.transactionsProcessed).toBe(true));
+
+    const requestedUrls = (global.fetch as any).mock.calls.map(([url]: [string]) => url);
+    expect(requestedUrls).toContain('/api/league/teams?season=2026');
+    getLeaguesForSeason('2026').forEach(league => {
+      expect(requestedUrls).toContain(`/api/league/${league.id}/transactions`);
     });
   });
 
@@ -201,7 +223,7 @@ describe('useTransactionAnalysisModel', () => {
       return Promise.reject(new Error('Unknown URL'));
     });
 
-    const { result } = renderHook(() => useTransactionAnalysisModel(5));
+    const { result } = renderHook(() => useTransactionAnalysisModel(5, '2025'));
 
     await waitFor(() => {
       expect(result.current.transactionsProcessed).toBe(true);
@@ -292,7 +314,7 @@ describe('useTransactionAnalysisModel', () => {
 
     const { result } = renderHook(() => useTransactionAnalysisModel(5));
 
-    expect(result.current.loadingStep).toBe('Loading team information from both leagues...');
+    expect(result.current.loadingStep).toBe('Loading team information from all leagues...');
 
     resolveTeams();
 

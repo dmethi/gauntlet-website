@@ -8,12 +8,13 @@ import { PlayerContributions } from './PlayerContributions';
 interface PositionalBreakdownProps {
   breakdown: Map<TrackedPosition, PositionalBreakdownResult>;
   contributions: Map<TrackedPosition, PlayerContributionGroup[]>;
+  teamCount: number;
 }
 
 const positionOrder: TrackedPosition[] = ['QB', 'RB', 'WR', 'TE', 'DEF'];
 
 export const PositionalBreakdown = memo(
-  ({ breakdown, contributions }: PositionalBreakdownProps) => {
+  ({ breakdown, contributions, teamCount }: PositionalBreakdownProps) => {
     const [expandedPositions, setExpandedPositions] = useState<Set<TrackedPosition>>(new Set());
 
     const rows = useMemo(() => {
@@ -83,7 +84,7 @@ export const PositionalBreakdown = memo(
                   <div>
                     <div className="text-base font-semibold">{position}</div>
                     <div className="text-xs text-white/80">
-                      Season total {summary.seasonTotal.toFixed(1)} · Rank 24{' '}
+                      Season total {summary.seasonTotal.toFixed(1)} · Rank {teamCount}{' '}
                       {summary.rank24 || '—'} · League {summary.rankLeague || '—'}
                     </div>
                   </div>
@@ -119,12 +120,12 @@ export const PositionalBreakdown = memo(
                   <div className="rounded-md border p-3">
                     <div className="text-xs uppercase text-muted-foreground">Ranks</div>
                     <div className="mb-2 flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">24-team</span>
+                      <span className="text-xs text-muted-foreground">{teamCount}-team</span>
                       <span
                         className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
-                          backgroundColor: getRankColor(summary.rank24, 24),
-                          color: getTextColor(getRankColor(summary.rank24, 24)),
+                          backgroundColor: getRankColor(summary.rank24, teamCount),
+                          color: getTextColor(getRankColor(summary.rank24, teamCount)),
                         }}
                       >
                         {summary.rank24 || '—'}
@@ -150,12 +151,12 @@ export const PositionalBreakdown = memo(
                       <span className="font-mono">{summary.opponentTotal.toFixed(1)}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span>Rank 24</span>
+                      <span>Rank {teamCount}</span>
                       <span
                         className="rounded-full px-2 py-1 text-xs font-medium"
                         style={{
-                          backgroundColor: getRankColor(summary.opponentRank24, 24),
-                          color: getTextColor(getRankColor(summary.opponentRank24, 24)),
+                          backgroundColor: getRankColor(summary.opponentRank24, teamCount),
+                          color: getTextColor(getRankColor(summary.opponentRank24, teamCount)),
                         }}
                       >
                         {summary.opponentRank24 || '—'}
@@ -184,10 +185,10 @@ export const PositionalBreakdown = memo(
                           <tr>
                             <th className="px-3 py-2 text-left">Week</th>
                             <th className="px-3 py-2 text-right">Team</th>
-                            <th className="px-3 py-2 text-center">Rank (24)</th>
+                            <th className="px-3 py-2 text-center">Rank ({teamCount})</th>
                             <th className="px-3 py-2 text-center">Rank (League)</th>
                             <th className="px-3 py-2 text-right">Opponent</th>
-                            <th className="px-3 py-2 text-center">Opp Rank (24)</th>
+                            <th className="px-3 py-2 text-center">Opp Rank ({teamCount})</th>
                             <th className="px-3 py-2 text-center">Opp Rank (League)</th>
                             <th className="px-3 py-2 text-right">vs Avg</th>
                             <th className="px-3 py-2 text-right">vs Median</th>
@@ -207,8 +208,8 @@ export const PositionalBreakdown = memo(
                                 <span
                                   className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
-                                    backgroundColor: getRankColor(row.rank24, 24),
-                                    color: getTextColor(getRankColor(row.rank24, 24)),
+                                    backgroundColor: getRankColor(row.rank24, teamCount),
+                                    color: getTextColor(getRankColor(row.rank24, teamCount)),
                                   }}
                                 >
                                   {row.rank24 || '—'}
@@ -232,8 +233,10 @@ export const PositionalBreakdown = memo(
                                 <span
                                   className="rounded-full px-2 py-1 text-xs font-medium"
                                   style={{
-                                    backgroundColor: getRankColor(row.opponentRank24, 24),
-                                    color: getTextColor(getRankColor(row.opponentRank24, 24)),
+                                    backgroundColor: getRankColor(row.opponentRank24, teamCount),
+                                    color: getTextColor(
+                                      getRankColor(row.opponentRank24, teamCount),
+                                    ),
                                   }}
                                 >
                                   {row.opponentRank24 || '—'}

@@ -43,7 +43,9 @@ export const MatchupSimulation = ({
       if (showLoading) setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`);
+      const response = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`, {
+        cache: 'no-store',
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch simulation: ${response.status}`);

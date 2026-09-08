@@ -7,13 +7,9 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 import type { LeagueWideOddsType, MatchupOdds, TeamOdds } from '@/features/matchups/types';
+import { getCurrentLeagues } from '@/config/leagues';
 
 export const dynamic = 'force-dynamic';
-
-const leagueNames: Record<string, string> = {
-  '1263744209295245312': 'Gauntlet AFC',
-  '1263740549504962561': 'Gauntlet NFC',
-};
 
 const probToAmerican = (prob: number): string => {
   if (prob <= 0) return '+∞';
@@ -55,9 +51,8 @@ export const GET = async (_req: NextRequest, props: { params: Promise<{ week: st
   }
 
   try {
-    const leagueIds = ['1263744209295245312', '1263740549504962561'];
-    const nflState = await sleeperClient.fetchNFLState();
-    const season = nflState?.season || '2025';
+    const leagueConfigs = getCurrentLeagues();
+    const season = String(leagueConfigs[0]?.season ?? new Date().getFullYear());
 
     // Load projections, players, and league info for each league
     const [rawProjections, players] = await Promise.all([
@@ -88,7 +83,8 @@ export const GET = async (_req: NextRequest, props: { params: Promise<{ week: st
       p90: number;
     }> = [];
 
-    for (const leagueId of leagueIds) {
+    for (const leagueConfig of leagueConfigs) {
+      const leagueId = leagueConfig.id;
       const [rosters, users, matchups, league] = await Promise.all([
         getRostersByLeague(leagueId),
         getUsersByLeague(leagueId),
@@ -178,7 +174,7 @@ export const GET = async (_req: NextRequest, props: { params: Promise<{ week: st
         allTeams.push({
           team: { rosterId: a.rosterId, matchupId: a.matchupId, roster: { owner: ownerA } },
           leagueId,
-          leagueName: leagueNames[leagueId],
+          leagueName: leagueConfig.name,
           mean: sim.team1Scores.mean,
           p10: sim.team1Scores.p10,
           p50: sim.team1Scores.median,
@@ -187,7 +183,7 @@ export const GET = async (_req: NextRequest, props: { params: Promise<{ week: st
         allTeams.push({
           team: { rosterId: b.rosterId, matchupId: b.matchupId, roster: { owner: ownerB } },
           leagueId,
-          leagueName: leagueNames[leagueId],
+          leagueName: leagueConfig.name,
           mean: sim.team2Scores.mean,
           p10: sim.team2Scores.p10,
           p50: sim.team2Scores.median,
@@ -265,6 +261,7 @@ export const GET = async (_req: NextRequest, props: { params: Promise<{ week: st
     const highestScorer: TeamOdds[] = allTeams
       .map((t, i) => ({
         teamId: `${t.leagueId}-${t.team.rosterId}`, // Make teamId unique across leagues
+        matchupId: t.team.matchupId,
         teamName:
           t.team.roster?.owner?.metadata?.team_name ||
           t.team.roster?.owner?.displayName ||
@@ -283,6 +280,7 @@ export const GET = async (_req: NextRequest, props: { params: Promise<{ week: st
     const lowestScorer: TeamOdds[] = allTeams
       .map((t, i) => ({
         teamId: `${t.leagueId}-${t.team.rosterId}`, // Make teamId unique across leagues
+        matchupId: t.team.matchupId,
         teamName:
           t.team.roster?.owner?.metadata?.team_name ||
           t.team.roster?.owner?.displayName ||

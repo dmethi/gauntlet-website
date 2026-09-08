@@ -84,9 +84,8 @@ const fetchAllLeagueTransactions = async (
 /**
  * Fetch team information for both leagues
  */
-const fetchTeamInfo = async (): Promise<Map<string, TeamInfo>> => {
-  // Matches the hardcoded 2025 leagues this hook fetches transactions from below.
-  const response = await fetch('/api/league/teams?season=2025');
+const fetchTeamInfo = async (season: string): Promise<Map<string, TeamInfo>> => {
+  const response = await fetch(`/api/league/teams?season=${season}`);
 
   if (!response.ok) {
     throw new Error('Failed to fetch team information');
@@ -131,7 +130,11 @@ const createPlayerLoader = (): PlayerDataLoader => {
     const player = playerData.getPlayerById(playerId);
 
     if (!player) {
-      return null;
+      return {
+        playerId,
+        playerName: `Player ${playerId}`,
+        position: 'UNKNOWN',
+      };
     }
 
     return {
@@ -145,7 +148,7 @@ const createPlayerLoader = (): PlayerDataLoader => {
 /**
  * Main waiver analytics hook
  *
- * Fetches and processes waiver data from both leagues with multi-league safe logic.
+ * Fetches and processes waiver data from every league in the selected season.
  * Includes competing bids analysis, cross-league comparisons, and player movement tracking.
  *
  * @param currentWeek - Current NFL week to analyze through
@@ -165,6 +168,7 @@ const createPlayerLoader = (): PlayerDataLoader => {
  */
 export const useWaiverAnalytics = (
   currentWeek: number,
+  season: string,
   options: UseWaiverAnalyticsOptions = {},
 ): UseWaiverAnalyticsResult => {
   const {
@@ -173,37 +177,33 @@ export const useWaiverAnalytics = (
     gcTime = 30 * 60 * 1000, // 30 minutes
   } = options;
 
-  // Only reachable via the 2025 archive stats page today — pin explicitly
-  // rather than reading whatever CURRENT_LEAGUES becomes.
-  const archiveLeagues = getLeaguesForSeason('2025');
-  const [afcLeague] = archiveLeagues.filter(l => l.conference === 'AFC');
-  const [nfcLeague] = archiveLeagues.filter(l => l.conference === 'NFC');
+  const leagues = getLeaguesForSeason(season);
 
   const queryResult = useQuery<WaiverAnalysisData, Error>({
-    queryKey: ['waiver-analytics', currentWeek],
+    queryKey: ['waiver-analytics', season, currentWeek],
     queryFn: async (): Promise<WaiverAnalysisData> => {
-      if (!afcLeague || !nfcLeague) {
+      if (leagues.length < 2) {
         throw new Error('League configuration not found');
       }
 
       // Fetch team info
-      const teamsMap = await fetchTeamInfo();
+      const teamsMap = await fetchTeamInfo(season);
 
       // CRITICAL: Fetch each league separately (multi-league safe)
-      const [afcTransactions, nfcTransactions] = await Promise.all([
-        fetchAllLeagueTransactions(afcLeague.id, currentWeek),
-        fetchAllLeagueTransactions(nfcLeague.id, currentWeek),
-      ]);
+      const leagueTransactions = await Promise.all(
+        leagues.map(async league => ({
+          leagueId: league.id,
+          leagueName: league.name,
+          weeklyTransactions: await fetchAllLeagueTransactions(league.id, currentWeek),
+        })),
+      );
 
       // Create player loader
       const playerLoader = createPlayerLoader();
 
       // Process data (handles multi-league logic internally)
       const analysisData = await processWaiverData(
-        afcLeague.id,
-        nfcLeague.id,
-        afcTransactions,
-        nfcTransactions,
+        leagueTransactions,
         teamsMap,
         playerLoader,
         currentWeek,

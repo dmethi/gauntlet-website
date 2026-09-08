@@ -27,86 +27,83 @@ import { findTopMovers, findTopMoversByLeague } from './player-movement';
  */
 export type PlayerDataLoader = (playerId: string) => PlayerInfo | null;
 
+export interface WaiverLeagueTransactions {
+  leagueId: string;
+  leagueName: string;
+  weeklyTransactions: Map<number, SleeperTransaction[]>;
+}
+
 /**
  * Process raw Sleeper transactions into complete waiver analysis
  *
  * Multi-league safe: Process each league separately, then combine
  */
 export const processWaiverData = async (
-  afcLeagueId: string,
-  nfcLeagueId: string,
-  afcTransactions: Map<number, SleeperTransaction[]>, // week -> transactions
-  nfcTransactions: Map<number, SleeperTransaction[]>,
+  leagues: WaiverLeagueTransactions[],
   teamsMap: Map<string, TeamInfo>, // `${leagueId}-${rosterId}` -> team info
   playerLoader: PlayerDataLoader,
   currentWeek: number,
 ): Promise<WaiverAnalysisData> => {
-  // CRITICAL: Process each league separately (roster IDs only unique within league)
-  const afcEnriched = processLeagueTransactions(
-    afcLeagueId,
-    'Gauntlet AFC',
-    afcTransactions,
-    teamsMap,
-    playerLoader,
+  if (leagues.length < 2) throw new Error('Waiver analysis requires at least two leagues');
+
+  // Roster IDs are only unique inside a league, so enrichment and competing
+  // bid analysis must stay isolated until every league has been processed.
+  const processedLeagues = leagues.map(league => {
+    const enriched = enrichWithCompetingBids(
+      processLeagueTransactions(
+        league.leagueId,
+        league.leagueName,
+        league.weeklyTransactions,
+        teamsMap,
+        playerLoader,
+      ),
+    );
+    const managers = buildManagerStatsForLeague(league.leagueId, enriched, teamsMap);
+    const trends = buildLeagueWaiverTrends(league.leagueId, league.leagueName, enriched, managers);
+    return { ...league, enriched, trends };
+  });
+
+  const [firstLeague, secondLeague] = processedLeagues;
+  const leagueTrends = processedLeagues.map(league => league.trends);
+
+  // Preserve the original two-league comparison views for the 2025 archive.
+  // Three-league seasons use the generic league summaries and complete table.
+  const playerComparisons = buildCrossLeaguePlayerComparisons(
+    firstLeague.enriched,
+    secondLeague.enriched,
   );
 
-  const nfcEnriched = processLeagueTransactions(
-    nfcLeagueId,
-    'Gauntlet NFC',
-    nfcTransactions,
-    teamsMap,
-    playerLoader,
+  const positionComparisons = buildPositionalSpendComparison(
+    firstLeague.enriched,
+    secondLeague.enriched,
   );
-
-  // Enrich both with competing bids analysis
-  const afcWithBids = enrichWithCompetingBids(afcEnriched);
-  const nfcWithBids = enrichWithCompetingBids(nfcEnriched);
-
-  // Build manager stats for each league
-  const afcManagerStats = buildManagerStatsForLeague(afcLeagueId, afcWithBids, teamsMap);
-
-  const nfcManagerStats = buildManagerStatsForLeague(nfcLeagueId, nfcWithBids, teamsMap);
-
-  // Build league trends
-  const afcTrends = buildLeagueWaiverTrends(
-    afcLeagueId,
-    'Gauntlet AFC',
-    afcWithBids,
-    afcManagerStats,
-  );
-
-  const nfcTrends = buildLeagueWaiverTrends(
-    nfcLeagueId,
-    'Gauntlet NFC',
-    nfcWithBids,
-    nfcManagerStats,
-  );
-
-  // Cross-league comparisons
-  const playerComparisons = buildCrossLeaguePlayerComparisons(afcWithBids, nfcWithBids);
-
-  const positionComparisons = buildPositionalSpendComparison(afcWithBids, nfcWithBids);
 
   const weeksAnalyzed = Array.from({ length: currentWeek }, (_, i) => i + 1);
-  const weeklyComparisons = buildWeeklySpendComparison(afcWithBids, nfcWithBids, weeksAnalyzed);
+  const weeklyComparisons = buildWeeklySpendComparison(
+    firstLeague.enriched,
+    secondLeague.enriched,
+    weeksAnalyzed,
+  );
 
   // Player movement analysis
-  const allTransactions = [...afcWithBids, ...nfcWithBids];
+  const allTransactions = processedLeagues.flatMap(league => league.enriched);
   const topMovers = findTopMovers(allTransactions, 50);
-  const afcTopMovers = findTopMoversByLeague(afcLeagueId, allTransactions, 20);
-  const nfcTopMovers = findTopMoversByLeague(nfcLeagueId, allTransactions, 20);
+  const topMoversByLeague = Object.fromEntries(
+    processedLeagues.map(league => [
+      league.leagueId,
+      findTopMoversByLeague(league.leagueId, allTransactions, 20),
+    ]),
+  );
 
   return {
-    afcTrends,
-    nfcTrends,
+    leagueTrends,
+    afcTrends: firstLeague.trends,
+    nfcTrends: secondLeague.trends,
     playerComparisons,
     positionComparisons,
     weeklyComparisons,
     topMovers,
-    topMoversByLeague: {
-      afc: afcTopMovers,
-      nfc: nfcTopMovers,
-    },
+    topMoversByLeague,
     allTransactions,
     currentWeek,
     weeksAnalyzed,

@@ -11,17 +11,14 @@ import {
   TeamSeasonStats,
 } from '@/shared/utils/calculations';
 import { CACHE_DURATIONS, CURRENT_SEASON } from '@/lib/constants';
-import { getLeaguesForSeason } from '@/config/leagues';
+import { getCurrentLeagues } from '@/config/leagues';
 import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
 import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type { SleeperMatchup, SleeperPlayer } from '@gauntlet/types';
 
 const sleeperClient = createBrowserStatsClient();
 
-// Callers (useLeagueOverviewClient.ts) always pass a concrete, already-2025-
-// pinned leagueId today, so this fallback is currently dead code — fixed for
-// consistency, mirroring useLeagueOverviewClient.ts's own DEFAULT_LEAGUE_ID.
-const DEFAULT_LEAGUE_ID = getLeaguesForSeason('2025').find(l => l.conference === 'AFC')?.id ?? '';
+const DEFAULT_LEAGUE_ID = getCurrentLeagues()[0]?.id ?? '';
 
 /**
  * Get all matchups for a season

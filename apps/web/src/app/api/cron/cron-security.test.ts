@@ -19,9 +19,9 @@ const runRecapGeneration = vi.fn(async () => ({
 vi.mock('./live-odds/snapshot-runner', () => ({ runLiveSnapshot }));
 vi.mock('./recap-report/runner', () => ({ runRecapGeneration }));
 
-const request = (path: string, token?: string): NextRequest =>
+const request = (path: string, token?: string, method = 'POST'): NextRequest =>
   new NextRequest(`https://gauntlet.test${path}`, {
-    method: 'POST',
+    method,
     headers: token ? { authorization: `Bearer ${token}` } : undefined,
   });
 
@@ -67,10 +67,16 @@ describe.each([
     expect(runner).not.toHaveBeenCalled();
   });
 
-  it('does not export a state-changing GET handler', async () => {
+  it('accepts the authenticated GET request sent by Vercel Cron', async () => {
     const route = await load();
-
-    expect('GET' in route).toBe(false);
+    if (path === '/api/cron/live-odds') {
+      expect('GET' in route).toBe(true);
+      const response = await route.GET(request(path, 'a-secure-cron-secret', 'GET'));
+      expect(response.status).toBe(200);
+      expect(runner).toHaveBeenCalledTimes(1);
+    } else {
+      expect('GET' in route).toBe(false);
+    }
   });
 
   it('rejects an immediate replay without re-running the command', async () => {

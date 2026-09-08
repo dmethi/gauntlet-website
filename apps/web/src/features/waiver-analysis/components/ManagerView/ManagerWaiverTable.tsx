@@ -306,7 +306,7 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                               manager.leagueName,
                             )}`}
                           >
-                            {manager.leagueName.includes('AFC') ? 'AFC' : 'NFC'}
+                            {manager.leagueName}
                           </span>
                         </TableCell>
 

@@ -20,6 +20,7 @@
     "build": "tsc",
     "postinstall": "prisma generate --schema=prisma/schema-historical.prisma",
     "prisma:migrate": "prisma migrate dev --schema=prisma/schema-historical.prisma",
+    "prisma:migrate:deploy": "prisma migrate deploy --schema=prisma/schema-historical.prisma",
     "prisma:generate": "prisma generate --schema=prisma/schema-historical.prisma",
     "live-snapshot": "tsx src/scripts/jobs/comprehensive-live-snapshot.ts",
     "update-variance": "tsx src/scripts/jobs/update-variance-models.ts",

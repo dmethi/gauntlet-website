@@ -5,6 +5,7 @@ import { LegionStandingsCard, PageHeaderHero } from '@gauntlet/ui';
 import { getCurrentLeagues } from '@/config/leagues';
 import { getLeagueById, getRostersByLeague } from '@/lib/api-replacements';
 import { ChevronRight } from 'lucide-react';
+import { COMPETITION_EXPLORE_LINKS } from './competition-links';
 
 export const metadata = {
   title: 'Competition — The Gauntlet',
@@ -80,39 +81,6 @@ const loadLeagueStandings = async (league: {
   }
 };
 
-const EXPLORE_LINKS = [
-  {
-    href: '/competition/playoff-scenarios',
-    label: 'Playoff Scenarios',
-    description: 'Seeding odds and the AFC vs. NFC championship battle',
-  },
-  {
-    href: '/competition/reports',
-    label: 'Weekly Reports',
-    description: 'Recaps and analysis for every week of the season',
-  },
-  {
-    href: '/league/transactions',
-    label: 'Transactions',
-    description: 'Every add, drop, and trade across both leagues',
-  },
-  {
-    href: '/league/draft',
-    label: 'Draft Recap',
-    description: 'Pick-by-pick results from draft day',
-  },
-  {
-    href: '/start-sit',
-    label: 'Start/Sit Optimizer',
-    description: 'Lineup recommendations based on projected points',
-  },
-  {
-    href: '/live',
-    label: 'Live Scores',
-    description: 'Follow matchups as they happen',
-  },
-];
-
 export default async function CompetitionPage() {
   const leagues = getCurrentLeagues();
   const standings = (await Promise.all(leagues.map(loadLeagueStandings))).filter(
@@ -170,7 +138,7 @@ export default async function CompetitionPage() {
         <div>
           <h2 className="mb-4 text-2xl font-bold">Explore</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {EXPLORE_LINKS.map(link => (
+            {COMPETITION_EXPLORE_LINKS.map(link => (
               <Link key={link.href} href={link.href}>
                 <Card className="h-full hover:shadow-lg transition-shadow">
                   <CardHeader>

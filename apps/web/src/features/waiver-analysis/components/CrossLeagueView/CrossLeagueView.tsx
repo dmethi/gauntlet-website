@@ -24,11 +24,12 @@ export const CrossLeagueView = memo<CrossLeagueViewProps>(props => {
       {/* Central comprehensive table - main view */}
       <CentralWaiverTable data={data} />
 
-      {/* Supporting aggregate views */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PositionalSpendComparisonView comparisons={data.positionComparisons} />
-        <WeeklySpendChart comparisons={data.weeklyComparisons} />
-      </div>
+      {data.leagueTrends.length === 2 && (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <PositionalSpendComparisonView comparisons={data.positionComparisons} />
+          <WeeklySpendChart comparisons={data.weeklyComparisons} />
+        </div>
+      )}
     </div>
   );
 });

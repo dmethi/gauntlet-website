@@ -76,7 +76,9 @@ describe('MatchupSimulation', () => {
         expect(screen.getByText('Team Beta')).toBeInTheDocument();
       });
 
-      expect(global.fetch).toHaveBeenCalledWith('/api/matchups/league-1/1/1/simulate');
+      expect(global.fetch).toHaveBeenCalledWith('/api/matchups/league-1/1/1/simulate', {
+        cache: 'no-store',
+      });
     });
 
     it('displays win probabilities', async () => {

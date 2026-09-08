@@ -34,7 +34,7 @@ interface TimeSeriesResponse {
  * Hook to fetch live win probability and score time-series data for a matchup
  *
  * Fetches data from the LiveWinProbSample database table via API endpoint.
- * Data is collected by cron jobs every 10 minutes during games.
+ * Data is collected by cron jobs every two minutes during NFL game windows.
  *
  * @param leagueId - Sleeper league ID
  * @param week - NFL week number
@@ -67,8 +67,8 @@ export const useMatchupTimeSeries = (leagueId: string, week: number, matchupId: 
 
       return res.json();
     },
-    // Refetch every 5 minutes during games
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+    refetchInterval: 2 * 60 * 1000,
     // Keep data for 30 minutes when not in use
     gcTime: 30 * 60 * 1000,
     // Fail fast so UI can surface errors immediately

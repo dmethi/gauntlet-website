@@ -40,7 +40,9 @@ export const useMatchupOdds = (options: UseMatchupOddsOptions): UseMatchupOddsRe
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`);
+        const response = await fetch(`/api/matchups/${leagueId}/${week}/${matchupId}/simulate`, {
+          cache: 'no-store',
+        });
 
         if (!response.ok) {
           if (response.status === 404) {

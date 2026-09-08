@@ -1,7 +1,7 @@
 /**
  * Waiver Analysis Feature
  *
- * Comprehensive waiver wire and FAAB analysis across both leagues.
+ * Comprehensive waiver wire and FAAB analysis across registered leagues.
  * Includes competing bids analysis, cross-league comparisons, and player movement tracking.
  *
  * @module features/waiver-analysis

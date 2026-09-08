@@ -4,12 +4,20 @@
   "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
+  "crons": [
+    { "path": "/api/cron/live-odds", "schedule": "*/2 0-4,14-23 * 9-12,1-2 0" },
+    { "path": "/api/cron/live-odds", "schedule": "*/2 0-4 * 9-12,1-2 1" },
+    { "path": "/api/cron/live-odds", "schedule": "*/2 0-4 * 9-12,1-2 2" },
+    { "path": "/api/cron/live-odds", "schedule": "*/2 17-23 * 9-12,1-2 4" },
+    { "path": "/api/cron/live-odds", "schedule": "*/2 0-4,17-23 * 9-12,1-2 5" },
+    { "path": "/api/cron/live-odds", "schedule": "*/2 0-4,17-23 * 9-12,1-2 6" }
+  ],
   "functions": {
     "src/app/api/**/route.{js,ts}": {
       "maxDuration": 30
     },
     "src/app/api/cron/live-odds/route.{js,ts}": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "src/app/api/cron/recap-report/route.{js,ts}": {
       "maxDuration": 300

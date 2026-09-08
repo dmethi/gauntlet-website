@@ -143,21 +143,23 @@ AI_SUMMARIZE_SECRET=your-local-capability-secret
 
 The application uses three different cron mechanisms:
 
-### 1. Authenticated POST Scheduler (Live Odds)
+### 1. Vercel Cron (Live Odds)
 
 **Purpose**: Captures live win probability snapshots during NFL games
 
-**Endpoint**: `POST /api/cron/live-odds`
+**Endpoint**: `GET /api/cron/live-odds`
 
 **Configuration**:
 
-- Configure an external scheduler that supports POST and custom headers
-- Set `Authorization: Bearer YOUR_CRON_SECRET`
-- Max duration: 60 seconds
-- Runs during NFL game windows
-
-Native Vercel Cron sends GET requests and is intentionally incompatible with
-these POST-only command routes.
+- The static two-minute NFL-window schedules live in `apps/web/vercel.json`.
+- Vercel sends `Authorization: Bearer YOUR_CRON_SECRET` automatically when
+  `CRON_SECRET` is configured for the project.
+- The route has a five-minute maximum duration and processes all current-season
+  leagues from `config/leagues.ts`.
+- Every tick stores per-matchup score/win-probability samples and one complete
+  league-wide race snapshot (highest/lowest score, closest game, biggest
+  blowout, and highest/lowest matchup total).
+- Authenticated POST remains supported for manual runs.
 
 **Testing locally**:
 
@@ -303,9 +305,9 @@ Monitor at GitHub → Actions tab:
 - Built-in email notifications for failures
 - Execution history and logs
 
-**External live-odds scheduler**:
+**Vercel live-odds cron**:
 
-- Use the scheduler's execution history and failure alerts
+- Use the Vercel cron execution history and function logs
 - Function failures remain visible in Vercel logs
 
 ## Common Commands

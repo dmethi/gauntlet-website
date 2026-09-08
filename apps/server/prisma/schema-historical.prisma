@@ -15,7 +15,7 @@ datasource db {
 
 /// Live win probability samples captured during NFL games
 /// Purpose: Time-series charts showing how win probability changed during games
-/// Written by: .github/workflows/live-odds-updates.yml (every 10 min during games)
+/// Written by: Vercel Cron (every 2 min during NFL game windows)
 /// Used by: Weekly recap reports, matchup excitement metrics
 model LiveWinProbSample {
   id              String   @id @default(cuid())
@@ -41,7 +41,7 @@ model LiveWinProbSample {
 
 /// Historical odds for individual matchups
 /// Purpose: Track how matchup odds changed over time
-/// Written by: .github/workflows/live-odds-updates.yml (during games)
+/// Written by: Vercel Cron (during NFL game windows)
 /// Used by: Matchup history charts, odds movement analysis
 model MatchupOddsHistory {
   id             String   @id @default(cuid())
@@ -69,10 +69,11 @@ model MatchupOddsHistory {
 
 /// League-wide odds snapshots
 /// Purpose: Track league-wide predictions (highest scorer, closest matchup, etc.)
-/// Written by: .github/workflows/live-odds-updates.yml
+/// Written by: Vercel Cron
 /// Used by: Weekly recap reports, league-wide trends
 model LeagueOddsHistory {
   id                    String   @id @default(cuid())
+  season                Int      @default(2025)
   week                  Int
   highestScorerOdds     Json
   lowestScorerOdds      Json
@@ -85,8 +86,7 @@ model LeagueOddsHistory {
   computeTimeMs         Int?
   createdAt             DateTime @default(now())
 
-  @@index([week])
+  @@index([season, week])
   @@index([createdAt])
   @@index([isLive])
 }
-

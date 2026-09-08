@@ -31,6 +31,7 @@ import {
  */
 export interface TransactionAnalysisProps {
   readonly currentWeek: number;
+  readonly season: string;
 }
 
 /**
@@ -42,8 +43,8 @@ export interface TransactionAnalysisProps {
  * <TransactionAnalysis currentWeek={dataset.currentWeek} />
  */
 export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
-  const { currentWeek } = props;
-  const model = useTransactionAnalysisModel(currentWeek);
+  const { currentWeek, season } = props;
+  const model = useTransactionAnalysisModel(currentWeek, season);
   const [selectedTxn, setSelectedTxn] = useState<GradeTxn | null>(null);
 
   // Filter and sort states

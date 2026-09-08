@@ -5,9 +5,10 @@ import { getRankColor, getTextColor } from '@/shared/utils/colors';
 
 interface WeeklyPerformanceChartProps {
   rows: WeeklyPerformanceRow[];
+  teamCount: number;
 }
 
-export const WeeklyPerformanceChart = memo(({ rows }: WeeklyPerformanceChartProps) => {
+export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerformanceChartProps) => {
   const maxScore = useMemo(() => {
     if (rows.length === 0) return 0;
     return Math.max(...rows.map(row => Math.max(row.teamScore, row.opponentScore)));
@@ -65,11 +66,11 @@ export const WeeklyPerformanceChart = memo(({ rows }: WeeklyPerformanceChartProp
                   <span
                     className="rounded-full px-2 py-1 font-medium"
                     style={{
-                      backgroundColor: getRankColor(row.rank24, 24),
-                      color: getTextColor(getRankColor(row.rank24, 24)),
+                      backgroundColor: getRankColor(row.rank24, teamCount),
+                      color: getTextColor(getRankColor(row.rank24, teamCount)),
                     }}
                   >
-                    Rank 24: {row.rank24 || '—'}
+                    Rank {teamCount}: {row.rank24 || '—'}
                   </span>
                   <span
                     className="rounded-full px-2 py-1 font-medium"
@@ -148,12 +149,12 @@ export const WeeklyPerformanceChart = memo(({ rows }: WeeklyPerformanceChartProp
                   </div>
                 </div>
                 <div className="rounded-md border p-2">
-                  <div className="text-muted-foreground">Opp Rank (24)</div>
+                  <div className="text-muted-foreground">Opp Rank ({teamCount})</div>
                   <div
                     className="rounded-full px-2 py-1 text-center font-medium"
                     style={{
-                      backgroundColor: getRankColor(row.opponentRank24, 24),
-                      color: getTextColor(getRankColor(row.opponentRank24, 24)),
+                      backgroundColor: getRankColor(row.opponentRank24, teamCount),
+                      color: getTextColor(getRankColor(row.opponentRank24, teamCount)),
                     }}
                   >
                     {row.opponentRank24 || '—'}

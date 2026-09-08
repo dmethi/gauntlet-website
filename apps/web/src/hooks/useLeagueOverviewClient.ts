@@ -5,18 +5,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { CACHE_DURATIONS } from '@/lib/constants';
-import { getLeaguesForSeason } from '@/config/leagues';
+import { getCurrentLeagues } from '@/config/leagues';
 import { useClientTeamStats, useClientWeeklyAverages } from './useClientCalculations';
 import { createBrowserStatsClient } from '@/lib/sleeper/browser-client';
 import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 const sleeperClient = createBrowserStatsClient();
 
-// 2026 leagues are registered (config/leagues.ts) but the app-wide switch to
-// them is deferred (see ROADMAP.md Phase 2/4) until the N-league consumers
-// that still hardcode AFC/NFC are redesigned. Pinned to 2025 to match
-// CURRENT_LEAGUES until that rollout happens.
-const DEFAULT_LEAGUE_ID = getLeaguesForSeason('2025').find(l => l.conference === 'AFC')?.id ?? '';
+const DEFAULT_LEAGUE_ID = getCurrentLeagues()[0]?.id ?? '';
 
 interface LeagueOverviewData {
   league: {
@@ -187,8 +183,8 @@ export const useLeagueOverviewClient = (leagueId?: string): LeagueOverviewData =
         id: team.rosterId,
         name: team.teamName,
         owner: roster?.owner.displayName || roster?.owner.username || 'Unknown',
-        wins: team.wins,
-        losses: team.losses,
+        wins: Number((roster?.settings as any)?.wins ?? team.wins),
+        losses: Number((roster?.settings as any)?.losses ?? team.losses),
         totalPoints: team.totalPoints,
         expectedWins: team.totalExpectedWins,
         luckRating: team.totalLuck,
