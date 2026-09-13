@@ -23,15 +23,18 @@ import type { PlayerMovement } from '../../types';
 
 interface TopMoversTableProps {
   readonly topMovers: PlayerMovement[];
-  readonly afcTopMovers: PlayerMovement[];
-  readonly nfcTopMovers: PlayerMovement[];
+  readonly leagueMovers: Array<{
+    leagueId: string;
+    leagueName: string;
+    players: PlayerMovement[];
+  }>;
 }
 
 type SortField = 'playerName' | 'totalTransactions' | 'addCount' | 'avgFAABCost';
 
 export const TopMoversTable = memo<TopMoversTableProps>(props => {
-  const { topMovers, afcTopMovers, nfcTopMovers } = props;
-  const [view, setView] = useState<'all' | 'afc' | 'nfc'>('all');
+  const { topMovers, leagueMovers } = props;
+  const [view, setView] = useState('all');
   const [sortField, setSortField] = useState<SortField>('totalTransactions');
   const [sortAsc, setSortAsc] = useState(false);
 
@@ -66,13 +69,13 @@ export const TopMoversTable = memo<TopMoversTableProps>(props => {
   };
 
   const sortedTopMovers = useMemo(() => sortPlayers(topMovers), [topMovers, sortField, sortAsc]);
-  const sortedAfcMovers = useMemo(
-    () => sortPlayers(afcTopMovers),
-    [afcTopMovers, sortField, sortAsc],
-  );
-  const sortedNfcMovers = useMemo(
-    () => sortPlayers(nfcTopMovers),
-    [nfcTopMovers, sortField, sortAsc],
+  const sortedLeagueMovers = useMemo(
+    () =>
+      leagueMovers.map(league => ({
+        ...league,
+        players: sortPlayers(league.players),
+      })),
+    [leagueMovers, sortField, sortAsc],
   );
 
   const handleSort = (field: SortField) => {
@@ -197,23 +200,24 @@ export const TopMoversTable = memo<TopMoversTableProps>(props => {
 
       <CardContent>
         <Tabs value={view} onValueChange={v => setView(v as any)} className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-3">
+          <TabsList className="flex h-auto w-full max-w-4xl flex-wrap justify-start">
             <TabsTrigger value="all">All Leagues</TabsTrigger>
-            <TabsTrigger value="afc">AFC Only</TabsTrigger>
-            <TabsTrigger value="nfc">NFC Only</TabsTrigger>
+            {leagueMovers.map(league => (
+              <TabsTrigger key={league.leagueId} value={league.leagueId}>
+                {league.leagueName}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="all" className="mt-4">
             {renderTable(sortedTopMovers)}
           </TabsContent>
 
-          <TabsContent value="afc" className="mt-4">
-            {renderTable(sortedAfcMovers)}
-          </TabsContent>
-
-          <TabsContent value="nfc" className="mt-4">
-            {renderTable(sortedNfcMovers)}
-          </TabsContent>
+          {sortedLeagueMovers.map(league => (
+            <TabsContent key={league.leagueId} value={league.leagueId} className="mt-4">
+              {renderTable(league.players)}
+            </TabsContent>
+          ))}
         </Tabs>
       </CardContent>
     </Card>

@@ -10,6 +10,8 @@ export { SwingPointsDisplay } from './components';
 
 // Export hooks
 export { useMatchupTimeSeries, useMatchupOdds } from './hooks';
+export { buildGauntletMatchupPath, buildSleeperMatchupUrl } from './matchup-links';
+export { resolveMatchupTeamIdentity } from './team-identity';
 
 // Export types
 export type {

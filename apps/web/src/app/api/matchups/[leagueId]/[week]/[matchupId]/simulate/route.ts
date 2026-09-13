@@ -1,385 +1,146 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
-import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { type NextRequest, NextResponse } from 'next/server';
+import { resolveMatchupTeamIdentity } from '@/features/matchups/team-identity';
 import {
-  calculateLeagueProjections,
-  type ScoringSettings,
-} from '@/lib/calculate-league-projections';
-import { normalizeNflTeamAbbreviation } from './nfl-team';
+  getDriveFFLiveOdds,
+  getTeamScoreDistribution,
+  toAmericanMoneyline,
+} from '@/lib/driveff-live-odds';
+import { sleeperClient } from '@/lib/sleeper/unified-client';
 
 export const dynamic = 'force-dynamic';
-
-interface NFLGameState {
-  team: string;
-  state: 'pre' | 'in' | 'post';
-  gameProgress: number; // 0-1 based on actual minutes elapsed
-  minutesElapsed: number;
-  minutesRemaining: number;
-  gameDescription: string;
-}
-
-const fetchEspnScoreboard = async () => {
-  try {
-    const url = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(10000),
-      cache: 'no-store',
-    });
-    if (!response.ok) {
-      throw new Error(`ESPN API returned ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.warn('Failed to fetch ESPN scoreboard:', error);
-    return null;
-  }
-};
-
-const parseClockSeconds = (clock: unknown): number => {
-  // ESPN generally provides numeric seconds, but be robust to strings like "MM:SS"
-  if (typeof clock === 'number') return Math.max(0, clock);
-  if (typeof clock === 'string') {
-    const trimmed = clock.trim();
-    if (/^\d{1,2}:\d{2}$/.test(trimmed)) {
-      const [mm, ss] = trimmed.split(':').map(Number);
-      if (Number.isFinite(mm) && Number.isFinite(ss)) return Math.max(0, mm * 60 + ss);
-    }
-    const asNum = Number(trimmed);
-    if (Number.isFinite(asNum)) return Math.max(0, asNum);
-  }
-  return 0;
-};
-
-/**
- * Build NFL game state map from ESPN scoreboard
- * This gives us the actual minute-by-minute progress of each NFL game
- */
-const buildNflGameStateMap = (espnData: any): Map<string, NFLGameState> => {
-  const gameStates = new Map<string, NFLGameState>();
-
-  if (!espnData?.events) return gameStates;
-
-  for (const event of espnData.events) {
-    const competition = event?.competitions?.[0];
-    // ESPN nests state under status.type, while period/clock live under status
-    const statusRoot = competition?.status || {};
-    const statusType = statusRoot?.type || {};
-
-    if (!competition?.competitors || !statusType) continue;
-
-    // Calculate actual game progress based on minutes
-    let gameProgress = 0;
-    let minutesElapsed = 0;
-    let minutesRemaining = 60; // NFL game is 60 minutes
-    let gameDescription = statusType.description || statusRoot?.type?.description || 'Unknown';
-
-    const state: 'pre' | 'in' | 'post' = (statusType.state as any) || 'pre';
-
-    if (state === 'pre') {
-      gameProgress = 0;
-      minutesElapsed = 0;
-      minutesRemaining = 60;
-    } else if (state === 'post') {
-      gameProgress = 1;
-      minutesElapsed = 60;
-      minutesRemaining = 0; // Game is over, no time remaining
-    } else if (state === 'in') {
-      const period = (statusRoot?.period as number) || (statusType?.period as number) || 1;
-      const clock = parseClockSeconds(
-        statusRoot?.clock ?? statusType?.clock ?? statusRoot?.displayClock,
-      );
-
-      // NFL: 4 quarters, 15 minutes (900 seconds) each
-      const totalGameSeconds = 4 * 15 * 60; // 3600 seconds
-      const elapsedSeconds = (period - 1) * 15 * 60 + (15 * 60 - clock);
-
-      gameProgress = Math.min(Math.max(elapsedSeconds / totalGameSeconds, 0), 1);
-      minutesElapsed = elapsedSeconds / 60;
-      minutesRemaining = Math.max(0, 60 - minutesElapsed);
-
-      // Enhanced description for live games
-      const clockMinutes = Math.floor(clock / 60);
-      const clockSeconds = Math.floor(clock % 60);
-      gameDescription = `Q${period} ${clockMinutes}:${clockSeconds.toString().padStart(2, '0')}`;
-    }
-
-    // Apply to both teams in this game
-    for (const competitor of competition.competitors) {
-      const abbr = normalizeNflTeamAbbreviation(competitor.team?.abbreviation);
-      if (abbr) {
-        gameStates.set(abbr, {
-          team: abbr,
-          state,
-          gameProgress,
-          minutesElapsed,
-          minutesRemaining,
-          gameDescription,
-        });
-      }
-    }
-  }
-
-  return gameStates;
-};
-
-const buildLiveNflTeamsSet = (gameStates: Map<string, NFLGameState>): Set<string> => {
-  const set = new Set<string>();
-  for (const [team, state] of gameStates.entries()) {
-    if (state.state === 'in') set.add(team);
-  }
-  return set;
-};
-
-const toLineupPlayersWithMinutes = (
-  ids: string[],
-  leagueProjections: Record<string, any>,
-  playersMap: Record<string, any>,
-  starterPoints: Record<string, number> | undefined,
-  nflGameStates: Map<string, NFLGameState>,
-) => {
-  return (ids || []).map((id, index) => {
-    const p = playersMap?.[id] || {};
-    const currentScore = starterPoints?.[index.toString()] || 0;
-    const fullProjection = leagueProjections[id]?.points || 0;
-
-    // Get NFL game state for this player
-    const nflTeam = normalizeNflTeamAbbreviation(p.team);
-    const gameState = nflTeam ? nflGameStates.get(nflTeam) : null;
-
-    // Calculate remaining projection based on actual game time
-    let remainingProjection = fullProjection;
-
-    if (gameState) {
-      if (gameState.state === 'post') {
-        // Game is over - NO projection remaining
-        remainingProjection = 0;
-      } else if (gameState.state === 'in') {
-        // Game in progress - projection proportional to minutes remaining
-        const projectionPerMinute = fullProjection / 60;
-        remainingProjection = projectionPerMinute * gameState.minutesRemaining;
-      } else {
-        // Pre-game - full projection remains
-        remainingProjection = fullProjection;
-      }
-    }
-
-    // Ensure position is valid for sim-engine validation
-    // Valid positions: QB, RB, WR, TE, K, DEF, DST
-    let position = p.position;
-    if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
-      // Default to RB for flex positions or unknown players (most common flex position)
-      position = 'RB';
-    }
-
-    return {
-      id,
-      name: p.full_name || id,
-      position,
-      projection: remainingProjection, // This is the key change - adjusted based on actual time
-      currentScore: Number(currentScore) || 0, // Ensure valid number, default to 0
-      nflTeam: nflTeam,
-
-      // Additional data for UI transparency
-      fullProjection,
-      gameState: gameState
-        ? {
-            state: gameState.state,
-            minutesElapsed: gameState.minutesElapsed,
-            minutesRemaining: gameState.minutesRemaining,
-            gameProgress: gameState.gameProgress,
-            gameDescription: gameState.gameDescription,
-          }
-        : null,
-    };
-  });
-};
+export const runtime = 'nodejs';
 
 export const GET = async (
   _req: NextRequest,
   props: { params: Promise<{ leagueId: string; week: string; matchupId: string }> },
 ) => {
   const params = await props.params;
-  try {
-    const leagueId = params.leagueId;
-    const week = parseInt(params.week, 10);
-    const matchupId = parseInt(params.matchupId, 10);
-    if (!leagueId || !Number.isFinite(week) || !Number.isFinite(matchupId)) {
-      return NextResponse.json({ success: false, error: 'Invalid params' }, { status: 400 });
-    }
+  const leagueId = params.leagueId;
+  const week = Number.parseInt(params.week, 10);
+  const matchupId = Number.parseInt(params.matchupId, 10);
 
-    // Fetch data from Sleeper + ESPN
-    const [matchups, rawProjections, players, league, espnScoreboard] = await Promise.all([
+  if (!leagueId || !Number.isFinite(week) || !Number.isFinite(matchupId)) {
+    return NextResponse.json({ success: false, error: 'Invalid params' }, { status: 400 });
+  }
+
+  try {
+    const [feed, matchups, players, rosters, users] = await Promise.all([
+      getDriveFFLiveOdds(leagueId, week, matchupId),
       sleeperClient.fetchMatchups(leagueId, week),
-      sleeperClient.fetchWeeklyProjections(week, '2025'),
       sleeperClient.fetchAllPlayers(),
-      sleeperClient.fetchLeague(leagueId),
-      fetchEspnScoreboard(),
+      sleeperClient.fetchRosters(leagueId),
+      sleeperClient.fetchUsers(leagueId),
     ]);
 
-    // Build NFL game state map for minutes-based projections
-    const nflGameStates = buildNflGameStateMap(espnScoreboard);
-    let liveNflTeams = buildLiveNflTeamsSet(nflGameStates);
-    // Fallback: if ESPN failed or no live games detected, approximate live teams by
-    // detecting players who have non-zero currentScore in the first 30 minutes of the window.
-    if (liveNflTeams.size === 0) {
-      const approxLive = new Set<string>();
-      const collectApproxLive = (ids: string[], playersMap: Record<string, any>) => {
-        for (const id of ids) {
-          const team = normalizeNflTeamAbbreviation(playersMap?.[id]?.team);
-          if (team) approxLive.add(team);
-        }
-      };
-      // We only have starters with scores per team; we will collect once we know them below
-      // liveNflTeams will be replaced after team1/team2 players are built
+    if (!feed.latest) {
+      return NextResponse.json(
+        { success: false, error: 'driveFF has not collected this matchup yet' },
+        { status: 404 },
+      );
     }
 
-    // Convert projections to array while preserving player_id
-    const rawProjectionsArray: any[] = Array.isArray(rawProjections)
-      ? rawProjections
-      : rawProjections
-        ? Object.entries(rawProjections).map(([playerId, projection]) => ({
-            ...(typeof projection === 'object' && projection !== null ? projection : {}),
-            player_id: playerId,
-          }))
-        : [];
-
-    // Calculate league-specific projections
-    const scoringSettings: ScoringSettings =
-      ((league as any)?.scoring_settings as ScoringSettings) || {};
-    const leagueProjections = calculateLeagueProjections(rawProjectionsArray, scoringSettings);
-
-    const pair = (matchups || []).filter((m: any) => m.matchup_id === matchupId);
+    const pair = (matchups || []).filter(matchup => matchup.matchup_id === matchupId);
     if (pair.length !== 2) {
       return NextResponse.json({ success: false, error: 'Matchup not found' }, { status: 404 });
     }
 
-    const [team1, team2] = pair;
-    const playersMap: Record<string, any> = players || {};
-    const team1Players = toLineupPlayersWithMinutes(
-      team1.starters || [],
-      leagueProjections,
-      playersMap,
-      team1.starters_points as Record<string, number> | undefined,
-      nflGameStates,
+    const [sleeperTeam1, sleeperTeam2] = pair;
+    const latest = feed.latest.matchup;
+    const team1IsRosterA = String(sleeperTeam1.roster_id) === latest.rosterAId;
+    const team1RosterId = String(sleeperTeam1.roster_id);
+    const team2RosterId = String(sleeperTeam2.roster_id);
+    const team1Distributions = feed.latest.playerDistributions.filter(
+      player => player.rosterId === team1RosterId,
     );
-    const team2Players = toLineupPlayersWithMinutes(
-      team2.starters || [],
-      leagueProjections,
-      playersMap,
-      team2.starters_points as Record<string, number> | undefined,
-      nflGameStates,
+    const team2Distributions = feed.latest.playerDistributions.filter(
+      player => player.rosterId === team2RosterId,
     );
+    const team1Identity = resolveMatchupTeamIdentity(sleeperTeam1.roster_id, rosters, users);
+    const team2Identity = resolveMatchupTeamIdentity(sleeperTeam2.roster_id, rosters, users);
+    const team1WinPct = team1IsRosterA ? latest.winProbA : latest.winProbB;
+    const team2WinPct = team1IsRosterA ? latest.winProbB : latest.winProbA;
+    const team1ProjectedFinal = team1IsRosterA ? latest.projectedFinalA : latest.projectedFinalB;
+    const team2ProjectedFinal = team1IsRosterA ? latest.projectedFinalB : latest.projectedFinalA;
+    const playerMap = players || {};
 
-    // If we had no ESPN-derived live teams, approximate using any players who currently have scores
-    if (liveNflTeams.size === 0) {
-      const approxLive = new Set<string>();
-      [...team1Players, ...team2Players].forEach(p => {
-        // Include any player with a non-zero score (including negative scores for defenses)
-        if ((p.currentScore || 0) !== 0 && p.nflTeam) approxLive.add(p.nflTeam);
-      });
-      liveNflTeams = approxLive;
-    }
-
-    // Minutes-based simulation with gameProgress=0 since we've adjusted projections
-    const sim = await simulateMatchupProbabilityFromPlayers(
-      team1Players as any,
-      team2Players as any,
-      20000, // Doubled from 10k to 20k iterations
-      0, // gameProgress=0 since projections are already adjusted based on actual NFL time
-      liveNflTeams,
-    );
-
-    // Calculate aggregate matchup game state for transparency
-    const allPlayers = [...team1Players, ...team2Players];
-    const gameStates = Array.from(new Set(allPlayers.map(p => p.nflTeam).filter(Boolean)))
-      .map(team => (team ? nflGameStates.get(team) : null))
-      .filter((state): state is NFLGameState => state !== null && state !== undefined);
-
-    const avgMinutesRemaining =
-      gameStates.length > 0
-        ? gameStates.reduce((sum, state) => sum + (state?.minutesRemaining ?? 60), 0) /
-          gameStates.length
-        : 60;
-
-    const avgGameProgress =
-      gameStates.length > 0
-        ? gameStates.reduce((sum, state) => sum + (state?.gameProgress ?? 0), 0) / gameStates.length
-        : 0;
-
-    const response = {
-      success: true,
-      source: 'sleeper-with-nfl-time-adjustment',
-      simulation: {
-        team1Scores: sim.team1Scores,
-        team2Scores: sim.team2Scores,
-        team1WinPct: sim.team1WinPct,
-        team2WinPct: sim.team2WinPct,
-        medianMargin: Math.abs(sim.team1Scores.median - sim.team2Scores.median),
-        impliedOdds: sim.impliedOdds,
-        teams: [
-          { rosterId: team1.roster_id, teamName: `Team ${team1.roster_id}`, players: team1Players },
-          { rosterId: team2.roster_id, teamName: `Team ${team2.roster_id}`, players: team2Players },
-        ],
-        iterations: 20000,
-        computeTimeMs: 0,
-        generatedAt: new Date().toISOString(),
-        // New transparency data
-        nflGameContext: {
-          totalNflGames: gameStates.length,
-          averageMinutesRemaining: avgMinutesRemaining,
-          averageGameProgress: avgGameProgress,
-          gameStates: gameStates.map(state => ({
-            team: state?.team ?? 'UNK',
-            state: state?.state ?? 'pre',
-            gameDescription: state?.gameDescription ?? 'Scheduled',
-            minutesRemaining: state?.minutesRemaining ?? 60,
-            gameProgress: state?.gameProgress ?? 0,
-          })),
+    const toTeamPlayers = (distributions: typeof team1Distributions) =>
+      distributions.map(player => ({
+        id: player.playerId,
+        name: playerMap[player.playerId]?.full_name || player.playerId,
+        position: player.position,
+        projection: player.mean,
+        currentScore: player.currentScore,
+        fullProjection: player.providerProjection,
+        gameState: {
+          gameProgress: player.gameProgress,
+          minutesRemaining: (1 - player.gameProgress) * 60,
         },
+      }));
+
+    const allDistributions = feed.latest.playerDistributions.map(player => ({
+      playerId: player.playerId,
+      playerName: playerMap[player.playerId]?.full_name || player.playerId,
+      position: player.position,
+      mean: player.mean,
+      p10: player.p10,
+      p25: player.p25,
+      median: player.p50,
+      p75: player.p75,
+      p90: player.p90,
+      stdDev: player.standardDeviation,
+      projection: player.mean,
+      currentScore: player.currentScore,
+      fullProjection: player.providerProjection,
+      gameState: {
+        gameProgress: player.gameProgress,
+        minutesRemaining: (1 - player.gameProgress) * 60,
       },
-      playersDistributions: [...team1Players, ...team2Players].map(p => ({
-        playerId: p.id,
-        playerName: p.name,
-        position: p.position,
-        mean: p.projection, // This is the adjusted projection
-        p10: Math.max(0, p.projection * 0.7),
-        median: p.projection,
-        p90: p.projection * 1.3,
-        stdDev: p.projection * 0.15,
-        projection: p.projection,
-        currentScore: p.currentScore,
-        fullProjection: (p as any).fullProjection,
-        gameState: (p as any).gameState,
-        dataSource: 'minutes-based-adjustment',
-      })),
-    };
+      dataSource: 'driveff',
+    }));
 
-    return NextResponse.json(response);
-  } catch (err) {
-    console.error('[SIMULATE] Error:', err);
-
-    // Return more detailed error information for debugging
-    const errorMessage = err instanceof Error ? err.message : 'Failed to simulate';
-    const errorDetails = err instanceof Error && err.stack ? err.stack : String(err);
-
-    console.error('[SIMULATE] Error details:', {
-      message: errorMessage,
-      stack: errorDetails,
-      leagueId: params.leagueId,
-      week: params.week,
-      matchupId: params.matchupId,
+    return NextResponse.json({
+      success: true,
+      source: 'driveff-live-odds',
+      simulation: {
+        team1Scores: getTeamScoreDistribution(team1ProjectedFinal, team1Distributions),
+        team2Scores: getTeamScoreDistribution(team2ProjectedFinal, team2Distributions),
+        team1WinPct,
+        team2WinPct,
+        medianMargin: Math.abs(team1ProjectedFinal - team2ProjectedFinal),
+        impliedOdds: {
+          team1MoneyLine: toAmericanMoneyline(team1WinPct),
+          team2MoneyLine: toAmericanMoneyline(team2WinPct),
+          spread: team1IsRosterA ? latest.spread : -latest.spread,
+          total: latest.total,
+        },
+        teams: [
+          {
+            rosterId: sleeperTeam1.roster_id,
+            ...team1Identity,
+            players: toTeamPlayers(team1Distributions),
+          },
+          {
+            rosterId: sleeperTeam2.roster_id,
+            ...team2Identity,
+            players: toTeamPlayers(team2Distributions),
+          },
+        ],
+        iterations: feed.latest.iterations,
+        computeTimeMs: 0,
+        generatedAt: feed.latest.timestamp,
+        modelSource: 'driveFF',
+        modelVersion: feed.latest.engineVersion,
+      },
+      playersDistributions: allDistributions,
     });
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined,
-      },
-      { status: 500 },
-    );
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to load driveFF odds';
+    console.error('[SIMULATE] driveFF adapter error:', {
+      message: errorMessage,
+      leagueId,
+      week,
+      matchupId,
+    });
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 502 });
   }
 };
-
-export const runtime = 'nodejs';

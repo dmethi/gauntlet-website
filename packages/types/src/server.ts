@@ -102,6 +102,9 @@ export interface MatchupSimulationResponse {
       players: SimulationPlayer[];
     }>;
     impliedOdds: ImpliedOdds;
+    nflGameContext?: {
+      averageGameProgress: number;
+    };
   };
 }
 
@@ -117,6 +120,7 @@ export interface CompleteSnapshot {
   week: number;
   leagueId: string;
   matchupId: number;
+  gameProgress?: number;
 
   // From Individual Matchup API (detailed data)
   team1: TeamSnapshot;

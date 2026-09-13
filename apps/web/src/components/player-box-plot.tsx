@@ -12,7 +12,7 @@ interface PlayerDistribution {
   p90: number;
   mean: number;
   sampleSize: number;
-  dataSource: 'player' | 'position' | 'synthetic';
+  dataSource: 'driveff' | 'player' | 'position' | 'synthetic';
 }
 
 interface PlayerBoxPlotProps {
@@ -118,6 +118,7 @@ export const PlayerBoxPlot = ({
   const getDataSourceColor = (source: string) => {
     switch (source) {
       case 'player':
+      case 'driveff':
         return 'rgb(16, 185, 129)'; // Emerald - real player data
       case 'position':
         return 'rgb(99, 102, 241)'; // Indigo - position data
@@ -210,11 +211,13 @@ export const PlayerBoxPlot = ({
         <TooltipContent side="top" className="max-w-xs">
           <div className="space-y-1 text-xs">
             <div className="font-medium">
-              {distribution.dataSource === 'player'
-                ? 'Player-Specific Data'
-                : distribution.dataSource === 'position'
-                  ? 'Position Average'
-                  : 'Estimated Range'}
+              {distribution.dataSource === 'driveff'
+                ? 'driveFF Live Distribution'
+                : distribution.dataSource === 'player'
+                  ? 'Player-Specific Data'
+                  : distribution.dataSource === 'position'
+                    ? 'Position Average'
+                    : 'Estimated Range'}
             </div>
             <div className="text-foreground/70 text-xs mb-2">
               📊 Scaled: 0 pts at 30%, max {maxProjection.toFixed(0)} pts at 100%

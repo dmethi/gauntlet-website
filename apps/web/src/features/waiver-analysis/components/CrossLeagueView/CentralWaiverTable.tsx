@@ -1,7 +1,7 @@
 /**
  * Central Waiver Table
  *
- * Comprehensive player-centric table showing all waiver acquisitions across both leagues
+ * Comprehensive player-centric table showing all waiver acquisitions across registered leagues
  * Following design patterns from draft analysis and stats pages
  */
 
@@ -59,21 +59,16 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
     return data.allTransactions.filter(t => t.isWinningBid && t.transactionType === 'waiver');
   }, [data.allTransactions]);
 
-  // Build cross-league lookup: player+week -> transactions by league
+  // Build cross-league lookup: player+week -> transaction by league.
   const crossLeagueMap = useMemo(() => {
-    const map = new Map<string, { afc?: WaiverTransaction; nfc?: WaiverTransaction }>();
+    const map = new Map<string, Map<string, WaiverTransaction>>();
 
     allWaiverTransactions.forEach(txn => {
       const key = `${txn.playerId}-${txn.week}`;
       if (!map.has(key)) {
-        map.set(key, {});
+        map.set(key, new Map());
       }
-      const entry = map.get(key)!;
-      if (txn.leagueName.includes('AFC')) {
-        entry.afc = txn;
-      } else {
-        entry.nfc = txn;
-      }
+      map.get(key)!.set(txn.leagueId, txn);
     });
 
     return map;
@@ -82,14 +77,14 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
   // Get cross-league delta for a transaction
   const getCrossLeagueDelta = (txn: WaiverTransaction): number | null => {
     const key = `${txn.playerId}-${txn.week}`;
-    const entry = crossLeagueMap.get(key);
-    if (!entry || !entry.afc || !entry.nfc) return null;
+    const leagueTransactions = crossLeagueMap.get(key);
+    const otherBids = Array.from(leagueTransactions?.values() ?? [])
+      .filter(other => other.leagueId !== txn.leagueId)
+      .map(other => other.faabBid);
+    if (otherBids.length === 0) return null;
 
-    const isAFC = txn.leagueName.includes('AFC');
-    const thisBid = txn.faabBid;
-    const otherBid = isAFC ? entry.nfc.faabBid : entry.afc.faabBid;
-
-    return thisBid - otherBid;
+    const otherLeagueAverage = otherBids.reduce((total, bid) => total + bid, 0) / otherBids.length;
+    return txn.faabBid - otherLeagueAverage;
   };
 
   // Filter transactions
@@ -98,9 +93,7 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
 
     // League filter
     if (leagueFilter !== 'all') {
-      filtered = filtered.filter(t =>
-        leagueFilter === 'afc' ? t.leagueName.includes('AFC') : t.leagueName.includes('NFC'),
-      );
+      filtered = filtered.filter(t => t.leagueId === leagueFilter);
     }
 
     // Position filter
@@ -206,8 +199,8 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
           Complete Waiver Wire Activity
         </CardTitle>
         <CardDescription>
-          All waiver acquisitions across both leagues • {sortedTransactions.length} shown of{' '}
-          {allWaiverTransactions.length} total
+          All waiver acquisitions across {data.leagueTrends.length} leagues •{' '}
+          {sortedTransactions.length} shown of {allWaiverTransactions.length} total
         </CardDescription>
 
         {/* Filters */}
@@ -218,8 +211,11 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Leagues</SelectItem>
-              <SelectItem value="afc">AFC Only</SelectItem>
-              <SelectItem value="nfc">NFC Only</SelectItem>
+              {data.leagueTrends.map(league => (
+                <SelectItem key={league.leagueId} value={league.leagueId}>
+                  {league.leagueName}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
@@ -306,7 +302,7 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                   className="px-3 py-3 text-center cursor-pointer hover:bg-muted/50"
                   onClick={() => handleSort('crossLeagueDelta')}
                 >
-                  Cross-League Δ {getSortIcon('crossLeagueDelta')}
+                  vs Other Leagues {getSortIcon('crossLeagueDelta')}
                 </th>
               </tr>
             </thead>
@@ -368,7 +364,7 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
                               txn.leagueName,
                             )}`}
                           >
-                            {txn.leagueName.includes('AFC') ? 'AFC' : 'NFC'}
+                            {txn.leagueName}
                           </span>
                         </td>
 

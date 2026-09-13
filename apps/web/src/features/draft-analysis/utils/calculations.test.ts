@@ -4,7 +4,7 @@
  * Comprehensive test coverage for all calculation functions extracted from manager-analytics.ts
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   calculateGini,
   calculatePlayerLevelAnalytics,
@@ -235,6 +235,21 @@ describe('kMeansCluster', () => {
     // Two groups should be in different clusters (use Set to check uniqueness)
     const uniqueClusters = new Set(clusters);
     expect(uniqueClusters.size).toBe(2); // Exactly 2 clusters formed
+  });
+
+  it('should not collapse clusters when random seeds start at the same point', () => {
+    const random = vi.spyOn(Math, 'random').mockReturnValue(0);
+    const data = [
+      [1, 1],
+      [2, 2],
+      [10, 10],
+      [11, 11],
+    ];
+
+    const { clusters } = kMeansCluster(data, 2);
+
+    expect(new Set(clusters).size).toBe(2);
+    random.mockRestore();
   });
 
   it('should create specified number of clusters', () => {

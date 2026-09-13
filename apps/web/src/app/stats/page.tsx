@@ -1,4 +1,3 @@
-import { SeasonPlaceholder } from '@/components/season-placeholder';
 import { StatsSeasonView } from '@/app/stats/stats-season-view';
 
 export const metadata = {
@@ -31,13 +30,5 @@ export default async function StatsPage(props: StatsPageProps) {
     return <StatsSeasonView season={searchParams.preview} searchParams={searchParams} />;
   }
 
-  return (
-    <SeasonPlaceholder
-      title="Stats Hub"
-      subtitle="2026 season — coming soon"
-      blurb="Team and player stats will show up here once the 2026 season is live."
-      archiveHref="/archive/2025/stats"
-      archiveLabel="See the 2025 stats"
-    />
-  );
+  return <StatsSeasonView season="2026" searchParams={searchParams} />;
 }

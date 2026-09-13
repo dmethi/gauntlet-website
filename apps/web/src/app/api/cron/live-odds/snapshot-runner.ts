@@ -24,9 +24,11 @@ import {
   createGauntletAPIClient,
   createMetrics,
   disconnect,
+  saveLeagueOddsHistory,
   saveSnapshotIfChanged,
 } from '@gauntlet/server';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
+import { getCurrentLeagues } from '@/config/leagues';
 
 import type { MetricsSummary } from '@gauntlet/types';
 
@@ -38,6 +40,11 @@ interface SnapshotResult {
   week: number;
   duration: number;
   metrics: MetricsSummary;
+  leagueOddsSaved: boolean;
+}
+
+interface SnapshotOptions {
+  delayMs?: number;
 }
 
 /**
@@ -48,11 +55,10 @@ const captureIndividualMatchup = async (
   week: number,
   matchupId: number,
   teamNames: Map<number, string>,
+  matchups: Awaited<ReturnType<typeof sleeperClient.fetchMatchups>>,
   apiClient: ReturnType<typeof createGauntletAPIClient>,
 ): Promise<CompleteSnapshot | null> => {
   try {
-    // Get fresh current scores directly from Sleeper API
-    const matchups = await sleeperClient.fetchMatchups(leagueId, week);
     const matchupPair = matchups.filter(m => m.matchup_id === matchupId);
 
     if (matchupPair.length !== 2) return null;
@@ -120,6 +126,7 @@ const captureIndividualMatchup = async (
       week,
       leagueId,
       matchupId,
+      gameProgress: sim.nflGameContext?.averageGameProgress ?? 0,
       team1: {
         rosterId: sim.teams[0].rosterId,
         rawProjectionTotal: team1RawProj,
@@ -160,18 +167,25 @@ const captureIndividualMatchup = async (
  * It replicates the logic from comprehensive-live-snapshot.ts but
  * returns a result object instead of exiting the process.
  */
-export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
+export const runLiveSnapshot = async ({
+  delayMs = 500,
+}: SnapshotOptions = {}): Promise<SnapshotResult> => {
   const jobStartTime = Date.now();
   const metrics = createMetrics();
-  const apiClient = createGauntletAPIClient({}, metrics);
+  const deploymentUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined;
+  const baseUrl = process.env.GAUNTLET_API_BASE_URL || deploymentUrl;
+  const apiClient = createGauntletAPIClient(baseUrl ? { baseUrl } : {}, metrics);
 
   let savedCount = 0;
   let skippedCount = 0;
   let failedCount = 0;
+  let leagueOddsSaved = false;
 
   try {
     const week = await apiClient.getCurrentWeek();
-    const leagueIds = ['1263744209295245312', '1263740549504962561'];
+    const leagueConfigs = getCurrentLeagues();
+    const leagueIds = leagueConfigs.map(league => league.id);
+    const season = leagueConfigs[0]?.season ?? new Date().getFullYear();
 
     const jobLogger = createChildLogger({ job: 'vercel-cron-snapshot', week });
 
@@ -180,12 +194,36 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
       message: `Starting scheduled live odds snapshot for week ${week}`,
     });
 
+    try {
+      const raceStartedAt = Date.now();
+      const leagueOdds = await apiClient.fetchLeagueOdds(week);
+      type RaceJson = Parameters<typeof saveLeagueOddsHistory>[0]['highestScorerOdds'];
+      const asRaceJson = (value: unknown): RaceJson => (value ?? []) as RaceJson;
+
+      await saveLeagueOddsHistory({
+        season,
+        week,
+        highestScorerOdds: asRaceJson(leagueOdds.highestScorer),
+        lowestScorerOdds: asRaceJson(leagueOdds.lowestScorer),
+        closestMatchup: asRaceJson(leagueOdds.closestMatchup),
+        biggestBlowout: asRaceJson(leagueOdds.biggestBlowout),
+        highestScoringMatchup: asRaceJson(leagueOdds.highestScoringMatchup),
+        lowestScoringMatchup: asRaceJson(leagueOdds.lowestScoringMatchup),
+        triggeredBy: 'vercel-cron-2min',
+        computeTimeMs: Date.now() - raceStartedAt,
+      });
+      leagueOddsSaved = true;
+    } catch (error) {
+      jobLogger.warn({ event: 'league_odds_capture_failed', error });
+    }
+
     // Capture individual matchups for detailed data
     for (const leagueId of leagueIds) {
-      const leagueName = leagueId.includes('3245') ? 'AFC' : 'NFC';
+      const leagueName = leagueConfigs.find(league => league.id === leagueId)?.name ?? leagueId;
       jobLogger.debug({ event: 'processing_league', leagueId, leagueName });
 
       const teamNames = await apiClient.getTeamNames(leagueId);
+      const matchups = await sleeperClient.fetchMatchups(leagueId, week);
       jobLogger.debug({ event: 'team_names_fetched', count: teamNames.size, leagueId });
 
       for (let matchupId = 1; matchupId <= 6; matchupId++) {
@@ -194,6 +232,7 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
           week,
           matchupId,
           teamNames,
+          matchups,
           apiClient,
         );
 
@@ -215,7 +254,7 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
         }
 
         // Small delay to avoid API overload
-        await new Promise(resolve => setTimeout(resolve, 500));
+        if (delayMs > 0) await new Promise(resolve => setTimeout(resolve, delayMs));
       }
     }
 
@@ -241,6 +280,7 @@ export const runLiveSnapshot = async (): Promise<SnapshotResult> => {
       week,
       duration: jobDuration,
       metrics: summary,
+      leagueOddsSaved,
     };
   } catch (error) {
     console.error('[SNAPSHOT] Fatal error:', error);

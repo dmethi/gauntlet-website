@@ -1,44 +1,29 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { getMatchupWinProbTimeSeries } from '@gauntlet/server';
+import { getDriveFFLiveOdds } from '@/lib/driveff-live-odds';
+
+export const dynamic = 'force-dynamic';
 
 /**
- * GET /api/matchup-timeseries/[leagueId]/[week]/[matchupId]
- *
- * Fetches live win probability and score time-series data for a specific matchup.
- * Used to power win probability over time and score over time charts.
- *
- * @param leagueId - Sleeper league ID
- * @param week - NFL week number
- * @param matchupId - Matchup ID within the league (1-6)
- *
- * @returns JSON with time-series data array or error
+ * Serves the chart contract expected by Gauntlet while driveFF owns collection,
+ * persistence, and probability calculation.
  */
 export const GET = async (
   _req: NextRequest,
   props: { params: Promise<{ leagueId: string; week: string; matchupId: string }> },
 ): Promise<NextResponse> => {
-  const params = await props.params;
+  const { leagueId, week, matchupId } = await props.params;
+  const weekNum = Number.parseInt(week, 10);
+  const matchupIdNum = Number.parseInt(matchupId, 10);
+
+  if (!leagueId || !Number.isFinite(weekNum) || !Number.isFinite(matchupIdNum)) {
+    return NextResponse.json({ error: 'Invalid week or matchupId parameter' }, { status: 400 });
+  }
+
   try {
-    const { leagueId, week, matchupId } = params;
-
-    // Validate params
-    const weekNum = parseInt(week);
-    const matchupIdNum = parseInt(matchupId);
-
-    if (isNaN(weekNum) || isNaN(matchupIdNum)) {
-      return NextResponse.json({ error: 'Invalid week or matchupId parameter' }, { status: 400 });
-    }
-
-    // Fetch raw time series from database
-    const rawData = await getMatchupWinProbTimeSeries(leagueId, weekNum, matchupIdNum);
-
-    // Get roster IDs from first sample (they're constant across all samples)
-    const rosterAId = rawData.length > 0 ? rawData[0].rosterAId : null;
-    const rosterBId = rawData.length > 0 ? rawData[0].rosterBId : null;
-
-    // Transform to expected format for charts
-    const series = rawData.map(sample => ({
-      timestamp: sample.timestamp.toISOString(),
+    const feed = await getDriveFFLiveOdds(leagueId, weekNum, matchupIdNum);
+    const firstSample = feed.samples[0];
+    const series = feed.samples.map(sample => ({
+      timestamp: sample.timestamp,
       team1Score: sample.currentScoreA,
       team2Score: sample.currentScoreB,
       team1WinProbability: sample.winProbA,
@@ -56,12 +41,14 @@ export const GET = async (
         matchupId: matchupIdNum,
         sampleCount: series.length,
         hasData: series.length > 0,
-        rosterAId,
-        rosterBId,
+        rosterAId: firstSample?.rosterAId ?? null,
+        rosterBId: firstSample?.rosterBId ?? null,
+        source: 'driveff',
+        schemaVersion: feed.schemaVersion,
       },
     });
   } catch (error) {
-    console.error('[API] Failed to fetch matchup time series:', error);
-    return NextResponse.json({ error: 'Failed to fetch time series data' }, { status: 500 });
+    console.error('[API] Failed to fetch driveFF matchup time series:', error);
+    return NextResponse.json({ error: 'Failed to fetch time series data' }, { status: 502 });
   }
 };

@@ -143,21 +143,24 @@ AI_SUMMARIZE_SECRET=your-local-capability-secret
 
 The application uses three different cron mechanisms:
 
-### 1. Authenticated POST Scheduler (Live Odds)
+### 1. driveFF Scheduler (Live Odds)
 
-**Purpose**: Captures live win probability snapshots during NFL games
+**Purpose**: Captures live win probability and score snapshots during NFL games
 
-**Endpoint**: `POST /api/cron/live-odds`
+**Consumer**: Gauntlet reads driveFF's versioned live-odds feed from its matchup
+and time-series API routes.
 
 **Configuration**:
 
-- Configure an external scheduler that supports POST and custom headers
-- Set `Authorization: Bearer YOUR_CRON_SECRET`
-- Max duration: 60 seconds
-- Runs during NFL game windows
-
-Native Vercel Cron sends GET requests and is intentionally incompatible with
-these POST-only command routes.
+- League registration and snapshot scheduling are owned by driveFF.
+- Gauntlet does not schedule `/api/cron/live-odds` in `apps/web/vercel.json`.
+- `DRIVEFF_API_BASE_URL` may override the default `https://driveff.com` origin.
+- Sleeper remains the source for roster identity and current fantasy scores;
+  driveFF supplies live projected finals, win probabilities, player
+  distributions, and their history.
+- The legacy Gauntlet live-odds endpoint remains available for manual recovery
+  while migration cleanup is in progress, but it is not a production data
+  source.
 
 **Testing locally**:
 
@@ -303,10 +306,10 @@ Monitor at GitHub → Actions tab:
 - Built-in email notifications for failures
 - Execution history and logs
 
-**External live-odds scheduler**:
+**driveFF live-odds scheduler**:
 
-- Use the scheduler's execution history and failure alerts
-- Function failures remain visible in Vercel logs
+- Use driveFF's scheduler history and logs to verify collection.
+- Verify Gauntlet consumption from a matchup's live model and time-series APIs.
 
 ## Common Commands
 
@@ -361,18 +364,20 @@ pnpm build --filter @gauntlet/types --filter @gauntlet/lib
 vercel --prod
 ```
 
-### Cron Job Unauthorized
+### Legacy Cron Endpoint Unauthorized
 
 **Error**: `401 Unauthorized` from cron endpoint
 
 **Solution**:
 
-1. Verify `CRON_SECRET` is set in Vercel environment variables
-2. For external cron services (cron-job.org), ensure header is exactly:
+1. This only applies to manual recovery calls to Gauntlet's legacy endpoint;
+   normal live-odds collection runs in driveFF.
+2. Verify `CRON_SECRET` is set in Vercel environment variables.
+3. For external cron services (cron-job.org), ensure header is exactly:
    ```
    Authorization: Bearer YOUR_CRON_SECRET
    ```
-3. Test locally first:
+4. Test locally first:
    ```bash
    curl -X POST http://localhost:3000/api/cron/live-odds \
      -H "Authorization: Bearer your-test-secret"

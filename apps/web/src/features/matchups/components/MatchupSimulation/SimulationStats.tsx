@@ -28,7 +28,7 @@ export const SimulationStats = memo<SimulationStatsProps>(props => {
         </div>
         <div>
           <div className="font-medium">Method</div>
-          <div className="text-muted-foreground">Minutes-Based</div>
+          <div className="text-muted-foreground">{simulationData.modelSource || 'driveFF'}</div>
         </div>
       </div>
     </div>

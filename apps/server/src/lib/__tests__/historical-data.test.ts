@@ -4,6 +4,8 @@ import {
   getLastWinProbSample,
   getMatchupWinProbTimeSeries,
   getWeekWinProbSamples,
+  saveLeagueOddsHistory,
+  getLeagueOddsHistory,
   disconnect,
 } from '@/lib';
 
@@ -203,6 +205,39 @@ describe('historical-data', () => {
         leagueId: '1263740549504962561',
         week: 4,
         matchupId: 3,
+      });
+    });
+  });
+
+  describe('league-wide race history', () => {
+    it('stores the season with each complete race snapshot', async () => {
+      mockPrisma.leagueOddsHistory.create.mockResolvedValueOnce({ id: 'race-snapshot' });
+
+      await saveLeagueOddsHistory({
+        season: 2026,
+        week: 1,
+        highestScorerOdds: [{ teamId: 'league:1', probability: 0.1 }],
+        lowestScorerOdds: [],
+        closestMatchup: [],
+        biggestBlowout: [],
+        highestScoringMatchup: [],
+        lowestScoringMatchup: [],
+        triggeredBy: 'vercel-cron-2min',
+      });
+
+      expect(mockPrisma.leagueOddsHistory.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ season: 2026, week: 1 }),
+      });
+    });
+
+    it('queries race history by season and week', async () => {
+      mockPrisma.leagueOddsHistory.findMany = vi.fn().mockResolvedValueOnce([]);
+
+      await getLeagueOddsHistory(2026, 1);
+
+      expect(mockPrisma.leagueOddsHistory.findMany).toHaveBeenCalledWith({
+        where: { season: 2026, week: 1 },
+        orderBy: { createdAt: 'asc' },
       });
     });
   });

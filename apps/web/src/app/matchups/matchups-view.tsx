@@ -20,10 +20,13 @@ import type { LeagueMatchups, MatchupData, MatchupTeam } from '@/features/matchu
 import { debugLog } from '@/lib/debug-log';
 import { WarRoomLoader } from '@gauntlet/ui';
 import { GauntletLogo } from '@/components/gauntlet-logo';
+import Image from 'next/image';
+import { buildGauntletMatchupPath } from '@/features/matchups/matchup-links';
 
 export interface MatchupsLeague {
   id: string;
   name: string;
+  logo?: string;
 }
 
 const WEEKS = Array.from({ length: 18 }, (_, i) => i + 1);
@@ -32,6 +35,9 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const backToAllHref = pathname.startsWith('/archive/2025')
+    ? '/archive/2025/matchups'
+    : '/matchups';
 
   const leagueIdParam = searchParams.get('leagueId');
   const weekParam = searchParams.get('week');
@@ -96,6 +102,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
             ownerName: team.ownerName || 'Unknown',
             points: team.points || 0,
             projectedPoints: team.projectedPoints || 0,
+            projectionSource: team.projectionSource,
             roster: {
               id: team.rosterId,
               players: team.players || [],
@@ -136,6 +143,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
         leagueData.push({
           leagueId: league.id,
           leagueName: league.name,
+          logo: league.logo,
           matchups,
         });
       }
@@ -193,7 +201,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
       }
 
       // Final fallback to week 2
-      const fallbackWeek = 2;
+      const fallbackWeek = 1;
       debugLog(`📅 [MATCHUPS CLIENT] Using final fallback to week ${fallbackWeek}`);
       setSelectedWeek(fallbackWeek);
       updateWeekInURL(fallbackWeek);
@@ -245,7 +253,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
         {/* Header */}
         <div className="space-y-4">
           {leagueIdParam && (
-            <Link href="/archive/2025/matchups">
+            <Link href={backToAllHref}>
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to All Matchups
@@ -260,7 +268,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
               <p className="text-muted-foreground mt-2 font-avenir">
                 {leagueIdParam
                   ? `View matchups for ${filteredLeagues[0]?.name || 'this league'}`
-                  : 'View all matchups across all leagues'}
+                  : 'Fresh simulations and every head-to-head across all three Legions'}
               </p>
             </div>
 
@@ -296,7 +304,11 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
             <Card key={league.leagueId}>
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <Trophy className="h-6 w-6 text-gauntlet-crimson" />
+                  {league.logo ? (
+                    <Image src={league.logo} alt="" width={32} height={32} />
+                  ) : (
+                    <Trophy className="h-6 w-6 text-primary" />
+                  )}
                   <div>
                     <CardTitle className="text-xl font-geizer tracking-wide">
                       {league.leagueName}
@@ -348,7 +360,7 @@ const MatchupCard = ({
   const isGameActive = !matchup.isComplete;
 
   return (
-    <Link href={`/matchups/${leagueId}/${week}/${matchup.matchupId}`}>
+    <Link href={buildGauntletMatchupPath(leagueId, week, matchup.matchupId)}>
       <Card className="hover:shadow-md transition-shadow cursor-pointer">
         <CardContent className="p-4">
           <div className="space-y-4">
@@ -442,7 +454,8 @@ const TeamRow = ({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) 
         </div>
         {team.projectedPoints && (
           <div className="text-xs text-muted-foreground">
-            Proj: {team.projectedPoints.toFixed(1)}
+            {team.projectionSource === 'driveff' ? 'Live proj' : 'Proj'}:{' '}
+            {team.projectedPoints.toFixed(1)}
           </div>
         )}
       </div>

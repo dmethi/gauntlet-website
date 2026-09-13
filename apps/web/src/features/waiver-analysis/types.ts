@@ -1,7 +1,7 @@
 /**
  * Waiver Analysis Types
  *
- * Types for comprehensive waiver wire and FAAB analysis across both leagues.
+ * Types for comprehensive waiver wire and FAAB analysis across registered leagues.
  * Based on real Sleeper API data including competing bids via failed transactions.
  */
 
@@ -332,6 +332,9 @@ export interface PlayerMovement {
  * Complete waiver analysis dataset
  */
 export interface WaiverAnalysisData {
+  /** Canonical per-league data for seasons with any number of leagues. */
+  leagueTrends: LeagueWaiverTrends[];
+
   // By league
   afcTrends: LeagueWaiverTrends;
   nfcTrends: LeagueWaiverTrends;
@@ -343,10 +346,7 @@ export interface WaiverAnalysisData {
 
   // Player movement (top movers)
   topMovers: PlayerMovement[]; // Combined top 50 across both leagues
-  topMoversByLeague: {
-    afc: PlayerMovement[];
-    nfc: PlayerMovement[];
-  };
+  topMoversByLeague: Record<string, PlayerMovement[]>;
 
   // All enriched transactions (for detailed views)
   allTransactions: WaiverTransaction[];

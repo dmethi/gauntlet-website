@@ -19,6 +19,7 @@ import { useTeamViewModel } from './useTeamViewModel';
 
 export const TeamView = memo(
   ({ allTeamEntries, positionsMap, dataset, fromWeek, toWeek, availableWeeks }: TeamViewProps) => {
+    const teamCount = allTeamEntries.length;
     const {
       teamOptions,
       selectedTeamKey,
@@ -78,14 +79,36 @@ export const TeamView = memo(
             </Select>
           </div>
 
-          <TeamSummaryCard fromWeek={fromWeek} toWeek={toWeek} data={teamTotals} />
-          <TeamComparisonTable fromWeek={fromWeek} toWeek={toWeek} data={teamTotals} />
-          <WeeklyPerformanceChart rows={weeklyPerformance} />
-          <PositionalBreakdown
-            breakdown={positionalBreakdown}
-            contributions={contributionsByPosition}
-          />
-          <PositionAdvantageChart data={teamAdvantages} />
+          {availableWeeks.length === 0 ? (
+            <div className="rounded-md border border-dashed bg-muted/20 px-6 py-10 text-center">
+              <h3 className="font-semibold">Week {fromWeek} scoring has not started</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Team analysis will populate here as live scores arrive.
+              </p>
+            </div>
+          ) : (
+            <>
+              <TeamSummaryCard
+                fromWeek={fromWeek}
+                toWeek={toWeek}
+                data={teamTotals}
+                teamCount={teamCount}
+              />
+              <TeamComparisonTable
+                fromWeek={fromWeek}
+                toWeek={toWeek}
+                data={teamTotals}
+                teamCount={teamCount}
+              />
+              <WeeklyPerformanceChart rows={weeklyPerformance} teamCount={teamCount} />
+              <PositionalBreakdown
+                breakdown={positionalBreakdown}
+                contributions={contributionsByPosition}
+                teamCount={teamCount}
+              />
+              <PositionAdvantageChart data={teamAdvantages} />
+            </>
+          )}
         </CardContent>
       </Card>
     );

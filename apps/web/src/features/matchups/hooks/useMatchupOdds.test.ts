@@ -77,7 +77,9 @@ describe('useMatchupOdds', () => {
 
     expect(result.current.oddsData).toEqual(mockOddsData);
     expect(result.current.error).toBeNull();
-    expect(global.fetch).toHaveBeenCalledWith('/api/matchups/12345/5/1/simulate');
+    expect(global.fetch).toHaveBeenCalledWith('/api/matchups/12345/5/1/simulate', {
+      cache: 'no-store',
+    });
   });
 
   it('handles 404 gracefully without error', async () => {
@@ -197,7 +199,9 @@ describe('useMatchupOdds', () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(2);
-      expect(global.fetch).toHaveBeenLastCalledWith('/api/matchups/12345/6/1/simulate');
+      expect(global.fetch).toHaveBeenLastCalledWith('/api/matchups/12345/6/1/simulate', {
+        cache: 'no-store',
+      });
     });
   });
 });

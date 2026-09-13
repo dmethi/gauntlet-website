@@ -43,12 +43,13 @@ const buildTotals = (): TeamTotalsResult => ({
 describe('TeamSummaryCard', () => {
   it('renders team overview with record and top performers', () => {
     const data = buildTotals();
-    render(<TeamSummaryCard fromWeek={1} toWeek={3} data={data} />);
+    render(<TeamSummaryCard fromWeek={1} toWeek={3} data={data} teamCount={36} />);
 
     expect(screen.getByText(/Team Overview/)).toBeInTheDocument();
     expect(screen.getByText(/Alpha/)).toBeInTheDocument();
     expect(screen.getByText('2-1')).toBeInTheDocument();
     expect(screen.getByText('MVP Player')).toBeInTheDocument();
     expect(screen.getByText('75.2')).toBeInTheDocument();
+    expect(screen.getByText('Rank (36)')).toBeInTheDocument();
   });
 });

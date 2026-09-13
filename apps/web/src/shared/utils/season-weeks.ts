@@ -30,5 +30,5 @@ export const resolveCompletedWeeks = (
   }
 
   const week = includeCurrentWeek ? nflState.week : nflState.week - 1;
-  return Math.min(Math.max(week, 1), regularSeasonWeeks);
+  return Math.min(Math.max(week, 0), regularSeasonWeeks);
 };

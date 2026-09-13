@@ -44,6 +44,7 @@
     "check:week5-data": "tsx scripts/check-week5-game-flow-data.ts",
     "precompute": "npx tsx src/scripts/precompute-analytics.ts",
     "precompute:real": "npx tsx src/scripts/precompute-real-analytics.ts",
+    "generate:opening-reports": "tsx src/scripts/generate-opening-reports.ts",
     "precompute:dev": "npm run precompute && npm run dev",
     "precompute:real-dev": "npm run precompute:real && npm run dev"
   },

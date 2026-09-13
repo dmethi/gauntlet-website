@@ -21,6 +21,7 @@ import { ScatterAnalysis } from './components/ScatterAnalysis';
 import { TrendsView } from './components/TrendsView';
 import { TeamView } from '@/features/stats/components/TeamView';
 import { WaiverAnalysisHub } from '@/features/waiver-analysis/components';
+import { resolveStatsWeekRange } from './stats-week-range';
 
 type ViewKey =
   | 'team'
@@ -101,8 +102,11 @@ export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentPro
   const t = selectedTeam.team;
 
   const validWeeks = t.teamScores.filter(d => d.value > 0).map(d => d.week);
-  const fromWeek = Math.min(...validWeeks, dataset.weekRange.from);
-  const toWeek = Math.max(...validWeeks, Math.min(dataset.weekRange.to, dataset.currentWeek - 1)); // Exclude current week if it's incomplete
+  const { from: fromWeek, to: toWeek } = resolveStatsWeekRange({
+    currentWeek: dataset.currentWeek,
+    configuredRange: dataset.weekRange,
+    scoredWeeks: validWeeks,
+  });
 
   const renderView = () => {
     switch (currentView) {
@@ -143,9 +147,9 @@ export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentPro
       case 'scatter':
         return <ScatterAnalysis allTeamEntries={allTeamEntries} positionsMap={positionsMap} />;
       case 'transactions':
-        return <TransactionAnalysis currentWeek={dataset.currentWeek} />;
+        return <TransactionAnalysis currentWeek={dataset.currentWeek} season={season ?? '2026'} />;
       case 'waiver-analysis':
-        return <WaiverAnalysisHub currentWeek={dataset.currentWeek} />;
+        return <WaiverAnalysisHub currentWeek={dataset.currentWeek} season={season ?? '2026'} />;
       case 'start-sit':
         return (
           <StartSitEfficiencyTab prefetchedData={dataset.startSitEfficiency} season={season} />

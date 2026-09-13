@@ -16,6 +16,7 @@ export interface MatchupTeam {
   ownerName: string;
   points: number;
   projectedPoints?: number;
+  projectionSource?: 'driveff' | 'sleeper';
   roster: {
     id: number;
     players: string[];
@@ -64,6 +65,7 @@ export interface TeamRoster {
   ownerName: string;
   points: number;
   projectedPoints: number;
+  projectionSource?: 'driveff' | 'sleeper';
   starters: PlayerDetails[];
   bench: PlayerDetails[];
   remainingPlayers: number;
@@ -97,6 +99,7 @@ export interface MatchupDetails {
 export interface LeagueMatchups {
   leagueId: string;
   leagueName: string;
+  logo?: string;
   week?: number;
   matchups: MatchupData[];
 }
@@ -153,6 +156,10 @@ export interface SimulationData {
       projection: number;
     }>;
   }>;
+  iterations?: number;
+  generatedAt?: string;
+  modelSource?: string;
+  modelVersion?: string;
 }
 
 /**
@@ -216,6 +223,7 @@ export interface MatchupOddsPreviewProps {
  */
 export interface TeamOdds {
   teamId: string;
+  matchupId: number;
   teamName: string;
   leagueId: string;
   leagueName: string;
@@ -251,6 +259,7 @@ export interface LeagueWideOddsType {
   highestScoringMatchup: MatchupOdds[];
   lowestScoringMatchup: MatchupOdds[];
   lastUpdated: string;
+  source?: 'driveff';
 }
 
 /**

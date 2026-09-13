@@ -35,7 +35,10 @@ export interface TransactionAnalysisModel {
  * if (model.loading) return <LoadingSpinner />;
  * return <TransactionTable data={model.allData} />;
  */
-export const useTransactionAnalysisModel = (currentNflWeek: number): TransactionAnalysisModel => {
+export const useTransactionAnalysisModel = (
+  currentNflWeek: number,
+  season: string = '2026',
+): TransactionAnalysisModel => {
   const [allData, setAllData] = useState<GradeTxn[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState('Initializing...');
@@ -49,13 +52,12 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
     const loadTransactionData = async (): Promise<void> => {
       try {
         setLoading(true);
-        setLoadingStep('Loading team information from both leagues...');
+        setLoadingStep('Loading team information from all leagues...');
 
         // Load team information
         const teamsData = new Map<string, TeamInfo>();
         try {
-          // Matches the hardcoded 2025 leagues this model fetches transactions from below.
-          const teamsRes = await fetch('/api/league/teams?season=2025');
+          const teamsRes = await fetch(`/api/league/teams?season=${season}`);
           if (teamsRes.ok) {
             const teamsResponse = await teamsRes.json();
             const teams = teamsResponse.teams || [];
@@ -80,9 +82,7 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
         setTeamsMap(teamsData);
         setTeamsLoaded(true);
 
-        // Only reachable via the 2025 archive stats page today — pin
-        // explicitly rather than reading whatever CURRENT_LEAGUES becomes.
-        const leagues = getLeaguesForSeason('2025');
+        const leagues = getLeaguesForSeason(season);
         setLoadingStep(
           `Processing ${leagues.map(l => l.name).join(' & ')} transactions and calculating VORP...`,
         );
@@ -145,7 +145,7 @@ export const useTransactionAnalysisModel = (currentNflWeek: number): Transaction
     return () => {
       cancelled = true;
     };
-  }, [currentNflWeek]);
+  }, [currentNflWeek, season]);
 
   return {
     allData,

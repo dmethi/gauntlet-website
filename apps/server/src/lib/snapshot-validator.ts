@@ -219,7 +219,7 @@ export const saveSnapshotIfChanged = async (
       matchupId: snapshot.matchupId,
       rosterAId: snapshot.team1.rosterId,
       rosterBId: snapshot.team2.rosterId,
-      gameProgress: 0, // Using simulation data
+      gameProgress: snapshot.gameProgress ?? 0,
       winProbA: snapshot.team1.winProbability,
       winProbB: snapshot.team2.winProbability,
       projectedFinalA: snapshot.team1.simulatedMean, // Use simulated mean (matches screenshot)

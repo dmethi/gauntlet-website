@@ -23,6 +23,7 @@ import { PlayerMovementView } from './PlayerMovementView';
  */
 export interface WaiverAnalysisHubProps {
   readonly currentWeek: number;
+  readonly season: string;
 }
 
 /**
@@ -35,8 +36,8 @@ export interface WaiverAnalysisHubProps {
  * <WaiverAnalysisHub currentWeek={dataset.currentWeek} />
  */
 export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
-  const { currentWeek } = props;
-  const { data, isLoading, isError, error } = useWaiverAnalytics(currentWeek);
+  const { currentWeek, season } = props;
+  const { data, isLoading, isError, error } = useWaiverAnalytics(currentWeek, season);
   const [currentView, setCurrentView] = useState<'managers' | 'cross-league' | 'players'>(
     'cross-league',
   );
@@ -80,35 +81,23 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
             Waiver & FAAB Analysis
           </CardTitle>
           <CardDescription>
-            Comprehensive waiver wire analysis including competing bids, cross-league comparisons,
-            and player movement tracking
+            Waiver wire analysis across every {season} league, including competing bids and player
+            movement tracking
           </CardDescription>
 
           {/* Quick stats summary */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            <div className="rounded-lg border p-3">
-              <div className="text-sm font-medium text-muted-foreground">AFC Total Spent</div>
-              <div className="text-2xl font-bold">${data.afcTrends.totalFAABSpent}</div>
-            </div>
-            <div className="rounded-lg border p-3">
-              <div className="text-sm font-medium text-muted-foreground">NFC Total Spent</div>
-              <div className="text-2xl font-bold">${data.nfcTrends.totalFAABSpent}</div>
-            </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {data.leagueTrends.map(league => (
+              <div key={league.leagueId} className="rounded-lg border p-3">
+                <div className="text-sm font-medium text-muted-foreground">{league.leagueName}</div>
+                <div className="text-2xl font-bold">${league.totalFAABSpent}</div>
+                <div className="text-xs text-muted-foreground">FAAB spent</div>
+              </div>
+            ))}
             <div className="rounded-lg border p-3">
               <div className="text-sm font-medium text-muted-foreground">Total Waivers</div>
               <div className="text-2xl font-bold">
-                {data.afcTrends.totalWaivers + data.nfcTrends.totalWaivers}
-              </div>
-            </div>
-            <div className="rounded-lg border p-3">
-              <div className="text-sm font-medium text-muted-foreground">
-                Players in Both Leagues
-              </div>
-              <div className="text-2xl font-bold">
-                {
-                  data.playerComparisons.filter(p => p.afcStats !== null && p.nfcStats !== null)
-                    .length
-                }
+                {data.leagueTrends.reduce((total, league) => total + league.totalWaivers, 0)}
               </div>
             </div>
           </div>
@@ -119,7 +108,7 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="cross-league" className="flex items-center gap-2">
                 <ArrowLeftRight className="h-4 w-4" />
-                Cross-League
+                League Activity
               </TabsTrigger>
               <TabsTrigger value="managers" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />

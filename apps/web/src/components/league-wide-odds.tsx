@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, Crown, RefreshCw, Target, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { getLeagueConfig } from '@/config/leagues';
+import { buildGauntletMatchupPath } from '@/features/matchups/matchup-links';
 import type {
   LeagueWideOddsProps,
   LeagueWideOddsType,
@@ -37,12 +40,6 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
       }
 
       const data = await response.json();
-      console.log(`🎯 [LEAGUE ODDS UI] Fetched fresh odds for week ${week}:`, {
-        highestScorer: data.highestScorer?.[0]?.teamName,
-        probability: data.highestScorer?.[0]?.probability,
-        source: data.source || 'api',
-        timestamp: new Date().toISOString(),
-      });
       setOdds(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load odds');
@@ -57,13 +54,20 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
   }, [week]);
 
   const getLeagueBadgeColor = (leagueId: string): string => {
-    return leagueId === '1263744209295245312'
-      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+    switch (getLeagueConfig(leagueId)?.conference) {
+      case 'Legion I':
+      case 'AFC':
+        return 'border border-primary/20 bg-primary/10 text-primary';
+      case 'Legion II':
+      case 'NFC':
+        return 'border border-secondary/30 bg-secondary/15 text-secondary';
+      default:
+        return 'border border-success/30 bg-success/15 text-success';
+    }
   };
 
   const getLeagueShortName = (leagueId: string): string => {
-    return leagueId === '1263744209295245312' ? 'AFC' : 'NFC';
+    return getLeagueConfig(leagueId)?.conference || 'League';
   };
 
   if (loading) {
@@ -71,7 +75,7 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
       <Card className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
-            <Crown className="h-5 w-5 text-amber-500" />
+            <Crown className="h-5 w-5 text-secondary" />
             League-Wide Odds
             <Badge variant="outline">Week {week}</Badge>
           </CardTitle>
@@ -104,7 +108,7 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide text-red-600">
+          <CardTitle className="flex items-center gap-2 font-geizer tracking-wide text-destructive">
             <AlertCircle className="h-5 w-5" />
             League-Wide Odds Error
           </CardTitle>
@@ -130,12 +134,12 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
-              <Crown className="h-5 w-5 text-amber-500" />
+              <Crown className="h-5 w-5 text-secondary" />
               League-Wide Odds
               <Badge variant="outline">Week {week}</Badge>
             </CardTitle>
             <CardDescription className="font-avenir">
-              Monte Carlo predictions across all Gauntlet matchups
+              Live projections and distributions from driveFF across all three Legions
             </CardDescription>
           </div>
           <Button onClick={() => fetchOdds(false)} variant="ghost" size="sm" disabled={loading}>
@@ -149,10 +153,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
           {/* Highest Scorer Table */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-              <h3 className="text-lg font-semibold text-green-700 dark:text-green-400">
-                Highest Scorer Odds
-              </h3>
+              <TrendingUp className="h-5 w-5 text-success" />
+              <h3 className="text-lg font-semibold text-success">Highest Scorer Odds</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -175,7 +177,14 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
                   {odds.highestScorer.map((team, index) => (
                     <tr key={team.teamId} className="border-b border-muted/50 hover:bg-muted/30">
                       <td className="py-2 text-muted-foreground">#{index + 1}</td>
-                      <td className="py-2 font-medium">{team.teamName}</td>
+                      <td className="py-2 font-medium">
+                        <Link
+                          href={buildGauntletMatchupPath(team.leagueId, week, team.matchupId)}
+                          className="underline-offset-4 hover:text-primary hover:underline"
+                        >
+                          {team.teamName}
+                        </Link>
+                      </td>
                       <td className="py-2">
                         <Badge className={getLeagueBadgeColor(team.leagueId)} variant="secondary">
                           {getLeagueShortName(team.leagueId)}
@@ -211,10 +220,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
           {/* Lowest Scorer Table */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <TrendingDown className="h-5 w-5 text-red-600" />
-              <h3 className="text-lg font-semibold text-red-700 dark:text-red-400">
-                Lowest Scorer Odds
-              </h3>
+              <TrendingDown className="h-5 w-5 text-destructive" />
+              <h3 className="text-lg font-semibold text-destructive">Lowest Scorer Odds</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -237,7 +244,14 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
                   {odds.lowestScorer.map((team, index) => (
                     <tr key={team.teamId} className="border-b border-muted/50 hover:bg-muted/30">
                       <td className="py-2 text-muted-foreground">#{index + 1}</td>
-                      <td className="py-2 font-medium">{team.teamName}</td>
+                      <td className="py-2 font-medium">
+                        <Link
+                          href={buildGauntletMatchupPath(team.leagueId, week, team.matchupId)}
+                          className="underline-offset-4 hover:text-primary hover:underline"
+                        >
+                          {team.teamName}
+                        </Link>
+                      </td>
                       <td className="py-2">
                         <Badge className={getLeagueBadgeColor(team.leagueId)} variant="secondary">
                           {getLeagueShortName(team.leagueId)}
@@ -273,10 +287,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
           {/* Closest Matchups Table */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Target className="h-5 w-5 text-orange-600" />
-              <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-400">
-                Closest Matchups
-              </h3>
+              <Target className="h-5 w-5 text-secondary" />
+              <h3 className="text-lg font-semibold text-secondary">Closest Matchups</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -300,11 +312,18 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
                     >
                       <td className="py-2 text-muted-foreground">#{index + 1}</td>
                       <td className="py-2">
-                        <div className="font-medium">
+                        <Link
+                          href={buildGauntletMatchupPath(
+                            matchup.team1.leagueId,
+                            week,
+                            matchup.matchupId,
+                          )}
+                          className="font-medium underline-offset-4 hover:text-primary hover:underline"
+                        >
                           {matchup.team1.name}
                           <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
-                        </div>
+                        </Link>
                       </td>
                       <td className="py-2">
                         <Badge
@@ -342,10 +361,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
           {/* Biggest Blowout Table */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Zap className="h-5 w-5 text-purple-600" />
-              <h3 className="text-lg font-semibold text-purple-700 dark:text-purple-400">
-                Biggest Blowouts
-              </h3>
+              <Zap className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold text-primary">Biggest Blowouts</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -369,11 +386,18 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
                     >
                       <td className="py-2 text-muted-foreground">#{index + 1}</td>
                       <td className="py-2">
-                        <div className="font-medium">
+                        <Link
+                          href={buildGauntletMatchupPath(
+                            matchup.team1.leagueId,
+                            week,
+                            matchup.matchupId,
+                          )}
+                          className="font-medium underline-offset-4 hover:text-primary hover:underline"
+                        >
                           {matchup.team1.name}
                           <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
-                        </div>
+                        </Link>
                       </td>
                       <td className="py-2">
                         <Badge
@@ -411,10 +435,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
           {/* Highest Scoring Matchup Table */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-              <h3 className="text-lg font-semibold text-green-700 dark:text-green-400">
-                Highest Scoring Matchup
-              </h3>
+              <TrendingUp className="h-5 w-5 text-success" />
+              <h3 className="text-lg font-semibold text-success">Highest Scoring Matchup</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -440,11 +462,18 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
                     >
                       <td className="py-2 text-muted-foreground">#{index + 1}</td>
                       <td className="py-2">
-                        <div className="font-medium">
+                        <Link
+                          href={buildGauntletMatchupPath(
+                            matchup.team1.leagueId,
+                            week,
+                            matchup.matchupId,
+                          )}
+                          className="font-medium underline-offset-4 hover:text-primary hover:underline"
+                        >
                           {matchup.team1.name}
                           <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
-                        </div>
+                        </Link>
                       </td>
                       <td className="py-2">
                         <Badge
@@ -482,10 +511,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
           {/* Lowest Scoring Matchup Table */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <TrendingDown className="h-5 w-5 text-orange-600" />
-              <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-400">
-                Lowest Scoring Matchup
-              </h3>
+              <TrendingDown className="h-5 w-5 text-secondary" />
+              <h3 className="text-lg font-semibold text-secondary">Lowest Scoring Matchup</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -511,11 +538,18 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
                     >
                       <td className="py-2 text-muted-foreground">#{index + 1}</td>
                       <td className="py-2">
-                        <div className="font-medium">
+                        <Link
+                          href={buildGauntletMatchupPath(
+                            matchup.team1.leagueId,
+                            week,
+                            matchup.matchupId,
+                          )}
+                          className="font-medium underline-offset-4 hover:text-primary hover:underline"
+                        >
                           {matchup.team1.name}
                           <span className="text-xs text-muted-foreground mx-1">vs</span>
                           {matchup.team2.name}
-                        </div>
+                        </Link>
                       </td>
                       <td className="py-2">
                         <Badge
@@ -554,8 +588,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
         {/* Footer */}
         <div className="mt-4 pt-4 border-t border-muted text-center">
           <p className="text-xs text-muted-foreground">
-            Updated: {new Date(odds.lastUpdated).toLocaleTimeString()} • Based on Monte Carlo
-            simulations of all active rosters
+            Updated: {new Date(odds.lastUpdated).toLocaleTimeString()} • driveFF live model • 10,000
+            cross-league simulations
           </p>
         </div>
       </CardContent>

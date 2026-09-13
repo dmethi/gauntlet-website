@@ -28,7 +28,7 @@ const prisma = new PrismaClient();
 /**
  * Save a live win probability sample to the database
  *
- * Used by: comprehensive-live-snapshot.ts (every 10 min during games)
+ * Used by: live-odds Vercel Cron (every 2 min during game windows)
  *
  * @param data - Snapshot data including scores, projections, and win probabilities
  * @param data.leagueId - Sleeper league ID
@@ -183,6 +183,7 @@ export const saveMatchupOddsHistory = async (data: {
  * @example
  * ```typescript
  * await saveLeagueOddsHistory({
+ *   season: 2026,
  *   week: 4,
  *   highestScorerOdds: { rosterId: 3, probability: 0.18, projection: 145.2 },
  *   lowestScorerOdds: { rosterId: 8, probability: 0.22, projection: 82.5 },
@@ -197,6 +198,7 @@ export const saveMatchupOddsHistory = async (data: {
  * ```
  */
 export const saveLeagueOddsHistory = async (data: {
+  season: number;
   week: number;
   highestScorerOdds: Prisma.InputJsonValue;
   lowestScorerOdds: Prisma.InputJsonValue;
@@ -210,6 +212,7 @@ export const saveLeagueOddsHistory = async (data: {
 }): Promise<LeagueOddsHistory> => {
   return prisma.leagueOddsHistory.create({
     data: {
+      season: data.season,
       week: data.week,
       highestScorerOdds: data.highestScorerOdds,
       lowestScorerOdds: data.lowestScorerOdds,
@@ -469,7 +472,7 @@ export const getMatchupOddsHistory = async (
  *
  * @example
  * ```typescript
- * const history = await getLeagueOddsHistory(4);
+ * const history = await getLeagueOddsHistory(2026, 4);
  * console.log(`Week 4 has ${history.length} league odds snapshots`);
  *
  * history.forEach(snapshot => {
@@ -478,9 +481,12 @@ export const getMatchupOddsHistory = async (
  * });
  * ```
  */
-export const getLeagueOddsHistory = async (week: number): Promise<LeagueOddsHistory[]> => {
+export const getLeagueOddsHistory = async (
+  season: number,
+  week: number
+): Promise<LeagueOddsHistory[]> => {
   return prisma.leagueOddsHistory.findMany({
-    where: { week },
+    where: { season, week },
     orderBy: { createdAt: 'asc' },
   });
 };
@@ -495,7 +501,7 @@ export const getLeagueOddsHistory = async (week: number): Promise<LeagueOddsHist
  *
  * @example
  * ```typescript
- * const latest = await getLatestLeagueOdds(4);
+ * const latest = await getLatestLeagueOdds(2026, 4);
  * if (latest) {
  *   console.log('Highest scorer odds:', latest.highestScorerOdds);
  *   console.log('Closest matchup:', latest.closestMatchup);
@@ -503,9 +509,12 @@ export const getLeagueOddsHistory = async (week: number): Promise<LeagueOddsHist
  * }
  * ```
  */
-export const getLatestLeagueOdds = async (week: number): Promise<LeagueOddsHistory | null> => {
+export const getLatestLeagueOdds = async (
+  season: number,
+  week: number
+): Promise<LeagueOddsHistory | null> => {
   return prisma.leagueOddsHistory.findFirst({
-    where: { week },
+    where: { season, week },
     orderBy: { createdAt: 'desc' },
   });
 };

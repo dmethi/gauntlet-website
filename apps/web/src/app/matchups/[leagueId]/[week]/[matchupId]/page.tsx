@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Clock, TrendingUp, Trophy } from 'lucide-react';
+import { ArrowLeft, Clock, ExternalLink, TrendingUp, Trophy } from 'lucide-react';
 import { MatchupSimulation } from '@/features/matchups/components/MatchupSimulation';
 import { PlayerBoxPlot } from '@/components/player-box-plot';
 import type { MatchupDetails, PlayerDetails, TeamRoster } from '@/features/matchups/types';
@@ -14,6 +14,7 @@ import { useMatchupTimeSeries } from '@/features/matchups/hooks';
 import { SwingPointsDisplay } from '@/features/matchups/components/SwingPointsDisplay';
 import { WarRoomLoader } from '@gauntlet/ui';
 import { GauntletLogo } from '@/components/gauntlet-logo';
+import { buildSleeperMatchupUrl } from '@/features/matchups/matchup-links';
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'FLEX', 'K', 'DEF'];
 
@@ -70,7 +71,11 @@ export default function MatchupDetailPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch time series data for charts
-  const { data: timeSeriesData, isLoading: timeSeriesLoading } = useMatchupTimeSeries(
+  const {
+    data: timeSeriesData,
+    isLoading: timeSeriesLoading,
+    isError: timeSeriesError,
+  } = useMatchupTimeSeries(
     Array.isArray(leagueId) ? leagueId[0] : (leagueId as string),
     parseInt(Array.isArray(week) ? week[0] : (week as string)),
     parseInt(Array.isArray(matchupId) ? matchupId[0] : (matchupId as string)),
@@ -133,15 +138,14 @@ export default function MatchupDetailPage(): JSX.Element {
           matchupId: parseInt(matchupId as string),
           week: parseInt(week as string),
           leagueId: leagueId as string,
-          leagueName:
-            data.leagueName ||
-            (leagueId === '1263744209295245312' ? 'Gauntlet AFC' : 'Gauntlet NFC'),
+          leagueName: data.leagueName || 'The Gauntlet',
           teams: matchupData.teams.map((team: any) => ({
             rosterId: team.rosterId,
             teamName: team.teamName || `Team ${team.rosterId}`,
             ownerName: team.ownerName || 'Unknown',
             points: team.points || 0,
             projectedPoints: team.projectedPoints || 0,
+            projectionSource: team.projectionSource,
             starters: (team.starters || []).map((player: any) => ({
               id: player.id,
               name: player.name || 'Unknown Player',
@@ -186,8 +190,9 @@ export default function MatchupDetailPage(): JSX.Element {
               }
             : null,
           isComplete:
-            matchupData.summary?.winnerRosterId !== null &&
-            matchupData.summary?.winnerRosterId !== undefined,
+            data.gameStatus === 'final' ||
+            (matchupData.summary?.winnerRosterId !== null &&
+              matchupData.summary?.winnerRosterId !== undefined),
           margin: data.margin || 0,
           gameStatus: data.gameStatus || 'pre_game',
         };
@@ -233,10 +238,20 @@ export default function MatchupDetailPage(): JSX.Element {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <Button variant="ghost" size="sm" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Matchups
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <a
+              href={buildSleeperMatchupUrl(matchup.leagueId, matchup.matchupId)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open in Sleeper
+              <ExternalLink className="ml-2 h-4 w-4" />
+            </a>
           </Button>
         </div>
 
@@ -313,6 +328,11 @@ export default function MatchupDetailPage(): JSX.Element {
                 <div className="h-48 flex items-center justify-center">
                   <div className="text-sm text-muted-foreground">Loading chart data...</div>
                 </div>
+              ) : timeSeriesError ? (
+                <div className="flex h-48 items-center justify-center px-4 text-center text-sm text-muted-foreground">
+                  Live tracking is temporarily unavailable. The next scheduled snapshot will retry
+                  automatically.
+                </div>
               ) : timeSeriesData?.series && timeSeriesData.series.length > 0 ? (
                 <WinProbChart
                   series={timeSeriesData.series}
@@ -322,8 +342,10 @@ export default function MatchupDetailPage(): JSX.Element {
               ) : (
                 <div className="h-48 flex items-center justify-center">
                   <div className="text-center text-sm text-muted-foreground px-4">
-                    <p className="mb-2">Live data not yet available</p>
-                    <p className="text-xs">Data is collected during games starting Week 6</p>
+                    <p className="mb-2">Awaiting the first live snapshot</p>
+                    <p className="text-xs">
+                      Tracking runs every two minutes during NFL game windows, beginning Week 1.
+                    </p>
                   </div>
                 </div>
               )}
@@ -343,6 +365,11 @@ export default function MatchupDetailPage(): JSX.Element {
                 <div className="h-48 flex items-center justify-center">
                   <div className="text-sm text-muted-foreground">Loading chart data...</div>
                 </div>
+              ) : timeSeriesError ? (
+                <div className="flex h-48 items-center justify-center px-4 text-center text-sm text-muted-foreground">
+                  Live tracking is temporarily unavailable. The next scheduled snapshot will retry
+                  automatically.
+                </div>
               ) : timeSeriesData?.series && timeSeriesData.series.length > 0 ? (
                 <ScoreChart
                   series={timeSeriesData.series}
@@ -352,8 +379,11 @@ export default function MatchupDetailPage(): JSX.Element {
               ) : (
                 <div className="h-48 flex items-center justify-center">
                   <div className="text-center text-sm text-muted-foreground px-4">
-                    <p className="mb-2">Live data not yet available</p>
-                    <p className="text-xs">Data is collected during games starting Week 6</p>
+                    <p className="mb-2">Awaiting the first live snapshot</p>
+                    <p className="text-xs">
+                      Scores are recorded every two minutes during NFL game windows, beginning Week
+                      1.
+                    </p>
                   </div>
                 </div>
               )}
@@ -420,7 +450,8 @@ const TeamScore = ({ team, isLeading }: { team: TeamRoster; isLeading: boolean }
 
       <div className="space-y-1">
         <div className="text-sm text-muted-foreground">
-          Projected: {team.projectedPoints.toFixed(1)}
+          {team.projectionSource === 'driveff' ? 'Live projected' : 'Projected'}:{' '}
+          {team.projectedPoints.toFixed(1)}
         </div>
         <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
@@ -520,7 +551,9 @@ const TeamRosterCard = ({
             </div>
             <div>
               <div className="font-bold text-lg">{team.projectedPoints.toFixed(1)}</div>
-              <div className="text-muted-foreground">Projected</div>
+              <div className="text-muted-foreground">
+                {team.projectionSource === 'driveff' ? 'Live projected' : 'Projected'}
+              </div>
             </div>
             <div>
               <div className="font-bold text-lg">{team.playersActive}</div>

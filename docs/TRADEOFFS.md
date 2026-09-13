@@ -200,6 +200,11 @@ MatchupCard.displayName = 'MatchupCard';
 | **Latency target** | <200ms       | UI responsiveness                |
 | **Correlation**    | QB-WR stacks | Realistic outcome modeling       |
 
+These choices describe the reusable Gauntlet engine. The live matchup UI uses
+driveFF's model and persisted distributions as its source of truth; Gauntlet
+only runs cross-league sampling over those distributions for league-wide race
+categories.
+
 ### Logging & Debugging
 
 | Decision            | Choice                  | Rationale              |
