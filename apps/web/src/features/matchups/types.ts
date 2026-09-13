@@ -154,6 +154,10 @@ export interface SimulationData {
       projection: number;
     }>;
   }>;
+  iterations?: number;
+  generatedAt?: string;
+  modelSource?: string;
+  modelVersion?: string;
 }
 
 /**

@@ -23,7 +23,7 @@ interface MatchupSimulationProps {
 }
 
 /**
- * MatchupSimulation - Main component for displaying Monte Carlo simulation results
+ * MatchupSimulation - Main component for displaying live driveFF model results
  * Shows win probabilities, score distributions, betting lines, and interactive calculators
  */
 export const MatchupSimulation = ({
@@ -83,7 +83,7 @@ export const MatchupSimulation = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
             <Zap className="h-5 w-5" />
-            Monte Carlo Simulation
+            Live Win Model
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -126,9 +126,9 @@ export const MatchupSimulation = ({
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
             <Zap className="h-5 w-5 text-yellow-500" />
-            Monte Carlo Simulation
+            Live Win Model
             <Badge variant="outline" className="ml-2">
-              20,000 sims
+              {(simulationData.iterations ?? 0).toLocaleString()} sims
             </Badge>
           </CardTitle>
           <div className="flex items-center gap-2">
