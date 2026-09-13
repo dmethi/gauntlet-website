@@ -7,6 +7,7 @@ import {
 import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
 import type { PlayerDetails, TeamRoster } from '@/features/matchups/types';
 import { getLeagueConfig } from '@/config/leagues';
+import { getDriveFFLiveOdds } from '@/lib/driveff-live-odds';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,14 +32,22 @@ export const GET = async (
     const projectionSeason = String(leagueConfig?.season ?? new Date().getFullYear());
 
     // Fetch all required data
-    const [league, matchups, users, rosters, rawProjections, playersData] = await Promise.all([
-      sleeperClient.fetchLeague(leagueId),
-      sleeperClient.fetchMatchups(leagueId, weekNumber),
-      sleeperClient.fetchUsers(leagueId),
-      sleeperClient.fetchRosters(leagueId),
-      sleeperClient.fetchWeeklyProjections(weekNumber, projectionSeason),
-      sleeperClient.fetchAllPlayers(),
-    ]);
+    const [league, matchups, users, rosters, rawProjections, playersData, driveFFFeed] =
+      await Promise.all([
+        sleeperClient.fetchLeague(leagueId),
+        sleeperClient.fetchMatchups(leagueId, weekNumber),
+        sleeperClient.fetchUsers(leagueId),
+        sleeperClient.fetchRosters(leagueId),
+        sleeperClient.fetchWeeklyProjections(weekNumber, projectionSeason),
+        sleeperClient.fetchAllPlayers(),
+        getDriveFFLiveOdds(leagueId, weekNumber, targetMatchupId).catch(error => {
+          console.warn(
+            `[MATCHUP API] driveFF unavailable for ${leagueId}/${weekNumber}/${targetMatchupId}`,
+            error,
+          );
+          return null;
+        }),
+      ]);
 
     if (!matchups || !Array.isArray(matchups)) {
       return NextResponse.json({ error: 'No matchups found' }, { status: 404 });
@@ -130,12 +139,25 @@ export const GET = async (
           };
         });
 
+      const pregameProjection = starterPlayers.reduce(
+        (sum: number, player: PlayerDetails) => sum + player.projectedPoints,
+        0,
+      );
+      const liveMatchup = driveFFFeed?.latest?.matchup;
+      const liveProjection =
+        String(matchup.roster_id) === liveMatchup?.rosterAId
+          ? liveMatchup.projectedFinalA
+          : String(matchup.roster_id) === liveMatchup?.rosterBId
+            ? liveMatchup.projectedFinalB
+            : null;
+
       return {
         rosterId: matchup.roster_id,
         teamName: owner?.display_name || owner?.username || `Team ${matchup.roster_id}`,
         ownerName: owner?.display_name || owner?.username || `Owner ${matchup.roster_id}`,
         points: matchup.points || 0,
-        projectedPoints: starterPlayers.reduce((sum: number, p: any) => sum + p.projectedPoints, 0),
+        projectedPoints: liveProjection ?? pregameProjection,
+        projectionSource: liveProjection === null ? 'sleeper' : 'driveff',
         starters: starterPlayers,
         bench: benchPlayers,
         remainingPlayers: starterPlayers.filter((p: any) => p.points === 0).length,
@@ -177,12 +199,22 @@ export const GET = async (
       isComplete,
       margin,
     };
+    const gameProgress = driveFFFeed?.latest?.matchup.gameProgress;
+    const gameStatus =
+      gameProgress === undefined
+        ? 'pre_game'
+        : gameProgress >= 1
+          ? 'final'
+          : gameProgress > 0
+            ? 'in_progress'
+            : 'pre_game';
 
     return NextResponse.json({
       matchup: matchupDetails,
       week: weekNumber,
       leagueId,
       leagueName: leagueConfig?.name || league?.name || 'The Gauntlet',
+      gameStatus,
     });
   } catch (error) {
     console.error('Error fetching individual matchup:', error);

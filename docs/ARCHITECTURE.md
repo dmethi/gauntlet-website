@@ -19,14 +19,32 @@ leagues.** The 2026 season has three leagues; later seasons may add more.
 Key challenges:
 
 - IDs are **not globally unique** (matchup IDs 1-6 repeat across leagues)
-- Real-time simulation of win probabilities requires fast Monte Carlo
-  computation
+- Real-time win probabilities must stay consistent with the shared driveFF model
+  and its persisted snapshots
 - Weekly recap reports need narrative synthesis alongside statistical analysis
 - System must remain maintainable by small team with heavy AI collaboration
 
 ---
 
 ## Architectural Decisions
+
+### Why driveFF Owns Live Matchup Probabilities?
+
+**Context**: Gauntlet and driveFF previously calculated and stored live matchup
+probabilities independently. That duplicated model maintenance and allowed the
+main matchup page, detail page, and historical charts to disagree.
+
+**Decision**: driveFF is the source of truth for live projected finals, win
+probabilities, player distributions, and score/probability time series. Gauntlet
+joins that feed to Sleeper roster, manager, and current-score data. League-wide
+high/low scorer odds are cross-league simulations over driveFF team
+distributions.
+
+**Constraint**: A Gauntlet matchup UI must not create a parallel live projection
+or win-probability model. It may fall back to Sleeper's pregame projection when
+driveFF has no current snapshot, and must label that fallback accordingly.
+
+---
 
 ### Why Monorepo (Turborepo + pnpm Workspaces)?
 

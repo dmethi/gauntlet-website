@@ -16,6 +16,7 @@ export interface MatchupTeam {
   ownerName: string;
   points: number;
   projectedPoints?: number;
+  projectionSource?: 'driveff' | 'sleeper';
   roster: {
     id: number;
     players: string[];
@@ -64,6 +65,7 @@ export interface TeamRoster {
   ownerName: string;
   points: number;
   projectedPoints: number;
+  projectionSource?: 'driveff' | 'sleeper';
   starters: PlayerDetails[];
   bench: PlayerDetails[];
   remainingPlayers: number;
@@ -257,6 +259,7 @@ export interface LeagueWideOddsType {
   highestScoringMatchup: MatchupOdds[];
   lowestScoringMatchup: MatchupOdds[];
   lastUpdated: string;
+  source?: 'driveff';
 }
 
 /**

@@ -112,6 +112,7 @@ export const toAmericanMoneyline = (probability: number): number => {
 export const getTeamScoreDistribution = (
   projectedFinal: number,
   players: DriveFFPlayerDistribution[],
+  currentScore = 0,
 ) => {
   const standardDeviation = Math.sqrt(
     players.reduce((sum, player) => sum + player.standardDeviation ** 2, 0),
@@ -121,7 +122,7 @@ export const getTeamScoreDistribution = (
   return {
     mean: projectedFinal,
     median: projectedFinal,
-    p10: Math.max(0, projectedFinal - p10Offset),
+    p10: Math.max(currentScore, projectedFinal - p10Offset),
     p90: projectedFinal + p10Offset,
   };
 };

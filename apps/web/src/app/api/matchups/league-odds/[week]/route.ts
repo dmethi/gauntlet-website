@@ -1,355 +1,258 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getMatchupsByWeek, getRostersByLeague, getUsersByLeague } from '@/lib/api-replacements';
-import { sleeperClient } from '@/lib/sleeper/unified-client';
-import { simulateMatchupProbabilityFromPlayers } from '@gauntlet/sim-engine';
-import {
-  calculateLeagueProjections,
-  type ScoringSettings,
-} from '@/lib/calculate-league-projections';
-import type { LeagueWideOddsType, MatchupOdds, TeamOdds } from '@/features/matchups/types';
 import { getCurrentLeagues } from '@/config/leagues';
+import { getDriveFFLiveOdds, getTeamScoreDistribution } from '@/lib/driveff-live-odds';
+import type { LeagueWideOddsType, MatchupOdds, TeamOdds } from '@/features/matchups/types';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
-const probToAmerican = (prob: number): string => {
-  if (prob <= 0) return '+∞';
-  if (prob >= 1) return '-∞';
-  if (prob >= 0.5) return `${Math.round(-(prob / (1 - prob)) * 100)}`;
-  return `+${Math.round(((1 - prob) / prob) * 100)}`;
+interface LiveTeam {
+  rosterId: number;
+  matchupId: number;
+  teamName: string;
+  leagueId: string;
+  leagueName: string;
+  currentScore: number;
+  mean: number;
+  p10: number;
+  p50: number;
+  p90: number;
+}
+
+const probToAmerican = (probability: number): string => {
+  if (probability <= 0) return '+∞';
+  if (probability >= 1) return '-∞';
+  if (probability >= 0.5) return `${Math.round(-(probability / (1 - probability)) * 100)}`;
+  return `+${Math.round(((1 - probability) / probability) * 100)}`;
 };
 
-const probToColor = (prob: number, reverse = false): string => {
-  let p = Math.max(0, Math.min(1, prob));
+const probToColor = (probability: number, reverse = false): string => {
+  let p = Math.max(0, Math.min(1, probability));
   if (reverse) p = 1 - p;
-  if (p < 0.33) {
-    const r = 255;
-    const g = Math.round(255 * (p / 0.33));
-    return `rgb(${r}, ${g}, 0)`;
-  }
+  if (p < 0.33) return `rgb(255, ${Math.round(255 * (p / 0.33))}, 0)`;
   if (p < 0.66) {
     const ratio = (p - 0.33) / 0.33;
-    const r = Math.round(255 * (1 - ratio));
-    return `rgb(${r}, 255, 0)`;
+    return `rgb(${Math.round(255 * (1 - ratio))}, 255, 0)`;
   }
   const ratio = (p - 0.66) / 0.34;
   return `rgb(0, 255, ${Math.round(128 * ratio)})`;
 };
 
-const sampleScore = (mean: number, p10: number, p90: number): number => {
-  const std = (p90 - p10) / (2 * 1.28);
-  const u1 = Math.random();
+const sampleScore = (team: LiveTeam): number => {
+  const standardDeviation = Math.max(0, (team.p90 - team.p10) / (2 * 1.2815515655446004));
+  const u1 = Math.max(Number.EPSILON, Math.random());
   const u2 = Math.random();
-  const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-  return mean + z * std;
+  const standardNormal = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  return Math.max(team.currentScore, team.mean + standardNormal * standardDeviation);
 };
 
+const teamNameFromOwner = (
+  owner: { username?: string; displayName?: string; metadata?: unknown } | undefined,
+  rosterId: number,
+): string => {
+  const metadata =
+    owner?.metadata && typeof owner.metadata === 'object'
+      ? (owner.metadata as Record<string, unknown>)
+      : null;
+  const metadataName = typeof metadata?.team_name === 'string' ? metadata.team_name : null;
+  return metadataName || owner?.displayName || owner?.username || `Team ${rosterId}`;
+};
+
+const emptyPayload = (week: number): LeagueWideOddsType => ({
+  week,
+  highestScorer: [],
+  lowestScorer: [],
+  closestMatchup: [],
+  biggestBlowout: [],
+  highestScoringMatchup: [],
+  lowestScoringMatchup: [],
+  lastUpdated: new Date().toISOString(),
+  source: 'driveff',
+});
+
 export const GET = async (_req: NextRequest, props: { params: Promise<{ week: string }> }) => {
-  const params = await props.params;
-  const week = parseInt(params.week, 10);
+  const { week: weekParam } = await props.params;
+  const week = Number.parseInt(weekParam, 10);
   if (!Number.isFinite(week) || week < 1 || week > 18) {
     return NextResponse.json({ error: 'Invalid week' }, { status: 400 });
   }
 
   try {
-    const leagueConfigs = getCurrentLeagues();
-    const season = String(leagueConfigs[0]?.season ?? new Date().getFullYear());
-
-    // Load projections, players, and league info for each league
-    const [rawProjections, players] = await Promise.all([
-      sleeperClient.fetchWeeklyProjections(week, season),
-      sleeperClient.fetchAllPlayers(),
-    ]);
-
-    // Convert projections to array while preserving player_id
-    const rawProjectionsArray: any[] = Array.isArray(rawProjections)
-      ? rawProjections
-      : rawProjections
-        ? Object.entries(rawProjections).map(([playerId, projection]) => ({
-            ...(typeof projection === 'object' && projection !== null ? projection : {}),
-            player_id: playerId,
-          }))
-        : [];
-    const playersMap: Record<string, any> = players || {};
-
-    // We'll calculate league-specific projections per league below
-
-    const allTeams: Array<{
-      team: { rosterId: number; matchupId: number; roster?: any };
-      leagueId: string;
-      leagueName: string;
-      mean: number;
-      p10: number;
-      p50: number;
-      p90: number;
-    }> = [];
-
-    for (const leagueConfig of leagueConfigs) {
-      const leagueId = leagueConfig.id;
-      const [rosters, users, matchups, league] = await Promise.all([
-        getRostersByLeague(leagueId),
-        getUsersByLeague(leagueId),
-        getMatchupsByWeek(leagueId, week),
-        sleeperClient.fetchLeague(leagueId),
-      ]);
-      const usersById = new Map(users.map((u: any) => [u.id, u]));
-      const rostersById = new Map(rosters.map((r: any) => [r.rosterId, r]));
-
-      // Calculate league-specific projections
-      const scoringSettings: ScoringSettings = (league?.scoring_settings as ScoringSettings) || {};
-      const leagueProjections = calculateLeagueProjections(rawProjectionsArray, scoringSettings);
-      const projOf = (id: string) => leagueProjections[id]?.points || 0;
-
-      // Only include complete matchup pairs to avoid duplicates
-      const grouped = new Map<number, any[]>();
-      for (const m of matchups) {
-        if (m.matchupId == null) continue;
-        const arr = grouped.get(m.matchupId) || [];
-        arr.push(m);
-        grouped.set(m.matchupId, arr);
-      }
-
-      for (const [, pair] of grouped) {
-        if (pair.length !== 2) continue;
-        const [a, b] = pair as any[];
-        const buildPlayers = (entry: any) => {
-          const ids: string[] = (entry.starters || []) as string[];
-          const pts: Record<string, number> = (entry.startersPoints ||
-            entry.starterPoints ||
-            {}) as any;
-          return ids
-            .map((id, index) => {
-              const p = playersMap[id] || {};
-              // starters_points uses array indices as keys, not player IDs
-              const currentScore = Number(pts?.[index.toString()] || 0);
-
-              // Ensure position is valid for sim-engine validation
-              // Valid positions: QB, RB, WR, TE, K, DEF, DST
-              let position = p.position;
-              if (!position || !['QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'DST'].includes(position)) {
-                // Default to RB for flex positions or unknown players (most common flex position)
-                position = 'RB';
-              }
-
-              return {
-                id,
-                name: p.full_name || id,
-                position,
-                projection: projOf(id),
-                currentScore,
-                nflTeam: p.team || undefined,
-              };
-            })
-            .filter(player => player.id !== '0'); // Filter out empty roster slots (Sleeper uses "0" for empty slots)
-        };
-        const team1Players = buildPlayers(a);
-        const team2Players = buildPlayers(b);
-
-        // Skip matchups where either team has no valid players (all empty slots)
-        if (team1Players.length === 0 || team2Players.length === 0) {
-          console.warn(
-            `[LEAGUE ODDS] Skipping matchup ${a.matchupId} in league ${leagueId} - empty lineup detected`,
-          );
-          continue;
-        }
-
-        // Run sim-engine once per matchup pair to get distributions. We don't have per-player NFL team live set here,
-        // so pass undefined; sim-engine will treat players without currentScore as pre-game and with currentScore as finished.
-        // This matches league-wide, pre-snapshot use where we don't adjust by minutes.
-        const sim = await simulateMatchupProbabilityFromPlayers(
-          team1Players as any,
-          team2Players as any,
-          10000,
-          0,
-          undefined,
+    const leagueResults = await Promise.all(
+      getCurrentLeagues().map(async leagueConfig => {
+        const [rosters, users, matchups] = await Promise.all([
+          getRostersByLeague(leagueConfig.id),
+          getUsersByLeague(leagueConfig.id),
+          getMatchupsByWeek(leagueConfig.id, week),
+        ]);
+        const usersById = new Map(users.map(user => [user.id, user]));
+        const ownersByRosterId = new Map(
+          rosters.map(roster => [roster.rosterId, usersById.get(roster.ownerId)]),
+        );
+        const matchupIds = [
+          ...new Set(
+            matchups
+              .map(matchup => matchup.matchupId)
+              .filter((matchupId): matchupId is number => matchupId !== null),
+          ),
+        ];
+        const feeds = await Promise.all(
+          matchupIds.map(matchupId => getDriveFFLiveOdds(leagueConfig.id, week, matchupId)),
         );
 
-        // Sim-engine now properly receives current scores from completed games
+        const liveTeams: LiveTeam[] = [];
+        const latestTimestamp = feeds
+          .flatMap(feed => (feed.latest ? [feed.latest.timestamp] : []))
+          .sort()
+          .at(-1);
+        for (const feed of feeds) {
+          if (!feed.latest) continue;
+          const { matchup, playerDistributions } = feed.latest;
 
-        const rosterA = rostersById.get(a.rosterId);
-        const rosterB = rostersById.get(b.rosterId);
-        const ownerA = rosterA ? usersById.get(rosterA.ownerId) : null;
-        const ownerB = rosterB ? usersById.get(rosterB.ownerId) : null;
+          const addTeam = (
+            rosterId: string,
+            projectedFinal: number,
+            currentScore: number,
+          ): void => {
+            const numericRosterId = Number.parseInt(rosterId, 10);
+            const distributions = playerDistributions.filter(
+              player => player.rosterId === rosterId,
+            );
+            const range = getTeamScoreDistribution(projectedFinal, distributions, currentScore);
+            liveTeams.push({
+              rosterId: numericRosterId,
+              matchupId: Number.parseInt(feed.matchupId, 10),
+              teamName: teamNameFromOwner(ownersByRosterId.get(numericRosterId), numericRosterId),
+              leagueId: leagueConfig.id,
+              leagueName: leagueConfig.name,
+              currentScore,
+              mean: projectedFinal,
+              p10: range.p10,
+              p50: range.median,
+              p90: range.p90,
+            });
+          };
 
-        // Store team summaries for later ranking
-        allTeams.push({
-          team: { rosterId: a.rosterId, matchupId: a.matchupId, roster: { owner: ownerA } },
-          leagueId,
-          leagueName: leagueConfig.name,
-          mean: sim.team1Scores.mean,
-          p10: sim.team1Scores.p10,
-          p50: sim.team1Scores.median,
-          p90: sim.team1Scores.p90,
-        });
-        allTeams.push({
-          team: { rosterId: b.rosterId, matchupId: b.matchupId, roster: { owner: ownerB } },
-          leagueId,
-          leagueName: leagueConfig.name,
-          mean: sim.team2Scores.mean,
-          p10: sim.team2Scores.p10,
-          p50: sim.team2Scores.median,
-          p90: sim.team2Scores.p90,
-        });
-      }
-    }
+          addTeam(matchup.rosterAId, matchup.projectedFinalA, matchup.currentScoreA);
+          addTeam(matchup.rosterBId, matchup.projectedFinalB, matchup.currentScoreB);
+        }
 
-    if (!allTeams.length) {
-      return NextResponse.json({
-        week,
-        highestScorer: [],
-        lowestScorer: [],
-        closestMatchup: [],
-        biggestBlowout: [],
-        highestScoringMatchup: [],
-        lowestScoringMatchup: [],
-        lastUpdated: new Date().toISOString(),
-      } as LeagueWideOddsType);
-    }
+        if (liveTeams.length > 0 && liveTeams.length !== feeds.length * 2) {
+          throw new Error(
+            `driveFF returned incomplete Week ${week} coverage for ${leagueConfig.id}`,
+          );
+        }
 
-    // Monte Carlo over team distributions derived from sim-engine means/ranges
-    const iterations = 10000; // Doubled from 5k to 10k iterations
-    const winsHigh = new Array(allTeams.length).fill(0);
-    const winsLow = new Array(allTeams.length).fill(0);
+        return { liveTeams, latestTimestamp: latestTimestamp ?? null };
+      }),
+    );
 
-    // Build matchup pairs
-    const mapPairs = new Map<string, number[]>();
-    allTeams.forEach((t, idx) => {
-      const key = `${t.leagueId}-${t.team.matchupId}`;
-      const arr = mapPairs.get(key) || [];
-      arr.push(idx);
-      mapPairs.set(key, arr);
+    const allTeams = leagueResults.flatMap(result => result.liveTeams);
+    if (allTeams.length === 0) return NextResponse.json(emptyPayload(week));
+
+    const iterations = 10_000;
+    const winsHigh = new Array<number>(allTeams.length).fill(0);
+    const winsLow = new Array<number>(allTeams.length).fill(0);
+    const pairIndexes = new Map<string, number[]>();
+    allTeams.forEach((team, index) => {
+      const key = `${team.leagueId}-${team.matchupId}`;
+      pairIndexes.set(key, [...(pairIndexes.get(key) || []), index]);
     });
-    const pairs = Array.from(mapPairs.values()).filter(p => p.length === 2);
+    const pairs = [...pairIndexes.values()].filter(pair => pair.length === 2);
+    const pairWinsClosest = new Array<number>(pairs.length).fill(0);
+    const pairWinsBlowout = new Array<number>(pairs.length).fill(0);
+    const pairWinsHighest = new Array<number>(pairs.length).fill(0);
+    const pairWinsLowest = new Array<number>(pairs.length).fill(0);
 
-    const pairWinsClosest = new Array(pairs.length).fill(0);
-    const pairWinsBlowout = new Array(pairs.length).fill(0);
-    const pairWinsHighest = new Array(pairs.length).fill(0);
-    const pairWinsLowest = new Array(pairs.length).fill(0);
-
-    for (let it = 0; it < iterations; it++) {
-      const scores = allTeams.map(t => sampleScore(t.mean, t.p10, t.p90));
-      // team highs/lows
-      let maxIdx = 0;
-      let minIdx = 0;
-      for (let i = 1; i < scores.length; i++) {
-        if (scores[i] > scores[maxIdx]) maxIdx = i;
-        if (scores[i] < scores[minIdx]) minIdx = i;
+    for (let iteration = 0; iteration < iterations; iteration += 1) {
+      const scores = allTeams.map(sampleScore);
+      let highestTeamIndex = 0;
+      let lowestTeamIndex = 0;
+      for (let index = 1; index < scores.length; index += 1) {
+        if (scores[index] > scores[highestTeamIndex]) highestTeamIndex = index;
+        if (scores[index] < scores[lowestTeamIndex]) lowestTeamIndex = index;
       }
-      winsHigh[maxIdx]++;
-      winsLow[minIdx]++;
+      winsHigh[highestTeamIndex] += 1;
+      winsLow[lowestTeamIndex] += 1;
 
-      // matchup derived metrics
-      let bestClosest = { idx: 0, margin: Infinity };
-      let bestBlow = { idx: 0, margin: -Infinity };
-      let bestHighTotal = { idx: 0, total: -Infinity };
-      let bestLowTotal = { idx: 0, total: Infinity };
-      pairs.forEach((p, pi) => {
-        const a = scores[p[0]];
-        const b = scores[p[1]];
-        const margin = Math.abs(a - b);
-        const total = a + b;
-        if (margin < bestClosest.margin) bestClosest = { idx: pi, margin };
-        if (margin > bestBlow.margin) bestBlow = { idx: pi, margin };
-        if (total > bestHighTotal.total) bestHighTotal = { idx: pi, total };
-        if (total < bestLowTotal.total) bestLowTotal = { idx: pi, total };
+      let closest = { index: 0, value: Number.POSITIVE_INFINITY };
+      let blowout = { index: 0, value: Number.NEGATIVE_INFINITY };
+      let highest = { index: 0, value: Number.NEGATIVE_INFINITY };
+      let lowest = { index: 0, value: Number.POSITIVE_INFINITY };
+      pairs.forEach(([first, second], index) => {
+        const margin = Math.abs(scores[first] - scores[second]);
+        const total = scores[first] + scores[second];
+        if (margin < closest.value) closest = { index, value: margin };
+        if (margin > blowout.value) blowout = { index, value: margin };
+        if (total > highest.value) highest = { index, value: total };
+        if (total < lowest.value) lowest = { index, value: total };
       });
-      pairWinsClosest[bestClosest.idx]++;
-      pairWinsBlowout[bestBlow.idx]++;
-      pairWinsHighest[bestHighTotal.idx]++;
-      pairWinsLowest[bestLowTotal.idx]++;
+      pairWinsClosest[closest.index] += 1;
+      pairWinsBlowout[blowout.index] += 1;
+      pairWinsHighest[highest.index] += 1;
+      pairWinsLowest[lowest.index] += 1;
     }
 
-    const highestScorer: TeamOdds[] = allTeams
-      .map((t, i) => ({
-        teamId: `${t.leagueId}-${t.team.rosterId}`, // Make teamId unique across leagues
-        matchupId: t.team.matchupId,
-        teamName:
-          t.team.roster?.owner?.metadata?.team_name ||
-          t.team.roster?.owner?.displayName ||
-          t.team.roster?.owner?.username ||
-          `Team ${t.team.rosterId}`,
-        leagueId: t.leagueId,
-        leagueName: t.leagueName,
-        probability: winsHigh[i] / iterations,
-        odds: probToAmerican(winsHigh[i] / iterations),
-        projectedRange: { p10: t.p10, p50: t.p50, p90: t.p90 },
-        totalProjection: t.mean,
-        color: probToColor(winsHigh[i] / iterations),
-      }))
-      .sort((a, b) => b.probability - a.probability);
-
-    const lowestScorer: TeamOdds[] = allTeams
-      .map((t, i) => ({
-        teamId: `${t.leagueId}-${t.team.rosterId}`, // Make teamId unique across leagues
-        matchupId: t.team.matchupId,
-        teamName:
-          t.team.roster?.owner?.metadata?.team_name ||
-          t.team.roster?.owner?.displayName ||
-          t.team.roster?.owner?.username ||
-          `Team ${t.team.rosterId}`,
-        leagueId: t.leagueId,
-        leagueName: t.leagueName,
-        probability: winsLow[i] / iterations,
-        odds: probToAmerican(winsLow[i] / iterations),
-        projectedRange: { p10: t.p10, p50: t.p50, p90: t.p90 },
-        totalProjection: t.mean,
-        color: probToColor(winsLow[i] / iterations, true),
-      }))
-      .sort((a, b) => b.probability - a.probability);
-
-    const toMatchupOdds = (arr: number[]): MatchupOdds[] =>
-      arr
-        .map((wins, pi) => {
-          const [i, j] = pairs[pi];
-          const a = allTeams[i];
-          const b = allTeams[j];
+    const toTeamOdds = (wins: number[], reverseColor = false): TeamOdds[] =>
+      allTeams
+        .map((team, index) => {
+          const probability = wins[index] / iterations;
           return {
-            matchupId: a.team.matchupId,
-            team1: {
-              name:
-                a.team.roster?.owner?.metadata?.team_name ||
-                a.team.roster?.owner?.displayName ||
-                a.team.roster?.owner?.username ||
-                `Team ${a.team.rosterId}`,
-              leagueId: a.leagueId,
-              projection: Math.round(a.mean * 100) / 100,
-            },
-            team2: {
-              name:
-                b.team.roster?.owner?.metadata?.team_name ||
-                b.team.roster?.owner?.displayName ||
-                b.team.roster?.owner?.username ||
-                `Team ${b.team.rosterId}`,
-              leagueId: b.leagueId,
-              projection: Math.round(b.mean * 100) / 100,
-            },
-            projectedMargin: Math.round(Math.abs(a.mean - b.mean) * 100) / 100,
-            probability: wins / iterations,
-            odds: probToAmerican(wins / iterations),
-            color: probToColor(wins / iterations),
+            teamId: `${team.leagueId}-${team.rosterId}`,
+            matchupId: team.matchupId,
+            teamName: team.teamName,
+            leagueId: team.leagueId,
+            leagueName: team.leagueName,
+            probability,
+            odds: probToAmerican(probability),
+            projectedRange: { p10: team.p10, p50: team.p50, p90: team.p90 },
+            totalProjection: team.mean,
+            color: probToColor(probability, reverseColor),
           };
         })
-        .sort((x, y) => y.probability - x.probability);
+        .sort((first, second) => second.probability - first.probability);
 
-    const closestMatchup = toMatchupOdds(pairWinsClosest);
-    const biggestBlowout = toMatchupOdds(pairWinsBlowout);
-    const highestScoringMatchup = toMatchupOdds(pairWinsHighest);
-    const lowestScoringMatchup = toMatchupOdds(pairWinsLowest);
+    const toMatchupOdds = (wins: number[]): MatchupOdds[] =>
+      wins
+        .map((winCount, pairIndex) => {
+          const [firstIndex, secondIndex] = pairs[pairIndex];
+          const first = allTeams[firstIndex];
+          const second = allTeams[secondIndex];
+          const probability = winCount / iterations;
+          return {
+            matchupId: first.matchupId,
+            team1: { name: first.teamName, leagueId: first.leagueId, projection: first.mean },
+            team2: { name: second.teamName, leagueId: second.leagueId, projection: second.mean },
+            projectedMargin: Math.abs(first.mean - second.mean),
+            probability,
+            odds: probToAmerican(probability),
+            color: probToColor(probability),
+          };
+        })
+        .sort((first, second) => second.probability - first.probability);
 
+    const lastUpdated = leagueResults.reduce<string | null>(
+      (latest, result) =>
+        result.latestTimestamp && (!latest || result.latestTimestamp > latest)
+          ? result.latestTimestamp
+          : latest,
+      null,
+    );
     const payload: LeagueWideOddsType = {
       week,
-      highestScorer,
-      lowestScorer,
-      closestMatchup,
-      biggestBlowout,
-      highestScoringMatchup,
-      lowestScoringMatchup,
-      lastUpdated: new Date().toISOString(),
+      highestScorer: toTeamOdds(winsHigh),
+      lowestScorer: toTeamOdds(winsLow, true),
+      closestMatchup: toMatchupOdds(pairWinsClosest),
+      biggestBlowout: toMatchupOdds(pairWinsBlowout),
+      highestScoringMatchup: toMatchupOdds(pairWinsHighest),
+      lowestScoringMatchup: toMatchupOdds(pairWinsLowest),
+      lastUpdated: lastUpdated || new Date().toISOString(),
+      source: 'driveff',
     };
     return NextResponse.json(payload);
-  } catch (err) {
-    console.error('[LEAGUE ODDS] Error:', err);
-    return NextResponse.json({ error: 'Failed to calculate odds' }, { status: 500 });
+  } catch (error) {
+    console.error('[LEAGUE ODDS] driveFF adapter error:', error);
+    return NextResponse.json({ error: 'Failed to load driveFF league odds' }, { status: 502 });
   }
 };
-
-export const runtime = 'nodejs';

@@ -102,6 +102,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
             ownerName: team.ownerName || 'Unknown',
             points: team.points || 0,
             projectedPoints: team.projectedPoints || 0,
+            projectionSource: team.projectionSource,
             roster: {
               id: team.rosterId,
               players: team.players || [],
@@ -453,7 +454,8 @@ const TeamRow = ({ team, isWinner }: { team: MatchupTeam; isWinner?: boolean }) 
         </div>
         {team.projectedPoints && (
           <div className="text-xs text-muted-foreground">
-            Proj: {team.projectedPoints.toFixed(1)}
+            {team.projectionSource === 'driveff' ? 'Live proj' : 'Proj'}:{' '}
+            {team.projectedPoints.toFixed(1)}
           </div>
         )}
       </div>

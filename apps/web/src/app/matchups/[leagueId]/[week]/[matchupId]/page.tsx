@@ -145,6 +145,7 @@ export default function MatchupDetailPage(): JSX.Element {
             ownerName: team.ownerName || 'Unknown',
             points: team.points || 0,
             projectedPoints: team.projectedPoints || 0,
+            projectionSource: team.projectionSource,
             starters: (team.starters || []).map((player: any) => ({
               id: player.id,
               name: player.name || 'Unknown Player',
@@ -189,8 +190,9 @@ export default function MatchupDetailPage(): JSX.Element {
               }
             : null,
           isComplete:
-            matchupData.summary?.winnerRosterId !== null &&
-            matchupData.summary?.winnerRosterId !== undefined,
+            data.gameStatus === 'final' ||
+            (matchupData.summary?.winnerRosterId !== null &&
+              matchupData.summary?.winnerRosterId !== undefined),
           margin: data.margin || 0,
           gameStatus: data.gameStatus || 'pre_game',
         };
@@ -448,7 +450,8 @@ const TeamScore = ({ team, isLeading }: { team: TeamRoster; isLeading: boolean }
 
       <div className="space-y-1">
         <div className="text-sm text-muted-foreground">
-          Projected: {team.projectedPoints.toFixed(1)}
+          {team.projectionSource === 'driveff' ? 'Live projected' : 'Projected'}:{' '}
+          {team.projectedPoints.toFixed(1)}
         </div>
         <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
@@ -548,7 +551,9 @@ const TeamRosterCard = ({
             </div>
             <div>
               <div className="font-bold text-lg">{team.projectedPoints.toFixed(1)}</div>
-              <div className="text-muted-foreground">Projected</div>
+              <div className="text-muted-foreground">
+                {team.projectionSource === 'driveff' ? 'Live projected' : 'Projected'}
+              </div>
             </div>
             <div>
               <div className="font-bold text-lg">{team.playersActive}</div>

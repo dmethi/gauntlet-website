@@ -139,7 +139,7 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <Badge variant="outline">Week {week}</Badge>
             </CardTitle>
             <CardDescription className="font-avenir">
-              Monte Carlo predictions across all Gauntlet matchups
+              Live projections and distributions from driveFF across all three Legions
             </CardDescription>
           </div>
           <Button onClick={() => fetchOdds(false)} variant="ghost" size="sm" disabled={loading}>
@@ -588,8 +588,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
         {/* Footer */}
         <div className="mt-4 pt-4 border-t border-muted text-center">
           <p className="text-xs text-muted-foreground">
-            Updated: {new Date(odds.lastUpdated).toLocaleTimeString()} • Based on Monte Carlo
-            simulations of all active rosters
+            Updated: {new Date(odds.lastUpdated).toLocaleTimeString()} • driveFF live model • 10,000
+            cross-league simulations
           </p>
         </div>
       </CardContent>

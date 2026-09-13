@@ -5,6 +5,7 @@ import {
   calculateLeagueProjections,
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
+import { getDriveFFLiveOdds } from '@/lib/driveff-live-odds';
 
 export const dynamic = 'force-dynamic';
 
@@ -133,6 +134,22 @@ export const GET = async (
       pairs.set(m.matchupId, arr);
     }
 
+    const driveFFFeeds = new Map(
+      await Promise.all(
+        [...pairs.keys()].map(async matchupId => {
+          try {
+            return [matchupId, await getDriveFFLiveOdds(leagueId, weekNumber, matchupId)] as const;
+          } catch (error) {
+            console.warn(
+              `[MATCHUPS API] driveFF unavailable for ${leagueId}/${weekNumber}/${matchupId}`,
+              error,
+            );
+            return [matchupId, null] as const;
+          }
+        }),
+      ),
+    );
+
     // Format to client shape
     const formatted = Array.from(pairs.entries()).map(([mid, group]) => {
       const [a, b] =
@@ -141,6 +158,7 @@ export const GET = async (
       const rosterB: Roster | null = b ? (rostersById.get(b.rosterId) ?? null) : null;
       const ownerA: User | null = rosterA ? (usersById.get(rosterA.ownerId) ?? null) : null;
       const ownerB: User | null = rosterB ? (usersById.get(rosterB.ownerId) ?? null) : null;
+      const liveMatchup = driveFFFeeds.get(mid)?.latest?.matchup;
 
       const makeTeam = (m: SleeperMatchup | null, roster: Roster | null, owner: User | null) => {
         const allStarters = (m?.starters || []) as string[];
@@ -157,14 +175,23 @@ export const GET = async (
           starterActualPoints[playerId] = Number(pointValue || 0);
         });
 
+        const pregameProjection = Number(
+          starters.reduce((sum: number, playerId: string) => sum + projectionOf(playerId), 0),
+        );
+        const liveProjection =
+          String(m?.rosterId) === liveMatchup?.rosterAId
+            ? liveMatchup.projectedFinalA
+            : String(m?.rosterId) === liveMatchup?.rosterBId
+              ? liveMatchup.projectedFinalB
+              : null;
+
         return {
           rosterId: m?.rosterId ?? 0,
           teamName: resolveTeamName(roster, owner),
           ownerName: owner?.displayName || owner?.username || 'Unknown',
           points: Number(m?.points || 0),
-          projectedPoints: Number(
-            starters.reduce((s: number, pid: string) => s + projectionOf(pid), 0),
-          ),
+          projectedPoints: liveProjection ?? pregameProjection,
+          projectionSource: liveProjection === null ? 'sleeper' : 'driveff',
           players: (m?.players || []) as string[],
           starters,
           owner,
@@ -192,7 +219,7 @@ export const GET = async (
       week: weekNumber,
       season,
       dbQueries: 0,
-      dataSource: 'sleeper-api',
+      dataSource: 'sleeper-api-with-driveff-live-projections',
     });
   } catch (error) {
     console.error('matchups route error', error);

@@ -29,6 +29,8 @@ const mockSimulationData = {
       spread: -2.5,
       total: 225.8,
     },
+    iterations: 10_000,
+    modelSource: 'driveFF',
     teams: [
       {
         rosterId: 1,
@@ -60,7 +62,7 @@ describe('MatchupSimulation', () => {
       render(<MatchupSimulation leagueId="league-1" week={1} matchupId={1} />);
 
       // Should show loading skeletons (check for the loading card title)
-      expect(screen.getByText('Monte Carlo Simulation')).toBeInTheDocument();
+      expect(screen.getByText('Live Win Model')).toBeInTheDocument();
       // Check for animate-pulse class which indicates loading skeletons
       const skeletons = document.querySelectorAll('.animate-pulse');
       expect(skeletons.length).toBeGreaterThan(0);
@@ -124,8 +126,8 @@ describe('MatchupSimulation', () => {
       render(<MatchupSimulation leagueId="league-1" week={1} matchupId={1} />);
 
       await waitFor(() => {
-        // Refresh button renders without accessible text, check for the "20,000 sims" badge instead
-        expect(screen.getByText(/20,000 sims/i)).toBeInTheDocument();
+        // Refresh button renders without accessible text, check for the simulation badge instead
+        expect(screen.getByText(/10,000 sims/i)).toBeInTheDocument();
         // Could also check that there are at least 2 buttons (info tooltip trigger + refresh)
         const buttons = screen.getAllByRole('button');
         expect(buttons.length).toBeGreaterThanOrEqual(2);
@@ -169,7 +171,7 @@ describe('MatchupSimulation', () => {
       render(<MatchupSimulation leagueId="league-1" week={1} matchupId={1} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/20,000 sims/i)).toBeInTheDocument(); // Simulation count
+        expect(screen.getByText(/10,000 sims/i)).toBeInTheDocument(); // Simulation count
       });
     });
   });

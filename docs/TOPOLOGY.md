@@ -140,9 +140,11 @@ pair.
 
 ### 1. Matchups (`features/matchups/`)
 
-**Owns:** Matchup display, head-to-head analysis, live scores **Data:** Sleeper
-API (matchups, rosters, players) **Constraint:** Process each league separately,
-then combine
+**Owns:** Matchup display and head-to-head analysis **Data:** Sleeper API
+(matchups, rosters, players, current scores) plus driveFF (live projected
+finals, win probabilities, player distributions, and time series)
+**Constraint:** Keep Sleeper identity/score data keyed by league, then join
+driveFF snapshots on league + week + matchup ID
 
 ### 2. Statistics (`features/stats/`)
 
@@ -165,10 +167,11 @@ simulation **Constraint:** Simulation engine provides probabilities
 **Owns:** Weekly recaps, narrative generation **Data:** Aggregated from all
 domains **Constraint:** Gemini API for narrative synthesis
 
-### 6. Simulation Engine (`@gauntlet/sim-engine`)
+### 6. Simulation Engine (`@gauntlet/sim-engine`, legacy)
 
-**Owns:** Monte Carlo simulation, win probability **Data:** Player projections,
-matchup context **Constraint:** <200ms response time, 10k iterations
+**Owns:** Non-live simulations outside the matchup experience **Data:** Player
+projections, matchup context **Constraint:** Live matchup probabilities and
+distributions come from driveFF; do not add a second Gauntlet calculation path
 
 ### 7. Profiles (`features/profiles/`)
 
@@ -185,6 +188,7 @@ constraint on the team key
 │                    External Systems                      │
 ├─────────────────────────────────────────────────────────┤
 │ Sleeper API ─────── Primary data (rosters, matchups)    │
+│ driveFF API ─────── Live odds, projections, time series │
 │ Gemini API ──────── Narrative synthesis for recaps      │
 │ Clerk ────────────── Authentication and profile images   │
 │ NFL Data ────────── Player projections (if needed)      │
@@ -194,7 +198,7 @@ constraint on the team key
 │                   apps/web (Next.js)                     │
 ├─────────────────────────────────────────────────────────┤
 │ • Feature modules (matchups, stats, profiles, playoffs) │
-│ • API routes (simulations, reports, cron)               │
+│ • API routes (driveFF consumers, reports, recap cron)   │
 │ • Public analytics/history + signed-in manager details   │
 └─────────────────────────────────────────────────────────┘
                             ↓
