@@ -84,4 +84,41 @@ describe('matchup detail API', () => {
       expect.objectContaining({ projectedPoints: 119.5, projectionSource: 'driveff' }),
     ]);
   });
+
+  it('falls back to the pregame projection and state when driveFF is unavailable', async () => {
+    getDriveFFLiveOdds.mockRejectedValueOnce(new Error('offline'));
+    const { GET } = await import('./route');
+    const response = await GET(new NextRequest('https://gauntlet.test/api/matchups/league-1/1/3'), {
+      params: Promise.resolve({ leagueId: 'league-1', week: '1', matchupId: '3' }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.gameStatus).toBe('pre_game');
+    expect(body.matchup.teams).toEqual([
+      expect.objectContaining({ projectionSource: 'sleeper' }),
+      expect.objectContaining({ projectionSource: 'sleeper' }),
+    ]);
+  });
+
+  it('marks a fully progressed driveFF matchup final', async () => {
+    getDriveFFLiveOdds.mockResolvedValueOnce({
+      latest: {
+        matchup: {
+          gameProgress: 1,
+          rosterAId: '1',
+          rosterBId: '2',
+          projectedFinalA: 170.2,
+          projectedFinalB: 119.5,
+        },
+      },
+    });
+    const { GET } = await import('./route');
+    const response = await GET(new NextRequest('https://gauntlet.test/api/matchups/league-1/1/3'), {
+      params: Promise.resolve({ leagueId: 'league-1', week: '1', matchupId: '3' }),
+    });
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).gameStatus).toBe('final');
+  });
 });

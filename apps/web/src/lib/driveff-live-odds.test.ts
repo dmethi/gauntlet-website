@@ -56,6 +56,33 @@ describe('driveFF live odds adapter', () => {
     await expect(getDriveFFLiveOdds('123', 1, 2)).rejects.toThrow(/invalid payload/);
   });
 
+  it('surfaces driveFF HTTP failures', async () => {
+    const fetchMock = vi.fn(async () => new Response(null, { status: 503 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(getDriveFFLiveOdds('league/id', 1, 2)).rejects.toThrow(/returned 503/);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://driveff.com/api/v1/live-odds/league%2Fid/1/2',
+      expect.any(Object),
+    );
+  });
+
+  it.each([
+    null,
+    { schemaVersion: 1, provider: 'other', samples: [] },
+    {
+      schemaVersion: 1,
+      provider: 'sleeper',
+      samples: [{ timestamp: 'now', rosterAId: '1', rosterBId: '2', winProbA: 'bad' }],
+    },
+  ])('rejects malformed feed variant %#', async payload => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify(payload))),
+    );
+    await expect(getDriveFFLiveOdds('123', 1, 2)).rejects.toThrow(/invalid payload/);
+  });
+
   it('derives team score ranges from player marginal variances', () => {
     const players = [
       { standardDeviation: 3 },
@@ -70,8 +97,17 @@ describe('driveFF live odds adapter', () => {
     });
   });
 
+  it('never projects a lower-tail outcome below points already scored', () => {
+    const players = [{ standardDeviation: 10 }] as DriveFFPlayerDistribution[];
+
+    expect(getTeamScoreDistribution(105, players, 101).p10).toBe(101);
+  });
+
   it('converts probabilities to American moneylines', () => {
     expect(toAmericanMoneyline(0.6)).toBe(-150);
     expect(toAmericanMoneyline(0.4)).toBe(150);
+    expect(toAmericanMoneyline(0.5)).toBe(100);
+    expect(toAmericanMoneyline(0)).toBe(999_900);
+    expect(toAmericanMoneyline(1)).toBe(-999_900);
   });
 });

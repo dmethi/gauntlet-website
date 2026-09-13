@@ -109,4 +109,18 @@ describe('league matchups API', () => {
       expect.objectContaining({ rosterId: 2, projectedPoints: 119.5, projectionSource: 'driveff' }),
     ]);
   });
+
+  it('labels Sleeper projections when the driveFF feed is unavailable', async () => {
+    getDriveFFLiveOdds.mockRejectedValueOnce(new Error('offline'));
+    const { GET } = await import('./route');
+    const response = await GET(new NextRequest('https://gauntlet.test/api/matchups/league-1/1'), {
+      params: Promise.resolve({ leagueId: 'league-1', week: '1' }),
+    });
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).matchups[0].teams).toEqual([
+      expect.objectContaining({ projectionSource: 'sleeper' }),
+      expect.objectContaining({ projectionSource: 'sleeper' }),
+    ]);
+  });
 });

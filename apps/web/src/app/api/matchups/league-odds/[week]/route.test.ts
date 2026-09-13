@@ -111,4 +111,37 @@ describe('league-wide odds API', () => {
     );
     expect(body.source).toBe('driveff');
   });
+
+  it('rejects an invalid week before loading league data', async () => {
+    const { GET } = await import('./route');
+    const response = await GET(
+      new NextRequest('https://gauntlet.test/api/matchups/league-odds/99'),
+      { params: Promise.resolve({ week: '99' }) },
+    );
+
+    expect(response.status).toBe(400);
+    expect(getDriveFFLiveOdds).not.toHaveBeenCalled();
+  });
+
+  it('returns an empty driveFF result when the week has no snapshots yet', async () => {
+    getDriveFFLiveOdds.mockResolvedValueOnce({
+      schemaVersion: 1,
+      provider: 'sleeper',
+      leagueId: 'league-1',
+      week: 1,
+      matchupId: '3',
+      samples: [],
+      latest: null,
+    });
+    const { GET } = await import('./route');
+    const response = await GET(
+      new NextRequest('https://gauntlet.test/api/matchups/league-odds/1'),
+      { params: Promise.resolve({ week: '1' }) },
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual(
+      expect.objectContaining({ source: 'driveff', highestScorer: [], closestMatchup: [] }),
+    );
+  });
 });
