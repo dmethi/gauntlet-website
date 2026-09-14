@@ -2,6 +2,17 @@
 
 import { memo } from 'react';
 import { colors } from '@/lib/colors';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 import type { LuckAnalysisEntry } from './utils';
 
 interface ExpectedWinsTableProps {
@@ -14,7 +25,54 @@ export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
       <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
         Expected Wins vs Actual Results
       </h3>
-      <div className="rounded-md border overflow-hidden">
+      <DataList className="sm:hidden">
+        {data.map(row => {
+          const luckColor =
+            row.luckRating > 0.05
+              ? colors.rdylgn[8]
+              : row.luckRating < -0.05
+                ? colors.rdylgn[2]
+                : colors.rdylgn[5];
+
+          return (
+            <DataListItem key={row.teamKey}>
+              <DataListHeader>
+                <div className="min-w-0">
+                  <DataListTitle>{row.teamInfo.teamName}</DataListTitle>
+                  <DataListDescription>{row.teamInfo.leagueName}</DataListDescription>
+                </div>
+                <div className="shrink-0 text-right">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                    Luck
+                  </div>
+                  <div className="mt-0.5 font-mono font-bold" style={{ color: luckColor }}>
+                    {row.luckRating > 0 ? '+' : ''}
+                    {(row.luckRating * 100).toFixed(1)}%
+                  </div>
+                </div>
+              </DataListHeader>
+              <DataListMetrics>
+                <DataListMetric>
+                  <DataListMetricLabel>Actual</DataListMetricLabel>
+                  <DataListMetricValue>{(row.actualWinPct * 100).toFixed(1)}%</DataListMetricValue>
+                </DataListMetric>
+                <DataListMetric>
+                  <DataListMetricLabel>Expected</DataListMetricLabel>
+                  <DataListMetricValue>
+                    {(row.expectedWinPct * 100).toFixed(1)}%
+                  </DataListMetricValue>
+                </DataListMetric>
+                <DataListMetric className="text-right">
+                  <DataListMetricLabel>Schedule ease</DataListMetricLabel>
+                  <DataListMetricValue>{(row.scheduleEase * 100).toFixed(1)}%</DataListMetricValue>
+                </DataListMetric>
+              </DataListMetrics>
+            </DataListItem>
+          );
+        })}
+      </DataList>
+
+      <div className="hidden overflow-hidden rounded-md border sm:block">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr>

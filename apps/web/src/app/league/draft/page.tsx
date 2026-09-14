@@ -222,45 +222,41 @@ const DraftPageContent = () => {
                         return (
                           <div key={round} className="space-y-2">
                             <h3 className="text-lg font-semibold">Round {round}</h3>
-                            <div className="overflow-x-auto rounded-md border border-border bg-card">
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Overall</TableHead>
-                                    <TableHead>Pick</TableHead>
-                                    <TableHead>Team</TableHead>
-                                    <TableHead>Player</TableHead>
-                                    <TableHead>Pos</TableHead>
-                                    <TableHead>NFL</TableHead>
-                                    <TableHead>Owner</TableHead>
-                                    <TableHead>Notes</TableHead>
+                            <Table surface="responsive" scrollLabel={`Round ${round} draft picks`}>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Overall</TableHead>
+                                  <TableHead>Pick</TableHead>
+                                  <TableHead>Team</TableHead>
+                                  <TableHead>Player</TableHead>
+                                  <TableHead>Pos</TableHead>
+                                  <TableHead>NFL</TableHead>
+                                  <TableHead>Owner</TableHead>
+                                  <TableHead>Notes</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {roundPicks.map(p => (
+                                  <TableRow
+                                    key={`${round}-${p.pickNo}-${p.player.id}`}
+                                    className="hover:bg-muted/50"
+                                  >
+                                    <TableCell>{p.pickNo}</TableCell>
+                                    <TableCell>
+                                      {round}.{pickInRound(p.pickNo)}
+                                    </TableCell>
+                                    <TableCell className="font-medium">{p.rosterName}</TableCell>
+                                    <TableCell>{p.player.name}</TableCell>
+                                    <TableCell>{p.player.position || '-'}</TableCell>
+                                    <TableCell>{p.player.team || '-'}</TableCell>
+                                    <TableCell>{p.ownerName}</TableCell>
+                                    <TableCell>
+                                      {p.isKeeper ? <Badge variant="outline">Keeper</Badge> : null}
+                                    </TableCell>
                                   </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                  {roundPicks.map(p => (
-                                    <TableRow
-                                      key={`${round}-${p.pickNo}-${p.player.id}`}
-                                      className="hover:bg-muted/50"
-                                    >
-                                      <TableCell>{p.pickNo}</TableCell>
-                                      <TableCell>
-                                        {round}.{pickInRound(p.pickNo)}
-                                      </TableCell>
-                                      <TableCell className="font-medium">{p.rosterName}</TableCell>
-                                      <TableCell>{p.player.name}</TableCell>
-                                      <TableCell>{p.player.position || '-'}</TableCell>
-                                      <TableCell>{p.player.team || '-'}</TableCell>
-                                      <TableCell>{p.ownerName}</TableCell>
-                                      <TableCell>
-                                        {p.isKeeper ? (
-                                          <Badge variant="outline">Keeper</Badge>
-                                        ) : null}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            </div>
+                                ))}
+                              </TableBody>
+                            </Table>
                           </div>
                         );
                       })}
@@ -278,43 +274,41 @@ const DraftPageContent = () => {
                   {!picks.length ? (
                     <div className="text-sm text-muted-foreground">No picks found.</div>
                   ) : (
-                    <div className="overflow-x-auto rounded-md border border-border bg-card">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Overall</TableHead>
-                            <TableHead>Round.Pick</TableHead>
-                            <TableHead>Team</TableHead>
-                            <TableHead>Player</TableHead>
-                            <TableHead>Pos</TableHead>
-                            <TableHead>NFL</TableHead>
-                            <TableHead>Owner</TableHead>
-                            <TableHead>Notes</TableHead>
+                    <Table surface="responsive" scrollLabel="All draft picks">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Overall</TableHead>
+                          <TableHead>Round.Pick</TableHead>
+                          <TableHead>Team</TableHead>
+                          <TableHead>Player</TableHead>
+                          <TableHead>Pos</TableHead>
+                          <TableHead>NFL</TableHead>
+                          <TableHead>Owner</TableHead>
+                          <TableHead>Notes</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {picks.map(p => (
+                          <TableRow
+                            key={`all-${p.pickNo}-${p.player.id}`}
+                            className="hover:bg-muted/50"
+                          >
+                            <TableCell>{p.pickNo}</TableCell>
+                            <TableCell>
+                              {p.round}.{pickInRound(p.pickNo)}
+                            </TableCell>
+                            <TableCell className="font-medium">{p.rosterName}</TableCell>
+                            <TableCell>{p.player.name}</TableCell>
+                            <TableCell>{p.player.position || '-'}</TableCell>
+                            <TableCell>{p.player.team || '-'}</TableCell>
+                            <TableCell>{p.ownerName}</TableCell>
+                            <TableCell>
+                              {p.isKeeper ? <Badge variant="outline">Keeper</Badge> : null}
+                            </TableCell>
                           </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {picks.map(p => (
-                            <TableRow
-                              key={`all-${p.pickNo}-${p.player.id}`}
-                              className="hover:bg-muted/50"
-                            >
-                              <TableCell>{p.pickNo}</TableCell>
-                              <TableCell>
-                                {p.round}.{pickInRound(p.pickNo)}
-                              </TableCell>
-                              <TableCell className="font-medium">{p.rosterName}</TableCell>
-                              <TableCell>{p.player.name}</TableCell>
-                              <TableCell>{p.player.position || '-'}</TableCell>
-                              <TableCell>{p.player.team || '-'}</TableCell>
-                              <TableCell>{p.ownerName}</TableCell>
-                              <TableCell>
-                                {p.isKeeper ? <Badge variant="outline">Keeper</Badge> : null}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                        ))}
+                      </TableBody>
+                    </Table>
                   )}
                 </div>
               )}
@@ -342,41 +336,39 @@ const DraftPageContent = () => {
                               </CardTitle>
                             </CardHeader>
                             <CardContent>
-                              <div className="overflow-x-auto rounded-md border border-border bg-card">
-                                <Table>
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead>Round.Pick</TableHead>
-                                      <TableHead>Overall</TableHead>
-                                      <TableHead>Player</TableHead>
-                                      <TableHead>Pos</TableHead>
-                                      <TableHead>NFL</TableHead>
-                                      <TableHead>Notes</TableHead>
+                              <Table surface="responsive" scrollLabel={`${team.name} draft picks`}>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Round.Pick</TableHead>
+                                    <TableHead>Overall</TableHead>
+                                    <TableHead>Player</TableHead>
+                                    <TableHead>Pos</TableHead>
+                                    <TableHead>NFL</TableHead>
+                                    <TableHead>Notes</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {teamPicks.map(p => (
+                                    <TableRow
+                                      key={`${p.rosterId}-${p.pickNo}`}
+                                      className="hover:bg-muted/50"
+                                    >
+                                      <TableCell>
+                                        {p.round}.{pickInRound(p.pickNo)}
+                                      </TableCell>
+                                      <TableCell>{p.pickNo}</TableCell>
+                                      <TableCell>{p.player.name}</TableCell>
+                                      <TableCell>{p.player.position || '-'}</TableCell>
+                                      <TableCell>{p.player.team || '-'}</TableCell>
+                                      <TableCell>
+                                        {p.isKeeper ? (
+                                          <Badge variant="outline">Keeper</Badge>
+                                        ) : null}
+                                      </TableCell>
                                     </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {teamPicks.map(p => (
-                                      <TableRow
-                                        key={`${p.rosterId}-${p.pickNo}`}
-                                        className="hover:bg-muted/50"
-                                      >
-                                        <TableCell>
-                                          {p.round}.{pickInRound(p.pickNo)}
-                                        </TableCell>
-                                        <TableCell>{p.pickNo}</TableCell>
-                                        <TableCell>{p.player.name}</TableCell>
-                                        <TableCell>{p.player.position || '-'}</TableCell>
-                                        <TableCell>{p.player.team || '-'}</TableCell>
-                                        <TableCell>
-                                          {p.isKeeper ? (
-                                            <Badge variant="outline">Keeper</Badge>
-                                          ) : null}
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </div>
+                                  ))}
+                                </TableBody>
+                              </Table>
                             </CardContent>
                           </Card>
                         );

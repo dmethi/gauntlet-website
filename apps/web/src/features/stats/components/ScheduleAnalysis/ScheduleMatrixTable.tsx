@@ -2,6 +2,7 @@
 
 import { memo } from 'react';
 import { colors } from '@/lib/colors';
+import { TableViewport } from '@/components/ui/table';
 import type { ScheduleMatrix } from './utils';
 import type { TeamData } from '@/features/stats/types';
 
@@ -33,7 +34,7 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
           {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
         </div>
 
-        <div className="overflow-auto rounded-md border">
+        <TableViewport surface="responsive" scrollLabel={`${title} comparison matrix`}>
           <table className="w-full text-xs border-collapse">
             <thead>
               <tr>
@@ -110,10 +111,10 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
               })}
             </tbody>
           </table>
-        </div>
+        </TableViewport>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div className="rounded-md border p-3">
+        <div className="divide-y divide-border/70 border-y border-border/70 text-xs md:grid md:grid-cols-3 md:gap-4 md:divide-y-0 md:border-0">
+          <div className="py-3 md:rounded-md md:border md:p-3">
             <h4 className="font-semibold mb-2">Legend</h4>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -131,7 +132,7 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
             </div>
           </div>
 
-          <div className="rounded-md border p-3">
+          <div className="py-3 md:rounded-md md:border md:p-3">
             <h4 className="font-semibold mb-2">Analysis</h4>
             <p className="text-muted-foreground">
               Reveals schedule strength by showing how each team would perform with different
@@ -139,7 +140,7 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
             </p>
           </div>
 
-          <div className="rounded-md border p-3">
+          <div className="py-3 md:rounded-md md:border md:p-3">
             <h4 className="font-semibold mb-2">Usage</h4>
             <p className="text-muted-foreground">
               Row team vs Column team schedule. “5-2” means the row team would go 5-2 with the

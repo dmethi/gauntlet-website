@@ -134,132 +134,130 @@ const LeagueOverviewContent = () => {
               </div>
             ) : null}
           </div>
-          <div className="overflow-x-auto rounded-md border border-border bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[60px]">Rank</TableHead>
-                  <TableHead>
-                    <button
-                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                      onClick={() => onSort('team')}
-                      aria-label="Sort by Team"
-                    >
-                      <span>Team</span>
-                      {sortKey === 'team' &&
-                        (sortDir === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        ))}
-                    </button>
-                  </TableHead>
-                  <TableHead className="w-[80px]">Division</TableHead>
-                  <TableHead>
-                    <button
-                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                      onClick={() => onSort('record')}
-                      aria-label="Sort by Record"
-                    >
-                      <span>Record</span>
-                      {sortKey === 'record' &&
-                        (sortDir === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        ))}
-                    </button>
-                  </TableHead>
-                  <TableHead>
-                    <button
-                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                      onClick={() => onSort('points')}
-                      aria-label="Sort by Points For"
-                    >
-                      <span>Points For</span>
-                      {sortKey === 'points' &&
-                        (sortDir === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        ))}
-                    </button>
-                  </TableHead>
-                  <TableHead>
-                    <button
-                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                      onClick={() => onSort('expectedWins')}
-                      aria-label="Sort by Expected Wins"
-                    >
-                      <span>Expected Wins</span>
-                      {sortKey === 'expectedWins' &&
-                        (sortDir === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        ))}
-                    </button>
-                  </TableHead>
-                  <TableHead>
-                    <button
-                      className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
-                      onClick={() => onSort('luck')}
-                      aria-label="Sort by Luck"
-                    >
-                      <span>Luck</span>
-                      {sortKey === 'luck' &&
-                        (sortDir === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        ))}
-                    </button>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedTeamStats.map(team => {
-                  const division = divisionConfig.find(item => item.id === team.division);
-                  const divisionLabel =
-                    division?.name ?? (team.division ? `Division ${team.division}` : 'N/A');
+          <Table surface="responsive" scrollLabel="Team rankings">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[60px]">Rank</TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => onSort('team')}
+                    aria-label="Sort by Team"
+                  >
+                    <span>Team</span>
+                    {sortKey === 'team' &&
+                      (sortDir === 'asc' ? (
+                        <ChevronUp className="h-3 w-3" />
+                      ) : (
+                        <ChevronDown className="h-3 w-3" />
+                      ))}
+                  </button>
+                </TableHead>
+                <TableHead className="w-[80px]">Division</TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => onSort('record')}
+                    aria-label="Sort by Record"
+                  >
+                    <span>Record</span>
+                    {sortKey === 'record' &&
+                      (sortDir === 'asc' ? (
+                        <ChevronUp className="h-3 w-3" />
+                      ) : (
+                        <ChevronDown className="h-3 w-3" />
+                      ))}
+                  </button>
+                </TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => onSort('points')}
+                    aria-label="Sort by Points For"
+                  >
+                    <span>Points For</span>
+                    {sortKey === 'points' &&
+                      (sortDir === 'asc' ? (
+                        <ChevronUp className="h-3 w-3" />
+                      ) : (
+                        <ChevronDown className="h-3 w-3" />
+                      ))}
+                  </button>
+                </TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => onSort('expectedWins')}
+                    aria-label="Sort by Expected Wins"
+                  >
+                    <span>Expected Wins</span>
+                    {sortKey === 'expectedWins' &&
+                      (sortDir === 'asc' ? (
+                        <ChevronUp className="h-3 w-3" />
+                      ) : (
+                        <ChevronDown className="h-3 w-3" />
+                      ))}
+                  </button>
+                </TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center gap-1 px-1 py-0.5 -mx-1 -my-0.5 rounded hover:text-card-foreground hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => onSort('luck')}
+                    aria-label="Sort by Luck"
+                  >
+                    <span>Luck</span>
+                    {sortKey === 'luck' &&
+                      (sortDir === 'asc' ? (
+                        <ChevronUp className="h-3 w-3" />
+                      ) : (
+                        <ChevronDown className="h-3 w-3" />
+                      ))}
+                  </button>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedTeamStats.map(team => {
+                const division = divisionConfig.find(item => item.id === team.division);
+                const divisionLabel =
+                  division?.name ?? (team.division ? `Division ${team.division}` : 'N/A');
 
-                  return (
-                    <TableRow
-                      key={team.id}
-                      className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
-                      onClick={() => {
-                        router.push(`/team/${team.id}`);
-                      }}
-                    >
-                      <TableCell>{team.canonicalRank}</TableCell>
-                      <TableCell className="font-medium">{team.name}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={division?.logo ? 'h-8 w-8 justify-center p-0' : 'text-xs'}
-                          title={divisionLabel}
-                        >
-                          {division?.logo ? (
-                            <Image src={division.logo} alt={divisionLabel} width={24} height={24} />
-                          ) : (
-                            divisionLabel
-                          )}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">
-                          {team.wins}-{team.losses}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
-                      <TableCell>{team.expectedWins.toFixed(2)}</TableCell>
-                      <TableCell>{team.luckRating.toFixed(2)}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                return (
+                  <TableRow
+                    key={team.id}
+                    className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
+                    onClick={() => {
+                      router.push(`/team/${team.id}`);
+                    }}
+                  >
+                    <TableCell>{team.canonicalRank}</TableCell>
+                    <TableCell className="font-medium">{team.name}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={division?.logo ? 'h-8 w-8 justify-center p-0' : 'text-xs'}
+                        title={divisionLabel}
+                      >
+                        {division?.logo ? (
+                          <Image src={division.logo} alt={divisionLabel} width={24} height={24} />
+                        ) : (
+                          divisionLabel
+                        )}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">
+                        {team.wins}-{team.losses}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{team.totalPoints.toFixed(2)}</TableCell>
+                    <TableCell>{team.expectedWins.toFixed(2)}</TableCell>
+                    <TableCell>{team.luckRating.toFixed(2)}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
 
         <div className="mt-12">

@@ -3,6 +3,17 @@
 import { memo } from 'react';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { colors } from '@/lib/colors';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 import type { ScheduleDifficultyEntry } from './utils';
 
 interface ScheduleDifficultyTableProps {
@@ -18,7 +29,42 @@ export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ dat
       <p className="text-sm text-muted-foreground">
         Teams with the lowest win percentage against their schedule faced the toughest opponents.
       </p>
-      <div className="rounded-md border overflow-hidden">
+      <DataList className="sm:hidden">
+        {data.map((row, index) => {
+          const badgeColor = getRankColor(index + 1, 24);
+
+          return (
+            <DataListItem key={row.scheduleOwnerKey}>
+              <DataListHeader>
+                <div className="flex min-w-0 items-start gap-3">
+                  <span
+                    className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-xs font-bold"
+                    style={{ backgroundColor: badgeColor, color: getTextColor(badgeColor) }}
+                  >
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <DataListTitle>{row.scheduleOwnerInfo.teamName}</DataListTitle>
+                    <DataListDescription>{row.scheduleOwnerInfo.leagueName}</DataListDescription>
+                  </div>
+                </div>
+              </DataListHeader>
+              <DataListMetrics className="grid-cols-2">
+                <DataListMetric>
+                  <DataListMetricLabel>Avg win rate</DataListMetricLabel>
+                  <DataListMetricValue>{(row.avgWinPct * 100).toFixed(1)}%</DataListMetricValue>
+                </DataListMetric>
+                <DataListMetric className="text-right">
+                  <DataListMetricLabel>Games</DataListMetricLabel>
+                  <DataListMetricValue>{row.totalGames}</DataListMetricValue>
+                </DataListMetric>
+              </DataListMetrics>
+            </DataListItem>
+          );
+        })}
+      </DataList>
+
+      <div className="hidden overflow-hidden rounded-md border sm:block">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr>

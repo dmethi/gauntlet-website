@@ -15,6 +15,17 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 import type { GradeTxn } from '@/features/transactions/types';
 import { getDivergingBg, getTextColorForBg } from '@/shared/utils/colors';
 import { deltaTextClass, gradeBadgeClass } from '@/lib/stat-colors';
@@ -46,8 +57,92 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
   const scoreRange = calculateScoreRange(allTransactions);
 
   return (
-    <div className="overflow-x-auto rounded-md border border-border bg-card">
-      <Table>
+    <>
+      <DataList className="sm:hidden">
+        {transactions.map(txn => {
+          const bg = getDivergingBg(txn.score / scoreRange);
+          const fg = getTextColorForBg(bg);
+
+          return (
+            <DataListItem
+              key={txn.id}
+              interactive
+              role="button"
+              tabIndex={0}
+              className="min-h-11 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+              onClick={() => onTransactionClick(txn)}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  onTransactionClick(txn);
+                }
+              }}
+            >
+              <DataListHeader>
+                <div className="min-w-0">
+                  <DataListTitle>{txn.teamName}</DataListTitle>
+                  <DataListDescription>
+                    {new Date(txn.createdAt).toLocaleDateString()} ·{' '}
+                    <span className="capitalize">{txn.type.replace('_', ' ')}</span> ·{' '}
+                    {txn.leagueName}
+                  </DataListDescription>
+                </div>
+                <Badge className={gradeBadgeClass(txn.grade)}>{txn.grade}</Badge>
+              </DataListHeader>
+
+              <div className="mt-3 space-y-1">
+                {txn.players.map(player => (
+                  <div key={player.playerId} className="text-sm leading-snug">
+                    <span className={player.role === 'add' ? 'text-success' : 'text-destructive'}>
+                      {player.role === 'add' ? '+' : '−'}
+                    </span>{' '}
+                    {player.name}
+                    <span className="text-muted-foreground"> · {player.position}</span>
+                  </div>
+                ))}
+              </div>
+
+              <DataListMetrics>
+                <DataListMetric>
+                  <DataListMetricLabel>FAAB</DataListMetricLabel>
+                  <DataListMetricValue>
+                    {txn.faabCost && txn.faabCost > 0 ? `$${txn.faabCost}` : 'Free'}
+                  </DataListMetricValue>
+                </DataListMetric>
+                <DataListMetric>
+                  <DataListMetricLabel>Raw VORP</DataListMetricLabel>
+                  <DataListMetricValue
+                    className={
+                      txn.rawScore === undefined ? undefined : deltaTextClass(txn.rawScore)
+                    }
+                  >
+                    {txn.rawScore === undefined
+                      ? 'N/A'
+                      : `${txn.rawScore >= 0 ? '+' : ''}${txn.rawScore.toFixed(1)}`}
+                  </DataListMetricValue>
+                </DataListMetric>
+                <DataListMetric className="text-right">
+                  <DataListMetricLabel>Adjusted</DataListMetricLabel>
+                  <DataListMetricValue>
+                    <span
+                      className="inline-flex rounded px-1.5 py-0.5 font-mono"
+                      style={{ backgroundColor: bg, color: fg }}
+                    >
+                      {txn.score.toFixed(1)}
+                    </span>
+                  </DataListMetricValue>
+                </DataListMetric>
+              </DataListMetrics>
+            </DataListItem>
+          );
+        })}
+      </DataList>
+
+      <Table
+        surface="responsive"
+        scrollLabel="Transactions table"
+        containerClassName="hidden sm:block"
+      >
         <TableHeader>
           <TableRow>
             <TableHead>Date</TableHead>
@@ -150,7 +245,7 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
           })}
         </TableBody>
       </Table>
-    </div>
+    </>
   );
 });
 

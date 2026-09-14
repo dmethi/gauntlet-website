@@ -2,11 +2,45 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
-  ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
-      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
-    </div>
+interface TableViewportProps extends React.HTMLAttributes<HTMLDivElement> {
+  surface?: 'plain' | 'responsive';
+  scrollLabel?: string;
+}
+
+const TableViewport = React.forwardRef<HTMLDivElement, TableViewportProps>(
+  ({ className, surface = 'plain', scrollLabel, ...props }, ref) => (
+    <div
+      ref={ref}
+      role={scrollLabel ? 'region' : undefined}
+      aria-label={scrollLabel}
+      tabIndex={scrollLabel ? 0 : undefined}
+      className={cn(
+        'relative w-full overflow-auto overscroll-x-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        surface === 'responsive' &&
+          'border-y border-border/70 bg-transparent sm:rounded-md sm:border sm:bg-card',
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+TableViewport.displayName = 'TableViewport';
+
+interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  containerClassName?: string;
+  surface?: TableViewportProps['surface'];
+  scrollLabel?: string;
+}
+
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, containerClassName, surface, scrollLabel, ...props }, ref) => (
+    <TableViewport className={containerClassName} surface={surface} scrollLabel={scrollLabel}>
+      <table
+        ref={ref}
+        className={cn('w-full caption-bottom text-sm tabular-nums', className)}
+        {...props}
+      />
+    </TableViewport>
   ),
 );
 Table.displayName = 'Table';
@@ -60,7 +94,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+      'h-10 whitespace-nowrap px-2 text-left align-middle text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground sm:px-3 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
       className,
     )}
     {...props}
@@ -75,7 +109,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+      'px-2 py-2 align-middle sm:px-3 sm:py-2.5 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
       className,
     )}
     {...props}
@@ -91,4 +125,14 @@ const TableCaption = React.forwardRef<
 ));
 TableCaption.displayName = 'TableCaption';
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+export {
+  Table,
+  TableViewport,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+};

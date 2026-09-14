@@ -87,8 +87,8 @@ describe('LeagueView', () => {
 
       render(<LeagueView {...props} />);
 
-      expect(screen.getByText('Team Alpha')).toBeInTheDocument();
-      expect(screen.getByText('Team Beta')).toBeInTheDocument();
+      expect(screen.getAllByText('Team Alpha')).not.toHaveLength(0);
+      expect(screen.getAllByText('Team Beta')).not.toHaveLength(0);
     });
   });
 
@@ -131,8 +131,8 @@ describe('LeagueView', () => {
       render(<LeagueView {...props} />);
 
       // Total points should be displayed
-      expect(screen.getByText('360.0')).toBeInTheDocument();
-      expect(screen.getByText('340.0')).toBeInTheDocument();
+      expect(screen.getAllByText('360.0')).not.toHaveLength(0);
+      expect(screen.getAllByText('340.0')).not.toHaveLength(0);
     });
   });
 
@@ -170,8 +170,8 @@ describe('LeagueView', () => {
 
       render(<LeagueView {...props} />);
 
-      expect(screen.getByText('Solo Team')).toBeInTheDocument();
-      expect(screen.getByText('360.0')).toBeInTheDocument();
+      expect(screen.getAllByText('Solo Team')).not.toHaveLength(0);
+      expect(screen.getAllByText('360.0')).not.toHaveLength(0);
     });
 
     it('excludes teams with zero score (no data yet, same convention as other stats views)', () => {
