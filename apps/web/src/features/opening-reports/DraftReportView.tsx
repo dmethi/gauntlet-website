@@ -45,7 +45,7 @@ export const DraftReportView = ({ report }: { report: DraftReport }) => {
   }));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl py-6 sm:px-6 sm:py-10 lg:px-8">
       <section className="grid gap-8 border-b border-border pb-12 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
         <div>
           <Badge className="bg-primary/10 text-primary border border-primary/20">
@@ -59,7 +59,7 @@ export const DraftReportView = ({ report }: { report: DraftReport }) => {
             half-PPR Sleeper auction market and then compared against the two other Gauntlet rooms.
           </p>
         </div>
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-l border-border pl-6 text-sm">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-border pt-5 text-sm lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
           <div>
             <dt className="text-muted-foreground">Players purchased</dt>
             <dd className="mt-1 font-geizer text-3xl">540</dd>
@@ -91,7 +91,7 @@ export const DraftReportView = ({ report }: { report: DraftReport }) => {
         </div>
 
         <div className="mt-8 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2 xl:grid-cols-4">
-          <article className="bg-background p-6">
+          <article className="bg-background p-4 sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Best market value
             </p>
@@ -114,7 +114,7 @@ export const DraftReportView = ({ report }: { report: DraftReport }) => {
                 : 'No benchmark match.'}
             </p>
           </article>
-          <article className="bg-background p-6">
+          <article className="bg-background p-4 sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Biggest premium
             </p>
@@ -137,7 +137,7 @@ export const DraftReportView = ({ report }: { report: DraftReport }) => {
                 : 'No benchmark match.'}
             </p>
           </article>
-          <article className="bg-background p-6">
+          <article className="bg-background p-4 sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Longest purchase drought
             </p>
@@ -150,7 +150,7 @@ export const DraftReportView = ({ report }: { report: DraftReport }) => {
                 : 'No qualifying purchases.'}
             </p>
           </article>
-          <article className="bg-background p-6">
+          <article className="bg-background p-4 sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Fastest room
             </p>

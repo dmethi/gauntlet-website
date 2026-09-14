@@ -145,18 +145,18 @@ export default function TeamStatsPage(props: { params: Promise<{ id: string }> }
         }
       />
 
-      <div className="px-6 py-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-md border border-border bg-card p-4">
+      <div className="py-5 md:px-6 md:py-8">
+        <div className="grid grid-cols-2 gap-3 md:gap-6 lg:grid-cols-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Total Points</h3>
             <p className="text-3xl font-bold">{totalPoints.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground">Avg: {averagePoints.toFixed(2)}</p>
           </div>
-          <div className="rounded-md border border-border bg-card p-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Expected Wins</h3>
             <p className="text-3xl font-bold">{totalExpectedWins.toFixed(1)}</p>
           </div>
-          <div className="rounded-md border border-border bg-card p-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Luck Rating</h3>
             <p className="text-3xl font-bold">{totalLuckRating.toFixed(2)}</p>
           </div>

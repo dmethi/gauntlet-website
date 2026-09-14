@@ -135,9 +135,9 @@ const StatsSeasonViewContent = ({ season, searchParams }: StatsSeasonViewProps) 
         crestSrc="/gauntlet_logo.svg"
       />
 
-      <div className="px-6 py-8">
+      <div className="py-5 md:px-6 md:py-8">
         {error && (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6">
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 sm:p-6">
             <div className="flex items-center gap-2">
               <div className="text-destructive font-semibold">Error loading stats</div>
             </div>

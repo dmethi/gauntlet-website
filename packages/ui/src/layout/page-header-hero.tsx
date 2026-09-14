@@ -38,19 +38,23 @@ export function PageHeaderHero({ title, crestSrc, subtitle, actions, avatar }: P
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.32, ease: [0.215, 0.61, 0.355, 1] }}
-        className='relative px-6 pt-20 md:pt-8 pb-6 max-w-7xl mx-auto flex items-end justify-between gap-4'
+        className='relative mx-auto flex max-w-7xl flex-col items-stretch gap-4 px-0 pb-5 pt-4 md:flex-row md:items-end md:justify-between md:px-6 md:pb-6 md:pt-8'
       >
-        <div className='flex items-center gap-4'>
+        <div className='flex min-w-0 items-center gap-4'>
           {avatar}
-          <div>
+          <div className='min-w-0'>
             <span className='block w-10 h-1 bg-primary rounded-full mb-3' />
-            <h1 className='font-geizer text-4xl sm:text-6xl tracking-widest uppercase leading-none'>
+            <h1 className='break-words font-geizer text-4xl uppercase leading-none tracking-widest sm:text-6xl'>
               {title}
             </h1>
             {subtitle && <p className='mt-2 text-sm text-muted-foreground'>{subtitle}</p>}
           </div>
         </div>
-        {actions && <div className='flex items-center gap-2 shrink-0'>{actions}</div>}
+        {actions && (
+          <div className='flex w-full flex-wrap items-center gap-2 md:w-auto md:shrink-0'>
+            {actions}
+          </div>
+        )}
       </motion.div>
     </header>
   );

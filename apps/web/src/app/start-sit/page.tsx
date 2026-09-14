@@ -29,7 +29,7 @@ const LoadingScreen = () => (
     <PageHeaderHero title="Start/Sit Efficiency" crestSrc="/gauntlet_logo.svg" />
     <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
 
-    <div className="px-6 py-8 max-w-md mx-auto text-center space-y-6">
+    <div className="mx-auto max-w-md space-y-6 py-5 text-center md:px-6 md:py-8">
       <Card>
         <CardContent className="pt-6 space-y-4 text-sm text-muted-foreground">
           <p>Analyzing start/sit decisions...</p>
@@ -142,17 +142,20 @@ export default function StartSitPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="fixed top-4 right-4 z-50">
-        <button
-          onClick={forceRefresh}
-          className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm hover:opacity-90 transition-opacity shadow-lg"
-          disabled={loading}
-        >
-          {loading ? '⟳' : '↻'} Refresh
-        </button>
-      </div>
-
+    <div className="mx-auto min-h-screen max-w-7xl">
+      <PageHeaderHero
+        title="Start/Sit Efficiency"
+        crestSrc="/gauntlet_logo.svg"
+        actions={
+          <button
+            onClick={forceRefresh}
+            className="min-h-11 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+            disabled={loading}
+          >
+            {loading ? '⟳' : '↻'} Refresh
+          </button>
+        }
+      />
       <StartSitEfficiency data={data} />
     </div>
   );

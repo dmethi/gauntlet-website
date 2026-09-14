@@ -36,7 +36,7 @@ const TeamLine = ({ team }: { team: PreviewTeam }) => {
   ];
 
   return (
-    <div className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-3 py-4">
+    <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 py-4 sm:grid-cols-[auto_minmax(0,1fr)_auto_auto]">
       <TeamAvatar src={team.avatarUrl} name={team.teamName} size={44} />
       <div className="min-w-0">
         <div className="flex min-w-0 items-center gap-2">
@@ -48,14 +48,15 @@ const TeamLine = ({ team }: { team: PreviewTeam }) => {
           <p className="mt-1 text-xs text-primary">Modeled at zero: {modeledAtZero.join(' · ')}</p>
         ) : null}
       </div>
-      <div className="text-right">
+      <div className="hidden text-right sm:block">
         <p className="font-geizer text-2xl">{team.p50.toFixed(1)}</p>
         <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Sleeper anchor</p>
         <p className="text-xs text-muted-foreground">
           {team.p10.toFixed(0)}–{team.p90.toFixed(0)}
         </p>
       </div>
-      <div className="w-16 text-right">
+      <div className="text-right sm:w-16">
+        <p className="font-geizer text-xl sm:hidden">{team.p50.toFixed(1)}</p>
         <p className="font-semibold">{percent(team.winProbability)}</p>
         <p className="text-xs text-muted-foreground">{team.moneyline}</p>
       </div>
@@ -122,7 +123,7 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
   const topScorerFavorite = report.gauntletWideRaces.highestScore[0];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl py-6 sm:px-6 sm:py-10 lg:px-8">
       <section className="grid gap-8 border-b border-border pb-12 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
         <div>
           <Badge className="bg-primary/10 text-primary border border-primary/20">
@@ -136,7 +137,7 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
             starts with how the roster was built.
           </p>
         </div>
-        <dl className="border-l border-border pl-6 text-sm">
+        <dl className="border-t border-border pt-5 text-sm lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
           <dt className="text-muted-foreground">Lineups and projections frozen</dt>
           <dd className="mt-1 font-medium">{formatTimestamp(report.metadata.generatedAt)}</dd>
           <dt className="mt-5 text-muted-foreground">Simulation</dt>

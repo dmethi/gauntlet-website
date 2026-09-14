@@ -29,7 +29,7 @@ const ManagersIndexPage = async () => {
         subtitle={`${managers.length} manager${managers.length === 1 ? '' : 's'} across every registered season`}
         crestSrc="/gauntlet_logo.svg"
       />
-      <div className="px-6 py-8">
+      <div className="py-5 md:px-6 md:py-8">
         {managers.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             No managers found in any registered league.

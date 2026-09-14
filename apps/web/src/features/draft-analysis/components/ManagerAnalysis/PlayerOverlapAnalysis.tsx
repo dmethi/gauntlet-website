@@ -89,13 +89,13 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
         {analytics.player_overlap_analytics.maverick_managers.length > 0 && (
           <div>
             <h4 className="font-medium mb-3">Maverick Managers (&lt;20% overlap)</h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
               {analytics.player_overlap_analytics.maverick_managers.map((manager, idx) => (
                 <div
                   key={`maverick-${manager.manager || 'mgr'}-${idx}`}
-                  className="p-3 rounded border text-center"
+                  className="min-w-0 rounded border p-3 text-center"
                 >
-                  <div className="font-medium">{manager.manager}</div>
+                  <div className="break-words font-medium">{manager.manager}</div>
                   <div className="text-sm text-muted-foreground">{manager.league}</div>
                   <Badge variant="outline" className="mt-1">
                     {manager.avg_overlap_with_others.toFixed(1)}% avg

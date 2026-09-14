@@ -8,7 +8,16 @@
 'use client';
 
 import { useMemo } from 'react';
-import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { useChartColors } from '@/shared/utils/colors';
 import { colors } from '@/lib/colors';
 
@@ -275,68 +284,70 @@ export const WinProbChart = ({
 
   return (
     <div className="h-48 w-full min-w-0 select-none">
-      <LineChart width={600} height={192} data={data} className="w-full h-full">
-        <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
-        <XAxis
-          dataKey="idx"
-          stroke={chartColors.axis}
-          tick={{ fontSize: 10, fill: chartColors.axis }}
-          ticks={ticks.map(t => t.value)}
-          tickFormatter={(value: number) => {
-            const tick = ticks.find(t => t.value === value);
-            return tick ? tick.label : '';
-          }}
-          height={40}
-          angle={-45}
-          textAnchor="end"
-        />
-        <YAxis
-          domain={[0, 100]}
-          stroke={chartColors.axis}
-          width={32}
-          tick={{ fontSize: 10, fill: chartColors.axis }}
-          label={{
-            value: 'Win %',
-            angle: -90,
-            position: 'insideLeft',
-            style: { fontSize: 10, fill: chartColors.axis },
-          }}
-        />
-        <Tooltip
-          contentStyle={{
-            background: chartColors.tooltip.background,
-            color: chartColors.tooltip.text,
-            border: `1px solid ${colors.core.crimsonRed}`,
-            borderRadius: '6px',
-            padding: '8px',
-          }}
-          labelFormatter={(label: number) => data[label]?.t || ''}
-          formatter={(value: number, name: string) => [`${value}%`, name]}
-        />
-        <Legend
-          verticalAlign="top"
-          align="right"
-          wrapperStyle={{ fontSize: 11, paddingBottom: 8 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="teamA"
-          name={teamAName}
-          stroke={colors.core.crimsonRed}
-          strokeWidth={2}
-          dot={false}
-          isAnimationActive={false}
-        />
-        <Line
-          type="monotone"
-          dataKey="teamB"
-          name={teamBName}
-          stroke={colors.core.regalGold}
-          strokeWidth={2}
-          dot={false}
-          isAnimationActive={false}
-        />
-      </LineChart>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+          <XAxis
+            dataKey="idx"
+            stroke={chartColors.axis}
+            tick={{ fontSize: 10, fill: chartColors.axis }}
+            ticks={ticks.map(t => t.value)}
+            tickFormatter={(value: number) => {
+              const tick = ticks.find(t => t.value === value);
+              return tick ? tick.label : '';
+            }}
+            height={40}
+            angle={-45}
+            textAnchor="end"
+          />
+          <YAxis
+            domain={[0, 100]}
+            stroke={chartColors.axis}
+            width={32}
+            tick={{ fontSize: 10, fill: chartColors.axis }}
+            label={{
+              value: 'Win %',
+              angle: -90,
+              position: 'insideLeft',
+              style: { fontSize: 10, fill: chartColors.axis },
+            }}
+          />
+          <Tooltip
+            contentStyle={{
+              background: chartColors.tooltip.background,
+              color: chartColors.tooltip.text,
+              border: `1px solid ${colors.core.crimsonRed}`,
+              borderRadius: '6px',
+              padding: '8px',
+            }}
+            labelFormatter={(label: number) => data[label]?.t || ''}
+            formatter={(value: number, name: string) => [`${value}%`, name]}
+          />
+          <Legend
+            verticalAlign="top"
+            align="right"
+            wrapperStyle={{ fontSize: 11, paddingBottom: 8 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="teamA"
+            name={teamAName}
+            stroke={colors.core.crimsonRed}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="teamB"
+            name={teamBName}
+            stroke={colors.core.regalGold}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
@@ -387,68 +398,70 @@ export const ScoreChart = ({
 
   return (
     <div className="h-48 w-full min-w-0 select-none">
-      <LineChart width={600} height={192} data={data} className="w-full h-full">
-        <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
-        <XAxis
-          dataKey="idx"
-          stroke={chartColors.axis}
-          tick={{ fontSize: 10, fill: chartColors.axis }}
-          ticks={ticks.map(t => t.value)}
-          tickFormatter={(value: number) => {
-            const tick = ticks.find(t => t.value === value);
-            return tick ? tick.label : '';
-          }}
-          height={40}
-          angle={-45}
-          textAnchor="end"
-        />
-        <YAxis
-          domain={[0, 'auto']}
-          stroke={chartColors.axis}
-          width={32}
-          tick={{ fontSize: 10, fill: chartColors.axis }}
-          label={{
-            value: 'Points',
-            angle: -90,
-            position: 'insideLeft',
-            style: { fontSize: 10, fill: chartColors.axis },
-          }}
-        />
-        <Tooltip
-          contentStyle={{
-            background: chartColors.tooltip.background,
-            color: chartColors.tooltip.text,
-            border: `1px solid ${colors.core.crimsonRed}`,
-            borderRadius: '6px',
-            padding: '8px',
-          }}
-          labelFormatter={(label: number) => data[label]?.t || ''}
-          formatter={(value: number, name: string) => [value.toFixed(1), name]}
-        />
-        <Legend
-          verticalAlign="top"
-          align="right"
-          wrapperStyle={{ fontSize: 11, paddingBottom: 8 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="teamA"
-          name={teamAName}
-          stroke={colors.core.crimsonRed}
-          strokeWidth={2}
-          dot={false}
-          isAnimationActive={false}
-        />
-        <Line
-          type="monotone"
-          dataKey="teamB"
-          name={teamBName}
-          stroke={colors.core.regalGold}
-          strokeWidth={2}
-          dot={false}
-          isAnimationActive={false}
-        />
-      </LineChart>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+          <XAxis
+            dataKey="idx"
+            stroke={chartColors.axis}
+            tick={{ fontSize: 10, fill: chartColors.axis }}
+            ticks={ticks.map(t => t.value)}
+            tickFormatter={(value: number) => {
+              const tick = ticks.find(t => t.value === value);
+              return tick ? tick.label : '';
+            }}
+            height={40}
+            angle={-45}
+            textAnchor="end"
+          />
+          <YAxis
+            domain={[0, 'auto']}
+            stroke={chartColors.axis}
+            width={32}
+            tick={{ fontSize: 10, fill: chartColors.axis }}
+            label={{
+              value: 'Points',
+              angle: -90,
+              position: 'insideLeft',
+              style: { fontSize: 10, fill: chartColors.axis },
+            }}
+          />
+          <Tooltip
+            contentStyle={{
+              background: chartColors.tooltip.background,
+              color: chartColors.tooltip.text,
+              border: `1px solid ${colors.core.crimsonRed}`,
+              borderRadius: '6px',
+              padding: '8px',
+            }}
+            labelFormatter={(label: number) => data[label]?.t || ''}
+            formatter={(value: number, name: string) => [value.toFixed(1), name]}
+          />
+          <Legend
+            verticalAlign="top"
+            align="right"
+            wrapperStyle={{ fontSize: 11, paddingBottom: 8 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="teamA"
+            name={teamAName}
+            stroke={colors.core.crimsonRed}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="teamB"
+            name={teamBName}
+            stroke={colors.core.regalGold}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };

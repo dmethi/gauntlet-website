@@ -45,13 +45,13 @@ export const PositionalAllocationHeatmap = memo<PositionalAllocationHeatmapProps
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 justify-between">
-            <div className="flex items-center gap-2">
+          <CardTitle className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-2">
               <TrendingUp className="h-5 w-5" />
               Positional Allocation Heatmap
             </div>
             <Select value={sortBy} onValueChange={onSortChange}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-full sm:w-48">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

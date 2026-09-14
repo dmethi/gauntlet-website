@@ -194,43 +194,6 @@
   }
 }
 
-/* Mobile-specific overrides */
-@media (max-width: 768px) {
-  /* Increase line height for better readability on mobile */
-  body {
-    line-height: 1.6;
-  }
-
-  /* Ensure proper spacing on mobile */
-  .space-y-6 > :not([hidden]) ~ :not([hidden]) {
-    margin-top: 1rem;
-  }
-
-  /* Responsive font sizes for mobile */
-  h1 {
-    @apply text-xl sm:text-2xl lg:text-3xl;
-  }
-
-  h2 {
-    @apply text-lg sm:text-xl lg:text-2xl;
-  }
-
-  h3 {
-    @apply text-base sm:text-lg lg:text-xl;
-  }
-
-  /* Force no horizontal scrolling on mobile */
-  * {
-    max-width: 100%;
-  }
-
-  /* Ensure grids don't overflow */
-  .grid {
-    width: 100%;
-    overflow: hidden;
-  }
-}
-
 /* Hero gradient orb animations */
 @keyframes orb-drift-a {
   0%,

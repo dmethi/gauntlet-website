@@ -21,7 +21,7 @@ export const ScoreBoxPlot = memo<ScoreBoxPlotProps>(props => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="relative cursor-help" style={{ width, height }}>
+          <div className="relative w-full cursor-help" style={{ maxWidth: width, height }}>
             {/* Background with scale */}
             <div className="w-full h-full bg-muted/20 rounded relative flex items-center">
               {/* Scale markers */}

@@ -8,7 +8,7 @@ import { ReportList } from './report-list';
 
 export default function ReportsPage() {
   return (
-    <Container className="py-8">
+    <Container flushOnMobile className="py-5 md:py-8">
       <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <PageHeader
           title="Reports"

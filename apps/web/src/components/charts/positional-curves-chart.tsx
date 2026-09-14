@@ -171,7 +171,7 @@ export const PositionalCurvesChart: React.FC<PositionalCurvesChartProps> = ({
     <div className="space-y-4">
       {/* Position Controls */}
       <div className="flex flex-wrap gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">Show positions:</span>
           {['QB', 'RB', 'WR', 'TE', 'DEF'].map(position => (
             <Button

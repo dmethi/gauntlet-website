@@ -43,8 +43,8 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
 
           return (
             <div key={row.week} className="space-y-2 rounded-md border p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                   <span className="text-sm font-semibold">Week {row.week}</span>
                   <span
                     className={`rounded-full px-2 py-1 text-xs font-bold text-white ${
@@ -58,11 +58,13 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                     {row.result}
                   </span>
                   {row.opponentKey ? (
-                    <span className="text-xs text-muted-foreground">vs {row.opponentKey}</span>
+                    <span className="break-all text-xs text-muted-foreground">
+                      vs {row.opponentKey}
+                    </span>
                   ) : null}
                 </div>
 
-                <div className="flex items-center gap-3 text-xs">
+                <div className="flex flex-wrap items-center gap-2 text-xs sm:gap-3">
                   <span
                     className="rounded-full px-2 py-1 font-medium"
                     style={{

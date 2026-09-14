@@ -6,7 +6,7 @@ import { ReportList } from '../../report-list';
 
 export default function ReportsArchive2025Page() {
   return (
-    <Container className="py-8">
+    <Container flushOnMobile className="py-5 md:py-8">
       <Button asChild variant="ghost" className="mb-6 -ml-3">
         <Link href="/competition/reports">
           <ArrowLeft className="h-4 w-4" />

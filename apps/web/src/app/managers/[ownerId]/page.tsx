@@ -56,7 +56,7 @@ const ManagerProfilePage = async (props: PageProps) => {
           subtitle="This owner doesn't appear in any registered season."
           crestSrc="/gauntlet_logo.svg"
         />
-        <div className="px-6 py-8">
+        <div className="py-5 md:px-6 md:py-8">
           <Link href="/archive/2025" className="text-sm text-primary hover:underline">
             &larr; Back to the 2025 archive
           </Link>
@@ -107,7 +107,7 @@ const ManagerProfilePage = async (props: PageProps) => {
           </div>
         }
       />
-      <div className="px-6 py-8">
+      <div className="py-5 md:px-6 md:py-8">
         {profile && (
           <section className="mb-10 border-y border-border py-6">
             <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
@@ -123,23 +123,23 @@ const ManagerProfilePage = async (props: PageProps) => {
             </div>
           </section>
         )}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
-          <div className="rounded-md border border-border bg-card p-4">
+        <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Career Record</h3>
             <p className="text-3xl font-bold">
               {career.wins}-{career.losses}
               {career.ties > 0 ? `-${career.ties}` : ''}
             </p>
           </div>
-          <div className="rounded-md border border-border bg-card p-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Win %</h3>
             <p className="text-3xl font-bold">{formatPct(career.winPct)}</p>
           </div>
-          <div className="rounded-md border border-border bg-card p-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Points For</h3>
             <p className="text-3xl font-bold">{career.pointsFor.toFixed(1)}</p>
           </div>
-          <div className="rounded-md border border-border bg-card p-4">
+          <div className="rounded-md border border-border bg-card p-3 sm:p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Points Against</h3>
             <p className="text-3xl font-bold">{career.pointsAgainst.toFixed(1)}</p>
           </div>

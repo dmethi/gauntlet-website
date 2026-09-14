@@ -606,7 +606,7 @@ const LeagueTransactionsContent = () => {
           subtitle={`${league?.name || 'League'} - Transaction feed with grades`}
           crestSrc="/gauntlet_logo.svg"
         />
-        <div className="px-6 py-8">
+        <div className="py-5 md:px-6 md:py-8">
           <div className="mb-3 flex items-center gap-2 flex-wrap">
             <div className="text-sm text-muted-foreground">Position:</div>
             {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (

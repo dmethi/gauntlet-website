@@ -64,7 +64,7 @@ export default function LivePage() {
           subtitle={`Week ${currentWeek}`}
           crestSrc="/gauntlet_logo.svg"
         />
-        <div className="px-6 py-8">
+        <div className="py-5 md:px-6 md:py-8">
           <Card>
             <CardContent className="pt-6 text-center">
               <p className="text-muted-foreground">
@@ -87,7 +87,7 @@ export default function LivePage() {
         crestSrc="/gauntlet_logo.svg"
       />
 
-      <div className="px-6 py-8 space-y-6">
+      <div className="space-y-6 py-5 md:px-6 md:py-8">
         <div className="text-sm text-muted-foreground">
           Last updated: {new Date(liveScores.lastUpdated).toLocaleString()}
         </div>

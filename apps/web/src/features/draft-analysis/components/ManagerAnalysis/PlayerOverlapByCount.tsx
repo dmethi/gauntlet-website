@@ -78,24 +78,27 @@ export const PlayerOverlapByCount = memo<PlayerOverlapByCountProps>(({ overlaps 
               </h4>
               <div className="grid gap-3">
                 {overlapsByCount[count].map((overlap, idx) => (
-                  <div key={`overlap-${count}-${idx}`} className="p-4 rounded border bg-muted/20">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{overlap.manager_a}</span>
+                  <div
+                    key={`overlap-${count}-${idx}`}
+                    className="min-w-0 rounded border bg-muted/20 p-3 sm:p-4"
+                  >
+                    <div className="mb-2 flex flex-col items-start gap-2 sm:flex-row sm:justify-between">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
+                        <span className="break-words font-medium">{overlap.manager_a}</span>
                         <Badge variant="outline" className="text-xs">
                           AFC
                         </Badge>
                         <span className="text-muted-foreground">↔</span>
-                        <span className="font-medium">{overlap.manager_b}</span>
+                        <span className="break-words font-medium">{overlap.manager_b}</span>
                         <Badge variant="outline" className="text-xs">
                           NFC
                         </Badge>
                       </div>
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="shrink-0">
                         {overlap.overlap_percentage.toFixed(1)}% total overlap
                       </Badge>
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="break-words text-sm text-muted-foreground">
                       <strong>Shared players:</strong> {overlap.shared_player_names.join(', ')}
                     </div>
                   </div>

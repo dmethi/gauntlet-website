@@ -214,7 +214,7 @@ export default function MatchupDetailPage(): JSX.Element {
 
   if (error || !matchup) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-background py-5 md:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
             <div className="text-red-500 text-lg mb-4">Error loading matchup</div>
@@ -235,7 +235,7 @@ export default function MatchupDetailPage(): JSX.Element {
   const maxProjection = Math.max(...allPlayers.map(player => player.projectedPoints));
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background py-5 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between gap-4">
@@ -276,7 +276,7 @@ export default function MatchupDetailPage(): JSX.Element {
 
         {/* Score Summary */}
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <TeamScore team={teamA} isLeading={teamA.points > teamB.points} />
               <div className="text-center">

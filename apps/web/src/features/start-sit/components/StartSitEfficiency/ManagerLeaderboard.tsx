@@ -17,7 +17,7 @@ export const ManagerLeaderboard = memo(({ managers }: ManagerLeaderboardProps) =
         return (
           <div
             key={manager.managerId}
-            className="flex items-center justify-between rounded-lg border bg-card p-3"
+            className="flex flex-col gap-3 rounded-lg border bg-card p-3 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="flex items-center gap-3">
               <span className="w-8 text-sm font-medium text-muted-foreground">#{index + 1}</span>
@@ -29,7 +29,7 @@ export const ManagerLeaderboard = memo(({ managers }: ManagerLeaderboardProps) =
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="grid w-full grid-cols-2 gap-3 border-t border-border pt-3 sm:w-auto sm:border-0 sm:pt-0">
               <div className="text-right">
                 <div className="font-semibold text-primary">
                   {(manager.weightedDecisionScore * 100).toFixed(1)}%

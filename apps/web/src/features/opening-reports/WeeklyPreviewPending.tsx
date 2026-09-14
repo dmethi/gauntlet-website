@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const WeeklyPreviewPending = () => {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl py-10 sm:px-6 sm:py-16 lg:px-8">
       <section className="grid gap-10 border-y border-border py-12 lg:grid-cols-[1fr_18rem]">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">
@@ -23,7 +23,7 @@ export const WeeklyPreviewPending = () => {
             Read the completed draft report →
           </Link>
         </div>
-        <dl className="space-y-5 border-l border-border pl-6 text-sm">
+        <dl className="space-y-5 border-t border-border pt-5 text-sm lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
           <div>
             <dt className="text-muted-foreground">Markets prepared</dt>
             <dd className="mt-1 font-geizer text-3xl">6</dd>

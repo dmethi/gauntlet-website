@@ -114,7 +114,7 @@ const LeagueOverviewContent = () => {
         subtitle={`Season ${league.season}`}
         crestSrc={leagueConfig?.logo ?? '/gauntlet_logo.svg'}
       />
-      <div className="px-6 py-8">
+      <div className="py-5 md:px-6 md:py-8">
         <div className="mb-8">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="text-2xl font-bold">Team Rankings</h2>

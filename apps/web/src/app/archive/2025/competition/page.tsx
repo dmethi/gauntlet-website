@@ -336,9 +336,9 @@ const LeagueStandingsSection = () => {
         <CardDescription>Current team rankings across both leagues</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-8 lg:grid-cols-2">
           {/* AFC Standings */}
-          <div>
+          <div className="min-w-0">
             <h3 className="mb-4 text-lg font-semibold">{afcLeague?.name || 'Gauntlet AFC'}</h3>
             <div className="overflow-x-auto rounded-md border border-border bg-card">
               <Table>
@@ -417,7 +417,7 @@ const LeagueStandingsSection = () => {
           </div>
 
           {/* NFC Standings */}
-          <div>
+          <div className="min-w-0">
             <h3 className="mb-4 text-lg font-semibold">{nfcLeague?.name || 'Gauntlet NFC'}</h3>
             <div className="overflow-x-auto rounded-md border border-border bg-card">
               <Table>
@@ -472,7 +472,7 @@ export default function CompetitionPage(): JSX.Element {
 
   if (isLoading) {
     return (
-      <Container className="py-8">
+      <Container flushOnMobile className="py-5 md:py-8">
         <PageHeader title="The Gauntlet Competition" subtitle="Loading leagues..." />
         <div className="grid gap-6 md:grid-cols-2">
           {[1, 2].map(i => (
@@ -493,7 +493,7 @@ export default function CompetitionPage(): JSX.Element {
 
   if (error) {
     return (
-      <Container className="py-8">
+      <Container flushOnMobile className="py-5 md:py-8">
         <PageHeader title="The Gauntlet Competition" subtitle="Failed to load leagues" />
         <Card>
           <CardContent className="pt-6">
@@ -517,7 +517,7 @@ export default function CompetitionPage(): JSX.Element {
   };
 
   return (
-    <Container className="py-8">
+    <Container flushOnMobile className="py-5 md:py-8">
       <PageHeader
         title="The Gauntlet Competition"
         subtitle="Two leagues, one ultimate championship"

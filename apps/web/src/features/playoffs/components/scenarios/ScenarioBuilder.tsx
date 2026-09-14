@@ -26,9 +26,9 @@ const MatchupSelector = memo<{
   readonly isLoading?: boolean;
 }>(({ matchup, lockedWinner, onSelect, isLoading }) => {
   return (
-    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30">
+    <div className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2 rounded-lg bg-muted/30 p-3 sm:grid-cols-[1.5rem_minmax(0,1fr)_4rem_minmax(0,1fr)] sm:items-center">
       {/* Matchup ID */}
-      <div className="w-6 text-center text-xs text-muted-foreground font-medium">
+      <div className="row-span-3 w-6 self-center text-center text-xs font-medium text-muted-foreground sm:row-span-1">
         M{matchup.matchupId}
       </div>
 
@@ -36,7 +36,7 @@ const MatchupSelector = memo<{
       <Button
         variant={lockedWinner === 'team1' ? 'default' : 'outline'}
         size="sm"
-        className={`flex-1 text-xs h-9 ${
+        className={`h-9 w-full min-w-0 text-xs ${
           lockedWinner === 'team1' ? 'bg-green-600 hover:bg-green-700 border-green-600' : ''
         }`}
         onClick={() => onSelect(lockedWinner === 'team1' ? null : 'team1')}
@@ -47,7 +47,7 @@ const MatchupSelector = memo<{
       </Button>
 
       {/* VS / Simulate indicator */}
-      <div className="w-16 text-center">
+      <div className="text-center">
         {lockedWinner === null ? (
           <Badge variant="secondary" className="text-xs">
             <Shuffle className="h-3 w-3 mr-1" />
@@ -62,7 +62,7 @@ const MatchupSelector = memo<{
       <Button
         variant={lockedWinner === 'team2' ? 'default' : 'outline'}
         size="sm"
-        className={`flex-1 text-xs h-9 ${
+        className={`h-9 w-full min-w-0 text-xs ${
           lockedWinner === 'team2' ? 'bg-green-600 hover:bg-green-700 border-green-600' : ''
         }`}
         onClick={() => onSelect(lockedWinner === 'team2' ? null : 'team2')}

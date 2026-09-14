@@ -22,9 +22,9 @@ export const ScoreRangesDisplay = memo<ScoreRangesDisplayProps>(props => {
         Score Ranges
       </h4>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Team 1 */}
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <div className="text-sm font-medium">{simulationData.teams[0].teamName}</div>
           <div className="text-2xl font-bold">{simulationData.team1Scores.median.toFixed(1)}</div>
           <div className="text-xs text-muted-foreground">
@@ -43,7 +43,7 @@ export const ScoreRangesDisplay = memo<ScoreRangesDisplayProps>(props => {
         </div>
 
         {/* Team 2 */}
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <div className="text-sm font-medium">{simulationData.teams[1].teamName}</div>
           <div className="text-2xl font-bold">{simulationData.team2Scores.median.toFixed(1)}</div>
           <div className="text-xs text-muted-foreground">

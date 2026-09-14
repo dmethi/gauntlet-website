@@ -233,7 +233,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-background py-5 md:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
             <div className="text-red-500 text-lg mb-4">Error loading matchups</div>
@@ -248,7 +248,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background py-5 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="space-y-4">

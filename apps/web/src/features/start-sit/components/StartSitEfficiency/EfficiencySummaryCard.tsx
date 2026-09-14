@@ -17,7 +17,7 @@ const MetricTile = ({
   subtitle: string;
   colorClass: string;
 }) => (
-  <div className="flex-1 px-4 py-3 text-center first:pl-0 last:pr-0">
+  <div className="bg-background px-2 py-3 text-center last:col-span-2 sm:px-4 sm:last:col-span-1">
     <div className={`text-2xl font-bold ${colorClass}`}>{value}</div>
     <div className="text-sm font-medium text-foreground">{title}</div>
     <div className="text-xs text-muted-foreground">{subtitle}</div>
@@ -26,7 +26,7 @@ const MetricTile = ({
 
 export const EfficiencySummaryCard = memo(({ summary }: EfficiencySummaryCardProps) => {
   return (
-    <div className="flex divide-x divide-border">
+    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-border sm:grid-cols-3">
       <MetricTile
         title="Avg Weighted Score"
         subtitle="Skill-adjusted decision rate"

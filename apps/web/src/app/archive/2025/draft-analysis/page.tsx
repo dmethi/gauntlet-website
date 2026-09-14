@@ -378,7 +378,7 @@ export default function DraftAnalysisPage(): JSX.Element {
     <div className="relative">
       {/* Fixed Header */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40">
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-between py-4 md:p-4">
           <div>
             <h1 className="text-2xl font-bold font-geizer">Draft Analysis Report</h1>
             <p className="text-sm text-muted-foreground">
@@ -388,7 +388,7 @@ export default function DraftAnalysisPage(): JSX.Element {
         </div>
 
         {/* Sticky Navigation */}
-        <div className="flex items-center gap-2 px-4 pb-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:px-4">
           {sections.map(section => {
             const Icon = section.icon;
             return (
@@ -426,7 +426,7 @@ export default function DraftAnalysisPage(): JSX.Element {
       {analytics && managerAnalytics && (
         <div className="space-y-0">
           {/* 🏈 League-Level Analysis Section */}
-          <section id="league" className="py-12 px-4 bg-background">
+          <section id="league" className="bg-background py-8 md:px-4 md:py-12">
             <div className="max-w-7xl mx-auto space-y-8">
               <div className="text-center">
                 <h2 className="text-3xl font-bold mb-2">🏈 League-Level Analysis</h2>
@@ -820,7 +820,7 @@ export default function DraftAnalysisPage(): JSX.Element {
           </section>
 
           {/* 👥 Manager-Level Analysis Section */}
-          <section id="managers" className="py-12 px-4 bg-muted/20">
+          <section id="managers" className="bg-muted/20 py-8 md:px-4 md:py-12">
             <div className="max-w-7xl mx-auto space-y-8">
               <div className="text-center">
                 <h2 className="text-3xl font-bold mb-2">👥 Manager-Level Analysis</h2>
@@ -835,7 +835,7 @@ export default function DraftAnalysisPage(): JSX.Element {
           </section>
 
           {/* 🏆 Team Directory Section */}
-          <section id="teams" className="py-12 px-4 bg-background">
+          <section id="teams" className="bg-background py-8 md:px-4 md:py-12">
             <div className="max-w-7xl mx-auto space-y-8">
               <div className="text-center">
                 <h2 className="text-3xl font-bold mb-2">🏆 Team Directory</h2>
@@ -891,24 +891,29 @@ export default function DraftAnalysisPage(): JSX.Element {
                                   <h5 className="font-medium text-sm text-muted-foreground mb-2">
                                     Starters
                                   </h5>
-                                  <div className="grid grid-cols-2 gap-1 text-xs">
+                                  <div className="grid min-w-0 grid-cols-1 gap-1 text-xs sm:grid-cols-2">
                                     {starters.map(pick => (
                                       <div
                                         key={`${draft1.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className="flex items-center justify-between rounded p-1 text-black dark:text-white"
+                                        className="flex min-w-0 items-center justify-between gap-1 rounded p-1 text-black dark:text-white"
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
                                       >
-                                        <div className="flex items-center gap-1">
-                                          <Badge variant="outline" className="text-[10px] px-1">
+                                        <div className="flex min-w-0 items-center gap-1">
+                                          <Badge
+                                            variant="outline"
+                                            className="shrink-0 px-1 text-[10px]"
+                                          >
                                             {pick.player.position}
                                           </Badge>
                                           <span className="truncate">
                                             {pick.player.name.split(' ').slice(-1)[0]}
                                           </span>
                                         </div>
-                                        <span className="font-medium">${pick.actualPrice}</span>
+                                        <span className="shrink-0 font-medium">
+                                          ${pick.actualPrice}
+                                        </span>
                                       </div>
                                     ))}
                                   </div>
@@ -919,24 +924,29 @@ export default function DraftAnalysisPage(): JSX.Element {
                                   <h5 className="font-medium text-sm text-muted-foreground mb-2">
                                     Bench
                                   </h5>
-                                  <div className="grid grid-cols-2 gap-1 text-xs">
+                                  <div className="grid min-w-0 grid-cols-1 gap-1 text-xs sm:grid-cols-2">
                                     {bench.map(pick => (
                                       <div
                                         key={`${draft1.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className="flex items-center justify-between rounded p-1 text-black dark:text-white"
+                                        className="flex min-w-0 items-center justify-between gap-1 rounded p-1 text-black dark:text-white"
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
                                       >
-                                        <div className="flex items-center gap-1">
-                                          <Badge variant="outline" className="text-[10px] px-1">
+                                        <div className="flex min-w-0 items-center gap-1">
+                                          <Badge
+                                            variant="outline"
+                                            className="shrink-0 px-1 text-[10px]"
+                                          >
                                             {pick.player.position}
                                           </Badge>
                                           <span className="truncate">
                                             {pick.player.name.split(' ').slice(-1)[0]}
                                           </span>
                                         </div>
-                                        <span className="font-medium">${pick.actualPrice}</span>
+                                        <span className="shrink-0 font-medium">
+                                          ${pick.actualPrice}
+                                        </span>
                                       </div>
                                     ))}
                                   </div>
@@ -996,24 +1006,29 @@ export default function DraftAnalysisPage(): JSX.Element {
                                   <h5 className="font-medium text-sm text-muted-foreground mb-2">
                                     Starters
                                   </h5>
-                                  <div className="grid grid-cols-2 gap-1 text-xs">
+                                  <div className="grid min-w-0 grid-cols-1 gap-1 text-xs sm:grid-cols-2">
                                     {starters.map(pick => (
                                       <div
                                         key={`${draft2.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className="flex items-center justify-between rounded p-1 text-black dark:text-white"
+                                        className="flex min-w-0 items-center justify-between gap-1 rounded p-1 text-black dark:text-white"
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
                                       >
-                                        <div className="flex items-center gap-1">
-                                          <Badge variant="outline" className="text-[10px] px-1">
+                                        <div className="flex min-w-0 items-center gap-1">
+                                          <Badge
+                                            variant="outline"
+                                            className="shrink-0 px-1 text-[10px]"
+                                          >
                                             {pick.player.position}
                                           </Badge>
                                           <span className="truncate">
                                             {pick.player.name.split(' ').slice(-1)[0]}
                                           </span>
                                         </div>
-                                        <span className="font-medium">${pick.actualPrice}</span>
+                                        <span className="shrink-0 font-medium">
+                                          ${pick.actualPrice}
+                                        </span>
                                       </div>
                                     ))}
                                   </div>
@@ -1024,24 +1039,29 @@ export default function DraftAnalysisPage(): JSX.Element {
                                   <h5 className="font-medium text-sm text-muted-foreground mb-2">
                                     Bench
                                   </h5>
-                                  <div className="grid grid-cols-2 gap-1 text-xs">
+                                  <div className="grid min-w-0 grid-cols-1 gap-1 text-xs sm:grid-cols-2">
                                     {bench.map(pick => (
                                       <div
                                         key={`${draft2.id}-${team.teamId}-${pick.pickNumber}`}
-                                        className="flex items-center justify-between rounded p-1 text-black dark:text-white"
+                                        className="flex min-w-0 items-center justify-between gap-1 rounded p-1 text-black dark:text-white"
                                         style={{
                                           backgroundColor: getHeatmapColor(pick.actualPrice),
                                         }}
                                       >
-                                        <div className="flex items-center gap-1">
-                                          <Badge variant="outline" className="text-[10px] px-1">
+                                        <div className="flex min-w-0 items-center gap-1">
+                                          <Badge
+                                            variant="outline"
+                                            className="shrink-0 px-1 text-[10px]"
+                                          >
                                             {pick.player.position}
                                           </Badge>
                                           <span className="truncate">
                                             {pick.player.name.split(' ').slice(-1)[0]}
                                           </span>
                                         </div>
-                                        <span className="font-medium">${pick.actualPrice}</span>
+                                        <span className="shrink-0 font-medium">
+                                          ${pick.actualPrice}
+                                        </span>
                                       </div>
                                     ))}
                                   </div>
@@ -1059,7 +1079,7 @@ export default function DraftAnalysisPage(): JSX.Element {
           </section>
 
           {/* 📋 Complete Draft Data Section */}
-          <section id="data" className="py-12 px-4 bg-muted/20">
+          <section id="data" className="bg-muted/20 py-8 md:px-4 md:py-12">
             <div className="max-w-7xl mx-auto space-y-8">
               <div className="text-center">
                 <h2 className="text-3xl font-bold mb-2">📋 Complete Draft Data</h2>

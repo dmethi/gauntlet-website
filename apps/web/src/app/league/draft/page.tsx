@@ -86,7 +86,10 @@ const PositionFilterButtons = ({
   value: string;
   onChange: (position: string) => void;
 }) => (
-  <div className="flex items-center gap-1" aria-label="Position filter">
+  <div
+    className="flex max-w-full items-center gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    aria-label="Position filter"
+  >
     {POSITIONS.map(p => (
       <Button
         key={p}
@@ -185,12 +188,12 @@ const DraftPageContent = () => {
           </div>
         }
       />
-      <div className="px-6 py-8">
+      <div className="py-5 md:px-6 md:py-8">
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-base">
               {draft ? (
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <span>Draft Type: {draft.type.toUpperCase()}</span>
                   <Badge variant="secondary">{draft.status}</Badge>
                   {teamsCount ? <Badge variant="outline">{teamsCount} Teams</Badge> : null}

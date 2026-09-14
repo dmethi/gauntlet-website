@@ -37,7 +37,7 @@ const Archive2025Page = () => {
   const leagueNames = leagues.map(l => l.name).join(' & ');
 
   return (
-    <Container className="py-8">
+    <Container flushOnMobile className="py-5 md:py-8">
       <PageHeader
         title="2025 Season Archive"
         subtitle={
