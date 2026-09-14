@@ -116,7 +116,7 @@ export const CrossLeaguePriceDiff = memo<CrossLeaguePriceDiffProps>(
 
     if (playersWithDiffs.length === 0) {
       return (
-        <Card>
+        <Card mobileFlat>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
@@ -136,7 +136,7 @@ export const CrossLeaguePriceDiff = memo<CrossLeaguePriceDiffProps>(
     }
 
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />

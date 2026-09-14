@@ -20,7 +20,7 @@ export const PositionScoringDistribution = ({
         );
 
         return (
-          <Card key={position}>
+          <Card key={position} mobileFlat>
             <CardHeader>
               <CardTitle>{position} Scoring Distribution Analysis</CardTitle>
               <CardDescription>

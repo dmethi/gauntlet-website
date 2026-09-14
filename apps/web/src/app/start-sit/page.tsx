@@ -8,7 +8,7 @@ import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import type { StartSitData } from '@/features/start-sit/types';
 
 const ErrorMessage = ({ error, onRetry }: { error: string; onRetry: () => void }) => (
-  <Card className="max-w-2xl mx-auto mt-8">
+  <Card mobileFlat className="max-w-2xl mx-auto mt-8">
     <CardContent className="pt-6 text-center">
       <div className="text-destructive mb-4">
         <h3 className="text-lg font-semibold">Analysis Failed</h3>
@@ -30,7 +30,7 @@ const LoadingScreen = () => (
     <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
 
     <div className="mx-auto max-w-md space-y-6 py-5 text-center md:px-6 md:py-8">
-      <Card>
+      <Card mobileFlat>
         <CardContent className="pt-6 space-y-4 text-sm text-muted-foreground">
           <p>Analyzing start/sit decisions...</p>
           <div className="text-xs bg-muted/40 p-3 rounded text-left">

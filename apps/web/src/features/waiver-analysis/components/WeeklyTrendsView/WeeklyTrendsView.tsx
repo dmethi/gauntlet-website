@@ -21,7 +21,7 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
   return (
     <div className="space-y-6">
       {/* Weekly Activity Chart */}
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle>{trends.leagueName} - Weekly Activity</CardTitle>
           <CardDescription>Week-by-week waiver spending and competition levels</CardDescription>
@@ -64,7 +64,7 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
       </Card>
 
       {/* Position Popularity */}
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle>Position Popularity</CardTitle>
           <CardDescription>Where FAAB was allocated by position</CardDescription>
@@ -100,7 +100,7 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
       </Card>
 
       {/* Competition Stats */}
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle>Competition Metrics</CardTitle>
           <CardDescription>Waiver wire competition intensity</CardDescription>

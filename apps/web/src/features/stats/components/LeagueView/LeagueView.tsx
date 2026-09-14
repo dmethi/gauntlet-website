@@ -52,7 +52,7 @@ export const LeagueView = memo<LeagueViewProps>(props => {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle>League Rankings</CardTitle>
           <CardDescription>

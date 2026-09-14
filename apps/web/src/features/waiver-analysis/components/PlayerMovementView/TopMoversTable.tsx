@@ -190,7 +190,7 @@ export const TopMoversTable = memo<TopMoversTableProps>(props => {
   );
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Highest Volume Movers</CardTitle>
         <CardDescription>

@@ -69,7 +69,7 @@ export const ScheduleAnalysis = ({ allTeamEntries, dataset }: ScheduleAnalysisPr
   );
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Schedule Analysis</CardTitle>
         <CardDescription>

@@ -96,7 +96,7 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
     <div className="space-y-6">
       <ManagerRankings transactions={model.allData} allTeams={model.teamsMap} />
 
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>

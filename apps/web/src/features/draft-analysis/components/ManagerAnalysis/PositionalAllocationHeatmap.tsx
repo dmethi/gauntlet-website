@@ -43,7 +43,7 @@ export const PositionalAllocationHeatmap = memo<PositionalAllocationHeatmapProps
     }, [profiles]);
 
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-2">

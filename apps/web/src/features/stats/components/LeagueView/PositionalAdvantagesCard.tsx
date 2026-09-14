@@ -27,7 +27,7 @@ export const PositionalAdvantagesCard = memo<PositionalAdvantagesCardProps>(prop
   });
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Positional Advantages Overview</CardTitle>
         <CardDescription>

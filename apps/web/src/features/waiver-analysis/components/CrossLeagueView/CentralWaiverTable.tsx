@@ -192,7 +192,7 @@ export const CentralWaiverTable = memo<CentralWaiverTableProps>(props => {
   }, [allWaiverTransactions]);
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />

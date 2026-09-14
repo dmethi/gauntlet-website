@@ -301,7 +301,7 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
         {/* Matchups by League */}
         {!loading &&
           leagueMatchups.map(league => (
-            <Card key={league.leagueId}>
+            <Card key={league.leagueId} mobileFlat>
               <CardHeader>
                 <div className="flex items-center gap-3">
                   {league.logo ? (

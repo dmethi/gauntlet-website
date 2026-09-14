@@ -256,7 +256,7 @@ export default function MatchupDetailPage(): JSX.Element {
         </div>
 
         {/* Matchup Header */}
-        <Card>
+        <Card mobileFlat>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -275,7 +275,7 @@ export default function MatchupDetailPage(): JSX.Element {
         </Card>
 
         {/* Score Summary */}
-        <Card>
+        <Card mobileFlat>
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <TeamScore team={teamA} isLeading={teamA.points > teamB.points} />
@@ -314,7 +314,7 @@ export default function MatchupDetailPage(): JSX.Element {
         {/* Live Charts - Win Probability & Score Over Time */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Win Probability Chart */}
-          <Card>
+          <Card mobileFlat>
             <CardHeader>
               <CardTitle className="text-lg font-geizer tracking-wide">
                 Win Probability Over Time
@@ -353,7 +353,7 @@ export default function MatchupDetailPage(): JSX.Element {
           </Card>
 
           {/* Score Over Time Chart */}
-          <Card>
+          <Card mobileFlat>
             <CardHeader>
               <CardTitle className="text-lg font-geizer tracking-wide">Score Over Time</CardTitle>
               <CardDescription className="font-avenir">

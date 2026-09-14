@@ -40,14 +40,14 @@ export const TeamView = memo(
 
     if (!teamTotals) {
       return (
-        <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
-          <CardHeader className="px-0 pt-0 sm:p-6">
+        <Card mobileFlat>
+          <CardHeader>
             <CardTitle>Team Analysis</CardTitle>
             <CardDescription>
               Season totals and weekly breakdown for individual teams
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-0 sm:px-6 sm:pb-6">
+          <CardContent>
             <div className="text-sm text-muted-foreground">Select a team to view analysis</div>
           </CardContent>
         </Card>
@@ -55,14 +55,14 @@ export const TeamView = memo(
     }
 
     return (
-      <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
-        <CardHeader className="px-0 pt-0 sm:p-6">
+      <Card mobileFlat>
+        <CardHeader>
           <CardTitle>Team Analysis</CardTitle>
           <CardDescription>
             Season totals, positional efficiency, and weekly performance for individual teams
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-8 p-0 sm:space-y-6 sm:p-6 sm:pt-0">
+        <CardContent className="space-y-8 sm:space-y-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <label className="text-sm font-medium text-muted-foreground">Select Team</label>
             <Select value={selectedTeamKey} onValueChange={setSelectedTeamKey}>

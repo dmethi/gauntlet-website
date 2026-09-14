@@ -97,7 +97,7 @@ export const PositionConsistencyAnalysis = ({
   return (
     <>
       {data.map(({ position, rows }) => (
-        <Card key={position}>
+        <Card key={position} mobileFlat>
           <CardHeader>
             <CardTitle>{position} Consistency Analysis</CardTitle>
             <CardDescription>

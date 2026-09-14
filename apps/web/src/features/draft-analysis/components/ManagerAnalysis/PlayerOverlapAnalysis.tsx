@@ -12,7 +12,7 @@ interface PlayerOverlapAnalysisProps {
 
 export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analytics }) => {
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <GitMerge className="h-5 w-5" />
@@ -24,7 +24,7 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card>
+          <Card className="rounded-none border-0 bg-muted/35 shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Copycat Pairs</CardTitle>
             </CardHeader>
@@ -38,7 +38,7 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-none border-0 bg-muted/35 shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Average Overlap</CardTitle>
             </CardHeader>
@@ -50,7 +50,7 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-none border-0 bg-muted/35 shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Maverick Managers</CardTitle>
             </CardHeader>

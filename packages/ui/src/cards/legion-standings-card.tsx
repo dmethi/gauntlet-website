@@ -21,7 +21,7 @@ type Props = {
 
 export function LegionStandingsCard({ title, icon, badge, caption, rows, footer }: Props) {
   return (
-    <div className='rounded-lg border border-border bg-card p-5'>
+    <div className='border-b border-border bg-transparent pb-8 sm:rounded-lg sm:border sm:bg-card sm:p-5'>
       <div className='flex items-center justify-between mb-3'>
         <div className='flex items-center gap-2'>
           {icon}

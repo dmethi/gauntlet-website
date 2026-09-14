@@ -65,7 +65,7 @@ export default function LivePage() {
           crestSrc="/gauntlet_logo.svg"
         />
         <div className="py-5 md:px-6 md:py-8">
-          <Card>
+          <Card mobileFlat>
             <CardContent className="pt-6 text-center">
               <p className="text-muted-foreground">
                 No live data available. Games may not be active or data has not been updated yet.

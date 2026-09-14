@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 
 export const BracketLegend = memo(() => {
   return (
-    <div className="grid gap-4 rounded-lg border bg-card p-4 text-xs text-muted-foreground md:grid-cols-2">
+    <div className="grid gap-4 border-b pb-8 text-xs text-muted-foreground sm:rounded-lg sm:border sm:bg-card sm:p-4 md:grid-cols-2">
       <div className="space-y-2">
         <h4 className="font-semibold text-foreground">Legend</h4>
         <div className="flex items-center space-x-2">

@@ -88,7 +88,7 @@ export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentPro
   if (!selectedTeam) {
     return (
       <div className="space-y-6">
-        <Card>
+        <Card mobileFlat>
           <CardContent className="py-8">
             <div className="text-center text-muted-foreground">
               No teams available or selected team not found.

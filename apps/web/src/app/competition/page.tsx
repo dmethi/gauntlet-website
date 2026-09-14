@@ -93,7 +93,7 @@ export default async function CompetitionPage() {
 
       <div className="py-8 space-y-10">
         {standings.length === 0 ? (
-          <Card>
+          <Card mobileFlat>
             <CardContent className="pt-6 text-center">
               <p className="text-muted-foreground">
                 No leagues are live yet for the current season. Check out the{' '}

@@ -20,7 +20,10 @@ const LeagueSummarySection = memo<{
   readonly leagueName: string;
 }>(({ summary, leagueName }) => {
   return (
-    <Card className="mb-6 border-2 border-gauntlet-gold/30 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20">
+    <Card
+      mobileFlat
+      className="mb-6 border-2 border-gauntlet-gold/30 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20"
+    >
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-gauntlet-gold" />

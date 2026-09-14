@@ -21,7 +21,7 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
   const maxTotal = Math.max(...comparisons.map(c => Math.max(c.afcSpend.total, c.nfcSpend.total)));
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Positional Spending Comparison</CardTitle>
         <CardDescription>How AFC vs NFC allocate FAAB across positions</CardDescription>

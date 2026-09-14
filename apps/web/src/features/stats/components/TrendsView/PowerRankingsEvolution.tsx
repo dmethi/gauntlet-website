@@ -210,7 +210,7 @@ export const PowerRankingsEvolution = ({
   const powerRankingRows = usePowerRankingRows(allTeamEntries, dataset);
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Power Rankings Evolution</CardTitle>
         <CardDescription>

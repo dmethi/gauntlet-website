@@ -79,7 +79,7 @@ export const MatchupSimulation = ({
   // Loading state
   if (loading && !simulationData) {
     return (
-      <Card className={className}>
+      <Card mobileFlat className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
             <Zap className="h-5 w-5" />
@@ -98,7 +98,7 @@ export const MatchupSimulation = ({
   // Error state
   if (error) {
     return (
-      <Card className={className}>
+      <Card mobileFlat className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide text-red-600">
             <AlertCircle className="h-5 w-5" />
@@ -121,7 +121,7 @@ export const MatchupSimulation = ({
   }
 
   return (
-    <Card className={className}>
+    <Card mobileFlat className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">

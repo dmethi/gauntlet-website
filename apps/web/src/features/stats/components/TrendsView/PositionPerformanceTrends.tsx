@@ -116,7 +116,7 @@ export const PositionPerformanceTrends = ({
   return (
     <>
       {positionData.map(({ position, rows }) => (
-        <Card key={position}>
+        <Card key={position} mobileFlat>
           <CardHeader>
             <CardTitle>{position} Weekly Performance Trends</CardTitle>
             <CardDescription>

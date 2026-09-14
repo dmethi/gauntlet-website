@@ -9,7 +9,7 @@ export const TeamScoringDistribution = ({
   const { chartData, domain } = buildTeamRidgePlot(allTeamEntries);
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Team Scoring Distribution Analysis</CardTitle>
         <CardDescription>

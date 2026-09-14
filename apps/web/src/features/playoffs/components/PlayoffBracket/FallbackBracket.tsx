@@ -117,7 +117,7 @@ export const FallbackBracket = memo<FallbackBracketProps>(({ bracketTeams, leagu
 
   if (upper.teams.length < 6 || lower.teams.length < 6) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>Bracket Preview</span>
@@ -137,7 +137,7 @@ export const FallbackBracket = memo<FallbackBracketProps>(({ bracketTeams, leagu
 
   return (
     <>
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>Upper Bracket</span>
@@ -219,7 +219,7 @@ export const FallbackBracket = memo<FallbackBracketProps>(({ bracketTeams, leagu
         </CardContent>
       </Card>
 
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>Lower Bracket</span>
@@ -311,7 +311,7 @@ export const FallbackBracket = memo<FallbackBracketProps>(({ bracketTeams, leagu
         </CardContent>
       </Card>
 
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>Placement Games</span>

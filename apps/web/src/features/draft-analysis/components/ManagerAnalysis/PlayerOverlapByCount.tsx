@@ -35,7 +35,7 @@ export const PlayerOverlapByCount = memo<PlayerOverlapByCountProps>(({ overlaps 
 
   if (sortedCounts.length === 0) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -55,7 +55,7 @@ export const PlayerOverlapByCount = memo<PlayerOverlapByCountProps>(({ overlaps 
   }
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Users className="h-5 w-5" />

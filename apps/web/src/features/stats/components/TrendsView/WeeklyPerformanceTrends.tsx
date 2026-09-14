@@ -106,7 +106,7 @@ export const WeeklyPerformanceTrends = ({
   const weeklyRows = useWeeklyPerformanceRows(allTeamEntries, dataset, leagueData);
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Weekly Performance Trends</CardTitle>
         <CardDescription>

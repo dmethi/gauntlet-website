@@ -75,7 +75,7 @@ export const OfficialBracketFlow = memo<OfficialBracketFlowProps>(
 
     return (
       <div className="space-y-8">
-        <Card>
+        <Card mobileFlat>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <span>Winners Bracket</span>
@@ -103,7 +103,7 @@ export const OfficialBracketFlow = memo<OfficialBracketFlowProps>(
           </CardContent>
         </Card>
 
-        <Card>
+        <Card mobileFlat>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <span>Losers Bracket</span>
@@ -131,7 +131,7 @@ export const OfficialBracketFlow = memo<OfficialBracketFlowProps>(
           </CardContent>
         </Card>
 
-        <Card>
+        <Card mobileFlat>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <span>Placement Games</span>

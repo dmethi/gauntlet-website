@@ -75,7 +75,7 @@ export const TeamConsistencyAnalysis = ({
   const data = useConsistencyData(allTeamEntries);
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Team Consistency Analysis</CardTitle>
         <CardDescription>

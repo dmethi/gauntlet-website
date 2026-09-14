@@ -92,7 +92,7 @@ export const PlayerPriceComparisonTable = memo<PlayerPriceComparisonTableProps>(
   };
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Player Price Comparison (Both Leagues)</CardTitle>
         <CardDescription>

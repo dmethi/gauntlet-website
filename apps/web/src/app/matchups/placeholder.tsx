@@ -8,7 +8,7 @@ export default function MatchupsPage() {
   return (
     <Container flushOnMobile className="py-5 md:py-8">
       <PageHeader title="Matchups" subtitle="Weekly matchups - Coming soon after season starts" />
-      <Card>
+      <Card mobileFlat>
         <CardContent className="pt-6">
           <div className="text-center py-8">
             <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />

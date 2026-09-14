@@ -37,7 +37,7 @@ export const WeeklyDifficultyChart = memo<WeeklyDifficultyChartProps>(({ points 
   }
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Weekly Difficulty Trend</CardTitle>
       </CardHeader>

@@ -137,7 +137,7 @@ LuckDistributionSection.displayName = 'LuckDistributionSection';
 
 const InfoCard = memo<{ title: string; description: string; children: ReactNode }>(
   ({ title, description, children }) => (
-    <Card>
+    <Card className="rounded-none border-0 bg-muted/35 shadow-none">
       <CardContent className="p-4 space-y-2">
         <h4 className="font-semibold text-sm">{title}</h4>
         <div className="text-2xl font-bold" style={{ color: colors.core.regalGold }}>
@@ -163,7 +163,7 @@ interface DistributionChartProps {
 
 const DistributionChart = memo<DistributionChartProps>(
   ({ title, data, highlight, barColor, highlightColor, xLabel, tooltipLabel }) => (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="text-sm font-semibold">{title}</CardTitle>
       </CardHeader>

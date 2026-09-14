@@ -49,7 +49,7 @@ export const ScatterAnalysis = ({ allTeamEntries, positionsMap }: ScatterAnalysi
   return (
     <div className="space-y-8">
       {/* Overall Team Efficiency */}
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle>Team Efficiency Analysis</CardTitle>
           <CardDescription>

@@ -50,7 +50,7 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
   // Error state
   if (isError || !data) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-destructive">
             <DollarSign className="h-5 w-5" />
@@ -74,7 +74,7 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
   // Main content
   return (
     <div className="space-y-6">
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5" />

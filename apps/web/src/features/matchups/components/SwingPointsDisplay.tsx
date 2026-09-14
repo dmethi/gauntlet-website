@@ -140,7 +140,7 @@ export const SwingPointsDisplay = memo<SwingPointsDisplayProps>(props => {
 
   if (!series || series.length === 0) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="w-5 h-5" />
@@ -162,7 +162,7 @@ export const SwingPointsDisplay = memo<SwingPointsDisplayProps>(props => {
 
   if (!hasConsecutive && !hasWindow) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="w-5 h-5" />
@@ -180,7 +180,7 @@ export const SwingPointsDisplay = memo<SwingPointsDisplayProps>(props => {
   }
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Activity className="w-5 h-5" />

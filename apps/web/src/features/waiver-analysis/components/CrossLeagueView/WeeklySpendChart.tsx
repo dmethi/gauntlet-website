@@ -23,7 +23,7 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
   );
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle>Week-by-Week Spending Trends</CardTitle>
         <CardDescription>

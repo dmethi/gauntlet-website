@@ -105,7 +105,7 @@ const ReportsSection = () => {
 
   if (error) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5 text-gauntlet-gold" />
@@ -122,7 +122,7 @@ const ReportsSection = () => {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5 text-gauntlet-gold" />
@@ -143,7 +143,7 @@ const ReportsSection = () => {
 
   if (reports.length === 0) {
     return (
-      <Card>
+      <Card mobileFlat>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5 text-gauntlet-gold" />
@@ -161,7 +161,7 @@ const ReportsSection = () => {
   }
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calendar className="h-5 w-5 text-gauntlet-gold" />
@@ -308,7 +308,7 @@ const LeagueStandingsSection = () => {
   if (afcLoading || nfcLoading) {
     return (
       <div className="mb-8">
-        <Card>
+        <Card mobileFlat>
           <CardHeader>
             <CardTitle>League Standings</CardTitle>
             <CardDescription>Loading standings...</CardDescription>
@@ -327,7 +327,7 @@ const LeagueStandingsSection = () => {
   const nfcSortedStats = getSortedTeamStats(nfcTeamStats);
 
   return (
-    <Card>
+    <Card mobileFlat>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-gauntlet-gold" />
@@ -495,7 +495,7 @@ export default function CompetitionPage(): JSX.Element {
     return (
       <Container flushOnMobile className="py-5 md:py-8">
         <PageHeader title="The Gauntlet Competition" subtitle="Failed to load leagues" />
-        <Card>
+        <Card mobileFlat>
           <CardContent className="pt-6">
             <p className="text-destructive">{String(error)}</p>
           </CardContent>
@@ -524,7 +524,10 @@ export default function CompetitionPage(): JSX.Element {
       />
 
       <div className="mb-8">
-        <Card className="bg-gradient-to-r from-gauntlet-crimson/5 to-gauntlet-gold/5 border-gauntlet-crimson/20">
+        <Card
+          mobileFlat
+          className="bg-gradient-to-r from-gauntlet-crimson/5 to-gauntlet-gold/5 border-gauntlet-crimson/20"
+        >
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Trophy className="h-5 w-5 text-gauntlet-gold" />
@@ -672,7 +675,7 @@ export default function CompetitionPage(): JSX.Element {
       </div>
 
       {leagues.length === 0 && (
-        <Card>
+        <Card mobileFlat>
           <CardContent className="pt-6 text-center">
             <p className="text-muted-foreground">No leagues found. Check back soon!</p>
           </CardContent>

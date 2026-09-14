@@ -437,7 +437,7 @@ export default function DraftAnalysisPage(): JSX.Element {
 
               {/* Market Overview Cards */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card>
+                <Card mobileFlat>
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       Market Concentration
@@ -466,7 +466,7 @@ export default function DraftAnalysisPage(): JSX.Element {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card mobileFlat>
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       Nomination Effects
@@ -495,7 +495,7 @@ export default function DraftAnalysisPage(): JSX.Element {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card mobileFlat>
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       Cross-League Agreement
@@ -520,7 +520,7 @@ export default function DraftAnalysisPage(): JSX.Element {
               </div>
 
               {/* Position Spending Table */}
-              <Card>
+              <Card mobileFlat>
                 <CardHeader>
                   <CardTitle>Position Spending Comparison</CardTitle>
                   <CardDescription>
@@ -800,7 +800,7 @@ export default function DraftAnalysisPage(): JSX.Element {
               </Card>
 
               {/* Positional Spending Curves */}
-              <Card>
+              <Card mobileFlat>
                 <CardHeader>
                   <CardTitle>Positional Spending Curves</CardTitle>
                   <CardDescription>
@@ -846,7 +846,7 @@ export default function DraftAnalysisPage(): JSX.Element {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* AFC Teams */}
-                <Card>
+                <Card mobileFlat>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Trophy className="h-5 w-5 text-red-600" />
@@ -961,7 +961,7 @@ export default function DraftAnalysisPage(): JSX.Element {
                 </Card>
 
                 {/* NFC Teams */}
-                <Card>
+                <Card mobileFlat>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Trophy className="h-5 w-5 text-blue-600" />
@@ -1088,7 +1088,7 @@ export default function DraftAnalysisPage(): JSX.Element {
                 </p>
               </div>
 
-              <Card>
+              <Card mobileFlat>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Filter className="h-5 w-5" />

@@ -2,10 +2,15 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  mobileFlat?: boolean;
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, mobileFlat = false, ...props }, ref) => (
     <div
       ref={ref}
+      data-mobile-flat={mobileFlat || undefined}
       className={cn('rounded-xl border bg-card text-card-foreground shadow-sm', className)}
       {...props}
     />
@@ -15,7 +20,12 @@ Card.displayName = 'Card';
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-4 sm:p-6', className)} {...props} />
+    <div
+      ref={ref}
+      data-card-header
+      className={cn('flex flex-col space-y-1.5 p-4 sm:p-6', className)}
+      {...props}
+    />
   ),
 );
 CardHeader.displayName = 'CardHeader';
@@ -40,7 +50,12 @@ CardDescription.displayName = 'CardDescription';
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('p-4 pt-0 sm:p-6 sm:pt-0', className)} {...props} />
+    <div
+      ref={ref}
+      data-card-content
+      className={cn('p-4 pt-0 sm:p-6 sm:pt-0', className)}
+      {...props}
+    />
   ),
 );
 CardContent.displayName = 'CardContent';
@@ -49,6 +64,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
+      data-card-footer
       className={cn('flex items-center p-4 pt-0 sm:p-6 sm:pt-0', className)}
       {...props}
     />
