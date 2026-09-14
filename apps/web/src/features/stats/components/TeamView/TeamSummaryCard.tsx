@@ -21,7 +21,7 @@ export const TeamSummaryCard = memo(
     const pointDifferential = data.teamTotal - data.opponentTotal;
 
     return (
-      <section className="space-y-4 rounded-md border bg-card text-card-foreground p-4">
+      <section className="space-y-5 border-b border-border/70 pb-8 text-card-foreground sm:rounded-md sm:border sm:bg-card sm:p-4">
         <header className="flex flex-col gap-1">
           <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             Team Overview (Weeks {fromWeek}-{toWeek})
@@ -31,8 +31,8 @@ export const TeamSummaryCard = memo(
           </p>
         </header>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          <div className="space-y-2 rounded-md border p-3">
+        <div className="grid gap-5 lg:grid-cols-3 lg:divide-x lg:divide-border">
+          <div className="space-y-2 border-t border-border/70 pt-4 lg:border-t-0 lg:pt-0">
             <h4 className="text-sm font-semibold text-muted-foreground">Season Totals</h4>
             <div className="flex items-center justify-between text-sm">
               <span>Team Points</span>
@@ -63,7 +63,7 @@ export const TeamSummaryCard = memo(
             </div>
           </div>
 
-          <div className="space-y-3 rounded-md border p-3">
+          <div className="space-y-3 border-t border-border/70 pt-4 lg:border-t-0 lg:pl-5 lg:pt-0">
             <div className="flex items-center justify-between text-sm">
               <span className="text-sm font-semibold text-muted-foreground">Record</span>
               <span className="font-semibold">
@@ -72,11 +72,11 @@ export const TeamSummaryCard = memo(
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-md border p-3 text-center">
+              <div className="bg-muted/45 p-3 text-center">
                 <div className="text-xs uppercase text-muted-foreground">Rank ({teamCount})</div>
                 <div className="text-lg font-semibold">{data.seasonRank24 || '—'}</div>
               </div>
-              <div className="rounded-md border p-3 text-center">
+              <div className="bg-muted/45 p-3 text-center">
                 <div className="text-xs uppercase text-muted-foreground">Rank (League)</div>
                 <div className="text-lg font-semibold">{data.seasonRankLeague || '—'}</div>
               </div>
@@ -92,7 +92,7 @@ export const TeamSummaryCard = memo(
             </div>
           </div>
 
-          <div className="space-y-2 rounded-md border p-3">
+          <div className="space-y-2 border-t border-border/70 pt-4 lg:border-t-0 lg:pl-5 lg:pt-0">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-semibold text-muted-foreground">Top Performers</h4>
               <span className="text-xs text-muted-foreground">Aggregate fantasy points</span>
@@ -104,7 +104,7 @@ export const TeamSummaryCard = memo(
                 {data.topPerformers.map(player => (
                   <li
                     key={player.playerId}
-                    className="flex items-center justify-between rounded-md border px-3 py-2"
+                    className="flex items-center justify-between border-b border-border/60 py-2 last:border-b-0"
                   >
                     <div>
                       <div className="font-medium">{player.name}</div>

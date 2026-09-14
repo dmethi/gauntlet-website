@@ -16,7 +16,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
 
   if (rows.length === 0) {
     return (
-      <section className="rounded-md border p-4">
+      <section className="border-b border-border/70 pb-8">
         <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
           Weekly Performance
         </h3>
@@ -26,7 +26,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
   }
 
   return (
-    <section className="space-y-4 rounded-md border p-4">
+    <section className="space-y-4 border-b border-border/70 pb-8">
       <header>
         <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
           Weekly Performance
@@ -42,7 +42,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
           const oppWidth = maxScore > 0 ? Math.round((row.opponentScore / maxScore) * 100) : 0;
 
           return (
-            <div key={row.week} className="space-y-2 rounded-md border p-3">
+            <div key={row.week} className="space-y-3 bg-muted/30 p-3 sm:rounded-md sm:border">
               <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                   <span className="text-sm font-semibold">Week {row.week}</span>
@@ -116,7 +116,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
               </div>
 
               <div className="grid gap-2 text-xs md:grid-cols-4">
-                <div className="rounded-md border p-2">
+                <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">vs League Avg</div>
                   <div
                     className="font-mono font-semibold"
@@ -133,7 +133,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                     {row.vsLeagueAverage.toFixed(1)}
                   </div>
                 </div>
-                <div className="rounded-md border p-2">
+                <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">vs League Median</div>
                   <div
                     className="font-mono font-semibold"
@@ -150,7 +150,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                     {row.vsLeagueMedian.toFixed(1)}
                   </div>
                 </div>
-                <div className="rounded-md border p-2">
+                <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">Opp Rank ({teamCount})</div>
                   <div
                     className="rounded-full px-2 py-1 text-center font-medium"
@@ -162,7 +162,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                     {row.opponentRank24 || '—'}
                   </div>
                 </div>
-                <div className="rounded-md border p-2">
+                <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">Opp Rank (League)</div>
                   <div
                     className="rounded-full px-2 py-1 text-center font-medium"

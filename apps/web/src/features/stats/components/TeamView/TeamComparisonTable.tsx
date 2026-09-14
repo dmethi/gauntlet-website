@@ -17,17 +17,14 @@ export const TeamComparisonTable = memo(
       data.gamesPlayed > 0 ? data.opponentTotal / data.gamesPlayed : data.opponentTotal;
 
     return (
-      <section className="rounded-md border">
-        <div
-          className="border-b px-4 py-3"
-          style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
-        >
-          <h3 className="text-base font-semibold">
+      <section className="border-b border-border/70 pb-8">
+        <div className="mb-3">
+          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             League Comparison (Weeks {fromWeek}-{toWeek})
           </h3>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border-y border-border/70">
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr>

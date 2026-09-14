@@ -32,7 +32,7 @@ export const PositionalBreakdown = memo(
 
     if (rows.length === 0) {
       return (
-        <section className="rounded-md border p-4">
+        <section className="border-b border-border/70 pb-8">
           <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             Positional Breakdown
           </h3>
@@ -56,7 +56,7 @@ export const PositionalBreakdown = memo(
     };
 
     return (
-      <section className="space-y-4 rounded-md border p-4">
+      <section className="space-y-4 border-b border-border/70 pb-8">
         <header>
           <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
             Positional Breakdown

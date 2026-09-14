@@ -50,19 +50,19 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
 
         <TabsContent value="overall" className="space-y-4">
           <EfficiencySummaryCard summary={summaryMetrics} />
-          <Card>
-            <CardHeader>
+          <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+            <CardHeader className="px-0 pt-0 sm:p-6">
               <CardTitle>Manager Rankings (Weighted by Position Skill)</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 sm:p-6 sm:pt-0">
               <ManagerLeaderboard managers={data.managerEfficiencies} />
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="positions">
-          <Card>
-            <CardContent className="space-y-4 py-6">
+          <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+            <CardContent className="space-y-4 p-0 sm:p-6">
               <PositionBreakdown
                 managers={data.managerEfficiencies}
                 selectedManagerId={selectedManagerId}
@@ -74,8 +74,8 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
         </TabsContent>
 
         <TabsContent value="context">
-          <Card>
-            <CardContent className="space-y-4 py-6">
+          <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+            <CardContent className="space-y-4 p-0 sm:p-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
@@ -89,8 +89,8 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
         </TabsContent>
 
         <TabsContent value="worst">
-          <Card>
-            <CardContent className="space-y-4 py-6">
+          <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+            <CardContent className="space-y-4 p-0 sm:p-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
@@ -104,8 +104,8 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
         </TabsContent>
 
         <TabsContent value="risk">
-          <Card>
-            <CardContent className="space-y-4 py-6">
+          <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+            <CardContent className="space-y-4 p-0 sm:p-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />

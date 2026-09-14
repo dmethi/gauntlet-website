@@ -189,8 +189,8 @@ const DraftPageContent = () => {
         }
       />
       <div className="py-5 md:px-6 md:py-8">
-        <Card className="mb-6">
-          <CardHeader>
+        <Card className="mb-6 rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+          <CardHeader className="px-0 pt-0 sm:p-6">
             <CardTitle className="text-base">
               {draft ? (
                 <div className="flex flex-wrap items-center gap-3">
@@ -203,7 +203,7 @@ const DraftPageContent = () => {
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0 sm:p-6 sm:pt-0">
             <div className="w-full">
               <DraftViewPills value={activeView} onChange={setActiveView} />
 

@@ -87,8 +87,8 @@ export const ScenarioBuilder = memo<ScenarioBuilderProps>(
     const totalMatchups = matchups.length;
 
     return (
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="rounded-none border-0 bg-transparent shadow-none sm:rounded-xl sm:border sm:bg-card sm:shadow-sm">
+        <CardHeader className="px-0 pb-3 pt-0 sm:p-6 sm:pb-3">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-base font-geizer tracking-wide flex items-center gap-2">
@@ -118,7 +118,7 @@ export const ScenarioBuilder = memo<ScenarioBuilderProps>(
           </div>
         </CardHeader>
 
-        <CardContent className="pt-0">
+        <CardContent className="p-0 sm:px-6 sm:pb-6">
           <div className="space-y-2">
             {matchups.map(matchup => (
               <MatchupSelector

@@ -9,7 +9,7 @@ interface PositionAdvantageChartProps {
 export const PositionAdvantageChart = memo(({ data }: PositionAdvantageChartProps) => {
   if (!data) {
     return (
-      <section className="rounded-md border p-4">
+      <section>
         <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
           Positional Advantages vs League Median
         </h3>
@@ -23,17 +23,16 @@ export const PositionAdvantageChart = memo(({ data }: PositionAdvantageChartProp
   const positions = Object.entries(data.positions);
 
   return (
-    <section className="rounded-md border">
-      <div
-        className="border-b px-4 py-3"
-        style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
-      >
-        <h3 className="text-base font-semibold">Positional Advantages vs League Median</h3>
-        <p className="text-xs text-white/80">
+    <section>
+      <div className="mb-3">
+        <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
+          Positional Advantages vs League Median
+        </h3>
+        <p className="text-sm text-muted-foreground">
           Positive values indicate the team is outperforming league medians at that position.
         </p>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto border-y border-border/70">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr>
