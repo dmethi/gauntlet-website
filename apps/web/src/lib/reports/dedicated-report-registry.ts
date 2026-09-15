@@ -9,6 +9,16 @@ export interface ReportListItem {
   description?: string;
 }
 
+export type DedicatedReportRoute = '2026-week-1';
+
+export const getDedicatedReportRoute = (
+  season: string,
+  slug: string,
+): DedicatedReportRoute | null => {
+  if (season === '2026' && slug === 'week-1') return '2026-week-1';
+  return null;
+};
+
 export const DEDICATED_REPORTS: ReportListItem[] = [
   {
     season: 2026,

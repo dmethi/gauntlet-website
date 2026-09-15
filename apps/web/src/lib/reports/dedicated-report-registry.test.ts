@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { DEDICATED_REPORTS, mergeDedicatedReports } from './dedicated-report-registry';
+import {
+  DEDICATED_REPORTS,
+  getDedicatedReportRoute,
+  mergeDedicatedReports,
+} from './dedicated-report-registry';
 
 describe('dedicated report registry', () => {
   it('registers the 2026 Week 1 newspaper recap', () => {
@@ -10,6 +14,12 @@ describe('dedicated report registry', () => {
         href: '/competition/reports/2026/week-1',
       }),
     );
+  });
+
+  it('resolves the canonical dynamic route to the bespoke Week 1 report', () => {
+    expect(getDedicatedReportRoute('2026', 'week-1')).toBe('2026-week-1');
+    expect(getDedicatedReportRoute('2026', 'week-2')).toBeNull();
+    expect(getDedicatedReportRoute('not-a-season', 'week-1')).toBeNull();
   });
 
   it('deduplicates by href and keeps the dedicated report metadata', () => {

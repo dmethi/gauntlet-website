@@ -7,6 +7,11 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { RecapReportView } from '@/components/reports/RecapReportView';
+import {
+  WEEK_ONE_RECAP_METADATA,
+  WeekOneRecapPage,
+} from '@/features/weekly-recap/week-one-report-page';
+import { getDedicatedReportRoute } from '@/lib/reports/dedicated-report-registry';
 import { getStaticReportParams, loadRecapReport } from '@/lib/reports/recap/utils/report-loader';
 
 interface PageProps {
@@ -32,6 +37,10 @@ export const generateMetadata = async (props: PageProps): Promise<Metadata> => {
   const resolvedParams = params instanceof Promise ? await params : params;
   const { season, slug } = resolvedParams;
   const week = parseWeekFromSlug(slug);
+
+  if (getDedicatedReportRoute(season, slug) === '2026-week-1') {
+    return WEEK_ONE_RECAP_METADATA;
+  }
 
   if (!week) {
     return {
@@ -75,6 +84,10 @@ const RecapReportPage = async (props: PageProps) => {
   const resolvedParams = params instanceof Promise ? await params : params;
   const { season, slug } = resolvedParams;
   const week = parseWeekFromSlug(slug);
+
+  if (getDedicatedReportRoute(season, slug) === '2026-week-1') {
+    return <WeekOneRecapPage />;
+  }
 
   if (!week) {
     notFound();
