@@ -2,7 +2,6 @@
 
 import { memo } from 'react';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import { colors } from '@/lib/colors';
 import {
   DataList,
   DataListDescription,
@@ -25,9 +24,7 @@ export const ScheduleStrengthTable = memo<ScheduleStrengthTableProps>(({ data })
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-        Hypothetical Records Summary
-      </h3>
+      <h3 className="text-lg font-semibold text-primary">Hypothetical Records Summary</h3>
       <DataList className="sm:hidden">
         {data.map((row, index) => {
           const badgeColor = getRankColor(index + 1, teamCount);

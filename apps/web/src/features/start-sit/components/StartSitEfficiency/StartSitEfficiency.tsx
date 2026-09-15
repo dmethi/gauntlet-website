@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { StartSitData } from '@/features/start-sit/types';
@@ -81,7 +82,7 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
             <CardContent className="space-y-4 py-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden="true" />
                   Loading roster context...
                 </div>
               ) : (
@@ -96,7 +97,7 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
             <CardContent className="space-y-4 py-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden="true" />
                   Loading decision details...
                 </div>
               ) : (
@@ -111,7 +112,7 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
             <CardContent className="space-y-4 py-6">
               {playersLoading ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary" />
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden="true" />
                   Loading decision details...
                 </div>
               ) : (

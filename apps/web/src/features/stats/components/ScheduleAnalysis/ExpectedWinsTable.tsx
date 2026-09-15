@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { colors } from '@/lib/colors';
+import { deltaTextClass } from '@/lib/stat-colors';
 import {
   DataList,
   DataListDescription,
@@ -22,17 +22,10 @@ interface ExpectedWinsTableProps {
 export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-        Expected Wins vs Actual Results
-      </h3>
+      <h3 className="text-lg font-semibold text-primary">Expected Wins vs Actual Results</h3>
       <DataList className="sm:hidden">
         {data.map(row => {
-          const luckColor =
-            row.luckRating > 0.05
-              ? colors.rdylgn[8]
-              : row.luckRating < -0.05
-                ? colors.rdylgn[2]
-                : colors.rdylgn[5];
+          const luckClass = deltaTextClass(row.luckRating, 0.05);
 
           return (
             <DataListItem key={row.teamKey}>
@@ -45,7 +38,7 @@ export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
                   <div className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                     Luck
                   </div>
-                  <div className="mt-0.5 font-mono font-bold" style={{ color: luckColor }}>
+                  <div className={`mt-0.5 font-mono font-bold ${luckClass}`}>
                     {row.luckRating > 0 ? '+' : ''}
                     {(row.luckRating * 100).toFixed(1)}%
                   </div>
@@ -85,12 +78,7 @@ export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
           </thead>
           <tbody>
             {data.map(row => {
-              const luckColor =
-                row.luckRating > 0.05
-                  ? colors.rdylgn[8]
-                  : row.luckRating < -0.05
-                    ? colors.rdylgn[2]
-                    : colors.rdylgn[5];
+              const luckClass = deltaTextClass(row.luckRating, 0.05);
 
               return (
                 <tr key={row.teamKey} className="border-t hover:bg-muted/20">
@@ -105,7 +93,7 @@ export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
                     {(row.expectedWinPct * 100).toFixed(1)}%
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className="font-mono font-semibold" style={{ color: luckColor }}>
+                    <span className={`font-mono font-semibold ${luckClass}`}>
                       {row.luckRating > 0 ? '+' : ''}
                       {(row.luckRating * 100).toFixed(1)}%
                     </span>

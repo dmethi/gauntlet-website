@@ -20,6 +20,7 @@ import {
   YAxis,
 } from 'recharts';
 import { colors } from '@/lib/colors';
+import { deltaTextClass } from '@/lib/stat-colors';
 import type { TeamLuckDistribution } from './utils';
 
 interface TeamOption {
@@ -40,9 +41,7 @@ export const LuckDistributionSection = memo<LuckDistributionSectionProps>(
       <div className="space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-              Team Distribution Analysis
-            </h3>
+            <h3 className="text-lg font-semibold text-primary">Team Distribution Analysis</h3>
             <p className="text-sm text-muted-foreground">
               Compare how a team performs with different schedules and how other teams would fare
               with theirs.
@@ -80,17 +79,7 @@ export const LuckDistributionSection = memo<LuckDistributionSectionProps>(
                 {(detail.othersWithMyScheduleAvg * 100).toFixed(1)}%
               </InfoCard>
               <InfoCard title="Luck Rating" description="Actual vs Expected">
-                <span
-                  className="text-2xl font-bold"
-                  style={{
-                    color:
-                      detail.luckRating > 0.05
-                        ? colors.rdylgn[8]
-                        : detail.luckRating < -0.05
-                          ? colors.rdylgn[2]
-                          : colors.rdylgn[5],
-                  }}
-                >
+                <span className={`text-2xl font-bold ${deltaTextClass(detail.luckRating, 0.05)}`}>
                   {detail.luckRating > 0 ? '+' : ''}
                   {(detail.luckRating * 100).toFixed(1)}%
                 </span>
@@ -137,12 +126,10 @@ LuckDistributionSection.displayName = 'LuckDistributionSection';
 
 const InfoCard = memo<{ title: string; description: string; children: ReactNode }>(
   ({ title, description, children }) => (
-    <Card className="rounded-none border-0 bg-muted/35 shadow-none">
+    <Card className="rounded-none border-0 bg-transparent shadow-none md:bg-muted/35">
       <CardContent className="p-4 space-y-2">
         <h4 className="font-semibold text-sm">{title}</h4>
-        <div className="text-2xl font-bold" style={{ color: colors.core.regalGold }}>
-          {children}
-        </div>
+        <div className="text-2xl font-bold text-secondary">{children}</div>
         <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
     </Card>

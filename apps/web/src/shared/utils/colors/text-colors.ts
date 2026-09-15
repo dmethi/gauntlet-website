@@ -1,24 +1,17 @@
-import { colors } from '@/lib/colors';
 import { hexToRgb } from './helpers';
 
 /**
- * Get text color (black or white) based on background color
- * Uses simple heuristic for specific color palette ranges
+ * Get the higher-contrast foreground for a background color.
  *
  * @param backgroundColor - Background hex color
- * @returns Hex color string ("#000000" or "#ffffff")
+ * @returns Hex color string ("#111827" or "#ffffff")
  *
  * @example
  * ```typescript
- * const textColor = getTextColor("#ffff00"); // "#000000" (black for yellow)
+ * const textColor = getTextColor("#ffff00"); // "#111827" (dark text for yellow)
  * ```
  */
-export const getTextColor = (backgroundColor: string): string => {
-  // Determine if text should be white or black based on background brightness
-  // For yellow/orange colors, use black text. For green/red, use white text.
-  const lightColors = [colors.rdylgn[3], colors.rdylgn[4], colors.rdylgn[5], colors.rdylgn[6]]; // orange and yellow range
-  return lightColors.includes(backgroundColor) ? '#000000' : '#ffffff';
-};
+export const getTextColor = (backgroundColor: string): string => getTextColorForBg(backgroundColor);
 
 /**
  * Get accessible text color based on background luminance
@@ -35,10 +28,17 @@ export const getTextColor = (backgroundColor: string): string => {
  */
 export const getTextColorForBg = (hex: string): string => {
   const { r, g, b } = hexToRgb(hex);
-  const srgb = [r, g, b].map(v => {
-    const c = v / 255;
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  });
-  const L = 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
-  return L > 0.5 ? '#111827' : '#ffffff';
+  const relativeLuminance = ([red, green, blue]: number[]): number => {
+    const srgb = [red, green, blue].map(value => {
+      const channel = value / 255;
+      return channel <= 0.03928 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+  };
+  const backgroundLuminance = relativeLuminance([r, g, b]);
+  const darkLuminance = relativeLuminance([17, 24, 39]);
+  const darkContrast = (backgroundLuminance + 0.05) / (darkLuminance + 0.05);
+  const lightContrast = 1.05 / (backgroundLuminance + 0.05);
+
+  return darkContrast >= lightContrast ? '#111827' : '#ffffff';
 };

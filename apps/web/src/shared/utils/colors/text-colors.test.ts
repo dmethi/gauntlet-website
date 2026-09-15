@@ -36,9 +36,9 @@ describe('getTextColorForBg', () => {
     expect(textColor).toBe('#111827');
   });
 
-  it('should return white text for red backgrounds', () => {
+  it('should return the higher-contrast dark text for bright red backgrounds', () => {
     const textColor = getTextColorForBg('#ff0000'); // Red background
-    expect(textColor).toBe('#ffffff');
+    expect(textColor).toBe('#111827');
   });
 
   it('should return white text for blue backgrounds', () => {

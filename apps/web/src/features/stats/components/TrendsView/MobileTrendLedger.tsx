@@ -112,11 +112,11 @@ export const MobileTrendLedger = ({ kind, rows, scoreDigits }: MobileTrendLedger
               />
             </span>
           </summary>
-          <dl className="grid grid-cols-2 gap-2 border-t border-border/70 p-3 text-xs">
+          <dl className="divide-y divide-border/70 border-t border-border/70 px-3 text-xs">
             {row.history.map(point => (
-              <div key={point.week} className="rounded-md bg-background p-2">
+              <div key={point.week} className="flex items-center justify-between gap-3 py-2.5">
                 <dt className="text-muted-foreground">Week {point.week}</dt>
-                <dd className="mt-1 flex items-center justify-between gap-2 font-mono">
+                <dd className="flex items-center gap-4 font-mono">
                   <span>{point.rank ? `#${point.rank}` : '—'}</span>
                   <span>
                     {typeof point.score === 'number' ? point.score.toFixed(scoreDigits) : '—'}

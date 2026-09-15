@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { colors } from '../../../../../../../brand/colors';
 import type { TeamTotalsResult } from './utils';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 
@@ -46,7 +45,7 @@ export const TeamComparisonTable = memo(
     return (
       <section className="border-b border-border/70 pb-8">
         <div className="mb-3">
-          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
+          <h3 className="text-lg font-semibold text-primary">
             League Comparison (Weeks {fromWeek}-{toWeek})
           </h3>
         </div>
@@ -125,10 +124,7 @@ export const TeamComparisonTable = memo(
             <tbody>
               <tr>
                 <td className="px-4 py-3 font-medium">Total Points</td>
-                <td
-                  className="px-4 py-3 text-right font-mono font-bold"
-                  style={{ color: colors.core.regalGold }}
-                >
+                <td className="px-4 py-3 text-right font-mono font-bold text-secondary">
                   {data.teamTotal.toFixed(1)}
                 </td>
                 <td className="px-4 py-3 text-right font-mono">{data.opponentTotal.toFixed(1)}</td>
@@ -175,10 +171,7 @@ export const TeamComparisonTable = memo(
               </tr>
               <tr className="border-t bg-muted/20">
                 <td className="px-4 py-3 font-medium">Weekly Average</td>
-                <td
-                  className="px-4 py-3 text-right font-mono font-bold"
-                  style={{ color: colors.core.regalGold }}
-                >
+                <td className="px-4 py-3 text-right font-mono font-bold text-secondary">
                   {weeklyAverage.toFixed(1)}
                 </td>
                 <td className="px-4 py-3 text-right font-mono">

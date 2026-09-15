@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { colors } from '../../../../../../../brand/colors';
 import type { TeamAdvantagesResult } from './utils';
 import { deltaTextClass } from '@/lib/stat-colors';
 
@@ -12,7 +11,7 @@ export const PositionAdvantageChart = memo(({ data }: PositionAdvantageChartProp
   if (!data) {
     return (
       <section>
-        <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
+        <h3 className="text-lg font-semibold text-primary">
           Positional Advantages vs League Median
         </h3>
         <p className="text-sm text-muted-foreground">
@@ -27,7 +26,7 @@ export const PositionAdvantageChart = memo(({ data }: PositionAdvantageChartProp
   return (
     <section>
       <div className="mb-3">
-        <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
+        <h3 className="text-lg font-semibold text-primary">
           Positional Advantages vs League Median
         </h3>
         <p className="text-sm text-muted-foreground">
@@ -100,33 +99,21 @@ export const PositionAdvantageChart = memo(({ data }: PositionAdvantageChartProp
           </thead>
           <tbody>
             {positions.map(([position, info]) => {
-              const advantageColor =
-                info.advantage === 0
-                  ? colors.rdylgn[5]
-                  : info.advantage > 0
-                    ? colors.rdylgn[8]
-                    : colors.rdylgn[2];
-
               return (
                 <tr key={position} className="border-t">
                   <td className="px-4 py-3 font-medium">{position}</td>
-                  <td
-                    className="px-4 py-3 text-right font-mono font-bold"
-                    style={{ color: colors.core.regalGold }}
-                  >
+                  <td className="px-4 py-3 text-right font-mono font-bold text-secondary">
                     {info.weeklyAverage.toFixed(1)}
                   </td>
                   <td className="px-4 py-3 text-right font-mono">{info.leagueMedian.toFixed(1)}</td>
                   <td
-                    className="px-4 py-3 text-right font-mono font-bold"
-                    style={{ color: advantageColor }}
+                    className={`px-4 py-3 text-right font-mono font-bold ${deltaTextClass(info.advantage)}`}
                   >
                     {info.advantage > 0 ? '+' : ''}
                     {info.advantage.toFixed(1)}
                   </td>
                   <td
-                    className="px-4 py-3 text-right font-mono font-bold"
-                    style={{ color: advantageColor }}
+                    className={`px-4 py-3 text-right font-mono font-bold ${deltaTextClass(info.percentageAdvantage)}`}
                   >
                     {info.percentageAdvantage > 0 ? '+' : ''}
                     {info.percentageAdvantage.toFixed(1)}%
@@ -139,29 +126,13 @@ export const PositionAdvantageChart = memo(({ data }: PositionAdvantageChartProp
               <td className="px-4 py-3" />
               <td className="px-4 py-3" />
               <td
-                className="px-4 py-3 text-right font-mono"
-                style={{
-                  color:
-                    data.totalAdvantage === 0
-                      ? colors.rdylgn[5]
-                      : data.totalAdvantage > 0
-                        ? colors.rdylgn[8]
-                        : colors.rdylgn[2],
-                }}
+                className={`px-4 py-3 text-right font-mono ${deltaTextClass(data.totalAdvantage)}`}
               >
                 {data.totalAdvantage > 0 ? '+' : ''}
                 {data.totalAdvantage.toFixed(1)}
               </td>
               <td
-                className="px-4 py-3 text-right font-mono"
-                style={{
-                  color:
-                    data.averageAdvantage === 0
-                      ? colors.rdylgn[5]
-                      : data.averageAdvantage > 0
-                        ? colors.rdylgn[8]
-                        : colors.rdylgn[2],
-                }}
+                className={`px-4 py-3 text-right font-mono ${deltaTextClass(data.averageAdvantage)}`}
               >
                 Avg {data.averageAdvantage > 0 ? '+' : ''}
                 {data.averageAdvantage.toFixed(1)}

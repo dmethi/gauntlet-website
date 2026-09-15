@@ -2,7 +2,6 @@
 
 import { memo, useId, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { colors } from '@/lib/colors';
 import { TableViewport } from '@/components/ui/table';
 import type { ScheduleMatrix } from './utils';
 import type { TeamData } from '@/features/stats/types';
@@ -15,13 +14,13 @@ interface MatchupMatrixTableProps {
   readonly matrix: ScheduleMatrix;
 }
 
-const getCellColor = (wins: number, losses: number): string => {
+const getCellTone = (wins: number, losses: number): string => {
   const total = wins + losses;
-  if (total === 0) return '#9ca3af';
+  if (total === 0) return 'bg-muted/30 text-muted-foreground';
   const winPct = wins / total;
-  if (winPct > 0.5) return '#16a34a';
-  if (winPct === 0.5) return '#ca8a04';
-  return '#dc2626';
+  if (winPct > 0.5) return 'bg-success/10 text-success';
+  if (winPct === 0.5) return 'bg-secondary/10 text-secondary';
+  return 'bg-destructive/10 text-destructive';
 };
 
 export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
@@ -32,9 +31,7 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
     return (
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-            {title}
-          </h3>
+          <h3 className="text-lg font-semibold text-primary">{title}</h3>
           {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
         </div>
 
@@ -118,14 +115,12 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
                           );
                         }
 
-                        const color = getCellColor(record.wins, record.losses);
                         return (
                           <td
                             key={opponentKey}
-                            className="border-r px-1 py-1 text-center"
-                            style={{ backgroundColor: `${color}20` }}
+                            className={`border-r px-1 py-1 text-center ${getCellTone(record.wins, record.losses)}`}
                           >
-                            <div className="font-mono text-xs font-medium" style={{ color }}>
+                            <div className="font-mono text-xs font-medium">
                               {record.wins}-{record.losses}
                             </div>
                           </td>
@@ -143,15 +138,15 @@ export const ScheduleMatrixTable = memo<MatchupMatrixTableProps>(
               <h4 className="mb-2 font-semibold">Legend</h4>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded" style={{ backgroundColor: '#16a34a20' }} />
+                  <div className="h-4 w-4 rounded border border-success/30 bg-success/15" />
                   <span>Winning record</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded" style={{ backgroundColor: '#ca8a0420' }} />
+                  <div className="h-4 w-4 rounded border border-secondary/30 bg-secondary/15" />
                   <span>Even record</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded" style={{ backgroundColor: '#dc262620' }} />
+                  <div className="h-4 w-4 rounded border border-destructive/30 bg-destructive/15" />
                   <span>Losing record</span>
                 </div>
               </div>

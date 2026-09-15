@@ -1,6 +1,5 @@
 import { memo, useMemo, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { colors } from '../../../../../../../brand/colors';
 import type { PlayerContributionGroup, PositionalBreakdownResult } from './utils';
 import type { TrackedPosition } from '@/shared/utils/stats';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
@@ -35,9 +34,7 @@ export const PositionalBreakdown = memo(
     if (rows.length === 0) {
       return (
         <section className="border-b border-border/70 pb-8">
-          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-            Positional Breakdown
-          </h3>
+          <h3 className="text-lg font-semibold text-primary">Positional Breakdown</h3>
           <p className="text-sm text-muted-foreground">
             No positional data available for this team.
           </p>
@@ -60,9 +57,7 @@ export const PositionalBreakdown = memo(
     return (
       <section className="space-y-4 border-b border-border/70 pb-8">
         <header>
-          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-            Positional Breakdown
-          </h3>
+          <h3 className="text-lg font-semibold text-primary">Positional Breakdown</h3>
           <p className="text-sm text-muted-foreground">
             Season totals and weekly performance by position. Open a position to view detailed
             trends and player contributions.
@@ -76,7 +71,7 @@ export const PositionalBreakdown = memo(
             const positionContributions = contributions.get(position) ?? [];
 
             return (
-              <div key={position} className="rounded-md border">
+              <div key={position} className="border-y md:rounded-md md:border">
                 <button
                   type="button"
                   onClick={() => toggle(position)}
@@ -100,20 +95,17 @@ export const PositionalBreakdown = memo(
                   </span>
                 </button>
 
-                <div className="grid gap-4 border-b p-4 sm:grid-cols-2 lg:grid-cols-4">
-                  <div className="rounded-md border p-3">
+                <div className="grid divide-y border-b px-1 sm:grid-cols-2 sm:gap-4 sm:divide-y-0 sm:p-4 lg:grid-cols-4">
+                  <div className="py-3 sm:rounded-md sm:border sm:p-3">
                     <div className="text-xs uppercase text-muted-foreground">Season Total</div>
-                    <div
-                      className="font-mono text-lg font-semibold"
-                      style={{ color: colors.core.regalGold }}
-                    >
+                    <div className="font-mono text-lg font-semibold text-secondary">
                       {summary.seasonTotal.toFixed(1)}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       Games Played: {summary.gamesPlayed}
                     </div>
                   </div>
-                  <div className="rounded-md border p-3">
+                  <div className="py-3 sm:rounded-md sm:border sm:p-3">
                     <div className="text-xs uppercase text-muted-foreground">League Metrics</div>
                     <div className="flex items-center justify-between text-sm">
                       <span>Avg</span>
@@ -124,7 +116,7 @@ export const PositionalBreakdown = memo(
                       <span className="font-mono">{summary.leagueMedian.toFixed(1)}</span>
                     </div>
                   </div>
-                  <div className="rounded-md border p-3">
+                  <div className="py-3 sm:rounded-md sm:border sm:p-3">
                     <div className="text-xs uppercase text-muted-foreground">Ranks</div>
                     <div className="mb-2 flex items-center gap-2">
                       <span className="text-xs text-muted-foreground">{teamCount}-team</span>
@@ -151,7 +143,7 @@ export const PositionalBreakdown = memo(
                       </span>
                     </div>
                   </div>
-                  <div className="rounded-md border p-3">
+                  <div className="py-3 sm:rounded-md sm:border sm:p-3">
                     <div className="text-xs uppercase text-muted-foreground">Opponent Totals</div>
                     <div className="flex items-center justify-between text-sm">
                       <span>Total</span>
@@ -275,10 +267,7 @@ export const PositionalBreakdown = memo(
                           {data.weekly.map(row => (
                             <tr key={row.week} className="border-t">
                               <td className="px-3 py-2 font-medium">Week {row.week}</td>
-                              <td
-                                className="px-3 py-2 text-right font-mono font-bold"
-                                style={{ color: colors.core.regalGold }}
-                              >
+                              <td className="px-3 py-2 text-right font-mono font-bold text-secondary">
                                 {row.teamPoints.toFixed(1)}
                               </td>
                               <td className="px-3 py-2 text-center">
@@ -331,29 +320,13 @@ export const PositionalBreakdown = memo(
                                 </span>
                               </td>
                               <td
-                                className="px-3 py-2 text-right font-mono text-xs"
-                                style={{
-                                  color:
-                                    row.vsAverage === 0
-                                      ? colors.rdylgn[5]
-                                      : row.vsAverage > 0
-                                        ? colors.rdylgn[8]
-                                        : colors.rdylgn[2],
-                                }}
+                                className={`px-3 py-2 text-right font-mono text-xs ${deltaTextClass(row.vsAverage)}`}
                               >
                                 {row.vsAverage > 0 ? '+' : ''}
                                 {row.vsAverage.toFixed(1)}
                               </td>
                               <td
-                                className="px-3 py-2 text-right font-mono text-xs"
-                                style={{
-                                  color:
-                                    row.vsMedian === 0
-                                      ? colors.rdylgn[5]
-                                      : row.vsMedian > 0
-                                        ? colors.rdylgn[8]
-                                        : colors.rdylgn[2],
-                                }}
+                                className={`px-3 py-2 text-right font-mono text-xs ${deltaTextClass(row.vsMedian)}`}
                               >
                                 {row.vsMedian > 0 ? '+' : ''}
                                 {row.vsMedian.toFixed(1)}

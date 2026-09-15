@@ -3,7 +3,6 @@
 import { memo, useState } from 'react';
 import { TrackedPosition } from '@/shared/utils/stats';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import { colors } from '../../../../../../../brand/colors';
 import { PlayerBreakdownRow } from '@/components/stats/PlayerBreakdown';
 import type { PlainStatsDataset } from '@/shared/utils/stats';
 import type { PositionData, TeamData } from './utils';
@@ -25,9 +24,7 @@ export const PositionRankingsSection = memo<PositionRankingsSectionProps>(props 
 
   return (
     <div className="mt-8 space-y-6">
-      <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-        Position Rankings
-      </h3>
+      <h3 className="text-lg font-semibold text-primary">Position Rankings</h3>
 
       {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => {
         const positionData = calculatePositionRankings(
@@ -39,17 +36,81 @@ export const PositionRankingsSection = memo<PositionRankingsSectionProps>(props 
         );
 
         return (
-          <div key={position} className="rounded-md border">
-            <div className="px-4 py-2" style={{ backgroundColor: colors.core.charcoalSteel }}>
-              <h4 className="font-semibold text-white">
+          <section key={position} className="border-y md:rounded-md md:border">
+            <div className="bg-muted/45 px-1 py-2 md:px-4">
+              <h4 className="font-semibold text-foreground">
                 {position} Rankings
                 {!isSeasonView && (
-                  <span className="ml-2 text-xs text-gray-300">(Click rows to see players)</span>
+                  <span className="ml-2 text-xs text-muted-foreground">
+                    (Tap a team to see players)
+                  </span>
                 )}
               </h4>
             </div>
 
-            <div className="p-4">
+            <div className="divide-y sm:hidden">
+              {positionData.map(team => {
+                const rowKey = `league-${position}-${team.key}`;
+                const isExpanded = expandedLeagueRows.has(rowKey);
+                const weekPlayerData = weekNum
+                  ? dataset.weeklyPlayerData[weekNum]?.[team.key]
+                  : null;
+                const playersForPosition = weekPlayerData?.positions[position] || [];
+
+                return (
+                  <div key={team.key}>
+                    <button
+                      type="button"
+                      className="grid min-h-11 w-full grid-cols-[2.5rem_1fr_auto] items-center gap-2 px-1 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-default"
+                      disabled={isSeasonView}
+                      aria-expanded={!isSeasonView ? isExpanded : undefined}
+                      onClick={() => {
+                        if (isSeasonView) return;
+                        const next = new Set(expandedLeagueRows);
+                        if (isExpanded) next.delete(rowKey);
+                        else next.add(rowKey);
+                        setExpandedLeagueRows(next);
+                      }}
+                    >
+                      <span
+                        className="justify-self-start rounded-full px-2 py-1 text-xs font-semibold"
+                        style={{
+                          backgroundColor: getRankColor(team.rank, positionData.length),
+                          color: getTextColor(getRankColor(team.rank, positionData.length)),
+                        }}
+                      >
+                        {team.rank}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-medium">
+                          {team.teamInfo.teamName}
+                        </span>
+                        <span className="block truncate text-xs text-muted-foreground">
+                          {team.teamInfo.leagueName}
+                        </span>
+                      </span>
+                      <span className="text-right">
+                        <span className="block font-mono text-sm font-bold text-secondary">
+                          {team.posScore.toFixed(1)}
+                        </span>
+                        {!isSeasonView ? (
+                          <span className="block text-xs text-muted-foreground">
+                            {isExpanded ? 'Hide' : 'Players'}
+                          </span>
+                        ) : null}
+                      </span>
+                    </button>
+                    {isExpanded && !isSeasonView && weekNum ? (
+                      <div className="border-t bg-muted/20">
+                        <PlayerBreakdownRow players={playersForPosition} position={position} />
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="hidden p-4 sm:block">
               <div className="rounded-md border">
                 <table className="w-full text-sm">
                   <thead className="bg-muted/20">
@@ -111,10 +172,7 @@ export const PositionRankingsSection = memo<PositionRankingsSectionProps>(props 
                               )}
                             </div>
                           </td>
-                          <td
-                            className="px-3 py-2 text-right font-mono font-bold"
-                            style={{ color: colors.core.regalGold }}
-                          >
+                          <td className="px-3 py-2 text-right font-mono font-bold text-secondary">
                             {team.posScore.toFixed(1)}
                           </td>
                           {!isSeasonView && (
@@ -148,7 +206,7 @@ export const PositionRankingsSection = memo<PositionRankingsSectionProps>(props 
                 </table>
               </div>
             </div>
-          </div>
+          </section>
         );
       })}
     </div>

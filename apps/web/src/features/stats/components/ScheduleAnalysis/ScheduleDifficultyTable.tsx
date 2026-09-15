@@ -2,7 +2,6 @@
 
 import { memo } from 'react';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
-import { colors } from '@/lib/colors';
 import {
   DataList,
   DataListDescription,
@@ -25,9 +24,7 @@ export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ dat
 
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-        Schedule Difficulty Rankings
-      </h3>
+      <h3 className="text-lg font-semibold text-primary">Schedule Difficulty Rankings</h3>
       <p className="text-sm text-muted-foreground">
         Teams with the lowest win percentage against their schedule faced the toughest opponents.
       </p>

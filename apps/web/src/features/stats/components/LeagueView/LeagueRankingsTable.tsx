@@ -59,10 +59,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                   <div className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                     Total
                   </div>
-                  <div
-                    className="mt-0.5 font-mono text-lg font-bold tabular-nums"
-                    style={{ color: colors.core.regalGold }}
-                  >
+                  <div className="mt-0.5 font-mono text-lg font-bold tabular-nums text-secondary">
                     {team.teamTotal.toFixed(1)}
                   </div>
                 </div>
@@ -70,7 +67,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
 
               {isSeasonView && latestPoint ? (
                 <div
-                  className="mt-3 grid grid-cols-[minmax(0,1fr)_7rem] items-center gap-3 rounded-md bg-muted/40 px-3 py-2"
+                  className="mt-3 grid grid-cols-[minmax(0,1fr)_7rem] items-center gap-3 border-y border-border/70 py-2"
                   role="img"
                   aria-label={`${team.teamInfo.teamName} weekly scoring trend, latest Week ${latestPoint.week}: ${latestPoint.score.toFixed(1)} points${weeklyDelta === null ? '' : `, ${weeklyDelta >= 0 ? 'up' : 'down'} ${Math.abs(weeklyDelta).toFixed(1)} points from the prior week`}`}
                 >
@@ -108,7 +105,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                         <Line
                           type="monotone"
                           dataKey="score"
-                          stroke={colors.core.regalGold}
+                          stroke="hsl(var(--secondary))"
                           strokeWidth={2}
                           dot={false}
                         />
@@ -227,10 +224,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                   <div className="font-medium">{team.teamInfo.teamName}</div>
                   <div className="text-xs text-muted-foreground">{team.teamInfo.leagueName}</div>
                 </td>
-                <td
-                  className="px-3 py-2 text-right font-mono font-bold"
-                  style={{ color: colors.core.regalGold }}
-                >
+                <td className="px-3 py-2 text-right font-mono font-bold text-secondary">
                   {team.teamTotal.toFixed(1)}
                 </td>
                 {isSeasonView && (
@@ -247,7 +241,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                           <Line
                             type="monotone"
                             dataKey="score"
-                            stroke={colors.core.regalGold}
+                            stroke="hsl(var(--secondary))"
                             strokeWidth={2}
                             dot={false}
                           />

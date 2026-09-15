@@ -33,7 +33,7 @@ import {
 import { PositionalCurvesChart } from '@/components/charts/positional-curves-chart';
 import { ManagerAnalysis } from '@/features/draft-analysis';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
-import { BarChart3, Filter, Trophy, Users } from 'lucide-react';
+import { BarChart3, Filter, Loader2, Trophy, Users } from 'lucide-react';
 import { debugLog } from '@/lib/debug-log';
 
 export default function DraftAnalysisPage(): JSX.Element {
@@ -330,7 +330,7 @@ export default function DraftAnalysisPage(): JSX.Element {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" aria-hidden="true" />
           <div className="text-lg font-medium">
             {error
               ? 'Loading fallback data...'

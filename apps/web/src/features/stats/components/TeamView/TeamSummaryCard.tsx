@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { colors } from '../../../../../../../brand/colors';
+import { deltaTextClass } from '@/lib/stat-colors';
 import type { TeamTotalsResult } from './utils';
 
 interface TeamSummaryCardProps {
@@ -23,7 +23,7 @@ export const TeamSummaryCard = memo(
     return (
       <section className="space-y-5 border-b border-border/70 pb-8 text-card-foreground sm:rounded-md sm:border sm:bg-card sm:p-4">
         <header className="flex flex-col gap-1">
-          <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
+          <h3 className="text-lg font-semibold text-primary">
             Team Overview (Weeks {fromWeek}-{toWeek})
           </h3>
           <p className="text-sm text-muted-foreground">
@@ -36,7 +36,7 @@ export const TeamSummaryCard = memo(
             <h4 className="text-sm font-semibold text-muted-foreground">Season Totals</h4>
             <div className="flex items-center justify-between text-sm">
               <span>Team Points</span>
-              <span className="font-mono font-bold" style={{ color: colors.core.regalGold }}>
+              <span className="font-mono font-bold text-secondary">
                 {data.teamTotal.toFixed(1)}
               </span>
             </div>
@@ -46,17 +46,7 @@ export const TeamSummaryCard = memo(
             </div>
             <div className="flex items-center justify-between text-sm">
               <span>Point Differential</span>
-              <span
-                className="font-mono font-bold"
-                style={{
-                  color:
-                    pointDifferential === 0
-                      ? colors.rdylgn[5]
-                      : pointDifferential > 0
-                        ? colors.rdylgn[8]
-                        : colors.rdylgn[2],
-                }}
-              >
+              <span className={`font-mono font-bold ${deltaTextClass(pointDifferential)}`}>
                 {pointDifferential > 0 ? '+' : ''}
                 {pointDifferential.toFixed(1)}
               </span>
@@ -112,10 +102,7 @@ export const TeamSummaryCard = memo(
                         {player.team ?? 'FA'} · {player.appearances} wk
                       </div>
                     </div>
-                    <span
-                      className="font-mono font-semibold"
-                      style={{ color: colors.core.regalGold }}
-                    >
+                    <span className="font-mono font-semibold text-secondary">
                       {player.totalPoints.toFixed(1)}
                     </span>
                   </li>

@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { colors } from '../../../../../../../brand/colors';
 import type { WeeklyPerformanceRow } from './utils';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
+import { deltaTextClass } from '@/lib/stat-colors';
 
 interface WeeklyPerformanceChartProps {
   rows: WeeklyPerformanceRow[];
@@ -18,9 +19,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
   if (rows.length === 0) {
     return (
       <section className="border-b border-border/70 pb-8">
-        <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-          Weekly Performance
-        </h3>
+        <h3 className="text-lg font-semibold text-primary">Weekly Performance</h3>
         <p className="text-sm text-muted-foreground">No weekly data available</p>
       </section>
     );
@@ -29,9 +28,7 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
   return (
     <section className="space-y-4 border-b border-border/70 pb-8">
       <header>
-        <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
-          Weekly Performance
-        </h3>
+        <h3 className="text-lg font-semibold text-primary">Weekly Performance</h3>
         <p className="text-sm text-muted-foreground">
           Weekly scores with opponent comparisons and league deltas
         </p>
@@ -134,14 +131,18 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                 <div className="grid gap-2 border-t border-border/70 p-2 text-xs">
                   <div className="flex items-center justify-between p-2">
                     <span className="text-muted-foreground">vs League Avg</span>
-                    <span className="font-mono font-semibold">
+                    <span
+                      className={`font-mono font-semibold ${deltaTextClass(row.vsLeagueAverage)}`}
+                    >
                       {row.vsLeagueAverage > 0 ? '+' : ''}
                       {row.vsLeagueAverage.toFixed(1)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-2">
                     <span className="text-muted-foreground">vs League Median</span>
-                    <span className="font-mono font-semibold">
+                    <span
+                      className={`font-mono font-semibold ${deltaTextClass(row.vsLeagueMedian)}`}
+                    >
                       {row.vsLeagueMedian > 0 ? '+' : ''}
                       {row.vsLeagueMedian.toFixed(1)}
                     </span>
@@ -160,34 +161,14 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
               <div className="hidden gap-2 text-xs md:grid md:grid-cols-4">
                 <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">vs League Avg</div>
-                  <div
-                    className="font-mono font-semibold"
-                    style={{
-                      color:
-                        row.vsLeagueAverage === 0
-                          ? colors.rdylgn[5]
-                          : row.vsLeagueAverage > 0
-                            ? colors.rdylgn[8]
-                            : colors.rdylgn[2],
-                    }}
-                  >
+                  <div className={`font-mono font-semibold ${deltaTextClass(row.vsLeagueAverage)}`}>
                     {row.vsLeagueAverage > 0 ? '+' : ''}
                     {row.vsLeagueAverage.toFixed(1)}
                   </div>
                 </div>
                 <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">vs League Median</div>
-                  <div
-                    className="font-mono font-semibold"
-                    style={{
-                      color:
-                        row.vsLeagueMedian === 0
-                          ? colors.rdylgn[5]
-                          : row.vsLeagueMedian > 0
-                            ? colors.rdylgn[8]
-                            : colors.rdylgn[2],
-                    }}
-                  >
+                  <div className={`font-mono font-semibold ${deltaTextClass(row.vsLeagueMedian)}`}>
                     {row.vsLeagueMedian > 0 ? '+' : ''}
                     {row.vsLeagueMedian.toFixed(1)}
                   </div>
