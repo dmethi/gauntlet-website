@@ -30,13 +30,13 @@
     --popover-foreground: 220 13% 9%;
     --primary: 350 85% 42%; /* crimson #C8102E */
     --primary-foreground: 0 0% 100%;
-    --secondary: 44 63% 44%; /* gold, darkened for light-bg contrast */
-    --secondary-foreground: 0 0% 8%;
+    --secondary: 44 63% 34%; /* accessible antique gold on light surfaces */
+    --secondary-foreground: 0 0% 100%;
     --muted: 220 10% 94%; /* ~#EEEFF1 */
     --muted-foreground: 229 6% 38%; /* ~#5B5D66 */
-    --accent: 44 63% 44%;
-    --accent-foreground: 0 0% 8%;
-    --success: 142 71% 40%;
+    --accent: 44 63% 34%;
+    --accent-foreground: 0 0% 100%;
+    --success: 142 71% 31%;
     --success-foreground: 0 0% 100%;
     --destructive: 350 85% 42%;
     --destructive-foreground: 0 0% 100%;

@@ -29,6 +29,17 @@ import {
 import { MatchupLink } from '@/components/matchup-link';
 import { VALID_POSITIONS } from '@/lib/constants';
 import Link from 'next/link';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 
 export default function TeamPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
@@ -166,6 +177,27 @@ export default function TeamPage(props: { params: Promise<{ id: string }> }) {
   const ownersText = formatOwners(allOwners);
   const avatarUrl = getAvatarUrl();
   const initials = getInitials(name);
+  const displayedMatchups = (team.matchups ?? [])
+    .filter(matchup => matchup.week >= 1 && matchup.week <= playoffStart + 2)
+    .map(matchup => {
+      const weekMetric = (team.weeklyMetrics ?? []).find(metric => metric.week === matchup.week);
+      const opponentPoints = weekMetric?.opponentPoints;
+      const leagueAverage = weeklyAverages.find(week => week.week === matchup.week)?.averagePoints;
+      const result =
+        opponentPoints == null || opponentPoints === 0
+          ? 'Bye'
+          : matchup.points > opponentPoints
+            ? 'Win'
+            : 'Loss';
+
+      return {
+        ...matchup,
+        opponentPoints,
+        leagueAverage,
+        result,
+        isPlayoff: matchup.week >= playoffStart,
+      };
+    });
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -552,113 +584,132 @@ export default function TeamPage(props: { params: Promise<{ id: string }> }) {
           <p className="text-sm text-muted-foreground mb-4">
             Click on a week to view the full matchup breakdown with player details and analytics.
           </p>
-          <div className="overflow-x-auto rounded-md border border-border bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Week</TableHead>
-                  <TableHead>Points</TableHead>
-                  <TableHead>Opp. Points</TableHead>
-                  <TableHead>League Avg</TableHead>
-                  <TableHead>Result</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {(team.matchups ?? [])
-                  .filter(m => m.week >= 1 && m.week <= 14)
-                  .map(matchup => {
-                    const weekData = weeklyData.find(w => w.week === matchup.week);
-                    const leagueAvgForWeek = weeklyAverages.find(
-                      w => w.week === matchup.week,
-                    )?.averagePoints;
-                    const leagueAvgCell =
-                      typeof leagueAvgForWeek === 'number' ? leagueAvgForWeek.toFixed(2) : '—';
-                    return (
-                      <TableRow key={`reg-${matchup.week}`} className="hover:bg-muted/50">
-                        <TableCell>
-                          <MatchupLink
-                            leagueId={String(team.league.id)}
-                            matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
-                            week={matchup.week}
-                            variant="compact"
-                            className="font-medium"
-                          />
-                        </TableCell>
-                        <TableCell>{matchup.points.toFixed(2)}</TableCell>
-                        <TableCell>{weekData ? weekData.opponentPoints.toFixed(2) : '—'}</TableCell>
-                        <TableCell>{leagueAvgCell}</TableCell>
-                        <TableCell>
-                          {!weekData ||
-                          weekData.opponentPoints === 0 ||
-                          weekData.opponentPoints == null
-                            ? 'Bye'
-                            : matchup.points > weekData.opponentPoints
-                              ? 'Win'
-                              : 'Loss'}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+          <DataList className="sm:hidden">
+            {displayedMatchups.map(matchup => (
+              <DataListItem key={`mobile-${matchup.week}`}>
+                <DataListHeader>
+                  <div className="min-w-0">
+                    <DataListTitle>
+                      <MatchupLink
+                        leagueId={String(team.league.id)}
+                        matchupId={matchup.matchupId || matchup.week}
+                        week={matchup.week}
+                        variant="compact"
+                        className="inline-flex min-h-11 items-center rounded-sm font-semibold underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                    </DataListTitle>
+                    <DataListDescription>
+                      {matchup.isPlayoff ? 'Playoffs' : 'Regular season'}
+                    </DataListDescription>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+                      Result
+                    </div>
+                    <div
+                      className={
+                        matchup.result === 'Win'
+                          ? 'mt-0.5 font-bold text-success'
+                          : matchup.result === 'Loss'
+                            ? 'mt-0.5 font-bold text-destructive'
+                            : 'mt-0.5 font-bold text-muted-foreground'
+                      }
+                    >
+                      {matchup.result}
+                    </div>
+                  </div>
+                </DataListHeader>
+                <DataListMetrics>
+                  <DataListMetric>
+                    <DataListMetricLabel>Points</DataListMetricLabel>
+                    <DataListMetricValue>{matchup.points.toFixed(2)}</DataListMetricValue>
+                  </DataListMetric>
+                  <DataListMetric>
+                    <DataListMetricLabel>Opponent</DataListMetricLabel>
+                    <DataListMetricValue>
+                      {matchup.opponentPoints?.toFixed(2) ?? '—'}
+                    </DataListMetricValue>
+                  </DataListMetric>
+                  <DataListMetric className="text-right">
+                    <DataListMetricLabel>League average</DataListMetricLabel>
+                    <DataListMetricValue>
+                      {matchup.leagueAverage?.toFixed(2) ?? '—'}
+                    </DataListMetricValue>
+                  </DataListMetric>
+                </DataListMetrics>
+              </DataListItem>
+            ))}
+          </DataList>
 
-                {(team.matchups ?? []).some(
-                  m => m.week >= playoffStart && m.week <= playoffStart + 2,
-                ) && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="bg-muted/40 text-xs uppercase tracking-wider">
-                      Playoffs (Weeks {playoffStart}–{playoffStart + 2})
+          <Table
+            containerClassName="hidden sm:block"
+            surface="responsive"
+            scrollLabel="Weekly matchups"
+          >
+            <TableHeader>
+              <TableRow>
+                <TableHead>Week</TableHead>
+                <TableHead>Points</TableHead>
+                <TableHead>Opp. Points</TableHead>
+                <TableHead>League Avg</TableHead>
+                <TableHead>Result</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {displayedMatchups
+                .filter(matchup => !matchup.isPlayoff)
+                .map(matchup => (
+                  <TableRow key={`reg-${matchup.week}`} className="hover:bg-muted/50">
+                    <TableCell>
+                      <MatchupLink
+                        leagueId={String(team.league.id)}
+                        matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
+                        week={matchup.week}
+                        variant="compact"
+                        className="font-medium"
+                      />
                     </TableCell>
+                    <TableCell>{matchup.points.toFixed(2)}</TableCell>
+                    <TableCell>{matchup.opponentPoints?.toFixed(2) ?? '—'}</TableCell>
+                    <TableCell>{matchup.leagueAverage?.toFixed(2) ?? '—'}</TableCell>
+                    <TableCell>{matchup.result}</TableCell>
                   </TableRow>
-                )}
+                ))}
 
-                {(team.matchups ?? [])
-                  .filter(m => m.week >= playoffStart && m.week <= playoffStart + 2)
-                  .map(matchup => {
-                    // Use authoritative weekly metrics for playoff weeks (weeklyData is regular-season-only)
-                    const playoffWeek = (team.weeklyMetrics ?? []).find(
-                      wm => wm.week === matchup.week,
-                    );
-                    const weekData = playoffWeek
-                      ? { opponentPoints: playoffWeek.opponentPoints }
-                      : undefined;
-                    const leagueAvgForWeek = weeklyAverages.find(
-                      w => w.week === matchup.week,
-                    )?.averagePoints;
-                    const leagueAvgCell =
-                      typeof leagueAvgForWeek === 'number' ? leagueAvgForWeek.toFixed(2) : '—';
-                    return (
-                      <TableRow key={`po-${matchup.week}`} className="hover:bg-muted/50">
-                        <TableCell>
-                          <MatchupLink
-                            leagueId={String(team.league.id)}
-                            matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
-                            week={matchup.week}
-                            variant="compact"
-                            className="font-medium"
-                          />
-                        </TableCell>
-                        <TableCell>{matchup.points.toFixed(2)}</TableCell>
-                        <TableCell>{weekData ? weekData.opponentPoints.toFixed(2) : '—'}</TableCell>
-                        <TableCell>{leagueAvgCell}</TableCell>
-                        <TableCell>
-                          {!weekData ||
-                          weekData.opponentPoints === 0 ||
-                          weekData.opponentPoints == null
-                            ? 'Bye'
-                            : matchup.points > weekData.opponentPoints
-                              ? 'Win'
-                              : 'Loss'}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </div>
+              {displayedMatchups.some(matchup => matchup.isPlayoff) && (
+                <TableRow>
+                  <TableCell colSpan={5} className="bg-muted/40 text-xs uppercase tracking-wider">
+                    Playoffs (Weeks {playoffStart}–{playoffStart + 2})
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {displayedMatchups
+                .filter(matchup => matchup.isPlayoff)
+                .map(matchup => (
+                  <TableRow key={`po-${matchup.week}`} className="hover:bg-muted/50">
+                    <TableCell>
+                      <MatchupLink
+                        leagueId={String(team.league.id)}
+                        matchupId={matchup.matchupId || matchup.week} // Use actual matchupId from data
+                        week={matchup.week}
+                        variant="compact"
+                        className="font-medium"
+                      />
+                    </TableCell>
+                    <TableCell>{matchup.points.toFixed(2)}</TableCell>
+                    <TableCell>{matchup.opponentPoints?.toFixed(2) ?? '—'}</TableCell>
+                    <TableCell>{matchup.leagueAverage?.toFixed(2) ?? '—'}</TableCell>
+                    <TableCell>{matchup.result}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
         </div>
 
         <div className="mt-8">
           <h2 className="mb-2 text-2xl font-bold">Transactions</h2>
-          <div className="rounded-md border border-border bg-card px-4 py-1">
+          <div className="border-y border-border/70 py-1 sm:rounded-md sm:border sm:bg-card sm:px-4">
             {tx?.ok ? (
               (() => {
                 const teamId = Number(team.id);

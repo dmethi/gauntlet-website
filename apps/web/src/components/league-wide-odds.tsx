@@ -15,6 +15,144 @@ import type {
   MatchupOdds,
   TeamOdds,
 } from '@/features/matchups/types';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
+
+const getLeagueBadgeColor = (leagueId: string): string => {
+  switch (getLeagueConfig(leagueId)?.conference) {
+    case 'Legion I':
+    case 'AFC':
+      return 'border border-primary/20 bg-primary/10 text-primary';
+    case 'Legion II':
+    case 'NFC':
+      return 'border border-secondary/30 bg-secondary/15 text-secondary';
+    default:
+      return 'border border-success/30 bg-success/15 text-success';
+  }
+};
+
+const getLeagueShortName = (leagueId: string): string =>
+  getLeagueConfig(leagueId)?.conference || 'League';
+
+const TeamOddsMobileList = ({ teams, week }: { teams: TeamOdds[]; week: number }) => (
+  <DataList className="sm:hidden">
+    {teams.map((team, index) => (
+      <DataListItem key={team.teamId}>
+        <DataListHeader>
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 px-1.5 text-sm font-bold tabular-nums text-primary">
+              {index + 1}
+            </span>
+            <div className="min-w-0">
+              <DataListTitle>
+                <Link
+                  href={buildGauntletMatchupPath(team.leagueId, week, team.matchupId)}
+                  className="inline-flex min-h-11 items-center rounded-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {team.teamName}
+                </Link>
+              </DataListTitle>
+              <DataListDescription>{getLeagueShortName(team.leagueId)}</DataListDescription>
+            </div>
+          </div>
+          <div className="shrink-0 text-right">
+            <div className="text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+              Probability
+            </div>
+            <div className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
+              {(team.probability * 100).toFixed(1)}%
+            </div>
+          </div>
+        </DataListHeader>
+        <DataListMetrics>
+          <DataListMetric>
+            <DataListMetricLabel>Projection</DataListMetricLabel>
+            <DataListMetricValue>
+              {(team.projectedRange?.p50 ?? team.totalProjection).toFixed(1)} pts
+            </DataListMetricValue>
+          </DataListMetric>
+          <DataListMetric>
+            <DataListMetricLabel>Range</DataListMetricLabel>
+            <DataListMetricValue>
+              {team.projectedRange?.p10?.toFixed(0) ?? '0'}–
+              {team.projectedRange?.p90?.toFixed(0) ?? '0'}
+            </DataListMetricValue>
+          </DataListMetric>
+          <DataListMetric className="text-right">
+            <DataListMetricLabel>Odds</DataListMetricLabel>
+            <DataListMetricValue>{team.odds}</DataListMetricValue>
+          </DataListMetric>
+        </DataListMetrics>
+      </DataListItem>
+    ))}
+  </DataList>
+);
+
+const MatchupOddsMobileList = ({
+  matchups,
+  week,
+  valueLabel,
+  valueFor,
+}: {
+  matchups: MatchupOdds[];
+  week: number;
+  valueLabel: string;
+  valueFor: (matchup: MatchupOdds) => string;
+}) => (
+  <DataList className="sm:hidden">
+    {matchups.map((matchup, index) => (
+      <DataListItem key={`${matchup.matchupId}-${matchup.team1.leagueId}-${valueLabel}`}>
+        <DataListHeader>
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 px-1.5 text-sm font-bold tabular-nums text-primary">
+              {index + 1}
+            </span>
+            <div className="min-w-0">
+              <DataListTitle>
+                <Link
+                  href={buildGauntletMatchupPath(matchup.team1.leagueId, week, matchup.matchupId)}
+                  className="inline-flex min-h-11 items-center rounded-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {matchup.team1.name} vs {matchup.team2.name}
+                </Link>
+              </DataListTitle>
+              <DataListDescription>
+                {getLeagueShortName(matchup.team1.leagueId)}
+              </DataListDescription>
+            </div>
+          </div>
+          <div className="shrink-0 text-right">
+            <div className="text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+              Probability
+            </div>
+            <div className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
+              {(matchup.probability * 100).toFixed(1)}%
+            </div>
+          </div>
+        </DataListHeader>
+        <DataListMetrics className="grid-cols-2">
+          <DataListMetric>
+            <DataListMetricLabel>{valueLabel}</DataListMetricLabel>
+            <DataListMetricValue>{valueFor(matchup)}</DataListMetricValue>
+          </DataListMetric>
+          <DataListMetric className="text-right">
+            <DataListMetricLabel>Odds</DataListMetricLabel>
+            <DataListMetricValue>{matchup.odds}</DataListMetricValue>
+          </DataListMetric>
+        </DataListMetrics>
+      </DataListItem>
+    ))}
+  </DataList>
+);
 
 export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) => {
   const [odds, setOdds] = useState<LeagueWideOddsType | null>(null);
@@ -53,26 +191,9 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
     fetchOdds();
   }, [week]);
 
-  const getLeagueBadgeColor = (leagueId: string): string => {
-    switch (getLeagueConfig(leagueId)?.conference) {
-      case 'Legion I':
-      case 'AFC':
-        return 'border border-primary/20 bg-primary/10 text-primary';
-      case 'Legion II':
-      case 'NFC':
-        return 'border border-secondary/30 bg-secondary/15 text-secondary';
-      default:
-        return 'border border-success/30 bg-success/15 text-success';
-    }
-  };
-
-  const getLeagueShortName = (leagueId: string): string => {
-    return getLeagueConfig(leagueId)?.conference || 'League';
-  };
-
   if (loading) {
     return (
-      <Card className={className}>
+      <Card mobileFlat className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide">
             <Crown className="h-5 w-5 text-secondary" />
@@ -106,7 +227,7 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
 
   if (error) {
     return (
-      <Card className={className}>
+      <Card mobileFlat className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-geizer tracking-wide text-destructive">
             <AlertCircle className="h-5 w-5" />
@@ -115,7 +236,7 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground mb-4">{error}</p>
-          <Button onClick={() => fetchOdds()} variant="outline" size="sm">
+          <Button onClick={() => fetchOdds()} variant="outline" className="min-h-11">
             <RefreshCw className="h-4 w-4 mr-2" />
             Retry
           </Button>
@@ -129,7 +250,7 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
   }
 
   return (
-    <Card className={className}>
+    <Card mobileFlat className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -142,7 +263,14 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               Live projections and distributions from driveFF across all three Legions
             </CardDescription>
           </div>
-          <Button onClick={() => fetchOdds(false)} variant="ghost" size="sm" disabled={loading}>
+          <Button
+            onClick={() => fetchOdds(false)}
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11"
+            disabled={loading}
+            aria-label="Refresh league-wide odds"
+          >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
@@ -156,7 +284,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <TrendingUp className="h-5 w-5 text-success" />
               <h3 className="text-lg font-semibold text-success">Highest Scorer Odds</h3>
             </div>
-            <div className="overflow-x-auto">
+            <TeamOddsMobileList teams={odds.highestScorer} week={week} />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-muted">
@@ -223,7 +352,8 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <TrendingDown className="h-5 w-5 text-destructive" />
               <h3 className="text-lg font-semibold text-destructive">Lowest Scorer Odds</h3>
             </div>
-            <div className="overflow-x-auto">
+            <TeamOddsMobileList teams={odds.lowestScorer} week={week} />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-muted">
@@ -290,7 +420,13 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <Target className="h-5 w-5 text-secondary" />
               <h3 className="text-lg font-semibold text-secondary">Closest Matchups</h3>
             </div>
-            <div className="overflow-x-auto">
+            <MatchupOddsMobileList
+              matchups={odds.closestMatchup}
+              week={week}
+              valueLabel="Margin"
+              valueFor={matchup => `${matchup.projectedMargin?.toFixed(1) || '0'} pts`}
+            />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-muted">
@@ -364,7 +500,13 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <Zap className="h-5 w-5 text-primary" />
               <h3 className="text-lg font-semibold text-primary">Biggest Blowouts</h3>
             </div>
-            <div className="overflow-x-auto">
+            <MatchupOddsMobileList
+              matchups={odds.biggestBlowout}
+              week={week}
+              valueLabel="Margin"
+              valueFor={matchup => `${matchup.projectedMargin?.toFixed(1) || '0'} pts`}
+            />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-muted">
@@ -438,7 +580,15 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <TrendingUp className="h-5 w-5 text-success" />
               <h3 className="text-lg font-semibold text-success">Highest Scoring Matchup</h3>
             </div>
-            <div className="overflow-x-auto">
+            <MatchupOddsMobileList
+              matchups={odds.highestScoringMatchup || []}
+              week={week}
+              valueLabel="Total points"
+              valueFor={matchup =>
+                `${(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts`
+              }
+            />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-muted">
@@ -514,7 +664,15 @@ export const LeagueWideOdds = ({ week, className = '' }: LeagueWideOddsProps) =>
               <TrendingDown className="h-5 w-5 text-secondary" />
               <h3 className="text-lg font-semibold text-secondary">Lowest Scoring Matchup</h3>
             </div>
-            <div className="overflow-x-auto">
+            <MatchupOddsMobileList
+              matchups={odds.lowestScoringMatchup || []}
+              week={week}
+              valueLabel="Total points"
+              valueFor={matchup =>
+                `${(matchup.team1.projection + matchup.team2.projection).toFixed(1)} pts`
+              }
+            />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-muted">

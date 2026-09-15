@@ -1,15 +1,12 @@
 'use client';
 
 import { LeagueChart } from '@/components/league-chart';
-import { useLeagueData, useLeagueDataById } from '@/lib/hooks';
 import { useLeagueOverviewClient } from '@/hooks/useLeagueOverviewClient';
-import type { LeagueData } from '@/shared/types';
 import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 import { Suspense, useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getLeagueConfig } from '@/config/leagues';
@@ -24,10 +21,20 @@ import {
 } from '@/components/ui/table';
 import { TransactionList } from '@/components/transactions';
 import { useSearchParams } from 'next/navigation';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 
 const LeagueOverviewContent = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const leagueIdParam = searchParams.get('leagueId');
 
   // Use the new client-side calculation hook
@@ -134,7 +141,101 @@ const LeagueOverviewContent = () => {
               </div>
             ) : null}
           </div>
-          <Table surface="responsive" scrollLabel="Team rankings">
+          <div className="mb-3 flex items-end gap-2 sm:hidden">
+            <label className="min-w-0 flex-1 text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+              Sort teams by
+              <select
+                value={sortKey}
+                onChange={event => setSortKey(event.target.value as typeof sortKey)}
+                className="mt-1 block min-h-11 w-full rounded-md border border-input bg-background px-3 text-base font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="points">Points for</option>
+                <option value="record">Record</option>
+                <option value="expectedWins">Expected wins</option>
+                <option value="luck">Luck</option>
+                <option value="team">Team name</option>
+              </select>
+            </label>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-11 w-11 shrink-0"
+              onClick={() => setSortDir(direction => (direction === 'asc' ? 'desc' : 'asc'))}
+              aria-label={`Sort ${sortDir === 'asc' ? 'descending' : 'ascending'}`}
+            >
+              {sortDir === 'asc' ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+
+          <DataList className="sm:hidden">
+            {sortedTeamStats.map(team => {
+              const division = divisionConfig.find(item => item.id === team.division);
+              const divisionLabel =
+                division?.name ?? (team.division ? `Division ${team.division}` : 'No division');
+
+              return (
+                <DataListItem key={team.id} interactive className="p-0">
+                  <Link
+                    href={`/team/${team.id}`}
+                    className="block min-h-11 py-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  >
+                    <DataListHeader>
+                      <div className="flex min-w-0 items-start gap-3">
+                        <span className="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 px-1.5 text-sm font-bold tabular-nums text-primary">
+                          {team.canonicalRank}
+                        </span>
+                        <div className="min-w-0">
+                          <DataListTitle className="truncate">{team.name}</DataListTitle>
+                          <DataListDescription>{divisionLabel}</DataListDescription>
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2 text-right">
+                        <div>
+                          <div className="text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+                            Points
+                          </div>
+                          <div className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
+                            {team.totalPoints.toFixed(1)}
+                          </div>
+                        </div>
+                        <ChevronRight
+                          className="h-4 w-4 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </DataListHeader>
+                    <DataListMetrics>
+                      <DataListMetric>
+                        <DataListMetricLabel>Record</DataListMetricLabel>
+                        <DataListMetricValue>
+                          {team.wins}-{team.losses}
+                        </DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric>
+                        <DataListMetricLabel>Expected wins</DataListMetricLabel>
+                        <DataListMetricValue>{team.expectedWins.toFixed(2)}</DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric className="text-right">
+                        <DataListMetricLabel>Luck</DataListMetricLabel>
+                        <DataListMetricValue>{team.luckRating.toFixed(2)}</DataListMetricValue>
+                      </DataListMetric>
+                    </DataListMetrics>
+                  </Link>
+                </DataListItem>
+              );
+            })}
+          </DataList>
+
+          <Table
+            containerClassName="hidden sm:block"
+            surface="responsive"
+            scrollLabel="Team rankings"
+          >
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[60px]">Rank</TableHead>
@@ -225,13 +326,17 @@ const LeagueOverviewContent = () => {
                 return (
                   <TableRow
                     key={team.id}
-                    className="group cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-colors duration-200 ease-out motion-reduce:transition-none"
-                    onClick={() => {
-                      router.push(`/team/${team.id}`);
-                    }}
+                    className="group hover:bg-muted/50 transition-colors duration-200 ease-out motion-reduce:transition-none"
                   >
                     <TableCell>{team.canonicalRank}</TableCell>
-                    <TableCell className="font-medium">{team.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <Link
+                        href={`/team/${team.id}`}
+                        className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        {team.name}
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       <Badge
                         variant="outline"
