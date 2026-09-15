@@ -13,6 +13,7 @@ describe('calculations', () => {
   const mockMatchups: ProcessedMatchup[] = [
     {
       rosterId: 1,
+      managerName: 'Manager Alpha',
       teamName: 'Team Alpha',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -20,6 +21,7 @@ describe('calculations', () => {
       season: '2025',
       points: 150.5,
       opponentId: 2,
+      opponentManagerName: 'Manager Beta',
       opponentName: 'Team Beta',
       opponentPoints: 120.3,
       won: true,
@@ -29,6 +31,7 @@ describe('calculations', () => {
     },
     {
       rosterId: 2,
+      managerName: 'Manager Beta',
       teamName: 'Team Beta',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -36,6 +39,7 @@ describe('calculations', () => {
       season: '2025',
       points: 120.3,
       opponentId: 1,
+      opponentManagerName: 'Manager Alpha',
       opponentName: 'Team Alpha',
       opponentPoints: 150.5,
       won: false,
@@ -45,6 +49,7 @@ describe('calculations', () => {
     },
     {
       rosterId: 3,
+      managerName: 'Manager Gamma',
       teamName: 'Team Gamma',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -52,6 +57,7 @@ describe('calculations', () => {
       season: '2025',
       points: 85.2,
       opponentId: 4,
+      opponentManagerName: 'Manager Delta',
       opponentName: 'Team Delta',
       opponentPoints: 180.7,
       won: false,
@@ -83,11 +89,12 @@ describe('calculations', () => {
       });
     });
 
-    it('should include team information in records', () => {
+    it('should include manager and team identity in records', () => {
       const records = calculateHallOfFameRecords(mockMatchups);
       const firstCategory = Array.from(records.values())[0];
       if (firstCategory && firstCategory.length > 0) {
         const record = firstCategory[0];
+        expect(record).toHaveProperty('managerName');
         expect(record).toHaveProperty('teamName');
         expect(record).toHaveProperty('teamId');
         expect(record).toHaveProperty('leagueId');

@@ -17,6 +17,7 @@ describe('aggregations', () => {
   const mockMatchups: ProcessedMatchup[] = [
     {
       rosterId: 1,
+      managerName: 'Manager Alpha',
       teamName: 'Team Alpha',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -33,6 +34,7 @@ describe('aggregations', () => {
     },
     {
       rosterId: 1,
+      managerName: 'Manager Alpha',
       teamName: 'Team Alpha',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -49,6 +51,7 @@ describe('aggregations', () => {
     },
     {
       rosterId: 1,
+      managerName: 'Manager Alpha',
       teamName: 'Team Alpha',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -65,6 +68,7 @@ describe('aggregations', () => {
     },
     {
       rosterId: 2,
+      managerName: 'Manager Beta',
       teamName: 'Team Beta',
       leagueId: 'league1',
       leagueName: 'AFC',
@@ -98,6 +102,7 @@ describe('aggregations', () => {
       const windows = calculateRollingWindows(mockMatchups, 3);
       const alphaWindow = windows.find(w => w.rosterId === 1);
       if (alphaWindow) {
+        expect(alphaWindow.managerName).toBe('Manager Alpha');
         expect(alphaWindow.windowSize).toBe(3);
         expect(alphaWindow.totalPoints).toBe(450); // 150 + 140 + 160
         expect(alphaWindow.averagePoints).toBe(150); // 450 / 3
@@ -133,6 +138,7 @@ describe('aggregations', () => {
       const seasonal = calculateSeasonalData(mockMatchups);
       const alphaData = seasonal.find(s => s.rosterId === 1);
       if (alphaData) {
+        expect(alphaData.managerName).toBe('Manager Alpha');
         expect(alphaData.wins).toBe(3);
         expect(alphaData.losses).toBe(0);
       }
@@ -177,6 +183,7 @@ describe('aggregations', () => {
       const streaks = calculateStreaks(mockMatchups, 1);
       const alphaWinStreak = streaks.find(s => s.rosterId === 1 && s.type === 'win');
       if (alphaWinStreak) {
+        expect(alphaWinStreak.managerName).toBe('Manager Alpha');
         expect(alphaWinStreak.length).toBe(3); // 3 consecutive wins
       }
     });
@@ -304,6 +311,7 @@ describe('aggregations', () => {
     it('should export RollingWindowData type', () => {
       const data: RollingWindowData = {
         rosterId: 1,
+        managerName: 'Test Manager',
         teamName: 'Test Team',
         leagueId: 'league1',
         leagueName: 'Test League',
@@ -324,6 +332,7 @@ describe('aggregations', () => {
     it('should export SeasonalData type', () => {
       const data: SeasonalData = {
         rosterId: 1,
+        managerName: 'Test Manager',
         teamName: 'Test Team',
         leagueId: 'league1',
         leagueName: 'Test League',
@@ -359,6 +368,7 @@ describe('aggregations', () => {
     it('should export StreakData type', () => {
       const data: StreakData = {
         rosterId: 1,
+        managerName: 'Test Manager',
         teamName: 'Test Team',
         type: 'win',
         length: 5,

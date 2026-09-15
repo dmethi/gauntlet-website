@@ -76,6 +76,7 @@ export const calculateHallOfFameRecords = (
           categoryDisplay: category.name,
           description: category.description,
           value,
+          managerName: matchup.managerName,
           teamName: matchup.teamName,
           teamId: matchup.rosterId,
           leagueId: matchup.leagueId,
@@ -83,6 +84,7 @@ export const calculateHallOfFameRecords = (
           week: matchup.week,
           season: matchup.season,
           opponent: matchup.opponentName,
+          opponentManagerName: matchup.opponentManagerName,
           opponentId: matchup.opponentId,
           contextData: {
             points: matchup.points,
@@ -96,11 +98,13 @@ export const calculateHallOfFameRecords = (
             ...(matchupCategories.includes(category.id) && {
               bothTeams: {
                 teamA: {
+                  managerName: matchup.managerName,
                   name: matchup.teamName,
                   id: matchup.rosterId,
                   points: matchup.points,
                 },
                 teamB: {
+                  managerName: matchup.opponentManagerName,
                   name: matchup.opponentName,
                   id: matchup.opponentId,
                   points: matchup.opponentPoints,

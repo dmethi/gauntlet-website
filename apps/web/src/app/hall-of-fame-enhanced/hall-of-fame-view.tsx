@@ -14,7 +14,6 @@ import {
 import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -25,23 +24,49 @@ import {
 import { Calendar, Clock, Filter, TrendingDown, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { getAllLeagues, getAllSeasons, getLeagueConfig } from '@/config/leagues';
-import { deltaTextClass, leagueBadgeClass } from '@/lib/stat-colors';
+import { deltaTextClass } from '@/lib/stat-colors';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 
 const ALL_LEAGUES = getAllLeagues();
 const ALL_SEASONS = [...getAllSeasons()].sort().reverse();
 
-// Short badge label for a league: "AFC" / "Legion I" / etc, falling back to
-// the full name if a league ID isn't in the registry (shouldn't happen).
 const getLeagueShortName = (leagueId: string): string => {
   const league = getLeagueConfig(leagueId);
   return league?.conference ?? league?.name ?? leagueId;
 };
 
-const LeagueBadge = ({ leagueId }: { leagueId: string }) => (
-  <Badge variant="outline" className={leagueBadgeClass(getLeagueConfig(leagueId)?.name ?? '')}>
-    {getLeagueShortName(leagueId)}
-  </Badge>
+const RecordIdentity = ({
+  managerName,
+  teamName,
+  teamId,
+}: {
+  managerName: string;
+  teamName: string;
+  teamId: number;
+}) => (
+  <div className="min-w-0">
+    <Link href={`/team/${teamId}`} className="block truncate text-sm font-semibold hover:underline">
+      {managerName}
+    </Link>
+    {teamName !== managerName && (
+      <p className="mt-0.5 truncate text-xs leading-4 text-muted-foreground">{teamName}</p>
+    )}
+  </div>
+);
+
+const RecordMeta = ({
+  leagueId,
+  season,
+  week,
+}: {
+  leagueId: string;
+  season: string;
+  week?: number;
+}) => (
+  <span className="text-xs text-muted-foreground">
+    {season}
+    {week ? ` • Week ${week}` : ''} • {getLeagueShortName(leagueId)}
+  </span>
 );
 
 // A record from any of the Hall of Fame data shapes — everything is scoped
@@ -74,16 +99,15 @@ const RollingWindowCard = ({ title, windows }: { title: string; windows: Rolling
               <div className="flex items-start gap-2 flex-1">
                 <span className="font-mono text-sm mt-0.5">{getRankEmoji(index + 1)}</span>
                 <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/team/${window.rosterId}`}
-                    className="font-medium hover:underline block truncate"
-                  >
-                    {window.teamName}
-                  </Link>
+                  <RecordIdentity
+                    managerName={window.managerName}
+                    teamName={window.teamName}
+                    teamId={window.rosterId}
+                  />
                   <div className="flex items-center gap-2 mt-1">
-                    <LeagueBadge leagueId={window.leagueId} />
                     <span className="text-xs text-muted-foreground">
-                      {window.season} • Weeks {window.startWeek}-{window.endWeek}
+                      {window.season} • Weeks {window.startWeek}-{window.endWeek} •{' '}
+                      {getLeagueShortName(window.leagueId)}
                     </span>
                   </div>
                 </div>
@@ -119,16 +143,15 @@ const StreakCard = ({ title, streaks }: { title: string; streaks: StreakData[] }
               <div className="flex items-start gap-2 flex-1">
                 <span className="font-mono text-sm mt-0.5">{getRankEmoji(index + 1)}</span>
                 <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/team/${streak.rosterId}`}
-                    className="font-medium hover:underline block truncate"
-                  >
-                    {streak.teamName}
-                  </Link>
+                  <RecordIdentity
+                    managerName={streak.managerName}
+                    teamName={streak.teamName}
+                    teamId={streak.rosterId}
+                  />
                   <div className="flex items-center gap-2 mt-1">
-                    <LeagueBadge leagueId={streak.leagueId} />
                     <span className="text-xs text-muted-foreground">
-                      {streak.season} • Weeks {streak.startWeek}-{streak.endWeek}
+                      {streak.season} • Weeks {streak.startWeek}-{streak.endWeek} •{' '}
+                      {getLeagueShortName(streak.leagueId)}
                     </span>
                   </div>
                 </div>
@@ -173,15 +196,13 @@ const SeasonalCard = ({
               <div className="flex items-start gap-2 flex-1">
                 <span className="font-mono text-sm mt-0.5">{getRankEmoji(index + 1)}</span>
                 <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/team/${record.rosterId}`}
-                    className="font-medium hover:underline block truncate"
-                  >
-                    {record.teamName}
-                  </Link>
+                  <RecordIdentity
+                    managerName={record.managerName}
+                    teamName={record.teamName}
+                    teamId={record.rosterId}
+                  />
                   <div className="flex items-center gap-2 mt-1">
-                    <LeagueBadge leagueId={record.leagueId} />
-                    <span className="text-xs text-muted-foreground">{record.season} Season</span>
+                    <RecordMeta leagueId={record.leagueId} season={record.season} />
                   </div>
                 </div>
               </div>
@@ -373,17 +394,17 @@ export const HallOfFameView = (): JSX.Element => {
                                     {getRankEmoji(index + 1)}
                                   </span>
                                   <div className="flex-1 min-w-0">
-                                    <Link
-                                      href={`/team/${record.teamId}`}
-                                      className="font-medium hover:underline block truncate"
-                                    >
-                                      {record.teamName}
-                                    </Link>
+                                    <RecordIdentity
+                                      managerName={record.managerName}
+                                      teamName={record.teamName}
+                                      teamId={record.teamId}
+                                    />
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                      <LeagueBadge leagueId={record.leagueId} />
-                                      <span className="text-xs text-muted-foreground">
-                                        {record.season} • Week {record.week}
-                                      </span>
+                                      <RecordMeta
+                                        leagueId={record.leagueId}
+                                        season={record.season}
+                                        week={record.week}
+                                      />
                                       {record.opponent && (
                                         <span className="text-xs text-muted-foreground">
                                           vs {record.opponent}
@@ -460,17 +481,17 @@ export const HallOfFameView = (): JSX.Element => {
                                     {getRankEmoji(index + 1)}
                                   </span>
                                   <div className="flex-1 min-w-0">
-                                    <Link
-                                      href={`/team/${record.teamId}`}
-                                      className="font-medium hover:underline block truncate"
-                                    >
-                                      {record.teamName}
-                                    </Link>
+                                    <RecordIdentity
+                                      managerName={record.managerName}
+                                      teamName={record.teamName}
+                                      teamId={record.teamId}
+                                    />
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                      <LeagueBadge leagueId={record.leagueId} />
-                                      <span className="text-xs text-muted-foreground">
-                                        {record.season} • Week {record.week}
-                                      </span>
+                                      <RecordMeta
+                                        leagueId={record.leagueId}
+                                        season={record.season}
+                                        week={record.week}
+                                      />
                                       {record.opponent && (
                                         <span className="text-xs text-muted-foreground">
                                           vs {record.opponent}
@@ -517,17 +538,17 @@ export const HallOfFameView = (): JSX.Element => {
                                         {getRankEmoji(index + 1)}
                                       </span>
                                       <div className="flex-1 min-w-0">
-                                        <Link
-                                          href={`/team/${record.teamId}`}
-                                          className="font-medium hover:underline block truncate"
-                                        >
-                                          {record.teamName}
-                                        </Link>
+                                        <RecordIdentity
+                                          managerName={record.managerName}
+                                          teamName={record.teamName}
+                                          teamId={record.teamId}
+                                        />
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <LeagueBadge leagueId={record.leagueId} />
-                                          <span className="text-xs text-muted-foreground">
-                                            {record.season} • Week {record.week}
-                                          </span>
+                                          <RecordMeta
+                                            leagueId={record.leagueId}
+                                            season={record.season}
+                                            week={record.week}
+                                          />
                                           {record.opponent && (
                                             <span className="text-xs text-muted-foreground">
                                               vs {record.opponent}
@@ -618,17 +639,17 @@ export const HallOfFameView = (): JSX.Element => {
                                     {getRankEmoji(index + 1)}
                                   </span>
                                   <div className="flex-1 min-w-0">
-                                    <Link
-                                      href={`/team/${record.teamId}`}
-                                      className="font-medium hover:underline block truncate"
-                                    >
-                                      {record.teamName}
-                                    </Link>
+                                    <RecordIdentity
+                                      managerName={record.managerName}
+                                      teamName={record.teamName}
+                                      teamId={record.teamId}
+                                    />
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                      <LeagueBadge leagueId={record.leagueId} />
-                                      <span className="text-xs text-muted-foreground">
-                                        {record.season} • Week {record.week}
-                                      </span>
+                                      <RecordMeta
+                                        leagueId={record.leagueId}
+                                        season={record.season}
+                                        week={record.week}
+                                      />
                                       {record.opponent && (
                                         <span className="text-xs text-muted-foreground">
                                           vs {record.opponent}
@@ -675,17 +696,17 @@ export const HallOfFameView = (): JSX.Element => {
                                         {getRankEmoji(index + 1)}
                                       </span>
                                       <div className="flex-1 min-w-0">
-                                        <Link
-                                          href={`/team/${record.teamId}`}
-                                          className="font-medium hover:underline block truncate"
-                                        >
-                                          {record.teamName}
-                                        </Link>
+                                        <RecordIdentity
+                                          managerName={record.managerName}
+                                          teamName={record.teamName}
+                                          teamId={record.teamId}
+                                        />
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <LeagueBadge leagueId={record.leagueId} />
-                                          <span className="text-xs text-muted-foreground">
-                                            {record.season} • Week {record.week}
-                                          </span>
+                                          <RecordMeta
+                                            leagueId={record.leagueId}
+                                            season={record.season}
+                                            week={record.week}
+                                          />
                                           {record.opponent && (
                                             <span className="text-xs text-muted-foreground">
                                               vs {record.opponent}
@@ -770,26 +791,30 @@ export const HallOfFameView = (): JSX.Element => {
                                     {isMatchupRecord && bothTeams ? (
                                       // Display for matchup records - show both teams
                                       <div>
-                                        <div className="font-medium text-sm">
+                                        <div className="text-sm font-semibold">
                                           <Link
                                             href={`/team/${bothTeams.teamA.id}`}
                                             className="hover:underline"
                                           >
-                                            {bothTeams.teamA.name}
+                                            {bothTeams.teamA.managerName}
                                           </Link>
                                           <span className="text-muted-foreground mx-2">vs</span>
                                           <Link
                                             href={`/team/${bothTeams.teamB.id}`}
                                             className="hover:underline"
                                           >
-                                            {bothTeams.teamB.name}
+                                            {bothTeams.teamB.managerName}
                                           </Link>
                                         </div>
+                                        <p className="mt-0.5 truncate text-xs leading-4 text-muted-foreground">
+                                          {bothTeams.teamA.name} vs {bothTeams.teamB.name}
+                                        </p>
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <LeagueBadge leagueId={record.leagueId} />
-                                          <span className="text-xs text-muted-foreground">
-                                            {record.season} • Week {record.week}
-                                          </span>
+                                          <RecordMeta
+                                            leagueId={record.leagueId}
+                                            season={record.season}
+                                            week={record.week}
+                                          />
                                           {matchupId && (
                                             <ViewMatchupLink
                                               leagueId={record.leagueId}
@@ -806,17 +831,17 @@ export const HallOfFameView = (): JSX.Element => {
                                     ) : (
                                       // Display for individual team records
                                       <div>
-                                        <Link
-                                          href={`/team/${record.teamId}`}
-                                          className="font-medium hover:underline block truncate"
-                                        >
-                                          {record.teamName}
-                                        </Link>
+                                        <RecordIdentity
+                                          managerName={record.managerName}
+                                          teamName={record.teamName}
+                                          teamId={record.teamId}
+                                        />
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                          <LeagueBadge leagueId={record.leagueId} />
-                                          <span className="text-xs text-muted-foreground">
-                                            {record.season} • Week {record.week}
-                                          </span>
+                                          <RecordMeta
+                                            leagueId={record.leagueId}
+                                            season={record.season}
+                                            week={record.week}
+                                          />
                                           {record.opponent && (
                                             <span className="text-xs text-muted-foreground">
                                               vs {record.opponent}
@@ -879,26 +904,30 @@ export const HallOfFameView = (): JSX.Element => {
                                   {getRankEmoji(index + 1)}
                                 </span>
                                 <div className="flex-1 min-w-0">
-                                  <div className="font-medium text-sm">
+                                  <div className="text-sm font-semibold">
                                     <Link
                                       href={`/team/${record.teamId}`}
                                       className={`hover:underline ${deltaTextClass(1)}`}
                                     >
-                                      {record.teamName}
+                                      {record.managerName}
                                     </Link>
                                     <span className="text-muted-foreground mx-1">vs</span>
                                     <Link
                                       href={`/team/${record.opponentId}`}
                                       className={`hover:underline ${deltaTextClass(-1)}`}
                                     >
-                                      {record.opponentName}
+                                      {record.opponentManagerName}
                                     </Link>
                                   </div>
+                                  <p className="mt-0.5 truncate text-xs leading-4 text-muted-foreground">
+                                    {record.teamName} vs {record.opponentName}
+                                  </p>
                                   <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                    <LeagueBadge leagueId={record.leagueId} />
-                                    <span className="text-xs text-muted-foreground">
-                                      {record.season} • Week {record.week}
-                                    </span>
+                                    <RecordMeta
+                                      leagueId={record.leagueId}
+                                      season={record.season}
+                                      week={record.week}
+                                    />
                                     {record.matchupId && (
                                       <ViewMatchupLink
                                         leagueId={record.leagueId}
@@ -1052,14 +1081,19 @@ export const HallOfFameView = (): JSX.Element => {
                 return formatRecord(highestScoreRecords[0]);
               })()}
             </div>
-            <p className="text-xs text-muted-foreground">
-              {(() => {
-                const highestScoreRecords = getWeeklyRecords('highest_team_points');
-                if (!highestScoreRecords || highestScoreRecords.length === 0) return '';
-                const record = highestScoreRecords[0];
-                return `${record.teamName} • Week ${record.week}`;
-              })()}
-            </p>
+            {(() => {
+              const highestScoreRecords = getWeeklyRecords('highest_team_points');
+              if (!highestScoreRecords || highestScoreRecords.length === 0) return null;
+              const record = highestScoreRecords[0];
+              return (
+                <div className="mt-1">
+                  <p className="truncate text-sm font-semibold">{record.managerName}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {record.teamName} • Week {record.week}
+                  </p>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
 
@@ -1073,9 +1107,14 @@ export const HallOfFameView = (): JSX.Element => {
               return (
                 <>
                   <div className="text-2xl font-bold">{winStreaks[0]?.length || 0} games</div>
-                  <p className="text-xs text-muted-foreground">
-                    {winStreaks[0]?.teamName || 'N/A'}
+                  <p className="mt-1 truncate text-sm font-semibold">
+                    {winStreaks[0]?.managerName || 'N/A'}
                   </p>
+                  {winStreaks[0] && (
+                    <p className="truncate text-xs text-muted-foreground">
+                      {winStreaks[0].teamName}
+                    </p>
+                  )}
                 </>
               );
             })()}
@@ -1094,7 +1133,12 @@ export const HallOfFameView = (): JSX.Element => {
                   <div className="text-2xl font-bold">
                     {highest[0]?.totalPoints.toFixed(2) || 'N/A'} pts
                   </div>
-                  <p className="text-xs text-muted-foreground">{highest[0]?.teamName || 'N/A'}</p>
+                  <p className="mt-1 truncate text-sm font-semibold">
+                    {highest[0]?.managerName || 'N/A'}
+                  </p>
+                  {highest[0] && (
+                    <p className="truncate text-xs text-muted-foreground">{highest[0].teamName}</p>
+                  )}
                 </>
               );
             })()}
@@ -1113,9 +1157,14 @@ export const HallOfFameView = (): JSX.Element => {
                   <div className="text-2xl font-bold">
                     {mostPoints[0]?.totalPoints.toFixed(2) || 'N/A'} pts
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {mostPoints[0]?.teamName || 'N/A'} • {mostPoints[0]?.season || ''}
+                  <p className="mt-1 truncate text-sm font-semibold">
+                    {mostPoints[0]?.managerName || 'N/A'}
                   </p>
+                  {mostPoints[0] && (
+                    <p className="truncate text-xs text-muted-foreground">
+                      {mostPoints[0].teamName} • {mostPoints[0].season}
+                    </p>
+                  )}
                 </>
               );
             })()}

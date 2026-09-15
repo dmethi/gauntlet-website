@@ -12,6 +12,7 @@ export interface HallOfFameRecord {
   categoryDisplay: string;
   description: string;
   value: number;
+  managerName: string;
   teamName: string;
   teamId: number;
   leagueId: string;
@@ -19,6 +20,7 @@ export interface HallOfFameRecord {
   week?: number;
   season: string;
   opponent?: string;
+  opponentManagerName?: string;
   opponentId?: number;
   contextData?: Record<string, any>;
   scope?: 'weekly' | 'rolling' | 'seasonal' | 'playoff' | 'alltime';
@@ -37,6 +39,7 @@ export interface HallOfFameCategory {
 
 export interface ProcessedMatchup {
   rosterId: number;
+  managerName: string;
   teamName: string;
   leagueId: string;
   leagueName: string;
@@ -45,6 +48,7 @@ export interface ProcessedMatchup {
   points: number;
   projectedPoints?: number;
   opponentId?: number;
+  opponentManagerName?: string;
   opponentName?: string;
   opponentPoints?: number;
   won?: boolean;
@@ -79,6 +83,7 @@ export interface HallOfFameSection {
 
 export interface SeasonalRecord {
   rank: number;
+  managerName: string;
   teamName: string;
   value: number;
   formattedValue: string;

@@ -28,10 +28,12 @@ import { getAllCategories } from '@/features/hall-of-fame/utils';
 export interface PositionalDifferenceRecord {
   position: string;
   difference: number;
+  managerName: string;
   teamName: string;
   teamId: number;
   teamScore: number;
   opponentName: string;
+  opponentManagerName: string;
   opponentId: number;
   opponentScore: number;
   leagueId: string;
@@ -136,10 +138,12 @@ const calculatePositionalDifferences = (
       const record: PositionalDifferenceRecord = {
         position,
         difference: diff,
+        managerName: winningTeam.managerName,
         teamName: winningTeam.teamName,
         teamId: winningTeam.rosterId,
         teamScore: winningScore,
         opponentName: losingTeam.teamName,
+        opponentManagerName: losingTeam.managerName,
         opponentId: losingTeam.rosterId,
         opponentScore: losingScore,
         leagueId: team1.leagueId,

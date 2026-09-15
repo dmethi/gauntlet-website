@@ -82,9 +82,15 @@ const convertToProcessedMatchup = async (
   const ownerName =
     getRealNameByRoster(leagueId, matchup.roster_id) || roster?.owner?.display_name || 'Unknown';
   const teamName = roster?.owner?.metadata?.team_name || ownerName;
+  const opponentManagerName = opponent
+    ? getRealNameByRoster(leagueId, opponent.roster_id) ||
+      opponentRoster?.owner?.display_name ||
+      'Unknown'
+    : undefined;
 
   return {
     rosterId: matchup.roster_id,
+    managerName: ownerName,
     teamName,
     leagueId,
     leagueName: getLeagueConfig(leagueId)?.conference || 'AFC',
@@ -93,6 +99,7 @@ const convertToProcessedMatchup = async (
     points: matchup.points || 0,
     projectedPoints: undefined, // Would need to fetch from projections API
     opponentId: opponent?.roster_id,
+    opponentManagerName,
     opponentName: opponentRoster?.owner?.metadata?.team_name || undefined,
     opponentPoints: opponent?.points,
     won: opponent ? (matchup.points || 0) > (opponent.points || 0) : undefined,

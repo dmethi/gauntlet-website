@@ -19,6 +19,7 @@ export interface EnhancedMatchup extends ProcessedMatchup {
 
 export interface RollingWindowData {
   rosterId: number;
+  managerName: string;
   teamName: string;
   leagueId: string;
   leagueName: string;
@@ -36,6 +37,7 @@ export interface RollingWindowData {
 
 export interface SeasonalData {
   rosterId: number;
+  managerName: string;
   teamName: string;
   leagueId: string;
   leagueName: string;
@@ -69,6 +71,7 @@ export interface SeasonalData {
 
 export interface StreakData {
   rosterId: number;
+  managerName: string;
   teamName: string;
   type: 'win' | 'loss' | 'above_median' | 'below_median';
   length: number;
@@ -138,6 +141,7 @@ export const calculateRollingWindows = (
 
       results.push({
         rosterId: teamGames[0].rosterId,
+        managerName: teamGames[0].managerName,
         teamName: teamGames[0].teamName,
         leagueId: teamGames[0].leagueId,
         leagueName: teamGames[0].leagueName,
@@ -226,6 +230,7 @@ export const calculateStreaks = (matchups: ProcessedMatchup[]): StreakData[] => 
         } else {
           currentWinStreak = {
             rosterId: game.rosterId,
+            managerName: game.managerName,
             teamName: game.teamName,
             type: 'win',
             length: 1,
@@ -249,6 +254,7 @@ export const calculateStreaks = (matchups: ProcessedMatchup[]): StreakData[] => 
         } else {
           currentLossStreak = {
             rosterId: game.rosterId,
+            managerName: game.managerName,
             teamName: game.teamName,
             type: 'loss',
             length: 1,
@@ -275,6 +281,7 @@ export const calculateStreaks = (matchups: ProcessedMatchup[]): StreakData[] => 
         } else {
           currentAboveStreak = {
             rosterId: game.rosterId,
+            managerName: game.managerName,
             teamName: game.teamName,
             type: 'above_median',
             length: 1,
@@ -298,6 +305,7 @@ export const calculateStreaks = (matchups: ProcessedMatchup[]): StreakData[] => 
         } else {
           currentBelowStreak = {
             rosterId: game.rosterId,
+            managerName: game.managerName,
             teamName: game.teamName,
             type: 'below_median',
             length: 1,
@@ -370,6 +378,7 @@ export const calculateSeasonalData = (matchups: EnhancedMatchup[]): SeasonalData
     if (!seasonalData.has(key)) {
       seasonalData.set(key, {
         rosterId: matchup.rosterId,
+        managerName: matchup.managerName,
         teamName: matchup.teamName,
         leagueId: matchup.leagueId,
         leagueName: matchup.leagueName,

@@ -16,6 +16,7 @@ const weeklyRecord = (overrides: Partial<HallOfFameRecord>): HallOfFameRecord =>
   categoryDisplay: 'Highest Team Points',
   description: 'Highest team points in any week',
   value: 174.06,
+  managerName: 'dhruvmodi',
   teamName: 'Drake Maye Lover',
   teamId: 5,
   leagueId: 'league_afc',

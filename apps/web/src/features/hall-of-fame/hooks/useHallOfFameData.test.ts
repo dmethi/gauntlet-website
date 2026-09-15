@@ -119,6 +119,17 @@ describe('createHallOfFameDataService', () => {
     expect(Array.isArray(matchups)).toBe(true);
   });
 
+  it('maps rosters to manager and team names', async () => {
+    const matchups = await service.getLeagueSeasonMatchups('league123', '2024');
+
+    expect(matchups).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ managerName: 'User One', teamName: 'Team Alpha' }),
+        expect.objectContaining({ managerName: 'User Two', teamName: 'Team Beta' }),
+      ]),
+    );
+  });
+
   it('enhances matchups with player data', async () => {
     const matchups = await service.getLeagueSeasonMatchups('league123', '2024');
 
@@ -225,15 +236,6 @@ describe('createHallOfFameDataService', () => {
     matchups.forEach((matchup: EnhancedMatchup) => {
       expect(matchup).toHaveProperty('rosterId');
       expect(matchup).toHaveProperty('matchupId');
-    });
-  });
-
-  it('maps rosters to users for team names', async () => {
-    const matchups = await service.getLeagueSeasonMatchups('league123', '2024');
-
-    matchups.forEach((matchup: EnhancedMatchup) => {
-      expect(matchup.teamName).toBeDefined();
-      expect(matchup.teamName).not.toBe('Unknown');
     });
   });
 

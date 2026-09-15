@@ -308,6 +308,7 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
 
         const processed: ProcessedMatchup = {
           rosterId: matchup.roster_id,
+          managerName: teamInfo?.userName || `Manager ${matchup.roster_id}`,
           teamName: teamInfo?.teamName || `Team ${matchup.roster_id}`,
           leagueId,
           leagueName: '',
@@ -315,6 +316,8 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
           season,
           points: matchup.points || 0,
           opponentId: opponent?.roster_id,
+          opponentManagerName:
+            opponentInfo?.userName || (opponent ? `Manager ${opponent.roster_id}` : undefined),
           opponentName:
             opponentInfo?.teamName || (opponent ? `Team ${opponent.roster_id}` : undefined),
           opponentPoints: opponent?.points,
@@ -366,7 +369,7 @@ export const createHallOfFameDataService = (): HallOfFameDataService => {
       const user = users.find((u: any) => u.user_id === roster.owner_id);
       rosterToUser.set(roster.roster_id, {
         teamName: user?.metadata?.team_name || user?.display_name || `Team ${roster.roster_id}`,
-        userName: user?.display_name || 'Unknown',
+        userName: user?.display_name || `Manager ${roster.roster_id}`,
         avatar: user?.avatar,
       });
     });
