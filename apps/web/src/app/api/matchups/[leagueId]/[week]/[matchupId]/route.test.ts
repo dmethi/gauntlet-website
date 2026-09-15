@@ -5,12 +5,14 @@ const getDriveFFLiveOdds = vi.fn();
 const fetchAllPlayers = vi.fn();
 const fetchLeague = vi.fn();
 const fetchMatchups = vi.fn();
+const fetchNFLState = vi.fn();
 const fetchRosters = vi.fn();
 const fetchUsers = vi.fn();
 const fetchWeeklyProjections = vi.fn();
 
 vi.mock('@/config/leagues', () => ({
   getLeagueConfig: () => ({ id: 'league-1', name: 'Test Legion', season: 2026 }),
+  getCurrentLeagues: () => [],
 }));
 vi.mock('@/lib/driveff-live-odds', () => ({ getDriveFFLiveOdds }));
 vi.mock('@/lib/sleeper/unified-client', () => ({
@@ -18,6 +20,7 @@ vi.mock('@/lib/sleeper/unified-client', () => ({
     fetchAllPlayers,
     fetchLeague,
     fetchMatchups,
+    fetchNFLState,
     fetchRosters,
     fetchUsers,
     fetchWeeklyProjections,
@@ -27,7 +30,13 @@ vi.mock('@/lib/sleeper/unified-client', () => ({
 describe('matchup detail API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    fetchLeague.mockResolvedValue({ scoring_settings: {} });
+    fetchLeague.mockResolvedValue({
+      season: '2026',
+      status: 'in_season',
+      settings: { playoff_week_start: 15 },
+      scoring_settings: {},
+    });
+    fetchNFLState.mockResolvedValue({ season: '2026', league_season: '2026', week: 1 });
     fetchMatchups.mockResolvedValue([
       {
         roster_id: 1,
@@ -119,6 +128,22 @@ describe('matchup detail API', () => {
     });
 
     expect(response.status).toBe(200);
-    expect((await response.json()).gameStatus).toBe('final');
+    const body = await response.json();
+    expect(body.gameStatus).toBe('final');
+    expect(body.matchup.isComplete).toBe(true);
+  });
+
+  it('marks a prior week final even when the last driveFF sample is stale', async () => {
+    fetchNFLState.mockResolvedValueOnce({ season: '2026', league_season: '2026', week: 2 });
+    const { GET } = await import('./route');
+    const response = await GET(new NextRequest('https://gauntlet.test/api/matchups/league-1/1/3'), {
+      params: Promise.resolve({ leagueId: 'league-1', week: '1', matchupId: '3' }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.gameStatus).toBe('final');
+    expect(body.matchup.isComplete).toBe(true);
+    expect(body.matchup.winner.rosterId).toBe(1);
   });
 });

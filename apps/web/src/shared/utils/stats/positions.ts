@@ -37,7 +37,7 @@ export const getStarterPositionPoints = ({
         };
 
         // Sum points for each starter by position
-        for (const playerId of matchup.starters) {
+        for (const playerId of matchup.starters ?? []) {
           const points = matchup.players_points[playerId] || 0;
           const player = playersIndex[playerId];
 

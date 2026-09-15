@@ -79,7 +79,7 @@ export interface SleeperRoster {
   roster_id: number;
   owner_id: string;
   players: string[]; // Player IDs
-  starters: string[]; // Player IDs in starting lineup
+  starters: string[] | null; // Player IDs in starting lineup; null until a lineup is submitted
   reserve?: string[]; // Player IDs on reserve/IR
   taxi?: string[]; // Player IDs on taxi squad
   settings: {

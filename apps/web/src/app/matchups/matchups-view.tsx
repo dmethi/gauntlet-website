@@ -134,8 +134,10 @@ const MatchupsViewContent = ({ leagues }: { leagues: MatchupsLeague[] }) => {
               })()
             : null,
           isComplete:
-            matchup.summary?.winnerRosterId !== null &&
-            matchup.summary?.winnerRosterId !== undefined,
+            typeof matchup.isComplete === 'boolean'
+              ? matchup.isComplete
+              : matchup.summary?.winnerRosterId !== null &&
+                matchup.summary?.winnerRosterId !== undefined,
         }));
 
         debugLog('📋 [MATCHUPS CLIENT] Processed matchups for', league.name, ':', matchups);

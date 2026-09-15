@@ -8,6 +8,7 @@ import type { SleeperRoster, SleeperUser } from '@gauntlet/types';
 import type { PlayerDetails, TeamRoster } from '@/features/matchups/types';
 import { getLeagueConfig } from '@/config/leagues';
 import { getDriveFFLiveOdds } from '@/lib/driveff-live-odds';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,9 +33,10 @@ export const GET = async (
     const projectionSeason = String(leagueConfig?.season ?? new Date().getFullYear());
 
     // Fetch all required data
-    const [league, matchups, users, rosters, rawProjections, playersData, driveFFFeed] =
+    const [league, nflState, matchups, users, rosters, rawProjections, playersData, driveFFFeed] =
       await Promise.all([
         sleeperClient.fetchLeague(leagueId),
+        sleeperClient.fetchNFLState(),
         sleeperClient.fetchMatchups(leagueId, weekNumber),
         sleeperClient.fetchUsers(leagueId),
         sleeperClient.fetchRosters(leagueId),
@@ -48,6 +50,10 @@ export const GET = async (
           return null;
         }),
       ]);
+
+    const gameProgress = driveFFFeed?.latest?.matchup.gameProgress;
+    const completedWeeks = resolveCompletedWeeks(league, nflState);
+    const isComplete = weekNumber <= completedWeeks || (gameProgress ?? 0) >= 1;
 
     if (!matchups || !Array.isArray(matchups)) {
       return NextResponse.json({ error: 'No matchups found' }, { status: 404 });
@@ -160,8 +166,10 @@ export const GET = async (
         projectionSource: liveProjection === null ? 'sleeper' : 'driveff',
         starters: starterPlayers,
         bench: benchPlayers,
-        remainingPlayers: starterPlayers.filter((p: any) => p.points === 0).length,
-        playersActive: starterPlayers.filter((p: any) => p.points > 0).length,
+        remainingPlayers: isComplete
+          ? 0
+          : starterPlayers.filter(player => player.points === 0).length,
+        playersActive: isComplete ? 0 : starterPlayers.filter(player => player.points > 0).length,
         owner: {
           id: owner?.user_id || '',
           username: owner?.username || '',
@@ -173,22 +181,18 @@ export const GET = async (
 
     // Determine winner
     let winner: TeamRoster | null = null;
-    let isComplete = false;
     let margin = 0;
 
     if (teams.length === 2) {
       const [teamA, teamB] = teams;
       margin = Math.abs(teamA.points - teamB.points);
 
-      // Consider complete if both teams have some points or if it's late in the week
-      if (teamA.points > 0 || teamB.points > 0) {
+      if (isComplete) {
         if (teamA.points > teamB.points) {
           winner = teamA;
         } else if (teamB.points > teamA.points) {
           winner = teamB;
         }
-        // Only mark as complete if there's a clear winner and significant points
-        isComplete = margin > 0 && (teamA.points > 50 || teamB.points > 50);
       }
     }
 
@@ -199,15 +203,13 @@ export const GET = async (
       isComplete,
       margin,
     };
-    const gameProgress = driveFFFeed?.latest?.matchup.gameProgress;
-    const gameStatus =
-      gameProgress === undefined
+    const gameStatus = isComplete
+      ? 'final'
+      : gameProgress === undefined
         ? 'pre_game'
-        : gameProgress >= 1
-          ? 'final'
-          : gameProgress > 0
-            ? 'in_progress'
-            : 'pre_game';
+        : gameProgress > 0
+          ? 'in_progress'
+          : 'pre_game';
 
     return NextResponse.json({
       matchup: matchupDetails,

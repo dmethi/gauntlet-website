@@ -197,7 +197,7 @@ export const calculatePositionalScoring = (
 
       // Process each starter's points by position
       if (matchup.starters_points) {
-        matchup.starters.forEach((playerId: string, idx: number) => {
+        (matchup.starters ?? []).forEach((playerId: string, idx: number) => {
           const points = matchup.starters_points[idx] || 0;
           const player = playerStats.get(playerId);
           if (!player) return;
