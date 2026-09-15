@@ -9,7 +9,7 @@ interface ManagerLeaderboardProps {
 
 export const ManagerLeaderboard = memo(({ managers }: ManagerLeaderboardProps) => {
   return (
-    <div className="space-y-3">
+    <div className="divide-y divide-border/70 border-y border-border/70 sm:space-y-3 sm:divide-y-0 sm:border-y-0">
       {managers.map((manager, index) => {
         const league = getLeagueLabel(manager.leagueId);
         const isPositive = manager.pointsImpactScore >= 0;
@@ -17,7 +17,7 @@ export const ManagerLeaderboard = memo(({ managers }: ManagerLeaderboardProps) =
         return (
           <div
             key={manager.managerId}
-            className="flex flex-col gap-3 rounded-lg border bg-card p-3 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:rounded-lg sm:border sm:bg-card sm:p-3"
           >
             <div className="flex items-center gap-3">
               <span className="w-8 text-sm font-medium text-muted-foreground">#{index + 1}</span>

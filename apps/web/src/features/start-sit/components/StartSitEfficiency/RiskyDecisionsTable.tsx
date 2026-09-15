@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/select';
 import type { DecisionDetail } from '@/features/start-sit/types';
 import { getLeagueLabel, getPlayerDisplayName } from './utils';
+import { ChevronDown } from 'lucide-react';
 
 interface RiskyDecisionsTableProps {
   decisions: DecisionDetail[];
@@ -39,9 +40,9 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
         <h3 className="text-lg font-semibold text-foreground">
           Best Risky Decisions • {filtered.length} cases
         </h3>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <Select value={threshold.toString()} onValueChange={value => setThreshold(Number(value))}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="h-11 w-full sm:w-32">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -52,7 +53,7 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
             </SelectContent>
           </Select>
           <Select value={selectedWeek} onValueChange={setSelectedWeek}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="h-11 w-full sm:w-32">
               <SelectValue placeholder="All Weeks" />
             </SelectTrigger>
             <SelectContent>
@@ -67,14 +68,14 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="divide-y divide-border/70 border-y border-border/70 sm:space-y-3 sm:divide-y-0 sm:border-y-0">
         {filtered.map(decision => {
           const league = getLeagueLabel(decision.leagueId);
           const selectedName = getPlayerDisplayName(decision.selectedPlayer.playerId, players);
           return (
             <Card
               key={`${decision.managerId}-${decision.week}-${decision.position}-${decision.selectedPlayer.playerId}`}
-              className="space-y-4 p-4"
+              className="space-y-4 rounded-none border-0 bg-transparent py-4 shadow-none sm:rounded-xl sm:border sm:bg-card sm:p-4 sm:shadow-sm"
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -86,15 +87,15 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xl font-bold text-success">
+                  <div className="text-xl font-bold text-foreground">
                     +{(decision.actualOutcome || 0).toFixed(1)} pts
                   </div>
                   <div className="text-xs text-muted-foreground">Risky Payoff</div>
                 </div>
               </div>
 
-              <div className="rounded-lg bg-success/10 p-3">
-                <div className="font-medium text-success">Risky Pick: {selectedName}</div>
+              <div className="border-y border-success/30 bg-success/10 py-3 sm:rounded-lg sm:border sm:p-3">
+                <div className="font-medium text-foreground">Risky Pick: {selectedName}</div>
                 <div className="text-sm">
                   Projected: {decision.selectedPlayer.projectedPoints.toFixed(1)} | Actual:{' '}
                   {decision.selectedPlayer.actualPoints.toFixed(1)}
@@ -102,11 +103,12 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
               </div>
 
               {decision.alternatives?.length ? (
-                <div className="space-y-2">
-                  <div className="text-xs font-medium text-muted-foreground">
-                    Alternatives they faded:
-                  </div>
-                  <div className="space-y-1 text-xs text-muted-foreground">
+                <details className="group">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                    <span>Alternatives they faded</span>
+                    <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="divide-y divide-border/70 border-y border-border/70 text-xs text-muted-foreground">
                     {decision.alternatives.slice(0, 5).map(alt => {
                       const altName = getPlayerDisplayName(alt.playerId, players);
                       const projDiff =
@@ -116,12 +118,12 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
                       return (
                         <div
                           key={alt.playerId}
-                          className="flex items-center justify-between rounded bg-card p-2"
+                          className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2 sm:flex sm:items-center sm:justify-between sm:rounded sm:bg-card sm:px-2"
                         >
                           <div className="truncate">
                             {altName} ({alt.source === 'waiver' ? 'waiver' : 'bench'})
                           </div>
-                          <div className="flex items-center gap-4">
+                          <div className="grid grid-cols-1 text-right sm:flex sm:items-center sm:gap-4">
                             <span className="font-medium text-secondary">
                               {alt.projectedPoints.toFixed(1)} ({projDiff >= 0 ? '+' : ''}
                               {projDiff.toFixed(1)})
@@ -129,13 +131,15 @@ export const RiskyDecisionsTable = memo(({ decisions, players }: RiskyDecisionsT
                             <span className="font-medium text-foreground">
                               {alt.actualPoints.toFixed(1)}
                             </span>
-                            <span className="font-medium text-success">+{outcome.toFixed(1)}</span>
+                            <span className="font-medium text-foreground">
+                              +{outcome.toFixed(1)}
+                            </span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                </div>
+                </details>
               ) : null}
             </Card>
           );

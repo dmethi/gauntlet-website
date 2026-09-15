@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
 import {
   DataList,
   DataListDescription,
@@ -69,6 +70,8 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
               interactive
               role="button"
               tabIndex={0}
+              aria-label={`View ${txn.teamName} transaction details`}
+              aria-haspopup="dialog"
               className="min-h-11 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               onClick={() => onTransactionClick(txn)}
               onKeyDown={event => {
@@ -87,7 +90,10 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
                     {txn.leagueName}
                   </DataListDescription>
                 </div>
-                <Badge className={gradeBadgeClass(txn.grade)}>{txn.grade}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge className={gradeBadgeClass(txn.grade)}>{txn.grade}</Badge>
+                  <ChevronRight aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                </div>
               </DataListHeader>
 
               <div className="mt-3 space-y-1">
@@ -104,13 +110,13 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
 
               <DataListMetrics>
                 <DataListMetric>
-                  <DataListMetricLabel>FAAB</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">FAAB</DataListMetricLabel>
                   <DataListMetricValue>
                     {txn.faabCost && txn.faabCost > 0 ? `$${txn.faabCost}` : 'Free'}
                   </DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric>
-                  <DataListMetricLabel>Raw VORP</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Raw VORP</DataListMetricLabel>
                   <DataListMetricValue
                     className={
                       txn.rawScore === undefined ? undefined : deltaTextClass(txn.rawScore)
@@ -122,7 +128,7 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
                   </DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric className="text-right">
-                  <DataListMetricLabel>Adjusted</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Adjusted</DataListMetricLabel>
                   <DataListMetricValue>
                     <span
                       className="inline-flex rounded px-1.5 py-0.5 font-mono"
@@ -163,8 +169,18 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
             return (
               <TableRow
                 key={txn.id}
-                className="cursor-pointer hover:bg-muted/50"
+                className="cursor-pointer hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                role="button"
+                tabIndex={0}
+                aria-haspopup="dialog"
+                aria-label={`View ${txn.teamName} transaction details`}
                 onClick={() => onTransactionClick(txn)}
+                onKeyDown={event => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onTransactionClick(txn);
+                  }
+                }}
               >
                 <TableCell>{new Date(txn.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell>
@@ -231,7 +247,8 @@ export const TransactionTable = memo<TransactionTableProps>(props => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2"
+                    className="min-h-11 px-3"
+                    aria-label={`View ${txn.teamName} transaction details`}
                     onClick={e => {
                       e.stopPropagation();
                       onTransactionClick(txn);

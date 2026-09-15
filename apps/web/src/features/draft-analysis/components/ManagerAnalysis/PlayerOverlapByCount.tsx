@@ -76,11 +76,11 @@ export const PlayerOverlapByCount = memo<PlayerOverlapByCountProps>(({ overlaps 
                   {overlapsByCount[count].length !== 1 ? 's' : ''})
                 </span>
               </h4>
-              <div className="grid gap-3">
+              <div className="divide-y divide-border/70 border-y border-border/70 sm:grid sm:gap-3 sm:divide-y-0 sm:border-y-0">
                 {overlapsByCount[count].map((overlap, idx) => (
                   <div
                     key={`overlap-${count}-${idx}`}
-                    className="min-w-0 rounded border bg-muted/20 p-3 sm:p-4"
+                    className="min-w-0 py-3 sm:rounded sm:border sm:bg-muted/20 sm:p-4"
                   >
                     <div className="mb-2 flex flex-col items-start gap-2 sm:flex-row sm:justify-between">
                       <div className="flex min-w-0 flex-wrap items-center gap-2">

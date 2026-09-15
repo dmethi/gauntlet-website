@@ -28,22 +28,25 @@ export const StartSitEfficiency = memo(({ data }: StartSitEfficiencyProps) => {
   } = useStartSitEfficiencyModel(data);
 
   return (
-    <div className="mx-auto max-w-7xl space-y-5 py-5 md:p-6">
+    <div className="mx-auto max-w-7xl space-y-5 py-4 sm:py-5 md:p-6">
       <Tabs defaultValue="overall" className="space-y-6">
-        <TabsList className="flex h-auto w-full justify-start gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <TabsTrigger className="shrink-0" value="overall">
+        <TabsList
+          aria-label="Start/sit analysis views"
+          className="flex h-auto w-full justify-start gap-1 overflow-x-auto pb-2"
+        >
+          <TabsTrigger className="min-h-11 shrink-0" value="overall">
             Overall Scores
           </TabsTrigger>
-          <TabsTrigger className="shrink-0" value="positions">
+          <TabsTrigger className="min-h-11 shrink-0" value="positions">
             Position Breakdown
           </TabsTrigger>
-          <TabsTrigger className="shrink-0" value="context">
+          <TabsTrigger className="min-h-11 shrink-0" value="context">
             Team Context
           </TabsTrigger>
-          <TabsTrigger className="shrink-0" value="worst">
+          <TabsTrigger className="min-h-11 shrink-0" value="worst">
             Worst Decisions
           </TabsTrigger>
-          <TabsTrigger className="shrink-0" value="risk">
+          <TabsTrigger className="min-h-11 shrink-0" value="risk">
             Risky Wins
           </TabsTrigger>
         </TabsList>

@@ -33,6 +33,17 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { deltaTextClass, leagueBadgeClass, tieredBadgeClass } from '@/lib/stat-colors';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 import type { ManagerWaiverStats, WaiverTransaction } from '../../types';
 
 interface ManagerWaiverTableProps {
@@ -184,9 +195,9 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
         </CardDescription>
 
         {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4">
+        <div className="grid grid-cols-1 gap-3 pt-4 sm:grid-cols-2">
           <Select value={leagueFilter} onValueChange={setLeagueFilter}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="All Leagues" />
             </SelectTrigger>
             <SelectContent>
@@ -205,14 +216,145 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
               placeholder="Search manager or team..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="pl-9"
+              aria-label="Search waiver managers"
+              className="h-11 pl-9"
             />
           </div>
+        </div>
+
+        <div className="grid grid-cols-[1fr_44px] gap-2 pt-3 sm:hidden">
+          <Select value={sortField} onValueChange={value => setSortField(value as SortField)}>
+            <SelectTrigger className="h-11" aria-label="Sort manager waiver performance">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="totalSpent">Sort: Total Spent</SelectItem>
+              <SelectItem value="remainingFAAB">Sort: Remaining</SelectItem>
+              <SelectItem value="percentSpent">Sort: Percent Used</SelectItem>
+              <SelectItem value="totalTransactions">Sort: Transactions</SelectItem>
+              <SelectItem value="netExcessSpend">Sort: Net Excess</SelectItem>
+              <SelectItem value="waiverSuccessRate">Sort: Success Rate</SelectItem>
+              <SelectItem value="teamName">Sort: Manager</SelectItem>
+            </SelectContent>
+          </Select>
+          <button
+            type="button"
+            onClick={() => setSortAsc(current => !current)}
+            aria-label={sortAsc ? 'Sort descending' : 'Sort ascending'}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-input hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
         </div>
       </CardHeader>
 
       <CardContent>
-        <div className="rounded-md border overflow-auto">
+        <DataList className="sm:hidden">
+          {filteredManagers.length === 0 ? (
+            <DataListItem className="text-center text-sm text-muted-foreground">
+              No managers match your filters
+            </DataListItem>
+          ) : (
+            filteredManagers.map(manager => {
+              const rowKey = `${manager.leagueId}-${manager.rosterId}`;
+              const transactions = getManagerTransactions(manager);
+
+              return (
+                <DataListItem key={rowKey}>
+                  <DataListHeader>
+                    <div className="min-w-0">
+                      <DataListTitle className="truncate">{manager.teamName}</DataListTitle>
+                      <DataListDescription>
+                        {manager.managerName} · {manager.leagueName}
+                      </DataListDescription>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <div className="font-mono text-base font-semibold">
+                        ${manager.totalFAABSpent}
+                      </div>
+                      <div className="text-xs text-muted-foreground">spent</div>
+                    </div>
+                  </DataListHeader>
+
+                  <details className="group mt-2">
+                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                      <span>More metrics</span>
+                      <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+                    </summary>
+                    <DataListMetrics className="mt-1 grid-cols-2">
+                      <DataListMetric>
+                        <DataListMetricLabel className="text-xs">Remaining</DataListMetricLabel>
+                        <DataListMetricValue>${manager.remainingFAAB}</DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric className="text-right">
+                        <DataListMetricLabel className="text-xs">Budget used</DataListMetricLabel>
+                        <DataListMetricValue>
+                          {manager.percentSpent.toFixed(0)}%
+                        </DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric>
+                        <DataListMetricLabel className="text-xs">Transactions</DataListMetricLabel>
+                        <DataListMetricValue>
+                          {manager.totalTransactions} · {manager.totalWaivers} waivers
+                        </DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric className="text-right">
+                        <DataListMetricLabel className="text-xs">Success rate</DataListMetricLabel>
+                        <DataListMetricValue>
+                          {(manager.waiverSuccessRate * 100).toFixed(0)}%
+                        </DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric className="col-span-2">
+                        <DataListMetricLabel className="text-xs">Net excess</DataListMetricLabel>
+                        <DataListMetricValue>
+                          {manager.netExcessSpend > 0 ? '+' : ''}$
+                          {manager.netExcessSpend.toFixed(0)}
+                        </DataListMetricValue>
+                      </DataListMetric>
+                    </DataListMetrics>
+
+                    <div className="mt-3 border-t border-border/70 pt-3">
+                      <div className="text-sm font-semibold">Transactions by cost</div>
+                      {transactions.length === 0 ? (
+                        <div className="mt-2 text-sm text-muted-foreground">
+                          No transactions recorded
+                        </div>
+                      ) : (
+                        <div className="mt-2 divide-y divide-border/70">
+                          {transactions.map((txn, index) => (
+                            <div
+                              key={txn.transactionId}
+                              className="flex items-start justify-between gap-3 py-2 text-sm"
+                            >
+                              <div className="min-w-0">
+                                <div className="truncate font-medium">
+                                  {index + 1}. {txn.playerName}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {txn.position} · Week {txn.week}
+                                </div>
+                              </div>
+                              <div className="shrink-0 text-right font-mono font-semibold">
+                                {txn.transactionType === 'waiver' ? `$${txn.faabBid}` : 'FA'}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                </DataListItem>
+              );
+            })
+          )}
+        </DataList>
+
+        <div
+          role="region"
+          aria-label="Manager waiver performance table"
+          tabIndex={0}
+          className="hidden overflow-auto rounded-md border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:block"
+        >
           <Table>
             <TableHeader>
               <TableRow>
@@ -279,8 +421,18 @@ export const ManagerWaiverTable = memo<ManagerWaiverTableProps>(props => {
                     <React.Fragment key={rowKey}>
                       <TableRow className="hover:bg-muted/30 cursor-pointer">
                         {/* Expand icon */}
-                        <TableCell className="text-center" onClick={() => toggleRow(rowKey)}>
-                          <button className="text-muted-foreground hover:text-foreground">
+                        <TableCell className="text-center">
+                          <button
+                            type="button"
+                            onClick={() => toggleRow(rowKey)}
+                            aria-expanded={isExpanded}
+                            aria-label={
+                              isExpanded
+                                ? `Collapse ${manager.teamName} transactions`
+                                : `Show ${manager.teamName} transactions`
+                            }
+                            className="inline-flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
                             {isExpanded ? (
                               <ChevronDown className="h-4 w-4" />
                             ) : (

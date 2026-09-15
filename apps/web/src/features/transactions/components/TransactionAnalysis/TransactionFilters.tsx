@@ -72,10 +72,10 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
   return (
     <div className="space-y-4">
       {/* Filter Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
         {/* Team Filter */}
         <Select value={teamFilter} onValueChange={onTeamFilterChange}>
-          <SelectTrigger>
+          <SelectTrigger className="h-11">
             <SelectValue placeholder="All Teams" />
           </SelectTrigger>
           <SelectContent>
@@ -90,7 +90,7 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
 
         {/* League Filter */}
         <Select value={leagueFilter} onValueChange={onLeagueFilterChange}>
-          <SelectTrigger>
+          <SelectTrigger className="h-11">
             <SelectValue placeholder="All Leagues" />
           </SelectTrigger>
           <SelectContent>
@@ -105,7 +105,7 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
 
         {/* Grade Filter */}
         <Select value={gradeFilter} onValueChange={onGradeFilterChange}>
-          <SelectTrigger>
+          <SelectTrigger className="h-11">
             <SelectValue placeholder="All Grades" />
           </SelectTrigger>
           <SelectContent>
@@ -127,17 +127,18 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
             placeholder="Search players..."
             value={searchTerm}
             onChange={e => onSearchChange(e.target.value)}
-            className="pl-10 pr-4 py-2 w-full border border-border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            aria-label="Search transactions by player"
+            className="h-11 w-full rounded-md border border-border bg-background py-2 pl-10 pr-4 text-base focus:border-transparent focus:outline-none focus:ring-2 focus:ring-ring sm:text-sm"
           />
         </div>
       </div>
 
       {/* Sort Controls */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Sort by:</span>
           <Select value={sortBy} onValueChange={onSortByChange}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="h-11 w-32">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -148,9 +149,10 @@ export const TransactionFilters = memo<TransactionFiltersProps>(props => {
           </Select>
 
           <button
-            title="Sort"
+            title={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+            aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
             onClick={onSortOrderToggle}
-            className="p-2 hover:bg-muted rounded-md"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <ArrowUpDown className="h-4 w-4" />
           </button>

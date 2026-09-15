@@ -23,8 +23,8 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="rounded-none border-0 bg-muted/35 shadow-none">
+        <div className="mb-6 grid grid-cols-1 gap-px overflow-hidden rounded-md bg-border md:grid-cols-3">
+          <Card className="rounded-none border-0 bg-background shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Copycat Pairs</CardTitle>
             </CardHeader>
@@ -38,7 +38,7 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
             </CardContent>
           </Card>
 
-          <Card className="rounded-none border-0 bg-muted/35 shadow-none">
+          <Card className="rounded-none border-0 bg-background shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Average Overlap</CardTitle>
             </CardHeader>
@@ -50,7 +50,7 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
             </CardContent>
           </Card>
 
-          <Card className="rounded-none border-0 bg-muted/35 shadow-none">
+          <Card className="rounded-none border-0 bg-background shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Maverick Managers</CardTitle>
             </CardHeader>
@@ -67,11 +67,11 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
         {analytics.player_overlap_analytics.copycat_pairs.length > 0 && (
           <div className="mb-6">
             <h4 className="font-medium mb-3">High Overlap Pairs (40%+ shared players)</h4>
-            <div className="grid gap-2">
+            <div className="divide-y divide-border/70 border-y border-border/70 sm:grid sm:gap-2 sm:divide-y-0 sm:border-y-0">
               {analytics.player_overlap_analytics.copycat_pairs.slice(0, 5).map((pair, idx) => (
                 <div
                   key={`pair-${pair.manager_a || 'A'}-${pair.manager_b || 'B'}-${idx}`}
-                  className="flex justify-between items-center p-3 rounded border"
+                  className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:rounded sm:border sm:p-3"
                 >
                   <div>
                     <span className="font-medium">{pair.manager_a}</span>
@@ -89,11 +89,11 @@ export const PlayerOverlapAnalysis = memo<PlayerOverlapAnalysisProps>(({ analyti
         {analytics.player_overlap_analytics.maverick_managers.length > 0 && (
           <div>
             <h4 className="font-medium mb-3">Maverick Managers (&lt;20% overlap)</h4>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+            <div className="divide-y divide-border/70 border-y border-border/70 sm:grid sm:grid-cols-2 sm:gap-3 sm:divide-y-0 sm:border-y-0 md:grid-cols-3">
               {analytics.player_overlap_analytics.maverick_managers.map((manager, idx) => (
                 <div
                   key={`maverick-${manager.manager || 'mgr'}-${idx}`}
-                  className="min-w-0 rounded border p-3 text-center"
+                  className="min-w-0 py-3 text-left sm:rounded sm:border sm:p-3 sm:text-center"
                 >
                   <div className="break-words font-medium">{manager.manager}</div>
                   <div className="text-sm text-muted-foreground">{manager.league}</div>

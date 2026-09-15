@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { GauntletLogo } from '@/components/gauntlet-logo';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +21,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { GradeTxn, RawTxn } from '@/features/transactions/types';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
+import { ChevronRight } from 'lucide-react';
 
 const LeagueTransactionsContent = () => {
   const searchParams = useSearchParams();
@@ -39,6 +51,7 @@ const LeagueTransactionsContent = () => {
   const [team, setTeam] = useState<number | 'ALL'>('ALL');
   const [sort, setSort] = useState<'date_desc' | 'score_desc' | 'score_asc'>('date_desc');
   const [selected, setSelected] = useState<GradeTxn | null>(null);
+  const transactionTriggerRef = useRef<HTMLElement | null>(null);
   const [view, setView] = useState<'paged' | 'all'>('paged');
   const [pageSize] = useState(20);
   const [currentPage, setCurrentPage] = useState(0);
@@ -514,69 +527,16 @@ const LeagueTransactionsContent = () => {
     return view === 'paged' && (currentPage + 1) * pageSize < filteredAndSorted.length;
   }, [view, currentPage, pageSize, filteredAndSorted]);
 
-  // RdYlGn background helpers (local)
-  const hexToRgb = (hex: string) => {
-    const h = hex.replace('#', '');
-    const bigint = parseInt(
-      h.length === 3
-        ? h
-            .split('')
-            .map(x => x + x)
-            .join('')
-        : h,
-      16,
-    );
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return { r, g, b };
+  const openTransaction = (transaction: GradeTxn): void => {
+    transactionTriggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setSelected(transaction);
   };
-  const mixHex = (a: string, b: string, t: number) => {
-    const ca = hexToRgb(a);
-    const cb = hexToRgb(b);
-    const rr = Math.round(ca.r + (cb.r - ca.r) * t);
-    const rg = Math.round(ca.g + (cb.g - ca.g) * t);
-    const rb = Math.round(ca.b + (cb.b - ca.b) * t);
-    const toHex = (v: number) => v.toString(16).padStart(2, '0');
-    return `#${toHex(rr)}${toHex(rg)}${toHex(rb)}`;
+
+  const closeTransaction = (): void => {
+    setSelected(null);
+    window.requestAnimationFrame(() => transactionTriggerRef.current?.focus());
   };
-  const RDYLGN = [
-    '#a50026',
-    '#d73027',
-    '#f46d43',
-    '#fdae61',
-    '#fee08b',
-    '#ffffbf',
-    '#d9ef8b',
-    '#a6d96a',
-    '#66bd63',
-    '#1a9850',
-    '#006837',
-  ];
-  const getDivergingBg = (normalized: number) => {
-    const t = Math.max(-1, Math.min(1, normalized));
-    const u = (t + 1) / 2;
-    const n = RDYLGN.length - 1;
-    const idx = Math.max(0, Math.min(n - 1, Math.floor(u * n)));
-    const frac = u * n - idx;
-    const from = RDYLGN[idx];
-    const to = RDYLGN[idx + 1] ?? RDYLGN[idx];
-    return mixHex(from, to, frac);
-  };
-  const getTextColorForBg = (hex: string) => {
-    const { r, g, b } = hexToRgb(hex);
-    const srgb = [r, g, b].map(v => {
-      const c = v / 255;
-      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-    });
-    const L = 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
-    return L > 0.5 ? '#111827' : '#ffffff';
-  };
-  const scoreRange = useMemo(() => {
-    const values = rows.map(r => r.score);
-    const maxAbs = Math.max(1, ...values.map(v => Math.abs(v)));
-    return maxAbs;
-  }, [rows]);
 
   // Build local facts store once per page load for current season weeks
   useEffect(() => {
@@ -607,7 +567,7 @@ const LeagueTransactionsContent = () => {
           crestSrc="/gauntlet_logo.svg"
         />
         <div className="py-5 md:px-6 md:py-8">
-          <div className="mb-3 flex items-center gap-2 flex-wrap">
+          <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-3">
             <div className="text-sm text-muted-foreground">Position:</div>
             {['ALL', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'].map(p => (
               <Button
@@ -618,17 +578,17 @@ const LeagueTransactionsContent = () => {
                   setPos(p);
                   setCurrentPage(0);
                 }}
-                className="h-7 px-2"
+                className="h-11 min-w-11 px-3"
               >
                 {p}
               </Button>
             ))}
-            <label className="ml-4 text-sm text-muted-foreground" htmlFor="team-filter">
+            <label className="ml-0 text-sm text-muted-foreground sm:ml-4" htmlFor="team-filter">
               Team:
             </label>
             <select
               id="team-filter"
-              className="border border-border rounded px-2 py-1 bg-background text-sm max-w-xs"
+              className="h-11 max-w-xs rounded border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               value={team === 'ALL' ? 'ALL' : String(team)}
               onChange={e => {
                 const v = e.target.value;
@@ -646,7 +606,7 @@ const LeagueTransactionsContent = () => {
                 </option>
               ))}
             </select>
-            <div className="ml-4 text-sm text-muted-foreground">Type:</div>
+            <div className="ml-0 text-sm text-muted-foreground sm:ml-4">Type:</div>
             {['ALL', 'free_agent', 'waiver', 'trade'].map(t => (
               <Button
                 key={t}
@@ -656,25 +616,25 @@ const LeagueTransactionsContent = () => {
                   setType(t);
                   setCurrentPage(0);
                 }}
-                className="h-7 px-2"
+                className="h-11 px-3 capitalize"
               >
                 {t === 'ALL' ? 'ALL' : t.replace('_', ' ')}
               </Button>
             ))}
-            <label className="ml-4 text-sm text-muted-foreground" htmlFor="txn-sort">
+            <label className="ml-0 text-sm text-muted-foreground sm:ml-4" htmlFor="txn-sort">
               Sort:
             </label>
             <select
               id="txn-sort"
-              className="border border-border rounded px-2 py-1 bg-background text-sm"
+              className="h-11 rounded border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               value={sort}
-              onChange={e => setSort(e.target.value as any)}
+              onChange={e => setSort(e.target.value as 'date_desc' | 'score_desc' | 'score_asc')}
             >
               <option value="date_desc">Most Recent</option>
               <option value="score_desc">Score (best)</option>
               <option value="score_asc">Score (worst)</option>
             </select>
-            <div className="ml-4 text-sm text-muted-foreground">View:</div>
+            <div className="ml-0 text-sm text-muted-foreground sm:ml-4">View:</div>
             {(['paged', 'all'] as const).map(v => (
               <Button
                 key={v}
@@ -684,7 +644,7 @@ const LeagueTransactionsContent = () => {
                   setView(v);
                   setCurrentPage(0);
                 }}
-                className="h-7 px-2"
+                className="h-11 px-3"
               >
                 {v === 'paged' ? 'Paged' : 'Show all'}
               </Button>
@@ -694,105 +654,175 @@ const LeagueTransactionsContent = () => {
           {factsLoading ? (
             <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
           ) : factsError ? (
-            <div className="text-sm text-red-500">Error loading matchup data: {factsError}</div>
+            <div className="text-sm text-destructive">Error loading matchup data: {factsError}</div>
           ) : loading ? (
             <WarRoomLoader show logo={<GauntletLogo size="lg" />} />
           ) : rows.length === 0 ? (
             <div className="text-sm text-muted-foreground">No transactions found.</div>
           ) : (
-            <Table surface="responsive" scrollLabel="League transactions">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Players</TableHead>
-                  <TableHead className="text-right">Grade</TableHead>
-                  <TableHead className="text-right">Score</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map(t => (
-                  <TableRow key={t.id}>
-                    <TableCell>{new Date(t.createdAt).toLocaleString()}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <div>{t.type.replace('_', ' ')}</div>
-                        {!!(t.rosterIds && t.rosterIds.length) && (
-                          <div className="text-xs text-muted-foreground">
-                            {(t.rosterIds || [])
-                              .map(rid => rosterMap.get(Number(rid)) || `Team ${rid}`)
-                              .join(' • ')}
-                          </div>
-                        )}
+            <>
+              <DataList className="sm:hidden">
+                {rows.map(transaction => (
+                  <DataListItem
+                    key={`mobile-${transaction.id}`}
+                    interactive
+                    role="button"
+                    tabIndex={0}
+                    aria-haspopup="dialog"
+                    aria-label={`View ${transaction.type.replace('_', ' ')} transaction details`}
+                    onClick={() => openTransaction(transaction)}
+                    onKeyDown={event => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openTransaction(transaction);
+                      }
+                    }}
+                    className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  >
+                    <DataListHeader>
+                      <div className="min-w-0">
+                        <DataListTitle className="capitalize">
+                          {transaction.type.replace('_', ' ')}
+                        </DataListTitle>
+                        <DataListDescription>
+                          {new Date(transaction.createdAt).toLocaleString()}
+                          {!!transaction.rosterIds?.length && (
+                            <>
+                              {' · '}
+                              {transaction.rosterIds
+                                .map(
+                                  rosterId => rosterMap.get(Number(rosterId)) || `Team ${rosterId}`,
+                                )
+                                .join(' · ')}
+                            </>
+                          )}
+                        </DataListDescription>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        {t.type === 'trade'
-                          ? // For trades, show which team got which player with unidirectional arrows
-                            (() => {
-                              // Find the corresponding raw transaction for trade details
-                              const rawTxn = rawTransactions.find(rt => rt.id === t.id);
-                              if (!rawTxn) {
-                                // Fallback to old logic if raw transaction not found
-                                const addedPlayers = t.players.filter(p => p.role === 'add');
-                                return addedPlayers.map(p => (
-                                  <div key={p.playerId} className="text-sm text-muted-foreground">
-                                    {p.name} ({p.position}) • Trade
-                                  </div>
-                                ));
-                              }
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Badge>{transaction.grade}</Badge>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </DataListHeader>
 
-                              // Use raw transaction data to show specific destinations
-                              return (rawTxn.adds || []).flatMap(addGroup =>
-                                (addGroup.players || []).map(player => {
-                                  const teamName =
-                                    rosterMap.get(Number(addGroup.rosterId)) ||
-                                    `Team ${addGroup.rosterId}`;
-                                  return (
-                                    <div key={player.id} className="text-sm text-muted-foreground">
-                                      {player.fullName} ({player.position}) → {teamName}
-                                    </div>
-                                  );
-                                }),
-                              );
-                            })()
-                          : // For non-trades, show traditional format with team context
-                            t.players.map(p => (
-                              <div key={p.playerId} className="text-sm text-muted-foreground">
-                                {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
-                              </div>
-                            ))}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2"
-                        onClick={() => setSelected(t)}
-                      >
-                        <Badge>{t.grade}</Badge>
-                      </Button>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {(() => {
-                        const bg = getDivergingBg(t.score / (scoreRange || 1));
-                        const fg = getTextColorForBg(bg);
-                        return (
-                          <span
-                            className="px-2 py-0.5 rounded"
-                            style={{ backgroundColor: bg, color: fg }}
-                          >
-                            {t.score.toFixed(2)}
-                          </span>
-                        );
-                      })()}
-                    </TableCell>
-                  </TableRow>
+                    <div className="mt-3 space-y-1">
+                      {transaction.players.map(player => (
+                        <div key={player.playerId} className="text-sm leading-snug">
+                          <span className="font-medium">
+                            {player.role === 'add' ? 'Added' : 'Dropped'}
+                          </span>{' '}
+                          {player.name}
+                          <span className="text-muted-foreground"> · {player.position}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <DataListMetrics className="grid-cols-2">
+                      <DataListMetric>
+                        <DataListMetricLabel className="text-xs">Grade</DataListMetricLabel>
+                        <DataListMetricValue>{transaction.grade}</DataListMetricValue>
+                      </DataListMetric>
+                      <DataListMetric className="text-right">
+                        <DataListMetricLabel className="text-xs">Score</DataListMetricLabel>
+                        <DataListMetricValue>{transaction.score.toFixed(2)}</DataListMetricValue>
+                      </DataListMetric>
+                    </DataListMetrics>
+                  </DataListItem>
                 ))}
-              </TableBody>
-            </Table>
+              </DataList>
+
+              <Table
+                surface="responsive"
+                scrollLabel="League transactions"
+                containerClassName="hidden sm:block"
+              >
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Players</TableHead>
+                    <TableHead className="text-right">Grade</TableHead>
+                    <TableHead className="text-right">Score</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map(t => (
+                    <TableRow key={t.id}>
+                      <TableCell>{new Date(t.createdAt).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <div>{t.type.replace('_', ' ')}</div>
+                          {!!(t.rosterIds && t.rosterIds.length) && (
+                            <div className="text-xs text-muted-foreground">
+                              {(t.rosterIds || [])
+                                .map(rid => rosterMap.get(Number(rid)) || `Team ${rid}`)
+                                .join(' • ')}
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          {t.type === 'trade'
+                            ? // For trades, show which team got which player with unidirectional arrows
+                              (() => {
+                                // Find the corresponding raw transaction for trade details
+                                const rawTxn = rawTransactions.find(rt => rt.id === t.id);
+                                if (!rawTxn) {
+                                  // Fallback to old logic if raw transaction not found
+                                  const addedPlayers = t.players.filter(p => p.role === 'add');
+                                  return addedPlayers.map(p => (
+                                    <div key={p.playerId} className="text-sm text-muted-foreground">
+                                      {p.name} ({p.position}) • Trade
+                                    </div>
+                                  ));
+                                }
+
+                                // Use raw transaction data to show specific destinations
+                                return (rawTxn.adds || []).flatMap(addGroup =>
+                                  (addGroup.players || []).map(player => {
+                                    const teamName =
+                                      rosterMap.get(Number(addGroup.rosterId)) ||
+                                      `Team ${addGroup.rosterId}`;
+                                    return (
+                                      <div
+                                        key={player.id}
+                                        className="text-sm text-muted-foreground"
+                                      >
+                                        {player.fullName} ({player.position}) → {teamName}
+                                      </div>
+                                    );
+                                  }),
+                                );
+                              })()
+                            : // For non-trades, show traditional format with team context
+                              t.players.map(p => (
+                                <div key={p.playerId} className="text-sm text-muted-foreground">
+                                  {p.name} ({p.position}) • {p.role === 'add' ? 'Added' : 'Dropped'}
+                                </div>
+                              ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="min-h-11 px-3"
+                          aria-label={`View ${t.type.replace('_', ' ')} transaction details`}
+                          onClick={() => openTransaction(t)}
+                        >
+                          <Badge>{t.grade}</Badge>
+                        </Button>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <span className="rounded bg-muted px-2 py-0.5 font-semibold text-foreground">
+                          {t.score.toFixed(2)}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </>
           )}
           {view === 'paged' && hasMorePages && (
             <div className="mt-4 flex justify-center">
@@ -801,6 +831,7 @@ const LeagueTransactionsContent = () => {
                 size="sm"
                 onClick={() => setCurrentPage(p => p + 1)}
                 disabled={loading || !leagueId}
+                className="min-h-11"
               >
                 Load more
               </Button>
@@ -809,8 +840,8 @@ const LeagueTransactionsContent = () => {
         </div>
       </div>
 
-      <Dialog open={!!selected} onOpenChange={open => !open && setSelected(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <Dialog open={!!selected} onOpenChange={open => !open && closeTransaction()}>
+        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Transaction Details</DialogTitle>
           </DialogHeader>
@@ -818,15 +849,9 @@ const LeagueTransactionsContent = () => {
             <div className="text-sm space-y-4">
               <div className="flex items-center gap-2">
                 <Badge>{selected.grade}</Badge>
-                {(() => {
-                  const bg = getDivergingBg(selected.score / (scoreRange || 1));
-                  const fg = getTextColorForBg(bg);
-                  return (
-                    <span className="px-1.5 rounded" style={{ backgroundColor: bg, color: fg }}>
-                      Score: {selected.score.toFixed(2)}
-                    </span>
-                  );
-                })()}
+                <span className="rounded bg-muted px-1.5 text-foreground">
+                  Score: {selected.score.toFixed(2)}
+                </span>
               </div>
               <div className="text-muted-foreground">
                 <div className="flex flex-col gap-1">
@@ -843,7 +868,7 @@ const LeagueTransactionsContent = () => {
                     else if (m === 11) weekLabel = 'Week 9-13';
                     else if (m === 12) weekLabel = 'Week 14-17 (Playoffs)';
                     else if (m === 1) weekLabel = 'Week 18+ (Postseason)';
-                    return <div className="text-xs">Transaction timing: {weekLabel}</div>;
+                    return <div className="text-sm">Transaction timing: {weekLabel}</div>;
                   })()}
                 </div>
               </div>
@@ -864,29 +889,29 @@ const LeagueTransactionsContent = () => {
                   const totalPenalties = selfHarm + oppHarm;
 
                   return (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-                      <div className="text-center">
-                        <div className="font-medium text-green-600">Contribution</div>
+                    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-md bg-border text-sm md:grid-cols-4">
+                      <div className="bg-background p-3 text-center">
+                        <div className="font-medium text-foreground">Contribution</div>
                         <div className="text-lg font-bold">+{contribution.toFixed(1)}</div>
                         <div className="text-muted-foreground">
                           Playoff-weighted VORP when started
                         </div>
                       </div>
-                      <div className="text-center">
-                        <div className="font-medium text-red-600">Self-Harm</div>
+                      <div className="bg-background p-3 text-center">
+                        <div className="font-medium text-foreground">Self-Harm</div>
                         <div className="text-lg font-bold">-{selfHarm.toFixed(1)}</div>
                         <div className="text-muted-foreground">
                           Points lost vs your best starter
                         </div>
                       </div>
-                      <div className="text-center">
-                        <div className="font-medium text-orange-600">Opponent-Harm</div>
+                      <div className="bg-background p-3 text-center">
+                        <div className="font-medium text-foreground">Opponent-Harm</div>
                         <div className="text-lg font-bold">-{oppHarm.toFixed(1)}</div>
                         <div className="text-muted-foreground">
                           Points above replacement by any opponent
                         </div>
                       </div>
-                      <div className="text-center border-l border-border pl-3">
+                      <div className="bg-background p-3 text-center">
                         <div className="font-medium">Final Score</div>
                         <div className="text-lg font-bold">{selected.score.toFixed(1)}</div>
                         <div className="text-muted-foreground">
@@ -902,7 +927,10 @@ const LeagueTransactionsContent = () => {
               <div className="space-y-3">
                 <h3 className="font-semibold text-base">Player Details</h3>
                 {selected.players.map(p => (
-                  <div key={p.playerId} className="border border-border rounded p-3">
+                  <div
+                    key={p.playerId}
+                    className="border-y border-border py-3 sm:rounded sm:border sm:p-3"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <div className="font-medium">
                         {p.name} ({p.position})
@@ -956,7 +984,7 @@ const LeagueTransactionsContent = () => {
                                     Playoff-weighted VORP (points minus position replacement level)
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className="text-green-600">
+                                <span className="text-foreground">
                                   +{p.forYou.weightedPoints.toFixed(1)}
                                 </span>
                               </div>
@@ -991,7 +1019,7 @@ const LeagueTransactionsContent = () => {
                                     would have displaced your worst starter
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className="text-red-600">
+                                <span className="text-foreground">
                                   -{p.afterDrop.selfHarmWeighted.toFixed(1)}
                                 </span>
                               </div>
@@ -1011,7 +1039,7 @@ const LeagueTransactionsContent = () => {
                                     started this player
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className="text-orange-600">
+                                <span className="text-foreground">
                                   -{p.afterDrop.oppHarmWeighted.toFixed(1)}
                                 </span>
                               </div>
@@ -1035,7 +1063,7 @@ const LeagueTransactionsContent = () => {
                           {p.weeklyPoints.map(wp => (
                             <div
                               key={wp.week}
-                              className={`p-2 rounded border ${wp.started ? 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800' : 'bg-muted/20'}`}
+                              className={`rounded border p-2 ${wp.started ? 'border-success/30 bg-success/10' : 'bg-muted/20'}`}
                             >
                               <div className="font-medium">Week {wp.week}</div>
                               <div className="flex justify-between">
@@ -1048,7 +1076,7 @@ const LeagueTransactionsContent = () => {
                               </div>
                               <div className="flex justify-between">
                                 <span>{p.role === 'add' ? 'Started:' : 'Opp started:'}:</span>
-                                <span>{wp.started ? '✓' : '✗'}</span>
+                                <span>{wp.started ? 'Yes' : 'No'}</span>
                               </div>
                             </div>
                           ))}

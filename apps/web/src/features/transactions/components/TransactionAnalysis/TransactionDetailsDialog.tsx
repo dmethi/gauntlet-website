@@ -47,7 +47,7 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
 
   return (
     <Dialog open={!!transaction} onOpenChange={open => !open && onClose()}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle>Transaction Details</DialogTitle>
         </DialogHeader>
@@ -65,7 +65,7 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
                 {new Date(transaction.createdAt).toLocaleString()} •{' '}
                 {transaction.type.replace('_', ' ')}
               </div>
-              <div className="text-xs">
+              <div className="text-sm">
                 Team: {transaction.teamName} • League: {transaction.leagueName}
               </div>
             </div>
@@ -74,25 +74,25 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
           {/* Score Breakdown */}
           <div className="bg-muted/30 rounded-lg p-3 space-y-2">
             <h3 className="font-semibold text-base">Score Breakdown</h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-              <div className="text-center">
+            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-md bg-border text-sm md:grid-cols-4">
+              <div className="bg-background p-3 text-center">
                 <div className="font-medium text-success">Contribution</div>
                 <div className="text-lg font-bold">+{breakdown.contribution.toFixed(1)}</div>
                 <div className="text-muted-foreground">Playoff-weighted VORP when started</div>
               </div>
-              <div className="text-center">
+              <div className="bg-background p-3 text-center">
                 <div className="font-medium text-destructive">Self-Harm</div>
                 <div className="text-lg font-bold">-{breakdown.selfHarm.toFixed(1)}</div>
                 <div className="text-muted-foreground">Points lost vs your best starter</div>
               </div>
-              <div className="text-center">
+              <div className="bg-background p-3 text-center">
                 <div className="font-medium text-secondary">Opponent-Harm</div>
                 <div className="text-lg font-bold">-{breakdown.oppHarm.toFixed(1)}</div>
                 <div className="text-muted-foreground">
                   Points above replacement by any opponent
                 </div>
               </div>
-              <div className="text-center">
+              <div className="bg-background p-3 text-center">
                 <div className="font-medium text-primary">Net Score</div>
                 <div className={`text-lg font-bold ${deltaTextClass(transaction.score)}`}>
                   {transaction.score >= 0 ? '+' : ''}
@@ -163,7 +163,12 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
                 {/* Weekly Performance */}
                 <div className="mt-3">
                   <h5 className="font-medium mb-2">Weekly Performance</h5>
-                  <div className="flex gap-2 overflow-x-auto">
+                  <div
+                    role="region"
+                    aria-label={`${player.name} weekly performance`}
+                    tabIndex={0}
+                    className="flex gap-2 overflow-x-auto pb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
                     {player.weeklyPoints
                       ?.filter(w => w.week <= currentNflWeek)
                       .map(week => {
@@ -190,7 +195,7 @@ export const TransactionDetailsDialog = memo<TransactionDetailsDialogProps>(prop
                             <div className="font-semibold">W{week.week}</div>
                             <div className="font-bold">{displayValue.toFixed(1)}</div>
                             {showVORP && <div className="text-xs opacity-75">VORP</div>}
-                            {week.started && <div className="text-xs">✓</div>}
+                            {week.started && <div className="text-xs">Started</div>}
                           </div>
                         );
                       })}

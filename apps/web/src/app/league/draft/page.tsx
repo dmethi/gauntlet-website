@@ -16,6 +16,18 @@ import {
 } from '@/components/ui/table';
 import { PageHeaderHero, WarRoomLoader } from '@gauntlet/ui';
 import { GauntletLogo } from '@/components/gauntlet-logo';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
+import { ChevronDown } from 'lucide-react';
 
 type ApiResponse = {
   ok: boolean;
@@ -48,6 +60,7 @@ const DRAFT_VIEWS = [
   { key: 'all-picks', label: 'All Picks' },
 ] as const;
 type DraftView = (typeof DRAFT_VIEWS)[number]['key'];
+type DraftPick = NonNullable<ApiResponse['data']>['picks'][number];
 
 const DraftViewPills = ({
   value,
@@ -57,7 +70,7 @@ const DraftViewPills = ({
   onChange: (view: DraftView) => void;
 }) => (
   <div
-    className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    className="flex items-center gap-1 overflow-x-auto pb-2"
     role="tablist"
     aria-label="Draft view"
   >
@@ -67,7 +80,7 @@ const DraftViewPills = ({
         role="tab"
         aria-selected={value === v.key}
         onClick={() => onChange(v.key)}
-        className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
+        className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
           value === v.key
             ? 'bg-primary/10 text-primary'
             : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
@@ -87,7 +100,7 @@ const PositionFilterButtons = ({
   onChange: (position: string) => void;
 }) => (
   <div
-    className="flex max-w-full items-center gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    className="flex max-w-full items-center gap-1 overflow-x-auto pb-2"
     aria-label="Position filter"
   >
     {POSITIONS.map(p => (
@@ -97,12 +110,108 @@ const PositionFilterButtons = ({
         variant={value === p ? 'default' : 'outline'}
         onClick={() => onChange(p)}
         aria-pressed={value === p}
-        className="h-7 px-2"
+        className="h-11 min-w-11 px-3"
       >
         {p}
       </Button>
     ))}
   </div>
+);
+
+const DraftPicksLedger = ({
+  picks,
+  pickInRound,
+  scrollLabel,
+  showTeam = true,
+  showOwner = true,
+}: {
+  picks: DraftPick[];
+  pickInRound: (pickNo: number) => number;
+  scrollLabel: string;
+  showTeam?: boolean;
+  showOwner?: boolean;
+}) => (
+  <>
+    <DataList className="sm:hidden">
+      {picks.map(pick => (
+        <DataListItem key={`mobile-${pick.rosterId}-${pick.pickNo}-${pick.player.id}`}>
+          <DataListHeader>
+            <div className="min-w-0">
+              <DataListTitle className="truncate">{pick.player.name}</DataListTitle>
+              <DataListDescription>
+                {pick.player.position || '—'} · {pick.player.team || 'No NFL team'}
+                {showTeam ? ` · ${pick.rosterName}` : ''}
+              </DataListDescription>
+            </div>
+            <div className="shrink-0 text-right">
+              <div className="text-base font-semibold">
+                {pick.round}.{pickInRound(pick.pickNo)}
+              </div>
+              <div className="text-xs text-muted-foreground">round.pick</div>
+            </div>
+          </DataListHeader>
+          <details className="group mt-2">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+              <span>Pick details</span>
+              <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+            </summary>
+            <DataListMetrics className="mt-1 grid-cols-2">
+              <DataListMetric>
+                <DataListMetricLabel className="text-xs">Overall</DataListMetricLabel>
+                <DataListMetricValue>#{pick.pickNo}</DataListMetricValue>
+              </DataListMetric>
+              {showOwner && (
+                <DataListMetric className="text-right">
+                  <DataListMetricLabel className="text-xs">Owner</DataListMetricLabel>
+                  <DataListMetricValue>{pick.ownerName}</DataListMetricValue>
+                </DataListMetric>
+              )}
+              <DataListMetric className="col-span-2">
+                <DataListMetricLabel className="text-xs">Notes</DataListMetricLabel>
+                <DataListMetricValue>
+                  {pick.isKeeper ? 'Keeper' : 'Standard pick'}
+                </DataListMetricValue>
+              </DataListMetric>
+            </DataListMetrics>
+          </details>
+        </DataListItem>
+      ))}
+    </DataList>
+
+    <Table surface="responsive" scrollLabel={scrollLabel} containerClassName="hidden sm:block">
+      <TableHeader>
+        <TableRow>
+          <TableHead>Overall</TableHead>
+          <TableHead>Round.Pick</TableHead>
+          {showTeam && <TableHead>Team</TableHead>}
+          <TableHead>Player</TableHead>
+          <TableHead>Pos</TableHead>
+          <TableHead>NFL</TableHead>
+          {showOwner && <TableHead>Owner</TableHead>}
+          <TableHead>Notes</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {picks.map(pick => (
+          <TableRow
+            key={`desktop-${pick.rosterId}-${pick.pickNo}-${pick.player.id}`}
+            className="hover:bg-muted/50"
+          >
+            <TableCell>{pick.pickNo}</TableCell>
+            <TableCell>
+              {pick.round}.{pickInRound(pick.pickNo)}
+            </TableCell>
+            {showTeam && <TableCell className="font-medium">{pick.rosterName}</TableCell>}
+            <TableCell>{pick.player.name}</TableCell>
+            <TableCell>{pick.player.position || '-'}</TableCell>
+            <TableCell>{pick.player.team || '-'}</TableCell>
+            {showOwner && <TableCell>{pick.ownerName}</TableCell>}
+            <TableCell>{pick.isKeeper ? <Badge variant="outline">Keeper</Badge> : null}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </>
 );
 
 const DraftPageContent = () => {
@@ -176,12 +285,12 @@ const DraftPageContent = () => {
         actions={
           <div className="flex gap-2">
             <Link href="/archive/2025/draft-analysis">
-              <Button variant="default" size="sm">
+              <Button variant="default" size="sm" className="min-h-11">
                 Mock Draft Analysis
               </Button>
             </Link>
             <Link href="/league/overview">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="min-h-11">
                 Back to Overview
               </Button>
             </Link>
@@ -222,41 +331,11 @@ const DraftPageContent = () => {
                         return (
                           <div key={round} className="space-y-2">
                             <h3 className="text-lg font-semibold">Round {round}</h3>
-                            <Table surface="responsive" scrollLabel={`Round ${round} draft picks`}>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Overall</TableHead>
-                                  <TableHead>Pick</TableHead>
-                                  <TableHead>Team</TableHead>
-                                  <TableHead>Player</TableHead>
-                                  <TableHead>Pos</TableHead>
-                                  <TableHead>NFL</TableHead>
-                                  <TableHead>Owner</TableHead>
-                                  <TableHead>Notes</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {roundPicks.map(p => (
-                                  <TableRow
-                                    key={`${round}-${p.pickNo}-${p.player.id}`}
-                                    className="hover:bg-muted/50"
-                                  >
-                                    <TableCell>{p.pickNo}</TableCell>
-                                    <TableCell>
-                                      {round}.{pickInRound(p.pickNo)}
-                                    </TableCell>
-                                    <TableCell className="font-medium">{p.rosterName}</TableCell>
-                                    <TableCell>{p.player.name}</TableCell>
-                                    <TableCell>{p.player.position || '-'}</TableCell>
-                                    <TableCell>{p.player.team || '-'}</TableCell>
-                                    <TableCell>{p.ownerName}</TableCell>
-                                    <TableCell>
-                                      {p.isKeeper ? <Badge variant="outline">Keeper</Badge> : null}
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
+                            <DraftPicksLedger
+                              picks={roundPicks}
+                              pickInRound={pickInRound}
+                              scrollLabel={`Round ${round} draft picks`}
+                            />
                           </div>
                         );
                       })}
@@ -274,41 +353,11 @@ const DraftPageContent = () => {
                   {!picks.length ? (
                     <div className="text-sm text-muted-foreground">No picks found.</div>
                   ) : (
-                    <Table surface="responsive" scrollLabel="All draft picks">
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Overall</TableHead>
-                          <TableHead>Round.Pick</TableHead>
-                          <TableHead>Team</TableHead>
-                          <TableHead>Player</TableHead>
-                          <TableHead>Pos</TableHead>
-                          <TableHead>NFL</TableHead>
-                          <TableHead>Owner</TableHead>
-                          <TableHead>Notes</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {picks.map(p => (
-                          <TableRow
-                            key={`all-${p.pickNo}-${p.player.id}`}
-                            className="hover:bg-muted/50"
-                          >
-                            <TableCell>{p.pickNo}</TableCell>
-                            <TableCell>
-                              {p.round}.{pickInRound(p.pickNo)}
-                            </TableCell>
-                            <TableCell className="font-medium">{p.rosterName}</TableCell>
-                            <TableCell>{p.player.name}</TableCell>
-                            <TableCell>{p.player.position || '-'}</TableCell>
-                            <TableCell>{p.player.team || '-'}</TableCell>
-                            <TableCell>{p.ownerName}</TableCell>
-                            <TableCell>
-                              {p.isKeeper ? <Badge variant="outline">Keeper</Badge> : null}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                    <DraftPicksLedger
+                      picks={picks}
+                      pickInRound={pickInRound}
+                      scrollLabel="All draft picks"
+                    />
                   )}
                 </div>
               )}
@@ -326,7 +375,7 @@ const DraftPageContent = () => {
                       {teamsByRoster.map(([rosterId, team]) => {
                         const teamPicks = picks.filter(p => p.rosterId === rosterId);
                         return (
-                          <Card key={rosterId}>
+                          <Card key={rosterId} mobileFlat>
                             <CardHeader>
                               <CardTitle className="text-base">
                                 <div className="flex items-center justify-between">
@@ -336,39 +385,13 @@ const DraftPageContent = () => {
                               </CardTitle>
                             </CardHeader>
                             <CardContent>
-                              <Table surface="responsive" scrollLabel={`${team.name} draft picks`}>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Round.Pick</TableHead>
-                                    <TableHead>Overall</TableHead>
-                                    <TableHead>Player</TableHead>
-                                    <TableHead>Pos</TableHead>
-                                    <TableHead>NFL</TableHead>
-                                    <TableHead>Notes</TableHead>
-                                  </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                  {teamPicks.map(p => (
-                                    <TableRow
-                                      key={`${p.rosterId}-${p.pickNo}`}
-                                      className="hover:bg-muted/50"
-                                    >
-                                      <TableCell>
-                                        {p.round}.{pickInRound(p.pickNo)}
-                                      </TableCell>
-                                      <TableCell>{p.pickNo}</TableCell>
-                                      <TableCell>{p.player.name}</TableCell>
-                                      <TableCell>{p.player.position || '-'}</TableCell>
-                                      <TableCell>{p.player.team || '-'}</TableCell>
-                                      <TableCell>
-                                        {p.isKeeper ? (
-                                          <Badge variant="outline">Keeper</Badge>
-                                        ) : null}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
+                              <DraftPicksLedger
+                                picks={teamPicks}
+                                pickInRound={pickInRound}
+                                scrollLabel={`${team.name} draft picks`}
+                                showTeam={false}
+                                showOwner={false}
+                              />
                             </CardContent>
                           </Card>
                         );

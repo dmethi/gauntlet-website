@@ -71,13 +71,13 @@ export const PositionBreakdown = memo(
     return (
       <div className="space-y-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <h3 className="text-lg font-semibold text-foreground">Position-by-Position Analysis</h3>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setViewMode('rankings')}
-                className={`rounded-lg px-3 py-1 text-sm transition-colors ${
+                className={`min-h-11 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   viewMode === 'rankings'
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -88,7 +88,7 @@ export const PositionBreakdown = memo(
               <button
                 type="button"
                 onClick={() => setViewMode('manager')}
-                className={`rounded-lg px-3 py-1 text-sm transition-colors ${
+                className={`min-h-11 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   viewMode === 'manager'
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -123,7 +123,10 @@ export const PositionBreakdown = memo(
               }
 
               return (
-                <Card key={position} className="space-y-3 p-4">
+                <Card
+                  key={position}
+                  className="space-y-3 rounded-none border-x-0 p-0 py-4 shadow-none sm:rounded-xl sm:border sm:p-4 sm:shadow-sm"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <PositionBadge position={position} weight={rankings[0].metrics.weight} />
@@ -140,7 +143,7 @@ export const PositionBreakdown = memo(
                       return (
                         <div
                           key={entry.manager.managerId}
-                          className="flex items-center justify-between rounded-lg bg-muted p-2 hover:bg-muted/80"
+                          className="flex items-center justify-between border-t border-border/70 py-3 first:border-t-0 sm:rounded-lg sm:border-0 sm:bg-muted sm:p-2 sm:hover:bg-muted/80"
                         >
                           <div className="flex flex-1 items-center gap-3">
                             <span className="w-6 text-sm font-medium text-muted-foreground">
@@ -191,7 +194,10 @@ export const PositionBreakdown = memo(
               {calculatePositionalEfficiency(selectedManager).map(({ position, metrics }) => {
                 const isPositive = metrics.pointsLostVsMedian >= 0;
                 return (
-                  <Card key={position} className="space-y-3 p-4">
+                  <Card
+                    key={position}
+                    className="space-y-3 rounded-none border-x-0 p-0 py-4 shadow-none sm:rounded-xl sm:border sm:p-4 sm:shadow-sm"
+                  >
                     <div className="flex items-center justify-between">
                       <PositionBadge position={position} weight={metrics.weight} />
                       <span className="text-xs text-muted-foreground">

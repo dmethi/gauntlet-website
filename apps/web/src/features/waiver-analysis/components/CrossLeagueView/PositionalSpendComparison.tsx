@@ -37,8 +37,8 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
             return (
               <div key={pos.position} className="space-y-2">
                 {/* Position Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span className="text-lg font-semibold">{pos.position}</span>
                     <span className="text-sm text-muted-foreground">
                       {pos.afcSpend.count + pos.nfcSpend.count} total acquisitions
@@ -76,7 +76,7 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
                       style={{ width: `${afcPercent}%` }}
                     >
                       {afcPercent > 15 && (
-                        <span className="text-xs font-medium text-white">
+                        <span className="text-xs font-medium text-primary-foreground">
                           ${pos.afcSpend.total}
                         </span>
                       )}
@@ -99,7 +99,7 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
                       style={{ width: `${nfcPercent}%` }}
                     >
                       {nfcPercent > 15 && (
-                        <span className="text-xs font-medium text-white">
+                        <span className="text-xs font-medium text-secondary-foreground">
                           ${pos.nfcSpend.total}
                         </span>
                       )}
@@ -108,8 +108,8 @@ export const PositionalSpendComparisonView = memo<PositionalSpendComparisonProps
                 </div>
 
                 {/* Top Players */}
-                <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
-                  <div>
+                <div className="grid grid-cols-1 gap-1 pt-1 text-xs text-muted-foreground sm:grid-cols-2 sm:gap-3">
+                  <div className="sm:text-right">
                     AFC top: {pos.afcSpend.topPlayer} (${pos.afcSpend.topBid})
                   </div>
                   <div>

@@ -20,10 +20,10 @@ export const ManagerAnalysis: React.FC<ManagerAnalysisProps> = ({ analytics }) =
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2">Manager Behavior Profiles</h2>
+        <h2 className="mb-2 text-2xl font-bold sm:text-3xl">Manager Behavior Profiles</h2>
         <p className="text-muted-foreground">
           Comprehensive analysis of draft strategies, spending patterns, and roster construction
         </p>

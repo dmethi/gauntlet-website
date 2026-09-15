@@ -17,6 +17,24 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
 import { ArrowUpDown, Search } from 'lucide-react';
 import { leagueBadgeClass, neutralBadgeClass } from '@/lib/stat-colors';
 import type { CrossLeaguePlayerComparison } from '../../types';
@@ -106,111 +124,180 @@ export const PlayerPriceComparisonTable = memo<PlayerPriceComparisonTableProps>(
             placeholder="Search players..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="pl-9"
+            aria-label="Search player price comparisons"
+            className="h-11 pl-9"
           />
+        </div>
+        <div className="mt-3 grid grid-cols-[1fr_44px] gap-2 sm:hidden">
+          <Select value={sortField} onValueChange={value => setSortField(value as SortField)}>
+            <SelectTrigger className="h-11" aria-label="Sort player price comparisons">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="priceDifference">Sort: Price Difference</SelectItem>
+              <SelectItem value="afcAvg">Sort: AFC Average</SelectItem>
+              <SelectItem value="nfcAvg">Sort: NFC Average</SelectItem>
+              <SelectItem value="playerName">Sort: Player</SelectItem>
+            </SelectContent>
+          </Select>
+          <button
+            type="button"
+            onClick={() => setSortAsc(current => !current)}
+            aria-label={sortAsc ? 'Sort descending' : 'Sort ascending'}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-input hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
         </div>
       </CardHeader>
 
       <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>
-                  <button
-                    onClick={() => handleSort('playerName')}
-                    className="flex items-center gap-1 hover:text-foreground"
-                  >
-                    Player <ArrowUpDown className="h-3 w-3" />
-                  </button>
-                </TableHead>
-                <TableHead>Position</TableHead>
-                <TableHead className="text-right">
-                  <button
-                    onClick={() => handleSort('afcAvg')}
-                    className="flex items-center gap-1 hover:text-foreground ml-auto"
-                  >
-                    AFC Avg <ArrowUpDown className="h-3 w-3" />
-                  </button>
-                </TableHead>
-                <TableHead className="text-right">
-                  <button
-                    onClick={() => handleSort('nfcAvg')}
-                    className="flex items-center gap-1 hover:text-foreground ml-auto"
-                  >
-                    NFC Avg <ArrowUpDown className="h-3 w-3" />
-                  </button>
-                </TableHead>
-                <TableHead className="text-right">
-                  <button
-                    onClick={() => handleSort('priceDifference')}
-                    className="flex items-center gap-1 hover:text-foreground ml-auto"
-                  >
-                    Difference <ArrowUpDown className="h-3 w-3" />
-                  </button>
-                </TableHead>
-                <TableHead>Higher Spender</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPlayers.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    No players match your search
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredPlayers.map(player => {
-                  const afcAvg = player.afcStats?.avgCost ?? 0;
-                  const nfcAvg = player.nfcStats?.avgCost ?? 0;
-                  const diff = player.priceDifference;
-                  const absDiff = Math.abs(diff);
+        <DataList className="sm:hidden">
+          {filteredPlayers.length === 0 ? (
+            <DataListItem className="text-center text-sm text-muted-foreground">
+              No players match your search
+            </DataListItem>
+          ) : (
+            filteredPlayers.map(player => {
+              const afcAvg = player.afcStats?.avgCost ?? 0;
+              const nfcAvg = player.nfcStats?.avgCost ?? 0;
 
-                  return (
-                    <TableRow key={player.playerId}>
-                      <TableCell className="font-medium">{player.playerName}</TableCell>
-                      <TableCell>
+              return (
+                <DataListItem key={player.playerId}>
+                  <DataListHeader>
+                    <div className="min-w-0">
+                      <DataListTitle className="truncate">{player.playerName}</DataListTitle>
+                      <DataListDescription>
+                        {player.position} ·{' '}
+                        {player.whichLeagueValuesMore === 'EQUAL'
+                          ? 'Equal spending'
+                          : `${player.whichLeagueValuesMore} higher`}
+                      </DataListDescription>
+                    </div>
+                  </DataListHeader>
+                  <DataListMetrics>
+                    <DataListMetric>
+                      <DataListMetricLabel className="text-xs">AFC avg</DataListMetricLabel>
+                      <DataListMetricValue>${afcAvg.toFixed(1)}</DataListMetricValue>
+                    </DataListMetric>
+                    <DataListMetric>
+                      <DataListMetricLabel className="text-xs">NFC avg</DataListMetricLabel>
+                      <DataListMetricValue>${nfcAvg.toFixed(1)}</DataListMetricValue>
+                    </DataListMetric>
+                    <DataListMetric className="text-right">
+                      <DataListMetricLabel className="text-xs">Difference</DataListMetricLabel>
+                      <DataListMetricValue>
+                        {player.priceDifference > 0 ? '+' : ''}${player.priceDifference.toFixed(1)}
+                      </DataListMetricValue>
+                    </DataListMetric>
+                  </DataListMetrics>
+                </DataListItem>
+              );
+            })
+          )}
+        </DataList>
+
+        <Table
+          surface="responsive"
+          scrollLabel="Player price comparison table"
+          containerClassName="hidden sm:block"
+        >
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <button
+                  onClick={() => handleSort('playerName')}
+                  className="flex items-center gap-1 hover:text-foreground"
+                >
+                  Player <ArrowUpDown className="h-3 w-3" />
+                </button>
+              </TableHead>
+              <TableHead>Position</TableHead>
+              <TableHead className="text-right">
+                <button
+                  onClick={() => handleSort('afcAvg')}
+                  className="flex items-center gap-1 hover:text-foreground ml-auto"
+                >
+                  AFC Avg <ArrowUpDown className="h-3 w-3" />
+                </button>
+              </TableHead>
+              <TableHead className="text-right">
+                <button
+                  onClick={() => handleSort('nfcAvg')}
+                  className="flex items-center gap-1 hover:text-foreground ml-auto"
+                >
+                  NFC Avg <ArrowUpDown className="h-3 w-3" />
+                </button>
+              </TableHead>
+              <TableHead className="text-right">
+                <button
+                  onClick={() => handleSort('priceDifference')}
+                  className="flex items-center gap-1 hover:text-foreground ml-auto"
+                >
+                  Difference <ArrowUpDown className="h-3 w-3" />
+                </button>
+              </TableHead>
+              <TableHead>Higher Spender</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredPlayers.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  No players match your search
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredPlayers.map(player => {
+                const afcAvg = player.afcStats?.avgCost ?? 0;
+                const nfcAvg = player.nfcStats?.avgCost ?? 0;
+                const diff = player.priceDifference;
+                const absDiff = Math.abs(diff);
+
+                return (
+                  <TableRow key={player.playerId}>
+                    <TableCell className="font-medium">{player.playerName}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${neutralBadgeClass}`}
+                      >
+                        {player.position}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right font-mono">${afcAvg.toFixed(1)}</TableCell>
+                    <TableCell className="text-right font-mono">${nfcAvg.toFixed(1)}</TableCell>
+                    <TableCell className="text-right font-mono">
+                      <span
+                        className={
+                          absDiff > 10
+                            ? 'text-destructive font-semibold'
+                            : absDiff > 5
+                              ? 'text-secondary'
+                              : 'text-muted-foreground'
+                        }
+                      >
+                        {diff > 0 ? '+' : ''}${diff.toFixed(1)}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {player.whichLeagueValuesMore === 'EQUAL' ? (
+                        <span className="text-muted-foreground text-sm">Equal</span>
+                      ) : (
                         <span
-                          className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${neutralBadgeClass}`}
+                          className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${leagueBadgeClass(
+                            player.whichLeagueValuesMore,
+                          )}`}
                         >
-                          {player.position}
+                          {player.whichLeagueValuesMore}
                         </span>
-                      </TableCell>
-                      <TableCell className="text-right font-mono">${afcAvg.toFixed(1)}</TableCell>
-                      <TableCell className="text-right font-mono">${nfcAvg.toFixed(1)}</TableCell>
-                      <TableCell className="text-right font-mono">
-                        <span
-                          className={
-                            absDiff > 10
-                              ? 'text-destructive font-semibold'
-                              : absDiff > 5
-                                ? 'text-secondary'
-                                : 'text-muted-foreground'
-                          }
-                        >
-                          {diff > 0 ? '+' : ''}${diff.toFixed(1)}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {player.whichLeagueValuesMore === 'EQUAL' ? (
-                          <span className="text-muted-foreground text-sm">Equal</span>
-                        ) : (
-                          <span
-                            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${leagueBadgeClass(
-                              player.whichLeagueValuesMore,
-                            )}`}
-                          >
-                            {player.whichLeagueValuesMore}
-                          </span>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
 
         {filteredPlayers.length > 0 && (
           <div className="mt-4 text-sm text-muted-foreground">

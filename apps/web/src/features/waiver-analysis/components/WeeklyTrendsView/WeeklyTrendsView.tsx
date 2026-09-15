@@ -35,7 +35,7 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
                 <div key={week.week} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Week {week.week}</span>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground sm:flex sm:items-center sm:gap-4">
                       <span>
                         {week.waiverCount} waivers • {week.freeAgentCount} FA
                       </span>
@@ -52,7 +52,15 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
                       style={{ height: `${Math.max(spendHeight, 5)}%` }}
                     >
                       {week.totalSpent > 0 && (
-                        <span className="text-xs font-medium text-white">${week.totalSpent}</span>
+                        <span
+                          className={`text-xs font-medium ${
+                            trends.leagueName.includes('AFC')
+                              ? 'text-primary-foreground'
+                              : 'text-secondary-foreground'
+                          }`}
+                        >
+                          ${week.totalSpent}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -87,7 +95,13 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
                     style={{ width: `${pos.percentOfTotalSpend}%` }}
                   >
                     {pos.percentOfTotalSpend > 10 && (
-                      <span className="text-xs font-medium text-white">
+                      <span
+                        className={`text-xs font-medium ${
+                          trends.leagueName.includes('AFC')
+                            ? 'text-primary-foreground'
+                            : 'text-secondary-foreground'
+                        }`}
+                      >
                         {pos.percentOfTotalSpend.toFixed(0)}%
                       </span>
                     )}
@@ -107,16 +121,16 @@ const LeagueTrendsCard = memo<{ trends: LeagueWaiverTrends }>(({ trends }) => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-4 border rounded-lg">
+            <div className="border-y border-border/70 py-4 text-center sm:rounded-lg sm:border sm:p-4">
               <div className="text-2xl font-bold">{trends.avgBidsPerPlayer.toFixed(1)}x</div>
               <div className="text-sm text-muted-foreground">Avg Bids per Player</div>
             </div>
-            <div className="text-center p-4 border rounded-lg">
+            <div className="border-y border-border/70 py-4 text-center sm:rounded-lg sm:border sm:p-4">
               <div className="text-2xl font-bold">{trends.totalFailedWaivers}</div>
               <div className="text-sm text-muted-foreground">Failed Waivers</div>
             </div>
             {trends.mostContestedPlayer && (
-              <div className="col-span-2 text-center p-4 border rounded-lg bg-muted">
+              <div className="col-span-2 border-y border-border/70 bg-muted/50 py-4 text-center sm:rounded-lg sm:border sm:p-4">
                 <div className="font-semibold">{trends.mostContestedPlayer.playerName}</div>
                 <div className="text-sm text-muted-foreground">
                   Most Contested ({trends.mostContestedPlayer.bidCount} bids)
@@ -137,9 +151,13 @@ export const WeeklyTrendsView = memo<WeeklyTrendsViewProps>(props => {
 
   return (
     <Tabs defaultValue="afc" className="w-full">
-      <TabsList className="grid w-full max-w-md grid-cols-2">
-        <TabsTrigger value="afc">AFC League</TabsTrigger>
-        <TabsTrigger value="nfc">NFC League</TabsTrigger>
+      <TabsList className="grid h-auto w-full max-w-md grid-cols-2">
+        <TabsTrigger className="min-h-11" value="afc">
+          AFC League
+        </TabsTrigger>
+        <TabsTrigger className="min-h-11" value="nfc">
+          NFC League
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value="afc" className="mt-6">

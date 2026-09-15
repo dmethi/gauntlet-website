@@ -11,7 +11,25 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  DataList,
+  DataListDescription,
+  DataListHeader,
+  DataListItem,
+  DataListMetric,
+  DataListMetricLabel,
+  DataListMetrics,
+  DataListMetricValue,
+  DataListTitle,
+} from '@/components/ui/data-list';
+import { ArrowUpDown, ChevronDown, TrendingUp } from 'lucide-react';
 import { getContrastingTextColor, getHeatmapColor } from './utils';
 import type { ManagerAnalytics } from '@/features/draft-analysis/types';
 import type { SortConfig } from '@/features/draft-analysis/hooks';
@@ -146,100 +164,179 @@ export const CrossLeaguePriceDiff = memo<CrossLeaguePriceDiffProps>(
             All drafted players with price comparison and draft pick numbers. Cross-league players
             show price differences with heatmap background.
           </CardDescription>
+          <div className="grid grid-cols-[1fr_44px] gap-2 pt-3 sm:hidden">
+            <Select value={sortConfig?.key ?? 'price_diff'} onValueChange={onSort}>
+              <SelectTrigger className="h-11" aria-label="Sort cross-league prices">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="price_diff">Sort: Price Gap</SelectItem>
+                <SelectItem value="afc_price">Sort: AFC Price</SelectItem>
+                <SelectItem value="nfc_price">Sort: NFC Price</SelectItem>
+                <SelectItem value="player_name">Sort: Player</SelectItem>
+              </SelectContent>
+            </Select>
+            <button
+              type="button"
+              onClick={() => onSort(sortConfig?.key ?? 'price_diff')}
+              aria-label="Reverse price sort order"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-input hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ArrowUpDown className="h-4 w-4" />
+            </button>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="border rounded-lg">
-            <div className="max-h-96 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => onSort('player_name')}
-                    >
-                      Player {getSortIcon('player_name')}
-                    </TableHead>
-                    <TableHead className="text-center">Pos</TableHead>
-                    <TableHead
-                      className="text-center cursor-pointer hover:bg-muted/50"
-                      onClick={() => onSort('afc_price')}
-                    >
-                      AFC Price {getSortIcon('afc_price')}
-                    </TableHead>
-                    <TableHead
-                      className="text-center cursor-pointer hover:bg-muted/50"
-                      onClick={() => onSort('nfc_price')}
-                    >
-                      NFC Price {getSortIcon('nfc_price')}
-                    </TableHead>
-                    <TableHead
-                      className="text-center cursor-pointer hover:bg-muted/50"
-                      onClick={() => onSort('price_diff')}
-                    >
-                      Price Gap {getSortIcon('price_diff')}
-                    </TableHead>
-                    <TableHead className="text-center">Higher In</TableHead>
-                    <TableHead className="text-center">AFC Pick #</TableHead>
-                    <TableHead className="text-center">NFC Pick #</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {playersWithDiffs.slice(0, 100).map((player, index) => (
-                    <TableRow key={`price-diff-${player.player_id}-${index}`}>
-                      <TableCell className="font-medium">{player.player_name}</TableCell>
-                      <TableCell className="text-center">
-                        <Badge variant="outline" className="text-xs">
-                          {player.position}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {player.afc_price !== null ? `$${player.afc_price}` : '-'}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {player.nfc_price !== null ? `$${player.nfc_price}` : '-'}
-                      </TableCell>
-                      <TableCell
-                        className={`text-center font-medium ${
-                          player.is_cross_league
-                            ? getContrastingTextColor(
-                                getHeatmapColor(player.price_diff_abs, maxDiff, minDiff),
-                              )
-                            : ''
-                        }`}
-                        style={{
-                          backgroundColor: player.is_cross_league
-                            ? getHeatmapColor(player.price_diff_abs, maxDiff, minDiff)
-                            : 'transparent',
-                        }}
+          <DataList className="sm:hidden">
+            {playersWithDiffs.slice(0, 100).map((player, index) => (
+              <DataListItem key={`price-diff-mobile-${player.player_id}-${index}`}>
+                <DataListHeader>
+                  <div className="min-w-0">
+                    <DataListTitle className="truncate">{player.player_name}</DataListTitle>
+                    <DataListDescription>
+                      {player.position} ·{' '}
+                      {player.is_cross_league
+                        ? `${player.higher_in} higher`
+                        : `${player.higher_in} only`}
+                    </DataListDescription>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-base font-semibold">
+                      {player.is_cross_league ? `$${player.price_diff_abs}` : '—'}
+                    </div>
+                    <div className="text-xs text-muted-foreground">price gap</div>
+                  </div>
+                </DataListHeader>
+                <DataListMetrics>
+                  <DataListMetric>
+                    <DataListMetricLabel className="text-xs">AFC price</DataListMetricLabel>
+                    <DataListMetricValue>
+                      {player.afc_price !== null ? `$${player.afc_price}` : '—'}
+                    </DataListMetricValue>
+                  </DataListMetric>
+                  <DataListMetric>
+                    <DataListMetricLabel className="text-xs">NFC price</DataListMetricLabel>
+                    <DataListMetricValue>
+                      {player.nfc_price !== null ? `$${player.nfc_price}` : '—'}
+                    </DataListMetricValue>
+                  </DataListMetric>
+                  <DataListMetric className="text-right">
+                    <DataListMetricLabel className="text-xs">Higher in</DataListMetricLabel>
+                    <DataListMetricValue>{player.higher_in}</DataListMetricValue>
+                  </DataListMetric>
+                </DataListMetrics>
+                <details className="group mt-2">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                    <span>Draft positions</span>
+                    <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <DataListMetrics className="mt-1 grid-cols-2">
+                    <DataListMetric>
+                      <DataListMetricLabel className="text-xs">AFC pick</DataListMetricLabel>
+                      <DataListMetricValue>{player.afc_pick_number || '—'}</DataListMetricValue>
+                    </DataListMetric>
+                    <DataListMetric className="text-right">
+                      <DataListMetricLabel className="text-xs">NFC pick</DataListMetricLabel>
+                      <DataListMetricValue>{player.nfc_pick_number || '—'}</DataListMetricValue>
+                    </DataListMetric>
+                  </DataListMetrics>
+                </details>
+              </DataListItem>
+            ))}
+          </DataList>
+
+          <Table
+            surface="responsive"
+            scrollLabel="Cross-league draft price table"
+            containerClassName="hidden max-h-96 sm:block"
+          >
+            <TableHeader>
+              <TableRow>
+                <TableHead
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => onSort('player_name')}
+                >
+                  Player {getSortIcon('player_name')}
+                </TableHead>
+                <TableHead className="text-center">Pos</TableHead>
+                <TableHead
+                  className="text-center cursor-pointer hover:bg-muted/50"
+                  onClick={() => onSort('afc_price')}
+                >
+                  AFC Price {getSortIcon('afc_price')}
+                </TableHead>
+                <TableHead
+                  className="text-center cursor-pointer hover:bg-muted/50"
+                  onClick={() => onSort('nfc_price')}
+                >
+                  NFC Price {getSortIcon('nfc_price')}
+                </TableHead>
+                <TableHead
+                  className="text-center cursor-pointer hover:bg-muted/50"
+                  onClick={() => onSort('price_diff')}
+                >
+                  Price Gap {getSortIcon('price_diff')}
+                </TableHead>
+                <TableHead className="text-center">Higher In</TableHead>
+                <TableHead className="text-center">AFC Pick #</TableHead>
+                <TableHead className="text-center">NFC Pick #</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {playersWithDiffs.slice(0, 100).map((player, index) => (
+                <TableRow key={`price-diff-${player.player_id}-${index}`}>
+                  <TableCell className="font-medium">{player.player_name}</TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant="outline" className="text-xs">
+                      {player.position}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {player.afc_price !== null ? `$${player.afc_price}` : '-'}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {player.nfc_price !== null ? `$${player.nfc_price}` : '-'}
+                  </TableCell>
+                  <TableCell
+                    className={`text-center font-medium ${
+                      player.is_cross_league
+                        ? getContrastingTextColor(
+                            getHeatmapColor(player.price_diff_abs, maxDiff, minDiff),
+                          )
+                        : ''
+                    }`}
+                    style={{
+                      backgroundColor: player.is_cross_league
+                        ? getHeatmapColor(player.price_diff_abs, maxDiff, minDiff)
+                        : 'transparent',
+                    }}
+                  >
+                    {player.is_cross_league ? `$${player.price_diff_abs}` : '-'}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {player.is_cross_league ? (
+                      <Badge
+                        variant={player.higher_in === 'AFC' ? 'destructive' : 'secondary'}
+                        className="text-xs"
                       >
-                        {player.is_cross_league ? `$${player.price_diff_abs}` : '-'}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {player.is_cross_league ? (
-                          <Badge
-                            variant={player.higher_in === 'AFC' ? 'destructive' : 'secondary'}
-                            className="text-xs"
-                          >
-                            {player.higher_in}
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-xs">
-                            {player.higher_in}
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-center text-sm">
-                        {player.afc_pick_number || '-'}
-                      </TableCell>
-                      <TableCell className="text-center text-sm">
-                        {player.nfc_pick_number || '-'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+                        {player.higher_in}
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-xs">
+                        {player.higher_in}
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center text-sm">
+                    {player.afc_pick_number || '-'}
+                  </TableCell>
+                  <TableCell className="text-center text-sm">
+                    {player.nfc_pick_number || '-'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     );

@@ -19,7 +19,7 @@ export const ManagerSelector = memo(
   ({ options, value, onChange, placeholder = 'Select manager' }: ManagerSelectorProps) => {
     return (
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-64">
+        <SelectTrigger className="h-11 w-full sm:w-64">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

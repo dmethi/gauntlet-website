@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { TransactionAnalysis } from './TransactionAnalysis';
 import * as useModelHook from './useTransactionAnalysisModel';
 import type { GradeTxn, TeamInfo } from '@/features/transactions/types';
@@ -18,7 +19,7 @@ describe('TransactionAnalysis', () => {
       transactionsProcessed: false,
     });
 
-    render(<TransactionAnalysis currentWeek={7} />);
+    render(<TransactionAnalysis currentWeek={7} season="2025" />);
     // Loading state renders the WarRoomLoader overlay instead of the loaded content.
     expect(screen.queryByText('Transaction Analysis')).not.toBeInTheDocument();
   });
@@ -46,7 +47,7 @@ describe('TransactionAnalysis', () => {
       transactionsProcessed: true,
     });
 
-    render(<TransactionAnalysis currentWeek={7} />);
+    render(<TransactionAnalysis currentWeek={7} season="2025" />);
     expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
   });
 
@@ -60,7 +61,7 @@ describe('TransactionAnalysis', () => {
       transactionsProcessed: true,
     });
 
-    render(<TransactionAnalysis currentWeek={7} />);
+    render(<TransactionAnalysis currentWeek={7} season="2025" />);
     // Empty allData is treated the same as still-loading by the component,
     // so it renders the WarRoomLoader overlay rather than the loaded content.
     expect(screen.queryByText('Transaction Analysis')).not.toBeInTheDocument();
@@ -90,7 +91,7 @@ describe('TransactionAnalysis', () => {
         transactionsProcessed: true,
       });
 
-      render(<TransactionAnalysis currentWeek={7} />);
+      render(<TransactionAnalysis currentWeek={7} season="2025" />);
       expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
     });
 
@@ -127,7 +128,7 @@ describe('TransactionAnalysis', () => {
         transactionsProcessed: true,
       });
 
-      render(<TransactionAnalysis currentWeek={7} />);
+      render(<TransactionAnalysis currentWeek={7} season="2025" />);
       expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
     });
   });
@@ -156,7 +157,7 @@ describe('TransactionAnalysis', () => {
         transactionsProcessed: true,
       });
 
-      render(<TransactionAnalysis currentWeek={7} />);
+      render(<TransactionAnalysis currentWeek={7} season="2025" />);
       expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
     });
 
@@ -183,7 +184,7 @@ describe('TransactionAnalysis', () => {
         transactionsProcessed: true,
       });
 
-      render(<TransactionAnalysis currentWeek={7} />);
+      render(<TransactionAnalysis currentWeek={7} season="2025" />);
       expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
     });
 
@@ -210,7 +211,7 @@ describe('TransactionAnalysis', () => {
         transactionsProcessed: true,
       });
 
-      render(<TransactionAnalysis currentWeek={7} />);
+      render(<TransactionAnalysis currentWeek={7} season="2025" />);
       expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
     });
   });
@@ -237,8 +238,44 @@ describe('TransactionAnalysis', () => {
         transactionsProcessed: true,
       });
 
-      render(<TransactionAnalysis currentWeek={7} />);
+      render(<TransactionAnalysis currentWeek={7} season="2025" />);
       expect(screen.getByText('Transaction Analysis')).toBeInTheDocument();
     });
+  });
+
+  it('restores focus to the transaction row after closing details', async () => {
+    const user = userEvent.setup();
+    const mockData = [
+      {
+        id: 'focus-transaction',
+        score: 10,
+        grade: 'A',
+        createdAt: '2025-01-01',
+        teamName: 'Team Focus',
+        leagueName: 'AFC',
+        type: 'free_agent',
+        players: [],
+      } as GradeTxn,
+    ];
+
+    vi.spyOn(useModelHook, 'useTransactionAnalysisModel').mockReturnValue({
+      allData: mockData,
+      loading: false,
+      loadingStep: '',
+      teamsMap: new Map(),
+      teamsLoaded: true,
+      transactionsProcessed: true,
+    });
+
+    render(<TransactionAnalysis currentWeek={7} season="2025" />);
+    const trigger = screen.getAllByRole('button', {
+      name: 'View Team Focus transaction details',
+    })[0];
+
+    await user.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+
+    await waitFor(() => expect(trigger).toHaveFocus());
   });
 });

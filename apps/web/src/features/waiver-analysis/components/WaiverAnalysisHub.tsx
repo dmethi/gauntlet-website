@@ -86,15 +86,15 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
           </CardDescription>
 
           {/* Quick stats summary */}
-          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-md bg-border md:grid-cols-4">
             {data.leagueTrends.map(league => (
-              <div key={league.leagueId} className="rounded-lg border p-3">
+              <div key={league.leagueId} className="bg-background p-3">
                 <div className="text-sm font-medium text-muted-foreground">{league.leagueName}</div>
                 <div className="text-2xl font-bold">${league.totalFAABSpent}</div>
                 <div className="text-xs text-muted-foreground">FAAB spent</div>
               </div>
             ))}
-            <div className="rounded-lg border p-3">
+            <div className="bg-background p-3">
               <div className="text-sm font-medium text-muted-foreground">Total Waivers</div>
               <div className="text-2xl font-bold">
                 {data.leagueTrends.reduce((total, league) => total + league.totalWaivers, 0)}
@@ -104,19 +104,26 @@ export const WaiverAnalysisHub = memo<WaiverAnalysisHubProps>(props => {
         </CardHeader>
 
         <CardContent>
-          <Tabs value={currentView} onValueChange={v => setCurrentView(v as any)}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="cross-league" className="flex items-center gap-2">
+          <Tabs
+            value={currentView}
+            onValueChange={value =>
+              setCurrentView(value as 'managers' | 'cross-league' | 'players')
+            }
+          >
+            <TabsList className="grid h-auto w-full grid-cols-3">
+              <TabsTrigger value="cross-league" className="min-h-11 gap-1.5 px-2 sm:gap-2">
                 <ArrowLeftRight className="h-4 w-4" />
-                League Activity
+                <span className="sm:hidden">Leagues</span>
+                <span className="hidden sm:inline">League Activity</span>
               </TabsTrigger>
-              <TabsTrigger value="managers" className="flex items-center gap-2">
+              <TabsTrigger value="managers" className="min-h-11 gap-1.5 px-2 sm:gap-2">
                 <Users className="h-4 w-4" />
                 Managers
               </TabsTrigger>
-              <TabsTrigger value="players" className="flex items-center gap-2">
+              <TabsTrigger value="players" className="min-h-11 gap-1.5 px-2 sm:gap-2">
                 <TrendingUp className="h-4 w-4" />
-                Player Movement
+                <span className="sm:hidden">Players</span>
+                <span className="hidden sm:inline">Player Movement</span>
               </TabsTrigger>
             </TabsList>
 

@@ -118,10 +118,11 @@ describe('ManagerAnalysis', () => {
 
   describe('Component Integration', () => {
     it('renders all sub-components without errors', () => {
-      const { container } = render(<ManagerAnalysis analytics={mockAnalytics} />);
+      render(<ManagerAnalysis analytics={mockAnalytics} />);
 
-      // Should have multiple sections
-      expect(container.querySelector('.space-y-8')).toBeInTheDocument();
+      expect(screen.getByText('Concentration Metrics')).toBeInTheDocument();
+      expect(screen.getByText('Cross-League Price Differences')).toBeInTheDocument();
+      expect(screen.getByText('Positional Allocation Heatmap')).toBeInTheDocument();
     });
 
     it('maintains consistent data flow between components', () => {

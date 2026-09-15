@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/select';
 import type { RosterContext } from '@/features/start-sit/types';
 import { getLeagueLabel, getPlayerDisplayName } from './utils';
+import { ChevronDown } from 'lucide-react';
 
 interface RosterContextPanelProps {
   rosterContext: RosterContext[];
@@ -17,7 +18,6 @@ interface RosterContextPanelProps {
 
 export const RosterContextPanel = memo(({ rosterContext, players }: RosterContextPanelProps) => {
   const [selectedManager, setSelectedManager] = useState<string>('all');
-  const [expandedAlternatives, setExpandedAlternatives] = useState<Set<string>>(new Set());
 
   const managerOptions = useMemo(
     () => ['all', ...Array.from(new Set(rosterContext.map(context => context.managerName))).sort()],
@@ -29,28 +29,16 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
     return rosterContext.filter(context => context.managerName === selectedManager);
   }, [rosterContext, selectedManager]);
 
-  const toggleExpanded = (key: string) => {
-    setExpandedAlternatives(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) {
-        next.delete(key);
-      } else {
-        next.add(key);
-      }
-      return next;
-    });
-  };
-
   if (rosterContext.length === 0) {
     return <div className="text-sm text-muted-foreground">Roster context is not available.</div>;
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-foreground">Team Context</h3>
         <Select value={selectedManager} onValueChange={setSelectedManager}>
-          <SelectTrigger className="w-52">
+          <SelectTrigger className="h-11 w-full sm:w-52">
             <SelectValue placeholder="All managers" />
           </SelectTrigger>
           <SelectContent>
@@ -67,11 +55,13 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
         {filteredContext.map(context => {
           const league = getLeagueLabel(context.leagueId);
           const toggleKey = `${context.managerId}-${context.week}`;
-          const isExpanded = expandedAlternatives.has(toggleKey);
 
           return (
-            <Card key={toggleKey} className="space-y-4 p-4">
-              <div className="flex items-start justify-between gap-4">
+            <Card
+              key={toggleKey}
+              className="space-y-4 rounded-none border-x-0 p-0 py-4 shadow-none sm:rounded-xl sm:border sm:p-4 sm:shadow-sm"
+            >
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
                   <div className="text-sm font-semibold text-foreground">
                     {context.managerName} ({league})
@@ -83,7 +73,12 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
+              <div
+                role="region"
+                aria-label={`${context.managerName} Week ${context.week} lineup decisions`}
+                tabIndex={0}
+                className="overflow-x-auto pb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="border-b text-xs text-muted-foreground">
@@ -159,27 +154,19 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
                 </table>
               </div>
 
-              <div className="flex items-center justify-between border-t pt-3 text-xs">
-                <span className="font-medium text-muted-foreground">
-                  Other Available Alternatives
-                </span>
-                <button
-                  type="button"
-                  onClick={() => toggleExpanded(toggleKey)}
-                  className="text-primary hover:text-primary/80"
-                >
-                  {isExpanded ? '▼ Collapse' : '▶ Show All'}
-                </button>
-              </div>
+              <details className="group border-t border-border/70 pt-1">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                  <span>Available alternatives</span>
+                  <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+                </summary>
 
-              <div className="grid gap-3 md:grid-cols-2 text-sm">
-                <div>
-                  <div className="font-medium text-primary">
-                    Bench ({context.benchPlayers.length})
-                  </div>
-                  <div className="space-y-1 text-muted-foreground">
-                    {(isExpanded ? context.benchPlayers : context.benchPlayers.slice(0, 6)).map(
-                      (bench, index) => (
+                <div className="grid gap-3 pt-2 text-sm md:grid-cols-2">
+                  <div>
+                    <div className="font-medium text-primary">
+                      Bench ({context.benchPlayers.length})
+                    </div>
+                    <div className="space-y-1 text-muted-foreground">
+                      {context.benchPlayers.map((bench, index) => (
                         <div key={index} className="flex justify-between">
                           <span className="truncate pr-2">
                             {getPlayerDisplayName(bench.player.playerId, players)}
@@ -188,47 +175,34 @@ export const RosterContextPanel = memo(({ rosterContext, players }: RosterContex
                             {bench.pointsScored.toFixed(1)}
                           </span>
                         </div>
-                      ),
-                    )}
-                    {!isExpanded && context.benchPlayers.length > 6 && (
-                      <div className="text-xs italic text-muted-foreground">
-                        +{context.benchPlayers.length - 6} more
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="font-medium text-secondary">
-                    Waiver Wire ({context.waiverAlternatives.length})
-                  </div>
-                  <div className="space-y-1 text-muted-foreground">
-                    {(isExpanded
-                      ? context.waiverAlternatives
-                      : context.waiverAlternatives.slice(0, 6)
-                    ).map((waiver, index) => (
-                      <div key={index} className="flex justify-between">
-                        <span className="truncate pr-2">
-                          {getPlayerDisplayName(waiver.player.playerId, players)}
-                        </span>
-                        <span className="font-medium text-foreground">
-                          {waiver.adjustedPoints.toFixed(1)}*
-                        </span>
-                      </div>
-                    ))}
-                    {!isExpanded && context.waiverAlternatives.length > 6 && (
-                      <div className="text-xs italic text-muted-foreground">
-                        +{context.waiverAlternatives.length - 6} more
-                      </div>
-                    )}
-                  </div>
-                  {context.waiverAlternatives.length > 0 && (
-                    <div className="pt-1 text-[11px] text-muted-foreground">
-                      * Adjusted with 35% waiver pickup penalty
+                      ))}
                     </div>
-                  )}
+                  </div>
+
+                  <div>
+                    <div className="font-medium text-secondary">
+                      Waiver Wire ({context.waiverAlternatives.length})
+                    </div>
+                    <div className="space-y-1 text-muted-foreground">
+                      {context.waiverAlternatives.map((waiver, index) => (
+                        <div key={index} className="flex justify-between">
+                          <span className="truncate pr-2">
+                            {getPlayerDisplayName(waiver.player.playerId, players)}
+                          </span>
+                          <span className="font-medium text-foreground">
+                            {waiver.adjustedPoints.toFixed(1)}*
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    {context.waiverAlternatives.length > 0 && (
+                      <div className="pt-1 text-xs text-muted-foreground">
+                        * Adjusted with 35% waiver pickup penalty
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </details>
             </Card>
           );
         })}

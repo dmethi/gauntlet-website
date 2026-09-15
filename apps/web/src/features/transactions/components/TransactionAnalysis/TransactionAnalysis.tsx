@@ -6,7 +6,7 @@
 
 'use client';
 
-import { memo, useMemo, useState } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 import { WarRoomLoader } from '@gauntlet/ui';
@@ -46,6 +46,7 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
   const { currentWeek, season } = props;
   const model = useTransactionAnalysisModel(currentWeek, season);
   const [selectedTxn, setSelectedTxn] = useState<GradeTxn | null>(null);
+  const transactionTriggerRef = useRef<HTMLElement | null>(null);
 
   // Filter and sort states
   const [teamFilter, setTeamFilter] = useState<string>('all');
@@ -92,14 +93,25 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
     setSearchTerm('');
   };
 
+  const handleOpenTransaction = (transaction: GradeTxn): void => {
+    transactionTriggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setSelectedTxn(transaction);
+  };
+
+  const handleCloseTransaction = (): void => {
+    setSelectedTxn(null);
+    window.requestAnimationFrame(() => transactionTriggerRef.current?.focus());
+  };
+
   return (
     <div className="space-y-6">
       <ManagerRankings transactions={model.allData} allTeams={model.teamsMap} />
 
       <Card mobileFlat>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
                 Transaction Analysis
@@ -140,7 +152,7 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
               <div className="text-muted-foreground">No transactions match your filters</div>
               <button
                 onClick={handleClearFilters}
-                className="mt-2 text-primary hover:underline text-sm"
+                className="mt-2 min-h-11 rounded-md px-3 text-sm font-medium text-primary hover:bg-primary/10 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Clear all filters
               </button>
@@ -149,7 +161,7 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
             <TransactionTable
               transactions={filteredData}
               allTransactions={model.allData}
-              onTransactionClick={setSelectedTxn}
+              onTransactionClick={handleOpenTransaction}
             />
           )}
         </CardContent>
@@ -159,7 +171,7 @@ export const TransactionAnalysis = memo<TransactionAnalysisProps>(props => {
         transaction={selectedTxn}
         allTransactions={model.allData}
         currentNflWeek={currentWeek}
-        onClose={() => setSelectedTxn(null)}
+        onClose={handleCloseTransaction}
       />
     </div>
   );

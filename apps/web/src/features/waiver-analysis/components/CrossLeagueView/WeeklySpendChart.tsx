@@ -39,9 +39,9 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
 
             return (
               <div key={week.week} className="space-y-2">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-sm font-medium">Week {week.week}</span>
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground sm:flex sm:items-center sm:gap-4">
                     <span>
                       AFC: {week.afcData.waiverCount} waivers, avg ${week.afcData.avgBid.toFixed(1)}
                     </span>
@@ -60,7 +60,7 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
                         style={{ height: `${Math.max(afcHeight, 5)}%` }}
                       >
                         {week.afcData.totalSpent > 0 && (
-                          <span className="text-xs font-medium text-white">
+                          <span className="text-xs font-medium text-primary-foreground">
                             ${week.afcData.totalSpent}
                           </span>
                         )}
@@ -77,7 +77,7 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
                         style={{ height: `${Math.max(nfcHeight, 5)}%` }}
                       >
                         {week.nfcData.totalSpent > 0 && (
-                          <span className="text-xs font-medium text-white">
+                          <span className="text-xs font-medium text-secondary-foreground">
                             ${week.nfcData.totalSpent}
                           </span>
                         )}
@@ -89,8 +89,8 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
 
                 {/* Top bids */}
                 {(week.afcData.topPlayer || week.nfcData.topPlayer) && (
-                  <div className="text-xs text-muted-foreground flex items-center justify-between">
-                    <span>
+                  <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground sm:grid-cols-2">
+                    <span className="sm:text-right">
                       {week.afcData.topPlayer &&
                         `AFC: ${week.afcData.topPlayer} ($${week.afcData.topBid})`}
                     </span>
@@ -107,20 +107,20 @@ export const WeeklySpendChart = memo<WeeklySpendChartProps>(props => {
 
         {/* Summary */}
         <div className="mt-6 pt-6 border-t">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-md bg-border text-center sm:grid-cols-3">
+            <div className="bg-background p-3">
               <div className="text-sm text-muted-foreground">Total AFC Spent</div>
               <div className="text-xl font-bold text-primary">
                 ${comparisons.reduce((sum, w) => sum + w.afcData.totalSpent, 0)}
               </div>
             </div>
-            <div>
+            <div className="bg-background p-3">
               <div className="text-sm text-muted-foreground">Total NFC Spent</div>
               <div className="text-xl font-bold text-secondary">
                 ${comparisons.reduce((sum, w) => sum + w.nfcData.totalSpent, 0)}
               </div>
             </div>
-            <div>
+            <div className="bg-background p-3">
               <div className="text-sm text-muted-foreground">Difference</div>
               <div className="text-xl font-bold">
                 ${Math.abs(comparisons.reduce((sum, w) => sum + w.spendDifference, 0)).toFixed(0)}
