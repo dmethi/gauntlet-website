@@ -6,6 +6,7 @@ import {
   type ScoringSettings,
 } from '@/lib/calculate-league-projections';
 import { getDriveFFLiveOdds } from '@/lib/driveff-live-odds';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 
 export const dynamic = 'force-dynamic';
 
@@ -124,6 +125,7 @@ export const GET = async (
     const scoringSettings: ScoringSettings = (league?.scoring_settings as ScoringSettings) || {};
     const leagueProjections = calculateLeagueProjections(rawProjectionsArray, scoringSettings);
     const projectionOf = (playerId: string): number => leagueProjections[playerId]?.points || 0;
+    const completedWeeks = resolveCompletedWeeks(league, nflState);
 
     // Group sleeper matchups by matchupId
     const pairs = new Map<number, SleeperMatchup[]>();
@@ -159,6 +161,7 @@ export const GET = async (
       const ownerA: User | null = rosterA ? (usersById.get(rosterA.ownerId) ?? null) : null;
       const ownerB: User | null = rosterB ? (usersById.get(rosterB.ownerId) ?? null) : null;
       const liveMatchup = driveFFFeeds.get(mid)?.latest?.matchup;
+      const isComplete = weekNumber <= completedWeeks || (liveMatchup?.gameProgress ?? 0) >= 1;
 
       const makeTeam = (m: SleeperMatchup | null, roster: Roster | null, owner: User | null) => {
         const allStarters = (m?.starters || []) as string[];
@@ -205,12 +208,20 @@ export const GET = async (
 
       const teams = [makeTeam(a, rosterA, ownerA)] as any[];
       if (b) teams.push(makeTeam(b, rosterB, ownerB));
+      const winnerRosterId =
+        isComplete && teams.length === 2
+          ? teams[0].points > teams[1].points
+            ? teams[0].rosterId
+            : teams[1].points > teams[0].points
+              ? teams[1].rosterId
+              : null
+          : null;
 
       return {
         matchupId: mid,
         teams,
-        summary: { winnerRosterId: null },
-        isComplete: false,
+        summary: { winnerRosterId },
+        isComplete,
       };
     });
 

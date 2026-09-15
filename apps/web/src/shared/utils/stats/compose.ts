@@ -8,6 +8,7 @@ import { aggregateTeamPoints, getTeamAndOpponentPoints } from './teams';
 import { rank, rankWithinLeagues } from './ranks';
 import { mean, median } from './medians';
 import { buildRosterLeagueMap, buildTeamInfoMap } from './join';
+import { resolveCompletedWeeks } from '@/shared/utils/season-weeks';
 import type { SleeperMatchup, SleeperRoster, SleeperUser } from '@gauntlet/types';
 import type { PositionPoints, TrackedPosition } from './positions';
 import type { TeamWeekData } from './teams';
@@ -160,18 +161,9 @@ export const buildStatsDataset = async ({
   // Create stats client instance
   const statsClient = createStatsClient();
 
-  // 1. Fetch NFL state
-  const nflState = await statsClient.fetchNFLState();
-  const stateWeek = Number((nflState as any)?.week);
-  const isValidWeek = Number.isFinite(stateWeek) && stateWeek >= 1 && stateWeek <= 18;
-  const currentWeek = isValidWeek ? Math.min(stateWeek, 18) : weekRange.to;
-  const actualRange = {
-    from: weekRange.from,
-    to: Math.min(weekRange.to, currentWeek),
-  };
-
-  // 2. Fetch league data and players index in parallel
-  const [leaguesData, playersIndex] = await Promise.all([
+  // 1. Fetch season context, league data, and players in parallel.
+  const [nflState, leaguesData, playersIndex] = await Promise.all([
+    statsClient.fetchNFLState(),
     Promise.all(
       leagueIds.map(async (id, i) => ({
         id,
@@ -181,6 +173,29 @@ export const buildStatsDataset = async ({
     ),
     statsClient.fetchPlayersIndex(),
   ]);
+
+  // Stats are analytical, so only aggregate completed weeks. The live NFL
+  // state applies to an active current-season league; archived leagues use
+  // their own regular-season boundary instead.
+  const completedWeeksByLeague = leaguesData.map(({ league }) =>
+    resolveCompletedWeeks(league, nflState),
+  );
+  const completedWeek = completedWeeksByLeague.length > 0 ? Math.min(...completedWeeksByLeague) : 0;
+  const referenceLeague = leaguesData[0]?.league;
+  const nflSeason = nflState.league_season ?? nflState.season;
+  const isActiveCurrentSeason =
+    referenceLeague?.season === nflSeason && referenceLeague.status !== 'complete';
+  const stateWeek = Number(nflState.week);
+  const hasValidStateWeek = Number.isFinite(stateWeek) && stateWeek >= 1 && stateWeek <= 18;
+  const currentWeek =
+    isActiveCurrentSeason && hasValidStateWeek
+      ? Math.min(stateWeek, 18)
+      : Math.min(completedWeek + 1, 18);
+  const currentSeason = referenceLeague?.season ?? nflSeason;
+  const actualRange = {
+    from: weekRange.from,
+    to: Math.min(weekRange.to, completedWeek),
+  };
 
   // 3. Fetch rosters and users for each league
   const rostersMap = new Map<string, SleeperRoster[]>();
@@ -283,7 +298,7 @@ export const buildStatsDataset = async ({
           };
 
           // Process each starter
-          for (const playerId of matchup.starters) {
+          for (const playerId of matchup.starters ?? []) {
             const player = playersIndex[playerId];
             const playerStats = weekPlayerStats[playerId];
             const fantasyPoints = matchup.players_points[playerId] || 0;
@@ -513,7 +528,7 @@ export const buildStatsDataset = async ({
 
   return {
     currentWeek,
-    currentSeason: nflState.season,
+    currentSeason,
     leagues: leaguesData,
     weekRange: actualRange,
     teams,

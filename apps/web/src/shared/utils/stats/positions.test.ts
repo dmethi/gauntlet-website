@@ -51,6 +51,33 @@ describe('Position Stats Utilities', () => {
   });
 
   describe('getStarterPositionPoints', () => {
+    it('treats an unset Sleeper lineup as zero position points', () => {
+      const matchups: Map<number, Map<string, SleeperMatchup[]>> = new Map([
+        [
+          2,
+          new Map([
+            [
+              'afc',
+              [
+                {
+                  roster_id: 1,
+                  matchup_id: 1,
+                  points: 0,
+                  starters: null,
+                  players: ['player1'],
+                  players_points: { player1: 0 },
+                } as unknown as SleeperMatchup,
+              ],
+            ],
+          ]),
+        ],
+      ]);
+
+      const result = getStarterPositionPoints({ matchups, playersIndex: mockPlayersIndex });
+
+      expect(result.get(2)?.get('afc-1')).toEqual({ QB: 0, RB: 0, WR: 0, TE: 0, DEF: 0 });
+    });
+
     it('sums points by position for each roster', () => {
       const matchups: Map<number, Map<string, SleeperMatchup[]>> = new Map([
         [

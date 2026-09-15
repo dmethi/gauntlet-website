@@ -60,8 +60,13 @@ describe('league matchups API', () => {
         starterPoints: { 0: 80 },
       },
     ]);
-    fetchNFLState.mockResolvedValue({ season: '2026' });
-    fetchLeague.mockResolvedValue({ scoring_settings: {} });
+    fetchNFLState.mockResolvedValue({ season: '2026', league_season: '2026', week: 2 });
+    fetchLeague.mockResolvedValue({
+      season: '2026',
+      status: 'in_season',
+      settings: { playoff_week_start: 15 },
+      scoring_settings: {},
+    });
     fetchWeeklyProjections.mockResolvedValue({
       p1: { player_id: 'p1', stats: { pts_ppr: 123.6 } },
       p2: { player_id: 'p2', stats: { pts_ppr: 110 } },
@@ -108,6 +113,51 @@ describe('league matchups API', () => {
       expect.objectContaining({ rosterId: 1, projectedPoints: 170.2, projectionSource: 'driveff' }),
       expect.objectContaining({ rosterId: 2, projectedPoints: 119.5, projectionSource: 'driveff' }),
     ]);
+    expect(body.matchups[0]).toEqual(
+      expect.objectContaining({
+        isComplete: true,
+        summary: { winnerRosterId: 1 },
+      }),
+    );
+  });
+
+  it('keeps the current week live until the driveFF matchup is fully progressed', async () => {
+    const { GET } = await import('./route');
+    const response = await GET(new NextRequest('https://gauntlet.test/api/matchups/league-1/2'), {
+      params: Promise.resolve({ leagueId: 'league-1', week: '2' }),
+    });
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).matchups[0]).toEqual(
+      expect.objectContaining({
+        isComplete: false,
+        summary: { winnerRosterId: null },
+      }),
+    );
+  });
+
+  it('marks a current-week simulation complete when driveFF reaches full progress', async () => {
+    const feed = await getDriveFFLiveOdds();
+    getDriveFFLiveOdds.mockResolvedValue({
+      ...feed,
+      latest: {
+        ...feed.latest,
+        matchup: { ...feed.latest.matchup, gameProgress: 1 },
+      },
+    });
+
+    const { GET } = await import('./route');
+    const response = await GET(new NextRequest('https://gauntlet.test/api/matchups/league-1/2'), {
+      params: Promise.resolve({ leagueId: 'league-1', week: '2' }),
+    });
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).matchups[0]).toEqual(
+      expect.objectContaining({
+        isComplete: true,
+        summary: { winnerRosterId: 1 },
+      }),
+    );
   });
 
   it('labels Sleeper projections when the driveFF feed is unavailable', async () => {
