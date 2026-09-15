@@ -6,7 +6,7 @@ const DataList = React.forwardRef<React.ElementRef<'ol'>, React.ComponentPropsWi
   ({ className, ...props }, ref) => (
     <ol
       ref={ref}
-      className={cn('divide-y divide-border/70 border-y border-border/70', className)}
+      className={cn('divide-y divide-border/80 border-y border-border/80', className)}
       {...props}
     />
   ),
@@ -23,7 +23,7 @@ const DataListItem = React.forwardRef<React.ElementRef<'li'>, DataListItemProps>
       ref={ref}
       data-interactive={interactive || undefined}
       className={cn(
-        'relative py-4 transition-colors duration-150 ease-out data-[interactive=true]:active:bg-muted/50 sm:px-4',
+        'relative py-3.5 transition-colors duration-150 ease-out data-[interactive=true]:cursor-pointer data-[interactive=true]:active:bg-muted/50 sm:px-4 sm:py-4',
         className,
       )}
       {...props}
@@ -65,7 +65,7 @@ const DataListMetrics = React.forwardRef<
   React.ElementRef<'dl'>,
   React.ComponentPropsWithoutRef<'dl'>
 >(({ className, ...props }, ref) => (
-  <dl ref={ref} className={cn('mt-3 grid grid-cols-3 gap-x-4 gap-y-3', className)} {...props} />
+  <dl ref={ref} className={cn('mt-2.5 grid grid-cols-3 gap-x-4 gap-y-2', className)} {...props} />
 ));
 DataListMetrics.displayName = 'DataListMetrics';
 
@@ -81,7 +81,7 @@ const DataListMetricLabel = React.forwardRef<HTMLElement, React.HTMLAttributes<H
     <dt
       ref={ref}
       className={cn(
-        'text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground',
+        'text-xs font-semibold uppercase leading-none tracking-[0.06em] text-muted-foreground',
         className,
       )}
       {...props}
