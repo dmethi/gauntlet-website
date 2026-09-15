@@ -115,6 +115,26 @@ describe('TrendsView', () => {
 
       expect(screen.getByText('Weekly Performance Trends')).toBeInTheDocument();
     });
+
+    it('provides compact mobile ledgers without dropping trend signals or history', () => {
+      const entry = createMockTeamEntry('team-1', 'Team Alpha');
+      const props: TrendsViewProps = {
+        allTeamEntries: [entry],
+        positionsMap: mockPositionsMap,
+        dataset: createMockDataset(),
+      };
+
+      const { container } = render(<TrendsView {...props} />);
+
+      expect(container.querySelector('[data-mobile-ledger="power-rankings"]')).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-mobile-ledger="weekly-performance"]'),
+      ).toBeInTheDocument();
+      expect(screen.getAllByRole('img', { name: /Team Alpha .* trend/ }).length).toBeGreaterThan(1);
+      expect(
+        screen.getAllByRole('group', { name: /Team Alpha complete weekly history/ }).length,
+      ).toBeGreaterThan(1);
+    });
   });
 
   describe('Position Performance Trends', () => {

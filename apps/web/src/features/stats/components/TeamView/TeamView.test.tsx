@@ -268,6 +268,27 @@ describe('TeamView component', () => {
   });
 
   describe('Data Display', () => {
+    it('provides compact mobile ledgers with expandable complete comparison data', () => {
+      const props = buildProps();
+      const { container } = render(<TeamView {...props} />);
+
+      expect(container.querySelector('[data-mobile-ledger="team-comparison"]')).toBeInTheDocument();
+      expect(
+        screen.getByRole('group', { name: 'Total Points complete comparison' }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('group', { name: 'Weekly Average complete comparison' }),
+      ).toBeInTheDocument();
+    });
+
+    it('retains weekly score signals and exposes secondary detail on demand', () => {
+      const props = buildProps();
+      render(<TeamView {...props} />);
+
+      expect(screen.getAllByRole('img', { name: /Week \d score comparison/ })).toHaveLength(3);
+      expect(screen.getAllByRole('group', { name: /Week \d complete details/ })).toHaveLength(3);
+    });
+
     it('displays team total points', () => {
       const props = buildProps();
       render(<TeamView {...props} />);

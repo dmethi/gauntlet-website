@@ -83,9 +83,9 @@ const usePositionConsistency = (
 };
 
 const getPositionDescriptor = (stdDev: number) => {
-  if (stdDev < 10) return '🎯 Very Steady';
-  if (stdDev < 18) return '📊 Somewhat Predictable';
-  return '🎲 Highly Volatile';
+  if (stdDev < 10) return 'Very steady';
+  if (stdDev < 18) return 'Somewhat predictable';
+  return 'Highly volatile';
 };
 
 export const PositionConsistencyAnalysis = ({
@@ -115,11 +115,11 @@ export const PositionConsistencyAnalysis = ({
                     textAnchor="end"
                     height={80}
                     interval={0}
-                    tick={{ fontSize: 10 }}
+                    tick={{ fontSize: 12 }}
                   />
                   <YAxis
                     label={{ value: `${position} Consistency`, angle: -90, position: 'insideLeft' }}
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 12 }}
                     domain={[0, 100]}
                     tickFormatter={value => Number(value).toFixed(0)}
                   />
@@ -131,21 +131,11 @@ export const PositionConsistencyAnalysis = ({
 
                       const row = payload[0].payload as PositionConsistencyRow;
                       return (
-                        <div
-                          className="p-4 rounded-lg shadow-xl border min-w-[320px]"
-                          style={{
-                            backgroundColor: colors.core.charcoalSteel,
-                            borderColor: colors.core.regalGold,
-                            color: 'white',
-                          }}
-                        >
-                          <div
-                            className="font-bold text-lg mb-1"
-                            style={{ color: colors.core.regalGold }}
-                          >
+                        <div className="min-w-[280px] rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-xl">
+                          <div className="mb-1 text-lg font-bold text-secondary">
                             {row.teamName}
                           </div>
-                          <div className="text-xs text-gray-300 mb-3">{row.leagueName}</div>
+                          <div className="mb-3 text-xs text-muted-foreground">{row.leagueName}</div>
                           <div className="space-y-3 text-sm">
                             <div className="grid grid-cols-2 gap-4">
                               <div>
@@ -153,19 +143,19 @@ export const PositionConsistencyAnalysis = ({
                                 <div className="text-lg font-bold">
                                   {row.consistency.toFixed(1)}/100
                                 </div>
-                                <div className="text-xs text-gray-400">
+                                <div className="text-xs text-muted-foreground">
                                   {getPositionDescriptor(row.stdDev)}
                                 </div>
                               </div>
                               <div>
                                 <div className="font-semibold">{position} Range</div>
                                 <div className="text-lg font-bold">{row.range.toFixed(1)}</div>
-                                <div className="text-xs text-gray-400">
+                                <div className="text-xs text-muted-foreground">
                                   {row.min.toFixed(1)} - {row.max.toFixed(1)}
                                 </div>
                               </div>
                             </div>
-                            <div className="border-t border-gray-600 pt-2">
+                            <div className="border-t border-border pt-2">
                               <div className="grid grid-cols-2 gap-3 text-xs">
                                 <div>
                                   Median:{' '}
@@ -201,15 +191,15 @@ export const PositionConsistencyAnalysis = ({
               <h4 className="font-semibold mb-2">{position} Consistency Guide</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
                 <div>
-                  <span className="font-semibold">🎯 Steady {position}:</span> Low week-to-week
+                  <span className="font-semibold">Steady {position}:</span> Low week-to-week
                   variance. Reliable production.
                 </div>
                 <div>
-                  <span className="font-semibold">📊 Average {position}:</span> Some volatility but
+                  <span className="font-semibold">Average {position}:</span> Some volatility but
                   generally predictable.
                 </div>
                 <div>
-                  <span className="font-semibold">🎲 Volatile {position}:</span> High variance.
+                  <span className="font-semibold">Volatile {position}:</span> High variance.
                   Boom-or-bust potential.
                 </div>
               </div>

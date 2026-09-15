@@ -66,7 +66,7 @@ export const TeamView = memo(
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <label className="text-sm font-medium text-muted-foreground">Select Team</label>
             <Select value={selectedTeamKey} onValueChange={setSelectedTeamKey}>
-              <SelectTrigger className="w-full sm:w-80">
+              <SelectTrigger className="min-h-11 w-full sm:w-80">
                 <SelectValue placeholder="Select team" />
               </SelectTrigger>
               <SelectContent>

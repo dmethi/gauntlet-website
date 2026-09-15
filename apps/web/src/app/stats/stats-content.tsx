@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeftRight,
   Calendar,
+  ChevronRight,
   ClipboardCheck,
   ScatterChart,
   Shuffle,
@@ -55,6 +56,7 @@ const VIEWS: { key: ViewKey; label: string; Icon: typeof Users }[] = [
 ];
 
 export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentProps) => {
+  const viewButtonRefs = useRef(new Map<ViewKey, HTMLButtonElement>());
   const season = leagues[0]?.season ? String(leagues[0].season) : undefined;
   const teamsMap = useMemo(() => new Map(dataset.teams), [dataset.teams]);
   const allTeamEntries = useMemo(() => Array.from(teamsMap.entries()), [teamsMap]);
@@ -73,6 +75,11 @@ export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentPro
   const [selectedTeamKey] = useState<string>(searchParams.team || teamOptions[0]?.key || '');
   const [currentView, setCurrentView] = useState<ViewKey>(searchParams.view || 'team');
   const [selectedWeek, setSelectedWeek] = useState<string>(searchParams.week || 'season');
+
+  useEffect(() => {
+    const activeButton = viewButtonRefs.current.get(currentView);
+    activeButton?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+  }, [currentView]);
 
   // Available weeks for dropdown
   const availableWeeks = Array.from({ length: dataset.currentWeek }, (_, i) => i + 1).filter(
@@ -159,25 +166,42 @@ export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentPro
 
   return (
     <div className="md:grid md:grid-cols-[200px_minmax(0,1fr)] md:gap-6">
-      {/* Below md: horizontal scrollable strip, never a squeezed sidebar.
-          At md+: persistent vertical rail, icon+label, left-border active state.
-          Validated live against real 2025 data in /playground/stats before porting. */}
-      <nav className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 pb-3 md:pb-0 mb-4 md:mb-0 md:border-r md:border-border md:pr-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {VIEWS.map(v => (
-          <button
-            key={v.key}
-            onClick={() => setCurrentView(v.key)}
-            className={`flex items-center gap-2 md:gap-2.5 shrink-0 px-3 py-1.5 md:px-2.5 md:py-2 rounded-full md:rounded-md text-xs font-semibold uppercase tracking-wide transition-colors text-left ${
-              currentView === v.key
-                ? 'bg-primary/10 text-primary md:border-l-2 md:border-primary md:-ml-[2px] md:pl-[calc(0.625rem+2px)]'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-            }`}
-          >
-            <v.Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
-            {v.label}
-          </button>
-        ))}
-      </nav>
+      {/* Mobile keeps every destination in one labeled horizontal rail; the edge fade and arrow
+          signal that more views continue off-screen. Desktop expands the same IA into a rail. */}
+      <div className="relative md:contents">
+        <nav
+          aria-label="Stats views"
+          tabIndex={0}
+          className="flex gap-1 overflow-x-auto -mx-4 mb-4 px-4 pb-3 pr-14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:-mx-6 sm:px-6 md:mx-0 md:mb-0 md:flex-col md:overflow-visible md:border-r md:border-border md:px-0 md:pb-0 md:pr-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {VIEWS.map(v => (
+            <button
+              key={v.key}
+              ref={button => {
+                if (button) viewButtonRefs.current.set(v.key, button);
+                else viewButtonRefs.current.delete(v.key);
+              }}
+              onClick={() => setCurrentView(v.key)}
+              aria-current={currentView === v.key ? 'page' : undefined}
+              className={`flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-left text-xs font-semibold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:gap-2.5 md:rounded-md md:px-2.5 ${
+                currentView === v.key
+                  ? 'bg-primary/10 text-primary md:border-l-2 md:border-primary md:-ml-[2px] md:pl-[calc(0.625rem+2px)]'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+              }`}
+            >
+              <v.Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+              {v.label}
+            </button>
+          ))}
+        </nav>
+        <span
+          aria-hidden="true"
+          data-scroll-cue
+          className="pointer-events-none absolute right-0 top-0 flex min-h-11 w-12 items-center justify-end bg-gradient-to-l from-background via-background/95 to-transparent pr-1 text-muted-foreground md:hidden"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </span>
+      </div>
       <div className="min-w-0">{renderView()}</div>
     </div>
   );

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { colors } from '@/lib/colors';
 import type { PlainStatsDataset } from '@/shared/utils/stats';
 import type { TeamData, TeamInfo, TrendsViewProps } from '@/features/stats';
+import { MobileTrendLedger, type TrendDirection, TrendSignal } from './MobileTrendLedger';
 
 interface PowerRankingsEvolutionProps extends Pick<TrendsViewProps, 'allTeamEntries'> {
   dataset: PlainStatsDataset;
@@ -15,7 +15,7 @@ interface PowerRankingData {
   teamInfo: TeamInfo;
   weeklyRanks: number[];
   weeklyScores: number[];
-  trend: string;
+  trend: TrendDirection;
   recordText: string;
   totalPoints: number;
 }
@@ -71,7 +71,7 @@ const usePowerRankingRows = (
         teamInfo: TeamInfo;
         weeklyScores: number[];
         weeklyRanks: number[];
-        trend: string;
+        trend: TrendDirection;
       }
     >();
 
@@ -155,7 +155,7 @@ const usePowerRankingRows = (
             teamInfo: team.teamInfo,
             weeklyScores: [],
             weeklyRanks: [],
-            trend: '',
+            trend: 'steady',
           });
         }
         const ranking = weeklyPowerRankings.get(team.key)!;
@@ -167,15 +167,15 @@ const usePowerRankingRows = (
     weeklyPowerRankings.forEach(data => {
       const { weeklyRanks } = data;
       if (weeklyRanks.length < 2) {
-        data.trend = '➡️';
+        data.trend = 'steady';
         return;
       }
 
       const recent = weeklyRanks.slice(-2);
       const change = recent[0] - recent[1];
-      if (change < -2) data.trend = '🚀';
-      else if (change > 2) data.trend = '📉';
-      else data.trend = '➡️';
+      if (change < -2) data.trend = 'improving';
+      else if (change > 2) data.trend = 'declining';
+      else data.trend = 'steady';
     });
 
     return Array.from(weeklyPowerRankings.entries())
@@ -219,7 +219,29 @@ export const PowerRankingsEvolution = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="overflow-auto rounded-md border">
+        <MobileTrendLedger
+          kind="power-rankings"
+          scoreDigits={2}
+          rows={powerRankingRows.map(row => ({
+            key: row.teamKey,
+            teamName: row.teamInfo.teamName,
+            leagueName: row.teamInfo.leagueName,
+            trend: row.trend,
+            context: `${row.recordText} · ${row.totalPoints.toFixed(1)} pts`,
+            history: Array.from({ length: Math.max(0, dataset.currentWeek - 1) }, (_, index) => ({
+              week: index + 1,
+              rank: row.weeklyRanks[index],
+              score: row.weeklyScores[index],
+            })),
+          }))}
+        />
+
+        <div
+          className="hidden overflow-auto rounded-md border sm:block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          role="region"
+          aria-label="Power rankings evolution table"
+          tabIndex={0}
+        >
           <table className="w-full text-xs">
             <thead className="bg-muted/50">
               <tr>
@@ -232,16 +254,12 @@ export const PowerRankingsEvolution = ({
                 ).map(week => (
                   <th
                     key={week}
-                    className="px-3 py-3 text-center font-semibold min-w-[50px]"
-                    style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
+                    className="min-w-[50px] bg-foreground px-3 py-3 text-center font-semibold text-background"
                   >
                     W{week}
                   </th>
                 ))}
-                <th
-                  className="px-3 py-3 text-center font-semibold min-w-[80px]"
-                  style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
-                >
+                <th className="min-w-[80px] bg-primary px-3 py-3 text-center font-semibold text-primary-foreground">
                   Weekly Trend
                 </th>
               </tr>
@@ -302,50 +320,12 @@ export const PowerRankingsEvolution = ({
                     );
                   })}
                   <td className="px-3 py-2 text-center">
-                    <div className="flex items-center justify-center gap-2 text-lg">
-                      <span>{row.trend}</span>
-                      <div className="w-16 h-8">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart
-                            data={(() => {
-                              const teamData = allTeamEntries.find(
-                                ([key]) => key === row.teamKey,
-                              )?.[1];
-                              if (!teamData) return [];
-
-                              return teamData.teamScores
-                                .filter(score => score.value > 0)
-                                .map(score => ({
-                                  week: score.week,
-                                  score: score.value,
-                                }));
-                            })()}
-                          >
-                            <Line
-                              type="monotone"
-                              dataKey="score"
-                              stroke={colors.core.regalGold}
-                              strokeWidth={2}
-                              dot={false}
-                            />
-                            <Tooltip
-                              contentStyle={{
-                                backgroundColor: 'rgba(0,0,0,0.8)',
-                                border: 'none',
-                                borderRadius: '4px',
-                                color: 'white',
-                                fontSize: '11px',
-                                padding: '4px 8px',
-                              }}
-                              formatter={(value: number | string) => [
-                                `${Number(value).toFixed(1)} pts`,
-                                'Score',
-                              ]}
-                              labelFormatter={week => `Week ${week}`}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
+                    <div className="flex items-center justify-center">
+                      <TrendSignal
+                        teamName={row.teamInfo.teamName}
+                        trend={row.trend}
+                        scores={row.weeklyScores}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -365,8 +345,8 @@ export const PowerRankingsEvolution = ({
             </div>
             <div>
               <p>
-                <strong>Trends:</strong> 🚀 Rising Power (rank up 3+), ➡️ Stable, 📉 Declining Power
-                (rank down 3+)
+                <strong>Trends:</strong> Rising power (rank up 3+), stable, declining power (rank
+                down 3+)
               </p>
             </div>
           </div>

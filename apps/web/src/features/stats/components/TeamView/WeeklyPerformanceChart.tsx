@@ -1,4 +1,5 @@
 import { memo, useMemo } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { colors } from '../../../../../../../brand/colors';
 import type { WeeklyPerformanceRow } from './utils';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
@@ -47,12 +48,12 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                 <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                   <span className="text-sm font-semibold">Week {row.week}</span>
                   <span
-                    className={`rounded-full px-2 py-1 text-xs font-bold text-white ${
+                    className={`rounded-full border px-2 py-1 text-xs font-bold ${
                       row.result === 'W'
-                        ? 'bg-green-600'
+                        ? 'border-success/30 bg-success/15 text-success'
                         : row.result === 'L'
-                          ? 'bg-red-600'
-                          : 'bg-slate-400'
+                          ? 'border-destructive/30 bg-destructive/15 text-destructive'
+                          : 'border-border bg-muted text-muted-foreground'
                     }`}
                   >
                     {row.result}
@@ -86,7 +87,11 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div
+                className="space-y-1"
+                role="img"
+                aria-label={`Week ${row.week} score comparison: team ${row.teamScore.toFixed(1)}, opponent ${row.opponentScore.toFixed(1)}`}
+              >
                 <div className="flex items-center gap-2 text-xs">
                   <span className="w-16 text-muted-foreground">Team</span>
                   <div className="relative h-2 flex-1 rounded-full bg-muted">
@@ -115,7 +120,44 @@ export const WeeklyPerformanceChart = memo(({ rows, teamCount }: WeeklyPerforman
                 </div>
               </div>
 
-              <div className="grid gap-2 text-xs md:grid-cols-4">
+              <details
+                className="group rounded-md border border-border/70 bg-background/70 md:hidden"
+                aria-label={`Week ${row.week} complete details`}
+              >
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between px-3 text-xs font-semibold text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
+                  League and opponent detail
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="h-4 w-4 transition-transform group-open:rotate-180"
+                  />
+                </summary>
+                <div className="grid gap-2 border-t border-border/70 p-2 text-xs">
+                  <div className="flex items-center justify-between p-2">
+                    <span className="text-muted-foreground">vs League Avg</span>
+                    <span className="font-mono font-semibold">
+                      {row.vsLeagueAverage > 0 ? '+' : ''}
+                      {row.vsLeagueAverage.toFixed(1)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-2">
+                    <span className="text-muted-foreground">vs League Median</span>
+                    <span className="font-mono font-semibold">
+                      {row.vsLeagueMedian > 0 ? '+' : ''}
+                      {row.vsLeagueMedian.toFixed(1)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-2">
+                    <span className="text-muted-foreground">Opponent rank ({teamCount})</span>
+                    <span className="font-mono font-semibold">{row.opponentRank24 || '—'}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2">
+                    <span className="text-muted-foreground">Opponent rank (league)</span>
+                    <span className="font-mono font-semibold">{row.opponentRankLeague || '—'}</span>
+                  </div>
+                </div>
+              </details>
+
+              <div className="hidden gap-2 text-xs md:grid md:grid-cols-4">
                 <div className="bg-background/70 p-2">
                   <div className="text-muted-foreground">vs League Avg</div>
                   <div

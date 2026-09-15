@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { rank, TrackedPosition } from '@/shared/utils/stats';
 import { colors } from '@/lib/colors';
 import type { PlainStatsDataset } from '@/shared/utils/stats';
 import type { PositionData, TeamData, TeamInfo, TrendsViewProps } from '@/features/stats';
+import { MobileTrendLedger, type TrendDirection, TrendSignal } from './MobileTrendLedger';
 
 interface PositionPerformanceTrendsProps
   extends Pick<TrendsViewProps, 'allTeamEntries' | 'positionsMap'> {
@@ -16,7 +16,7 @@ interface PositionPerformanceRow {
   teamInfo: TeamInfo;
   weeklyRanks: number[];
   weeklyScores: number[];
-  trend: string;
+  trend: TrendDirection;
 }
 
 const buildRowsForPosition = (
@@ -31,7 +31,7 @@ const buildRowsForPosition = (
       teamInfo: TeamInfo;
       weeklyRanks: number[];
       weeklyScores: number[];
-      trend: string;
+      trend: TrendDirection;
     }
   >();
 
@@ -56,7 +56,7 @@ const buildRowsForPosition = (
           teamInfo: team.teamInfo,
           weeklyRanks: [],
           weeklyScores: [],
-          trend: '',
+          trend: 'steady',
         });
       }
 
@@ -69,15 +69,15 @@ const buildRowsForPosition = (
   rankings.forEach(data => {
     const { weeklyRanks } = data;
     if (weeklyRanks.length < 2) {
-      data.trend = '➡️';
+      data.trend = 'steady';
       return;
     }
 
     const recent = weeklyRanks.slice(-2);
     const change = recent[0] - recent[1];
-    if (change < -2) data.trend = '📈';
-    else if (change > 2) data.trend = '📉';
-    else data.trend = '➡️';
+    if (change < -2) data.trend = 'improving';
+    else if (change > 2) data.trend = 'declining';
+    else data.trend = 'steady';
   });
 
   return Array.from(rankings.entries());
@@ -125,7 +125,31 @@ export const PositionPerformanceTrends = ({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="overflow-auto rounded-md border">
+            <MobileTrendLedger
+              kind={`${position.toLowerCase()}-performance`}
+              scoreDigits={1}
+              rows={rows.map(([teamKey, data]) => ({
+                key: teamKey,
+                teamName: data.teamInfo.teamName,
+                leagueName: data.teamInfo.leagueName,
+                trend: data.trend,
+                history: Array.from(
+                  { length: Math.max(0, dataset.currentWeek - 1) },
+                  (_, index) => ({
+                    week: index + 1,
+                    rank: data.weeklyRanks[index],
+                    score: data.weeklyScores[index],
+                  }),
+                ),
+              }))}
+            />
+
+            <div
+              className="hidden overflow-auto rounded-md border sm:block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              role="region"
+              aria-label={`${position} weekly performance trend table`}
+              tabIndex={0}
+            >
               <table className="w-full text-xs">
                 <thead className="bg-muted/50">
                   <tr>
@@ -138,16 +162,12 @@ export const PositionPerformanceTrends = ({
                     ).map(week => (
                       <th
                         key={week}
-                        className="px-3 py-3 text-center font-semibold min-w-[50px]"
-                        style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
+                        className="min-w-[50px] bg-foreground px-3 py-3 text-center font-semibold text-background"
                       >
                         W{week}
                       </th>
                     ))}
-                    <th
-                      className="px-3 py-3 text-center font-semibold min-w-[60px]"
-                      style={{ backgroundColor: colors.core.crimsonRed, color: 'white' }}
-                    >
+                    <th className="min-w-[60px] bg-primary px-3 py-3 text-center font-semibold text-primary-foreground">
                       Trend
                     </th>
                   </tr>
@@ -206,38 +226,12 @@ export const PositionPerformanceTrends = ({
                         );
                       })}
                       <td className="px-3 py-2 text-center">
-                        <div className="w-16 h-8">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart
-                              data={data.weeklyScores.map((score, index) => ({
-                                week: index + 1,
-                                score,
-                              }))}
-                            >
-                              <Line
-                                type="monotone"
-                                dataKey="score"
-                                stroke={colors.core.regalGold}
-                                strokeWidth={2}
-                                dot={false}
-                              />
-                              <Tooltip
-                                contentStyle={{
-                                  backgroundColor: 'rgba(0,0,0,0.8)',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  color: 'white',
-                                  fontSize: '11px',
-                                  padding: '4px 8px',
-                                }}
-                                formatter={(value: number | string) => [
-                                  `${Number(value).toFixed(1)}`,
-                                  'Score',
-                                ]}
-                                labelFormatter={week => `Week ${week}`}
-                              />
-                            </LineChart>
-                          </ResponsiveContainer>
+                        <div className="flex items-center justify-center gap-2">
+                          <TrendSignal
+                            teamName={data.teamInfo.teamName}
+                            trend={data.trend}
+                            scores={data.weeklyScores}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -254,7 +248,7 @@ export const PositionPerformanceTrends = ({
                   {position} performance
                 </p>
                 <p>
-                  <strong>Trends:</strong> 📈 Improving, ➡️ Stable, 📉 Declining
+                  <strong>Trends:</strong> Improving, stable, declining
                 </p>
               </div>
             </div>

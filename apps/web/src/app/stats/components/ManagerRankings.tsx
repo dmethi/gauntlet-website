@@ -93,11 +93,16 @@ export const ManagerRankings = ({
           </CardTitle>
           <CardDescription>
             Transaction efficiency ranking based on Cost-Adjusted VORP (FAAB penalties applied) with
-            playoff weighting. Click a manager to see their transaction history.
+            playoff weighting. Open a manager to see their transaction history.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            role="region"
+            aria-label="Manager rankings table"
+            tabIndex={0}
+          >
             <table className="w-full">
               <thead>
                 <tr className="border-b">
@@ -114,12 +119,22 @@ export const ManagerRankings = ({
                 {managerStats.map((manager, index) => (
                   <tr
                     key={manager.teamName}
-                    className="border-b hover:bg-muted/50 cursor-pointer"
+                    className="border-b hover:bg-muted/50"
                     onClick={() => setSelectedManager(manager.teamName)}
                   >
                     <td className="p-2 font-medium">#{index + 1}</td>
-                    <td className="p-2 font-medium text-primary hover:underline">
-                      {manager.teamName}
+                    <td className="p-0 font-medium">
+                      <button
+                        type="button"
+                        className="min-h-11 w-full px-2 text-left text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                        aria-label={`View ${manager.teamName} details`}
+                        onClick={event => {
+                          event.stopPropagation();
+                          setSelectedManager(manager.teamName);
+                        }}
+                      >
+                        {manager.teamName}
+                      </button>
                     </td>
                     <td
                       className={`p-2 text-right font-mono font-bold ${deltaTextClass(manager.netVORP)}`}

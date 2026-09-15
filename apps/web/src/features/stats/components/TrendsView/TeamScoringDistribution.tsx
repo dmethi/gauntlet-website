@@ -25,16 +25,16 @@ export const TeamScoringDistribution = ({
           <h4 className="font-semibold mb-2">Reading Team Ridge Plots</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
             <div>
-              <span className="font-semibold">🎯 Narrow Ridge:</span> Tall, thin curve = consistent
+              <span className="font-semibold">Narrow ridge:</span> Tall, thin curve = consistent
               scoring.
             </div>
             <div>
-              <span className="font-semibold">🌊 Wide Ridge:</span> Flat, spread curve = volatile
+              <span className="font-semibold">Wide ridge:</span> Flat, spread curve = volatile
               performance.
             </div>
             <div>
-              <span className="font-semibold">📍 Median Line:</span> Dashed vertical line shows
-              typical output.
+              <span className="font-semibold">Median line:</span> Dashed vertical line shows typical
+              output.
             </div>
           </div>
         </div>

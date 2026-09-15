@@ -41,15 +41,15 @@ export const PositionScoringDistribution = ({
                 <h4 className="font-semibold mb-2">{position} Ridge Plot Guide</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
                   <div>
-                    <span className="font-semibold">🎯 Narrow Ridge:</span> Tall, thin curve =
+                    <span className="font-semibold">Narrow ridge:</span> Tall, thin curve =
                     consistent {position} scoring.
                   </div>
                   <div>
-                    <span className="font-semibold">🌊 Wide Ridge:</span> Flat, spread curve =
-                    volatile {position} performance.
+                    <span className="font-semibold">Wide ridge:</span> Flat, spread curve = volatile{' '}
+                    {position} performance.
                   </div>
                   <div>
-                    <span className="font-semibold">📍 Median Line:</span> Dashed line shows typical{' '}
+                    <span className="font-semibold">Median line:</span> Dashed line shows typical{' '}
                     {position} production.
                   </div>
                 </div>

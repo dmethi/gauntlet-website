@@ -64,9 +64,9 @@ const useConsistencyData = (allTeamEntries: [string, TeamData][]): ConsistencyRo
 };
 
 const getConsistencyDescriptor = (stdDev: number) => {
-  if (stdDev < 15) return '🎯 Very Steady';
-  if (stdDev < 25) return '📊 Somewhat Predictable';
-  return '🎲 Highly Volatile';
+  if (stdDev < 15) return 'Very steady';
+  if (stdDev < 25) return 'Somewhat predictable';
+  return 'Highly volatile';
 };
 
 export const TeamConsistencyAnalysis = ({
@@ -93,11 +93,11 @@ export const TeamConsistencyAnalysis = ({
                 textAnchor="end"
                 height={80}
                 interval={0}
-                tick={{ fontSize: 10 }}
+                tick={{ fontSize: 12 }}
               />
               <YAxis
                 label={{ value: 'Consistency Score', angle: -90, position: 'insideLeft' }}
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 12 }}
                 domain={[0, 100]}
                 tickFormatter={value => Number(value).toFixed(0)}
               />
@@ -110,21 +110,9 @@ export const TeamConsistencyAnalysis = ({
                   const row = payload[0].payload as ConsistencyRow;
 
                   return (
-                    <div
-                      className="p-4 rounded-lg shadow-xl border min-w-[320px]"
-                      style={{
-                        backgroundColor: colors.core.charcoalSteel,
-                        borderColor: colors.core.regalGold,
-                        color: 'white',
-                      }}
-                    >
-                      <div
-                        className="font-bold text-lg mb-1"
-                        style={{ color: colors.core.regalGold }}
-                      >
-                        {row.teamName}
-                      </div>
-                      <div className="text-xs text-gray-300 mb-3">{row.leagueName}</div>
+                    <div className="min-w-[280px] rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-xl">
+                      <div className="mb-1 text-lg font-bold text-secondary">{row.teamName}</div>
+                      <div className="mb-3 text-xs text-muted-foreground">{row.leagueName}</div>
                       <div className="space-y-3 text-sm">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
@@ -132,19 +120,19 @@ export const TeamConsistencyAnalysis = ({
                             <div className="text-lg font-bold">
                               {row.consistency.toFixed(1)}/100
                             </div>
-                            <div className="text-xs text-gray-400">
+                            <div className="text-xs text-muted-foreground">
                               {getConsistencyDescriptor(row.stdDev)}
                             </div>
                           </div>
                           <div>
                             <div className="font-semibold">Score Range</div>
                             <div className="text-lg font-bold">{row.range.toFixed(1)}</div>
-                            <div className="text-xs text-gray-400">
+                            <div className="text-xs text-muted-foreground">
                               {row.min.toFixed(1)} - {row.max.toFixed(1)}
                             </div>
                           </div>
                         </div>
-                        <div className="border-t border-gray-600 pt-2">
+                        <div className="border-t border-border pt-2">
                           <div className="grid grid-cols-2 gap-3 text-xs">
                             <div>
                               Median: <span className="font-semibold">{row.median.toFixed(1)}</span>
@@ -179,15 +167,15 @@ export const TeamConsistencyAnalysis = ({
           <h4 className="font-semibold mb-2">How to Read Consistency</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground">
             <div>
-              <span className="font-semibold">🎯 Steady Teams:</span> Low standard deviation
-              (&lt;15), narrow score ranges. Reliable for playoffs.
+              <span className="font-semibold">Steady teams:</span> Low standard deviation (&lt;15),
+              narrow score ranges. Reliable for playoffs.
             </div>
             <div>
-              <span className="font-semibold">📊 Average Teams:</span> Medium volatility (15-25 std
+              <span className="font-semibold">Average teams:</span> Medium volatility (15-25 std
               dev). Some variance but predictable.
             </div>
             <div>
-              <span className="font-semibold">🎲 Volatile Teams:</span> High volatility (&gt;25 std
+              <span className="font-semibold">Volatile teams:</span> High volatility (&gt;25 std
               dev). Boom-or-bust potential.
             </div>
           </div>

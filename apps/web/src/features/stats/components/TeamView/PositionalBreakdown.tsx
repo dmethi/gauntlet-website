@@ -1,9 +1,11 @@
 import { memo, useMemo, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { colors } from '../../../../../../../brand/colors';
 import type { PlayerContributionGroup, PositionalBreakdownResult } from './utils';
 import type { TrackedPosition } from '@/shared/utils/stats';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
 import { PlayerContributions } from './PlayerContributions';
+import { deltaTextClass } from '@/lib/stat-colors';
 
 interface PositionalBreakdownProps {
   breakdown: Map<TrackedPosition, PositionalBreakdownResult>;
@@ -62,7 +64,7 @@ export const PositionalBreakdown = memo(
             Positional Breakdown
           </h3>
           <p className="text-sm text-muted-foreground">
-            Season totals and weekly performance by position. Click a position to view detailed
+            Season totals and weekly performance by position. Open a position to view detailed
             trends and player contributions.
           </p>
         </header>
@@ -78,18 +80,23 @@ export const PositionalBreakdown = memo(
                 <button
                   type="button"
                   onClick={() => toggle(position)}
-                  className="flex w-full items-center justify-between gap-3 border-b px-4 py-3 text-left"
-                  style={{ backgroundColor: colors.core.charcoalSteel, color: 'white' }}
+                  aria-expanded={isExpanded}
+                  aria-controls={`position-${position}-details`}
+                  className="flex min-h-11 w-full items-center justify-between gap-3 border-b bg-foreground px-4 py-3 text-left text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                 >
                   <div>
                     <div className="text-base font-semibold">{position}</div>
-                    <div className="text-xs text-white/80">
+                    <div className="text-xs text-background/80">
                       Season total {summary.seasonTotal.toFixed(1)} · Rank {teamCount}{' '}
                       {summary.rank24 || '—'} · League {summary.rankLeague || '—'}
                     </div>
                   </div>
-                  <span className="text-sm text-white/80">
+                  <span className="flex items-center gap-2 text-sm text-background/80">
                     {isExpanded ? 'Hide' : 'Show'} details
+                    <ChevronDown
+                      aria-hidden="true"
+                      className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    />
                   </span>
                 </button>
 
@@ -178,8 +185,78 @@ export const PositionalBreakdown = memo(
                 </div>
 
                 {isExpanded ? (
-                  <div className="space-y-4 p-4">
-                    <div className="overflow-x-auto rounded-md border">
+                  <div id={`position-${position}-details`} className="space-y-4 p-4">
+                    <div className="space-y-2 sm:hidden" data-mobile-ledger={`${position}-weeks`}>
+                      {data.weekly.map(row => (
+                        <details
+                          key={row.week}
+                          className="group rounded-md border bg-muted/20"
+                          aria-label={`${position} week ${row.week} complete details`}
+                        >
+                          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
+                            <span>
+                              <span className="block text-sm font-semibold">Week {row.week}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {row.teamPoints.toFixed(1)} points · rank {row.rank24 || '—'}
+                              </span>
+                            </span>
+                            <ChevronDown
+                              aria-hidden="true"
+                              className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180"
+                            />
+                          </summary>
+                          <dl className="grid grid-cols-2 gap-3 border-t border-border/70 p-3 text-xs">
+                            <div>
+                              <dt className="text-muted-foreground">League rank</dt>
+                              <dd className="font-mono font-semibold">{row.rankLeague || '—'}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-muted-foreground">Opponent</dt>
+                              <dd className="font-mono font-semibold">
+                                {row.opponentPoints.toFixed(1)}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="text-muted-foreground">Opponent rank ({teamCount})</dt>
+                              <dd className="font-mono font-semibold">
+                                {row.opponentRank24 || '—'}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="text-muted-foreground">Opponent league rank</dt>
+                              <dd className="font-mono font-semibold">
+                                {row.opponentRankLeague || '—'}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="text-muted-foreground">vs average</dt>
+                              <dd
+                                className={`font-mono font-semibold ${deltaTextClass(row.vsAverage)}`}
+                              >
+                                {row.vsAverage > 0 ? '+' : ''}
+                                {row.vsAverage.toFixed(1)}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="text-muted-foreground">vs median</dt>
+                              <dd
+                                className={`font-mono font-semibold ${deltaTextClass(row.vsMedian)}`}
+                              >
+                                {row.vsMedian > 0 ? '+' : ''}
+                                {row.vsMedian.toFixed(1)}
+                              </dd>
+                            </div>
+                          </dl>
+                        </details>
+                      ))}
+                    </div>
+
+                    <div
+                      className="hidden overflow-x-auto rounded-md border sm:block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      role="region"
+                      aria-label={`${position} weekly performance table`}
+                      tabIndex={0}
+                    >
                       <table className="w-full text-sm">
                         <thead className="bg-muted/40">
                           <tr>
