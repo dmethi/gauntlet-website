@@ -10,6 +10,12 @@ import { Container, PageHeader } from '@gauntlet/ui';
 import { ScenarioBuilder, SeedingTable } from '@/features/playoffs/components/scenarios';
 import { usePlayoffSeedingWithScenarios, useWeek14Scenarios } from '@/features/playoffs/hooks';
 
+const lastUpdatedFormatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'America/New_York',
+});
+
 /**
  * Loading skeleton for seeding section
  */
@@ -146,7 +152,11 @@ export default function PlayoffScenariosPage() {
           Probabilities calculated using Monte Carlo simulations based on historical scoring
           distributions and current projections.
         </p>
-        <p className="mt-1">Last updated: {new Date().toLocaleString()}</p>
+        {currentSeedingData?.generatedAt && (
+          <p className="mt-1">
+            Last updated: {lastUpdatedFormatter.format(new Date(currentSeedingData.generatedAt))}
+          </p>
+        )}
       </div>
     </Container>
   );
