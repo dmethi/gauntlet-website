@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ScheduleAnalysis } from './ScheduleAnalysis';
 import type { ScheduleAnalysisProps, TeamData } from '@/features/stats/types';
 import type { PlainStatsDataset } from '@/shared/utils/stats';
@@ -73,6 +74,31 @@ describe('ScheduleAnalysis', () => {
 
       expect(screen.getByText(/Hypothetical Records Matrix/i)).toBeInTheDocument();
     });
+
+    it('keeps each mobile matrix behind a labeled, collapsed expert disclosure', async () => {
+      const user = userEvent.setup();
+      const entries = [
+        createMockTeamEntry('team-1', 'Team Alpha', 'AFC'),
+        createMockTeamEntry('team-2', 'Team Beta', 'AFC'),
+      ];
+
+      render(<ScheduleAnalysis allTeamEntries={entries} dataset={createMockDataset()} />);
+
+      const overallDisclosure = screen.getByRole('button', {
+        name: /Explore full 2 × 2 Hypothetical Records Matrix/i,
+      });
+      expect(overallDisclosure).toHaveAttribute('aria-expanded', 'false');
+
+      await user.click(overallDisclosure);
+
+      expect(overallDisclosure).toHaveAttribute('aria-expanded', 'true');
+      expect(overallDisclosure).toHaveAccessibleName(
+        /Hide full 2 × 2 Hypothetical Records Matrix/i,
+      );
+      expect(
+        screen.getByRole('region', { name: 'Hypothetical Records Matrix comparison matrix' }),
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Schedule Strength', () => {
@@ -88,6 +114,17 @@ describe('ScheduleAnalysis', () => {
       // ScheduleStrengthTable's actual heading is "Hypothetical Records Summary"
       // (its user-facing name changed since this test was written).
       expect(screen.getByText(/Hypothetical Records Summary/i)).toBeInTheDocument();
+    });
+
+    it('labels ranks against the active team cohort', () => {
+      const entries = [
+        createMockTeamEntry('team-1', 'Team Alpha', 'AFC'),
+        createMockTeamEntry('team-2', 'Team Beta', 'NFC'),
+      ];
+
+      render(<ScheduleAnalysis allTeamEntries={entries} dataset={createMockDataset()} />);
+
+      expect(screen.getAllByLabelText('Rank 1 of 2')).not.toHaveLength(0);
     });
   });
 
@@ -122,7 +159,7 @@ describe('ScheduleAnalysis', () => {
 
       render(<ScheduleAnalysis {...props} />);
 
-      expect(screen.getByText(/AFC League/i)).toBeInTheDocument();
+      expect(screen.getByText('AFC League (2×2 Matrix)')).toBeInTheDocument();
     });
 
     it('displays NFC league matrix when NFC teams present', () => {

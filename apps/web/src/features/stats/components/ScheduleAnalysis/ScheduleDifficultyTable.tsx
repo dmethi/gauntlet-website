@@ -21,6 +21,8 @@ interface ScheduleDifficultyTableProps {
 }
 
 export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ data }) => {
+  const teamCount = data.length;
+
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
@@ -31,7 +33,7 @@ export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ dat
       </p>
       <DataList className="sm:hidden">
         {data.map((row, index) => {
-          const badgeColor = getRankColor(index + 1, 24);
+          const badgeColor = getRankColor(index + 1, teamCount);
 
           return (
             <DataListItem key={row.scheduleOwnerKey}>
@@ -40,6 +42,7 @@ export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ dat
                   <span
                     className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-xs font-bold"
                     style={{ backgroundColor: badgeColor, color: getTextColor(badgeColor) }}
+                    aria-label={`Rank ${index + 1} of ${teamCount}`}
                   >
                     {index + 1}
                   </span>
@@ -51,11 +54,11 @@ export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ dat
               </DataListHeader>
               <DataListMetrics className="grid-cols-2">
                 <DataListMetric>
-                  <DataListMetricLabel>Avg win rate</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Avg win rate</DataListMetricLabel>
                   <DataListMetricValue>{(row.avgWinPct * 100).toFixed(1)}%</DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric className="text-right">
-                  <DataListMetricLabel>Games</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Games</DataListMetricLabel>
                   <DataListMetricValue>{row.totalGames}</DataListMetricValue>
                 </DataListMetric>
               </DataListMetrics>
@@ -76,13 +79,14 @@ export const ScheduleDifficultyTable = memo<ScheduleDifficultyTableProps>(({ dat
           </thead>
           <tbody>
             {data.map((row, index) => {
-              const badgeColor = getRankColor(index + 1, 24);
+              const badgeColor = getRankColor(index + 1, teamCount);
               return (
                 <tr key={row.scheduleOwnerKey} className="border-t hover:bg-muted/20">
                   <td className="px-4 py-3 text-center">
                     <span
                       className="rounded-full px-2 py-1 text-xs font-medium"
                       style={{ backgroundColor: badgeColor, color: getTextColor(badgeColor) }}
+                      aria-label={`Rank ${index + 1} of ${teamCount}`}
                     >
                       {index + 1}
                     </span>

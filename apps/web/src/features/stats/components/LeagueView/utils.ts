@@ -265,16 +265,24 @@ export const getPositionSparklineData = (
  * Get color for position sparkline based on rank
  *
  * @param rank - Position rank
+ * @param total - Total number of teams in the active ranking cohort
  * @param colors - Color palette
  * @returns Color string
  *
  * @example
  * const color = getPositionSparklineColor(3, colors);
  */
-export const getPositionSparklineColor = (rank: number, colors: any): string => {
-  if (rank <= 6) {
+export const getPositionSparklineColor = (
+  rank: number,
+  total: number,
+  colors: { rdylgn: readonly string[] },
+): string => {
+  const topQuarter = Math.max(1, Math.ceil(total / 4));
+  const topHalf = Math.max(1, Math.ceil(total / 2));
+
+  if (rank <= topQuarter) {
     return colors.rdylgn[8]; // Elite = green
-  } else if (rank <= 12) {
+  } else if (rank <= topHalf) {
     return colors.rdylgn[5]; // Average = yellow
   } else {
     return colors.rdylgn[2]; // Below average = red

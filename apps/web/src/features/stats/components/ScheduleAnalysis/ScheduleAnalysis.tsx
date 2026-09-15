@@ -77,23 +77,31 @@ export const ScheduleAnalysis = ({ allTeamEntries, dataset }: ScheduleAnalysisPr
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-10">
-        <ScheduleMatrixTable
-          title="Hypothetical Records Matrix"
-          description="Row team vs Column team's schedule. Values show how many wins/losses would occur if the row team faced the column team's opponents."
-          columnLabel="vs Opponent →"
-          teams={allTeamEntries}
-          matrix={scheduleMatrix}
-        />
+        <div className="flex flex-col gap-10">
+          <div className="order-1 sm:order-2">
+            <ScheduleStrengthTable data={summaryStats} />
+          </div>
 
-        <ScheduleStrengthTable data={summaryStats} />
+          <div className="order-2 sm:order-3">
+            <ScheduleDifficultyTable data={scheduleDifficulty} />
+          </div>
 
-        <ScheduleDifficultyTable data={scheduleDifficulty} />
+          <div className="order-3 sm:order-1">
+            <ScheduleMatrixTable
+              title="Hypothetical Records Matrix"
+              description="Row team vs Column team's schedule. Values show how many wins/losses would occur if the row team faced the column team's opponents."
+              columnLabel="vs Opponent →"
+              teams={allTeamEntries}
+              matrix={scheduleMatrix}
+            />
+          </div>
+        </div>
 
         <div className="space-y-6">
           <h3 className="text-lg font-semibold">League-by-League Matrices</h3>
           {afcTeams.length ? (
             <ScheduleMatrixTable
-              title="AFC League (12×12 Matrix)"
+              title={`AFC League (${afcTeams.length}×${afcTeams.length} Matrix)`}
               columnLabel="AFC Team →"
               teams={afcTeams}
               matrix={scheduleMatrix}
@@ -101,7 +109,7 @@ export const ScheduleAnalysis = ({ allTeamEntries, dataset }: ScheduleAnalysisPr
           ) : null}
           {nfcTeams.length ? (
             <ScheduleMatrixTable
-              title="NFC League (12×12 Matrix)"
+              title={`NFC League (${nfcTeams.length}×${nfcTeams.length} Matrix)`}
               columnLabel="NFC Team →"
               teams={nfcTeams}
               matrix={scheduleMatrix}

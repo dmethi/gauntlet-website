@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { ChevronDown, Minus, TrendingDown, TrendingUp } from 'lucide-react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { TrackedPosition } from '@/shared/utils/stats';
 import { getRankColor, getTextColor } from '@/shared/utils/colors';
@@ -9,10 +10,6 @@ import {
   DataListDescription,
   DataListHeader,
   DataListItem,
-  DataListMetric,
-  DataListMetricLabel,
-  DataListMetrics,
-  DataListMetricValue,
   DataListTitle,
 } from '@/components/ui/data-list';
 import { colors } from '../../../../../../../brand/colors';
@@ -28,20 +25,28 @@ interface LeagueRankingsTableProps {
 
 export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
   const { leagueData, isSeasonView, allTeamEntries, positionsMap } = props;
+  const teamCount = leagueData.length;
+  const teamDataByKey = new Map(allTeamEntries);
 
   return (
     <>
       <DataList className="sm:hidden">
         {leagueData.map(team => {
-          const rankColor = getRankColor(team.rank, 24);
+          const rankColor = getRankColor(team.rank, teamCount);
+          const trendData = getSparklineData(teamDataByKey.get(team.key));
+          const latestPoint = trendData.at(-1);
+          const previousPoint = trendData.at(-2);
+          const weeklyDelta =
+            latestPoint && previousPoint ? latestPoint.score - previousPoint.score : null;
 
           return (
-            <DataListItem key={team.key}>
+            <DataListItem key={team.key} className="py-3">
               <DataListHeader>
                 <div className="flex min-w-0 items-start gap-3">
                   <span
                     className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-xs font-bold tabular-nums"
                     style={{ backgroundColor: rankColor, color: getTextColor(rankColor) }}
+                    aria-label={`Rank ${team.rank} of ${teamCount}`}
                   >
                     {team.rank}
                   </span>
@@ -51,7 +56,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                   </div>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                  <div className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                     Total
                   </div>
                   <div
@@ -63,25 +68,124 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                 </div>
               </DataListHeader>
 
-              <DataListMetrics className="grid-cols-5 gap-2">
-                {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => {
-                  const positionColor = getRankColor(team.positionRanks[position], 24);
+              {isSeasonView && latestPoint ? (
+                <div
+                  className="mt-3 grid grid-cols-[minmax(0,1fr)_7rem] items-center gap-3 rounded-md bg-muted/40 px-3 py-2"
+                  role="img"
+                  aria-label={`${team.teamInfo.teamName} weekly scoring trend, latest Week ${latestPoint.week}: ${latestPoint.score.toFixed(1)} points${weeklyDelta === null ? '' : `, ${weeklyDelta >= 0 ? 'up' : 'down'} ${Math.abs(weeklyDelta).toFixed(1)} points from the prior week`}`}
+                >
+                  <div className="min-w-0">
+                    <div className="text-xs font-semibold text-muted-foreground">Weekly trend</div>
+                    <div className="mt-0.5 flex items-center gap-2 text-xs tabular-nums">
+                      <span className="font-semibold">
+                        W{latestPoint.week} · {latestPoint.score.toFixed(1)} pts
+                      </span>
+                      {weeklyDelta === null ? null : (
+                        <span
+                          className={
+                            weeklyDelta > 0
+                              ? 'flex items-center gap-1 text-success'
+                              : weeklyDelta < 0
+                                ? 'flex items-center gap-1 text-destructive'
+                                : 'flex items-center gap-1 text-muted-foreground'
+                          }
+                        >
+                          {weeklyDelta > 0 ? (
+                            <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
+                          ) : weeklyDelta < 0 ? (
+                            <TrendingDown className="h-3.5 w-3.5" aria-hidden="true" />
+                          ) : (
+                            <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+                          )}
+                          {Math.abs(weeklyDelta).toFixed(1)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="h-9 w-28" aria-hidden="true">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={trendData}>
+                        <Line
+                          type="monotone"
+                          dataKey="score"
+                          stroke={colors.core.regalGold}
+                          strokeWidth={2}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              ) : null}
 
-                  return (
-                    <DataListMetric
-                      key={position}
-                      className="border-l-2 pl-2"
-                      style={{ borderColor: positionColor }}
-                    >
-                      <DataListMetricLabel>{position}</DataListMetricLabel>
-                      <DataListMetricValue>#{team.positionRanks[position]}</DataListMetricValue>
-                      <div className="text-[10px] tabular-nums text-muted-foreground">
-                        {team.positions[position].toFixed(1)}
+              <details className="group mt-1">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-md text-xs font-semibold text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
+                  {isSeasonView ? 'Position trends & ranks' : 'Position breakdown'}
+                  <ChevronDown
+                    className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <div className="divide-y divide-border/70 border-y border-border/70">
+                  {(['QB', 'RB', 'WR', 'TE', 'DEF'] as TrackedPosition[]).map(position => {
+                    const positionRank = team.positionRanks[position];
+                    const positionColor = getRankColor(positionRank, teamCount);
+                    const positionTrend = getPositionSparklineData(
+                      positionsMap,
+                      position,
+                      team.key,
+                    );
+
+                    return (
+                      <div
+                        key={position}
+                        className="grid min-h-12 grid-cols-[2.5rem_minmax(0,1fr)_5rem] items-center gap-3 py-2"
+                      >
+                        <div className="flex items-center gap-2 text-xs font-bold">
+                          <span
+                            className="h-2.5 w-2.5 rounded-sm"
+                            style={{ backgroundColor: positionColor }}
+                            aria-hidden="true"
+                          />
+                          {position}
+                        </div>
+                        <div className="min-w-0 text-xs tabular-nums">
+                          <span className="font-semibold">Rank #{positionRank}</span>
+                          <span className="text-muted-foreground"> of {teamCount}</span>
+                          <span className="ml-2 text-muted-foreground">
+                            {team.positions[position].toFixed(1)} pts
+                          </span>
+                        </div>
+                        {isSeasonView ? (
+                          <div
+                            className="h-6 w-20"
+                            role="img"
+                            aria-label={`${team.teamInfo.teamName} ${position} weekly trend`}
+                          >
+                            <ResponsiveContainer width="100%" height="100%">
+                              <LineChart data={positionTrend}>
+                                <Line
+                                  type="monotone"
+                                  dataKey="score"
+                                  stroke={getPositionSparklineColor(
+                                    positionRank,
+                                    teamCount,
+                                    colors,
+                                  )}
+                                  strokeWidth={1.5}
+                                  dot={false}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        ) : (
+                          <div />
+                        )}
                       </div>
-                    </DataListMetric>
-                  );
-                })}
-              </DataListMetrics>
+                    );
+                  })}
+                </div>
+              </details>
             </DataListItem>
           );
         })}
@@ -111,9 +215,10 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                   <span
                     className="rounded-full px-2 py-1 text-xs font-medium"
                     style={{
-                      backgroundColor: getRankColor(team.rank, 24),
-                      color: getTextColor(getRankColor(team.rank, 24)),
+                      backgroundColor: getRankColor(team.rank, teamCount),
+                      color: getTextColor(getRankColor(team.rank, teamCount)),
                     }}
+                    aria-label={`Rank ${team.rank} of ${teamCount}`}
                   >
                     {team.rank}
                   </span>
@@ -173,13 +278,15 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                       <div
                         className="rounded-lg p-2 transition-colors min-w-[70px]"
                         style={{
-                          backgroundColor: getRankColor(team.positionRanks[position], 24),
+                          backgroundColor: getRankColor(team.positionRanks[position], teamCount),
                         }}
                       >
                         <div
                           className="font-mono font-bold text-xs"
                           style={{
-                            color: getTextColor(getRankColor(team.positionRanks[position], 24)),
+                            color: getTextColor(
+                              getRankColor(team.positionRanks[position], teamCount),
+                            ),
                           }}
                         >
                           #{team.positionRanks[position]}
@@ -187,7 +294,9 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                         <div
                           className="font-mono text-xs"
                           style={{
-                            color: getTextColor(getRankColor(team.positionRanks[position], 24)),
+                            color: getTextColor(
+                              getRankColor(team.positionRanks[position], teamCount),
+                            ),
                           }}
                         >
                           {team.positions[position].toFixed(1)}
@@ -206,6 +315,7 @@ export const LeagueRankingsTable = memo<LeagueRankingsTableProps>(props => {
                                 dataKey="score"
                                 stroke={getPositionSparklineColor(
                                   team.positionRanks[position],
+                                  teamCount,
                                   colors,
                                 )}
                                 strokeWidth={1.5}

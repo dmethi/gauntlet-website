@@ -90,6 +90,34 @@ describe('LeagueView', () => {
       expect(screen.getAllByText('Team Alpha')).not.toHaveLength(0);
       expect(screen.getAllByText('Team Beta')).not.toHaveLength(0);
     });
+
+    it('describes the active ranking cohort instead of a fixed league size', () => {
+      const entries = [
+        createMockTeamEntry('team-1', 'Team Alpha', 360),
+        createMockTeamEntry('team-2', 'Team Beta', 340),
+        createMockTeamEntry('team-3', 'Team Gamma', 320),
+      ];
+
+      render(<LeagueView {...createProps({ allTeamEntries: entries })} />);
+
+      expect(screen.getByText(/All 3 teams ranked by performance/i)).toBeInTheDocument();
+      expect(screen.getAllByLabelText('Rank 1 of 3')).not.toHaveLength(0);
+    });
+
+    it('keeps a weekly trend visible and places position trends in a disclosure', () => {
+      const entries = [createMockTeamEntry('team-1', 'Team Alpha', 360)];
+
+      render(<LeagueView {...createProps({ allTeamEntries: entries })} />);
+
+      expect(
+        screen.getByRole('img', { name: /Team Alpha weekly scoring trend/i }),
+      ).toBeInTheDocument();
+
+      const disclosureLabel = screen.getByText('Position trends & ranks');
+      const disclosure = disclosureLabel.closest('details');
+      expect(disclosureLabel.tagName).toBe('SUMMARY');
+      expect(disclosure).not.toHaveAttribute('open');
+    });
   });
 
   describe('Position Rankings', () => {

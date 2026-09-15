@@ -57,8 +57,8 @@ export const LeagueView = memo<LeagueViewProps>(props => {
           <CardTitle>League Rankings</CardTitle>
           <CardDescription>
             {isSeasonView
-              ? 'Season totals - All 24 teams ranked by performance. Color-coded positions show strengths (green) and weaknesses (red).'
-              : `Week ${weekNum} - All 24 teams ranked by performance. Color-coded positions show strengths (green) and weaknesses (red). Click position tables to see players.`}
+              ? `Season totals - All ${leagueData.length} teams ranked by performance. Color and rank labels show positional strengths and weaknesses.`
+              : `Week ${weekNum} - All ${leagueData.length} teams ranked by performance. Color and rank labels show positional strengths and weaknesses. Select a position table to see players.`}
           </CardDescription>
         </CardHeader>
         <CardContent>

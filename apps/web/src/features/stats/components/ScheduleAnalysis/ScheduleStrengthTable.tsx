@@ -21,6 +21,8 @@ interface ScheduleStrengthTableProps {
 }
 
 export const ScheduleStrengthTable = memo<ScheduleStrengthTableProps>(({ data }) => {
+  const teamCount = data.length;
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold" style={{ color: colors.core.crimsonRed }}>
@@ -28,7 +30,7 @@ export const ScheduleStrengthTable = memo<ScheduleStrengthTableProps>(({ data })
       </h3>
       <DataList className="sm:hidden">
         {data.map((row, index) => {
-          const badgeColor = getRankColor(index + 1, 24);
+          const badgeColor = getRankColor(index + 1, teamCount);
 
           return (
             <DataListItem key={row.teamKey}>
@@ -37,6 +39,7 @@ export const ScheduleStrengthTable = memo<ScheduleStrengthTableProps>(({ data })
                   <span
                     className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-xs font-bold"
                     style={{ backgroundColor: badgeColor, color: getTextColor(badgeColor) }}
+                    aria-label={`Rank ${index + 1} of ${teamCount}`}
                   >
                     {index + 1}
                   </span>
@@ -48,17 +51,17 @@ export const ScheduleStrengthTable = memo<ScheduleStrengthTableProps>(({ data })
               </DataListHeader>
               <DataListMetrics>
                 <DataListMetric>
-                  <DataListMetricLabel>Record</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Record</DataListMetricLabel>
                   <DataListMetricValue>
                     {row.totalWins}-{row.totalLosses}
                   </DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric>
-                  <DataListMetricLabel>Win rate</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Win rate</DataListMetricLabel>
                   <DataListMetricValue>{(row.winPct * 100).toFixed(1)}%</DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric className="text-right">
-                  <DataListMetricLabel>Games</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Games</DataListMetricLabel>
                   <DataListMetricValue>{row.totalGames}</DataListMetricValue>
                 </DataListMetric>
               </DataListMetrics>
@@ -80,13 +83,14 @@ export const ScheduleStrengthTable = memo<ScheduleStrengthTableProps>(({ data })
           </thead>
           <tbody>
             {data.map((row, index) => {
-              const badgeColor = getRankColor(index + 1, 24);
+              const badgeColor = getRankColor(index + 1, teamCount);
               return (
                 <tr key={row.teamKey} className="border-t hover:bg-muted/20">
                   <td className="px-4 py-3 text-center">
                     <span
                       className="rounded-full px-2 py-1 text-xs font-medium"
                       style={{ backgroundColor: badgeColor, color: getTextColor(badgeColor) }}
+                      aria-label={`Rank ${index + 1} of ${teamCount}`}
                     >
                       {index + 1}
                     </span>

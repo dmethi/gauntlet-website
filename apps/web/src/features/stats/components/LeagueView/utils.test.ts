@@ -468,26 +468,22 @@ describe('LeagueView utilities', () => {
 
   describe('getPositionSparklineColor', () => {
     const mockColors = {
-      rdylgn: {
-        2: '#d73027', // red
-        5: '#ffffbf', // yellow
-        8: '#1a9850', // green
-      },
+      rdylgn: ['', '', '#d73027', '', '', '#ffffbf', '', '', '#1a9850'],
     };
 
-    it('should return green for elite ranks (1-6)', () => {
-      expect(getPositionSparklineColor(1, mockColors)).toBe(mockColors.rdylgn[8]);
-      expect(getPositionSparklineColor(6, mockColors)).toBe(mockColors.rdylgn[8]);
+    it('should return green for the top quarter of the active cohort', () => {
+      expect(getPositionSparklineColor(1, 36, mockColors)).toBe(mockColors.rdylgn[8]);
+      expect(getPositionSparklineColor(9, 36, mockColors)).toBe(mockColors.rdylgn[8]);
     });
 
-    it('should return yellow for average ranks (7-12)', () => {
-      expect(getPositionSparklineColor(7, mockColors)).toBe(mockColors.rdylgn[5]);
-      expect(getPositionSparklineColor(12, mockColors)).toBe(mockColors.rdylgn[5]);
+    it('should return yellow for the second quarter of the active cohort', () => {
+      expect(getPositionSparklineColor(10, 36, mockColors)).toBe(mockColors.rdylgn[5]);
+      expect(getPositionSparklineColor(18, 36, mockColors)).toBe(mockColors.rdylgn[5]);
     });
 
-    it('should return red for below average ranks (13+)', () => {
-      expect(getPositionSparklineColor(13, mockColors)).toBe(mockColors.rdylgn[2]);
-      expect(getPositionSparklineColor(24, mockColors)).toBe(mockColors.rdylgn[2]);
+    it('should return red for ranks in the lower half of the active cohort', () => {
+      expect(getPositionSparklineColor(19, 36, mockColors)).toBe(mockColors.rdylgn[2]);
+      expect(getPositionSparklineColor(36, 36, mockColors)).toBe(mockColors.rdylgn[2]);
     });
   });
 });

@@ -42,7 +42,7 @@ export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
                   <DataListDescription>{row.teamInfo.leagueName}</DataListDescription>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                  <div className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                     Luck
                   </div>
                   <div className="mt-0.5 font-mono font-bold" style={{ color: luckColor }}>
@@ -53,17 +53,17 @@ export const ExpectedWinsTable = memo<ExpectedWinsTableProps>(({ data }) => {
               </DataListHeader>
               <DataListMetrics>
                 <DataListMetric>
-                  <DataListMetricLabel>Actual</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Actual</DataListMetricLabel>
                   <DataListMetricValue>{(row.actualWinPct * 100).toFixed(1)}%</DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric>
-                  <DataListMetricLabel>Expected</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Expected</DataListMetricLabel>
                   <DataListMetricValue>
                     {(row.expectedWinPct * 100).toFixed(1)}%
                   </DataListMetricValue>
                 </DataListMetric>
                 <DataListMetric className="text-right">
-                  <DataListMetricLabel>Schedule ease</DataListMetricLabel>
+                  <DataListMetricLabel className="text-xs">Schedule ease</DataListMetricLabel>
                   <DataListMetricValue>{(row.scheduleEase * 100).toFixed(1)}%</DataListMetricValue>
                 </DataListMetric>
               </DataListMetrics>
