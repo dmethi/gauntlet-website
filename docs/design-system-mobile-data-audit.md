@@ -8,6 +8,13 @@ list with dividers. Tables remain the right tool for comparison matrices, but
 their scroll surface should sit directly in the section and lose its inset frame
 on mobile.
 
+Mobile views must preserve analytical parity with desktop. The default is a
+compact, complete ledger: identity, the primary outcome, and the metrics needed
+to scan every record remain visible. Secondary comparisons and positional or
+time-series detail may move into an inline disclosure, but they must not be
+removed. Expert matrices remain available behind an explicit, labeled disclosure
+when they are not the best mobile entry point.
+
 This keeps the product recognizable through typography, rank markers, gold
 result values, and restrained position colors rather than through repeated
 rounded containers.
@@ -37,7 +44,7 @@ classification as a record list, true comparison matrix, or interactive entity.
 | Comparison matrix squeezed to fit            | Intrinsic-width table in a named, focusable `TableViewport` with a sticky identity column | Preserves real two-dimensional comparison and makes the overflow usable.                      |
 | A grid of bordered metric cards per record   | Semantic `dl` metric strip separated by spacing and type                                  | Keeps labels and values legible without manufacturing extra surfaces.                         |
 | Hover-only row affordance                    | Minimum 44px touch target, visible focus, and touch active state                          | Gives touch and keyboard users equivalent feedback.                                           |
-| Every value shown at once                    | Primary mobile metrics first; secondary detail in a row disclosure or desktop table       | Prioritizes the decision users are making instead of preserving desktop density.              |
+| Every value shown at once                    | Compact complete ledger with secondary detail in an inline disclosure                     | Preserves analytical parity without forcing desktop density into the first scan.              |
 
 ## Foundations
 
@@ -53,7 +60,13 @@ Mobile records should normally contain:
 1. identity and context in the header;
 2. one visually dominant outcome;
 3. no more than three primary metrics in the first metric row;
-4. secondary details only when they materially affect the decision.
+4. secondary details in a native disclosure when they materially affect the
+   decision.
+
+Functional labels must render at 12px or larger. Interactive controls and
+disclosure summaries must provide at least a 44px touch target. Compactness
+comes from grouping, alignment, and tighter vertical rhythm—not tiny type or
+undersized controls.
 
 ### `TableViewport`
 
@@ -78,6 +91,9 @@ use a consistent compact rhythm and tabular numerals.
   selection and action, not as a generic container fill.
 - Keep position colors as narrow accents or compact labels; avoid turning whole
   records into multicolor panels.
+- Use semantic foreground/background token pairs for rank, delta, and status
+  color. Every text pair must meet WCAG AA in both themes, and rank or status
+  must remain legible without color.
 - Prefer typography, rank medallions, and precise dividers over “brand by
   rounded box.”
 - Avoid gradients and decorative shadows in data-dense areas. They reduce
@@ -98,21 +114,26 @@ use a consistent compact rhythm and tabular numerals.
 5. **Interaction:** audit sortable headers, expandable rows, visible focus, and
    44px touch targets.
 
-## Candidate implementation in this branch
+## Implementation in this branch
 
 - Added the shared `DataList` family and responsive `TableViewport` primitive.
 - Converted league rankings, schedule rankings, expected wins, and transaction
   analysis to purpose-built mobile lists while retaining desktop tables.
 - Converted the schedule matrix to the accessible horizontal-scroll pattern.
+- Preserved season and positional analysis through compact visible signals and
+  inline disclosures instead of removing mobile analytics.
+- Migrated League Overview, team matchup history, scoring summaries, and
+  league-wide odds to complete mobile ledgers while retaining comparison tables
+  on larger screens.
+- Raised shared functional-label typography to 12px and corrected the light
+  theme's semantic gold and success roles for accessible contrast.
 - Removed redundant table frames from league overview, transactions, draft,
   archive standings, and the shared scoring summary.
 - Standardized table header hierarchy and numeric alignment at the primitive
   level.
-
-The next migration wave should target waiver-analysis rankings and trend
-matrices. They are deliberately left as follow-up work so the candidate system
-can be evaluated on representative screens before every dense data view is
-rewritten.
+- Propagated the same ledger, disclosure, touch-target, semantic-color, and
+  scroll-affordance rules through Stats, Waiver Analysis, Draft Analysis,
+  Transactions, and Start/Sit views.
 
 ## Library recommendation
 
