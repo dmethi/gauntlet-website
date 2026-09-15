@@ -12,7 +12,9 @@ The 2026 Week 1 recap will read like a digital newspaper rather than a dashboard
 
 All 18 matchups receive a compact game brief with win-probability and score-over-time charts. The strongest stories receive feature treatment. Verified Hall of Fame and Hall of Shame additions form a recurring Record Book department, while 2025 connections appear as archive clippings beside the stories they deepen.
 
-Manager labels must use explicit editorial names or Sleeper display names. Never infer a shortened name from a username. In particular, Sleeper user `krishnik` is **Nikhil Krishnan**, not Krish.
+The published identity resolver uses one consistent priority everywhere: a nonempty Sleeper team name, then the linked Gauntlet profile's full name, then the Sleeper display name or username, and finally `Team {rosterId}`. Scoreboards, chart legends, record entries, accessible labels, and generated prose must receive the same resolved primary label. Never infer a shortened name from a username. In particular, if `krishnik` has no team name but has the existing profile for **Nikhil Krishnan**, the report displays Nikhil Krishnan, not Krish.
+
+The editorial copy later in this document uses working human-readable labels. The final report model applies the resolver before publication, rather than hardcoding those labels into UI components.
 
 ## Editorial Draft
 
@@ -287,11 +289,12 @@ Please resume overreacting responsibly.
 1. **Masthead:** *The Gauntlet Gazette*, publication date, volume, week, byline, and league navigation.
 2. **Lead package:** Eight-column headline and lede beside a four-column Week in 60 Seconds rail.
 3. **Scoreboard rail:** Three equal newspaper columns, one per legion. League data remains separate until this presentation layer.
-4. **Record Book spread:** Three columns for Hall of Fame, Hall of Shame, and Week 1 Curiosities. Each record receives a scope stamp.
-5. **Game-flow desks:** A feature matchup occupies seven columns; companion briefs occupy five. The layout alternates to avoid repetition.
-6. **Lineup Autopsy:** A tabular corrections-desk treatment showing actual lineup, legal substitution, revised score, and whether it flips the winner.
-7. **Archive desk:** Inline archive clippings for matchup-specific connections, followed by a compact Last Season's Receipts spread.
-8. **Closing column:** Final note and Week 2 teaser.
+4. **Week in pictures:** League scoring distributions, the upset ledger, and the game-flow atlas establish the statistical shape of the week before the long read.
+5. **Record Book spread:** Three columns for Hall of Fame, Hall of Shame, and Week 1 Curiosities. Each record receives a scope stamp and historical comparison.
+6. **Game-flow desks:** A feature matchup occupies seven columns; companion briefs occupy five. The layout alternates to avoid repetition.
+7. **Lineup Autopsy:** A visual corrections-desk treatment showing actual lineup, legal substitution, revised score, and whether it flips the winner.
+8. **Archive desk:** Inline archive clippings for matchup-specific connections, followed by a compact Last Season's Receipts spread.
+9. **Closing column:** Final note and Week 2 teaser.
 
 ### Matchup brief anatomy
 
@@ -306,6 +309,30 @@ Every matchup uses the same editorial unit:
 7. A link to the full matchup and box score.
 
 Featured matchups display both charts side by side with two or three annotations. Compact briefs use a chart switcher so all 18 matchups retain both views without placing 36 full charts in the article. On mobile, every matchup uses the switcher.
+
+### Visualization program
+
+The newspaper should feel data-rich, but each visualization must answer a specific editorial question. Avoid decorative sparklines and repeated charts that do not change the reader's understanding.
+
+#### Week in pictures
+
+- **Scoring distribution:** Three aligned strip or beeswarm plots—one per legion—share the same horizontal scale. Mark each league's median and average, plus the overall 117.17 average. The plots reveal the Keep's strong floor, the Forge's wider spread, and the true position of the week's outliers without combining league calculations prematurely.
+- **The upset ledger:** An 18-row prediction-versus-result board shows the opening favorite, opening probability, eventual winner, and margin. Use a clear reversal mark for the nine favorites who lost and a stronger stamp for the six +160-or-longer underdog winners.
+- **Game-flow atlas:** Arrange all 18 matchups inside the five editorial flow clusters. Each entry uses a meaningful score-difference timeline thumbnail, final margin, and the point at which the winner became a durable favorite. The atlas doubles as section navigation; it is not ornamental.
+
+#### Matchup visuals
+
+- Synchronize the win-probability and score-over-time charts so hovering either chart reveals the same timestamp in both.
+- Add vertical bands or rules for Wednesday, Thursday, Sunday early, Sunday late, Sunday night, and Monday night. Schedule context is essential to the article's thesis.
+- Annotate only the two or three moments named in the recap, including the relevant remaining players when known.
+- Show both full charts for the featured matchup in each section. Compact briefs keep both available behind a labeled switcher, with the most trustworthy chart selected by default.
+
+#### Record Book and archive visuals
+
+- **Historical rank rails:** Place each new record on a shared scale beside the retained all-time top five. A No. 4 performance should look like a No. 4 performance, not a generic trophy tile.
+- **Year-over-year slopegraph:** Compare the 2025 and 2026 opening averages and medians, with a second line limited to the same 18 returning primary owners.
+- **Rematch margin dumbbells:** Show Daal's swing from a 29-point loss to a 66.72-point win and vchak's nearly identical 28.68- and 29.09-point victories. These two stories have different shapes and should look different.
+- **Lineup autopsy bars:** For each winner-flipping mistake, compare actual score, points gained by the legal swap, opponent score, and revised result. The graphic must make the counterfactual legible without reading a paragraph.
 
 ### Newspaper visual system
 
@@ -332,7 +359,9 @@ Featured matchups display both charts side by side with two or three annotations
 
 - Chart tabs must work with keyboard navigation and expose a visible selected state.
 - Tooltips should show Eastern time, both teams' scores or probabilities, and the active players when that context is available.
+- Synchronized chart cursors, annotations, patterns, and direct labels must prevent color from carrying meaning alone.
 - Article reading order must remain coherent without charts and in a screen reader.
+- Every visualization needs a concise takeaway, data table fallback, and descriptive accessible label.
 - Archive clippings collapse below their related matchup on mobile.
 - The masthead and section index may become sticky, but the article itself should scroll naturally.
 
@@ -340,7 +369,9 @@ Featured matchups display both charts side by side with two or three annotations
 
 - Use composite matchup keys: `leagueId:week:matchupId`.
 - Process each legion independently and combine only in the page's presentation model.
-- Resolve manager labels from an explicit editorial-name map, with Sleeper display name as fallback.
+- Resolve one primary display label on the server and carry it through the report model: nonempty Sleeper team name → linked Gauntlet profile full name → Sleeper display name → Sleeper username → `Team {rosterId}`.
+- Treat whitespace-only team names as missing. Never use the literal strings `null`, `undefined`, or an empty label.
+- Keep the Sleeper owner ID and composite team ID as identity keys. Names are presentation data and may change.
 - Distinguish `all-time record`, `all-time top five`, `season leader`, `weekly leader`, and `statistical oddity` in the data model and UI.
 - Calculate lineup counterfactuals against the actual two-FLEX roster format. The existing simplified Hall helper assumes one FLEX and cannot be the publication source for bench records.
 - Store a confidence or caveat field with every narrative fact derived from time-series data.
@@ -350,6 +381,7 @@ Featured matchups display both charts side by side with two or three annotations
 - Game flow, not league order, supplies the primary narrative structure.
 - Every matchup appears exactly once in a flow section and once in its legion scoreboard.
 - Every matchup offers both historical charts, but only feature stories display both simultaneously.
+- Overview, matchup, record-book, archive, and lineup visualizations each answer a different editorial question; no chart exists only as decoration.
 - Hall of Fame and Hall of Shame entries require verified historical placement; curiosities use a separate label.
 - Historical echoes appear beside relevant matchups; broader 2025 comparisons form a dedicated archive department.
 - The recap preserves commissioner voice while keeping exact scores and verified mechanisms ahead of jokes.
@@ -357,7 +389,6 @@ Featured matchups display both charts side by side with two or three annotations
 ## Open Editorial Questions
 
 - Confirm the publication byline and whether *The Gauntlet Gazette* is the permanent masthead.
-- Resolve full editorial names for managers whose Sleeper display names are handles.
 - Choose the final roast intensity before publication.
 - Decide whether the Week 2 teaser contains three editor-selected games or one game from each legion.
 
