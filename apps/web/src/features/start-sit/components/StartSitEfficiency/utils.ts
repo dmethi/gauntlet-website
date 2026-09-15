@@ -5,6 +5,7 @@ import type {
   PositionBreakdown,
   StartSitData,
 } from '@/features/start-sit/types';
+import { getLeagueConfig } from '@/config/leagues';
 
 export interface ManagerOption {
   value: string;
@@ -146,7 +147,8 @@ export const collectPlayerIds = (data: StartSitData): string[] => {
 
 export const getLeagueLabel = (leagueId: string): string => {
   if (!leagueId) return 'Unknown';
-  return leagueId.includes('44209') ? 'AFC' : 'NFC';
+  const league = getLeagueConfig(leagueId);
+  return league?.conference ?? league?.name ?? 'Unknown';
 };
 
 export const buildManagerOptions = (managers: ManagerEfficiency[]): ManagerOption[] =>

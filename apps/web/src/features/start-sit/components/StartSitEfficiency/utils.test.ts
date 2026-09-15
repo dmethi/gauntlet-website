@@ -17,7 +17,7 @@ import {
 const createDecision = (overrides: Partial<DecisionDetail> = {}): DecisionDetail => ({
   managerId: 'manager-1',
   managerName: 'Manager One',
-  leagueId: 'league-44209',
+  leagueId: '1387520086092312576',
   week: 2,
   position: 'RB1',
   selectedPlayer: {
@@ -52,7 +52,7 @@ const createDecision = (overrides: Partial<DecisionDetail> = {}): DecisionDetail
 const createManager = (overrides: Partial<ManagerEfficiency> = {}): ManagerEfficiency => ({
   managerId: 'manager-1',
   managerName: 'Manager One',
-  leagueId: 'league-44209',
+  leagueId: '1387520086092312576',
   decisions: [createDecision()],
   overallDecisionRate: 0.6,
   overallEfficiencyRate: 0.55,
@@ -252,13 +252,21 @@ describe('Start/Sit efficiency utils', () => {
 
   it('builds manager options with league labels', () => {
     const options = buildManagerOptions([
-      createManager({ managerId: 'a', managerName: 'Alpha', leagueId: 'foo-44209' }),
-      createManager({ managerId: 'b', managerName: 'Beta', leagueId: 'foo-999' }),
+      createManager({
+        managerId: 'a',
+        managerName: 'Alpha',
+        leagueId: '1387520086092312576',
+      }),
+      createManager({
+        managerId: 'b',
+        managerName: 'Beta',
+        leagueId: '1387520236663615488',
+      }),
     ]);
 
     expect(options).toEqual([
-      { value: 'a', label: 'Alpha', leagueLabel: 'AFC' },
-      { value: 'b', label: 'Beta', leagueLabel: 'NFC' },
+      { value: 'a', label: 'Alpha', leagueLabel: 'Legion I' },
+      { value: 'b', label: 'Beta', leagueLabel: 'Legion III' },
     ]);
   });
 
@@ -278,8 +286,11 @@ describe('Start/Sit efficiency utils', () => {
   });
 
   it('maps league IDs to friendly labels', () => {
-    expect(getLeagueLabel('44209')).toBe('AFC');
-    expect(getLeagueLabel('some-other')).toBe('NFC');
+    expect(getLeagueLabel('1387520086092312576')).toBe('Legion I');
+    expect(getLeagueLabel('1387520168866885632')).toBe('Legion II');
+    expect(getLeagueLabel('1387520236663615488')).toBe('Legion III');
+    expect(getLeagueLabel('1263744209295245312')).toBe('AFC');
+    expect(getLeagueLabel('some-other')).toBe('Unknown');
   });
 
   it('derives player display names with graceful fallbacks', () => {

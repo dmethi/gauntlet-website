@@ -8,14 +8,15 @@ describe('ManagerSelector', () => {
     render(
       <ManagerSelector
         options={[
-          { value: 'a', label: 'Alpha', leagueLabel: 'AFC' },
-          { value: 'b', label: 'Beta', leagueLabel: 'NFC' },
+          { value: 'a', label: 'Alpha', leagueLabel: 'Legion I' },
+          { value: 'b', label: 'Beta', leagueLabel: 'Legion II' },
         ]}
         value="a"
         onChange={handleChange}
       />,
     );
 
-    expect(screen.getByText(/Alpha/)).toBeInTheDocument();
+    expect(screen.getByText('Alpha (Legion I)')).toBeInTheDocument();
+    expect(screen.queryByText(/AFC|NFC/)).not.toBeInTheDocument();
   });
 });
