@@ -185,19 +185,19 @@ const compressNonGameData = (series: ChartSeriesPoint[]): ChartSeriesPoint[] => 
  * Format timestamp to EST with day and time
  * Example: "Thu 8PM", "Sun 1PM", "Mon 11PM"
  */
-const formatTimestampEST = (timestamp: Date): string => {
-  // Convert to EST (UTC-5) or EDT (UTC-4) - using a simple approach
-  // Note: This doesn't handle DST transitions perfectly but works for display
-  const estDate = new Date(timestamp.getTime() - 5 * 60 * 60 * 1000);
+const easternTimestampFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  weekday: 'short',
+  hour: 'numeric',
+  hour12: true,
+});
 
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const day = dayNames[estDate.getUTCDay()];
+export const formatTimestampEastern = (timestamp: Date): string => {
+  const parts = easternTimestampFormatter.formatToParts(timestamp);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find(part => part.type === type)?.value ?? '';
 
-  let hours = estDate.getUTCHours();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12; // Convert to 12-hour format
-
-  return `${day} ${hours}${ampm}`;
+  return `${value('weekday')} ${value('hour')}${value('dayPeriod')}`;
 };
 
 /**
@@ -218,14 +218,14 @@ const generateTimeTicks = (
   // Always include first tick
   ticks.push({
     value: data[0].idx,
-    label: formatTimestampEST(data[0].timestamp),
+    label: formatTimestampEastern(data[0].timestamp),
   });
 
   // Add intermediate ticks
   for (let i = step; i < data.length - step; i += step) {
     ticks.push({
       value: data[i].idx,
-      label: formatTimestampEST(data[i].timestamp),
+      label: formatTimestampEastern(data[i].timestamp),
     });
   }
 
@@ -233,7 +233,7 @@ const generateTimeTicks = (
   if (data.length > 1) {
     ticks.push({
       value: data[data.length - 1].idx,
-      label: formatTimestampEST(data[data.length - 1].timestamp),
+      label: formatTimestampEastern(data[data.length - 1].timestamp),
     });
   }
 

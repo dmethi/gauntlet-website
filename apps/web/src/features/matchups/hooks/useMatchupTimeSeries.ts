@@ -17,7 +17,7 @@ export interface TimeSeriesPoint {
 /**
  * API response structure for matchup time series
  */
-interface TimeSeriesResponse {
+export interface TimeSeriesResponse {
   series: TimeSeriesPoint[];
   metadata: {
     leagueId: string;
@@ -55,7 +55,12 @@ interface TimeSeriesResponse {
  * }
  * ```
  */
-export const useMatchupTimeSeries = (leagueId: string, week: number, matchupId: number) => {
+export const useMatchupTimeSeries = (
+  leagueId: string,
+  week: number,
+  matchupId: number,
+  options: { historical?: boolean } = {},
+) => {
   return useQuery<TimeSeriesResponse>({
     queryKey: ['matchup-timeseries', leagueId, week, matchupId],
     queryFn: async () => {
@@ -68,7 +73,7 @@ export const useMatchupTimeSeries = (leagueId: string, week: number, matchupId: 
       return res.json();
     },
     staleTime: 60 * 1000,
-    refetchInterval: 2 * 60 * 1000,
+    refetchInterval: options.historical ? false : 2 * 60 * 1000,
     // Keep data for 30 minutes when not in use
     gcTime: 30 * 60 * 1000,
     // Fail fast so UI can surface errors immediately

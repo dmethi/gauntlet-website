@@ -11,16 +11,12 @@ import path from 'path';
 import type { WeeklyRecapReport } from '../types';
 import { isLegacyReport, transformLegacyReport } from './legacy-transformer';
 import { debugLog } from '@/lib/debug-log';
+import {
+  mergeDedicatedReports,
+  type ReportListItem,
+} from '@/lib/reports/dedicated-report-registry';
 
-export interface ReportListItem {
-  season: number;
-  week: number;
-  title: string;
-  href: string;
-  date: string;
-  tags: string[];
-  status: 'success' | 'partial' | 'failed';
-}
+export type { ReportListItem } from '@/lib/reports/dedicated-report-registry';
 
 /**
  * Try to parse a string wrapped in triple backtick code fences as JSON.
@@ -335,21 +331,7 @@ export const getAvailableReports = async (): Promise<ReportListItem[]> => {
       debugLog('[Report Loader] No legacy reports found');
     }
 
-    // Add Week 1 (hardcoded static page)
-    reports.push({
-      season: 2025,
-      week: 1,
-      title: `Week 1 Report — 2025`,
-      href: `/competition/reports/2025/week-1`,
-      date: '2025-09-13T13:35:44.370Z', // From the static page data
-      tags: ['Week 1', 'AFC', 'NFC'],
-      status: 'success',
-    });
-
-    // Sort by date descending (newest first)
-    reports.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    return reports;
+    return mergeDedicatedReports(reports);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('[Report Loader] Error scanning reports:', error);
