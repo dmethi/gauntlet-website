@@ -113,6 +113,7 @@ const RaceBoard = ({
 
 export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) => {
   const weekLabel = `Week ${report.metadata.week}`;
+  const isOpeningWeek = report.metadata.week === 1;
   const windowLabels = new Map(report.schedule.map(window => [window.id, window.label]));
   const teams = report.leagues.flatMap(league =>
     league.matchups.flatMap(matchup => [matchup.teamA, matchup.teamB]),
@@ -130,11 +131,14 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
             {weekLabel} · Opening lines
           </Badge>
           <h2 className="mt-5 max-w-4xl font-geizer text-4xl uppercase tracking-wider sm:text-6xl">
-            The draft room follows everyone onto the field.
+            {isOpeningWeek
+              ? 'The draft room follows everyone onto the field.'
+              : 'The standings are real now.'}
           </h2>
           <p className="mt-5 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Eighteen matchups, six scoring windows and one frozen set of model odds. Every preview
-            starts with how the roster was built.
+            {isOpeningWeek
+              ? 'Eighteen matchups, six scoring windows and one frozen set of model odds. Every preview starts with how the roster was built.'
+              : 'Eighteen matchups, five scoring sessions, and the first chance to turn 1–0 into a run — or 0–1 into a problem.'}
           </p>
         </div>
         <dl className="border-t border-border pt-5 text-sm lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
