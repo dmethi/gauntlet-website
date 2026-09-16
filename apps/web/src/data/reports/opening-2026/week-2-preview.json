@@ -2,9 +2,9 @@
   "metadata": {
     "season": 2026,
     "week": 2,
-    "generatedAt": "2026-09-16T15:30:32.453Z",
-    "lineupsAsOf": "2026-09-16T15:30:32.453Z",
-    "projectionsAsOf": "2026-09-16T15:30:32.453Z",
+    "generatedAt": "2026-09-16T15:40:59.923Z",
+    "lineupsAsOf": "2026-09-16T15:40:59.923Z",
+    "projectionsAsOf": "2026-09-16T15:40:59.923Z",
     "firstKickoffAt": "2026-09-18T00:15Z",
     "simulation": {
       "engine": "@gauntlet/sim-engine position outcome distributions + seeded slate sampler",
@@ -85,7 +85,7 @@
     },
     {
       "id": "window-3",
-      "label": "Sun 4:05 PM",
+      "label": "Sun late afternoon",
       "startsAt": "2026-09-20T20:05Z",
       "games": [
         {
@@ -99,14 +99,7 @@
           "homeName": "Chargers",
           "away": "LV",
           "awayName": "Raiders"
-        }
-      ]
-    },
-    {
-      "id": "window-4",
-      "label": "Sun 4:25 PM",
-      "startsAt": "2026-09-20T20:25Z",
-      "games": [
+        },
         {
           "home": "DAL",
           "homeName": "Cowboys",
@@ -128,7 +121,7 @@
       ]
     },
     {
-      "id": "window-5",
+      "id": "window-4",
       "label": "Sun 8:20 PM",
       "startsAt": "2026-09-21T00:20Z",
       "games": [
@@ -141,7 +134,7 @@
       ]
     },
     {
-      "id": "window-6",
+      "id": "window-5",
       "label": "Mon 8:15 PM",
       "startsAt": "2026-09-22T00:15Z",
       "games": [
@@ -159,122 +152,122 @@
       {
         "id": "1387520168866885632:7",
         "label": "akmadurai",
-        "probability": 0.11225
-      },
-      {
-        "id": "1387520086092312576:3",
-        "label": "Love Warrents Dak Pics",
-        "probability": 0.1085
+        "probability": 0.1086
       },
       {
         "id": "1387520168866885632:9",
         "label": "lukebowsh",
-        "probability": 0.10755
+        "probability": 0.1059
+      },
+      {
+        "id": "1387520086092312576:3",
+        "label": "Love Warrents Dak Pics",
+        "probability": 0.1045
       },
       {
         "id": "1387520236663615488:11",
         "label": "Loveland Island",
-        "probability": 0.09585
+        "probability": 0.0924
       },
       {
         "id": "1387520086092312576:1",
         "label": "Crown and Pound",
-        "probability": 0.0754
+        "probability": 0.0755
       },
       {
         "id": "1387520086092312576:7",
         "label": "Something’s Gotta Gibbs",
-        "probability": 0.0734
+        "probability": 0.07
       },
       {
         "id": "1387520236663615488:2",
         "label": "krishnik",
-        "probability": 0.0473
+        "probability": 0.04585
       },
       {
         "id": "1387520168866885632:12",
         "label": "vayyala",
-        "probability": 0.04315
+        "probability": 0.04115
       },
       {
         "id": "1387520168866885632:5",
         "label": "HarrytheHitman9",
-        "probability": 0.03425
+        "probability": 0.034
       },
       {
         "id": "1387520086092312576:2",
         "label": "Coker Laced Flowers",
-        "probability": 0.0292
-      },
-      {
-        "id": "1387520236663615488:6",
-        "label": "Can you tuten my face",
-        "probability": 0.02835
-      },
-      {
-        "id": "1387520168866885632:6",
-        "label": "JimothyGreene",
-        "probability": 0.028
+        "probability": 0.0298
       },
       {
         "id": "1387520236663615488:1",
         "label": "ashwindandapani1",
-        "probability": 0.0268
+        "probability": 0.02845
+      },
+      {
+        "id": "1387520168866885632:6",
+        "label": "JimothyGreene",
+        "probability": 0.02825
+      },
+      {
+        "id": "1387520236663615488:6",
+        "label": "Can you tuten my face",
+        "probability": 0.028
       },
       {
         "id": "1387520168866885632:10",
         "label": "King Henry’s Court",
-        "probability": 0.0229
+        "probability": 0.02325
       },
       {
         "id": "1387520168866885632:8",
         "label": "the beggar king",
-        "probability": 0.022
-      },
-      {
-        "id": "1387520236663615488:10",
-        "label": "brendenclerget",
-        "probability": 0.01925
-      },
-      {
-        "id": "1387520168866885632:1",
-        "label": "Ja’Marrican Psycho",
-        "probability": 0.0185
-      },
-      {
-        "id": "1387520086092312576:8",
-        "label": "ziyanp22",
-        "probability": 0.014
-      },
-      {
-        "id": "1387520086092312576:6",
-        "label": "scboom5",
-        "probability": 0.0115
-      },
-      {
-        "id": "1387520168866885632:2",
-        "label": "Jonathon Taylor Mayde",
-        "probability": 0.0112
-      },
-      {
-        "id": "1387520086092312576:4",
-        "label": "Two Williams, One Cup",
-        "probability": 0.01065
-      },
-      {
-        "id": "1387520236663615488:5",
-        "label": "gibuttersnaps",
-        "probability": 0.00865
-      },
-      {
-        "id": "1387520236663615488:4",
-        "label": "Socialized L-Care",
-        "probability": 0.0082
+        "probability": 0.0221
       },
       {
         "id": "1387520236663615488:12",
         "label": "Sahilmodi8",
-        "probability": 0.0077
+        "probability": 0.02115
+      },
+      {
+        "id": "1387520236663615488:10",
+        "label": "brendenclerget",
+        "probability": 0.01965
+      },
+      {
+        "id": "1387520168866885632:1",
+        "label": "Ja’Marrican Psycho",
+        "probability": 0.0188
+      },
+      {
+        "id": "1387520086092312576:8",
+        "label": "ziyanp22",
+        "probability": 0.01495
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5",
+        "probability": 0.0119
+      },
+      {
+        "id": "1387520168866885632:2",
+        "label": "Jonathon Taylor Mayde",
+        "probability": 0.0106
+      },
+      {
+        "id": "1387520086092312576:4",
+        "label": "Two Williams, One Cup",
+        "probability": 0.00995
+      },
+      {
+        "id": "1387520236663615488:4",
+        "label": "Socialized L-Care",
+        "probability": 0.0089
+      },
+      {
+        "id": "1387520236663615488:5",
+        "label": "gibuttersnaps",
+        "probability": 0.0085
       },
       {
         "id": "1387520086092312576:12",
@@ -284,52 +277,52 @@
       {
         "id": "1387520236663615488:8",
         "label": "aditya22",
-        "probability": 0.00665
+        "probability": 0.00655
       },
       {
         "id": "1387520168866885632:3",
         "label": "Checkout & Gameplay",
-        "probability": 0.00615
+        "probability": 0.0065
       },
       {
         "id": "1387520236663615488:7",
         "label": "Mexican Cartel",
-        "probability": 0.0044
+        "probability": 0.0053
       },
       {
         "id": "1387520168866885632:4",
         "label": "Team Lil Bros",
-        "probability": 0.00275
+        "probability": 0.003
       },
       {
         "id": "1387520086092312576:11",
         "label": "benweinfeld",
-        "probability": 0.0023
+        "probability": 0.0024
       },
       {
         "id": "1387520086092312576:9",
         "label": "cescott25",
-        "probability": 0.00215
+        "probability": 0.0022
       },
       {
         "id": "1387520086092312576:5",
         "label": "Jaxson my Johnston",
-        "probability": 0.00165
+        "probability": 0.00185
       },
       {
         "id": "1387520086092312576:10",
         "label": "Injured Excellence",
-        "probability": 0.00125
+        "probability": 0.0015
       },
       {
         "id": "1387520236663615488:3",
         "label": "aaryanshetty",
-        "probability": 0.0009
+        "probability": 0.00135
       },
       {
         "id": "1387520236663615488:9",
         "label": "Lisan Al-Caleb",
-        "probability": 0.0004
+        "probability": 0.00035
       },
       {
         "id": "1387520168866885632:11",
@@ -341,550 +334,550 @@
       {
         "id": "1387520168866885632:11",
         "label": "vchak",
-        "probability": 0.66495
-      },
-      {
-        "id": "1387520086092312576:5",
-        "label": "Jaxson my Johnston",
-        "probability": 0.03005
+        "probability": 0.7376
       },
       {
         "id": "1387520236663615488:3",
         "label": "aaryanshetty",
-        "probability": 0.0293
+        "probability": 0.0277
+      },
+      {
+        "id": "1387520086092312576:5",
+        "label": "Jaxson my Johnston",
+        "probability": 0.02555
       },
       {
         "id": "1387520236663615488:9",
         "label": "Lisan Al-Caleb",
-        "probability": 0.02495
+        "probability": 0.0236
       },
       {
         "id": "1387520086092312576:11",
         "label": "benweinfeld",
-        "probability": 0.01935
+        "probability": 0.0169
       },
       {
         "id": "1387520086092312576:10",
         "label": "Injured Excellence",
-        "probability": 0.0193
+        "probability": 0.0163
       },
       {
         "id": "1387520086092312576:9",
         "label": "cescott25",
-        "probability": 0.01695
-      },
-      {
-        "id": "1387520236663615488:7",
-        "label": "Mexican Cartel",
-        "probability": 0.0153
+        "probability": 0.01435
       },
       {
         "id": "1387520168866885632:4",
         "label": "Team Lil Bros",
-        "probability": 0.01415
+        "probability": 0.01285
       },
       {
-        "id": "1387520236663615488:1",
-        "label": "ashwindandapani1",
-        "probability": 0.01365
+        "id": "1387520236663615488:7",
+        "label": "Mexican Cartel",
+        "probability": 0.0113
       },
       {
         "id": "1387520236663615488:8",
         "label": "aditya22",
-        "probability": 0.01225
+        "probability": 0.00995
+      },
+      {
+        "id": "1387520236663615488:1",
+        "label": "ashwindandapani1",
+        "probability": 0.00885
       },
       {
         "id": "1387520236663615488:5",
         "label": "gibuttersnaps",
-        "probability": 0.01225
+        "probability": 0.00885
       },
       {
         "id": "1387520086092312576:12",
         "label": "Marginal Returns",
-        "probability": 0.01115
+        "probability": 0.0086
       },
       {
         "id": "1387520236663615488:4",
         "label": "Socialized L-Care",
-        "probability": 0.0105
+        "probability": 0.0081
       },
       {
         "id": "1387520086092312576:6",
         "label": "scboom5",
-        "probability": 0.01045
+        "probability": 0.0079
       },
       {
         "id": "1387520168866885632:2",
         "label": "Jonathon Taylor Mayde",
-        "probability": 0.0094
-      },
-      {
-        "id": "1387520086092312576:4",
-        "label": "Two Williams, One Cup",
-        "probability": 0.0088
+        "probability": 0.0068
       },
       {
         "id": "1387520168866885632:3",
         "label": "Checkout & Gameplay",
-        "probability": 0.0079
+        "probability": 0.00615
       },
       {
-        "id": "1387520236663615488:12",
-        "label": "Sahilmodi8",
-        "probability": 0.0079
+        "id": "1387520086092312576:4",
+        "label": "Two Williams, One Cup",
+        "probability": 0.00615
       },
       {
         "id": "1387520168866885632:8",
         "label": "the beggar king",
-        "probability": 0.00715
-      },
-      {
-        "id": "1387520168866885632:1",
-        "label": "Ja’Marrican Psycho",
-        "probability": 0.00605
+        "probability": 0.00455
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene",
-        "probability": 0.00585
+        "probability": 0.00445
+      },
+      {
+        "id": "1387520168866885632:1",
+        "label": "Ja’Marrican Psycho",
+        "probability": 0.00405
       },
       {
         "id": "1387520236663615488:10",
         "label": "brendenclerget",
-        "probability": 0.0052
+        "probability": 0.0036
+      },
+      {
+        "id": "1387520236663615488:12",
+        "label": "Sahilmodi8",
+        "probability": 0.00345
       },
       {
         "id": "1387520086092312576:8",
         "label": "ziyanp22",
-        "probability": 0.0052
+        "probability": 0.00335
       },
       {
         "id": "1387520236663615488:6",
         "label": "Can you tuten my face",
-        "probability": 0.00455
+        "probability": 0.003
       },
       {
         "id": "1387520168866885632:10",
         "label": "King Henry’s Court",
-        "probability": 0.00455
-      },
-      {
-        "id": "1387520086092312576:2",
-        "label": "Coker Laced Flowers",
-        "probability": 0.00355
-      },
-      {
-        "id": "1387520168866885632:5",
-        "label": "HarrytheHitman9",
-        "probability": 0.00355
+        "probability": 0.00285
       },
       {
         "id": "1387520086092312576:7",
         "label": "Something’s Gotta Gibbs",
-        "probability": 0.00355
+        "probability": 0.00245
+      },
+      {
+        "id": "1387520086092312576:2",
+        "label": "Coker Laced Flowers",
+        "probability": 0.0023
+      },
+      {
+        "id": "1387520168866885632:5",
+        "label": "HarrytheHitman9",
+        "probability": 0.00225
       },
       {
         "id": "1387520236663615488:2",
         "label": "krishnik",
-        "probability": 0.00235
+        "probability": 0.00155
       },
       {
         "id": "1387520086092312576:1",
         "label": "Crown and Pound",
-        "probability": 0.0022
+        "probability": 0.00115
       },
       {
         "id": "1387520168866885632:12",
         "label": "vayyala",
-        "probability": 0.0018
-      },
-      {
-        "id": "1387520236663615488:11",
-        "label": "Loveland Island",
-        "probability": 0.00165
+        "probability": 0.0011
       },
       {
         "id": "1387520168866885632:9",
         "label": "lukebowsh",
-        "probability": 0.0015
-      },
-      {
-        "id": "1387520086092312576:3",
-        "label": "Love Warrents Dak Pics",
-        "probability": 0.00145
+        "probability": 0.00075
       },
       {
         "id": "1387520168866885632:7",
         "label": "akmadurai",
-        "probability": 0.0013
+        "probability": 0.00055
+      },
+      {
+        "id": "1387520086092312576:3",
+        "label": "Love Warrents Dak Pics",
+        "probability": 0.00055
+      },
+      {
+        "id": "1387520236663615488:11",
+        "label": "Loveland Island",
+        "probability": 0.00055
       }
     ],
     "closestMatchup": [
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.07015
+        "probability": 0.0732
       },
       {
         "id": "1387520086092312576:6",
         "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.0661
+        "probability": 0.0681
       },
       {
         "id": "1387520086092312576:5",
         "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.0661
+        "probability": 0.06745
       },
       {
         "id": "1387520168866885632:4",
         "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.0643
-      },
-      {
-        "id": "1387520236663615488:2",
-        "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.06355
-      },
-      {
-        "id": "1387520236663615488:3",
-        "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.0621
+        "probability": 0.06575
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.0621
-      },
-      {
-        "id": "1387520236663615488:5",
-        "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.06165
+        "probability": 0.06515
       },
       {
         "id": "1387520086092312576:2",
         "label": "ziyanp22 vs. cescott25",
-        "probability": 0.0608
+        "probability": 0.06425
+      },
+      {
+        "id": "1387520236663615488:5",
+        "label": "Socialized L-Care vs. brendenclerget",
+        "probability": 0.0642
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.0593
+        "probability": 0.06235
       },
       {
-        "id": "1387520236663615488:1",
-        "label": "krishnik vs. aditya22",
-        "probability": 0.0586
+        "id": "1387520236663615488:3",
+        "label": "ashwindandapani1 vs. Mexican Cartel",
+        "probability": 0.06175
       },
       {
         "id": "1387520086092312576:4",
         "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.0552
+        "probability": 0.0592
       },
       {
-        "id": "1387520086092312576:1",
-        "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.05325
-      },
-      {
-        "id": "1387520236663615488:6",
-        "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.0522
+        "id": "1387520236663615488:1",
+        "label": "krishnik vs. aditya22",
+        "probability": 0.0545
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.0517
+        "probability": 0.05345
+      },
+      {
+        "id": "1387520086092312576:1",
+        "label": "Coker Laced Flowers vs. Jaxson my Johnston",
+        "probability": 0.0515
+      },
+      {
+        "id": "1387520236663615488:6",
+        "label": "Can you tuten my face vs. Lisan Al-Caleb",
+        "probability": 0.0495
+      },
+      {
+        "id": "1387520236663615488:2",
+        "label": "aaryanshetty vs. Sahilmodi8",
+        "probability": 0.0492
       },
       {
         "id": "1387520236663615488:4",
         "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.0491
+        "probability": 0.04885
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.04065
+        "probability": 0.03945
       },
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.00315
+        "probability": 0.00215
       }
     ],
     "biggestBlowout": [
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.5235
+        "probability": 0.55675
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.066
+        "probability": 0.06315
       },
       {
         "id": "1387520236663615488:4",
         "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.04775
+        "probability": 0.0438
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.043
-      },
-      {
-        "id": "1387520086092312576:1",
-        "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.03655
+        "probability": 0.0385
       },
       {
         "id": "1387520236663615488:6",
         "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.0349
+        "probability": 0.03335
       },
       {
-        "id": "1387520086092312576:4",
-        "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.03245
-      },
-      {
-        "id": "1387520236663615488:1",
-        "label": "krishnik vs. aditya22",
-        "probability": 0.03065
-      },
-      {
-        "id": "1387520236663615488:3",
-        "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.02575
-      },
-      {
-        "id": "1387520168866885632:3",
-        "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.02245
-      },
-      {
-        "id": "1387520168866885632:6",
-        "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.02165
-      },
-      {
-        "id": "1387520168866885632:4",
-        "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.0185
-      },
-      {
-        "id": "1387520086092312576:2",
-        "label": "ziyanp22 vs. cescott25",
-        "probability": 0.01825
-      },
-      {
-        "id": "1387520236663615488:5",
-        "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.01775
-      },
-      {
-        "id": "1387520086092312576:6",
-        "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.01655
-      },
-      {
-        "id": "1387520086092312576:5",
-        "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.0159
+        "id": "1387520086092312576:1",
+        "label": "Coker Laced Flowers vs. Jaxson my Johnston",
+        "probability": 0.03325
       },
       {
         "id": "1387520236663615488:2",
         "label": "aaryanshetty vs. Sahilmodi8",
+        "probability": 0.0286
+      },
+      {
+        "id": "1387520086092312576:4",
+        "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
+        "probability": 0.0273
+      },
+      {
+        "id": "1387520236663615488:1",
+        "label": "krishnik vs. aditya22",
+        "probability": 0.02635
+      },
+      {
+        "id": "1387520236663615488:3",
+        "label": "ashwindandapani1 vs. Mexican Cartel",
+        "probability": 0.0239
+      },
+      {
+        "id": "1387520168866885632:3",
+        "label": "Ja’Marrican Psycho vs. vayyala",
+        "probability": 0.0193
+      },
+      {
+        "id": "1387520168866885632:6",
+        "label": "JimothyGreene vs. the beggar king",
+        "probability": 0.01785
+      },
+      {
+        "id": "1387520086092312576:2",
+        "label": "ziyanp22 vs. cescott25",
+        "probability": 0.01695
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5 vs. Injured Excellence",
         "probability": 0.0158
+      },
+      {
+        "id": "1387520236663615488:5",
+        "label": "Socialized L-Care vs. brendenclerget",
+        "probability": 0.0154
+      },
+      {
+        "id": "1387520168866885632:4",
+        "label": "HarrytheHitman9 vs. King Henry’s Court",
+        "probability": 0.01525
+      },
+      {
+        "id": "1387520086092312576:5",
+        "label": "Two Williams, One Cup vs. benweinfeld",
+        "probability": 0.0141
       },
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.0126
+        "probability": 0.0104
       }
     ],
     "highestMatchupTotal": [
       {
         "id": "1387520086092312576:4",
         "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.2583
+        "probability": 0.2658
       },
       {
         "id": "1387520236663615488:4",
         "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.09965
+        "probability": 0.0988
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.0936
+        "probability": 0.0911
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.0852
-      },
-      {
-        "id": "1387520086092312576:3",
-        "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.0831
+        "probability": 0.0861
       },
       {
         "id": "1387520168866885632:4",
         "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.0825
+        "probability": 0.08405
+      },
+      {
+        "id": "1387520086092312576:3",
+        "label": "Crown and Pound vs. Marginal Returns",
+        "probability": 0.0802
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.06475
+        "probability": 0.06155
       },
       {
         "id": "1387520236663615488:1",
         "label": "krishnik vs. aditya22",
-        "probability": 0.05595
+        "probability": 0.0542
       },
       {
         "id": "1387520236663615488:5",
         "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.03605
+        "probability": 0.0352
       },
       {
         "id": "1387520236663615488:3",
         "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.0307
+        "probability": 0.0312
       },
       {
         "id": "1387520086092312576:1",
         "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.0235
+        "probability": 0.02095
       },
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.0202
+        "probability": 0.01975
       },
       {
         "id": "1387520086092312576:2",
         "label": "ziyanp22 vs. cescott25",
-        "probability": 0.01685
+        "probability": 0.0163
       },
       {
         "id": "1387520236663615488:6",
         "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.01575
-      },
-      {
-        "id": "1387520086092312576:6",
-        "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.0122
-      },
-      {
-        "id": "1387520086092312576:5",
-        "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.012
+        "probability": 0.0154
       },
       {
         "id": "1387520236663615488:2",
         "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.00735
+        "probability": 0.0153
+      },
+      {
+        "id": "1387520086092312576:5",
+        "label": "Two Williams, One Cup vs. benweinfeld",
+        "probability": 0.01085
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5 vs. Injured Excellence",
+        "probability": 0.01035
       },
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.00235
+        "probability": 0.0029
       }
     ],
     "lowestMatchupTotal": [
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.2814
-      },
-      {
-        "id": "1387520236663615488:2",
-        "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.1037
+        "probability": 0.3131
       },
       {
         "id": "1387520086092312576:6",
         "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.07905
+        "probability": 0.08365
       },
       {
         "id": "1387520086092312576:5",
         "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.07535
+        "probability": 0.08075
+      },
+      {
+        "id": "1387520236663615488:2",
+        "label": "aaryanshetty vs. Sahilmodi8",
+        "probability": 0.0716
       },
       {
         "id": "1387520236663615488:6",
         "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.06355
+        "probability": 0.0664
       },
       {
         "id": "1387520236663615488:3",
         "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.0616
-      },
-      {
-        "id": "1387520086092312576:1",
-        "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.05695
+        "probability": 0.05895
       },
       {
         "id": "1387520086092312576:2",
         "label": "ziyanp22 vs. cescott25",
-        "probability": 0.05465
+        "probability": 0.0572
+      },
+      {
+        "id": "1387520086092312576:1",
+        "label": "Coker Laced Flowers vs. Jaxson my Johnston",
+        "probability": 0.0571
       },
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.048
+        "probability": 0.05015
       },
       {
         "id": "1387520236663615488:5",
         "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.03415
+        "probability": 0.0348
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.0284
+        "probability": 0.02595
       },
       {
         "id": "1387520236663615488:1",
         "label": "krishnik vs. aditya22",
-        "probability": 0.02675
+        "probability": 0.0242
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.01915
+        "probability": 0.0177
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.0177
+        "probability": 0.0156
       },
       {
         "id": "1387520168866885632:4",
         "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.0149
-      },
-      {
-        "id": "1387520236663615488:4",
-        "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.01465
+        "probability": 0.01335
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.01435
+        "probability": 0.01325
+      },
+      {
+        "id": "1387520236663615488:4",
+        "label": "gibuttersnaps vs. Loveland Island",
+        "probability": 0.0122
       },
       {
         "id": "1387520086092312576:4",
         "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.0057
+        "probability": 0.00405
       }
     ]
   },
@@ -898,252 +891,252 @@
           {
             "id": "1387520086092312576:3",
             "label": "Love Warrents Dak Pics",
-            "probability": 0.25865
+            "probability": 0.26515
           },
           {
             "id": "1387520086092312576:1",
             "label": "Crown and Pound",
-            "probability": 0.20145
+            "probability": 0.2047
           },
           {
             "id": "1387520086092312576:7",
             "label": "Something’s Gotta Gibbs",
-            "probability": 0.1855
+            "probability": 0.183
           },
           {
             "id": "1387520086092312576:2",
             "label": "Coker Laced Flowers",
-            "probability": 0.10505
+            "probability": 0.1029
           },
           {
             "id": "1387520086092312576:8",
             "label": "ziyanp22",
-            "probability": 0.05975
+            "probability": 0.0612
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5",
-            "probability": 0.0486
+            "probability": 0.04845
           },
           {
             "id": "1387520086092312576:4",
             "label": "Two Williams, One Cup",
-            "probability": 0.047
+            "probability": 0.0455
           },
           {
             "id": "1387520086092312576:12",
             "label": "Marginal Returns",
-            "probability": 0.03625
+            "probability": 0.0345
           },
           {
             "id": "1387520086092312576:11",
             "label": "benweinfeld",
-            "probability": 0.0176
+            "probability": 0.0158
           },
           {
             "id": "1387520086092312576:9",
             "label": "cescott25",
-            "probability": 0.01625
+            "probability": 0.0157
           },
           {
             "id": "1387520086092312576:5",
             "label": "Jaxson my Johnston",
-            "probability": 0.0122
+            "probability": 0.01205
           },
           {
             "id": "1387520086092312576:10",
             "label": "Injured Excellence",
-            "probability": 0.0117
+            "probability": 0.01105
           }
         ],
         "lowestScore": [
           {
             "id": "1387520086092312576:5",
             "label": "Jaxson my Johnston",
-            "probability": 0.18395
+            "probability": 0.194
           },
           {
             "id": "1387520086092312576:10",
             "label": "Injured Excellence",
-            "probability": 0.14085
+            "probability": 0.1479
           },
           {
             "id": "1387520086092312576:11",
             "label": "benweinfeld",
-            "probability": 0.1407
+            "probability": 0.14785
           },
           {
             "id": "1387520086092312576:9",
             "label": "cescott25",
-            "probability": 0.13165
+            "probability": 0.13635
           },
           {
             "id": "1387520086092312576:12",
             "label": "Marginal Returns",
-            "probability": 0.08925
-          },
-          {
-            "id": "1387520086092312576:4",
-            "label": "Two Williams, One Cup",
-            "probability": 0.0793
+            "probability": 0.08685
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5",
-            "probability": 0.0787
+            "probability": 0.07845
+          },
+          {
+            "id": "1387520086092312576:4",
+            "label": "Two Williams, One Cup",
+            "probability": 0.0753
           },
           {
             "id": "1387520086092312576:8",
             "label": "ziyanp22",
-            "probability": 0.05235
+            "probability": 0.0496
           },
           {
             "id": "1387520086092312576:2",
             "label": "Coker Laced Flowers",
-            "probability": 0.03565
+            "probability": 0.0303
           },
           {
             "id": "1387520086092312576:7",
             "label": "Something’s Gotta Gibbs",
-            "probability": 0.0291
+            "probability": 0.0238
           },
           {
             "id": "1387520086092312576:1",
             "label": "Crown and Pound",
-            "probability": 0.02365
+            "probability": 0.01865
           },
           {
             "id": "1387520086092312576:3",
             "label": "Love Warrents Dak Pics",
-            "probability": 0.01485
+            "probability": 0.01095
           }
         ],
         "closestMatchup": [
           {
-            "id": "1387520086092312576:6",
-            "label": "scboom5 vs. Injured Excellence",
+            "id": "1387520086092312576:5",
+            "label": "Two Williams, One Cup vs. benweinfeld",
             "probability": 0.18855
           },
           {
-            "id": "1387520086092312576:5",
-            "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.1839
+            "id": "1387520086092312576:6",
+            "label": "scboom5 vs. Injured Excellence",
+            "probability": 0.18805
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.1791
+            "probability": 0.17865
           },
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.15695
-          },
-          {
-            "id": "1387520086092312576:1",
-            "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.146
+            "probability": 0.1616
           },
           {
             "id": "1387520086092312576:3",
             "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.1455
+            "probability": 0.1442
+          },
+          {
+            "id": "1387520086092312576:1",
+            "label": "Coker Laced Flowers vs. Jaxson my Johnston",
+            "probability": 0.13895
           }
         ],
         "biggestBlowout": [
           {
-            "id": "1387520086092312576:3",
-            "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.212
-          },
-          {
             "id": "1387520086092312576:1",
             "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.21145
+            "probability": 0.2178
+          },
+          {
+            "id": "1387520086092312576:3",
+            "label": "Crown and Pound vs. Marginal Returns",
+            "probability": 0.21295
           },
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.1826
+            "probability": 0.1743
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.13825
-          },
-          {
-            "id": "1387520086092312576:5",
-            "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.12945
+            "probability": 0.1422
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.12625
+            "probability": 0.12745
+          },
+          {
+            "id": "1387520086092312576:5",
+            "label": "Two Williams, One Cup vs. benweinfeld",
+            "probability": 0.1253
           }
         ],
         "highestMatchupTotal": [
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.51655
+            "probability": 0.53645
           },
           {
             "id": "1387520086092312576:3",
             "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.21915
+            "probability": 0.21875
           },
           {
             "id": "1387520086092312576:1",
             "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.0839
+            "probability": 0.0763
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.06905
+            "probability": 0.0664
           },
           {
             "id": "1387520086092312576:5",
             "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.05845
+            "probability": 0.0528
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.0529
+            "probability": 0.0493
           }
         ],
         "lowestMatchupTotal": [
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.2619
+            "probability": 0.266
           },
           {
             "id": "1387520086092312576:5",
             "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.2496
+            "probability": 0.25795
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.1955
+            "probability": 0.1972
           },
           {
             "id": "1387520086092312576:1",
             "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.1855
+            "probability": 0.1854
           },
           {
             "id": "1387520086092312576:3",
             "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.07935
+            "probability": 0.0717
           },
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.02815
+            "probability": 0.02175
           }
         ]
       },
@@ -1159,11 +1152,11 @@
             "managerName": "anantjindani",
             "avatarUrl": "https://sleepercdn.com/avatars/d76ff60fc913451238f7defc1a326040",
             "projection": 120.1,
-            "p10": 102.1,
+            "p10": 103.5,
             "p50": 120.1,
-            "p90": 138.3,
-            "winProbability": 0.76125,
-            "moneyline": "-319",
+            "p90": 137.3,
+            "winProbability": 0.7819,
+            "moneyline": "-359",
             "draftGrade": "C-",
             "draftScore": 41,
             "bestDraftValue": {
@@ -1185,7 +1178,7 @@
                 "playerName": "Christian McCaffrey",
                 "nflTeam": "SF",
                 "projection": 20.2,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "6790",
@@ -1218,21 +1211,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 100
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 120.2
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 120.2
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 120.2
               }
@@ -1246,11 +1234,11 @@
             "managerName": "hunterzogg",
             "avatarUrl": "https://sleepercdn.com/uploads/c51c579378ccdce5fa8b31a86d3d7aff.jpg",
             "projection": 106.2,
-            "p10": 89.5,
+            "p10": 91,
             "p50": 106.2,
-            "p90": 123.4,
-            "winProbability": 0.23875000000000002,
-            "moneyline": "+319",
+            "p90": 122.3,
+            "winProbability": 0.21809999999999996,
+            "moneyline": "+359",
             "draftGrade": "F",
             "draftScore": 24,
             "bestDraftValue": {
@@ -1272,7 +1260,7 @@
                 "playerName": "Jaxson Dart",
                 "nflTeam": "NYG",
                 "projection": 18.6,
-                "windowId": "window-6"
+                "windowId": "window-5"
               },
               {
                 "playerId": "9224",
@@ -1305,21 +1293,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 60.4
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 80
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 87.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 106.1
               }
@@ -1339,11 +1322,11 @@
             "managerName": "ziyanp22",
             "avatarUrl": "https://sleepercdn.com/avatars/7208404e9332f4ba6bfe5fc9743d614d",
             "projection": 116.5,
-            "p10": 99.3,
+            "p10": 100.7,
             "p50": 116.5,
-            "p90": 134.3,
-            "winProbability": 0.66275,
-            "moneyline": "-197",
+            "p90": 133.4,
+            "winProbability": 0.67505,
+            "moneyline": "-208",
             "draftGrade": "F",
             "draftScore": 19,
             "bestDraftValue": {
@@ -1358,14 +1341,14 @@
                 "playerName": "Jayden Daniels",
                 "nflTeam": "WAS",
                 "projection": 21.9,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "9226",
                 "playerName": "De'Von Achane",
                 "nflTeam": "MIA",
                 "projection": 18.9,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "11584",
@@ -1398,21 +1381,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 75.7
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 116.5
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 116.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 116.5
               }
@@ -1426,11 +1404,11 @@
             "managerName": "cescott25",
             "avatarUrl": "https://sleepercdn.com/avatars/4f4090e5e9c3941414db40a871e3e909",
             "projection": 108.7,
-            "p10": 92.4,
+            "p10": 93.9,
             "p50": 108.7,
-            "p90": 125.2,
-            "winProbability": 0.33725000000000005,
-            "moneyline": "+197",
+            "p90": 124.2,
+            "winProbability": 0.32494999999999996,
+            "moneyline": "+208",
             "draftGrade": "A",
             "draftScore": 88,
             "bestDraftValue": {
@@ -1485,21 +1463,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 97.1
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 108.5
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 108.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 108.5
               }
@@ -1519,11 +1492,11 @@
             "managerName": "dmethi",
             "avatarUrl": "https://sleepercdn.com/uploads/ea2dd473ef8432a167d512bd2eacb4f6.jpg",
             "projection": 125,
-            "p10": 105.4,
+            "p10": 107.3,
             "p50": 125,
-            "p90": 145.3,
-            "winProbability": 0.72745,
-            "moneyline": "-267",
+            "p90": 144.2,
+            "winProbability": 0.74285,
+            "moneyline": "-289",
             "draftGrade": "C+",
             "draftScore": 60,
             "bestDraftValue": {
@@ -1538,7 +1511,7 @@
                 "playerName": "Jonathan Taylor",
                 "nflTeam": "IND",
                 "projection": 21.8,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "5892",
@@ -1578,21 +1551,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 91.3
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 103.3
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 125.1
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 125.1
               }
@@ -1606,11 +1574,11 @@
             "managerName": "Bego60",
             "avatarUrl": "https://sleepercdn.com/avatars/c49667362b43dfb5b67209744ea7c597",
             "projection": 112.6,
-            "p10": 95.4,
+            "p10": 96.8,
             "p50": 112.6,
-            "p90": 130.2,
-            "winProbability": 0.27254999999999996,
-            "moneyline": "+267",
+            "p90": 129.2,
+            "winProbability": 0.25715,
+            "moneyline": "+289",
             "draftGrade": "C",
             "draftScore": 48,
             "bestDraftValue": {
@@ -1632,7 +1600,7 @@
                 "playerName": "Matthew Stafford",
                 "nflTeam": "LAR",
                 "projection": 16.1,
-                "windowId": "window-6"
+                "windowId": "window-5"
               },
               {
                 "playerId": "12507",
@@ -1665,21 +1633,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 73.5
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 96.5
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 96.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 112.6
               }
@@ -1699,11 +1662,11 @@
             "managerName": "YouSmellLikeDaal",
             "avatarUrl": "https://sleepercdn.com/avatars/15ed1d55c470e695634cbfc7f2c98cac",
             "projection": 127.6,
-            "p10": 107.9,
+            "p10": 109.9,
             "p50": 127.6,
-            "p90": 148.1,
-            "winProbability": 0.5662,
-            "moneyline": "-131",
+            "p90": 147,
+            "winProbability": 0.573,
+            "moneyline": "-134",
             "draftGrade": "B-",
             "draftScore": 68,
             "bestDraftValue": {
@@ -1725,14 +1688,14 @@
                 "playerName": "Dak Prescott",
                 "nflTeam": "DAL",
                 "projection": 20,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "12481",
                 "playerName": "Cam Skattebo",
                 "nflTeam": "NYG",
                 "projection": 14.9,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -1758,21 +1721,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 60.9
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 112.7
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 112.7
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 127.6
               }
@@ -1786,11 +1744,11 @@
             "managerName": "kanzelm3",
             "avatarUrl": "https://sleepercdn.com/avatars/51b6afcb8bf8da271150451521b1952c",
             "projection": 124,
-            "p10": 103.6,
+            "p10": 105.7,
             "p50": 124,
-            "p90": 144.6,
-            "winProbability": 0.43379999999999996,
-            "moneyline": "+131",
+            "p90": 143.3,
+            "winProbability": 0.42700000000000005,
+            "moneyline": "+134",
             "draftGrade": "B-",
             "draftScore": 67,
             "bestDraftValue": {
@@ -1819,7 +1777,7 @@
                 "playerName": "CeeDee Lamb",
                 "nflTeam": "DAL",
                 "projection": 15.6,
-                "windowId": "window-4"
+                "windowId": "window-3"
               }
             ],
             "modeledAtZero": {
@@ -1845,21 +1803,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 97.6
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 113.2
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 124.1
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 124.1
               }
@@ -1879,11 +1832,11 @@
             "managerName": "Akill13",
             "avatarUrl": "https://sleepercdn.com/avatars/41a22e87e290fcae03ddf6384fd2cc3a",
             "projection": 113.9,
-            "p10": 96.4,
+            "p10": 97.8,
             "p50": 113.9,
-            "p90": 131.9,
-            "winProbability": 0.6126,
-            "moneyline": "-158",
+            "p90": 130.8,
+            "winProbability": 0.6243,
+            "moneyline": "-166",
             "draftGrade": "D",
             "draftScore": 37,
             "bestDraftValue": {
@@ -1898,7 +1851,7 @@
                 "playerName": "Kyren Williams",
                 "nflTeam": "LAR",
                 "projection": 20.1,
-                "windowId": "window-6"
+                "windowId": "window-5"
               },
               {
                 "playerId": "11560",
@@ -1938,21 +1891,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 77.8
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 77.8
-              },
-              {
-                "windowId": "window-5",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 86.9
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 113.9
               }
@@ -1966,11 +1914,11 @@
             "managerName": "benweinfeld",
             "avatarUrl": "https://sleepercdn.com/avatars/8fcf0e0e6a75e96a591d2a4a4a400f41",
             "projection": 108.4,
-            "p10": 92.1,
+            "p10": 93.3,
             "p50": 108.4,
-            "p90": 125.4,
-            "winProbability": 0.38739999999999997,
-            "moneyline": "+158",
+            "p90": 124.1,
+            "winProbability": 0.37570000000000003,
+            "moneyline": "+166",
             "draftGrade": "C-",
             "draftScore": 47,
             "bestDraftValue": {
@@ -1985,21 +1933,21 @@
                 "playerName": "Kenneth Walker",
                 "nflTeam": "KC",
                 "projection": 18,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "4046",
                 "playerName": "Patrick Mahomes",
                 "nflTeam": "KC",
                 "projection": 17.8,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "9493",
                 "playerName": "Puka Nacua",
                 "nflTeam": "LAR",
                 "projection": 16.7,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -2025,21 +1973,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 38.7
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 47.4
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 91.7
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 108.4
               }
@@ -2059,11 +2002,11 @@
             "managerName": "scboom5",
             "avatarUrl": "https://sleepercdn.com/avatars/1d538540976713a2a93c687c112b5c70",
             "projection": 114,
-            "p10": 96.2,
+            "p10": 97.7,
             "p50": 114,
-            "p90": 132.1,
-            "winProbability": 0.6295,
-            "moneyline": "-170",
+            "p90": 131.2,
+            "winProbability": 0.6398,
+            "moneyline": "-178",
             "draftGrade": "F",
             "draftScore": 4,
             "bestDraftValue": {
@@ -2078,14 +2021,14 @@
                 "playerName": "Javonte Williams",
                 "nflTeam": "DAL",
                 "projection": 20.7,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "9488",
                 "playerName": "Jaxon Smith-Njigba",
                 "nflTeam": "SEA",
                 "projection": 16.2,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "3163",
@@ -2118,21 +2061,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 62.8
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 114.1
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 114.1
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 114.1
               }
@@ -2146,11 +2084,11 @@
             "managerName": "nkjchamp",
             "avatarUrl": "https://sleepercdn.com/uploads/f58c79bc122f9392b7c5609723c7e1fd.jpg",
             "projection": 107.8,
-            "p10": 91.8,
+            "p10": 93.2,
             "p50": 107.8,
-            "p90": 124,
-            "winProbability": 0.37050000000000005,
-            "moneyline": "+170",
+            "p90": 123.2,
+            "winProbability": 0.36019999999999996,
+            "moneyline": "+178",
             "draftGrade": "B",
             "draftScore": 72,
             "bestDraftValue": {
@@ -2165,7 +2103,7 @@
                 "playerName": "Brock Purdy",
                 "nflTeam": "SF",
                 "projection": 20.6,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "12527",
@@ -2179,7 +2117,7 @@
                 "playerName": "Jadarian Price",
                 "nflTeam": "SEA",
                 "projection": 14.3,
-                "windowId": "window-4"
+                "windowId": "window-3"
               }
             ],
             "modeledAtZero": {
@@ -2205,21 +2143,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 44.6
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 86.5
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 86.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 107.9
               }
@@ -2239,57 +2172,57 @@
           {
             "id": "1387520168866885632:7",
             "label": "akmadurai",
-            "probability": 0.23325
+            "probability": 0.23605
           },
           {
             "id": "1387520168866885632:9",
             "label": "lukebowsh",
-            "probability": 0.21715
+            "probability": 0.219
           },
           {
             "id": "1387520168866885632:12",
             "label": "vayyala",
-            "probability": 0.1159
+            "probability": 0.1169
           },
           {
             "id": "1387520168866885632:5",
             "label": "HarrytheHitman9",
-            "probability": 0.09015
+            "probability": 0.0901
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene",
-            "probability": 0.0762
+            "probability": 0.0741
           },
           {
             "id": "1387520168866885632:10",
             "label": "King Henry’s Court",
-            "probability": 0.07015
+            "probability": 0.07045
           },
           {
             "id": "1387520168866885632:8",
             "label": "the beggar king",
-            "probability": 0.0606
+            "probability": 0.06025
           },
           {
             "id": "1387520168866885632:1",
             "label": "Ja’Marrican Psycho",
-            "probability": 0.05865
+            "probability": 0.0585
           },
           {
             "id": "1387520168866885632:2",
             "label": "Jonathon Taylor Mayde",
-            "probability": 0.03795
+            "probability": 0.0354
           },
           {
             "id": "1387520168866885632:3",
             "label": "Checkout & Gameplay",
-            "probability": 0.0242
+            "probability": 0.0233
           },
           {
             "id": "1387520168866885632:4",
             "label": "Team Lil Bros",
-            "probability": 0.0158
+            "probability": 0.01595
           },
           {
             "id": "1387520168866885632:11",
@@ -2301,190 +2234,190 @@
           {
             "id": "1387520168866885632:11",
             "label": "vchak",
-            "probability": 0.8639
+            "probability": 0.90025
           },
           {
             "id": "1387520168866885632:4",
             "label": "Team Lil Bros",
-            "probability": 0.0295
-          },
-          {
-            "id": "1387520168866885632:2",
-            "label": "Jonathon Taylor Mayde",
-            "probability": 0.0195
+            "probability": 0.0244
           },
           {
             "id": "1387520168866885632:3",
             "label": "Checkout & Gameplay",
-            "probability": 0.01835
+            "probability": 0.01475
+          },
+          {
+            "id": "1387520168866885632:2",
+            "label": "Jonathon Taylor Mayde",
+            "probability": 0.01465
           },
           {
             "id": "1387520168866885632:8",
             "label": "the beggar king",
-            "probability": 0.01545
-          },
-          {
-            "id": "1387520168866885632:1",
-            "label": "Ja’Marrican Psycho",
-            "probability": 0.01265
+            "probability": 0.01005
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene",
-            "probability": 0.01215
+            "probability": 0.00885
+          },
+          {
+            "id": "1387520168866885632:1",
+            "label": "Ja’Marrican Psycho",
+            "probability": 0.00865
           },
           {
             "id": "1387520168866885632:10",
             "label": "King Henry’s Court",
-            "probability": 0.00865
+            "probability": 0.00595
           },
           {
             "id": "1387520168866885632:5",
             "label": "HarrytheHitman9",
-            "probability": 0.0074
+            "probability": 0.0052
           },
           {
             "id": "1387520168866885632:12",
             "label": "vayyala",
-            "probability": 0.00555
+            "probability": 0.0035
           },
           {
             "id": "1387520168866885632:9",
             "label": "lukebowsh",
-            "probability": 0.00365
+            "probability": 0.00205
           },
           {
             "id": "1387520168866885632:7",
             "label": "akmadurai",
-            "probability": 0.00325
+            "probability": 0.0017
           }
         ],
         "closestMatchup": [
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.2319
+            "probability": 0.23385
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.21955
+            "probability": 0.2217
           },
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.2039
+            "probability": 0.20775
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.1996
+            "probability": 0.2069
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.1329
+            "probability": 0.12115
           },
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.01215
+            "probability": 0.00865
           }
         ],
         "biggestBlowout": [
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.7106
+            "probability": 0.7495
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.115
+            "probability": 0.10745
           },
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.0489
+            "probability": 0.04175
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.0488
+            "probability": 0.0389
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.0434
+            "probability": 0.0353
           },
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.0333
+            "probability": 0.0271
           }
         ],
         "highestMatchupTotal": [
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.2513
+            "probability": 0.24805
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.23705
+            "probability": 0.24145
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.2314
+            "probability": 0.23445
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.18395
+            "probability": 0.1827
           },
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.0821
+            "probability": 0.0797
           },
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.0142
+            "probability": 0.01365
           }
         ],
         "lowestMatchupTotal": [
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.57905
+            "probability": 0.614
           },
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.15285
+            "probability": 0.14835
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.0901
+            "probability": 0.0805
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.06375
+            "probability": 0.05535
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.0578
+            "probability": 0.05105
           },
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.05645
+            "probability": 0.05075
           }
         ]
       },
@@ -2500,11 +2433,11 @@
             "managerName": "no14n",
             "avatarUrl": "https://sleepercdn.com/avatars/f0edbf4278f53f9425db175073df6584",
             "projection": 114,
-            "p10": 96.6,
+            "p10": 98,
             "p50": 114,
-            "p90": 132,
-            "winProbability": 0.524,
-            "moneyline": "-110",
+            "p90": 130.8,
+            "winProbability": 0.525,
+            "moneyline": "-111",
             "draftGrade": "C",
             "draftScore": 49,
             "bestDraftValue": {
@@ -2519,7 +2452,7 @@
                 "playerName": "Jonathan Taylor",
                 "nflTeam": "IND",
                 "projection": 21.8,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "11564",
@@ -2559,21 +2492,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 92.2
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 92.2
-              },
-              {
-                "windowId": "window-5",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 114
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 114
               }
@@ -2587,11 +2515,11 @@
             "managerName": "zhirsch",
             "avatarUrl": "https://sleepercdn.com/avatars/b319fdf8b7b5b0359d3c78622ba4d70c",
             "projection": 112.7,
-            "p10": 96.4,
+            "p10": 97.7,
             "p50": 112.7,
-            "p90": 129.5,
-            "winProbability": 0.476,
-            "moneyline": "+110",
+            "p90": 128.5,
+            "winProbability": 0.475,
+            "moneyline": "+111",
             "draftGrade": "D",
             "draftScore": 32,
             "bestDraftValue": {
@@ -2606,7 +2534,7 @@
                 "playerName": "Dak Prescott",
                 "nflTeam": "DAL",
                 "projection": 20,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "12512",
@@ -2620,7 +2548,7 @@
                 "playerName": "Blake Corum",
                 "nflTeam": "LAR",
                 "projection": 13.4,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -2646,21 +2574,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 49.2
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 80.6
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 88.1
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 112.7
               }
@@ -2680,11 +2603,11 @@
             "managerName": "lukebowsh",
             "avatarUrl": "https://sleepercdn.com/avatars/82aec8e811b839b8ec25d7b458afd57b",
             "projection": 127,
-            "p10": 106.6,
+            "p10": 108.5,
             "p50": 127,
-            "p90": 148.1,
-            "winProbability": 0.9936,
-            "moneyline": "-15525",
+            "p90": 146.9,
+            "winProbability": 0.9962,
+            "moneyline": "-26216",
             "draftGrade": "C-",
             "draftScore": 43,
             "bestDraftValue": {
@@ -2706,7 +2629,7 @@
                 "playerName": "Jayden Daniels",
                 "nflTeam": "WAS",
                 "projection": 21.9,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "7611",
@@ -2739,21 +2662,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 59.5
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 126.9
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 126.9
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 126.9
               }
@@ -2767,11 +2685,11 @@
             "managerName": "vchak",
             "avatarUrl": null,
             "projection": 80.2,
-            "p10": 65.9,
+            "p10": 67.4,
             "p50": 80.2,
-            "p90": 95,
-            "winProbability": 0.006399999999999961,
-            "moneyline": "+15525",
+            "p90": 94.4,
+            "winProbability": 0.0038000000000000256,
+            "moneyline": "+26216",
             "draftGrade": "C",
             "draftScore": 49,
             "bestDraftValue": {
@@ -2786,7 +2704,7 @@
                 "playerName": "Kenneth Walker",
                 "nflTeam": "KC",
                 "projection": 18,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "6797",
@@ -2826,21 +2744,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 62.1
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 62.1
-              },
-              {
-                "windowId": "window-5",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 80.1
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 80.1
               }
@@ -2860,11 +2773,11 @@
             "managerName": "doubleosean",
             "avatarUrl": "https://sleepercdn.com/avatars/d1a9b641b25f6d7eccc502e3166b476c",
             "projection": 117.4,
-            "p10": 99.6,
+            "p10": 100.9,
             "p50": 117.4,
-            "p90": 135.5,
-            "winProbability": 0.4013,
-            "moneyline": "+149",
+            "p90": 134.4,
+            "winProbability": 0.39665,
+            "moneyline": "+152",
             "draftGrade": "B-",
             "draftScore": 65,
             "bestDraftValue": {
@@ -2879,7 +2792,7 @@
                 "playerName": "Kyren Williams",
                 "nflTeam": "LAR",
                 "projection": 20.1,
-                "windowId": "window-6"
+                "windowId": "window-5"
               },
               {
                 "playerId": "7523",
@@ -2893,7 +2806,7 @@
                 "playerName": "Cam Skattebo",
                 "nflTeam": "NYG",
                 "projection": 14.9,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -2919,21 +2832,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 65.6
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 82.5
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 82.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 117.5
               }
@@ -2947,11 +2855,11 @@
             "managerName": "vayyala",
             "avatarUrl": "https://sleepercdn.com/avatars/578c6b253dd7b4bab45382e1af102204",
             "projection": 122.2,
-            "p10": 103.9,
+            "p10": 105.4,
             "p50": 122.2,
-            "p90": 141,
-            "winProbability": 0.5987,
-            "moneyline": "-149",
+            "p90": 139.9,
+            "winProbability": 0.60335,
+            "moneyline": "-152",
             "draftGrade": "C-",
             "draftScore": 46,
             "bestDraftValue": {
@@ -2966,7 +2874,7 @@
                 "playerName": "Brock Purdy",
                 "nflTeam": "SF",
                 "projection": 20.6,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "4866",
@@ -3006,21 +2914,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 90.8
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 111.4
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 122.3
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 122.3
               }
@@ -3040,10 +2943,10 @@
             "managerName": "HarrytheHitman9",
             "avatarUrl": "https://sleepercdn.com/avatars/25666f7849bfde075482164450be7a99",
             "projection": 120.2,
-            "p10": 102.3,
+            "p10": 103.6,
             "p50": 120.2,
-            "p90": 139,
-            "winProbability": 0.53065,
+            "p90": 138,
+            "winProbability": 0.5306,
             "moneyline": "-113",
             "draftGrade": "F",
             "draftScore": 27,
@@ -3066,14 +2969,14 @@
                 "playerName": "Javonte Williams",
                 "nflTeam": "DAL",
                 "projection": 20.7,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "9488",
                 "playerName": "Jaxon Smith-Njigba",
                 "nflTeam": "SEA",
                 "projection": 16.2,
-                "windowId": "window-4"
+                "windowId": "window-3"
               }
             ],
             "modeledAtZero": {
@@ -3099,21 +3002,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 68.9
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 120.2
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 120.2
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 120.2
               }
@@ -3127,10 +3025,10 @@
             "managerName": "RithikP",
             "avatarUrl": "https://sleepercdn.com/avatars/a9a588d0104b86ddf473e455aeb4348d",
             "projection": 118.8,
-            "p10": 101,
+            "p10": 102.6,
             "p50": 118.8,
-            "p90": 136.7,
-            "winProbability": 0.46935000000000004,
+            "p90": 135.8,
+            "winProbability": 0.46940000000000004,
             "moneyline": "+113",
             "draftGrade": "C+",
             "draftScore": 56,
@@ -3186,21 +3084,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 111.8
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 111.8
-              },
-              {
-                "windowId": "window-5",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 111.8
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 118.7
               }
@@ -3220,11 +3113,11 @@
             "managerName": "dhruvmodi",
             "avatarUrl": "https://sleepercdn.com/avatars/82aec8e811b839b8ec25d7b458afd57b",
             "projection": 110.1,
-            "p10": 93.8,
+            "p10": 94.9,
             "p50": 110.1,
-            "p90": 126.9,
-            "winProbability": 0.181,
-            "moneyline": "+452",
+            "p90": 126.1,
+            "winProbability": 0.16295,
+            "moneyline": "+514",
             "draftGrade": "B+",
             "draftScore": 76,
             "bestDraftValue": {
@@ -3253,7 +3146,7 @@
                 "playerName": "CeeDee Lamb",
                 "nflTeam": "DAL",
                 "projection": 15.6,
-                "windowId": "window-4"
+                "windowId": "window-3"
               }
             ],
             "modeledAtZero": {
@@ -3279,21 +3172,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 94.6
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 110.2
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 110.2
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 110.2
               }
@@ -3307,11 +3195,11 @@
             "managerName": "akmadurai",
             "avatarUrl": "https://sleepercdn.com/avatars/47485031fa0a626c0393b7df2b0ad508",
             "projection": 128.3,
-            "p10": 108.7,
+            "p10": 110.5,
             "p50": 128.3,
-            "p90": 148.4,
-            "winProbability": 0.819,
-            "moneyline": "-452",
+            "p90": 147.4,
+            "winProbability": 0.83705,
+            "moneyline": "-514",
             "draftGrade": "B-",
             "draftScore": 64,
             "bestDraftValue": {
@@ -3333,7 +3221,7 @@
                 "playerName": "Christian McCaffrey",
                 "nflTeam": "SF",
                 "projection": 20.2,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "5892",
@@ -3366,21 +3254,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 75.3
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 118
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 118
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 128.2
               }
@@ -3400,11 +3283,11 @@
             "managerName": "JimothyGreene",
             "avatarUrl": "https://sleepercdn.com/avatars/b3338675f635c2c1f42b469621d38ec6",
             "projection": 118,
-            "p10": 99.2,
+            "p10": 100.6,
             "p50": 118,
-            "p90": 137.4,
-            "winProbability": 0.5226,
-            "moneyline": "-109",
+            "p90": 136.3,
+            "winProbability": 0.525,
+            "moneyline": "-111",
             "draftGrade": "B",
             "draftScore": 70,
             "bestDraftValue": {
@@ -3433,7 +3316,7 @@
                 "playerName": "Puka Nacua",
                 "nflTeam": "LAR",
                 "projection": 16.7,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -3459,21 +3342,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 84.4
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 92.3
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 101.4
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 118.1
               }
@@ -3487,11 +3365,11 @@
             "managerName": "lurski",
             "avatarUrl": "https://sleepercdn.com/uploads/69739f7b3d5134dfcde3a9144a7f11a0.jpg",
             "projection": 117,
-            "p10": 98.4,
+            "p10": 100.1,
             "p50": 117,
-            "p90": 135.7,
-            "winProbability": 0.47740000000000005,
-            "moneyline": "+109",
+            "p90": 134.5,
+            "winProbability": 0.475,
+            "moneyline": "+111",
             "draftGrade": "D",
             "draftScore": 37,
             "bestDraftValue": {
@@ -3513,14 +3391,14 @@
                 "playerName": "De'Von Achane",
                 "nflTeam": "MIA",
                 "projection": 18.9,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "12508",
                 "playerName": "Jaxson Dart",
                 "nflTeam": "NYG",
                 "projection": 18.6,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -3546,21 +3424,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 57.7
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 90.9
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 90.9
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 116.9
               }
@@ -3580,252 +3453,252 @@
           {
             "id": "1387520236663615488:11",
             "label": "Loveland Island",
-            "probability": 0.2836
+            "probability": 0.2778
           },
           {
             "id": "1387520236663615488:2",
             "label": "krishnik",
-            "probability": 0.1705
+            "probability": 0.16215
           },
           {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face",
-            "probability": 0.11475
-          },
-          {
-            "id": "1387520236663615488:1",
-            "label": "ashwindandapani1",
-            "probability": 0.10355
-          },
-          {
-            "id": "1387520236663615488:10",
-            "label": "brendenclerget",
-            "probability": 0.0924
-          },
-          {
-            "id": "1387520236663615488:5",
-            "label": "gibuttersnaps",
-            "probability": 0.0495
+            "probability": 0.10865
           },
           {
             "id": "1387520236663615488:12",
             "label": "Sahilmodi8",
-            "probability": 0.0484
+            "probability": 0.0985
+          },
+          {
+            "id": "1387520236663615488:1",
+            "label": "ashwindandapani1",
+            "probability": 0.0967
+          },
+          {
+            "id": "1387520236663615488:10",
+            "label": "brendenclerget",
+            "probability": 0.08565
+          },
+          {
+            "id": "1387520236663615488:5",
+            "label": "gibuttersnaps",
+            "probability": 0.0474
           },
           {
             "id": "1387520236663615488:4",
             "label": "Socialized L-Care",
-            "probability": 0.0469
+            "probability": 0.0418
           },
           {
             "id": "1387520236663615488:8",
             "label": "aditya22",
-            "probability": 0.04255
+            "probability": 0.0364
           },
           {
             "id": "1387520236663615488:7",
             "label": "Mexican Cartel",
-            "probability": 0.0307
+            "probability": 0.0295
           },
           {
             "id": "1387520236663615488:3",
             "label": "aaryanshetty",
-            "probability": 0.0094
+            "probability": 0.0092
           },
           {
             "id": "1387520236663615488:9",
             "label": "Lisan Al-Caleb",
-            "probability": 0.00775
+            "probability": 0.00625
           }
         ],
         "lowestScore": [
           {
-            "id": "1387520236663615488:9",
-            "label": "Lisan Al-Caleb",
-            "probability": 0.1846
-          },
-          {
             "id": "1387520236663615488:3",
             "label": "aaryanshetty",
-            "probability": 0.1845
+            "probability": 0.20755
+          },
+          {
+            "id": "1387520236663615488:9",
+            "label": "Lisan Al-Caleb",
+            "probability": 0.2057
           },
           {
             "id": "1387520236663615488:7",
             "label": "Mexican Cartel",
-            "probability": 0.10605
+            "probability": 0.10785
           },
           {
             "id": "1387520236663615488:8",
             "label": "aditya22",
-            "probability": 0.08905
-          },
-          {
-            "id": "1387520236663615488:5",
-            "label": "gibuttersnaps",
-            "probability": 0.08235
+            "probability": 0.09265
           },
           {
             "id": "1387520236663615488:4",
             "label": "Socialized L-Care",
-            "probability": 0.0799
+            "probability": 0.0837
+          },
+          {
+            "id": "1387520236663615488:5",
+            "label": "gibuttersnaps",
+            "probability": 0.079
           },
           {
             "id": "1387520236663615488:1",
             "label": "ashwindandapani1",
-            "probability": 0.0756
-          },
-          {
-            "id": "1387520236663615488:12",
-            "label": "Sahilmodi8",
-            "probability": 0.07205
+            "probability": 0.0727
           },
           {
             "id": "1387520236663615488:10",
             "label": "brendenclerget",
-            "probability": 0.0452
+            "probability": 0.0416
+          },
+          {
+            "id": "1387520236663615488:12",
+            "label": "Sahilmodi8",
+            "probability": 0.03995
           },
           {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face",
-            "probability": 0.0414
+            "probability": 0.03735
           },
           {
             "id": "1387520236663615488:2",
             "label": "krishnik",
-            "probability": 0.02565
+            "probability": 0.02145
           },
           {
             "id": "1387520236663615488:11",
             "label": "Loveland Island",
-            "probability": 0.01365
+            "probability": 0.0105
           }
         ],
         "closestMatchup": [
           {
-            "id": "1387520236663615488:2",
-            "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.18585
-          },
-          {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.1812
+            "probability": 0.19155
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.17175
+            "probability": 0.18655
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.16705
+            "probability": 0.169
+          },
+          {
+            "id": "1387520236663615488:2",
+            "label": "aaryanshetty vs. Sahilmodi8",
+            "probability": 0.15355
           },
           {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.15165
+            "probability": 0.1515
           },
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.1425
+            "probability": 0.14785
           }
         ],
         "biggestBlowout": [
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.2258
+            "probability": 0.21405
           },
           {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.19685
-          },
-          {
-            "id": "1387520236663615488:1",
-            "label": "krishnik vs. aditya22",
-            "probability": 0.1717
-          },
-          {
-            "id": "1387520236663615488:3",
-            "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.15425
-          },
-          {
-            "id": "1387520236663615488:5",
-            "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.12585
+            "probability": 0.18855
           },
           {
             "id": "1387520236663615488:2",
             "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.12555
+            "probability": 0.18255
+          },
+          {
+            "id": "1387520236663615488:1",
+            "label": "krishnik vs. aditya22",
+            "probability": 0.1582
+          },
+          {
+            "id": "1387520236663615488:3",
+            "label": "ashwindandapani1 vs. Mexican Cartel",
+            "probability": 0.1407
+          },
+          {
+            "id": "1387520236663615488:5",
+            "label": "Socialized L-Care vs. brendenclerget",
+            "probability": 0.11595
           }
         ],
         "highestMatchupTotal": [
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.33635
+            "probability": 0.33455
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.2254
+            "probability": 0.21455
           },
           {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.16305
+            "probability": 0.1567
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.13265
-          },
-          {
-            "id": "1387520236663615488:6",
-            "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.08945
+            "probability": 0.1288
           },
           {
             "id": "1387520236663615488:2",
             "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.0531
+            "probability": 0.08305
+          },
+          {
+            "id": "1387520236663615488:6",
+            "label": "Can you tuten my face vs. Lisan Al-Caleb",
+            "probability": 0.08235
           }
         ],
         "lowestMatchupTotal": [
           {
-            "id": "1387520236663615488:2",
-            "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.3034
-          },
-          {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.2161
+            "probability": 0.2432
+          },
+          {
+            "id": "1387520236663615488:2",
+            "label": "aaryanshetty vs. Sahilmodi8",
+            "probability": 0.2393
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.1877
+            "probability": 0.20445
           },
           {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.1278
+            "probability": 0.14135
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.1026
+            "probability": 0.1083
           },
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.0624
+            "probability": 0.0634
           }
         ]
       },
@@ -3841,11 +3714,11 @@
             "managerName": "krishnik",
             "avatarUrl": "https://sleepercdn.com/avatars/7572250c2fb084c434fed0e82229e183",
             "projection": 122.1,
-            "p10": 103.3,
+            "p10": 105,
             "p50": 122.1,
-            "p90": 141.6,
-            "winProbability": 0.6968,
-            "moneyline": "-230",
+            "p90": 140.3,
+            "winProbability": 0.7124,
+            "moneyline": "-248",
             "draftGrade": "C",
             "draftScore": 55,
             "bestDraftValue": {
@@ -3860,14 +3733,14 @@
                 "playerName": "Jayden Daniels",
                 "nflTeam": "WAS",
                 "projection": 21.9,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "6813",
                 "playerName": "Jonathan Taylor",
                 "nflTeam": "IND",
                 "projection": 21.8,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "4199",
@@ -3900,21 +3773,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 65.7
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 100.4
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 122.2
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 122.2
               }
@@ -3928,11 +3796,11 @@
             "managerName": "aditya22",
             "avatarUrl": "https://sleepercdn.com/avatars/4d46b7d568cc71d4819293c612731196",
             "projection": 111.8,
-            "p10": 94.9,
+            "p10": 96.4,
             "p50": 111.8,
-            "p90": 129.3,
-            "winProbability": 0.3032,
-            "moneyline": "+230",
+            "p90": 128.4,
+            "winProbability": 0.28759999999999997,
+            "moneyline": "+248",
             "draftGrade": "C-",
             "draftScore": 42,
             "bestDraftValue": {
@@ -3961,7 +3829,7 @@
                 "playerName": "Jaxon Smith-Njigba",
                 "nflTeam": "SEA",
                 "projection": 16.2,
-                "windowId": "window-4"
+                "windowId": "window-3"
               }
             ],
             "modeledAtZero": {
@@ -3987,21 +3855,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 67.7
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 92.1
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 100.6
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 111.8
               }
@@ -4021,11 +3884,11 @@
             "managerName": "aaryanshetty",
             "avatarUrl": "https://sleepercdn.com/avatars/d55d1f7075eda01948318de4af616075",
             "projection": 105.4,
-            "p10": 89.3,
+            "p10": 90.3,
             "p50": 105.4,
-            "p90": 121.6,
-            "winProbability": 0.32855,
-            "moneyline": "+204",
+            "p90": 120.8,
+            "winProbability": 0.2297,
+            "moneyline": "+335",
             "draftGrade": "F",
             "draftScore": 18,
             "bestDraftValue": {
@@ -4080,21 +3943,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 91.5
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 105.3
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 105.3
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 105.3
               }
@@ -4107,12 +3965,12 @@
             "teamName": "Sahilmodi8",
             "managerName": "Sahilmodi8",
             "avatarUrl": "https://sleepercdn.com/avatars/8eb8f8bf999945d523f2c4033f70473e",
-            "projection": 113.2,
-            "p10": 96.5,
-            "p50": 113.2,
-            "p90": 130.7,
-            "winProbability": 0.67145,
-            "moneyline": "-204",
+            "projection": 118.4,
+            "p10": 102,
+            "p50": 118.4,
+            "p90": 135.7,
+            "winProbability": 0.7703,
+            "moneyline": "-335",
             "draftGrade": "B",
             "draftScore": 70,
             "bestDraftValue": {
@@ -4127,7 +3985,7 @@
                 "playerName": "Brock Purdy",
                 "nflTeam": "SF",
                 "projection": 20.6,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "5892",
@@ -4163,32 +4021,27 @@
               {
                 "windowId": "window-2",
                 "label": "Sun 1:00 PM",
-                "projectedPoints": 83.3
+                "projectedPoints": 88.6
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 83.3
+                "label": "Sun late afternoon",
+                "projectedPoints": 118.5
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 113.2
+                "label": "Sun 8:20 PM",
+                "projectedPoints": 118.5
               },
               {
                 "windowId": "window-5",
-                "label": "Sun 8:20 PM",
-                "projectedPoints": 113.2
-              },
-              {
-                "windowId": "window-6",
                 "label": "Mon 8:15 PM",
-                "projectedPoints": 113.2
+                "projectedPoints": 118.5
               }
             ]
           },
-          "spread": -7.8,
-          "total": 218.6
+          "spread": -13,
+          "total": 223.8
         },
         {
           "matchupId": 3,
@@ -4201,11 +4054,11 @@
             "managerName": "ashwindandapani1",
             "avatarUrl": "https://sleepercdn.com/avatars/d55d1f7075eda01948318de4af616075",
             "projection": 116,
-            "p10": 96,
+            "p10": 97.8,
             "p50": 116,
-            "p90": 136.9,
-            "winProbability": 0.6046,
-            "moneyline": "-153",
+            "p90": 135.7,
+            "winProbability": 0.61155,
+            "moneyline": "-157",
             "draftGrade": "C+",
             "draftScore": 57,
             "bestDraftValue": {
@@ -4227,7 +4080,7 @@
                 "playerName": "Christian McCaffrey",
                 "nflTeam": "SF",
                 "projection": 20.2,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "6797",
@@ -4260,21 +4113,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 66.6
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 115.9
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 115.9
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 115.9
               }
@@ -4288,11 +4136,11 @@
             "managerName": "rafas10",
             "avatarUrl": "https://sleepercdn.com/avatars/7572250c2fb084c434fed0e82229e183",
             "projection": 110.5,
-            "p10": 93.5,
+            "p10": 95.1,
             "p50": 110.5,
-            "p90": 128,
-            "winProbability": 0.3954,
-            "moneyline": "+153",
+            "p90": 127.2,
+            "winProbability": 0.38844999999999996,
+            "moneyline": "+157",
             "draftGrade": "B+",
             "draftScore": 77,
             "bestDraftValue": {
@@ -4321,7 +4169,7 @@
                 "playerName": "Jadarian Price",
                 "nflTeam": "SEA",
                 "projection": 14.3,
-                "windowId": "window-4"
+                "windowId": "window-3"
               }
             ],
             "modeledAtZero": {
@@ -4347,21 +4195,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 62.4
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 85.9
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 85.9
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 110.4
               }
@@ -4381,11 +4224,11 @@
             "managerName": "gibuttersnaps",
             "avatarUrl": "https://sleepercdn.com/avatars/b70fd30e2dcf8d417bdcc7fbfe1432b6",
             "projection": 113.1,
-            "p10": 95.8,
+            "p10": 97.4,
             "p50": 113.1,
-            "p90": 130.7,
-            "winProbability": 0.25445,
-            "moneyline": "+293",
+            "p90": 130,
+            "winProbability": 0.2384,
+            "moneyline": "+319",
             "draftGrade": "C-",
             "draftScore": 43,
             "bestDraftValue": {
@@ -4400,7 +4243,7 @@
                 "playerName": "De'Von Achane",
                 "nflTeam": "MIA",
                 "projection": 18.9,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "12527",
@@ -4440,21 +4283,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 86.7
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 113.1
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 113.1
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 113.1
               }
@@ -4468,11 +4306,11 @@
             "managerName": "siddharthseth",
             "avatarUrl": null,
             "projection": 127.1,
-            "p10": 107.4,
+            "p10": 109.1,
             "p50": 127.1,
-            "p90": 147.1,
-            "winProbability": 0.7455499999999999,
-            "moneyline": "-293",
+            "p90": 146,
+            "winProbability": 0.7616,
+            "moneyline": "-319",
             "draftGrade": "B-",
             "draftScore": 67,
             "bestDraftValue": {
@@ -4527,21 +4365,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 115.5
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 127
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 127
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 127
               }
@@ -4561,11 +4394,11 @@
             "managerName": "AyushDhadphale",
             "avatarUrl": "https://sleepercdn.com/avatars/be021b9487b79ecf2304a3a0ff63642f",
             "projection": 112.8,
-            "p10": 95.8,
+            "p10": 97,
             "p50": 112.8,
-            "p90": 130.7,
-            "winProbability": 0.40365,
-            "moneyline": "+148",
+            "p90": 129.7,
+            "winProbability": 0.39745,
+            "moneyline": "+152",
             "draftGrade": "C+",
             "draftScore": 63,
             "bestDraftValue": {
@@ -4580,14 +4413,14 @@
                 "playerName": "Kenneth Walker",
                 "nflTeam": "KC",
                 "projection": 18,
-                "windowId": "window-5"
+                "windowId": "window-4"
               },
               {
                 "playerId": "9493",
                 "playerName": "Puka Nacua",
                 "nflTeam": "LAR",
                 "projection": 16.7,
-                "windowId": "window-6"
+                "windowId": "window-5"
               },
               {
                 "playerId": "3163",
@@ -4620,21 +4453,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 67.4
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 67.4
-              },
-              {
-                "windowId": "window-5",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 96.3
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 113
               }
@@ -4648,11 +4476,11 @@
             "managerName": "brendenclerget",
             "avatarUrl": "https://sleepercdn.com/avatars/b319fdf8b7b5b0359d3c78622ba4d70c",
             "projection": 117.6,
-            "p10": 100,
+            "p10": 101.6,
             "p50": 117.6,
-            "p90": 135.5,
-            "winProbability": 0.5963499999999999,
-            "moneyline": "-148",
+            "p90": 134.5,
+            "winProbability": 0.6025499999999999,
+            "moneyline": "-152",
             "draftGrade": "F",
             "draftScore": 29,
             "bestDraftValue": {
@@ -4674,14 +4502,14 @@
                 "playerName": "Kyren Williams",
                 "nflTeam": "LAR",
                 "projection": 20.1,
-                "windowId": "window-6"
+                "windowId": "window-5"
               },
               {
                 "playerId": "12481",
                 "playerName": "Cam Skattebo",
                 "nflTeam": "NYG",
                 "projection": 14.9,
-                "windowId": "window-6"
+                "windowId": "window-5"
               }
             ],
             "modeledAtZero": {
@@ -4707,21 +4535,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 44.6
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 75
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 82.5
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 117.5
               }
@@ -4741,11 +4564,11 @@
             "managerName": "lineeth03",
             "avatarUrl": "https://sleepercdn.com/avatars/15d7cf259bc30eab8f6120f45f652fb6",
             "projection": 118.9,
-            "p10": 100.5,
+            "p10": 102,
             "p50": 118.9,
-            "p90": 137.7,
-            "winProbability": 0.77335,
-            "moneyline": "-341",
+            "p90": 136.5,
+            "winProbability": 0.7903,
+            "moneyline": "-377",
             "draftGrade": "C-",
             "draftScore": 40,
             "bestDraftValue": {
@@ -4760,7 +4583,7 @@
                 "playerName": "Javonte Williams",
                 "nflTeam": "DAL",
                 "projection": 20.7,
-                "windowId": "window-4"
+                "windowId": "window-3"
               },
               {
                 "playerId": "3198",
@@ -4774,7 +4597,7 @@
                 "playerName": "Patrick Mahomes",
                 "nflTeam": "KC",
                 "projection": 17.8,
-                "windowId": "window-5"
+                "windowId": "window-4"
               }
             ],
             "modeledAtZero": {
@@ -4800,21 +4623,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
-                "projectedPoints": 66.9
-              },
-              {
-                "windowId": "window-4",
-                "label": "Sun 4:25 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 87.6
               },
               {
-                "windowId": "window-5",
+                "windowId": "window-4",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 105.4
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 118.8
               }
@@ -4828,11 +4646,11 @@
             "managerName": "AryanShah",
             "avatarUrl": "https://sleepercdn.com/uploads/e8b539aa92032d637b74dbb3f7dcdc13",
             "projection": 104.9,
-            "p10": 89.6,
+            "p10": 90.7,
             "p50": 104.9,
-            "p90": 120.4,
-            "winProbability": 0.22665000000000002,
-            "moneyline": "+341",
+            "p90": 119.5,
+            "winProbability": 0.2097,
+            "moneyline": "+377",
             "draftGrade": "C",
             "draftScore": 50,
             "bestDraftValue": {
@@ -4887,21 +4705,16 @@
               },
               {
                 "windowId": "window-3",
-                "label": "Sun 4:05 PM",
+                "label": "Sun late afternoon",
                 "projectedPoints": 95.8
               },
               {
                 "windowId": "window-4",
-                "label": "Sun 4:25 PM",
-                "projectedPoints": 95.8
-              },
-              {
-                "windowId": "window-5",
                 "label": "Sun 8:20 PM",
                 "projectedPoints": 104.9
               },
               {
-                "windowId": "window-6",
+                "windowId": "window-5",
                 "label": "Mon 8:15 PM",
                 "projectedPoints": 104.9
               }

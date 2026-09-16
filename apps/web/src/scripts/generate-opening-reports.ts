@@ -198,33 +198,61 @@ const buildBenchmark = (market: MarketAuctionSnapshot): AuctionBenchmarkInput =>
 const normalizeNflTeam = (team: string): string => (team === 'WSH' ? 'WAS' : team);
 
 const buildSchedule = (scoreboard: EspnScoreboard): PreviewWindow[] => {
-  const byKickoff = new Map<string, PreviewWindow['games']>();
+  const sessions = new Map<
+    string,
+    { startsAt: string; label: string; games: PreviewWindow['games'] }
+  >();
   scoreboard.events.forEach(event => {
     const competitors = event.competitions[0]?.competitors ?? [];
     const home = competitors.find(team => team.homeAway === 'home')?.team;
     const away = competitors.find(team => team.homeAway === 'away')?.team;
     if (!home || !away) return;
-    const games = byKickoff.get(event.date) ?? [];
-    games.push({
+    const startsAt = new Date(event.date);
+    const easternTime = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      weekday: 'short',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(startsAt);
+    const weekday = easternTime.find(part => part.type === 'weekday')?.value;
+    const hour = Number(easternTime.find(part => part.type === 'hour')?.value);
+    const lateSundayAfternoon = weekday === 'Sun' && hour >= 16 && hour < 18;
+    const sessionKey = lateSundayAfternoon
+      ? `${startsAt.toLocaleDateString('en-CA', { timeZone: 'America/New_York' })}:late-afternoon`
+      : event.date;
+    const session = sessions.get(sessionKey) ?? {
+      startsAt: event.date,
+      label: lateSundayAfternoon
+        ? 'Sun late afternoon'
+        : new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            weekday: 'short',
+            hour: 'numeric',
+            minute: '2-digit',
+          }).format(startsAt),
+      games: [],
+    };
+    if (startsAt.getTime() < new Date(session.startsAt).getTime()) {
+      session.startsAt = event.date;
+    }
+    session.games.push({
       home: normalizeNflTeam(home.abbreviation),
       homeName: home.shortDisplayName,
       away: normalizeNflTeam(away.abbreviation),
       awayName: away.shortDisplayName,
     });
-    byKickoff.set(event.date, games);
+    sessions.set(sessionKey, session);
   });
-  return Array.from(byKickoff.entries())
-    .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
-    .map(([startsAt, games], index) => ({
+  return Array.from(sessions.values())
+    .sort(
+      (first, second) => new Date(first.startsAt).getTime() - new Date(second.startsAt).getTime(),
+    )
+    .map((session, index) => ({
       id: `window-${index + 1}`,
-      label: new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/New_York',
-        weekday: 'short',
-        hour: 'numeric',
-        minute: '2-digit',
-      }).format(new Date(startsAt)),
-      startsAt,
-      games,
+      label: session.label,
+      startsAt: session.startsAt,
+      games: session.games,
     }));
 };
 
