@@ -2,9 +2,9 @@
   "metadata": {
     "season": 2026,
     "week": 2,
-    "generatedAt": "2026-09-16T15:46:42.737Z",
-    "lineupsAsOf": "2026-09-16T15:46:42.737Z",
-    "projectionsAsOf": "2026-09-16T15:46:42.737Z",
+    "generatedAt": "2026-09-16T16:07:59.960Z",
+    "lineupsAsOf": "2026-09-16T16:07:59.960Z",
+    "projectionsAsOf": "2026-09-16T16:07:59.960Z",
     "firstKickoffAt": "2026-09-18T00:15Z",
     "simulation": {
       "engine": "@gauntlet/sim-engine position outcome distributions + seeded slate sampler",
@@ -147,182 +147,258 @@
       ]
     }
   ],
+  "waiverWire": {
+    "sourceWeek": 1,
+    "totalSpent": 56,
+    "successfulClaims": 21,
+    "leagues": [
+      {
+        "leagueId": "1387520086092312576",
+        "leagueName": "Legion I: The Throne",
+        "totalSpent": 31,
+        "successfulClaims": 9,
+        "averageBid": 3.4,
+        "topClaim": {
+          "playerName": "Alvin Kamara",
+          "position": "RB",
+          "teamName": "Injured Excellence",
+          "bid": 13
+        }
+      },
+      {
+        "leagueId": "1387520168866885632",
+        "leagueName": "Legion II: The Keep",
+        "totalSpent": 15,
+        "successfulClaims": 6,
+        "averageBid": 2.5,
+        "topClaim": {
+          "playerName": "Tampa Bay Buccaneers",
+          "position": "DEF",
+          "teamName": "vayyala",
+          "bid": 6
+        }
+      },
+      {
+        "leagueId": "1387520236663615488",
+        "leagueName": "Legion III: The Forge",
+        "totalSpent": 10,
+        "successfulClaims": 6,
+        "averageBid": 1.7,
+        "topClaim": {
+          "playerName": "Tampa Bay Buccaneers",
+          "position": "DEF",
+          "teamName": "Sahilmodi8",
+          "bid": 6
+        }
+      }
+    ],
+    "biggestBids": [
+      {
+        "playerName": "Alvin Kamara",
+        "position": "RB",
+        "teamName": "Injured Excellence",
+        "bid": 13,
+        "leagueName": "Legion I: The Throne"
+      },
+      {
+        "playerName": "Antonio Williams",
+        "position": "WR",
+        "teamName": "Two Williams, One Cup",
+        "bid": 10,
+        "leagueName": "Legion I: The Throne"
+      },
+      {
+        "playerName": "Tampa Bay Buccaneers",
+        "position": "DEF",
+        "teamName": "Coker Laced Flowers",
+        "bid": 7,
+        "leagueName": "Legion I: The Throne"
+      },
+      {
+        "playerName": "Tampa Bay Buccaneers",
+        "position": "DEF",
+        "teamName": "vayyala",
+        "bid": 6,
+        "leagueName": "Legion II: The Keep"
+      }
+    ]
+  },
   "gauntletWideRaces": {
     "highestScore": [
       {
         "id": "1387520168866885632:7",
         "label": "akmadurai",
-        "probability": 0.11495
+        "probability": 0.1133
       },
       {
         "id": "1387520086092312576:3",
         "label": "Love Warrents Dak Pics",
-        "probability": 0.11465
+        "probability": 0.1058
       },
       {
         "id": "1387520168866885632:9",
         "label": "lukebowsh",
-        "probability": 0.1109
+        "probability": 0.1048
       },
       {
         "id": "1387520236663615488:11",
         "label": "Loveland Island",
-        "probability": 0.09235
+        "probability": 0.09725
       },
       {
         "id": "1387520086092312576:1",
         "label": "Crown and Pound",
-        "probability": 0.0752
+        "probability": 0.0733
       },
       {
         "id": "1387520086092312576:7",
         "label": "Something’s Gotta Gibbs",
-        "probability": 0.072
-      },
-      {
-        "id": "1387520236663615488:2",
-        "label": "krishnik",
-        "probability": 0.049
+        "probability": 0.07155
       },
       {
         "id": "1387520168866885632:12",
         "label": "vayyala",
-        "probability": 0.0409
+        "probability": 0.0465
+      },
+      {
+        "id": "1387520236663615488:2",
+        "label": "krishnik",
+        "probability": 0.0444
       },
       {
         "id": "1387520168866885632:5",
         "label": "HarrytheHitman9",
-        "probability": 0.0327
-      },
-      {
-        "id": "1387520236663615488:6",
-        "label": "Can you tuten my face",
-        "probability": 0.02945
+        "probability": 0.0347
       },
       {
         "id": "1387520086092312576:2",
         "label": "Coker Laced Flowers",
-        "probability": 0.0269
+        "probability": 0.03235
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene",
-        "probability": 0.02655
+        "probability": 0.0276
       },
       {
-        "id": "1387520236663615488:1",
-        "label": "ashwindandapani1",
-        "probability": 0.0244
-      },
-      {
-        "id": "1387520168866885632:10",
-        "label": "King Henry’s Court",
-        "probability": 0.0244
-      },
-      {
-        "id": "1387520168866885632:8",
-        "label": "the beggar king",
-        "probability": 0.0239
+        "id": "1387520236663615488:6",
+        "label": "Can you tuten my face",
+        "probability": 0.0255
       },
       {
         "id": "1387520236663615488:12",
         "label": "Sahilmodi8",
-        "probability": 0.0185
+        "probability": 0.0247
+      },
+      {
+        "id": "1387520168866885632:10",
+        "label": "King Henry’s Court",
+        "probability": 0.02285
+      },
+      {
+        "id": "1387520236663615488:1",
+        "label": "ashwindandapani1",
+        "probability": 0.0225
       },
       {
         "id": "1387520236663615488:10",
         "label": "brendenclerget",
-        "probability": 0.01775
+        "probability": 0.01985
+      },
+      {
+        "id": "1387520168866885632:8",
+        "label": "the beggar king",
+        "probability": 0.01875
       },
       {
         "id": "1387520168866885632:1",
         "label": "Ja’Marrican Psycho",
-        "probability": 0.0174
+        "probability": 0.01755
       },
       {
         "id": "1387520086092312576:8",
         "label": "ziyanp22",
-        "probability": 0.0148
-      },
-      {
-        "id": "1387520086092312576:6",
-        "label": "scboom5",
-        "probability": 0.0104
-      },
-      {
-        "id": "1387520086092312576:4",
-        "label": "Two Williams, One Cup",
-        "probability": 0.00975
-      },
-      {
-        "id": "1387520236663615488:5",
-        "label": "gibuttersnaps",
-        "probability": 0.0085
+        "probability": 0.0144
       },
       {
         "id": "1387520168866885632:2",
         "label": "Jonathon Taylor Mayde",
-        "probability": 0.0082
+        "probability": 0.0111
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5",
+        "probability": 0.01075
+      },
+      {
+        "id": "1387520086092312576:4",
+        "label": "Two Williams, One Cup",
+        "probability": 0.0094
       },
       {
         "id": "1387520236663615488:4",
         "label": "Socialized L-Care",
-        "probability": 0.0072
-      },
-      {
-        "id": "1387520236663615488:8",
-        "label": "aditya22",
-        "probability": 0.00555
+        "probability": 0.008
       },
       {
         "id": "1387520168866885632:3",
         "label": "Checkout & Gameplay",
-        "probability": 0.00545
-      },
-      {
-        "id": "1387520236663615488:7",
-        "label": "Mexican Cartel",
-        "probability": 0.00485
+        "probability": 0.00695
       },
       {
         "id": "1387520086092312576:12",
         "label": "Marginal Returns",
-        "probability": 0.0047
+        "probability": 0.0069
+      },
+      {
+        "id": "1387520236663615488:5",
+        "label": "gibuttersnaps",
+        "probability": 0.00655
+      },
+      {
+        "id": "1387520236663615488:8",
+        "label": "aditya22",
+        "probability": 0.00605
+      },
+      {
+        "id": "1387520236663615488:7",
+        "label": "Mexican Cartel",
+        "probability": 0.00415
       },
       {
         "id": "1387520168866885632:4",
         "label": "Team Lil Bros",
-        "probability": 0.00215
-      },
-      {
-        "id": "1387520086092312576:9",
-        "label": "cescott25",
-        "probability": 0.00185
+        "probability": 0.00335
       },
       {
         "id": "1387520086092312576:11",
         "label": "benweinfeld",
+        "probability": 0.0026
+      },
+      {
+        "id": "1387520086092312576:9",
+        "label": "cescott25",
+        "probability": 0.0023
+      },
+      {
+        "id": "1387520086092312576:10",
+        "label": "Injured Excellence",
         "probability": 0.00145
       },
       {
         "id": "1387520086092312576:5",
         "label": "Jaxson my Johnston",
-        "probability": 0.00115
-      },
-      {
-        "id": "1387520086092312576:10",
-        "label": "Injured Excellence",
-        "probability": 0.00095
+        "probability": 0.00145
       },
       {
         "id": "1387520236663615488:3",
         "label": "aaryanshetty",
-        "probability": 0.00085
+        "probability": 0.00095
       },
       {
         "id": "1387520236663615488:9",
         "label": "Lisan Al-Caleb",
-        "probability": 0.0003
+        "probability": 0.0004
       },
       {
         "id": "1387520168866885632:11",
@@ -334,550 +410,550 @@
       {
         "id": "1387520168866885632:11",
         "label": "vchak",
-        "probability": 0.628
-      },
-      {
-        "id": "1387520086092312576:5",
-        "label": "Jaxson my Johnston",
-        "probability": 0.0318
+        "probability": 0.6801
       },
       {
         "id": "1387520236663615488:3",
         "label": "aaryanshetty",
-        "probability": 0.031
+        "probability": 0.0292
+      },
+      {
+        "id": "1387520086092312576:5",
+        "label": "Jaxson my Johnston",
+        "probability": 0.02835
       },
       {
         "id": "1387520236663615488:9",
         "label": "Lisan Al-Caleb",
-        "probability": 0.02205
-      },
-      {
-        "id": "1387520236663615488:1",
-        "label": "ashwindandapani1",
-        "probability": 0.02015
-      },
-      {
-        "id": "1387520086092312576:10",
-        "label": "Injured Excellence",
-        "probability": 0.01775
-      },
-      {
-        "id": "1387520236663615488:7",
-        "label": "Mexican Cartel",
-        "probability": 0.0175
-      },
-      {
-        "id": "1387520168866885632:4",
-        "label": "Team Lil Bros",
-        "probability": 0.01745
-      },
-      {
-        "id": "1387520086092312576:9",
-        "label": "cescott25",
-        "probability": 0.0173
+        "probability": 0.02615
       },
       {
         "id": "1387520086092312576:11",
         "label": "benweinfeld",
-        "probability": 0.01695
+        "probability": 0.02045
       },
       {
-        "id": "1387520236663615488:5",
-        "label": "gibuttersnaps",
-        "probability": 0.0154
+        "id": "1387520086092312576:10",
+        "label": "Injured Excellence",
+        "probability": 0.0202
       },
       {
-        "id": "1387520236663615488:8",
-        "label": "aditya22",
-        "probability": 0.01375
+        "id": "1387520086092312576:9",
+        "label": "cescott25",
+        "probability": 0.01755
       },
       {
-        "id": "1387520236663615488:4",
-        "label": "Socialized L-Care",
-        "probability": 0.01295
+        "id": "1387520236663615488:7",
+        "label": "Mexican Cartel",
+        "probability": 0.0149
       },
       {
-        "id": "1387520086092312576:6",
-        "label": "scboom5",
-        "probability": 0.0128
+        "id": "1387520168866885632:4",
+        "label": "Team Lil Bros",
+        "probability": 0.0142
+      },
+      {
+        "id": "1387520236663615488:1",
+        "label": "ashwindandapani1",
+        "probability": 0.01195
       },
       {
         "id": "1387520086092312576:12",
         "label": "Marginal Returns",
-        "probability": 0.01165
+        "probability": 0.01115
       },
       {
-        "id": "1387520086092312576:4",
-        "label": "Two Williams, One Cup",
+        "id": "1387520236663615488:8",
+        "label": "aditya22",
         "probability": 0.011
       },
       {
-        "id": "1387520168866885632:8",
-        "label": "the beggar king",
-        "probability": 0.0108
+        "id": "1387520236663615488:5",
+        "label": "gibuttersnaps",
+        "probability": 0.0104
+      },
+      {
+        "id": "1387520236663615488:4",
+        "label": "Socialized L-Care",
+        "probability": 0.01
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5",
+        "probability": 0.0092
       },
       {
         "id": "1387520168866885632:2",
         "label": "Jonathon Taylor Mayde",
-        "probability": 0.0089
+        "probability": 0.009
       },
       {
-        "id": "1387520168866885632:6",
-        "label": "JimothyGreene",
-        "probability": 0.0088
+        "id": "1387520086092312576:4",
+        "label": "Two Williams, One Cup",
+        "probability": 0.00785
       },
       {
         "id": "1387520168866885632:3",
         "label": "Checkout & Gameplay",
-        "probability": 0.0073
+        "probability": 0.00735
       },
       {
-        "id": "1387520086092312576:8",
-        "label": "ziyanp22",
-        "probability": 0.007
-      },
-      {
-        "id": "1387520236663615488:6",
-        "label": "Can you tuten my face",
-        "probability": 0.0067
-      },
-      {
-        "id": "1387520236663615488:10",
-        "label": "brendenclerget",
-        "probability": 0.0062
+        "id": "1387520168866885632:8",
+        "label": "the beggar king",
+        "probability": 0.00575
       },
       {
         "id": "1387520168866885632:1",
         "label": "Ja’Marrican Psycho",
-        "probability": 0.0061
-      },
-      {
-        "id": "1387520168866885632:10",
-        "label": "King Henry’s Court",
-        "probability": 0.00585
-      },
-      {
-        "id": "1387520086092312576:7",
-        "label": "Something’s Gotta Gibbs",
         "probability": 0.0053
       },
       {
-        "id": "1387520168866885632:5",
-        "label": "HarrytheHitman9",
-        "probability": 0.00475
+        "id": "1387520168866885632:6",
+        "label": "JimothyGreene",
+        "probability": 0.0053
+      },
+      {
+        "id": "1387520086092312576:8",
+        "label": "ziyanp22",
+        "probability": 0.0053
+      },
+      {
+        "id": "1387520236663615488:10",
+        "label": "brendenclerget",
+        "probability": 0.00515
       },
       {
         "id": "1387520236663615488:12",
         "label": "Sahilmodi8",
+        "probability": 0.00435
+      },
+      {
+        "id": "1387520168866885632:10",
+        "label": "King Henry’s Court",
+        "probability": 0.0042
+      },
+      {
+        "id": "1387520236663615488:6",
+        "label": "Can you tuten my face",
         "probability": 0.00385
       },
       {
         "id": "1387520086092312576:2",
         "label": "Coker Laced Flowers",
-        "probability": 0.00365
+        "probability": 0.0038
       },
       {
-        "id": "1387520236663615488:2",
-        "label": "krishnik",
-        "probability": 0.00355
+        "id": "1387520086092312576:7",
+        "label": "Something’s Gotta Gibbs",
+        "probability": 0.0034
       },
       {
-        "id": "1387520086092312576:1",
-        "label": "Crown and Pound",
-        "probability": 0.00345
-      },
-      {
-        "id": "1387520168866885632:9",
-        "label": "lukebowsh",
-        "probability": 0.00265
-      },
-      {
-        "id": "1387520086092312576:3",
-        "label": "Love Warrents Dak Pics",
-        "probability": 0.00215
-      },
-      {
-        "id": "1387520168866885632:7",
-        "label": "akmadurai",
-        "probability": 0.0019
-      },
-      {
-        "id": "1387520236663615488:11",
-        "label": "Loveland Island",
-        "probability": 0.0019
+        "id": "1387520168866885632:5",
+        "label": "HarrytheHitman9",
+        "probability": 0.0033
       },
       {
         "id": "1387520168866885632:12",
         "label": "vayyala",
-        "probability": 0.0017
+        "probability": 0.0022
+      },
+      {
+        "id": "1387520236663615488:2",
+        "label": "krishnik",
+        "probability": 0.0021
+      },
+      {
+        "id": "1387520086092312576:1",
+        "label": "Crown and Pound",
+        "probability": 0.0018
+      },
+      {
+        "id": "1387520236663615488:11",
+        "label": "Loveland Island",
+        "probability": 0.00155
+      },
+      {
+        "id": "1387520086092312576:3",
+        "label": "Love Warrents Dak Pics",
+        "probability": 0.00125
+      },
+      {
+        "id": "1387520168866885632:7",
+        "label": "akmadurai",
+        "probability": 0.0012
+      },
+      {
+        "id": "1387520168866885632:9",
+        "label": "lukebowsh",
+        "probability": 0.0012
       }
     ],
     "closestMatchup": [
       {
-        "id": "1387520168866885632:1",
-        "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.0683
-      },
-      {
         "id": "1387520168866885632:4",
         "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.0671
+        "probability": 0.0688
       },
       {
-        "id": "1387520086092312576:5",
-        "label": "Two Williams, One Cup vs. benweinfeld",
+        "id": "1387520168866885632:1",
+        "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
+        "probability": 0.0677
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5 vs. Injured Excellence",
         "probability": 0.06625
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.0658
-      },
-      {
-        "id": "1387520086092312576:6",
-        "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.0656
-      },
-      {
-        "id": "1387520168866885632:6",
-        "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.06215
-      },
-      {
-        "id": "1387520086092312576:2",
-        "label": "ziyanp22 vs. cescott25",
-        "probability": 0.0618
-      },
-      {
-        "id": "1387520236663615488:5",
-        "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.06135
+        "probability": 0.0638
       },
       {
         "id": "1387520236663615488:3",
         "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.05965
+        "probability": 0.06335
+      },
+      {
+        "id": "1387520086092312576:5",
+        "label": "Two Williams, One Cup vs. benweinfeld",
+        "probability": 0.0633
+      },
+      {
+        "id": "1387520236663615488:5",
+        "label": "Socialized L-Care vs. brendenclerget",
+        "probability": 0.0622
+      },
+      {
+        "id": "1387520168866885632:6",
+        "label": "JimothyGreene vs. the beggar king",
+        "probability": 0.06095
       },
       {
         "id": "1387520236663615488:1",
         "label": "krishnik vs. aditya22",
-        "probability": 0.05725
-      },
-      {
-        "id": "1387520236663615488:6",
-        "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.0546
+        "probability": 0.0598
       },
       {
         "id": "1387520086092312576:4",
         "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.05445
+        "probability": 0.05975
       },
       {
-        "id": "1387520236663615488:2",
-        "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.053
+        "id": "1387520086092312576:2",
+        "label": "ziyanp22 vs. cescott25",
+        "probability": 0.0593
       },
       {
         "id": "1387520086092312576:1",
         "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.05265
+        "probability": 0.0542
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.052
+        "probability": 0.0533
+      },
+      {
+        "id": "1387520236663615488:2",
+        "label": "aaryanshetty vs. Sahilmodi8",
+        "probability": 0.0508
+      },
+      {
+        "id": "1387520236663615488:6",
+        "label": "Can you tuten my face vs. Lisan Al-Caleb",
+        "probability": 0.0506
       },
       {
         "id": "1387520236663615488:4",
         "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.05115
+        "probability": 0.0504
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.04275
+        "probability": 0.04265
       },
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.00415
+        "probability": 0.00285
       }
     ],
     "biggestBlowout": [
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.51085
+        "probability": 0.53535
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.06465
+        "probability": 0.0646
       },
       {
         "id": "1387520236663615488:4",
         "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.0475
+        "probability": 0.04515
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.04135
-      },
-      {
-        "id": "1387520086092312576:4",
-        "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.0361
+        "probability": 0.03905
       },
       {
         "id": "1387520086092312576:1",
         "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.03495
+        "probability": 0.0355
       },
       {
         "id": "1387520236663615488:6",
         "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.03435
-      },
-      {
-        "id": "1387520236663615488:1",
-        "label": "krishnik vs. aditya22",
-        "probability": 0.0316
+        "probability": 0.0332
       },
       {
         "id": "1387520236663615488:2",
         "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.0278
+        "probability": 0.03195
+      },
+      {
+        "id": "1387520236663615488:1",
+        "label": "krishnik vs. aditya22",
+        "probability": 0.0288
+      },
+      {
+        "id": "1387520086092312576:4",
+        "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
+        "probability": 0.0285
       },
       {
         "id": "1387520236663615488:3",
         "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.0268
-      },
-      {
-        "id": "1387520168866885632:6",
-        "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.0247
+        "probability": 0.02255
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.0211
+        "probability": 0.02175
       },
       {
         "id": "1387520086092312576:2",
         "label": "ziyanp22 vs. cescott25",
-        "probability": 0.01915
+        "probability": 0.0189
       },
       {
-        "id": "1387520168866885632:4",
-        "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.0187
+        "id": "1387520168866885632:6",
+        "label": "JimothyGreene vs. the beggar king",
+        "probability": 0.01805
       },
       {
         "id": "1387520236663615488:5",
         "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.01845
+        "probability": 0.01725
       },
       {
-        "id": "1387520086092312576:6",
-        "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.0156
+        "id": "1387520168866885632:4",
+        "label": "HarrytheHitman9 vs. King Henry’s Court",
+        "probability": 0.01665
       },
       {
         "id": "1387520086092312576:5",
         "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.0153
+        "probability": 0.0152
+      },
+      {
+        "id": "1387520086092312576:6",
+        "label": "scboom5 vs. Injured Excellence",
+        "probability": 0.01495
       },
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.01105
+        "probability": 0.0126
       }
     ],
     "highestMatchupTotal": [
       {
         "id": "1387520086092312576:4",
         "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.26175
+        "probability": 0.26045
       },
       {
         "id": "1387520236663615488:4",
         "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.09945
+        "probability": 0.09935
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.0923
+        "probability": 0.09455
       },
       {
         "id": "1387520168866885632:4",
         "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.08535
+        "probability": 0.08505
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.0853
+        "probability": 0.084
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.079
+        "probability": 0.0808
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.0666
+        "probability": 0.06245
       },
       {
         "id": "1387520236663615488:1",
         "label": "krishnik vs. aditya22",
-        "probability": 0.05635
+        "probability": 0.0545
       },
       {
         "id": "1387520236663615488:5",
         "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.03525
+        "probability": 0.036
       },
       {
         "id": "1387520236663615488:3",
         "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.03005
+        "probability": 0.02705
       },
       {
         "id": "1387520086092312576:1",
         "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-        "probability": 0.0215
+        "probability": 0.02275
       },
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.0187
-      },
-      {
-        "id": "1387520236663615488:6",
-        "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.01555
+        "probability": 0.02045
       },
       {
         "id": "1387520086092312576:2",
         "label": "ziyanp22 vs. cescott25",
-        "probability": 0.01555
+        "probability": 0.01725
       },
       {
         "id": "1387520236663615488:2",
         "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.01305
+        "probability": 0.0163
+      },
+      {
+        "id": "1387520236663615488:6",
+        "label": "Can you tuten my face vs. Lisan Al-Caleb",
+        "probability": 0.01425
       },
       {
         "id": "1387520086092312576:6",
         "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.01115
+        "probability": 0.01145
       },
       {
         "id": "1387520086092312576:5",
         "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.011
+        "probability": 0.0114
       },
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.0021
+        "probability": 0.00195
       }
     ],
     "lowestMatchupTotal": [
       {
         "id": "1387520168866885632:2",
         "label": "lukebowsh vs. vchak",
-        "probability": 0.28345
+        "probability": 0.29345
       },
       {
         "id": "1387520086092312576:6",
         "label": "scboom5 vs. Injured Excellence",
-        "probability": 0.08135
+        "probability": 0.0821
       },
       {
         "id": "1387520086092312576:5",
         "label": "Two Williams, One Cup vs. benweinfeld",
-        "probability": 0.07365
-      },
-      {
-        "id": "1387520236663615488:3",
-        "label": "ashwindandapani1 vs. Mexican Cartel",
-        "probability": 0.072
+        "probability": 0.07655
       },
       {
         "id": "1387520236663615488:2",
         "label": "aaryanshetty vs. Sahilmodi8",
-        "probability": 0.0657
+        "probability": 0.0742
       },
       {
         "id": "1387520236663615488:6",
         "label": "Can you tuten my face vs. Lisan Al-Caleb",
-        "probability": 0.06435
+        "probability": 0.06605
       },
       {
-        "id": "1387520086092312576:2",
-        "label": "ziyanp22 vs. cescott25",
-        "probability": 0.0572
+        "id": "1387520236663615488:3",
+        "label": "ashwindandapani1 vs. Mexican Cartel",
+        "probability": 0.0629
       },
       {
         "id": "1387520086092312576:1",
         "label": "Coker Laced Flowers vs. Jaxson my Johnston",
+        "probability": 0.06035
+      },
+      {
+        "id": "1387520086092312576:2",
+        "label": "ziyanp22 vs. cescott25",
         "probability": 0.057
       },
       {
         "id": "1387520168866885632:1",
         "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-        "probability": 0.0462
+        "probability": 0.05135
       },
       {
         "id": "1387520236663615488:5",
         "label": "Socialized L-Care vs. brendenclerget",
-        "probability": 0.0373
+        "probability": 0.03665
       },
       {
         "id": "1387520168866885632:6",
         "label": "JimothyGreene vs. the beggar king",
-        "probability": 0.0327
+        "probability": 0.0277
       },
       {
         "id": "1387520236663615488:1",
         "label": "krishnik vs. aditya22",
-        "probability": 0.0289
+        "probability": 0.0264
       },
       {
         "id": "1387520086092312576:3",
         "label": "Crown and Pound vs. Marginal Returns",
-        "probability": 0.0225
+        "probability": 0.0189
       },
       {
         "id": "1387520168866885632:5",
         "label": "Team Lil Bros vs. akmadurai",
-        "probability": 0.01985
-      },
-      {
-        "id": "1387520168866885632:4",
-        "label": "HarrytheHitman9 vs. King Henry’s Court",
-        "probability": 0.018
-      },
-      {
-        "id": "1387520236663615488:4",
-        "label": "gibuttersnaps vs. Loveland Island",
-        "probability": 0.01745
+        "probability": 0.01725
       },
       {
         "id": "1387520168866885632:3",
         "label": "Ja’Marrican Psycho vs. vayyala",
-        "probability": 0.01455
+        "probability": 0.01565
+      },
+      {
+        "id": "1387520168866885632:4",
+        "label": "HarrytheHitman9 vs. King Henry’s Court",
+        "probability": 0.0151
+      },
+      {
+        "id": "1387520236663615488:4",
+        "label": "gibuttersnaps vs. Loveland Island",
+        "probability": 0.01325
       },
       {
         "id": "1387520086092312576:4",
         "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-        "probability": 0.00785
+        "probability": 0.00515
       }
     ]
   },
@@ -891,200 +967,200 @@
           {
             "id": "1387520086092312576:3",
             "label": "Love Warrents Dak Pics",
-            "probability": 0.271
+            "probability": 0.26045
           },
           {
             "id": "1387520086092312576:1",
             "label": "Crown and Pound",
-            "probability": 0.2018
+            "probability": 0.2001
           },
           {
             "id": "1387520086092312576:7",
             "label": "Something’s Gotta Gibbs",
-            "probability": 0.18905
+            "probability": 0.1867
           },
           {
             "id": "1387520086092312576:2",
             "label": "Coker Laced Flowers",
-            "probability": 0.0996
+            "probability": 0.10825
           },
           {
             "id": "1387520086092312576:8",
             "label": "ziyanp22",
-            "probability": 0.0616
+            "probability": 0.0604
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5",
-            "probability": 0.0482
+            "probability": 0.0463
           },
           {
             "id": "1387520086092312576:4",
             "label": "Two Williams, One Cup",
-            "probability": 0.04715
+            "probability": 0.0438
           },
           {
             "id": "1387520086092312576:12",
             "label": "Marginal Returns",
-            "probability": 0.0333
+            "probability": 0.0364
           },
           {
             "id": "1387520086092312576:11",
             "label": "benweinfeld",
-            "probability": 0.014
+            "probability": 0.0178
           },
           {
             "id": "1387520086092312576:9",
             "label": "cescott25",
-            "probability": 0.01345
-          },
-          {
-            "id": "1387520086092312576:5",
-            "label": "Jaxson my Johnston",
-            "probability": 0.0105
+            "probability": 0.0174
           },
           {
             "id": "1387520086092312576:10",
             "label": "Injured Excellence",
-            "probability": 0.01035
+            "probability": 0.01135
+          },
+          {
+            "id": "1387520086092312576:5",
+            "label": "Jaxson my Johnston",
+            "probability": 0.01105
           }
         ],
         "lowestScore": [
           {
             "id": "1387520086092312576:5",
             "label": "Jaxson my Johnston",
-            "probability": 0.17955
+            "probability": 0.18625
           },
           {
             "id": "1387520086092312576:10",
             "label": "Injured Excellence",
-            "probability": 0.1367
+            "probability": 0.1474
           },
           {
             "id": "1387520086092312576:11",
             "label": "benweinfeld",
-            "probability": 0.13025
+            "probability": 0.1446
           },
           {
             "id": "1387520086092312576:9",
             "label": "cescott25",
-            "probability": 0.1264
+            "probability": 0.13325
           },
           {
             "id": "1387520086092312576:12",
             "label": "Marginal Returns",
-            "probability": 0.08675
+            "probability": 0.0877
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5",
-            "probability": 0.08465
+            "probability": 0.076
           },
           {
             "id": "1387520086092312576:4",
             "label": "Two Williams, One Cup",
-            "probability": 0.0841
+            "probability": 0.07575
           },
           {
             "id": "1387520086092312576:8",
             "label": "ziyanp22",
-            "probability": 0.055
-          },
-          {
-            "id": "1387520086092312576:7",
-            "label": "Something’s Gotta Gibbs",
-            "probability": 0.0356
+            "probability": 0.0508
           },
           {
             "id": "1387520086092312576:2",
             "label": "Coker Laced Flowers",
-            "probability": 0.0335
+            "probability": 0.03575
+          },
+          {
+            "id": "1387520086092312576:7",
+            "label": "Something’s Gotta Gibbs",
+            "probability": 0.0283
           },
           {
             "id": "1387520086092312576:1",
             "label": "Crown and Pound",
-            "probability": 0.02815
+            "probability": 0.0208
           },
           {
             "id": "1387520086092312576:3",
             "label": "Love Warrents Dak Pics",
-            "probability": 0.01935
+            "probability": 0.0134
           }
         ],
         "closestMatchup": [
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.1888
+            "probability": 0.1876
           },
           {
             "id": "1387520086092312576:5",
             "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.1859
+            "probability": 0.18125
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.17855
+            "probability": 0.1764
           },
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.15415
-          },
-          {
-            "id": "1387520086092312576:1",
-            "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.1479
+            "probability": 0.1628
           },
           {
             "id": "1387520086092312576:3",
             "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.1447
+            "probability": 0.14745
+          },
+          {
+            "id": "1387520086092312576:1",
+            "label": "Coker Laced Flowers vs. Jaxson my Johnston",
+            "probability": 0.1445
           }
         ],
         "biggestBlowout": [
           {
-            "id": "1387520086092312576:3",
-            "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.20915
-          },
-          {
             "id": "1387520086092312576:1",
             "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.20585
+            "probability": 0.2154
+          },
+          {
+            "id": "1387520086092312576:3",
+            "label": "Crown and Pound vs. Marginal Returns",
+            "probability": 0.2087
           },
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.1932
+            "probability": 0.17385
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.1386
+            "probability": 0.14455
           },
           {
             "id": "1387520086092312576:5",
             "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.1268
+            "probability": 0.1296
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.1264
+            "probability": 0.1279
           }
         ],
         "highestMatchupTotal": [
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.51705
+            "probability": 0.523
           },
           {
             "id": "1387520086092312576:3",
             "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.21825
+            "probability": 0.2178
           },
           {
             "id": "1387520086092312576:1",
@@ -1094,49 +1170,49 @@
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.0725
+            "probability": 0.07005
           },
           {
             "id": "1387520086092312576:5",
             "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.0576
+            "probability": 0.0568
           },
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.05325
+            "probability": 0.051
           }
         ],
         "lowestMatchupTotal": [
           {
             "id": "1387520086092312576:6",
             "label": "scboom5 vs. Injured Excellence",
-            "probability": 0.25845
+            "probability": 0.2621
           },
           {
             "id": "1387520086092312576:5",
             "label": "Two Williams, One Cup vs. benweinfeld",
-            "probability": 0.2462
+            "probability": 0.252
           },
           {
             "id": "1387520086092312576:2",
             "label": "ziyanp22 vs. cescott25",
-            "probability": 0.19395
+            "probability": 0.19535
           },
           {
             "id": "1387520086092312576:1",
             "label": "Coker Laced Flowers vs. Jaxson my Johnston",
-            "probability": 0.18395
+            "probability": 0.18785
           },
           {
             "id": "1387520086092312576:3",
             "label": "Crown and Pound vs. Marginal Returns",
-            "probability": 0.08385
+            "probability": 0.07715
           },
           {
             "id": "1387520086092312576:4",
             "label": "Love Warrents Dak Pics vs. Something’s Gotta Gibbs",
-            "probability": 0.0336
+            "probability": 0.02555
           }
         ]
       },
@@ -1152,11 +1228,11 @@
             "managerName": "anantjindani",
             "avatarUrl": "https://sleepercdn.com/avatars/d76ff60fc913451238f7defc1a326040",
             "projection": 120.1,
-            "p10": 101.9,
+            "p10": 102,
             "p50": 120.1,
-            "p90": 137.6,
-            "winProbability": 0.7658,
-            "moneyline": "-327",
+            "p90": 138.2,
+            "winProbability": 0.7651,
+            "moneyline": "-326",
             "record": "1-0",
             "draftGrade": "C-",
             "draftScore": 41,
@@ -1235,11 +1311,11 @@
             "managerName": "hunterzogg",
             "avatarUrl": "https://sleepercdn.com/uploads/c51c579378ccdce5fa8b31a86d3d7aff.jpg",
             "projection": 106.2,
-            "p10": 88.9,
+            "p10": 89.7,
             "p50": 106.2,
-            "p90": 122.8,
-            "winProbability": 0.23419999999999996,
-            "moneyline": "+327",
+            "p90": 122.9,
+            "winProbability": 0.2349,
+            "moneyline": "+326",
             "record": "1-0",
             "draftGrade": "F",
             "draftScore": 24,
@@ -1324,11 +1400,11 @@
             "managerName": "ziyanp22",
             "avatarUrl": "https://sleepercdn.com/avatars/7208404e9332f4ba6bfe5fc9743d614d",
             "projection": 116.5,
-            "p10": 98.7,
+            "p10": 99.6,
             "p50": 116.5,
-            "p90": 134.2,
-            "winProbability": 0.66555,
-            "moneyline": "-199",
+            "p90": 133.8,
+            "winProbability": 0.66415,
+            "moneyline": "-198",
             "record": "0-1",
             "draftGrade": "F",
             "draftScore": 19,
@@ -1407,11 +1483,11 @@
             "managerName": "cescott25",
             "avatarUrl": "https://sleepercdn.com/avatars/4f4090e5e9c3941414db40a871e3e909",
             "projection": 108.7,
-            "p10": 92.1,
+            "p10": 92.6,
             "p50": 108.7,
-            "p90": 124.9,
-            "winProbability": 0.33445,
-            "moneyline": "+199",
+            "p90": 125.3,
+            "winProbability": 0.33585,
+            "moneyline": "+198",
             "record": "0-1",
             "draftGrade": "A",
             "draftScore": 88,
@@ -1496,11 +1572,11 @@
             "managerName": "dmethi",
             "avatarUrl": "https://sleepercdn.com/uploads/ea2dd473ef8432a167d512bd2eacb4f6.jpg",
             "projection": 125,
-            "p10": 104.1,
+            "p10": 106.1,
             "p50": 125,
-            "p90": 144.9,
-            "winProbability": 0.724,
-            "moneyline": "-262",
+            "p90": 144.2,
+            "winProbability": 0.7359,
+            "moneyline": "-279",
             "record": "1-0",
             "draftGrade": "C+",
             "draftScore": 60,
@@ -1579,11 +1655,11 @@
             "managerName": "Bego60",
             "avatarUrl": "https://sleepercdn.com/avatars/c49667362b43dfb5b67209744ea7c597",
             "projection": 112.6,
-            "p10": 95.2,
+            "p10": 95.6,
             "p50": 112.6,
-            "p90": 129.6,
-            "winProbability": 0.276,
-            "moneyline": "+262",
+            "p90": 129.8,
+            "winProbability": 0.2641,
+            "moneyline": "+279",
             "record": "0-1",
             "draftGrade": "C",
             "draftScore": 48,
@@ -1668,11 +1744,11 @@
             "managerName": "YouSmellLikeDaal",
             "avatarUrl": "https://sleepercdn.com/avatars/15ed1d55c470e695634cbfc7f2c98cac",
             "projection": 127.6,
-            "p10": 106.6,
+            "p10": 108.7,
             "p50": 127.6,
-            "p90": 148.3,
-            "winProbability": 0.56665,
-            "moneyline": "-131",
+            "p90": 147,
+            "winProbability": 0.56815,
+            "moneyline": "-132",
             "record": "1-0",
             "draftGrade": "B-",
             "draftScore": 68,
@@ -1751,11 +1827,11 @@
             "managerName": "kanzelm3",
             "avatarUrl": "https://sleepercdn.com/avatars/51b6afcb8bf8da271150451521b1952c",
             "projection": 124,
-            "p10": 102.4,
+            "p10": 104.2,
             "p50": 124,
-            "p90": 144.3,
-            "winProbability": 0.43335,
-            "moneyline": "+131",
+            "p90": 143.6,
+            "winProbability": 0.43184999999999996,
+            "moneyline": "+132",
             "record": "0-1",
             "draftGrade": "B-",
             "draftScore": 67,
@@ -1840,11 +1916,11 @@
             "managerName": "Akill13",
             "avatarUrl": "https://sleepercdn.com/avatars/41a22e87e290fcae03ddf6384fd2cc3a",
             "projection": 113.9,
-            "p10": 95.5,
+            "p10": 97,
             "p50": 113.9,
-            "p90": 131.9,
-            "winProbability": 0.61315,
-            "moneyline": "-158",
+            "p90": 131.1,
+            "winProbability": 0.61545,
+            "moneyline": "-160",
             "record": "0-1",
             "draftGrade": "D",
             "draftScore": 37,
@@ -1923,11 +1999,11 @@
             "managerName": "benweinfeld",
             "avatarUrl": "https://sleepercdn.com/avatars/8fcf0e0e6a75e96a591d2a4a4a400f41",
             "projection": 108.4,
-            "p10": 92.2,
+            "p10": 92.1,
             "p50": 108.4,
-            "p90": 124.6,
-            "winProbability": 0.38685,
-            "moneyline": "+158",
+            "p90": 125.3,
+            "winProbability": 0.38454999999999995,
+            "moneyline": "+160",
             "record": "0-1",
             "draftGrade": "C-",
             "draftScore": 47,
@@ -2012,11 +2088,11 @@
             "managerName": "scboom5",
             "avatarUrl": "https://sleepercdn.com/avatars/1d538540976713a2a93c687c112b5c70",
             "projection": 114,
-            "p10": 95.3,
+            "p10": 96.8,
             "p50": 114,
-            "p90": 131.9,
-            "winProbability": 0.62655,
-            "moneyline": "-168",
+            "p90": 131.3,
+            "winProbability": 0.6346,
+            "moneyline": "-174",
             "record": "1-0",
             "draftGrade": "F",
             "draftScore": 4,
@@ -2097,9 +2173,9 @@
             "projection": 107.8,
             "p10": 91.8,
             "p50": 107.8,
-            "p90": 123.6,
-            "winProbability": 0.37344999999999995,
-            "moneyline": "+168",
+            "p90": 123.9,
+            "winProbability": 0.36539999999999995,
+            "moneyline": "+174",
             "record": "1-0",
             "draftGrade": "B",
             "draftScore": 72,
@@ -2184,57 +2260,57 @@
           {
             "id": "1387520168866885632:7",
             "label": "akmadurai",
-            "probability": 0.2349
+            "probability": 0.23505
           },
           {
             "id": "1387520168866885632:9",
             "label": "lukebowsh",
-            "probability": 0.22175
+            "probability": 0.21565
           },
           {
             "id": "1387520168866885632:12",
             "label": "vayyala",
-            "probability": 0.11345
+            "probability": 0.12005
           },
           {
             "id": "1387520168866885632:5",
             "label": "HarrytheHitman9",
-            "probability": 0.09035
+            "probability": 0.08995
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene",
-            "probability": 0.0741
+            "probability": 0.07355
           },
           {
             "id": "1387520168866885632:10",
             "label": "King Henry’s Court",
-            "probability": 0.0739
-          },
-          {
-            "id": "1387520168866885632:8",
-            "label": "the beggar king",
-            "probability": 0.0654
+            "probability": 0.071
           },
           {
             "id": "1387520168866885632:1",
             "label": "Ja’Marrican Psycho",
-            "probability": 0.0578
+            "probability": 0.05725
+          },
+          {
+            "id": "1387520168866885632:8",
+            "label": "the beggar king",
+            "probability": 0.05655
           },
           {
             "id": "1387520168866885632:2",
             "label": "Jonathon Taylor Mayde",
-            "probability": 0.0319
+            "probability": 0.0387
           },
           {
             "id": "1387520168866885632:3",
             "label": "Checkout & Gameplay",
-            "probability": 0.0221
+            "probability": 0.0253
           },
           {
             "id": "1387520168866885632:4",
             "label": "Team Lil Bros",
-            "probability": 0.01435
+            "probability": 0.01695
           },
           {
             "id": "1387520168866885632:11",
@@ -2246,190 +2322,190 @@
           {
             "id": "1387520168866885632:11",
             "label": "vchak",
-            "probability": 0.84305
+            "probability": 0.8767
           },
           {
             "id": "1387520168866885632:4",
             "label": "Team Lil Bros",
-            "probability": 0.03315
-          },
-          {
-            "id": "1387520168866885632:8",
-            "label": "the beggar king",
-            "probability": 0.02015
+            "probability": 0.0275
           },
           {
             "id": "1387520168866885632:2",
             "label": "Jonathon Taylor Mayde",
-            "probability": 0.01945
+            "probability": 0.0186
           },
           {
             "id": "1387520168866885632:3",
             "label": "Checkout & Gameplay",
-            "probability": 0.0187
+            "probability": 0.01705
           },
           {
-            "id": "1387520168866885632:6",
-            "label": "JimothyGreene",
-            "probability": 0.01675
+            "id": "1387520168866885632:8",
+            "label": "the beggar king",
+            "probability": 0.012
           },
           {
             "id": "1387520168866885632:1",
             "label": "Ja’Marrican Psycho",
-            "probability": 0.01365
+            "probability": 0.01085
+          },
+          {
+            "id": "1387520168866885632:6",
+            "label": "JimothyGreene",
+            "probability": 0.0108
           },
           {
             "id": "1387520168866885632:10",
             "label": "King Henry’s Court",
-            "probability": 0.01065
+            "probability": 0.0074
           },
           {
             "id": "1387520168866885632:5",
             "label": "HarrytheHitman9",
-            "probability": 0.0092
-          },
-          {
-            "id": "1387520168866885632:9",
-            "label": "lukebowsh",
-            "probability": 0.0059
+            "probability": 0.00725
           },
           {
             "id": "1387520168866885632:12",
             "label": "vayyala",
-            "probability": 0.0055
+            "probability": 0.0057
+          },
+          {
+            "id": "1387520168866885632:9",
+            "label": "lukebowsh",
+            "probability": 0.0032
           },
           {
             "id": "1387520168866885632:7",
             "label": "akmadurai",
-            "probability": 0.00385
+            "probability": 0.00295
           }
         ],
         "closestMatchup": [
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.231
+            "probability": 0.22815
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.21925
-          },
-          {
-            "id": "1387520168866885632:3",
-            "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.20855
+            "probability": 0.2204
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.1949
+            "probability": 0.20485
+          },
+          {
+            "id": "1387520168866885632:3",
+            "label": "Ja’Marrican Psycho vs. vayyala",
+            "probability": 0.20395
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.1311
+            "probability": 0.132
           },
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.0152
+            "probability": 0.01065
           }
         ],
         "biggestBlowout": [
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.7013
+            "probability": 0.72755
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.1172
-          },
-          {
-            "id": "1387520168866885632:6",
-            "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.05345
+            "probability": 0.11005
           },
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.04915
+            "probability": 0.0467
+          },
+          {
+            "id": "1387520168866885632:6",
+            "label": "JimothyGreene vs. the beggar king",
+            "probability": 0.04155
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.04815
+            "probability": 0.03985
           },
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.03075
+            "probability": 0.0343
           }
         ],
         "highestMatchupTotal": [
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.2481
+            "probability": 0.2526
           },
           {
             "id": "1387520168866885632:4",
             "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.2413
+            "probability": 0.2395
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.23145
+            "probability": 0.23365
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.1863
+            "probability": 0.17885
           },
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.0787
+            "probability": 0.0825
           },
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.01415
+            "probability": 0.0129
           }
         ],
         "lowestMatchupTotal": [
           {
             "id": "1387520168866885632:2",
             "label": "lukebowsh vs. vchak",
-            "probability": 0.5711
+            "probability": 0.5913
           },
           {
             "id": "1387520168866885632:1",
             "label": "Jonathon Taylor Mayde vs. Checkout & Gameplay",
-            "probability": 0.1486
+            "probability": 0.151
           },
           {
             "id": "1387520168866885632:6",
             "label": "JimothyGreene vs. the beggar king",
-            "probability": 0.0947
+            "probability": 0.08595
           },
           {
             "id": "1387520168866885632:5",
             "label": "Team Lil Bros vs. akmadurai",
-            "probability": 0.0666
-          },
-          {
-            "id": "1387520168866885632:4",
-            "label": "HarrytheHitman9 vs. King Henry’s Court",
-            "probability": 0.0623
+            "probability": 0.0598
           },
           {
             "id": "1387520168866885632:3",
             "label": "Ja’Marrican Psycho vs. vayyala",
-            "probability": 0.0567
+            "probability": 0.05625
+          },
+          {
+            "id": "1387520168866885632:4",
+            "label": "HarrytheHitman9 vs. King Henry’s Court",
+            "probability": 0.0557
           }
         ]
       },
@@ -2445,11 +2521,11 @@
             "managerName": "no14n",
             "avatarUrl": "https://sleepercdn.com/avatars/f0edbf4278f53f9425db175073df6584",
             "projection": 114,
-            "p10": 96.3,
+            "p10": 96.7,
             "p50": 114,
-            "p90": 131.3,
-            "winProbability": 0.52465,
-            "moneyline": "-110",
+            "p90": 131.8,
+            "winProbability": 0.5257,
+            "moneyline": "-111",
             "record": "0-1",
             "draftGrade": "C",
             "draftScore": 49,
@@ -2528,11 +2604,11 @@
             "managerName": "zhirsch",
             "avatarUrl": "https://sleepercdn.com/avatars/b319fdf8b7b5b0359d3c78622ba4d70c",
             "projection": 112.7,
-            "p10": 96.3,
+            "p10": 96.4,
             "p50": 112.7,
-            "p90": 129.1,
-            "winProbability": 0.47535000000000005,
-            "moneyline": "+110",
+            "p90": 129.3,
+            "winProbability": 0.47430000000000005,
+            "moneyline": "+111",
             "record": "1-0",
             "draftGrade": "D",
             "draftScore": 32,
@@ -2617,11 +2693,11 @@
             "managerName": "lukebowsh",
             "avatarUrl": "https://sleepercdn.com/avatars/82aec8e811b839b8ec25d7b458afd57b",
             "projection": 127,
-            "p10": 105,
+            "p10": 107.2,
             "p50": 127,
-            "p90": 147.8,
-            "winProbability": 0.9907,
-            "moneyline": "-10653",
+            "p90": 147.1,
+            "winProbability": 0.9947,
+            "moneyline": "-18768",
             "record": "0-1",
             "draftGrade": "C-",
             "draftScore": 43,
@@ -2700,11 +2776,11 @@
             "managerName": "vchak",
             "avatarUrl": null,
             "projection": 80.2,
-            "p10": 64.9,
+            "p10": 66.3,
             "p50": 80.2,
-            "p90": 94.9,
-            "winProbability": 0.009299999999999975,
-            "moneyline": "+10653",
+            "p90": 94.4,
+            "winProbability": 0.005299999999999971,
+            "moneyline": "+18768",
             "record": "1-0",
             "draftGrade": "C",
             "draftScore": 49,
@@ -2789,11 +2865,11 @@
             "managerName": "doubleosean",
             "avatarUrl": "https://sleepercdn.com/avatars/d1a9b641b25f6d7eccc502e3166b476c",
             "projection": 117.4,
-            "p10": 98.9,
+            "p10": 100,
             "p50": 117.4,
-            "p90": 135.1,
-            "winProbability": 0.4024,
-            "moneyline": "+149",
+            "p90": 134.9,
+            "winProbability": 0.40015,
+            "moneyline": "+150",
             "record": "0-1",
             "draftGrade": "B-",
             "draftScore": 65,
@@ -2872,11 +2948,11 @@
             "managerName": "vayyala",
             "avatarUrl": "https://sleepercdn.com/avatars/578c6b253dd7b4bab45382e1af102204",
             "projection": 122.2,
-            "p10": 103.7,
+            "p10": 103.9,
             "p50": 122.2,
-            "p90": 140.5,
-            "winProbability": 0.5976,
-            "moneyline": "-149",
+            "p90": 140.8,
+            "winProbability": 0.59985,
+            "moneyline": "-150",
             "record": "0-1",
             "draftGrade": "C-",
             "draftScore": 46,
@@ -2961,10 +3037,10 @@
             "managerName": "HarrytheHitman9",
             "avatarUrl": "https://sleepercdn.com/avatars/25666f7849bfde075482164450be7a99",
             "projection": 120.2,
-            "p10": 101.4,
+            "p10": 102.5,
             "p50": 120.2,
-            "p90": 138.7,
-            "winProbability": 0.52975,
+            "p90": 138.5,
+            "winProbability": 0.5314,
             "moneyline": "-113",
             "record": "1-0",
             "draftGrade": "F",
@@ -3044,10 +3120,10 @@
             "managerName": "RithikP",
             "avatarUrl": "https://sleepercdn.com/avatars/a9a588d0104b86ddf473e455aeb4348d",
             "projection": 118.8,
-            "p10": 100.1,
+            "p10": 101.4,
             "p50": 118.8,
-            "p90": 136.9,
-            "winProbability": 0.47024999999999995,
+            "p90": 136.2,
+            "winProbability": 0.4686,
             "moneyline": "+113",
             "record": "1-0",
             "draftGrade": "C+",
@@ -3133,11 +3209,11 @@
             "managerName": "dhruvmodi",
             "avatarUrl": "https://sleepercdn.com/avatars/82aec8e811b839b8ec25d7b458afd57b",
             "projection": 110.1,
-            "p10": 93,
+            "p10": 94,
             "p50": 110.1,
-            "p90": 126.7,
-            "winProbability": 0.18665,
-            "moneyline": "+436",
+            "p90": 126.6,
+            "winProbability": 0.1758,
+            "moneyline": "+469",
             "record": "1-0",
             "draftGrade": "B+",
             "draftScore": 76,
@@ -3216,11 +3292,11 @@
             "managerName": "akmadurai",
             "avatarUrl": "https://sleepercdn.com/avatars/47485031fa0a626c0393b7df2b0ad508",
             "projection": 128.3,
-            "p10": 107.7,
+            "p10": 109.1,
             "p50": 128.3,
-            "p90": 148.2,
-            "winProbability": 0.81335,
-            "moneyline": "-436",
+            "p90": 147.6,
+            "winProbability": 0.8242,
+            "moneyline": "-469",
             "record": "1-0",
             "draftGrade": "B-",
             "draftScore": 64,
@@ -3305,11 +3381,11 @@
             "managerName": "JimothyGreene",
             "avatarUrl": "https://sleepercdn.com/avatars/b3338675f635c2c1f42b469621d38ec6",
             "projection": 118,
-            "p10": 98,
+            "p10": 99.6,
             "p50": 118,
-            "p90": 137,
-            "winProbability": 0.51945,
-            "moneyline": "-108",
+            "p90": 136.5,
+            "winProbability": 0.5204,
+            "moneyline": "-109",
             "record": "0-1",
             "draftGrade": "B",
             "draftScore": 70,
@@ -3388,11 +3464,11 @@
             "managerName": "lurski",
             "avatarUrl": "https://sleepercdn.com/uploads/69739f7b3d5134dfcde3a9144a7f11a0.jpg",
             "projection": 117,
-            "p10": 97.1,
+            "p10": 99.3,
             "p50": 117,
-            "p90": 136.2,
-            "winProbability": 0.48055000000000003,
-            "moneyline": "+108",
+            "p90": 134.7,
+            "winProbability": 0.4796,
+            "moneyline": "+109",
             "record": "0-1",
             "draftGrade": "D",
             "draftScore": 37,
@@ -3477,252 +3553,252 @@
           {
             "id": "1387520236663615488:11",
             "label": "Loveland Island",
-            "probability": 0.27225
+            "probability": 0.2808
           },
           {
             "id": "1387520236663615488:2",
             "label": "krishnik",
-            "probability": 0.169
-          },
-          {
-            "id": "1387520236663615488:6",
-            "label": "Can you tuten my face",
-            "probability": 0.1146
-          },
-          {
-            "id": "1387520236663615488:1",
-            "label": "ashwindandapani1",
-            "probability": 0.09425
+            "probability": 0.16245
           },
           {
             "id": "1387520236663615488:12",
             "label": "Sahilmodi8",
-            "probability": 0.09355
+            "probability": 0.1067
+          },
+          {
+            "id": "1387520236663615488:6",
+            "label": "Can you tuten my face",
+            "probability": 0.1038
           },
           {
             "id": "1387520236663615488:10",
             "label": "brendenclerget",
-            "probability": 0.08605
+            "probability": 0.08975
+          },
+          {
+            "id": "1387520236663615488:1",
+            "label": "ashwindandapani1",
+            "probability": 0.08915
           },
           {
             "id": "1387520236663615488:5",
             "label": "gibuttersnaps",
-            "probability": 0.04805
+            "probability": 0.0423
           },
           {
             "id": "1387520236663615488:4",
             "label": "Socialized L-Care",
-            "probability": 0.043
+            "probability": 0.042
           },
           {
             "id": "1387520236663615488:8",
             "label": "aditya22",
-            "probability": 0.0364
+            "probability": 0.03785
           },
           {
             "id": "1387520236663615488:7",
             "label": "Mexican Cartel",
-            "probability": 0.0301
+            "probability": 0.0291
           },
           {
             "id": "1387520236663615488:3",
             "label": "aaryanshetty",
-            "probability": 0.00755
+            "probability": 0.00875
           },
           {
             "id": "1387520236663615488:9",
             "label": "Lisan Al-Caleb",
-            "probability": 0.0052
+            "probability": 0.00735
           }
         ],
         "lowestScore": [
           {
-            "id": "1387520236663615488:3",
-            "label": "aaryanshetty",
-            "probability": 0.18445
-          },
-          {
             "id": "1387520236663615488:9",
             "label": "Lisan Al-Caleb",
-            "probability": 0.1714
+            "probability": 0.19805
+          },
+          {
+            "id": "1387520236663615488:3",
+            "label": "aaryanshetty",
+            "probability": 0.19725
           },
           {
             "id": "1387520236663615488:7",
             "label": "Mexican Cartel",
-            "probability": 0.1114
-          },
-          {
-            "id": "1387520236663615488:1",
-            "label": "ashwindandapani1",
-            "probability": 0.0915
+            "probability": 0.1103
           },
           {
             "id": "1387520236663615488:8",
             "label": "aditya22",
-            "probability": 0.08885
-          },
-          {
-            "id": "1387520236663615488:5",
-            "label": "gibuttersnaps",
-            "probability": 0.08785
+            "probability": 0.09275
           },
           {
             "id": "1387520236663615488:4",
             "label": "Socialized L-Care",
-            "probability": 0.08435
+            "probability": 0.08265
           },
           {
-            "id": "1387520236663615488:6",
-            "label": "Can you tuten my face",
-            "probability": 0.0476
+            "id": "1387520236663615488:5",
+            "label": "gibuttersnaps",
+            "probability": 0.07835
+          },
+          {
+            "id": "1387520236663615488:1",
+            "label": "ashwindandapani1",
+            "probability": 0.07355
           },
           {
             "id": "1387520236663615488:10",
             "label": "brendenclerget",
-            "probability": 0.04575
+            "probability": 0.0471
           },
           {
             "id": "1387520236663615488:12",
             "label": "Sahilmodi8",
-            "probability": 0.0387
+            "probability": 0.0439
+          },
+          {
+            "id": "1387520236663615488:6",
+            "label": "Can you tuten my face",
+            "probability": 0.0382
           },
           {
             "id": "1387520236663615488:2",
             "label": "krishnik",
-            "probability": 0.0316
+            "probability": 0.0236
           },
           {
             "id": "1387520236663615488:11",
             "label": "Loveland Island",
-            "probability": 0.01655
+            "probability": 0.0143
           }
         ],
         "closestMatchup": [
           {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.18875
+            "probability": 0.18595
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.1772
+            "probability": 0.18385
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.1682
-          },
-          {
-            "id": "1387520236663615488:2",
-            "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.15865
+            "probability": 0.1763
           },
           {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.1575
+            "probability": 0.15345
+          },
+          {
+            "id": "1387520236663615488:2",
+            "label": "aaryanshetty vs. Sahilmodi8",
+            "probability": 0.15175
           },
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.1497
+            "probability": 0.1487
           }
         ],
         "biggestBlowout": [
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.21355
-          },
-          {
-            "id": "1387520236663615488:6",
-            "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.1833
+            "probability": 0.21175
           },
           {
             "id": "1387520236663615488:2",
             "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.16895
+            "probability": 0.18505
+          },
+          {
+            "id": "1387520236663615488:6",
+            "label": "Can you tuten my face vs. Lisan Al-Caleb",
+            "probability": 0.1831
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.1633
+            "probability": 0.16045
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.1521
+            "probability": 0.13935
           },
           {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.1188
+            "probability": 0.1203
           }
         ],
         "highestMatchupTotal": [
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.3265
+            "probability": 0.33125
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.21915
+            "probability": 0.21675
           },
           {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.1577
+            "probability": 0.15915
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.1277
-          },
-          {
-            "id": "1387520236663615488:6",
-            "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.08725
+            "probability": 0.12165
           },
           {
             "id": "1387520236663615488:2",
             "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.0817
+            "probability": 0.0875
+          },
+          {
+            "id": "1387520236663615488:6",
+            "label": "Can you tuten my face vs. Lisan Al-Caleb",
+            "probability": 0.0837
           }
         ],
         "lowestMatchupTotal": [
           {
             "id": "1387520236663615488:6",
             "label": "Can you tuten my face vs. Lisan Al-Caleb",
-            "probability": 0.22965
+            "probability": 0.238
           },
           {
             "id": "1387520236663615488:2",
             "label": "aaryanshetty vs. Sahilmodi8",
-            "probability": 0.22435
+            "probability": 0.2368
           },
           {
             "id": "1387520236663615488:3",
             "label": "ashwindandapani1 vs. Mexican Cartel",
-            "probability": 0.2149
+            "probability": 0.2043
           },
           {
             "id": "1387520236663615488:5",
             "label": "Socialized L-Care vs. brendenclerget",
-            "probability": 0.14235
+            "probability": 0.14285
           },
           {
             "id": "1387520236663615488:1",
             "label": "krishnik vs. aditya22",
-            "probability": 0.11545
+            "probability": 0.1114
           },
           {
             "id": "1387520236663615488:4",
             "label": "gibuttersnaps vs. Loveland Island",
-            "probability": 0.0733
+            "probability": 0.06665
           }
         ]
       },
@@ -3738,11 +3814,11 @@
             "managerName": "krishnik",
             "avatarUrl": "https://sleepercdn.com/avatars/7572250c2fb084c434fed0e82229e183",
             "projection": 122.1,
-            "p10": 102.2,
+            "p10": 104,
             "p50": 122.1,
-            "p90": 141.7,
-            "winProbability": 0.69185,
-            "moneyline": "-225",
+            "p90": 140.7,
+            "winProbability": 0.70125,
+            "moneyline": "-235",
             "record": "0-1",
             "draftGrade": "C",
             "draftScore": 55,
@@ -3821,11 +3897,11 @@
             "managerName": "aditya22",
             "avatarUrl": "https://sleepercdn.com/avatars/4d46b7d568cc71d4819293c612731196",
             "projection": 111.8,
-            "p10": 94.6,
+            "p10": 95.3,
             "p50": 111.8,
-            "p90": 129,
-            "winProbability": 0.30815000000000003,
-            "moneyline": "+225",
+            "p90": 128.8,
+            "winProbability": 0.29874999999999996,
+            "moneyline": "+235",
             "record": "0-1",
             "draftGrade": "C-",
             "draftScore": 42,
@@ -3910,11 +3986,11 @@
             "managerName": "aaryanshetty",
             "avatarUrl": "https://sleepercdn.com/avatars/d55d1f7075eda01948318de4af616075",
             "projection": 105.4,
-            "p10": 88.5,
+            "p10": 89.2,
             "p50": 105.4,
             "p90": 121.3,
-            "winProbability": 0.2402,
-            "moneyline": "+316",
+            "winProbability": 0.24135,
+            "moneyline": "+314",
             "record": "1-0",
             "draftGrade": "F",
             "draftScore": 18,
@@ -3993,11 +4069,11 @@
             "managerName": "Sahilmodi8",
             "avatarUrl": "https://sleepercdn.com/avatars/8eb8f8bf999945d523f2c4033f70473e",
             "projection": 118.4,
-            "p10": 100.8,
+            "p10": 100.6,
             "p50": 118.4,
-            "p90": 135.9,
-            "winProbability": 0.7598,
-            "moneyline": "-316",
+            "p90": 136.7,
+            "winProbability": 0.75865,
+            "moneyline": "-314",
             "record": "1-0",
             "draftGrade": "B",
             "draftScore": 70,
@@ -4082,11 +4158,11 @@
             "managerName": "ashwindandapani1",
             "avatarUrl": "https://sleepercdn.com/avatars/d55d1f7075eda01948318de4af616075",
             "projection": 116,
-            "p10": 93.8,
+            "p10": 96.7,
             "p50": 116,
-            "p90": 136.4,
-            "winProbability": 0.59745,
-            "moneyline": "-148",
+            "p90": 135.5,
+            "winProbability": 0.60875,
+            "moneyline": "-156",
             "record": "0-1",
             "draftGrade": "C+",
             "draftScore": 57,
@@ -4165,11 +4241,11 @@
             "managerName": "rafas10",
             "avatarUrl": "https://sleepercdn.com/avatars/7572250c2fb084c434fed0e82229e183",
             "projection": 110.5,
-            "p10": 92.5,
+            "p10": 93.8,
             "p50": 110.5,
-            "p90": 128,
-            "winProbability": 0.40254999999999996,
-            "moneyline": "+148",
+            "p90": 127.4,
+            "winProbability": 0.39125,
+            "moneyline": "+156",
             "record": "0-1",
             "draftGrade": "B+",
             "draftScore": 77,
@@ -4254,11 +4330,11 @@
             "managerName": "gibuttersnaps",
             "avatarUrl": "https://sleepercdn.com/avatars/b70fd30e2dcf8d417bdcc7fbfe1432b6",
             "projection": 113.1,
-            "p10": 94.6,
+            "p10": 96.5,
             "p50": 113.1,
-            "p90": 130.9,
-            "winProbability": 0.25775,
-            "moneyline": "+288",
+            "p90": 129.7,
+            "winProbability": 0.2481,
+            "moneyline": "+303",
             "record": "1-0",
             "draftGrade": "C-",
             "draftScore": 43,
@@ -4337,11 +4413,11 @@
             "managerName": "siddharthseth",
             "avatarUrl": null,
             "projection": 127.1,
-            "p10": 106.6,
+            "p10": 107.6,
             "p50": 127.1,
-            "p90": 146.4,
-            "winProbability": 0.7422500000000001,
-            "moneyline": "-288",
+            "p90": 146.5,
+            "winProbability": 0.7519,
+            "moneyline": "-303",
             "record": "1-0",
             "draftGrade": "B-",
             "draftScore": 67,
@@ -4426,11 +4502,11 @@
             "managerName": "AyushDhadphale",
             "avatarUrl": "https://sleepercdn.com/avatars/be021b9487b79ecf2304a3a0ff63642f",
             "projection": 112.8,
-            "p10": 94.9,
+            "p10": 96.2,
             "p50": 112.8,
-            "p90": 130.5,
-            "winProbability": 0.4049,
-            "moneyline": "+147",
+            "p90": 130.1,
+            "winProbability": 0.40135,
+            "moneyline": "+149",
             "record": "0-1",
             "draftGrade": "C+",
             "draftScore": 63,
@@ -4509,11 +4585,11 @@
             "managerName": "brendenclerget",
             "avatarUrl": "https://sleepercdn.com/avatars/b319fdf8b7b5b0359d3c78622ba4d70c",
             "projection": 117.6,
-            "p10": 99.5,
+            "p10": 100.2,
             "p50": 117.6,
-            "p90": 135.3,
-            "winProbability": 0.5951,
-            "moneyline": "-147",
+            "p90": 135.2,
+            "winProbability": 0.59865,
+            "moneyline": "-149",
             "record": "0-1",
             "draftGrade": "F",
             "draftScore": 29,
@@ -4598,11 +4674,11 @@
             "managerName": "lineeth03",
             "avatarUrl": "https://sleepercdn.com/avatars/15d7cf259bc30eab8f6120f45f652fb6",
             "projection": 118.9,
-            "p10": 99,
+            "p10": 101.2,
             "p50": 118.9,
-            "p90": 137.8,
-            "winProbability": 0.76795,
-            "moneyline": "-331",
+            "p90": 136.7,
+            "winProbability": 0.77865,
+            "moneyline": "-352",
             "record": "1-0",
             "draftGrade": "C-",
             "draftScore": 40,
@@ -4681,11 +4757,11 @@
             "managerName": "AryanShah",
             "avatarUrl": "https://sleepercdn.com/uploads/e8b539aa92032d637b74dbb3f7dcdc13",
             "projection": 104.9,
-            "p10": 89.7,
+            "p10": 89.6,
             "p50": 104.9,
-            "p90": 119.8,
-            "winProbability": 0.23204999999999998,
-            "moneyline": "+331",
+            "p90": 120.4,
+            "winProbability": 0.22135000000000005,
+            "moneyline": "+352",
             "record": "1-0",
             "draftGrade": "C",
             "draftScore": 50,

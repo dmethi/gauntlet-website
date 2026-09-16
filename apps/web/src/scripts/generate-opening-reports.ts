@@ -18,6 +18,7 @@ import {
   type PreviewWindow,
   simulateOpeningSlate,
   type SlateTeam,
+  type WaiverWireReport,
   type WeeklyPreviewReport,
 } from '../features/opening-reports';
 import {
@@ -82,6 +83,14 @@ interface SleeperMatchup {
   starters: string[];
 }
 
+interface SleeperTransaction {
+  status: 'complete' | 'failed' | string;
+  type: 'waiver' | 'free_agent' | string;
+  settings?: { waiver_bid?: number } | null;
+  adds?: Record<string, number> | null;
+  roster_ids: number[];
+}
+
 interface SleeperPlayer {
   full_name?: string;
   first_name?: string;
@@ -106,6 +115,11 @@ const formatRecord = (roster: SleeperRoster): string => {
   return ties > 0 ? `${wins}-${losses}-${ties}` : `${wins}-${losses}`;
 };
 
+const teamNameForRoster = (roster: SleeperRoster, users: Map<string, SleeperUser>): string => {
+  const user = users.get(roster.owner_id);
+  return user?.metadata?.team_name || user?.display_name || `Team ${roster.roster_id}`;
+};
+
 interface EspnScoreboard {
   events: Array<{
     date: string;
@@ -126,6 +140,7 @@ interface LeagueSnapshot {
   rosters: SleeperRoster[];
   users: SleeperUser[];
   matchups: SleeperMatchup[];
+  waiverTransactions: SleeperTransaction[];
 }
 
 const fetchJson = async <T>(url: string): Promise<T> => {
@@ -148,14 +163,19 @@ const getLeagueSnapshot = async ({
   week: number;
 }): Promise<LeagueSnapshot> => {
   const league = await fetchJson<SleeperLeague>(`${SLEEPER_API}/league/${config.id}`);
-  const [draft, picks, rosters, users, matchups] = await Promise.all([
+  const [draft, picks, rosters, users, matchups, waiverTransactions] = await Promise.all([
     fetchJson<SleeperDraft>(`${SLEEPER_API}/draft/${league.draft_id}`),
     fetchJson<SleeperPick[]>(`${SLEEPER_API}/draft/${league.draft_id}/picks`),
     fetchJson<SleeperRoster[]>(`${SLEEPER_API}/league/${config.id}/rosters`),
     fetchJson<SleeperUser[]>(`${SLEEPER_API}/league/${config.id}/users`),
     fetchJson<SleeperMatchup[]>(`${SLEEPER_API}/league/${config.id}/matchups/${week}`),
+    week > 1
+      ? fetchJson<SleeperTransaction[]>(
+          `${SLEEPER_API}/league/${config.id}/transactions/${week - 1}`,
+        )
+      : Promise.resolve([]),
   ]);
-  return { config, league, draft, picks, rosters, users, matchups };
+  return { config, league, draft, picks, rosters, users, matchups, waiverTransactions };
 };
 
 const toDraftLeagueInput = (snapshot: LeagueSnapshot): DraftLeagueInput => {
@@ -279,6 +299,65 @@ const windowForTeam = (schedule: PreviewWindow[], nflTeam: string | undefined): 
 
 const toProjectionArray = (raw: Record<string, RawProjection>): RawProjection[] =>
   Object.entries(raw).map(([playerId, projection]) => ({ ...projection, player_id: playerId }));
+
+const buildWaiverWireReport = ({
+  snapshots,
+  players,
+  week,
+}: {
+  snapshots: LeagueSnapshot[];
+  players: SleeperPlayers;
+  week: number;
+}): WaiverWireReport | null => {
+  if (week === 1) return null;
+
+  const leagues = snapshots.map(snapshot => {
+    const rosters = new Map(snapshot.rosters.map(roster => [roster.roster_id, roster]));
+    const users = new Map(snapshot.users.map(user => [user.user_id, user]));
+    const claims = snapshot.waiverTransactions
+      .filter(transaction => transaction.type === 'waiver' && transaction.status === 'complete')
+      .flatMap(transaction => {
+        const [playerId] = Object.keys(transaction.adds ?? {});
+        const roster = rosters.get(transaction.roster_ids[0]);
+        if (!playerId || !roster) return [];
+        const player = players[playerId];
+        return [
+          {
+            playerName:
+              player?.full_name ||
+              `${player?.first_name ?? ''} ${player?.last_name ?? ''}`.trim() ||
+              playerId,
+            position: player?.position ?? null,
+            teamName: teamNameForRoster(roster, users),
+            bid: Number(transaction.settings?.waiver_bid ?? 0),
+          },
+        ];
+      })
+      .sort((first, second) => second.bid - first.bid);
+    const totalSpent = claims.reduce((sum, claim) => sum + claim.bid, 0);
+
+    return {
+      leagueId: snapshot.config.id,
+      leagueName: snapshot.config.name,
+      totalSpent,
+      successfulClaims: claims.length,
+      averageBid: claims.length > 0 ? Math.round((totalSpent / claims.length) * 10) / 10 : 0,
+      topClaim: claims[0] ?? null,
+      claims,
+    };
+  });
+
+  return {
+    sourceWeek: week - 1,
+    totalSpent: leagues.reduce((sum, league) => sum + league.totalSpent, 0),
+    successfulClaims: leagues.reduce((sum, league) => sum + league.successfulClaims, 0),
+    leagues: leagues.map(({ claims: _claims, ...league }) => league),
+    biggestBids: leagues
+      .flatMap(league => league.claims.map(claim => ({ ...claim, leagueName: league.leagueName })))
+      .sort((first, second) => second.bid - first.bid)
+      .slice(0, 4),
+  };
+};
 
 const createPreviewTeam = ({
   slateTeam,
@@ -527,6 +606,7 @@ const generateWeeklyPreview = async ({
       },
     },
     schedule,
+    waiverWire: buildWaiverWireReport({ snapshots, players, week }),
     gauntletWideRaces: combineLeagueSlateSimulations(simulations),
     leagues: leaguePreviews,
   };

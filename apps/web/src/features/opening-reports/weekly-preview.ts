@@ -69,6 +69,30 @@ export interface LeaguePreview {
   matchups: PreviewMatchup[];
 }
 
+export interface WaiverWireClaim {
+  playerName: string;
+  position: string | null;
+  teamName: string;
+  bid: number;
+}
+
+export interface WaiverWireLeague {
+  leagueId: string;
+  leagueName: string;
+  totalSpent: number;
+  successfulClaims: number;
+  averageBid: number;
+  topClaim: WaiverWireClaim | null;
+}
+
+export interface WaiverWireReport {
+  sourceWeek: number;
+  totalSpent: number;
+  successfulClaims: number;
+  leagues: WaiverWireLeague[];
+  biggestBids: Array<WaiverWireClaim & { leagueName: string }>;
+}
+
 export interface WeeklyPreviewReport {
   metadata: {
     season: 2026;
@@ -86,6 +110,7 @@ export interface WeeklyPreviewReport {
     };
   };
   schedule: PreviewWindow[];
+  waiverWire: WaiverWireReport | null;
   gauntletWideRaces: OpeningSlateRaces;
   leagues: LeaguePreview[];
 }

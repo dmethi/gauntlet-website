@@ -6,6 +6,7 @@ import {
   type PreviewTeam,
   raceLabels,
   topRaceCandidates,
+  type WaiverWireReport,
   type WeeklyPreviewReport,
 } from './weekly-preview';
 import { MatchupScoreCurve } from './MatchupScoreCurve';
@@ -22,6 +23,95 @@ const formatTimestamp = (value: string): string =>
     minute: '2-digit',
     timeZoneName: 'short',
   }).format(new Date(value));
+
+const currency = (value: number): string => `$${value.toLocaleString('en-US')}`;
+
+const WaiverWireBoard = ({ report }: { report: WaiverWireReport }) => {
+  const leagues = [...report.leagues].sort((first, second) => second.totalSpent - first.totalSpent);
+  const leader = leagues[0];
+  const runnerUp = leagues[1];
+  const lead = leader && runnerUp ? leader.totalSpent - runnerUp.totalSpent : null;
+
+  return (
+    <section className="border-b border-border py-12" aria-labelledby="waiver-wire">
+      <div className="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">
+            Week {report.sourceWeek} waiver run
+          </p>
+          <h2 id="waiver-wire" className="mt-2 font-geizer text-3xl uppercase tracking-wider">
+            Waiver wire
+          </h2>
+        </div>
+        <p className="max-w-md text-sm leading-6 text-muted-foreground">
+          {currency(report.totalSpent)} spent across {report.successfulClaims} successful claims.
+          {leader && runnerUp && lead !== null
+            ? ` ${leader.leagueName} led the room, spending ${currency(lead)} more than ${runnerUp.leagueName}.`
+            : ''}
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-3">
+        {leagues.map(league => (
+          <article key={league.leagueId} className="bg-background p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              {league.leagueName}
+            </p>
+            <p className="mt-4 font-geizer text-4xl">{currency(league.totalSpent)}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {league.successfulClaims} successful{' '}
+              {league.successfulClaims === 1 ? 'claim' : 'claims'} · {currency(league.averageBid)}{' '}
+              avg bid
+            </p>
+            {league.topClaim ? (
+              <p className="mt-5 border-t border-border pt-4 text-sm">
+                <span className="text-muted-foreground">Top bid</span>
+                <span className="ml-2 font-semibold">
+                  {currency(league.topClaim.bid)} · {league.topClaim.playerName}
+                  {league.topClaim.position ? ` (${league.topClaim.position})` : ''}
+                </span>
+              </p>
+            ) : null}
+          </article>
+        ))}
+      </div>
+
+      {report.biggestBids.length > 0 ? (
+        <div className="mt-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            Biggest claims
+          </p>
+          <ol className="mt-4 grid gap-x-8 gap-y-3 md:grid-cols-2">
+            {report.biggestBids.map((claim, index) => (
+              <li
+                key={`${claim.leagueName}:${claim.teamName}:${claim.playerName}:${index}`}
+                className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-t border-border pt-3 text-sm"
+              >
+                <span className="font-geizer text-xl text-muted-foreground">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate font-semibold">
+                    {claim.playerName}
+                    {claim.position ? ` · ${claim.position}` : ''}
+                  </span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {claim.teamName} · {claim.leagueName}
+                  </span>
+                </span>
+                <span className="font-geizer text-xl">{currency(claim.bid)}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : null}
+
+      <p className="mt-6 text-xs leading-5 text-muted-foreground">
+        Completed waiver claims only; free-agent adds are excluded.
+      </p>
+    </section>
+  );
+};
 
 const TeamLine = ({ team }: { team: PreviewTeam }) => {
   const modeledAtZero = [
@@ -150,6 +240,8 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
           </dd>
         </dl>
       </section>
+
+      {report.waiverWire ? <WaiverWireBoard report={report.waiverWire} /> : null}
 
       <section className="py-12" aria-labelledby="opening-board">
         <div className="flex flex-wrap items-end justify-between gap-4">
