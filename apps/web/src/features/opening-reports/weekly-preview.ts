@@ -71,7 +71,7 @@ export interface LeaguePreview {
 export interface WeeklyPreviewReport {
   metadata: {
     season: 2026;
-    week: 1;
+    week: number;
     generatedAt: string;
     lineupsAsOf: string;
     projectionsAsOf: string;

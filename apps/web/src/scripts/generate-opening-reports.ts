@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { getLeaguesForSeason } from '../config/leagues';
 import {
@@ -27,11 +27,10 @@ import {
 
 const SLEEPER_API = 'https://api.sleeper.app/v1';
 const YAFSB_AUCTION_URL = 'https://yafsb.com/fantasy-football/auction-draft-values/half-ppr/';
-const ESPN_WEEK_ONE_URL =
-  'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=1';
 const OUTPUT_DIRECTORY = path.join(process.cwd(), 'src', 'data', 'reports', 'opening-2026');
 const ITERATIONS = 20_000;
 const BASE_SEED = 20_260_909;
+const MAX_REGULAR_SEASON_WEEK = 18;
 
 interface SleeperLeague {
   draft_id: string;
@@ -129,16 +128,20 @@ const fetchText = async (url: string): Promise<string> => {
   return response.text();
 };
 
-const getLeagueSnapshot = async (
-  config: ReturnType<typeof getLeaguesForSeason>[number],
-): Promise<LeagueSnapshot> => {
+const getLeagueSnapshot = async ({
+  config,
+  week,
+}: {
+  config: ReturnType<typeof getLeaguesForSeason>[number];
+  week: number;
+}): Promise<LeagueSnapshot> => {
   const league = await fetchJson<SleeperLeague>(`${SLEEPER_API}/league/${config.id}`);
   const [draft, picks, rosters, users, matchups] = await Promise.all([
     fetchJson<SleeperDraft>(`${SLEEPER_API}/draft/${league.draft_id}`),
     fetchJson<SleeperPick[]>(`${SLEEPER_API}/draft/${league.draft_id}/picks`),
     fetchJson<SleeperRoster[]>(`${SLEEPER_API}/league/${config.id}/rosters`),
     fetchJson<SleeperUser[]>(`${SLEEPER_API}/league/${config.id}/users`),
-    fetchJson<SleeperMatchup[]>(`${SLEEPER_API}/league/${config.id}/matchups/1`),
+    fetchJson<SleeperMatchup[]>(`${SLEEPER_API}/league/${config.id}/matchups/${week}`),
   ]);
   return { config, league, draft, picks, rosters, users, matchups };
 };
@@ -329,6 +332,7 @@ const generateWeeklyPreview = async ({
   rawProjections,
   schedule,
   generatedAt,
+  week,
 }: {
   snapshots: LeagueSnapshot[];
   draftReport: DraftReport;
@@ -336,15 +340,17 @@ const generateWeeklyPreview = async ({
   rawProjections: Record<string, RawProjection>;
   schedule: PreviewWindow[];
   generatedAt: string;
+  week: number;
 }): Promise<WeeklyPreviewReport> => {
   const firstKickoffAt = schedule[0]?.startsAt;
-  if (!firstKickoffAt) throw new Error('Week 1 schedule has no kickoff windows');
+  if (!firstKickoffAt) throw new Error(`Week ${week} schedule has no kickoff windows`);
+  const seed = BASE_SEED + (week - 1) * 7;
 
   const projectionArray = toProjectionArray(rawProjections);
   const preparedLeagues = snapshots.map(snapshot => {
     if (snapshot.matchups.length !== 12) {
       throw new Error(
-        `${snapshot.config.name} has ${snapshot.matchups.length}/12 Week 1 roster rows`,
+        `${snapshot.config.name} has ${snapshot.matchups.length}/12 Week ${week} roster rows`,
       );
     }
     const users = new Map(snapshot.users.map(user => [user.user_id, user]));
@@ -355,7 +361,7 @@ const generateWeeklyPreview = async ({
     );
     const slateTeams: SlateTeam[] = snapshot.matchups.map(matchup => {
       if (matchup.matchup_id === null) {
-        throw new Error(`${snapshot.config.name} has a roster without a Week 1 matchup`);
+        throw new Error(`${snapshot.config.name} has a roster without a Week ${week} matchup`);
       }
       const roster = rosters.get(matchup.roster_id);
       if (!roster) throw new Error(`Missing roster ${snapshot.config.id}:${matchup.roster_id}`);
@@ -406,7 +412,7 @@ const generateWeeklyPreview = async ({
     const simulation = simulateOpeningSlate({
       teams: slateTeams,
       iterations: ITERATIONS,
-      seed: BASE_SEED + leagueIndex,
+      seed: seed + leagueIndex,
       positionOutcomes,
     });
     simulations.push(simulation);
@@ -462,7 +468,7 @@ const generateWeeklyPreview = async ({
   return {
     metadata: {
       season: 2026,
-      week: 1,
+      week,
       generatedAt,
       lineupsAsOf: generatedAt,
       projectionsAsOf: generatedAt,
@@ -470,9 +476,8 @@ const generateWeeklyPreview = async ({
       simulation: {
         engine: '@gauntlet/sim-engine position outcome distributions + seeded slate sampler',
         iterations: ITERATIONS,
-        seed: BASE_SEED,
-        projectionSource:
-          'Sleeper Week 1 projections scored with each league settings; every team P50 is anchored to its lineup projection',
+        seed,
+        projectionSource: `Sleeper Week ${week} projections scored with each league settings; every team P50 is anchored to its lineup projection`,
         varianceSource:
           '@gauntlet/sim-engine static position distributions, recentered to the Sleeper median anchor',
       },
@@ -488,16 +493,32 @@ const writeArtifact = async (filename: string, value: unknown): Promise<void> =>
   await writeFile(path.join(OUTPUT_DIRECTORY, filename), `${JSON.stringify(value, null, 2)}\n`);
 };
 
+const parseTargetWeek = (value: string | undefined): number => {
+  if (!value) return 1;
+  const week = Number(value);
+  if (!Number.isInteger(week) || week < 1 || week > MAX_REGULAR_SEASON_WEEK) {
+    throw new Error(`Week must be an integer between 1 and ${MAX_REGULAR_SEASON_WEEK}`);
+  }
+  return week;
+};
+
+const readDraftReport = async (): Promise<DraftReport> => {
+  const artifactPath = path.join(OUTPUT_DIRECTORY, 'draft-report.json');
+  return JSON.parse(await readFile(artifactPath, 'utf8')) as DraftReport;
+};
+
 const main = async (): Promise<void> => {
+  const week = parseTargetWeek(process.argv[2]);
   const configs = getLeaguesForSeason('2026');
   if (configs.length !== 3)
     throw new Error(`Expected 3 registered 2026 leagues, found ${configs.length}`);
-  const [snapshots, marketHtml, players, rawProjections, scoreboard] = await Promise.all([
-    Promise.all(configs.map(getLeagueSnapshot)),
-    fetchText(YAFSB_AUCTION_URL),
+  const [snapshots, players, rawProjections, scoreboard] = await Promise.all([
+    Promise.all(configs.map(config => getLeagueSnapshot({ config, week }))),
     fetchJson<SleeperPlayers>(`${SLEEPER_API}/players/nfl`),
-    fetchJson<Record<string, RawProjection>>(`${SLEEPER_API}/projections/nfl/regular/2026/1`),
-    fetchJson<EspnScoreboard>(ESPN_WEEK_ONE_URL),
+    fetchJson<Record<string, RawProjection>>(`${SLEEPER_API}/projections/nfl/regular/2026/${week}`),
+    fetchJson<EspnScoreboard>(
+      `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=${week}`,
+    ),
   ]);
 
   snapshots.forEach(snapshot => {
@@ -510,16 +531,21 @@ const main = async (): Promise<void> => {
   });
 
   const generatedAt = new Date().toISOString();
-  const market = parseYafsbAuctionSnapshot(marketHtml);
-  if (market.values.length < 150) {
-    throw new Error(`YAFSB parser found only ${market.values.length} auction values`);
+  let draftReport: DraftReport;
+  if (week === 1) {
+    const market = parseYafsbAuctionSnapshot(await fetchText(YAFSB_AUCTION_URL));
+    if (market.values.length < 150) {
+      throw new Error(`YAFSB parser found only ${market.values.length} auction values`);
+    }
+    draftReport = buildDraftReport({
+      leagues: snapshots.map(toDraftLeagueInput),
+      generatedAt,
+      benchmark: buildBenchmark(market),
+    });
+    await writeArtifact('draft-report.json', draftReport);
+  } else {
+    draftReport = await readDraftReport();
   }
-  const draftReport = buildDraftReport({
-    leagues: snapshots.map(toDraftLeagueInput),
-    generatedAt,
-    benchmark: buildBenchmark(market),
-  });
-  await writeArtifact('draft-report.json', draftReport);
 
   const weeklyPreview = await generateWeeklyPreview({
     snapshots,
@@ -528,9 +554,10 @@ const main = async (): Promise<void> => {
     rawProjections,
     schedule: buildSchedule(scoreboard),
     generatedAt,
+    week,
   });
 
-  await writeArtifact('week-1-preview.json', weeklyPreview);
+  await writeArtifact(`week-${week}-preview.json`, weeklyPreview);
 };
 
 main()

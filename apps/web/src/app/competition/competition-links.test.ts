@@ -9,6 +9,7 @@ import {
 describe('competition navigation', () => {
   it('keeps previews, draft recap, and live scores inside the reports hub', () => {
     expect(REPORT_HUB_LINKS.map(link => link.href)).toEqual([
+      '/competition/preview/2026/week-2',
       '/competition/preview/2026/week-1',
       '/draft/analysis',
       '/matchups',

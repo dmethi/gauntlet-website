@@ -18,6 +18,11 @@ export const REPORT_HUB_SECTIONS: ReportHubSection[] = [
     description: 'What to watch before each week kicks off.',
     links: [
       {
+        href: '/competition/preview/2026/week-2',
+        label: 'Week 2 Preview',
+        description: 'Fresh odds, score races, and matchup curves across all three Legions',
+      },
+      {
         href: '/competition/preview/2026/week-1',
         label: 'Week 1 Preview',
         description: 'Opening odds, score races, and matchup curves across all three Legions',

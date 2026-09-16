@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const WeeklyPreviewPending = () => {
+export const WeeklyPreviewPending = ({ week = 1 }: { week?: number }) => {
   return (
     <div className="mx-auto max-w-5xl py-10 sm:px-6 sm:py-16 lg:px-8">
       <section className="grid gap-10 border-y border-border py-12 lg:grid-cols-[1fr_18rem]">
@@ -9,7 +9,7 @@ export const WeeklyPreviewPending = () => {
             Board forming
           </p>
           <h2 className="mt-3 font-geizer text-4xl uppercase tracking-wider sm:text-5xl">
-            Week 1 waits for the final lineup.
+            Week {week} waits for the final lineup.
           </h2>
           <p className="mt-5 max-w-2xl leading-7 text-muted-foreground">
             The report generator is ready, but it will not invent a starter or projection. Once

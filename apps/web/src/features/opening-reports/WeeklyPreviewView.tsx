@@ -113,6 +113,7 @@ const RaceBoard = ({
 );
 
 export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) => {
+  const weekLabel = `Week ${report.metadata.week}`;
   const windowLabels = new Map(report.schedule.map(window => [window.id, window.label]));
   const teams = report.leagues.flatMap(league =>
     league.matchups.flatMap(matchup => [matchup.teamA, matchup.teamB]),
@@ -127,7 +128,7 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
       <section className="grid gap-8 border-b border-border pb-12 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
         <div>
           <Badge className="bg-primary/10 text-primary border border-primary/20">
-            Week 1 · Opening lines
+            {weekLabel} · Opening lines
           </Badge>
           <h2 className="mt-5 max-w-4xl font-geizer text-4xl uppercase tracking-wider sm:text-6xl">
             The draft room follows everyone onto the field.
@@ -176,7 +177,10 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
         ) : null}
       </section>
 
-      <section className="bg-muted/35 px-5 py-9 sm:px-7" aria-label="NFL Week 1 scoring windows">
+      <section
+        className="bg-muted/35 px-5 py-9 sm:px-7"
+        aria-label={`NFL ${weekLabel} scoring windows`}
+      >
         <div className="mb-6 flex items-baseline justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
@@ -332,11 +336,11 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
       <aside className="py-10 text-sm leading-6 text-muted-foreground">
         <p>
           <strong className="text-foreground">Model note.</strong> Each Legion is simulated
-          independently from Sleeper Week 1 projections scored with that league&apos;s settings. The
-          same retained worlds determine head-to-head odds and every race market; only completed
-          Legion results are combined for the all-Gauntlet board. Open lineup slots, unresolved
-          player IDs and legitimate zero projections are retained as zero-point contributions and
-          disclosed beside the affected team.
+          independently from Sleeper {weekLabel} projections scored with that league&apos;s
+          settings. The same retained worlds determine head-to-head odds and every race market; only
+          completed Legion results are combined for the all-Gauntlet board. Open lineup slots,
+          unresolved player IDs and legitimate zero projections are retained as zero-point
+          contributions and disclosed beside the affected team.
         </p>
         <p className="mt-3">
           Draft grades and price context come from the frozen{' '}
