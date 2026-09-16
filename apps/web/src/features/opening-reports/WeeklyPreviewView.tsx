@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import { gradeBadgeClass, neutralBadgeClass } from '@/lib/stat-colors';
+import { neutralBadgeClass } from '@/lib/stat-colors';
 import type { OpeningSlateRaces } from './slate-simulation';
 import {
   type PreviewTeam,
@@ -41,7 +40,7 @@ const TeamLine = ({ team }: { team: PreviewTeam }) => {
       <div className="min-w-0">
         <div className="flex min-w-0 items-center gap-2">
           <p className="truncate font-semibold">{team.teamName}</p>
-          <Badge className={gradeBadgeClass(team.draftGrade)}>{team.draftGrade}</Badge>
+          {team.record ? <Badge className={neutralBadgeClass}>{team.record}</Badge> : null}
         </div>
         <p className="mt-1 truncate text-xs text-muted-foreground">{team.managerName}</p>
         {modeledAtZero.length > 0 ? (
@@ -343,15 +342,8 @@ export const WeeklyPreviewView = ({ report }: { report: WeeklyPreviewReport }) =
           contributions and disclosed beside the affected team.
         </p>
         <p className="mt-3">
-          Draft grades and price context come from the frozen{' '}
-          <Link
-            href="/draft/analysis"
-            className="font-medium text-primary underline-offset-4 hover:underline"
-          >
-            2026 draft report
-          </Link>
-          . Seed {report.metadata.simulation.seed}; variance data from the Gauntlet simulation
-          engine.
+          Records reflect the latest Sleeper standings at the time of this snapshot. Seed{' '}
+          {report.metadata.simulation.seed}; variance data from the Gauntlet simulation engine.
         </p>
       </aside>
     </div>

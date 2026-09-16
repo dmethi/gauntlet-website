@@ -26,6 +26,7 @@ export interface PreviewTeam {
   p90: number;
   winProbability: number;
   moneyline: string;
+  record: string | null;
   draftGrade: string;
   draftScore: number;
   bestDraftValue: Pick<

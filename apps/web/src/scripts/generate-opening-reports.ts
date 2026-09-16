@@ -62,6 +62,11 @@ interface SleeperRoster {
   roster_id: number;
   owner_id: string;
   starters: string[];
+  settings?: {
+    wins?: number;
+    losses?: number;
+    ties?: number;
+  };
 }
 
 interface SleeperUser {
@@ -92,6 +97,13 @@ const sleeperAvatarUrl = (user: SleeperUser | undefined): string | null => {
   const avatar = user?.metadata?.avatar || user?.avatar;
   if (!avatar) return null;
   return avatar.startsWith('http') ? avatar : `https://sleepercdn.com/avatars/${avatar}`;
+};
+
+const formatRecord = (roster: SleeperRoster): string => {
+  const wins = roster.settings?.wins ?? 0;
+  const losses = roster.settings?.losses ?? 0;
+  const ties = roster.settings?.ties ?? 0;
+  return ties > 0 ? `${wins}-${losses}-${ties}` : `${wins}-${losses}`;
 };
 
 interface EspnScoreboard {
@@ -280,6 +292,7 @@ const createPreviewTeam = ({
   p90,
   winProbability,
   moneyline,
+  record,
   draftReport,
   players,
   schedule,
@@ -295,6 +308,7 @@ const createPreviewTeam = ({
   p90: number;
   winProbability: number;
   moneyline: string;
+  record: string;
   draftReport: DraftReport;
   players: SleeperPlayers;
   schedule: PreviewWindow[];
@@ -323,6 +337,7 @@ const createPreviewTeam = ({
     p90,
     winProbability,
     moneyline,
+    record,
     draftGrade: draftTeam.grade,
     draftScore: draftTeam.score,
     bestDraftValue: draftTeam.bestValue
@@ -467,6 +482,7 @@ const generateWeeklyPreview = async ({
           p90: result.p90,
           winProbability: side.winProbability,
           moneyline: side.moneyline,
+          record: formatRecord(roster),
           draftReport,
           players,
           schedule,
