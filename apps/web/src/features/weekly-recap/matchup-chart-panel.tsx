@@ -8,6 +8,7 @@ import styles from './week-one-recap.module.css';
 
 interface MatchupChartPanelProps {
   leagueId: string;
+  week: number;
   matchupId: number;
   teamOne: { rosterId: number; label: string };
   teamTwo: { rosterId: number; label: string };
@@ -17,13 +18,14 @@ interface MatchupChartPanelProps {
 
 export const MatchupChartPanel = ({
   leagueId,
+  week,
   matchupId,
   teamOne,
   teamTwo,
   quality,
   note,
 }: MatchupChartPanelProps) => {
-  const { data, isLoading, error } = useMatchupTimeSeries(leagueId, 1, matchupId, {
+  const { data, isLoading, error } = useMatchupTimeSeries(leagueId, week, matchupId, {
     historical: true,
   });
 

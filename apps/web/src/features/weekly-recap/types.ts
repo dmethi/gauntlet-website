@@ -1,9 +1,4 @@
-export type FlowSectionId =
-  | 'prime-time'
-  | 'scoreboard-lied'
-  | 'sunday-avalanches'
-  | 'never-in-doubt'
-  | 'final-score-lied';
+export type FlowSectionId = string;
 
 export type ProbabilityQuality = 'reliable' | 'directional' | 'unreliable';
 
@@ -13,7 +8,7 @@ export interface RecapTeam {
   score: number;
 }
 
-export interface WeekOneMatchup {
+export interface WeeklyRecapMatchup {
   key: string;
   leagueId: string;
   matchupId: number;
@@ -30,11 +25,11 @@ export interface WeekOneMatchup {
   featured?: boolean;
 }
 
-export interface WeekOneLeague {
+export interface WeeklyRecapLeague {
   leagueId: string;
   name: string;
   shortName: 'Throne' | 'Keep' | 'Forge';
-  matchups: readonly WeekOneMatchup[];
+  matchups: readonly WeeklyRecapMatchup[];
 }
 
 export interface FlowSection {
@@ -70,18 +65,22 @@ export interface HistoricalReceipt {
   afterLabel?: string;
 }
 
-export interface WeekOneRecap {
-  season: 2026;
-  week: 1;
+export interface WeeklyRecap {
+  season: number;
+  week: number;
   publishedAt: string;
   headline: string;
   subheadline: string;
   lede: readonly string[];
-  leagues: readonly WeekOneLeague[];
+  leagues: readonly WeeklyRecapLeague[];
   flowSections: readonly FlowSection[];
   records: readonly RecordBookEntry[];
   autopsies: readonly LineupAutopsy[];
   receipts: readonly HistoricalReceipt[];
 }
+
+export type WeekOneMatchup = WeeklyRecapMatchup;
+export type WeekOneLeague = WeeklyRecapLeague;
+export type WeekOneRecap = WeeklyRecap;
 
 export type ResolvedTeamLabels = Readonly<Record<string, string>>;

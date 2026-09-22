@@ -9,17 +9,29 @@ export interface ReportListItem {
   description?: string;
 }
 
-export type DedicatedReportRoute = '2026-week-1';
+export type DedicatedReportRoute = '2026-week-1' | '2026-week-2';
 
 export const getDedicatedReportRoute = (
   season: string,
   slug: string,
 ): DedicatedReportRoute | null => {
   if (season === '2026' && slug === 'week-1') return '2026-week-1';
+  if (season === '2026' && slug === 'week-2') return '2026-week-2';
   return null;
 };
 
 export const DEDICATED_REPORTS: ReportListItem[] = [
+  {
+    season: 2026,
+    week: 2,
+    title: 'The Margin for Error Disappeared',
+    href: '/competition/reports/2026/week-2',
+    date: '2026-09-22T12:00:00-04:00',
+    tags: ['Week 2', 'Close games', 'Lineup autopsy', 'Auction value'],
+    status: 'success',
+    description:
+      'Six close finishes, a league-wide scoring reversal, and a winning lineup on every losing bench.',
+  },
   {
     season: 2026,
     week: 1,

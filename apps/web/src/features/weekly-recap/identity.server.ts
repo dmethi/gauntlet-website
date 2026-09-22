@@ -3,14 +3,15 @@ import 'server-only';
 import { getManagerProfilesBySleeperId } from '@/features/profiles/manager-profiles';
 import { sleeperClient } from '@/lib/sleeper/unified-client';
 import { buildRecapTeamLabels } from './identity-data';
-import type { ResolvedTeamLabels } from './types';
+import type { ResolvedTeamLabels, WeeklyRecap } from './types';
 import { WEEK_ONE_RECAP } from './week-one-data';
 
-export const loadWeekOneTeamLabels = async (
+export const loadWeeklyRecapTeamLabels = async (
+  report: WeeklyRecap,
   includeProfileNames: boolean,
 ): Promise<ResolvedTeamLabels> => {
   const fallbackLabels = Object.fromEntries(
-    WEEK_ONE_RECAP.leagues.flatMap(league =>
+    report.leagues.flatMap(league =>
       league.matchups.flatMap(matchup =>
         matchup.teams.map(team => [`${league.leagueId}:${team.rosterId}`, team.fallbackLabel]),
       ),
@@ -26,7 +27,7 @@ export const loadWeekOneTeamLabels = async (
     );
 
     const leagueLabels = await Promise.all(
-      WEEK_ONE_RECAP.leagues.map(async league => {
+      report.leagues.map(async league => {
         const [rosters, users] = await Promise.all([
           sleeperClient.fetchRosters(league.leagueId),
           sleeperClient.fetchUsers(league.leagueId),
@@ -37,7 +38,11 @@ export const loadWeekOneTeamLabels = async (
 
     return Object.assign(fallbackLabels, ...leagueLabels);
   } catch (error) {
-    console.error('[Week 1 recap] Falling back to stored team labels:', error);
+    console.error(`[Week ${report.week} recap] Falling back to stored team labels:`, error);
     return fallbackLabels;
   }
 };
+
+export const loadWeekOneTeamLabels = async (
+  includeProfileNames: boolean,
+): Promise<ResolvedTeamLabels> => loadWeeklyRecapTeamLabels(WEEK_ONE_RECAP, includeProfileNames);

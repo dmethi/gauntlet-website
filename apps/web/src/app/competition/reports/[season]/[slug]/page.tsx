@@ -11,6 +11,10 @@ import {
   WEEK_ONE_RECAP_METADATA,
   WeekOneRecapPage,
 } from '@/features/weekly-recap/week-one-report-page';
+import {
+  WEEK_TWO_RECAP_METADATA,
+  WeekTwoRecapPage,
+} from '@/features/weekly-recap/week-two-report-page';
 import { getDedicatedReportRoute } from '@/lib/reports/dedicated-report-registry';
 import { getStaticReportParams, loadRecapReport } from '@/lib/reports/recap/utils/report-loader';
 
@@ -40,6 +44,9 @@ export const generateMetadata = async (props: PageProps): Promise<Metadata> => {
 
   if (getDedicatedReportRoute(season, slug) === '2026-week-1') {
     return WEEK_ONE_RECAP_METADATA;
+  }
+  if (getDedicatedReportRoute(season, slug) === '2026-week-2') {
+    return WEEK_TWO_RECAP_METADATA;
   }
 
   if (!week) {
@@ -87,6 +94,9 @@ const RecapReportPage = async (props: PageProps) => {
 
   if (getDedicatedReportRoute(season, slug) === '2026-week-1') {
     return <WeekOneRecapPage />;
+  }
+  if (getDedicatedReportRoute(season, slug) === '2026-week-2') {
+    return <WeekTwoRecapPage />;
   }
 
   if (!week) {

@@ -16,9 +16,19 @@ describe('dedicated report registry', () => {
     );
   });
 
+  it('registers the 2026 Week 2 newspaper recap', () => {
+    expect(DEDICATED_REPORTS).toContainEqual(
+      expect.objectContaining({
+        season: 2026,
+        week: 2,
+        href: '/competition/reports/2026/week-2',
+      }),
+    );
+  });
+
   it('resolves the canonical dynamic route to the bespoke Week 1 report', () => {
     expect(getDedicatedReportRoute('2026', 'week-1')).toBe('2026-week-1');
-    expect(getDedicatedReportRoute('2026', 'week-2')).toBeNull();
+    expect(getDedicatedReportRoute('2026', 'week-2')).toBe('2026-week-2');
     expect(getDedicatedReportRoute('not-a-season', 'week-1')).toBeNull();
   });
 
@@ -38,7 +48,7 @@ describe('dedicated report registry', () => {
     const merged = mergeDedicatedReports(discovered);
 
     expect(merged).toHaveLength(DEDICATED_REPORTS.length);
-    expect(merged[0].title).toBe('The Scoreboard Was Lying');
+    expect(merged.find(report => report.week === 1)?.title).toBe('The Scoreboard Was Lying');
   });
 
   it('sorts newest reports first', () => {
@@ -54,6 +64,6 @@ describe('dedicated report registry', () => {
       },
     ]);
 
-    expect(merged[0].season).toBe(2026);
+    expect(merged[0]).toEqual(expect.objectContaining({ season: 2026, week: 2 }));
   });
 });

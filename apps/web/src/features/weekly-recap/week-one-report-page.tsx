@@ -11,7 +11,7 @@ export const WEEK_ONE_RECAP_METADATA: Metadata = {
 };
 
 export const WeekOneRecapPage = async () => {
-  const { userId } = await auth();
+  const userId = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? (await auth()).userId : null;
   const labels = await loadWeekOneTeamLabels(Boolean(userId));
 
   return <WeekOneRecapView report={WEEK_ONE_RECAP} labels={labels} />;

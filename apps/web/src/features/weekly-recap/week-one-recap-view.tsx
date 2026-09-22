@@ -23,6 +23,9 @@ const ScoringDistribution = ({ report }: { report: WeekOneRecap }) => {
   const scores = report.leagues.flatMap(league =>
     league.matchups.flatMap(matchup => matchup.teams.map(team => team.score)),
   );
+  const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+  const high = Math.max(...scores);
+  const low = Math.min(...scores);
   const bins = [
     { label: '<80', min: 0, max: 80 },
     { label: '80s', min: 80, max: 90 },
@@ -44,11 +47,15 @@ const ScoringDistribution = ({ report }: { report: WeekOneRecap }) => {
       <div className={styles.figureHeading}>
         <div>
           <p className={styles.eyebrow}>The scoring weather</p>
-          <h2 id="score-distribution-title">Thirty-six scores, one crowded middle</h2>
+          <h2 id="score-distribution-title">
+            {report.week === 1
+              ? 'Thirty-six scores, one crowded middle'
+              : 'The points disappeared; the outliers did not'}
+          </h2>
         </div>
         <p>
-          <strong>117.17</strong> average · <strong>157.80</strong> high · <strong>63.75</strong>{' '}
-          low
+          <strong>{score(average)}</strong> average · <strong>{score(high)}</strong> high ·{' '}
+          <strong>{score(low)}</strong> low
         </p>
       </div>
       <div className={styles.histogram}>
@@ -93,13 +100,17 @@ const OpeningLineLedger = ({
       };
     })
     .sort((a, b) => a.chance - b.chance);
+  const totalMatchups = report.leagues.reduce((sum, league) => sum + league.matchups.length, 0);
+  const favoriteWins = totalMatchups - upsets.length;
 
   return (
     <section className={styles.ledger} aria-labelledby="upset-ledger-title">
       <div className={styles.sectionRule}>
         <p className={styles.eyebrow}>Market report</p>
         <h2 id="upset-ledger-title">The underdog ledger</h2>
-        <p>Favorites split the board 9–9. These were the opening lines that lost.</p>
+        <p>
+          Favorites finished {favoriteWins}–{upsets.length}. These were the opening lines that lost.
+        </p>
       </div>
       <div className={styles.ledgerRows}>
         {upsets.map(item => (
@@ -122,10 +133,12 @@ const MatchupStory = ({
   matchup,
   leagueName,
   labels,
+  week,
 }: {
   matchup: WeekOneMatchup;
   leagueName: string;
   labels: ResolvedTeamLabels;
+  week: number;
 }) => {
   const [teamOne, teamTwo] = matchupLabels(matchup, labels);
   const winner = matchup.teams.find(team => team.rosterId === matchup.winnerRosterId)!;
@@ -158,6 +171,7 @@ const MatchupStory = ({
       </div>
       <MatchupChartPanel
         leagueId={matchup.leagueId}
+        week={week}
         matchupId={matchup.matchupId}
         teamOne={teamOne}
         teamTwo={teamTwo}
@@ -200,6 +214,24 @@ export const WeekOneRecapView = ({
   report: WeekOneRecap;
   labels: ResolvedTeamLabels;
 }) => {
+  const isOpeningWeek = report.week === 1;
+  const allMatchups = report.leagues.flatMap(league => league.matchups);
+  const allScores = allMatchups.flatMap(matchup => matchup.teams.map(team => team.score));
+  const totalPoints = allScores.reduce((sum, value) => sum + value, 0);
+  const favoriteWins = allMatchups.filter(
+    matchup => matchup.winnerRosterId === matchup.openingFavoriteRosterId,
+  ).length;
+  const closeGames = allMatchups.filter(matchup => {
+    const [teamOne, teamTwo] = matchup.teams;
+    return Math.abs(teamOne.score - teamTwo.score) <= 5;
+  }).length;
+  const publicationDate = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'America/New_York',
+  }).format(new Date(report.publishedAt));
   const matchupByKey = new Map(
     report.leagues.flatMap(league =>
       league.matchups.map(matchup => [matchup.key, { league, matchup }]),
@@ -210,25 +242,25 @@ export const WeekOneRecapView = ({
     <main className={styles.paper}>
       <header className={styles.masthead}>
         <div className={styles.folio}>
-          <span>Vol. II · No. 1</span>
-          <span>Tuesday, September 15, 2026</span>
-          <span>Price: one waiver claim</span>
+          <span>Vol. II · No. {report.week}</span>
+          <span>{publicationDate}</span>
+          <span>Price: {isOpeningWeek ? 'one waiver claim' : 'one lineup regret'}</span>
         </div>
         <p className={styles.brand}>The Gauntlet Gazette</p>
         <div className={styles.editionLine}>
-          <span>Opening-week edition</span>
+          <span>{isOpeningWeek ? 'Opening-week edition' : `Week ${report.week} edition`}</span>
           <span>Throne · Keep · Forge</span>
         </div>
       </header>
 
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>Week 1, reconstructed</p>
+        <p className={styles.eyebrow}>Week {report.week}, reconstructed</p>
         <h1>{report.headline}</h1>
         <p className={styles.subheadline}>{report.subheadline}</p>
         <div className={styles.byline}>
           <span>By The Gauntlet Desk</span>
           <span>
-            <Clock3 aria-hidden="true" /> 12 min read
+            <Clock3 aria-hidden="true" /> {isOpeningWeek ? 12 : 14} min read
           </span>
         </div>
         <div className={styles.lede}>
@@ -238,18 +270,20 @@ export const WeekOneRecapView = ({
         </div>
       </section>
 
-      <section className={styles.ticker} aria-label="Week 1 at a glance">
+      <section className={styles.ticker} aria-label={`Week ${report.week} at a glance`}>
         <div>
-          <strong>4,218.19</strong>
+          <strong>{totalPoints.toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>
           <span>total points</span>
         </div>
         <div>
-          <strong>9–9</strong>
+          <strong>
+            {favoriteWins}–{allMatchups.length - favoriteWins}
+          </strong>
           <span>favorites vs. field</span>
         </div>
         <div>
-          <strong>6</strong>
-          <span>big underdog wins</span>
+          <strong>{isOpeningWeek ? 6 : closeGames}</strong>
+          <span>{isOpeningWeek ? 'big underdog wins' : 'games within five'}</span>
         </div>
         <div>
           <strong>18</strong>
@@ -265,9 +299,11 @@ export const WeekOneRecapView = ({
       <section className={styles.flowDesk} aria-labelledby="flow-desk-title">
         <div className={styles.sectionBanner}>
           <p className={styles.eyebrow}>The game-flow desk</p>
-          <h2 id="flow-desk-title">Eighteen games, sorted by how they felt</h2>
+          <h2 id="flow-desk-title">
+            Eighteen games, sorted by {isOpeningWeek ? 'how they felt' : 'where they hurt'}
+          </h2>
           <p>
-            Final scores flatten time. These five files restore it—using the score curve, the
+            Final scores flatten time. These case files restore it—using the score curve, the
             win-probability curve, and who was still waiting to play.
           </p>
         </div>
@@ -291,6 +327,7 @@ export const WeekOneRecapView = ({
                     matchup={entry.matchup}
                     leagueName={entry.league.shortName}
                     labels={labels}
+                    week={report.week}
                   />
                 );
               })}
@@ -303,7 +340,7 @@ export const WeekOneRecapView = ({
         <div className={styles.sectionBannerDark}>
           <p className={styles.eyebrow}>Permanent ink</p>
           <h2 id="record-book-title">Hall of Fame & Shame</h2>
-          <p>Week 1’s statistical outliers, entered into the ledger.</p>
+          <p>Week {report.week}’s statistical outliers, entered into the ledger.</p>
         </div>
         <div className={styles.recordGrid}>
           {report.records.map(record => (
@@ -323,7 +360,7 @@ export const WeekOneRecapView = ({
       <section className={styles.autopsySection} aria-labelledby="autopsy-title">
         <div className={styles.sectionRule}>
           <p className={styles.eyebrow}>Lineup autopsy</p>
-          <h2 id="autopsy-title">Five losses hiding on the bench</h2>
+          <h2 id="autopsy-title">{report.autopsies.length} losses hiding on the bench</h2>
           <p>One legal swap would have changed each verdict.</p>
         </div>
         <div className={styles.autopsyGrid}>
@@ -359,9 +396,15 @@ export const WeekOneRecapView = ({
 
       <section className={styles.receiptsSection} aria-labelledby="receipts-title">
         <div className={styles.sectionRule}>
-          <p className={styles.eyebrow}>Yesterday’s paper</p>
-          <h2 id="receipts-title">Receipts from 2025</h2>
-          <p>The new season arrived. Some old patterns did not survive the trip.</p>
+          <p className={styles.eyebrow}>{isOpeningWeek ? 'Yesterday’s paper' : 'Through two'}</p>
+          <h2 id="receipts-title">
+            {isOpeningWeek ? 'Receipts from 2025' : 'The early auction market'}
+          </h2>
+          <p>
+            {isOpeningWeek
+              ? 'The new season arrived. Some old patterns did not survive the trip.'
+              : 'Two weeks can reveal production. It cannot declare a season winner.'}
+          </p>
         </div>
         <div className={styles.receiptGrid}>
           {report.receipts.map((receipt, index) => {
@@ -370,9 +413,15 @@ export const WeekOneRecapView = ({
             return (
               <article key={receipt.title}>
                 <span className={styles.receiptNumber}>{String(index + 1).padStart(2, '0')}</span>
-                <span className={styles.receiptArrow}>
-                  {up ? <ArrowUpRight aria-hidden="true" /> : <ArrowDownRight aria-hidden="true" />}
-                </span>
+                {receipt.before != null && receipt.after != null && (
+                  <span className={styles.receiptArrow}>
+                    {up ? (
+                      <ArrowUpRight aria-hidden="true" />
+                    ) : (
+                      <ArrowDownRight aria-hidden="true" />
+                    )}
+                  </span>
+                )}
                 <h3>{receipt.title}</h3>
                 <p>{receipt.summary}</p>
                 <ReceiptVisual receipt={receipt} />
@@ -385,10 +434,12 @@ export const WeekOneRecapView = ({
       <footer className={styles.colophon}>
         <strong>How this edition was made</strong>
         <p>
-          Final totals come from Sleeper. Opening odds come from the frozen Week 1 preview.
-          Game-flow charts use the recorded score and probability feeds; panels marked directional
-          or unreliable carry explicit caveats. Team names are preferred, with authenticated member
-          profiles used before Sleeper display names where available.
+          Final totals come from Sleeper. Opening odds come from the frozen Week {report.week}{' '}
+          preview. Game-flow charts use the recorded score and probability feeds; panels marked
+          directional or unreliable carry explicit caveats. Team names are preferred, with
+          authenticated member profiles used before Sleeper display names where available.
+          {!isOpeningWeek &&
+            ' VORP uses the median benched player at the same position, calculated per Legion and week.'}
         </p>
       </footer>
     </main>
