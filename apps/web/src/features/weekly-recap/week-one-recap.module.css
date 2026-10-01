@@ -35,6 +35,7 @@
 .visualGrid,
 .flowDesk,
 .autopsySection,
+.statsSection,
 .receiptsSection,
 .colophon {
   width: min(1440px, calc(100% - 32px));
@@ -621,6 +622,7 @@
 }
 
 .autopsySection,
+.statsSection,
 .receiptsSection {
   padding-top: 80px;
 }
@@ -669,6 +671,93 @@
 }
 .autopsyBars .flippedBar i {
   background: var(--red);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin-top: 26px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+}
+.statsGrid article {
+  display: flex;
+  min-height: 300px;
+  flex-direction: column;
+  background: var(--paper);
+  padding: 24px;
+}
+.statsCardHeader {
+  display: flex;
+  min-height: 76px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 16px;
+}
+.statsCardHeader span {
+  color: var(--red);
+  font:
+    800 0.62rem/1.2 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.statsCardHeader strong {
+  flex-shrink: 0;
+  color: var(--ink);
+  font:
+    900 2.6rem/0.85 var(--font-geizer),
+    Impact,
+    sans-serif;
+  text-align: right;
+  white-space: nowrap;
+}
+.statsGrid h3 {
+  margin-top: 20px;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+.statsGrid article > p {
+  margin-top: 10px;
+  color: var(--muted-ink);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.statsGrid a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-top: auto;
+  padding-top: 22px;
+  color: var(--red);
+  font:
+    800 0.65rem/1 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.statsGrid a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.statsGrid a svg {
+  width: 14px;
+  height: 14px;
+}
+.statsNote {
+  margin-top: 14px !important;
+  color: var(--muted-ink);
+  font:
+    italic 0.72rem/1.5 ui-sans-serif,
+    system-ui,
+    sans-serif;
 }
 
 .receiptGrid {
@@ -784,6 +873,9 @@
   .autopsyGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 700px) {
@@ -792,6 +884,7 @@
   .visualGrid,
   .flowDesk,
   .autopsySection,
+  .statsSection,
   .receiptsSection,
   .colophon,
   .sectionBannerDark,
@@ -892,6 +985,15 @@
   }
   .autopsyGrid {
     grid-template-columns: 1fr;
+  }
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  .statsGrid article {
+    min-height: 0;
+  }
+  .statsCardHeader strong {
+    font-size: 2rem;
   }
   .autopsyGrid article > p {
     min-height: 0;

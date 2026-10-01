@@ -44,4 +44,12 @@ describe('WEEK_THREE_RECAP', () => {
       expect(autopsy.revisedScore).toBeGreaterThan(autopsy.opponentScore);
     }
   });
+
+  it('links one deep-dive finding to every Stats Hub view', () => {
+    const items = WEEK_THREE_RECAP.statsDeepDive.items;
+
+    expect(items).toHaveLength(8);
+    expect(new Set(items.map(item => item.view)).size).toBe(8);
+    expect(items.every(item => item.href.startsWith('/stats?view='))).toBe(true);
+  });
 });

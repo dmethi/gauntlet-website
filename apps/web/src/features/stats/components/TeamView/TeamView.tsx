@@ -18,7 +18,15 @@ import { PositionAdvantageChart } from './PositionAdvantageChart';
 import { useTeamViewModel } from './useTeamViewModel';
 
 export const TeamView = memo(
-  ({ allTeamEntries, positionsMap, dataset, fromWeek, toWeek, availableWeeks }: TeamViewProps) => {
+  ({
+    allTeamEntries,
+    positionsMap,
+    dataset,
+    fromWeek,
+    toWeek,
+    availableWeeks,
+    initialTeamKey,
+  }: TeamViewProps) => {
     const teamCount = allTeamEntries.length;
     const {
       teamOptions,
@@ -36,6 +44,7 @@ export const TeamView = memo(
       fromWeek,
       toWeek,
       availableWeeks,
+      initialTeamKey,
     });
 
     if (!teamTotals) {

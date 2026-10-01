@@ -31,9 +31,14 @@ export const useTeamViewModel = ({
   fromWeek,
   toWeek,
   availableWeeks,
+  initialTeamKey,
 }: TeamViewProps): TeamViewModel => {
   const [selectedTeamKey, setSelectedTeamKey] = useState<string>(
-    allTeamEntries.length > 0 ? allTeamEntries[0][0] : '',
+    initialTeamKey && allTeamEntries.some(([key]) => key === initialTeamKey)
+      ? initialTeamKey
+      : allTeamEntries.length > 0
+        ? allTeamEntries[0][0]
+        : '',
   );
 
   const teamOptions = useMemo(

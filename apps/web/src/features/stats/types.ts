@@ -113,6 +113,7 @@ export interface TeamViewProps {
   fromWeek: number;
   toWeek: number;
   availableWeeks: number[];
+  initialTeamKey?: string;
 }
 
 /**

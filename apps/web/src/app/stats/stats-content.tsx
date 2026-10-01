@@ -126,6 +126,7 @@ export const StatsContent = ({ dataset, searchParams, leagues }: StatsContentPro
             fromWeek={fromWeek}
             toWeek={toWeek}
             availableWeeks={availableWeeks}
+            initialTeamKey={selectedTeamKey}
           />
         );
       case 'league':

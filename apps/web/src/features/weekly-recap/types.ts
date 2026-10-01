@@ -65,6 +65,22 @@ export interface HistoricalReceipt {
   afterLabel?: string;
 }
 
+export interface StatsDeepDiveItem {
+  view: string;
+  metric: string;
+  title: string;
+  summary: string;
+  href: string;
+  linkLabel: string;
+}
+
+export interface StatsDeepDive {
+  title: string;
+  deck: string;
+  items: readonly StatsDeepDiveItem[];
+  note?: string;
+}
+
 export interface WeeklyRecap {
   season: number;
   week: number;
@@ -76,6 +92,7 @@ export interface WeeklyRecap {
   flowSections: readonly FlowSection[];
   records: readonly RecordBookEntry[];
   autopsies: readonly LineupAutopsy[];
+  statsDeepDive?: StatsDeepDive;
   receipts: readonly HistoricalReceipt[];
   openingOddsSource?: string;
 }

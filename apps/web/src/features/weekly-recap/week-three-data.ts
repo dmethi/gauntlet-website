@@ -485,6 +485,85 @@ export const WEEK_THREE_RECAP = {
       swap: 'Malik Washington over Terrance Ferguson',
     },
   ],
+  statsDeepDive: {
+    title: 'Three Weeks, Eight Lenses',
+    deck: 'The standings say who won. The Stats Hub says how sustainable it looks—and where the points, luck, and decisions actually came from.',
+    note: 'Completed Weeks 1–3 across 36 teams. Schedule luck uses counterfactual schedules; positional figures are starter averages. Transaction activity excludes Week 4, and VORP grades are intentionally omitted pending a 2026 date-boundary correction.',
+    items: [
+      {
+        view: 'Team analysis',
+        metric: '+27.93',
+        title: 'Rithik Has No Positional Debt',
+        summary:
+          'King Henry’s Court leads the Gauntlet with 420.34 points and owns the largest combined edge across QB, RB, WR, TE, and defense: 27.93 points per week above the cross-league medians.',
+        href: '/stats?view=team&team=1387520168866885632-10',
+        linkLabel: 'Open Rithik’s team analysis',
+      },
+      {
+        view: 'League view',
+        metric: '+23.88',
+        title: 'Daal and Aman Own the Running-Back Economy',
+        summary:
+          'Love Warrents Dak Pics has received 64.20 running-back points per week, 23.88 above the 36-team median. No team holds a larger advantage at any tracked position.',
+        href: '/stats?view=league',
+        linkLabel: 'Compare every positional edge',
+      },
+      {
+        view: 'Schedule',
+        metric: '+1.42',
+        title: 'Checkout’s 3–0 Is Running on Credit',
+        summary:
+          'Checkout & Gameplay owns the easiest schedule and the largest gap between actual and modeled wins. Its 300.70 points would average only 0.86 wins across the other 35 schedules.',
+        href: '/stats?view=schedule',
+        linkLabel: 'Inspect the luck tables',
+      },
+      {
+        view: 'Trends',
+        metric: '34→5→1',
+        title: 'Aditya Is the Season’s Sharpest Ascent',
+        summary:
+          'The weekly line climbed from 87.56 to 129.38 to 165.39, a 77.83-point rise and a scoring-rank jump from 34th to fifth to first. The direction is unmistakable; three-week volatility is still the warning label.',
+        href: '/stats?view=trends',
+        linkLabel: 'Follow the weekly trajectories',
+      },
+      {
+        view: 'Scatter',
+        metric: '+35.73',
+        title: 'Lisan Al-Caleb Is Winning the Receiver Split',
+        summary:
+          'Its receivers score 50.90 per week while opposing receivers manage 15.17, the largest WR scoring gap in the field. Early positional splits describe three matchups, not a permanent defense.',
+        href: '/stats?view=scatter',
+        linkLabel: 'Explore the position plots',
+      },
+      {
+        view: 'Transactions',
+        metric: '189',
+        title: 'The Market Has Moved Without a Trade',
+        summary:
+          'Weeks 1–3 produced 123 free-agent moves and 66 successful waivers, but no trades. Nothing is going Wright and Socialized L-Care made 16 moves each while spending $34 and $8, respectively.',
+        href: '/stats?view=transactions',
+        linkLabel: 'Browse the transaction tape',
+      },
+      {
+        view: 'Waiver',
+        metric: '16 bids',
+        title: 'Ollie Gordon Started a Three-Legion Auction',
+        summary:
+          'Sixteen Week 3 claims produced $356 in winning FAAB across the three leagues. Checkout & Gameplay’s full-budget $200 bid was the largest, beating the next Keep offer by $90.',
+        href: '/stats?view=waiver-analysis',
+        linkLabel: 'See the bidding ledger',
+      },
+      {
+        view: 'Start / sit',
+        metric: '66.7%',
+        title: 'Injured Excellence Leads the Decision Table',
+        summary:
+          'Neil leads all 36 managers with a 66.67% weighted score and +23.47 points of impact across 11 qualifying decisions. The model covers threshold-qualified QB, TE, flex, and defense choices—not every lineup slot.',
+        href: '/stats?view=start-sit',
+        linkLabel: 'Review the decision model',
+      },
+    ],
+  },
   receipts: [
     {
       title: 'Jahmyr Gibbs owns the production board',

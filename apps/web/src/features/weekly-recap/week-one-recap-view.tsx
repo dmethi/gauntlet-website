@@ -395,6 +395,35 @@ export const WeekOneRecapView = ({
         </div>
       </section>
 
+      {report.statsDeepDive && (
+        <section className={styles.statsSection} aria-labelledby="stats-deep-dive-title">
+          <div className={styles.sectionRule}>
+            <p className={styles.eyebrow}>The numbers desk</p>
+            <h2 id="stats-deep-dive-title">{report.statsDeepDive.title}</h2>
+            <p>{report.statsDeepDive.deck}</p>
+          </div>
+          <div className={styles.statsGrid}>
+            {report.statsDeepDive.items.map(item => (
+              <article key={item.view}>
+                <div className={styles.statsCardHeader}>
+                  <span>{item.view}</span>
+                  <strong>{item.metric}</strong>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.summary}</p>
+                <a href={item.href}>
+                  {item.linkLabel}
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+              </article>
+            ))}
+          </div>
+          {report.statsDeepDive.note && (
+            <p className={styles.statsNote}>{report.statsDeepDive.note}</p>
+          )}
+        </section>
+      )}
+
       <section className={styles.receiptsSection} aria-labelledby="receipts-title">
         <div className={styles.sectionRule}>
           <p className={styles.eyebrow}>

@@ -146,6 +146,14 @@ describe('useTeamViewModel', () => {
     expect(mockProps.allTeamEntries[0][0]).toBe('league1-team1');
   });
 
+  it('honors a valid team from a deep link', () => {
+    const { result } = renderHook(() =>
+      useTeamViewModel({ ...mockProps, initialTeamKey: 'league1-team2' }),
+    );
+
+    expect(result.current.selectedTeamKey).toBe('league1-team2');
+  });
+
   it('builds team options correctly', () => {
     // Note: This hook requires very complex mock data structure
     // Testing mock data structure only
