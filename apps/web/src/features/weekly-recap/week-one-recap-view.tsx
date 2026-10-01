@@ -215,6 +215,7 @@ export const WeekOneRecapView = ({
   labels: ResolvedTeamLabels;
 }) => {
   const isOpeningWeek = report.week === 1;
+  const weekWord = ['zero', 'one', 'two', 'three'][report.week] ?? String(report.week);
   const allMatchups = report.leagues.flatMap(league => league.matchups);
   const allScores = allMatchups.flatMap(matchup => matchup.teams.map(team => team.score));
   const totalPoints = allScores.reduce((sum, value) => sum + value, 0);
@@ -396,14 +397,16 @@ export const WeekOneRecapView = ({
 
       <section className={styles.receiptsSection} aria-labelledby="receipts-title">
         <div className={styles.sectionRule}>
-          <p className={styles.eyebrow}>{isOpeningWeek ? 'Yesterday’s paper' : 'Through two'}</p>
+          <p className={styles.eyebrow}>
+            {isOpeningWeek ? 'Yesterday’s paper' : `Through ${weekWord}`}
+          </p>
           <h2 id="receipts-title">
             {isOpeningWeek ? 'Receipts from 2025' : 'The early auction market'}
           </h2>
           <p>
             {isOpeningWeek
               ? 'The new season arrived. Some old patterns did not survive the trip.'
-              : 'Two weeks can reveal production. It cannot declare a season winner.'}
+              : `${weekWord[0].toUpperCase()}${weekWord.slice(1)} weeks can reveal production. They cannot declare a season winner.`}
           </p>
         </div>
         <div className={styles.receiptGrid}>
@@ -434,10 +437,11 @@ export const WeekOneRecapView = ({
       <footer className={styles.colophon}>
         <strong>How this edition was made</strong>
         <p>
-          Final totals come from Sleeper. Opening odds come from the frozen Week {report.week}{' '}
-          preview. Game-flow charts use the recorded score and probability feeds; panels marked
-          directional or unreliable carry explicit caveats. Team names are preferred, with
-          authenticated member profiles used before Sleeper display names where available.
+          Final totals come from Sleeper. Opening odds come from{' '}
+          {report.openingOddsSource ?? `the frozen Week ${report.week} preview`}. Game-flow charts
+          use the recorded score and probability feeds; panels marked directional or unreliable
+          carry explicit caveats. Team names are preferred, with authenticated member profiles used
+          before Sleeper display names where available.
           {!isOpeningWeek &&
             ' VORP uses the median benched player at the same position, calculated per Legion and week.'}
         </p>

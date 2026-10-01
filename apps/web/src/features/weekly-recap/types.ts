@@ -77,6 +77,7 @@ export interface WeeklyRecap {
   records: readonly RecordBookEntry[];
   autopsies: readonly LineupAutopsy[];
   receipts: readonly HistoricalReceipt[];
+  openingOddsSource?: string;
 }
 
 export type WeekOneMatchup = WeeklyRecapMatchup;

@@ -9,7 +9,7 @@ export interface ReportListItem {
   description?: string;
 }
 
-export type DedicatedReportRoute = '2026-week-1' | '2026-week-2';
+export type DedicatedReportRoute = '2026-week-1' | '2026-week-2' | '2026-week-3';
 
 export const getDedicatedReportRoute = (
   season: string,
@@ -17,10 +17,22 @@ export const getDedicatedReportRoute = (
 ): DedicatedReportRoute | null => {
   if (season === '2026' && slug === 'week-1') return '2026-week-1';
   if (season === '2026' && slug === 'week-2') return '2026-week-2';
+  if (season === '2026' && slug === 'week-3') return '2026-week-3';
   return null;
 };
 
 export const DEDICATED_REPORTS: ReportListItem[] = [
+  {
+    season: 2026,
+    week: 3,
+    title: 'The Average Came Back. The Middle Did Not.',
+    href: '/competition/reports/2026/week-3',
+    date: '2026-10-01T12:00:00-04:00',
+    tags: ['Week 3', 'Scoring extremes', 'Standings', 'Auction value'],
+    status: 'success',
+    description:
+      'Four teams above 140, fifteen below 100, five unbeaten teams, and four still searching for a win.',
+  },
   {
     season: 2026,
     week: 2,
