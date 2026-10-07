@@ -32,7 +32,7 @@ export const DEDICATED_REPORTS: ReportListItem[] = [
     tags: ['Week 4', 'Unbeaten teams', 'Close games', 'Lineup autopsy'],
     status: 'success',
     description:
-      'Four of five unbeaten teams fell, six games finished within five, and Sid remained perfect.',
+      'Four of five unbeaten teams fell, six games finished within five, and gibuttersnaps remained perfect.',
   },
   {
     season: 2026,

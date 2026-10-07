@@ -313,7 +313,7 @@ export const WEEK_THREE_RECAP = {
           headline: 'Gibuttersnaps Won Pretty and Stayed Perfect',
           deck: 'Last week’s 81-point survivor returned with an 119-point upset.',
           recap:
-            'Bo Nix, Drake London, and Juwan Johnson combined for 67.84 as Gibuttersnaps beat Rafa 118.99–100.56. The opening line made Rafa a slight favorite, but Sid took control and moved to 3–0 one week after posting the third-lowest winning score in registered history.',
+            'Bo Nix, Drake London, and Juwan Johnson combined for 67.84 as Gibuttersnaps beat Rafa 118.99–100.56. The opening line made Rafa a slight favorite, but Gibuttersnaps took control and moved to 3–0 one week after posting the third-lowest winning score in registered history.',
           decisiveLabel: '3–0 · Opening chance: 47.9%',
           probabilityQuality: 'reliable',
         },

@@ -9,7 +9,7 @@ export const WEEK_FOUR_RECAP = {
     'Only one of five unbeaten teams survived; the top score hit 166.77, and 6 games finished within five points.',
   lede: [
     'Week 4 produced 4,158.87 points across 36 teams, an average of 115.52 and a median of 118.89. The range ran from 74.52 to 166.77.',
-    'Four of the five teams that entered 3–0 lost. The lone survivor was Sid’s gibuttersnaps, which scored 127.96 and beat Can you tuten my face 124.35. The unbeaten tier collapsed from five teams to one in a single week.',
+    'Four of the five teams that entered 3–0 lost. The lone survivor was gibuttersnaps, which scored 127.96 and beat Can you tuten my face 124.35. The unbeaten tier collapsed from five teams to one in a single week.',
     '6 games were decided by five points or fewer. The closest ended 130.61–129.83 in the Forge. These are the 18 final matchups, with starter points checked against Sleeper’s Week 4 box scores.',
   ],
   leagues: [
@@ -508,7 +508,7 @@ export const WEEK_FOUR_RECAP = {
             },
           ],
           winnerRosterId: 5,
-          headline: 'Sid Stayed Perfect by 3.61',
+          headline: 'Gibuttersnaps Stayed Perfect by 3.61',
           deck: 'gibuttersnaps survived Can you tuten my face 127.96–124.35 to reach 4–0.',
           recap:
             'gibuttersnaps beat Can you tuten my face 127.96–124.35. Chuba Hubbard scored 28.40; SEA D/ST added 17.70. The margin left almost no room for a missed start.',
@@ -577,7 +577,7 @@ export const WEEK_FOUR_RECAP = {
       rank: null,
       rankLabel: 'Five unbeaten became one',
       summary:
-        'Shivang, Checkout, Rithik, and Lisan Al-Caleb all lost. Sid’s gibuttersnaps stands alone at 4–0.',
+        'Shivang, Checkout, Rithik, and Lisan Al-Caleb all lost. Gibuttersnaps stands alone at 4–0.',
     },
     {
       title: 'The Forge’s Fraction',
@@ -655,7 +655,7 @@ export const WEEK_FOUR_RECAP = {
   ],
   receipts: [
     {
-      title: 'Sid owns the last perfect record',
+      title: 'Gibuttersnaps owns the last perfect record',
       summary: 'gibuttersnaps moved to 4–0 with a 127.96–124.35 win over Can you tuten my face.',
     },
     {

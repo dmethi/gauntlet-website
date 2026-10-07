@@ -113,7 +113,9 @@ const GameLine = ({
 export const WeekFourDeepDives = () => {
   const { luckiest, unluckiest } = rankScheduleLuck(snapshot.teams);
   const { thrillers, finishes } = rankGames(snapshot.games);
-  const sid = snapshot.teams.find(team => team.league === 'Forge' && team.rosterId === 5)!;
+  const gibuttersnaps = snapshot.teams.find(
+    team => team.league === 'Forge' && team.rosterId === 5,
+  )!;
   const harry = snapshot.teams.find(team => team.league === 'Keep' && team.rosterId === 5)!;
 
   return (
@@ -123,9 +125,9 @@ export const WeekFourDeepDives = () => {
           <span className={styles.eyebrow}>Supplement I · Schedule desk</span>
           <h2 id="luck-desk-title">Fortune chose its favorites</h2>
           <p>
-            Sid is 4–0. Put his same four scores on the other 35 schedules and he averages only{' '}
-            {format(sid.scheduleExpected)} wins. Harry has {format(harry.allPlayExpected)} all-play
-            expected wins and a 2–2 record.
+            Gibuttersnaps is 4–0. Put those same four scores on the other 35 schedules and the team
+            averages only {format(gibuttersnaps.scheduleExpected)} wins. Harry has{' '}
+            {format(harry.allPlayExpected)} all-play expected wins and a 2–2 record.
           </p>
         </header>
         <div className={styles.luckColumns}>
