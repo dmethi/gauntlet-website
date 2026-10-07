@@ -9,7 +9,7 @@ export interface ReportListItem {
   description?: string;
 }
 
-export type DedicatedReportRoute = '2026-week-1' | '2026-week-2' | '2026-week-3';
+export type DedicatedReportRoute = '2026-week-1' | '2026-week-2' | '2026-week-3' | '2026-week-4';
 
 export const getDedicatedReportRoute = (
   season: string,
@@ -18,10 +18,22 @@ export const getDedicatedReportRoute = (
   if (season === '2026' && slug === 'week-1') return '2026-week-1';
   if (season === '2026' && slug === 'week-2') return '2026-week-2';
   if (season === '2026' && slug === 'week-3') return '2026-week-3';
+  if (season === '2026' && slug === 'week-4') return '2026-week-4';
   return null;
 };
 
 export const DEDICATED_REPORTS: ReportListItem[] = [
+  {
+    season: 2026,
+    week: 4,
+    title: 'The Week the Perfect Records Broke',
+    href: '/competition/reports/2026/week-4',
+    date: '2026-10-07T12:00:00-04:00',
+    tags: ['Week 4', 'Unbeaten teams', 'Close games', 'Lineup autopsy'],
+    status: 'success',
+    description:
+      'Four of five unbeaten teams fell, six games finished within five, and Sid remained perfect.',
+  },
   {
     season: 2026,
     week: 3,

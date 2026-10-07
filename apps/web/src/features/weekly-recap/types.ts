@@ -14,8 +14,8 @@ export interface WeeklyRecapMatchup {
   matchupId: number;
   teams: readonly [RecapTeam, RecapTeam];
   winnerRosterId: number;
-  openingFavoriteRosterId: number;
-  openingWinProbability: number;
+  openingFavoriteRosterId?: number;
+  openingWinProbability?: number;
   headline: string;
   deck: string;
   recap: string;
