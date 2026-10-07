@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
 import { loadWeeklyRecapTeamLabels } from './identity.server';
 import { WeekOneRecapView } from './week-one-recap-view';
+import { WeekFourDeepDives } from './week-four-deep-dives';
 import { WEEK_FOUR_RECAP } from './week-four-data';
 
 export const WEEK_FOUR_RECAP_METADATA: Metadata = {
@@ -14,5 +15,7 @@ export const WeekFourRecapPage = async () => {
   const userId = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? (await auth()).userId : null;
   const labels = await loadWeeklyRecapTeamLabels(WEEK_FOUR_RECAP, Boolean(userId));
 
-  return <WeekOneRecapView report={WEEK_FOUR_RECAP} labels={labels} />;
+  return (
+    <WeekOneRecapView report={WEEK_FOUR_RECAP} labels={labels} supplement={<WeekFourDeepDives />} />
+  );
 };

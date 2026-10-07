@@ -1,4 +1,5 @@
 import { ArrowDownRight, ArrowUpRight, Clock3, Trophy } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { MatchupChartPanel } from './matchup-chart-panel';
 import type { HistoricalReceipt, ResolvedTeamLabels, WeekOneMatchup, WeekOneRecap } from './types';
 import styles from './week-one-recap.module.css';
@@ -50,7 +51,9 @@ const ScoringDistribution = ({ report }: { report: WeekOneRecap }) => {
           <h2 id="score-distribution-title">
             {report.week === 1
               ? 'Thirty-six scores, one crowded middle'
-              : 'The points disappeared; the outliers did not'}
+              : report.week === 4
+                ? 'The points came back in force'
+                : 'The points disappeared; the outliers did not'}
           </h2>
         </div>
         <p>
@@ -210,9 +213,11 @@ const ReceiptVisual = ({ receipt }: { receipt: HistoricalReceipt }) => {
 export const WeekOneRecapView = ({
   report,
   labels,
+  supplement,
 }: {
   report: WeekOneRecap;
   labels: ResolvedTeamLabels;
+  supplement?: ReactNode;
 }) => {
   const isOpeningWeek = report.week === 1;
   const weekWord = ['zero', 'one', 'two', 'three', 'four'][report.week] ?? String(report.week);
@@ -468,6 +473,8 @@ export const WeekOneRecapView = ({
           })}
         </div>
       </section>
+
+      {supplement}
 
       <footer className={styles.colophon}>
         <strong>How this edition was made</strong>
