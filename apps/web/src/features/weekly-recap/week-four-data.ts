@@ -10,7 +10,7 @@ export const WEEK_FOUR_RECAP = {
   lede: [
     'Week 4 produced 4,158.87 points across 36 teams, an average of 115.52 and a median of 118.89. The range ran from 74.52 to 166.77.',
     'Four of the five teams that entered 3–0 lost. The lone survivor was gibuttersnaps, which scored 127.96 and beat Can you tuten my face 124.35. The unbeaten tier collapsed from five teams to one in a single week.',
-    '6 games were decided by five points or fewer. The closest ended 130.61–129.83 in the Forge. These are the 18 final matchups, with starter points checked against Sleeper’s Week 4 box scores.',
+    'Six games were decided by five points or fewer, and opening favorites finished 10–8. The closest ended 130.61–129.83 in the Forge. These are the 18 final matchups, with starter points checked against Sleeper’s Week 4 box scores.',
   ],
   leagues: [
     {
@@ -40,10 +40,12 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Crown and Pound beat Coker Laced Flowers 102.23–99.34. Nico Collins scored 27.30; Jonathan Taylor added 24.20. The margin left almost no room for a missed start.',
           decisiveLabel: 'Nico Collins: 27.30 · Margin: 2.89',
-          probabilityQuality: 'unreliable',
+          probabilityQuality: 'directional',
           probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+            'The recorded final did not match Sleeper’s corrected final; treat the game-flow chart as directional.',
           featured: true,
+          openingFavoriteRosterId: 1,
+          openingWinProbability: 0.5537,
         },
         {
           key: '1387520086092312576:4:2',
@@ -67,10 +69,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'cescott25 beat Something’s Gotta Gibbs 156.97–131.63. Tetairoa McMillan scored 37.20; Josh Allen added 18.02. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Tetairoa McMillan: 37.20 · Margin: 25.34',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 9,
+          openingWinProbability: 0.6837,
         },
         {
           key: '1387520086092312576:4:3',
@@ -94,10 +96,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'benweinfeld beat Saquon Hussein 121.90–95.98. Kenneth Walker scored 32.40; Puka Nacua added 23.20. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Kenneth Walker: 32.40 · Margin: 25.92',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 11,
+          openingWinProbability: 0.6804,
         },
         {
           key: '1387520086092312576:4:4',
@@ -121,10 +123,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Injured Excellence beat ziyanp22 138.79–83.18. Emanuel Wilson scored 25.50; Alvin Kamara added 20.80. The result was one of the week’s clearest routs.',
           decisiveLabel: 'Emanuel Wilson: 25.50 · Margin: 55.61',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 10,
+          openingWinProbability: 0.6127,
         },
         {
           key: '1387520086092312576:4:5',
@@ -148,10 +150,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Two Williams, One Cup beat Marginal Returns 108.38–105.91. Kyren Williams scored 33.70; Quinshon Judkins added 20.10. The margin left almost no room for a missed start.',
           decisiveLabel: 'Kyren Williams: 33.70 · Margin: 2.47',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 12,
+          openingWinProbability: 0.6023,
         },
         {
           key: '1387520086092312576:4:6',
@@ -175,10 +177,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Love Warrents Dak Pics beat scboom5 119.38–115.32. Bijan Robinson scored 29.20; Sam LaPorta added 18.40. The margin left almost no room for a missed start.',
           decisiveLabel: 'Bijan Robinson: 29.20 · Margin: 4.06',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 3,
+          openingWinProbability: 0.7848,
         },
       ],
     },
@@ -209,10 +211,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Ja’Marrican Psycho beat Checkout & Gameplay 139.70–128.78. Kyren Williams scored 33.70; Alvin Kamara added 20.80. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Kyren Williams: 33.70 · Margin: 10.92',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 1,
+          openingWinProbability: 0.6309,
         },
         {
           key: '1387520168866885632:4:2',
@@ -236,10 +238,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'lukebowsh beat King Henry’s Court 121.58–115.12. C.J. Stroud scored 23.58; Rhamondre Stevenson added 18.40. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'C.J. Stroud: 23.58 · Margin: 6.46',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 10,
+          openingWinProbability: 0.5775,
         },
         {
           key: '1387520168866885632:4:3',
@@ -263,10 +265,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Team Lil Bros beat Jonathon Taylor Mayde 105.92–82.16. CeeDee Lamb scored 32.80; Ashton Jeanty added 17.10. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'CeeDee Lamb: 32.80 · Margin: 23.76',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 2,
+          openingWinProbability: 0.7093,
         },
         {
           key: '1387520168866885632:4:4',
@@ -290,10 +292,12 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'the beggar king beat vchak 127.24–118.39. Emanuel Wilson scored 25.50; Romeo Doubs added 20.80. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Emanuel Wilson: 25.50 · Margin: 8.85',
-          probabilityQuality: 'unreliable',
+          probabilityQuality: 'directional',
           probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+            'The recorded final did not match Sleeper’s corrected final; treat the game-flow chart as directional.',
           featured: false,
+          openingFavoriteRosterId: 8,
+          openingWinProbability: 0.5323,
         },
         {
           key: '1387520168866885632:4:5',
@@ -317,10 +321,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'vayyala beat akmadurai 96.27–74.52. Nico Collins scored 27.30; Brock Purdy added 21.12. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Nico Collins: 27.30 · Margin: 21.75',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 7,
+          openingWinProbability: 0.515,
         },
         {
           key: '1387520168866885632:4:6',
@@ -344,10 +348,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'JimothyGreene beat HarrytheHitman9 166.77–124.58. Bijan Robinson scored 29.20; Chuba Hubbard added 28.40. The result was one of the week’s clearest routs.',
           decisiveLabel: 'Bijan Robinson: 29.20 · Margin: 42.19',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 5,
+          openingWinProbability: 0.6532,
         },
       ],
     },
@@ -378,10 +382,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'krishnik beat Mexican Cartel 139.88–90.97. Jonathan Taylor scored 24.20; C.J. Stroud added 23.58. The result was one of the week’s clearest routs.',
           decisiveLabel: 'Jonathan Taylor: 24.20 · Margin: 48.91',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 2,
+          openingWinProbability: 0.6023,
         },
         {
           key: '1387520236663615488:4:2',
@@ -405,10 +409,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'aaryanshetty beat Loveland Island 112.33–85.82. Nico Collins scored 27.30; Rhamondre Stevenson added 18.40. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Nico Collins: 27.30 · Margin: 26.51',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 3,
+          openingWinProbability: 0.5483,
         },
         {
           key: '1387520236663615488:4:3',
@@ -432,10 +436,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'brendenclerget beat aditya22 128.18–124.82. Tetairoa McMillan scored 37.20; Kyren Williams added 33.70. The margin left almost no room for a missed start.',
           decisiveLabel: 'Tetairoa McMillan: 37.20 · Margin: 3.36',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 8,
+          openingWinProbability: 0.6724,
         },
         {
           key: '1387520236663615488:4:4',
@@ -459,10 +463,10 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'Sahilmodi8 beat Lisan Al-Caleb 106.92–77.16. Emanuel Wilson scored 25.50; Brock Purdy added 21.12. The two leading starters gave the winner the decisive base.',
           decisiveLabel: 'Emanuel Wilson: 25.50 · Margin: 29.76',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+          probabilityQuality: 'reliable',
           featured: false,
+          openingFavoriteRosterId: 9,
+          openingWinProbability: 0.5797,
         },
         {
           key: '1387520236663615488:4:5',
@@ -482,14 +486,14 @@ export const WEEK_FOUR_RECAP = {
           ],
           winnerRosterId: 1,
           headline: 'Ashwin Took the Week by 0.78',
-          deck: 'CeeDee Lamb’s 32.80 anchored the closest finish in all three Legions.',
+          deck: 'A two-minute probability jump turned a 5% chance into a 94% chance near the finish.',
           recap:
-            'ashwindandapani1 beat Socialized L-Care 130.61–129.83. CeeDee Lamb scored 32.80; Romeo Doubs added 20.80. The margin left almost no room for a missed start.',
-          decisiveLabel: 'CeeDee Lamb: 32.80 · Margin: 0.78',
-          probabilityQuality: 'unreliable',
-          probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+            'CeeDee Lamb scored 32.80 for Ashwin, but Socialized L-Care still held a slim live edge late Monday. At 11:14 p.m. ET, driveFF gave Ashwin only a 5% chance. Two minutes later, after the opponent’s recorded score fell by 0.70, that chance was 94%. Sleeper’s final settled at 130.61–129.83, the closest finish of Week 4.',
+          decisiveLabel: '5% → 94% in two minutes · Margin: 0.78',
+          probabilityQuality: 'reliable',
           featured: true,
+          openingFavoriteRosterId: 1,
+          openingWinProbability: 0.6098,
         },
         {
           key: '1387520236663615488:4:6',
@@ -513,10 +517,12 @@ export const WEEK_FOUR_RECAP = {
           recap:
             'gibuttersnaps beat Can you tuten my face 127.96–124.35. Chuba Hubbard scored 28.40; SEA D/ST added 17.70. The margin left almost no room for a missed start.',
           decisiveLabel: 'Chuba Hubbard: 28.40 · Margin: 3.61',
-          probabilityQuality: 'unreliable',
+          probabilityQuality: 'directional',
           probabilityNote:
-            'Opening probability was not verified for this report; interpret any chart with caution.',
+            'The recorded final did not match Sleeper’s corrected final; treat the game-flow chart as directional.',
           featured: true,
+          openingFavoriteRosterId: 6,
+          openingWinProbability: 0.8386,
         },
       ],
     },
@@ -667,4 +673,5 @@ export const WEEK_FOUR_RECAP = {
       summary: 'Ashwin’s 130.61 edged Socialized L-Care’s 129.83 by 0.78 points.',
     },
   ],
+  openingOddsSource: 'the first recorded Week 4 driveFF sample',
 } satisfies WeeklyRecap;

@@ -24,4 +24,12 @@ describe('WEEK_FOUR_RECAP', () => {
       expect(autopsy.revisedScore).toBeGreaterThan(autopsy.opponentScore);
     }
   });
+
+  it('uses a recorded opening favorite for every matchup', () => {
+    for (const matchup of matchups) {
+      expect(matchup.teams.map(team => team.rosterId)).toContain(matchup.openingFavoriteRosterId);
+      expect(matchup.openingWinProbability).toBeGreaterThanOrEqual(0.5);
+      expect(matchup.openingWinProbability).toBeLessThanOrEqual(1);
+    }
+  });
 });
