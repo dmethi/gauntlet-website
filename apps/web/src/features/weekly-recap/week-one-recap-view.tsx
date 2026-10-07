@@ -1,4 +1,5 @@
 import { ArrowDownRight, ArrowUpRight, Clock3, Trophy } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { MatchupChartPanel } from './matchup-chart-panel';
 import type { HistoricalReceipt, ResolvedTeamLabels, WeekOneMatchup, WeekOneRecap } from './types';
 import styles from './week-one-recap.module.css';
@@ -50,7 +51,9 @@ const ScoringDistribution = ({ report }: { report: WeekOneRecap }) => {
           <h2 id="score-distribution-title">
             {report.week === 1
               ? 'Thirty-six scores, one crowded middle'
-              : 'The points disappeared; the outliers did not'}
+              : report.week === 4
+                ? 'The points came back in force'
+                : 'The points disappeared; the outliers did not'}
           </h2>
         </div>
         <p>
@@ -95,7 +98,7 @@ const OpeningLineLedger = ({
         league: league.shortName,
         winner: getLabel(labels, matchup.leagueId, winner.rosterId, winner.fallbackLabel),
         loser: getLabel(labels, matchup.leagueId, loser.rosterId, loser.fallbackLabel),
-        chance: 1 - matchup.openingWinProbability,
+        chance: 1 - (matchup.openingWinProbability ?? 0.5),
         final: `${score(winner.score)}–${score(loser.score)}`,
       };
     })
@@ -210,14 +213,17 @@ const ReceiptVisual = ({ receipt }: { receipt: HistoricalReceipt }) => {
 export const WeekOneRecapView = ({
   report,
   labels,
+  supplement,
 }: {
   report: WeekOneRecap;
   labels: ResolvedTeamLabels;
+  supplement?: ReactNode;
 }) => {
   const isOpeningWeek = report.week === 1;
-  const weekWord = ['zero', 'one', 'two', 'three'][report.week] ?? String(report.week);
+  const weekWord = ['zero', 'one', 'two', 'three', 'four'][report.week] ?? String(report.week);
   const allMatchups = report.leagues.flatMap(league => league.matchups);
   const allScores = allMatchups.flatMap(matchup => matchup.teams.map(team => team.score));
+  const hasOpeningOdds = allMatchups.every(matchup => matchup.openingWinProbability != null);
   const totalPoints = allScores.reduce((sum, value) => sum + value, 0);
   const favoriteWins = allMatchups.filter(
     matchup => matchup.winnerRosterId === matchup.openingFavoriteRosterId,
@@ -278,9 +284,9 @@ export const WeekOneRecapView = ({
         </div>
         <div>
           <strong>
-            {favoriteWins}–{allMatchups.length - favoriteWins}
+            {hasOpeningOdds ? `${favoriteWins}–${allMatchups.length - favoriteWins}` : '—'}
           </strong>
-          <span>favorites vs. field</span>
+          <span>{hasOpeningOdds ? 'favorites vs. field' : 'opening odds unavailable'}</span>
         </div>
         <div>
           <strong>{isOpeningWeek ? 6 : closeGames}</strong>
@@ -294,7 +300,7 @@ export const WeekOneRecapView = ({
 
       <div className={styles.visualGrid}>
         <ScoringDistribution report={report} />
-        <OpeningLineLedger report={report} labels={labels} />
+        {hasOpeningOdds && <OpeningLineLedger report={report} labels={labels} />}
       </div>
 
       <section className={styles.flowDesk} aria-labelledby="flow-desk-title">
@@ -304,8 +310,9 @@ export const WeekOneRecapView = ({
             Eighteen games, sorted by {isOpeningWeek ? 'how they felt' : 'where they hurt'}
           </h2>
           <p>
-            Final scores flatten time. These case files restore it—using the score curve, the
-            win-probability curve, and who was still waiting to play.
+            {hasOpeningOdds
+              ? 'Final scores flatten time. These case files restore it—using the score curve, the win-probability curve, and who was still waiting to play.'
+              : 'Final scores and starter production tell the story of each matchup.'}
           </p>
         </div>
 
@@ -430,7 +437,11 @@ export const WeekOneRecapView = ({
             {isOpeningWeek ? 'Yesterday’s paper' : `Through ${weekWord}`}
           </p>
           <h2 id="receipts-title">
-            {isOpeningWeek ? 'Receipts from 2025' : 'The early auction market'}
+            {isOpeningWeek
+              ? 'Receipts from 2025'
+              : report.week === 4
+                ? 'The Week 4 evidence'
+                : 'The early auction market'}
           </h2>
           <p>
             {isOpeningWeek
@@ -463,15 +474,19 @@ export const WeekOneRecapView = ({
         </div>
       </section>
 
+      {supplement}
+
       <footer className={styles.colophon}>
         <strong>How this edition was made</strong>
         <p>
-          Final totals come from Sleeper. Opening odds come from{' '}
-          {report.openingOddsSource ?? `the frozen Week ${report.week} preview`}. Game-flow charts
-          use the recorded score and probability feeds; panels marked directional or unreliable
-          carry explicit caveats. Team names are preferred, with authenticated member profiles used
-          before Sleeper display names where available.
+          Final totals and starter points come from Sleeper.
+          {hasOpeningOdds &&
+            ` Opening odds come from ${report.openingOddsSource ?? `the frozen Week ${report.week} preview`}.`}{' '}
+          Game-flow charts use recorded score and probability feeds when available; panels marked
+          directional or unreliable carry explicit caveats. Team names are preferred, with
+          authenticated member profiles used before Sleeper display names where available.
           {!isOpeningWeek &&
+            report.week < 4 &&
             ' VORP uses the median benched player at the same position, calculated per Legion and week.'}
         </p>
       </footer>

@@ -1,0 +1,197 @@
+.supplement {
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 80px 0 20px;
+}
+.desk + .desk {
+  margin-top: 94px;
+}
+.deskHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(270px, 0.9fr);
+  align-items: end;
+  gap: 24px 60px;
+  border-top: 5px double var(--ink);
+  padding-top: 22px;
+}
+.eyebrow,
+.gameKicker {
+  color: var(--red);
+  font:
+    800 0.67rem/1.2 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.eyebrow {
+  grid-column: 1 / -1;
+}
+.deskHeader h2 {
+  max-width: 13ch;
+  font:
+    900 clamp(3.5rem, 7vw, 7rem) / 0.83 var(--font-geizer),
+    Impact,
+    sans-serif;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+.deskHeader > p {
+  max-width: 38rem;
+  font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+  line-height: 1.27;
+}
+.luckColumns,
+.gamesColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px;
+  margin-top: 56px;
+}
+.luckColumns h3,
+.gamesColumns h3 {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 12px;
+  font:
+    900 1.1rem/1 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.luckColumns ol,
+.gamesColumns ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.luckRow,
+.gameLine {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--rule);
+  padding: 18px 0;
+}
+.rank {
+  align-self: start;
+  color: var(--red);
+  font:
+    900 1.35rem/1 var(--font-geizer),
+    Impact,
+    sans-serif;
+}
+.luckIdentity,
+.luckNumbers,
+.gameIdentity,
+.index {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.luckIdentity strong,
+.gameIdentity a {
+  font-size: clamp(1.03rem, 1.35vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.08;
+}
+.luckIdentity > span,
+.luckNumbers > span,
+.gameDetail,
+.index > span {
+  margin-top: 5px;
+  color: var(--muted-ink);
+  font:
+    700 0.66rem/1.3 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.03em;
+}
+.luckNumbers,
+.index {
+  align-items: flex-end;
+  text-align: right;
+}
+.luckNumbers strong,
+.index strong {
+  color: var(--red);
+  font:
+    900 2.4rem/0.85 var(--font-geizer),
+    Impact,
+    sans-serif;
+  white-space: nowrap;
+}
+.gameIdentity {
+  gap: 3px;
+}
+.gameIdentity a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.gameIdentity a:hover {
+  color: var(--red);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gameIdentity a span {
+  color: var(--muted-ink);
+  font-style: italic;
+  font-weight: 400;
+}
+.method {
+  max-width: 75rem;
+  margin-top: 26px;
+  border-top: 1px solid var(--ink);
+  padding-top: 12px;
+  color: var(--muted-ink);
+  font:
+    0.78rem/1.5 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+.method a {
+  color: var(--red);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 980px) {
+  .deskHeader {
+    grid-template-columns: 1fr;
+  }
+  .luckColumns,
+  .gamesColumns {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+}
+@media (max-width: 700px) {
+  .supplement {
+    width: min(100% - 22px, 1440px);
+    padding-top: 60px;
+  }
+  .desk + .desk {
+    margin-top: 70px;
+  }
+  .deskHeader h2 {
+    font-size: clamp(3.2rem, 14vw, 5rem);
+  }
+  .luckColumns,
+  .gamesColumns {
+    margin-top: 36px;
+  }
+  .luckRow,
+  .gameLine {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  .luckNumbers strong,
+  .index strong {
+    font-size: 1.9rem;
+  }
+  .luckNumbers > span,
+  .index > span {
+    max-width: 74px;
+  }
+}
