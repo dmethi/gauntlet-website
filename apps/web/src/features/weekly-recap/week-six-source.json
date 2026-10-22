@@ -1,0 +1,4313 @@
+{
+  "season": 2026,
+  "week": 6,
+  "capturedAt": "2026-10-22T15:14:21.491972+00:00",
+  "sources": {
+    "scores": "https://api.sleeper.app/v1/league/{leagueId}/matchups/{week}",
+    "identities": "https://api.sleeper.app/v1/league/{leagueId}/users",
+    "rosters": "https://api.sleeper.app/v1/league/{leagueId}/rosters",
+    "players": "https://api.sleeper.app/v1/players/nfl",
+    "gameFlow": "https://driveff.com/api/v1/live-odds/{leagueId}/6/{matchupId}"
+  },
+  "methodology": "Each Legion processed independently. Standings recomputed from corrected Weeks 1–6 box scores. All-play expected wins sum the weekly fraction of the other 11 Legion teams beaten (ties count half). Winning swaps replace one starter with a bench player and permit reassigning existing starters across the actual QB/RB/RB/WR/WR/TE/FLEX/FLEX/DEF slots. Retrospective only; no projection or injury-availability claim.",
+  "leagues": [
+    {
+      "leagueId": "1387520086092312576",
+      "name": "Legion I: The Throne",
+      "shortName": "Throne",
+      "rosterSlots": [
+        "QB",
+        "RB",
+        "RB",
+        "WR",
+        "WR",
+        "TE",
+        "FLEX",
+        "FLEX",
+        "DEF",
+        "BN",
+        "BN",
+        "BN",
+        "BN",
+        "BN",
+        "BN"
+      ],
+      "standings": [
+        {
+          "rosterId": 3,
+          "label": "Love Warrents Dak Pics",
+          "wins": 5,
+          "losses": 1,
+          "pointsFor": 754.41,
+          "pointsAgainst": 576.62,
+          "weeklyScores": [130.47, 113.86, 149.49, 119.38, 140.49, 100.72],
+          "opponentScores": [63.75, 123.15, 81.73, 115.32, 103.52, 89.15],
+          "allPlayExpectedWins": 4.3636,
+          "winGap": 0.6364
+        },
+        {
+          "rosterId": 11,
+          "label": "benweinfeld",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 752.75,
+          "pointsAgainst": 647.18,
+          "weeklyScores": [103.9, 126.88, 114.09, 121.9, 142.05, 143.93],
+          "opponentScores": [139.35, 76.82, 133.59, 95.98, 108.44, 93.0],
+          "allPlayExpectedWins": 4.5455,
+          "winGap": -0.5455
+        },
+        {
+          "rosterId": 9,
+          "label": "cescott25",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 748.64,
+          "pointsAgainst": 662.63,
+          "weeklyScores": [128.76, 127.62, 108.46, 156.97, 137.68, 89.15],
+          "opponentScores": [141.52, 91.29, 92.58, 131.63, 104.89, 100.72],
+          "allPlayExpectedWins": 4.0,
+          "winGap": 0.0
+        },
+        {
+          "rosterId": 6,
+          "label": "scboom5",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 734.15,
+          "pointsAgainst": 664.14,
+          "weeklyScores": [123.71, 138.43, 133.59, 115.32, 132.1, 91.0],
+          "opponentScores": [90.86, 107.33, 114.09, 119.38, 147.28, 85.2],
+          "allPlayExpectedWins": 4.0,
+          "winGap": 0.0
+        },
+        {
+          "rosterId": 10,
+          "label": "Injured Excellence",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 680.15,
+          "pointsAgainst": 595.26,
+          "weeklyScores": [139.35, 107.33, 97.33, 138.79, 91.79, 105.56],
+          "opponentScores": [103.9, 138.43, 101.6, 83.18, 68.23, 99.92],
+          "allPlayExpectedWins": 3.1818,
+          "winGap": 0.8182
+        },
+        {
+          "rosterId": 2,
+          "label": "Coker Laced Flowers",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 686.66,
+          "pointsAgainst": 640.58,
+          "weeklyScores": [141.52, 128.21, 86.12, 99.34, 101.6, 129.87],
+          "opponentScores": [128.76, 69.1, 98.58, 102.23, 99.97, 141.94],
+          "allPlayExpectedWins": 3.1818,
+          "winGap": -0.1818
+        },
+        {
+          "rosterId": 12,
+          "label": "Marginal Returns",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 677.9,
+          "pointsAgainst": 705.02,
+          "weeklyScores": [63.75, 109.38, 109.64, 105.91, 147.28, 141.94],
+          "opponentScores": [130.47, 92.16, 112.04, 108.38, 132.1, 129.87],
+          "allPlayExpectedWins": 3.3636,
+          "winGap": -0.3636
+        },
+        {
+          "rosterId": 4,
+          "label": "Two Williams, One Cup",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 564.91,
+          "pointsAgainst": 656.16,
+          "weeklyScores": [90.86, 76.82, 101.6, 108.38, 103.52, 83.73],
+          "opponentScores": [123.71, 126.88, 97.33, 105.91, 140.49, 61.84],
+          "allPlayExpectedWins": 1.5455,
+          "winGap": 1.4545
+        },
+        {
+          "rosterId": 7,
+          "label": "Something’s Gotta Gibbs",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 681.17,
+          "pointsAgainst": 745.43,
+          "weeklyScores": [114.46, 123.15, 112.04, 131.63, 99.97, 99.92],
+          "opponentScores": [157.8, 113.86, 109.64, 156.97, 101.6, 105.56],
+          "allPlayExpectedWins": 3.3636,
+          "winGap": -1.3636
+        },
+        {
+          "rosterId": 1,
+          "label": "Crown and Pound",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 631.81,
+          "pointsAgainst": 754.28,
+          "weeklyScores": [157.8, 92.16, 81.73, 102.23, 104.89, 93.0],
+          "opponentScores": [114.46, 109.38, 149.49, 99.34, 137.68, 143.93],
+          "allPlayExpectedWins": 2.4545,
+          "winGap": -0.4545
+        },
+        {
+          "rosterId": 8,
+          "label": "ziyanp22",
+          "wins": 1,
+          "losses": 5,
+          "pointsFor": 559.2,
+          "pointsAgainst": 685.08,
+          "weeklyScores": [92.51, 91.29, 98.58, 83.18, 108.44, 85.2],
+          "opponentScores": [99.5, 127.62, 86.12, 138.79, 142.05, 91.0],
+          "allPlayExpectedWins": 1.4545,
+          "winGap": -0.4545
+        },
+        {
+          "rosterId": 5,
+          "label": "Saquon Hussein",
+          "wins": 1,
+          "losses": 5,
+          "pointsFor": 487.23,
+          "pointsAgainst": 626.6,
+          "weeklyScores": [99.5, 69.1, 92.58, 95.98, 68.23, 61.84],
+          "opponentScores": [92.51, 128.21, 108.46, 121.9, 91.79, 83.73],
+          "allPlayExpectedWins": 0.5455,
+          "winGap": 0.4545
+        }
+      ],
+      "matchups": [
+        {
+          "key": "1387520086092312576:6:1",
+          "matchupId": 1,
+          "teams": [
+            {
+              "rosterId": 2,
+              "label": "Coker Laced Flowers",
+              "score": 129.87,
+              "starters": [
+                {
+                  "id": "96",
+                  "name": "Aaron Rodgers",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 16.02,
+                  "slot": "QB"
+                },
+                {
+                  "id": "4034",
+                  "name": "Christian McCaffrey",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 27.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6790",
+                  "name": "D'Andre Swift",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 21.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9997",
+                  "name": "Zay Flowers",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 9.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11646",
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "9484",
+                  "name": "Tucker Kraft",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 6.2,
+                  "slot": "TE"
+                },
+                {
+                  "id": "7525",
+                  "name": "DeVonta Smith",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 17.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "11581",
+                  "name": "MarShawn Lloyd",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 1.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "PIT",
+                  "name": "Pittsburgh Steelers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 19.05,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": [
+                {
+                  "out": {
+                    "id": "11581",
+                    "name": "MarShawn Lloyd",
+                    "position": "RB",
+                    "eligible": ["RB"],
+                    "points": 1.0,
+                    "slot": "FLEX"
+                  },
+                  "in": {
+                    "id": "13274",
+                    "name": "Germie Bernard",
+                    "position": "WR",
+                    "eligible": ["WR"],
+                    "points": 20.2
+                  },
+                  "revisedScore": 149.07,
+                  "gain": 19.2
+                },
+                {
+                  "out": {
+                    "id": "11581",
+                    "name": "MarShawn Lloyd",
+                    "position": "RB",
+                    "eligible": ["RB"],
+                    "points": 1.0,
+                    "slot": "FLEX"
+                  },
+                  "in": {
+                    "id": "8136",
+                    "name": "Rachaad White",
+                    "position": "RB",
+                    "eligible": ["RB"],
+                    "points": 14.2
+                  },
+                  "revisedScore": 143.07,
+                  "gain": 13.2
+                }
+              ]
+            },
+            {
+              "rosterId": 12,
+              "label": "Marginal Returns",
+              "score": 141.94,
+              "starters": [
+                {
+                  "id": "9228",
+                  "name": "Bryce Young",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 19.84,
+                  "slot": "QB"
+                },
+                {
+                  "id": "8138",
+                  "name": "James Cook III",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 25.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11576",
+                  "name": "Braelon Allen",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.4,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8137",
+                  "name": "George Pickens",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.3,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12514",
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 14.3,
+                  "slot": "WR"
+                },
+                {
+                  "id": "4217",
+                  "name": "George Kittle",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 15.4,
+                  "slot": "TE"
+                },
+                {
+                  "id": "12507",
+                  "name": "Omarion Hampton",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "12501",
+                  "name": "Matthew Golden",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 19.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "KC",
+                  "name": "Kansas City Chiefs",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 17.1,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 12,
+          "margin": 12.07,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.5675,
+              "winProbB": 0.4325,
+              "projectedFinalA": 116.39842634251637,
+              "projectedFinalB": 112.12683509215806,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 4,
+              "total": 228.5,
+              "rosterAId": "2",
+              "rosterBId": "12"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9988888888888889,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 130.0922248319443,
+              "projectedFinalB": 142.063926331913,
+              "currentScoreA": 129.87,
+              "currentScoreB": 141.94,
+              "spread": -12,
+              "total": 272,
+              "rosterAId": "2",
+              "rosterBId": "12"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.0635,
+            "winnerOpening": 0.4325,
+            "favoriteRosterId": 2,
+            "favoriteProbability": 0.5675,
+            "leadChanges": 5
+          }
+        },
+        {
+          "key": "1387520086092312576:6:2",
+          "matchupId": 2,
+          "teams": [
+            {
+              "rosterId": 3,
+              "label": "Love Warrents Dak Pics",
+              "score": 100.72,
+              "starters": [
+                {
+                  "id": "3294",
+                  "name": "Dak Prescott",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 11.02,
+                  "slot": "QB"
+                },
+                {
+                  "id": "9509",
+                  "name": "Bijan Robinson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.8,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8228",
+                  "name": "Jaylen Warren",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 10.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11783",
+                  "name": "Ryan Flournoy",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "2216",
+                  "name": "Mike Evans",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.9,
+                  "slot": "WR"
+                },
+                {
+                  "id": "3214",
+                  "name": "Hunter Henry",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 12.8,
+                  "slot": "TE"
+                },
+                {
+                  "id": "7594",
+                  "name": "Chuba Hubbard",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 22.1,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8132",
+                  "name": "Tyler Allgeier",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "SEA",
+                  "name": "Seattle Seahawks",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 7.0,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 9,
+              "label": "cescott25",
+              "score": 89.15,
+              "starters": [
+                {
+                  "id": "4984",
+                  "name": "Josh Allen",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 18.8,
+                  "slot": "QB"
+                },
+                {
+                  "id": "3198",
+                  "name": "Derrick Henry",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "5995",
+                  "name": "Justice Hill",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 2.4,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12526",
+                  "name": "Tetairoa McMillan",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.6,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11620",
+                  "name": "Rome Odunze",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8130",
+                  "name": "Trey McBride",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 8.8,
+                  "slot": "TE"
+                },
+                {
+                  "id": "11604",
+                  "name": "Brock Bowers",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 9.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "13279",
+                  "name": "Carnell Tate",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 16.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "CAR",
+                  "name": "Carolina Panthers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 11.15,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 3,
+          "margin": 11.57,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.8022,
+              "winProbB": 0.1978,
+              "projectedFinalA": 138.8280739750152,
+              "projectedFinalB": 115.33543573564175,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 23.5,
+              "total": 254.5,
+              "rosterAId": "3",
+              "rosterBId": "9"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9994444444444446,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 100.8633232603362,
+              "projectedFinalB": 89.15000000001523,
+              "currentScoreA": 100.72,
+              "currentScoreB": 89.15,
+              "spread": 11.5,
+              "total": 190,
+              "rosterAId": "3",
+              "rosterBId": "9"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.1618,
+            "winnerOpening": 0.8022,
+            "favoriteRosterId": 3,
+            "favoriteProbability": 0.8022,
+            "leadChanges": 12
+          }
+        },
+        {
+          "key": "1387520086092312576:6:3",
+          "matchupId": 3,
+          "teams": [
+            {
+              "rosterId": 4,
+              "label": "Two Williams, One Cup",
+              "score": 83.73,
+              "starters": [
+                {
+                  "id": "421",
+                  "name": "Matthew Stafford",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 15.88,
+                  "slot": "QB"
+                },
+                {
+                  "id": "8150",
+                  "name": "Kyren Williams",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 10.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "5967",
+                  "name": "Tony Pollard",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11637",
+                  "name": "Keon Coleman",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.9,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11628",
+                  "name": "Marvin Harrison Jr.",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 4.9,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12506",
+                  "name": "Harold Fannin Jr.",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 1.4,
+                  "slot": "TE"
+                },
+                {
+                  "id": "13298",
+                  "name": "KC Concepcion Jr.",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8129",
+                  "name": "Dameon Pierce",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "LAR",
+                  "name": "Los Angeles Rams",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 6.95,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 5,
+              "label": "Saquon Hussein",
+              "score": 61.84,
+              "starters": [
+                {
+                  "id": "6804",
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 20.74,
+                  "slot": "QB"
+                },
+                {
+                  "id": "7528",
+                  "name": "Najee Harris",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 0.2,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11439",
+                  "name": "Jaleel McLaughlin",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 7.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8167",
+                  "name": "Christian Watson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 7.9,
+                  "slot": "WR"
+                },
+                {
+                  "id": "2449",
+                  "name": "Stefon Diggs",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "2505",
+                  "name": "Darren Waller",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 0.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "4454",
+                  "name": "Kendrick Bourne",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 7.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8154",
+                  "name": "Brian Robinson Jr.",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 2.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "NYG",
+                  "name": "New York Giants",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 2.9,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 4,
+          "margin": 21.89,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.6368,
+              "winProbB": 0.3632,
+              "projectedFinalA": 100.8668857158532,
+              "projectedFinalB": 93.4251510838734,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 7.5,
+              "total": 194,
+              "rosterAId": "4",
+              "rosterBId": "5"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9777292768959435,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 83.72999999998864,
+              "projectedFinalB": 64.91060544611743,
+              "currentScoreA": 83.73,
+              "currentScoreB": 61.84,
+              "spread": 19,
+              "total": 148.5,
+              "rosterAId": "4",
+              "rosterBId": "5"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.6222,
+            "winnerOpening": 0.6368,
+            "favoriteRosterId": 4,
+            "favoriteProbability": 0.6368,
+            "leadChanges": 0
+          }
+        },
+        {
+          "key": "1387520086092312576:6:4",
+          "matchupId": 4,
+          "teams": [
+            {
+              "rosterId": 6,
+              "label": "scboom5",
+              "score": 91.0,
+              "starters": [
+                {
+                  "id": "7083",
+                  "name": "Tyler Huntley",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 12.4,
+                  "slot": "QB"
+                },
+                {
+                  "id": "7588",
+                  "name": "Javonte Williams",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 13.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6806",
+                  "name": "J.K. Dobbins",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 12.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9488",
+                  "name": "Jaxon Smith-Njigba",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 19.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "13346",
+                  "name": "Denzel Boston",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 2.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7002",
+                  "name": "Juwan Johnson",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 0.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "12474",
+                  "name": "Woody Marks",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.6,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "1479",
+                  "name": "Keenan Allen",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 12.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "SF",
+                  "name": "San Francisco 49ers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 9.3,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 8,
+              "label": "ziyanp22",
+              "score": 85.2,
+              "starters": [
+                {
+                  "id": "11566",
+                  "name": "Jayden Daniels",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 21.0,
+                  "slot": "QB"
+                },
+                {
+                  "id": "7567",
+                  "name": "Kenny Gainwell",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 3.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11584",
+                  "name": "Bucky Irving",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11635",
+                  "name": "Ladd McConkey",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 2.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8146",
+                  "name": "Garrett Wilson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 6.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12517",
+                  "name": "Colston Loveland",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 15.5,
+                  "slot": "TE"
+                },
+                {
+                  "id": "7526",
+                  "name": "Jaylen Waddle",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 4.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "10213",
+                  "name": "Tre Tucker",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 24.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "IND",
+                  "name": "Indianapolis Colts",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 0.7,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": [
+                {
+                  "out": {
+                    "id": "11635",
+                    "name": "Ladd McConkey",
+                    "position": "WR",
+                    "eligible": ["WR"],
+                    "points": 2.2,
+                    "slot": "WR"
+                  },
+                  "in": {
+                    "id": "12048",
+                    "name": "George Holani",
+                    "position": "RB",
+                    "eligible": ["RB"],
+                    "points": 8.5
+                  },
+                  "revisedScore": 91.5,
+                  "gain": 6.3
+                }
+              ]
+            }
+          ],
+          "winnerRosterId": 6,
+          "margin": 5.8,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.94,
+              "winProbB": 0.06,
+              "projectedFinalA": 110.83926307886485,
+              "projectedFinalB": 77.81489538540507,
+              "currentScoreA": 1,
+              "currentScoreB": 0,
+              "spread": 33,
+              "total": 188.5,
+              "rosterAId": "6",
+              "rosterBId": "8"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.977173721340388,
+              "winProbA": 0.0394,
+              "winProbB": 0.9606,
+              "projectedFinalA": 89.15837960337143,
+              "projectedFinalB": 92.97895608512498,
+              "currentScoreA": 89.1,
+              "currentScoreB": 85.2,
+              "spread": -4,
+              "total": 182,
+              "rosterAId": "6",
+              "rosterBId": "8"
+            },
+            "finalAligned": false,
+            "winnerLow": 0.0276,
+            "winnerOpening": 0.94,
+            "favoriteRosterId": 6,
+            "favoriteProbability": 0.94,
+            "leadChanges": 1
+          }
+        },
+        {
+          "key": "1387520086092312576:6:5",
+          "matchupId": 5,
+          "teams": [
+            {
+              "rosterId": 1,
+              "label": "Crown and Pound",
+              "score": 93.0,
+              "starters": [
+                {
+                  "id": "11564",
+                  "name": "Drake Maye",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 24.3,
+                  "slot": "QB"
+                },
+                {
+                  "id": "6813",
+                  "name": "Jonathan Taylor",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 22.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9757",
+                  "name": "Kendre Miller",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9487",
+                  "name": "Parker Washington",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 8.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7569",
+                  "name": "Nico Collins",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 9.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7600",
+                  "name": "Pat Freiermuth",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 2.1,
+                  "slot": "TE"
+                },
+                {
+                  "id": "5846",
+                  "name": "DK Metcalf",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 14.8,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "5927",
+                  "name": "Terry McLaurin",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "JAX",
+                  "name": "Jacksonville Jaguars",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": -0.8,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 11,
+              "label": "benweinfeld",
+              "score": 143.93,
+              "starters": [
+                {
+                  "id": "4046",
+                  "name": "Patrick Mahomes",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 10.98,
+                  "slot": "QB"
+                },
+                {
+                  "id": "12490",
+                  "name": "Bhayshul Tuten",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 23.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8151",
+                  "name": "Kenneth Walker III",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 29.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9493",
+                  "name": "Puka Nacua",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8112",
+                  "name": "Drake London",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8131",
+                  "name": "Isaiah Likely",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 20.9,
+                  "slot": "TE"
+                },
+                {
+                  "id": "12519",
+                  "name": "Luther Burden III",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "1466",
+                  "name": "Travis Kelce",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 7.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "DEN",
+                  "name": "Denver Broncos",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 16.45,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 11,
+          "margin": 50.93,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.3775,
+              "winProbB": 0.6225,
+              "projectedFinalA": 117.97869395746186,
+              "projectedFinalB": 126.18336020380863,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -8.5,
+              "total": 244,
+              "rosterAId": "1",
+              "rosterBId": "11"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9777292768959435,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 96.82291031912642,
+              "projectedFinalB": 143.92999999999876,
+              "currentScoreA": 93,
+              "currentScoreB": 143.93,
+              "spread": -47,
+              "total": 240.5,
+              "rosterAId": "1",
+              "rosterBId": "11"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.6075,
+            "winnerOpening": 0.6225,
+            "favoriteRosterId": 11,
+            "favoriteProbability": 0.6225,
+            "leadChanges": 0
+          }
+        },
+        {
+          "key": "1387520086092312576:6:6",
+          "matchupId": 6,
+          "teams": [
+            {
+              "rosterId": 7,
+              "label": "Something’s Gotta Gibbs",
+              "score": 99.92,
+              "starters": [
+                {
+                  "id": "1166",
+                  "name": "Kirk Cousins",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 18.52,
+                  "slot": "QB"
+                },
+                {
+                  "id": "7611",
+                  "name": "Rhamondre Stevenson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12489",
+                  "name": "RJ Harvey",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6786",
+                  "name": "CeeDee Lamb",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11834",
+                  "name": "Devaughn Vele",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7553",
+                  "name": "Kyle Pitts Sr.",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 20.5,
+                  "slot": "TE"
+                },
+                {
+                  "id": "8134",
+                  "name": "Khalil Shakir",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8126",
+                  "name": "Wan'Dale Robinson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.7,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "NE",
+                  "name": "New England Patriots",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 9.4,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 10,
+              "label": "Injured Excellence",
+              "score": 105.56,
+              "starters": [
+                {
+                  "id": "8183",
+                  "name": "Brock Purdy",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 19.36,
+                  "slot": "QB"
+                },
+                {
+                  "id": "11435",
+                  "name": "Emanuel Wilson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 7.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12527",
+                  "name": "Ashton Jeanty",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11632",
+                  "name": "Malik Nabers",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 22.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "5859",
+                  "name": "A.J. Brown",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "5022",
+                  "name": "Dallas Goedert",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 9.1,
+                  "slot": "TE"
+                },
+                {
+                  "id": "2133",
+                  "name": "Davante Adams",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8144",
+                  "name": "Chris Olave",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 12.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "BAL",
+                  "name": "Baltimore Ravens",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 11.7,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 10,
+          "margin": 5.64,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.2277,
+              "winProbB": 0.7723,
+              "projectedFinalA": 103.09536250013983,
+              "projectedFinalB": 120.02214601022914,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -17,
+              "total": 223.5,
+              "rosterAId": "7",
+              "rosterBId": "10"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9994444444444446,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 99.92000000001713,
+              "projectedFinalB": 105.78351274430558,
+              "currentScoreA": 99.92,
+              "currentScoreB": 105.56,
+              "spread": -6,
+              "total": 205.5,
+              "rosterAId": "7",
+              "rosterBId": "10"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.5784,
+            "winnerOpening": 0.7723,
+            "favoriteRosterId": 10,
+            "favoriteProbability": 0.7723,
+            "leadChanges": 0
+          }
+        }
+      ]
+    },
+    {
+      "leagueId": "1387520168866885632",
+      "name": "Legion II: The Keep",
+      "shortName": "Keep",
+      "rosterSlots": [
+        "QB",
+        "RB",
+        "RB",
+        "WR",
+        "WR",
+        "TE",
+        "FLEX",
+        "FLEX",
+        "DEF",
+        "BN",
+        "BN",
+        "BN",
+        "BN",
+        "BN",
+        "BN"
+      ],
+      "standings": [
+        {
+          "rosterId": 10,
+          "label": "King Henry’s Court",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 799.11,
+          "pointsAgainst": 700.91,
+          "weeklyScores": [141.86, 166.52, 111.96, 115.12, 171.3, 92.35],
+          "opponentScores": [111.65, 95.2, 99.88, 121.58, 148.84, 123.76],
+          "allPlayExpectedWins": 4.2727,
+          "winGap": -0.2727
+        },
+        {
+          "rosterId": 9,
+          "label": "lukebowsh",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 711.04,
+          "pointsAgainst": 599.51,
+          "weeklyScores": [112.21, 92.79, 137.15, 121.58, 160.26, 87.05],
+          "opponentScores": [118.6, 91.38, 75.44, 115.12, 88.39, 110.58],
+          "allPlayExpectedWins": 3.3182,
+          "winGap": 0.6818
+        },
+        {
+          "rosterId": 8,
+          "label": "the beggar king",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 689.74,
+          "pointsAgainst": 622.16,
+          "weeklyScores": [106.2, 92.1, 124.1, 127.24, 116.34, 123.76],
+          "opponentScores": [131.41, 72.33, 90.07, 118.39, 117.61, 92.35],
+          "allPlayExpectedWins": 3.1818,
+          "winGap": 0.8182
+        },
+        {
+          "rosterId": 3,
+          "label": "Checkout & Gameplay",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 689.44,
+          "pointsAgainst": 692.68,
+          "weeklyScores": [118.6, 91.26, 90.84, 128.78, 148.84, 111.12],
+          "opponentScores": [112.21, 89.42, 88.99, 139.7, 171.3, 91.06],
+          "allPlayExpectedWins": 3.1818,
+          "winGap": 0.8182
+        },
+        {
+          "rosterId": 7,
+          "label": "akmadurai",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 647.46,
+          "pointsAgainst": 656.2,
+          "weeklyScores": [125.72, 114.56, 90.07, 74.52, 111.55, 131.04],
+          "opponentScores": [112.21, 113.32, 124.1, 96.27, 110.25, 100.05],
+          "allPlayExpectedWins": 3.0,
+          "winGap": 1.0
+        },
+        {
+          "rosterId": 5,
+          "label": "HarrytheHitman9",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 739.72,
+          "pointsAgainst": 760.98,
+          "weeklyScores": [153.36, 95.2, 145.75, 124.58, 110.25, 110.58],
+          "opponentScores": [122.7, 166.52, 106.39, 166.77, 111.55, 87.05],
+          "allPlayExpectedWins": 4.0909,
+          "winGap": -1.0909
+        },
+        {
+          "rosterId": 6,
+          "label": "JimothyGreene",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 705.77,
+          "pointsAgainst": 667.24,
+          "weeklyScores": [112.21, 72.33, 134.21, 166.77, 133.65, 86.6],
+          "opponentScores": [125.72, 92.1, 96.06, 124.58, 99.91, 128.87],
+          "allPlayExpectedWins": 2.9545,
+          "winGap": 0.0455
+        },
+        {
+          "rosterId": 11,
+          "label": "vchak",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 663.42,
+          "pointsAgainst": 568.54,
+          "weeklyScores": [136.46, 91.38, 88.99, 118.39, 99.33, 128.87],
+          "opponentScores": [107.37, 92.79, 90.84, 127.24, 63.7, 86.6],
+          "allPlayExpectedWins": 2.7273,
+          "winGap": 0.2727
+        },
+        {
+          "rosterId": 4,
+          "label": "Team Lil Bros",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 625.06,
+          "pointsAgainst": 588.94,
+          "weeklyScores": [131.41, 113.32, 96.06, 105.92, 63.7, 114.65],
+          "opponentScores": [106.2, 114.56, 134.21, 82.16, 99.33, 52.48],
+          "allPlayExpectedWins": 2.7273,
+          "winGap": 0.2727
+        },
+        {
+          "rosterId": 12,
+          "label": "vayyala",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 628.75,
+          "pointsAgainst": 699.57,
+          "weeklyScores": [122.7, 118.93, 99.88, 96.27, 99.91, 91.06],
+          "opponentScores": [153.36, 114.96, 111.96, 74.52, 133.65, 111.12],
+          "allPlayExpectedWins": 2.6364,
+          "winGap": -0.6364
+        },
+        {
+          "rosterId": 1,
+          "label": "Ja’Marrican Psycho",
+          "wins": 1,
+          "losses": 5,
+          "pointsFor": 613.57,
+          "pointsAgainst": 810.23,
+          "weeklyScores": [111.65, 114.96, 106.39, 139.7, 88.39, 52.48],
+          "opponentScores": [141.86, 118.93, 145.75, 128.78, 160.26, 114.65],
+          "allPlayExpectedWins": 2.5455,
+          "winGap": -1.5455
+        },
+        {
+          "rosterId": 2,
+          "label": "Jonathon Taylor Mayde",
+          "wins": 1,
+          "losses": 5,
+          "pointsFor": 572.05,
+          "pointsAgainst": 718.17,
+          "weeklyScores": [107.37, 89.42, 75.44, 82.16, 117.61, 100.05],
+          "opponentScores": [136.46, 91.26, 137.15, 105.92, 116.34, 131.04],
+          "allPlayExpectedWins": 1.3636,
+          "winGap": -0.3636
+        }
+      ],
+      "matchups": [
+        {
+          "key": "1387520168866885632:6:1",
+          "matchupId": 1,
+          "teams": [
+            {
+              "rosterId": 3,
+              "label": "Checkout & Gameplay",
+              "score": 111.12,
+              "starters": [
+                {
+                  "id": "3294",
+                  "name": "Dak Prescott",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 11.02,
+                  "slot": "QB"
+                },
+                {
+                  "id": "11586",
+                  "name": "Blake Corum",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11439",
+                  "name": "Jaleel McLaughlin",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 7.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9487",
+                  "name": "Parker Washington",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 8.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "9997",
+                  "name": "Zay Flowers",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 9.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8130",
+                  "name": "Trey McBride",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 8.8,
+                  "slot": "TE"
+                },
+                {
+                  "id": "11632",
+                  "name": "Malik Nabers",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 22.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "12526",
+                  "name": "Tetairoa McMillan",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.6,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "KC",
+                  "name": "Kansas City Chiefs",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 17.1,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 12,
+              "label": "vayyala",
+              "score": 91.06,
+              "starters": [
+                {
+                  "id": "8183",
+                  "name": "Brock Purdy",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 19.36,
+                  "slot": "QB"
+                },
+                {
+                  "id": "11576",
+                  "name": "Braelon Allen",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.4,
+                  "slot": "RB"
+                },
+                {
+                  "id": "4035",
+                  "name": "Alvin Kamara",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "7526",
+                  "name": "Jaylen Waddle",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 4.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7569",
+                  "name": "Nico Collins",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 9.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "9480",
+                  "name": "Brenton Strange",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 6.9,
+                  "slot": "TE"
+                },
+                {
+                  "id": "7600",
+                  "name": "Pat Freiermuth",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 2.1,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8167",
+                  "name": "Christian Watson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 7.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "BAL",
+                  "name": "Baltimore Ravens",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 11.7,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 3,
+          "margin": 20.06,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.3531,
+              "winProbB": 0.6469,
+              "projectedFinalA": 109.30582212933479,
+              "projectedFinalB": 117.93476240567074,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -9,
+              "total": 227,
+              "rosterAId": "3",
+              "rosterBId": "12"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9994444444444446,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 111.12000000000226,
+              "projectedFinalB": 91.2823150575568,
+              "currentScoreA": 111.12,
+              "currentScoreB": 91.06,
+              "spread": 20,
+              "total": 202.5,
+              "rosterAId": "3",
+              "rosterBId": "12"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.188,
+            "winnerOpening": 0.3531,
+            "favoriteRosterId": 12,
+            "favoriteProbability": 0.6469,
+            "leadChanges": 11
+          }
+        },
+        {
+          "key": "1387520168866885632:6:2",
+          "matchupId": 2,
+          "teams": [
+            {
+              "rosterId": 5,
+              "label": "HarrytheHitman9",
+              "score": 110.58,
+              "starters": [
+                {
+                  "id": "421",
+                  "name": "Matthew Stafford",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 15.88,
+                  "slot": "QB"
+                },
+                {
+                  "id": "7588",
+                  "name": "Javonte Williams",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 13.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6790",
+                  "name": "D'Andre Swift",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 21.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9488",
+                  "name": "Jaxon Smith-Njigba",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 19.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "10232",
+                  "name": "Michael Wilson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "9484",
+                  "name": "Tucker Kraft",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 6.2,
+                  "slot": "TE"
+                },
+                {
+                  "id": "3214",
+                  "name": "Hunter Henry",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 12.8,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "9500",
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 6.7,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "NE",
+                  "name": "New England Patriots",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 9.4,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 9,
+              "label": "lukebowsh",
+              "score": 87.05,
+              "starters": [
+                {
+                  "id": "11566",
+                  "name": "Jayden Daniels",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 21.0,
+                  "slot": "QB"
+                },
+                {
+                  "id": "13414",
+                  "name": "Kaelon Black",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.2,
+                  "slot": "RB"
+                },
+                {
+                  "id": "7611",
+                  "name": "Rhamondre Stevenson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12519",
+                  "name": "Luther Burden III",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "5927",
+                  "name": "Terry McLaurin",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "4217",
+                  "name": "George Kittle",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 15.4,
+                  "slot": "TE"
+                },
+                {
+                  "id": "13294",
+                  "name": "Makai Lemon",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "13274",
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 20.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "HOU",
+                  "name": "Houston Texans",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 0.05,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 5,
+          "margin": 23.53,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.7825,
+              "winProbB": 0.2175,
+              "projectedFinalA": 121.79357923434515,
+              "projectedFinalB": 103.50608324174401,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 18.5,
+              "total": 225.5,
+              "rosterAId": "5",
+              "rosterBId": "9"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9543474426807761,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 110.57999999998651,
+              "projectedFinalB": 98.86545662228889,
+              "currentScoreA": 110.58,
+              "currentScoreB": 87.05,
+              "spread": 11.5,
+              "total": 209.5,
+              "rosterAId": "5",
+              "rosterBId": "9"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.7056,
+            "winnerOpening": 0.7825,
+            "favoriteRosterId": 5,
+            "favoriteProbability": 0.7825,
+            "leadChanges": 0
+          }
+        },
+        {
+          "key": "1387520168866885632:6:3",
+          "matchupId": 3,
+          "teams": [
+            {
+              "rosterId": 2,
+              "label": "Jonathon Taylor Mayde",
+              "score": 100.05,
+              "starters": [
+                {
+                  "id": "11564",
+                  "name": "Drake Maye",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 24.3,
+                  "slot": "QB"
+                },
+                {
+                  "id": "6813",
+                  "name": "Jonathan Taylor",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 22.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "7567",
+                  "name": "Kenny Gainwell",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 3.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8112",
+                  "name": "Drake London",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "4983",
+                  "name": "DJ Moore",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 0.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "10236",
+                  "name": "Dalton Kincaid",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 7.3,
+                  "slot": "TE"
+                },
+                {
+                  "id": "11635",
+                  "name": "Ladd McConkey",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 2.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "6806",
+                  "name": "J.K. Dobbins",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 12.6,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "NO",
+                  "name": "New Orleans Saints",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 16.95,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 7,
+              "label": "akmadurai",
+              "score": 131.04,
+              "starters": [
+                {
+                  "id": "6804",
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 20.74,
+                  "slot": "QB"
+                },
+                {
+                  "id": "4034",
+                  "name": "Christian McCaffrey",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 27.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9757",
+                  "name": "Kendre Miller",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "2133",
+                  "name": "Davante Adams",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8137",
+                  "name": "George Pickens",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.3,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7553",
+                  "name": "Kyle Pitts Sr.",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 20.5,
+                  "slot": "TE"
+                },
+                {
+                  "id": "11637",
+                  "name": "Keon Coleman",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8136",
+                  "name": "Rachaad White",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "SF",
+                  "name": "San Francisco 49ers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 9.3,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 7,
+          "margin": 30.99,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.62,
+              "winProbB": 0.38,
+              "projectedFinalA": 111.85647758392005,
+              "projectedFinalB": 104.67464715712421,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 7.5,
+              "total": 216.5,
+              "rosterAId": "2",
+              "rosterBId": "7"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9766181657848324,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 100.05000000001786,
+              "projectedFinalB": 132.7790783833807,
+              "currentScoreA": 100.05,
+              "currentScoreB": 127.74,
+              "spread": -32.5,
+              "total": 233,
+              "rosterAId": "2",
+              "rosterBId": "7"
+            },
+            "finalAligned": false,
+            "winnerLow": 0.1665,
+            "winnerOpening": 0.38,
+            "favoriteRosterId": 2,
+            "favoriteProbability": 0.62,
+            "leadChanges": 9
+          }
+        },
+        {
+          "key": "1387520168866885632:6:4",
+          "matchupId": 4,
+          "teams": [
+            {
+              "rosterId": 6,
+              "label": "JimothyGreene",
+              "score": 86.6,
+              "starters": [
+                {
+                  "id": "6770",
+                  "name": "Joe Burrow",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 0.0,
+                  "slot": "QB"
+                },
+                {
+                  "id": "9509",
+                  "name": "Bijan Robinson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.8,
+                  "slot": "RB"
+                },
+                {
+                  "id": "7594",
+                  "name": "Chuba Hubbard",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 22.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9493",
+                  "name": "Puka Nacua",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "5846",
+                  "name": "DK Metcalf",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 14.8,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12518",
+                  "name": "Tyler Warren",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 0.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "5967",
+                  "name": "Tony Pollard",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.6,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "12501",
+                  "name": "Matthew Golden",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 19.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "NYG",
+                  "name": "New York Giants",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 2.9,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 11,
+              "label": "vchak",
+              "score": 128.87,
+              "starters": [
+                {
+                  "id": "1166",
+                  "name": "Kirk Cousins",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 18.52,
+                  "slot": "QB"
+                },
+                {
+                  "id": "12474",
+                  "name": "Woody Marks",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8129",
+                  "name": "Dameon Pierce",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11646",
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "5859",
+                  "name": "A.J. Brown",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11604",
+                  "name": "Brock Bowers",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 9.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "8151",
+                  "name": "Kenneth Walker III",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 29.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "13279",
+                  "name": "Carnell Tate",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 16.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "DEN",
+                  "name": "Denver Broncos",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 16.45,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 11,
+          "margin": 42.27,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.4998,
+              "winProbB": 0.5002,
+              "projectedFinalA": 116.07792371918818,
+              "projectedFinalB": 116.30554612384091,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -0.5,
+              "total": 232.5,
+              "rosterAId": "6",
+              "rosterBId": "11"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9777292768959435,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 86.59999999998502,
+              "projectedFinalB": 128.87000000001734,
+              "currentScoreA": 86.6,
+              "currentScoreB": 128.87,
+              "spread": -42.5,
+              "total": 215.5,
+              "rosterAId": "6",
+              "rosterBId": "11"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.4999,
+            "winnerOpening": 0.5002,
+            "favoriteRosterId": 11,
+            "favoriteProbability": 0.5002,
+            "leadChanges": 2
+          }
+        },
+        {
+          "key": "1387520168866885632:6:5",
+          "matchupId": 5,
+          "teams": [
+            {
+              "rosterId": 1,
+              "label": "Ja’Marrican Psycho",
+              "score": 52.48,
+              "starters": [
+                {
+                  "id": "4046",
+                  "name": "Patrick Mahomes",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 10.98,
+                  "slot": "QB"
+                },
+                {
+                  "id": "8150",
+                  "name": "Kyren Williams",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 10.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12481",
+                  "name": "Cam Skattebo",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 0.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8134",
+                  "name": "Khalil Shakir",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8126",
+                  "name": "Wan'Dale Robinson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12506",
+                  "name": "Harold Fannin Jr.",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 1.4,
+                  "slot": "TE"
+                },
+                {
+                  "id": "11581",
+                  "name": "MarShawn Lloyd",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 1.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8132",
+                  "name": "Tyler Allgeier",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "SEA",
+                  "name": "Seattle Seahawks",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 7.0,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 4,
+              "label": "Team Lil Bros",
+              "score": 114.65,
+              "starters": [
+                {
+                  "id": "11560",
+                  "name": "Caleb Williams",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 16.0,
+                  "slot": "QB"
+                },
+                {
+                  "id": "12527",
+                  "name": "Ashton Jeanty",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12507",
+                  "name": "Omarion Hampton",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6786",
+                  "name": "CeeDee Lamb",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11624",
+                  "name": "Xavier Worthy",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.8,
+                  "slot": "WR"
+                },
+                {
+                  "id": "1466",
+                  "name": "Travis Kelce",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 7.3,
+                  "slot": "TE"
+                },
+                {
+                  "id": "12517",
+                  "name": "Colston Loveland",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 15.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "12514",
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 14.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "PIT",
+                  "name": "Pittsburgh Steelers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 19.05,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 4,
+          "margin": 62.17,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.7156,
+              "winProbB": 0.2844,
+              "projectedFinalA": 108.62363247765664,
+              "projectedFinalB": 95.99618633194102,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 12.5,
+              "total": 204.5,
+              "rosterAId": "1",
+              "rosterBId": "4"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 1,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 52.47999999999297,
+              "projectedFinalB": 114.65000000000708,
+              "currentScoreA": 52.48,
+              "currentScoreB": 114.65,
+              "spread": -62,
+              "total": 167,
+              "rosterAId": "1",
+              "rosterBId": "4"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.2336,
+            "winnerOpening": 0.2844,
+            "favoriteRosterId": 1,
+            "favoriteProbability": 0.7156,
+            "leadChanges": 1
+          }
+        },
+        {
+          "key": "1387520168866885632:6:6",
+          "matchupId": 6,
+          "teams": [
+            {
+              "rosterId": 8,
+              "label": "the beggar king",
+              "score": 123.76,
+              "starters": [
+                {
+                  "id": "12545",
+                  "name": "Tyler Shough",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 27.96,
+                  "slot": "QB"
+                },
+                {
+                  "id": "12490",
+                  "name": "Bhayshul Tuten",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 23.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11435",
+                  "name": "Emanuel Wilson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 7.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8146",
+                  "name": "Garrett Wilson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 6.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11834",
+                  "name": "Devaughn Vele",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8131",
+                  "name": "Isaiah Likely",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 20.9,
+                  "slot": "TE"
+                },
+                {
+                  "id": "8138",
+                  "name": "James Cook III",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 25.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "11620",
+                  "name": "Rome Odunze",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "IND",
+                  "name": "Indianapolis Colts",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 0.7,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 10,
+              "label": "King Henry’s Court",
+              "score": 92.35,
+              "starters": [
+                {
+                  "id": "4984",
+                  "name": "Josh Allen",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 18.8,
+                  "slot": "QB"
+                },
+                {
+                  "id": "12489",
+                  "name": "RJ Harvey",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11584",
+                  "name": "Bucky Irving",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8144",
+                  "name": "Chris Olave",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 12.3,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7525",
+                  "name": "DeVonta Smith",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 17.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7002",
+                  "name": "Juwan Johnson",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 0.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "8228",
+                  "name": "Jaylen Warren",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 10.3,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "3198",
+                  "name": "Derrick Henry",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "LAR",
+                  "name": "Los Angeles Rams",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 6.95,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 8,
+          "margin": 31.41,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.2767,
+              "winProbB": 0.7233,
+              "projectedFinalA": 113.70725466211384,
+              "projectedFinalB": 128.76840165490265,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -15,
+              "total": 242.5,
+              "rosterAId": "8",
+              "rosterBId": "10"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 1,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 123.76000000000808,
+              "projectedFinalB": 92.34999999998449,
+              "currentScoreA": 123.76,
+              "currentScoreB": 92.35,
+              "spread": 31.5,
+              "total": 216,
+              "rosterAId": "8",
+              "rosterBId": "10"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.1051,
+            "winnerOpening": 0.2767,
+            "favoriteRosterId": 10,
+            "favoriteProbability": 0.7233,
+            "leadChanges": 3
+          }
+        }
+      ]
+    },
+    {
+      "leagueId": "1387520236663615488",
+      "name": "Legion III: The Forge",
+      "shortName": "Forge",
+      "rosterSlots": [
+        "QB",
+        "RB",
+        "RB",
+        "WR",
+        "WR",
+        "TE",
+        "FLEX",
+        "FLEX",
+        "DEF",
+        "BN",
+        "BN",
+        "BN",
+        "BN",
+        "BN",
+        "BN"
+      ],
+      "standings": [
+        {
+          "rosterId": 5,
+          "label": "gibuttersnaps",
+          "wins": 5,
+          "losses": 1,
+          "pointsFor": 619.11,
+          "pointsAgainst": 584.72,
+          "weeklyScores": [115.89, 81.72, 118.99, 127.96, 67.57, 106.98],
+          "opponentScores": [105.96, 77.56, 100.56, 124.35, 96.34, 79.95],
+          "allPlayExpectedWins": 2.6364,
+          "winGap": 2.3636
+        },
+        {
+          "rosterId": 8,
+          "label": "aditya22",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 805.84,
+          "pointsAgainst": 639.38,
+          "weeklyScores": [87.56, 129.38, 165.39, 124.82, 171.93, 126.76],
+          "opponentScores": [131.74, 113.29, 88.73, 128.18, 99.42, 78.02],
+          "allPlayExpectedWins": 4.2727,
+          "winGap": -0.2727
+        },
+        {
+          "rosterId": 6,
+          "label": "Can you tuten my face",
+          "wins": 4,
+          "losses": 2,
+          "pointsFor": 748.85,
+          "pointsAgainst": 656.44,
+          "weeklyScores": [120.22, 105.68, 126.09, 124.35, 129.51, 143.0],
+          "opponentScores": [98.52, 125.17, 100.24, 127.96, 115.44, 89.11],
+          "allPlayExpectedWins": 4.0,
+          "winGap": 0.0
+        },
+        {
+          "rosterId": 2,
+          "label": "krishnik",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 715.91,
+          "pointsAgainst": 688.57,
+          "weeklyScores": [116.21, 113.29, 151.78, 139.88, 96.06, 98.69],
+          "opponentScores": [118.85, 129.38, 93.88, 90.97, 158.28, 97.21],
+          "allPlayExpectedWins": 3.6364,
+          "winGap": -0.6364
+        },
+        {
+          "rosterId": 1,
+          "label": "ashwindandapani1",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 708.44,
+          "pointsAgainst": 715.76,
+          "weeklyScores": [105.96, 131.08, 128.14, 130.61, 115.44, 97.21],
+          "opponentScores": [115.89, 130.42, 111.42, 129.83, 129.51, 98.69],
+          "allPlayExpectedWins": 4.0,
+          "winGap": -1.0
+        },
+        {
+          "rosterId": 11,
+          "label": "Loveland Island",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 677.37,
+          "pointsAgainst": 578.76,
+          "weeklyScores": [145.27, 77.56, 111.42, 85.82, 158.28, 99.02],
+          "opponentScores": [70.16, 81.72, 128.14, 112.33, 96.06, 90.35],
+          "allPlayExpectedWins": 3.2727,
+          "winGap": -0.2727
+        },
+        {
+          "rosterId": 12,
+          "label": "Sahilmodi8",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 623.94,
+          "pointsAgainst": 628.73,
+          "weeklyScores": [131.74, 118.93, 93.88, 106.92, 83.36, 89.11],
+          "opponentScores": [87.56, 66.96, 151.78, 77.16, 102.27, 143.0],
+          "allPlayExpectedWins": 2.2727,
+          "winGap": 0.7273
+        },
+        {
+          "rosterId": 9,
+          "label": "Lisan Al-Caleb",
+          "wins": 3,
+          "losses": 3,
+          "pointsFor": 613.4,
+          "pointsAgainst": 687.87,
+          "weeklyScores": [126.91, 125.17, 94.39, 77.16, 99.42, 90.35],
+          "opponentScores": [115.46, 105.68, 88.86, 106.92, 171.93, 99.02],
+          "allPlayExpectedWins": 2.5455,
+          "winGap": 0.4545
+        },
+        {
+          "rosterId": 7,
+          "label": "Mexican Cartel",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 674.61,
+          "pointsAgainst": 739.99,
+          "weeklyScores": [70.16, 130.42, 100.56, 90.97, 153.65, 128.85],
+          "opponentScores": [145.27, 131.08, 118.99, 139.88, 127.19, 77.58],
+          "allPlayExpectedWins": 3.2727,
+          "winGap": -1.2727
+        },
+        {
+          "rosterId": 4,
+          "label": "Socialized L-Care",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 612.7,
+          "pointsAgainst": 622.05,
+          "weeklyScores": [98.52, 121.13, 88.86, 129.83, 96.34, 78.02],
+          "opponentScores": [120.22, 82.5, 94.39, 130.61, 67.57, 126.76],
+          "allPlayExpectedWins": 2.0909,
+          "winGap": -0.0909
+        },
+        {
+          "rosterId": 10,
+          "label": "brendenclerget",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 606.23,
+          "pointsAgainst": 711.16,
+          "weeklyScores": [115.46, 82.5, 100.24, 128.18, 102.27, 77.58],
+          "opponentScores": [126.91, 121.13, 126.09, 124.82, 83.36, 128.85],
+          "allPlayExpectedWins": 2.1818,
+          "winGap": -0.1818
+        },
+        {
+          "rosterId": 3,
+          "label": "aaryanshetty",
+          "wins": 2,
+          "losses": 4,
+          "pointsFor": 594.01,
+          "pointsAgainst": 746.98,
+          "weeklyScores": [118.85, 66.96, 88.73, 112.33, 127.19, 79.95],
+          "opponentScores": [116.21, 118.93, 165.39, 85.82, 153.65, 106.98],
+          "allPlayExpectedWins": 1.8182,
+          "winGap": 0.1818
+        }
+      ],
+      "matchups": [
+        {
+          "key": "1387520236663615488:6:1",
+          "matchupId": 1,
+          "teams": [
+            {
+              "rosterId": 1,
+              "label": "ashwindandapani1",
+              "score": 97.21,
+              "starters": [
+                {
+                  "id": "6797",
+                  "name": "Justin Herbert",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 9.26,
+                  "slot": "QB"
+                },
+                {
+                  "id": "11579",
+                  "name": "Audric Estime",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 8.4,
+                  "slot": "RB"
+                },
+                {
+                  "id": "4034",
+                  "name": "Christian McCaffrey",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 27.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6786",
+                  "name": "CeeDee Lamb",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "13346",
+                  "name": "Denzel Boston",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 2.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8110",
+                  "name": "Jake Ferguson",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 2.3,
+                  "slot": "TE"
+                },
+                {
+                  "id": "8121",
+                  "name": "Romeo Doubs",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.7,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "11637",
+                  "name": "Keon Coleman",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "CLE",
+                  "name": "Cleveland Browns",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 11.45,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": [
+                {
+                  "out": {
+                    "id": "13346",
+                    "name": "Denzel Boston",
+                    "position": "WR",
+                    "eligible": ["WR"],
+                    "points": 2.0,
+                    "slot": "WR"
+                  },
+                  "in": {
+                    "id": "5947",
+                    "name": "Jakobi Meyers",
+                    "position": "WR",
+                    "eligible": ["WR"],
+                    "points": 10.8
+                  },
+                  "revisedScore": 106.01,
+                  "gain": 8.8
+                },
+                {
+                  "out": {
+                    "id": "13346",
+                    "name": "Denzel Boston",
+                    "position": "WR",
+                    "eligible": ["WR"],
+                    "points": 2.0,
+                    "slot": "WR"
+                  },
+                  "in": {
+                    "id": "4454",
+                    "name": "Kendrick Bourne",
+                    "position": "WR",
+                    "eligible": ["WR"],
+                    "points": 7.2
+                  },
+                  "revisedScore": 102.41,
+                  "gain": 5.2
+                }
+              ]
+            },
+            {
+              "rosterId": 2,
+              "label": "krishnik",
+              "score": 98.69,
+              "starters": [
+                {
+                  "id": "6804",
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 20.74,
+                  "slot": "QB"
+                },
+                {
+                  "id": "6813",
+                  "name": "Jonathan Taylor",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 22.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "6806",
+                  "name": "J.K. Dobbins",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 12.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9997",
+                  "name": "Zay Flowers",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 9.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7525",
+                  "name": "DeVonta Smith",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 17.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12506",
+                  "name": "Harold Fannin Jr.",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 1.4,
+                  "slot": "TE"
+                },
+                {
+                  "id": "4037",
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.7,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8154",
+                  "name": "Brian Robinson Jr.",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 2.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "LAR",
+                  "name": "Los Angeles Rams",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 6.95,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 2,
+          "margin": 1.48,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.1592,
+              "winProbB": 0.8408,
+              "projectedFinalA": 80.63709285717117,
+              "projectedFinalB": 103.62708112573075,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -23,
+              "total": 184.5,
+              "rosterAId": "1",
+              "rosterBId": "2"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9994444444444446,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 97.43373503085479,
+              "projectedFinalB": 98.68999999997494,
+              "currentScoreA": 97.21,
+              "currentScoreB": 98.69,
+              "spread": -1.5,
+              "total": 196,
+              "rosterAId": "1",
+              "rosterBId": "2"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.0707,
+            "winnerOpening": 0.8408,
+            "favoriteRosterId": 2,
+            "favoriteProbability": 0.8408,
+            "leadChanges": 22
+          }
+        },
+        {
+          "key": "1387520236663615488:6:2",
+          "matchupId": 2,
+          "teams": [
+            {
+              "rosterId": 3,
+              "label": "aaryanshetty",
+              "score": 79.95,
+              "starters": [
+                {
+                  "id": "7083",
+                  "name": "Tyler Huntley",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 12.4,
+                  "slot": "QB"
+                },
+                {
+                  "id": "12474",
+                  "name": "Woody Marks",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.6,
+                  "slot": "RB"
+                },
+                {
+                  "id": "7611",
+                  "name": "Rhamondre Stevenson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8137",
+                  "name": "George Pickens",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.3,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7569",
+                  "name": "Nico Collins",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 9.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "9480",
+                  "name": "Brenton Strange",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 6.9,
+                  "slot": "TE"
+                },
+                {
+                  "id": "9500",
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 6.7,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "9487",
+                  "name": "Parker Washington",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 8.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "CAR",
+                  "name": "Carolina Panthers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 11.15,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 5,
+              "label": "gibuttersnaps",
+              "score": 106.98,
+              "starters": [
+                {
+                  "id": "9758",
+                  "name": "C.J. Stroud",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 22.98,
+                  "slot": "QB"
+                },
+                {
+                  "id": "7594",
+                  "name": "Chuba Hubbard",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 22.1,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12527",
+                  "name": "Ashton Jeanty",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8112",
+                  "name": "Drake London",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11620",
+                  "name": "Rome Odunze",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "7002",
+                  "name": "Juwan Johnson",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 0.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "13279",
+                  "name": "Carnell Tate",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 16.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "9757",
+                  "name": "Kendre Miller",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "SEA",
+                  "name": "Seattle Seahawks",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 7.0,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 5,
+          "margin": 27.03,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.6134,
+              "winProbB": 0.3866,
+              "projectedFinalA": 114.29802918142528,
+              "projectedFinalB": 107.76304668380327,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 6.5,
+              "total": 222,
+              "rosterAId": "3",
+              "rosterBId": "5"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 1,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 79.94999999998936,
+              "projectedFinalB": 106.97999999998707,
+              "currentScoreA": 79.95,
+              "currentScoreB": 106.98,
+              "spread": -27,
+              "total": 187,
+              "rosterAId": "3",
+              "rosterBId": "5"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.3385,
+            "winnerOpening": 0.3866,
+            "favoriteRosterId": 3,
+            "favoriteProbability": 0.6134,
+            "leadChanges": 1
+          }
+        },
+        {
+          "key": "1387520236663615488:6:3",
+          "matchupId": 3,
+          "teams": [
+            {
+              "rosterId": 4,
+              "label": "Socialized L-Care",
+              "score": 78.02,
+              "starters": [
+                {
+                  "id": "96",
+                  "name": "Aaron Rodgers",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 16.02,
+                  "slot": "QB"
+                },
+                {
+                  "id": "8151",
+                  "name": "Kenneth Walker III",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 29.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12512",
+                  "name": "Quinshon Judkins",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 0.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9493",
+                  "name": "Puka Nacua",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.0,
+                  "slot": "WR"
+                },
+                {
+                  "id": "1479",
+                  "name": "Keenan Allen",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 12.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "3271",
+                  "name": "Tyler Higbee",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 2.2,
+                  "slot": "TE"
+                },
+                {
+                  "id": "13293",
+                  "name": "Ja'Kobi Lane",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 6.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "4950",
+                  "name": "Christian Kirk",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 0.0,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "IND",
+                  "name": "Indianapolis Colts",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 0.7,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 8,
+              "label": "aditya22",
+              "score": 126.76,
+              "starters": [
+                {
+                  "id": "12545",
+                  "name": "Tyler Shough",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 27.96,
+                  "slot": "QB"
+                },
+                {
+                  "id": "8138",
+                  "name": "James Cook III",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 25.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8228",
+                  "name": "Jaylen Warren",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 10.3,
+                  "slot": "RB"
+                },
+                {
+                  "id": "9488",
+                  "name": "Jaxon Smith-Njigba",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 19.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11632",
+                  "name": "Malik Nabers",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 22.5,
+                  "slot": "WR"
+                },
+                {
+                  "id": "1466",
+                  "name": "Travis Kelce",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 7.3,
+                  "slot": "TE"
+                },
+                {
+                  "id": "5967",
+                  "name": "Tony Pollard",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 9.6,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "10232",
+                  "name": "Michael Wilson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "JAX",
+                  "name": "Jacksonville Jaguars",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": -0.8,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 8,
+          "margin": 48.74,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.2082,
+              "winProbB": 0.7918,
+              "projectedFinalA": 104.49714513974307,
+              "projectedFinalB": 125.80469800577762,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -21.5,
+              "total": 230,
+              "rosterAId": "4",
+              "rosterBId": "8"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9994444444444446,
+              "winProbA": 0,
+              "winProbB": 1,
+              "projectedFinalA": 78.02000000001082,
+              "projectedFinalB": 126.7600000000081,
+              "currentScoreA": 78.02,
+              "currentScoreB": 126.76,
+              "spread": -48.5,
+              "total": 205,
+              "rosterAId": "4",
+              "rosterBId": "8"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.6883,
+            "winnerOpening": 0.7918,
+            "favoriteRosterId": 8,
+            "favoriteProbability": 0.7918,
+            "leadChanges": 0
+          }
+        },
+        {
+          "key": "1387520236663615488:6:4",
+          "matchupId": 4,
+          "teams": [
+            {
+              "rosterId": 6,
+              "label": "Can you tuten my face",
+              "score": 143.0,
+              "starters": [
+                {
+                  "id": "11564",
+                  "name": "Drake Maye",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 24.3,
+                  "slot": "QB"
+                },
+                {
+                  "id": "3198",
+                  "name": "Derrick Henry",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "7588",
+                  "name": "Javonte Williams",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 13.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "10213",
+                  "name": "Tre Tucker",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 24.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11646",
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "11604",
+                  "name": "Brock Bowers",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 9.0,
+                  "slot": "TE"
+                },
+                {
+                  "id": "12490",
+                  "name": "Bhayshul Tuten",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 23.7,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "12519",
+                  "name": "Luther Burden III",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "KC",
+                  "name": "Kansas City Chiefs",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 17.1,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 12,
+              "label": "Sahilmodi8",
+              "score": 89.11,
+              "starters": [
+                {
+                  "id": "8183",
+                  "name": "Brock Purdy",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 19.36,
+                  "slot": "QB"
+                },
+                {
+                  "id": "11581",
+                  "name": "MarShawn Lloyd",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 1.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11435",
+                  "name": "Emanuel Wilson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 7.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11834",
+                  "name": "Devaughn Vele",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.7,
+                  "slot": "WR"
+                },
+                {
+                  "id": "13150",
+                  "name": "Darius Cooper",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 1.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "9484",
+                  "name": "Tucker Kraft",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 6.2,
+                  "slot": "TE"
+                },
+                {
+                  "id": "8129",
+                  "name": "Dameon Pierce",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8136",
+                  "name": "Rachaad White",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "PIT",
+                  "name": "Pittsburgh Steelers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 19.05,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 6,
+          "margin": 53.89,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.8827,
+              "winProbB": 0.1173,
+              "projectedFinalA": 128.04730178182209,
+              "projectedFinalB": 100.11044782769582,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 27.5,
+              "total": 228,
+              "rosterAId": "6",
+              "rosterBId": "12"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.977173721340388,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 143,
+              "projectedFinalB": 93.97605012165847,
+              "currentScoreA": 143,
+              "currentScoreB": 89.01,
+              "spread": 49,
+              "total": 237,
+              "rosterAId": "6",
+              "rosterBId": "12"
+            },
+            "finalAligned": false,
+            "winnerLow": 0.7758,
+            "winnerOpening": 0.8827,
+            "favoriteRosterId": 6,
+            "favoriteProbability": 0.8827,
+            "leadChanges": 0
+          }
+        },
+        {
+          "key": "1387520236663615488:6:5",
+          "matchupId": 5,
+          "teams": [
+            {
+              "rosterId": 7,
+              "label": "Mexican Cartel",
+              "score": 128.85,
+              "starters": [
+                {
+                  "id": "4984",
+                  "name": "Josh Allen",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 18.8,
+                  "slot": "QB"
+                },
+                {
+                  "id": "4035",
+                  "name": "Alvin Kamara",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11576",
+                  "name": "Braelon Allen",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.4,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12501",
+                  "name": "Matthew Golden",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 19.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "2133",
+                  "name": "Davante Adams",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 5.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "4217",
+                  "name": "George Kittle",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 15.4,
+                  "slot": "TE"
+                },
+                {
+                  "id": "5859",
+                  "name": "A.J. Brown",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "8131",
+                  "name": "Isaiah Likely",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 20.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "DEN",
+                  "name": "Denver Broncos",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 16.45,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 10,
+              "label": "brendenclerget",
+              "score": 77.58,
+              "starters": [
+                {
+                  "id": "421",
+                  "name": "Matthew Stafford",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 15.88,
+                  "slot": "QB"
+                },
+                {
+                  "id": "8150",
+                  "name": "Kyren Williams",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 10.7,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12481",
+                  "name": "Cam Skattebo",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 0.0,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12526",
+                  "name": "Tetairoa McMillan",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 11.6,
+                  "slot": "WR"
+                },
+                {
+                  "id": "5927",
+                  "name": "Terry McLaurin",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 3.2,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8130",
+                  "name": "Trey McBride",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 8.8,
+                  "slot": "TE"
+                },
+                {
+                  "id": "5012",
+                  "name": "Mark Andrews",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 0.9,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "5846",
+                  "name": "DK Metcalf",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 14.8,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "BAL",
+                  "name": "Baltimore Ravens",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 11.7,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 7,
+          "margin": 51.27,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.5386,
+              "winProbB": 0.4614,
+              "projectedFinalA": 120.24183582335412,
+              "projectedFinalB": 117.70306798285924,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": 2.5,
+              "total": 238,
+              "rosterAId": "7",
+              "rosterBId": "10"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.977173721340388,
+              "winProbA": 1,
+              "winProbB": 0,
+              "projectedFinalA": 128.97355214555418,
+              "projectedFinalB": 81.41033847964603,
+              "currentScoreA": 128.85,
+              "currentScoreB": 77.58,
+              "spread": 47.5,
+              "total": 210.5,
+              "rosterAId": "7",
+              "rosterBId": "10"
+            },
+            "finalAligned": true,
+            "winnerLow": 0.5295,
+            "winnerOpening": 0.5386,
+            "favoriteRosterId": 7,
+            "favoriteProbability": 0.5386,
+            "leadChanges": 0
+          }
+        },
+        {
+          "key": "1387520236663615488:6:6",
+          "matchupId": 6,
+          "teams": [
+            {
+              "rosterId": 9,
+              "label": "Lisan Al-Caleb",
+              "score": 90.35,
+              "starters": [
+                {
+                  "id": "11560",
+                  "name": "Caleb Williams",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 16.0,
+                  "slot": "QB"
+                },
+                {
+                  "id": "6790",
+                  "name": "D'Andre Swift",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 21.5,
+                  "slot": "RB"
+                },
+                {
+                  "id": "12507",
+                  "name": "Omarion Hampton",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 5.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8144",
+                  "name": "Chris Olave",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 12.3,
+                  "slot": "WR"
+                },
+                {
+                  "id": "8146",
+                  "name": "Garrett Wilson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 6.4,
+                  "slot": "WR"
+                },
+                {
+                  "id": "10236",
+                  "name": "Dalton Kincaid",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 7.3,
+                  "slot": "TE"
+                },
+                {
+                  "id": "11439",
+                  "name": "Jaleel McLaughlin",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 7.5,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "2449",
+                  "name": "Stefon Diggs",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 13.4,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "HOU",
+                  "name": "Houston Texans",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 0.05,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            },
+            {
+              "rosterId": 11,
+              "label": "Loveland Island",
+              "score": 99.02,
+              "starters": [
+                {
+                  "id": "3257",
+                  "name": "Jacoby Brissett",
+                  "position": "QB",
+                  "eligible": ["QB"],
+                  "points": 7.42,
+                  "slot": "QB"
+                },
+                {
+                  "id": "9509",
+                  "name": "Bijan Robinson",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.8,
+                  "slot": "RB"
+                },
+                {
+                  "id": "11584",
+                  "name": "Bucky Irving",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 6.9,
+                  "slot": "RB"
+                },
+                {
+                  "id": "8167",
+                  "name": "Christian Watson",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 7.9,
+                  "slot": "WR"
+                },
+                {
+                  "id": "2216",
+                  "name": "Mike Evans",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 10.9,
+                  "slot": "WR"
+                },
+                {
+                  "id": "12517",
+                  "name": "Colston Loveland",
+                  "position": "TE",
+                  "eligible": ["TE"],
+                  "points": 15.5,
+                  "slot": "TE"
+                },
+                {
+                  "id": "12489",
+                  "name": "RJ Harvey",
+                  "position": "RB",
+                  "eligible": ["RB"],
+                  "points": 14.1,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "13274",
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "eligible": ["WR"],
+                  "points": 20.2,
+                  "slot": "FLEX"
+                },
+                {
+                  "id": "SF",
+                  "name": "San Francisco 49ers",
+                  "position": "DEF",
+                  "eligible": ["DEF"],
+                  "points": 9.3,
+                  "slot": "DEF"
+                }
+              ],
+              "winningSwaps": []
+            }
+          ],
+          "winnerRosterId": 11,
+          "margin": 8.67,
+          "flow": {
+            "sampleCount": 575,
+            "opening": {
+              "timestamp": "2026-10-16T00:16:50.424Z",
+              "gameProgress": 0,
+              "winProbA": 0.2012,
+              "winProbB": 0.7988,
+              "projectedFinalA": 100.01356670546083,
+              "projectedFinalB": 120.26309887521569,
+              "currentScoreA": 0,
+              "currentScoreB": 0,
+              "spread": -20,
+              "total": 220.5,
+              "rosterAId": "9",
+              "rosterBId": "11"
+            },
+            "final": {
+              "timestamp": "2026-10-20T03:20:49.286Z",
+              "gameProgress": 0.9766181657848324,
+              "winProbA": 0.0014,
+              "winProbB": 0.9986,
+              "projectedFinalA": 93.43413392106228,
+              "projectedFinalB": 97.32105698199149,
+              "currentScoreA": 90.35,
+              "currentScoreB": 97.12,
+              "spread": -4,
+              "total": 190.5,
+              "rosterAId": "9",
+              "rosterBId": "11"
+            },
+            "finalAligned": false,
+            "winnerLow": 0.7746,
+            "winnerOpening": 0.7988,
+            "favoriteRosterId": 11,
+            "favoriteProbability": 0.7988,
+            "leadChanges": 0
+          }
+        }
+      ]
+    }
+  ]
+}
