@@ -9,7 +9,12 @@ export interface ReportListItem {
   description?: string;
 }
 
-export type DedicatedReportRoute = '2026-week-1' | '2026-week-2' | '2026-week-3' | '2026-week-4';
+export type DedicatedReportRoute =
+  | '2026-week-1'
+  | '2026-week-2'
+  | '2026-week-3'
+  | '2026-week-4'
+  | '2026-week-6';
 
 export const getDedicatedReportRoute = (
   season: string,
@@ -19,10 +24,22 @@ export const getDedicatedReportRoute = (
   if (season === '2026' && slug === 'week-2') return '2026-week-2';
   if (season === '2026' && slug === 'week-3') return '2026-week-3';
   if (season === '2026' && slug === 'week-4') return '2026-week-4';
+  if (season === '2026' && slug === 'week-6') return '2026-week-6';
   return null;
 };
 
 export const DEDICATED_REPORTS: ReportListItem[] = [
+  {
+    season: 2026,
+    week: 6,
+    title: 'Twenty Teams Couldn’t Find a Hundred',
+    href: '/competition/reports/2026/week-6',
+    date: '2026-10-22T11:20:00-04:00',
+    tags: ['Week 6', 'Scoring drought', 'Standings', 'Lineup autopsy'],
+    status: 'success',
+    description:
+      'Twenty sub-100 lineups, eight blowouts, one photo finish, and a five-way tie atop the Keep.',
+  },
   {
     season: 2026,
     week: 4,

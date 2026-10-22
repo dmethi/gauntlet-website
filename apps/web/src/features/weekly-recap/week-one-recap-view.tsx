@@ -51,9 +51,11 @@ const ScoringDistribution = ({ report }: { report: WeekOneRecap }) => {
           <h2 id="score-distribution-title">
             {report.week === 1
               ? 'Thirty-six scores, one crowded middle'
-              : report.week === 4
-                ? 'The points came back in force'
-                : 'The points disappeared; the outliers did not'}
+              : report.week === 6
+                ? 'Twenty teams below a hundred'
+                : report.week === 4
+                  ? 'The points came back in force'
+                  : 'The points disappeared; the outliers did not'}
           </h2>
         </div>
         <p>
@@ -220,7 +222,8 @@ export const WeekOneRecapView = ({
   supplement?: ReactNode;
 }) => {
   const isOpeningWeek = report.week === 1;
-  const weekWord = ['zero', 'one', 'two', 'three', 'four'][report.week] ?? String(report.week);
+  const weekWord =
+    ['zero', 'one', 'two', 'three', 'four', 'five', 'six'][report.week] ?? String(report.week);
   const allMatchups = report.leagues.flatMap(league => league.matchups);
   const allScores = allMatchups.flatMap(matchup => matchup.teams.map(team => team.score));
   const hasOpeningOdds = allMatchups.every(matchup => matchup.openingWinProbability != null);
@@ -439,8 +442,8 @@ export const WeekOneRecapView = ({
           <h2 id="receipts-title">
             {isOpeningWeek
               ? 'Receipts from 2025'
-              : report.week === 4
-                ? 'The Week 4 evidence'
+              : report.week >= 4
+                ? `The Week ${report.week} evidence`
                 : 'The early auction market'}
           </h2>
           <p>

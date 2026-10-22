@@ -36,6 +36,17 @@ describe('dedicated report registry', () => {
     );
   });
 
+  it('registers and resolves the 2026 Week 6 edition', () => {
+    expect(getDedicatedReportRoute('2026', 'week-6')).toBe('2026-week-6');
+    expect(DEDICATED_REPORTS).toContainEqual(
+      expect.objectContaining({
+        season: 2026,
+        week: 6,
+        href: '/competition/reports/2026/week-6',
+      }),
+    );
+  });
+
   it('registers the 2026 Week 4 newspaper recap', () => {
     expect(DEDICATED_REPORTS).toContainEqual(
       expect.objectContaining({
@@ -86,6 +97,6 @@ describe('dedicated report registry', () => {
       },
     ]);
 
-    expect(merged[0]).toEqual(expect.objectContaining({ season: 2026, week: 4 }));
+    expect(merged[0]).toEqual(expect.objectContaining({ season: 2026, week: 6 }));
   });
 });
