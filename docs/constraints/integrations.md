@@ -387,6 +387,34 @@ these server-to-server capabilities.
 
 ---
 
+## Frozen Recap Rankings
+
+`apps/web/src/features/weekly-recap/report-rankings.ts` computes one Legion at a
+time from frozen Sleeper draft picks, transactions, and weekly box scores. The
+Week 6 edition combines only the finished ranking rows for presentation.
+
+- VORP subtracts the same-position bench median for that Legion and week.
+  Zero-scoring benched players remain in the pool. This follows driveFF's
+  baseline, rather than the legacy Transactions tab's universal starter median.
+- Draft returns count starts in the original acquisition stint and retain the
+  full purchase cost for injured, benched, or released picks. Pick surplus is
+  VORP minus auction price times the Legion's realized draft VORP per dollar.
+- Transaction completion timestamps determine the report cutoff. Sleeper's
+  transaction leg can contain the following Wednesday's claims. Each start is
+  credited once, to its recorded roster's latest overlapping ownership stint.
+  Already-played points stay with the original lineup after a midweek trade.
+- Transaction return deducts 25 points per full FAAB budget spent, matching
+  driveFF's grading convention. The UI must also show raw VORP and dollars.
+- Positional edges compare six-week team position totals, including flex,
+  against the median team average in the same Legion.
+
+The frozen inputs are public data. The source snapshot, methodology, and cutoff
+travel with the edition; published rankings do not change with later pickups.
+Regression tests cover independent baselines, separate reacquisition stints,
+late claims, full draft costs, midweek trades, and source coverage.
+
+---
+
 ## Changing Integration Contracts
 
 Before modifying any pattern in this doc:

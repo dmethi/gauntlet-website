@@ -629,6 +629,15 @@ export const WEEK_SIX_RECAP = {
     note: 'Totals use corrected Sleeper box scores for Weeks 1–6. All-play expected wins compare each weekly score with the other 11 teams in the same Legion, awarding half a win for a tie, then sum those weekly fractions. This is a descriptive schedule baseline, not a playoff forecast or the Stats Hub’s counterfactual-schedule model. Ziyan’s swap moves Jaylen Waddle from flex to WR so George Holani can occupy flex.',
     items: [
       {
+        view: 'Six-week rankings',
+        metric: '36 drafts',
+        title: 'Follow the Money Into the Rankings',
+        summary:
+          'Best and worst draft returns, auction bargains and shortfalls, transaction returns, positional edges, and four statistical outliers. Every table is frozen through Week 6.',
+        href: '#six-week-rankings',
+        linkLabel: 'Jump to the six-week rankings',
+      },
+      {
         view: 'Trends',
         metric: '−529.20',
         title: 'The Decline Came From Every Position',

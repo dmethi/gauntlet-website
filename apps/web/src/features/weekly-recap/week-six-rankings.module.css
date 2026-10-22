@@ -1,0 +1,271 @@
+.supplement {
+  width: min(1440px, calc(100% - 32px));
+  margin: 80px auto 24px;
+  scroll-margin-top: 100px;
+}
+.header {
+  border-top: 6px double var(--ink);
+  padding-top: 22px;
+}
+.eyebrow {
+  color: var(--red);
+  font:
+    800 0.67rem/1.3 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.header h2 {
+  margin: 18px 0;
+  font:
+    900 clamp(3.6rem, 9vw, 8rem) / 0.86 var(--font-geizer),
+    Impact,
+    sans-serif;
+  text-transform: uppercase;
+  max-width: 14ch;
+}
+.header > p:last-child {
+  max-width: 52rem;
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  line-height: 1.35;
+}
+.contents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  padding: 18px 0;
+  margin-top: 24px;
+  border-block: 1px solid var(--ink);
+  font:
+    800 0.75rem/1.2 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  text-transform: uppercase;
+}
+.contents a,
+.sourceNote a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.contents a:hover,
+.sourceNote a:hover {
+  color: var(--red);
+}
+.contents a:focus-visible,
+.sourceNote summary:focus-visible,
+.sourceNote a:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 5px;
+}
+.desk {
+  margin-top: 64px;
+  scroll-margin-top: 100px;
+}
+.desk > h3 {
+  margin: 10px 0 18px;
+  max-width: 28ch;
+  font-size: clamp(1.9rem, 3.5vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.05;
+}
+.desk > p:not(.eyebrow, .method) {
+  max-width: 70rem;
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px;
+  margin-top: 28px;
+}
+.rankingTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.rankingTable caption {
+  text-align: left;
+  border-block: 2px solid var(--ink);
+  padding: 12px 0;
+  font:
+    800 0.8rem/1.3 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.rankingTable thead th {
+  padding: 10px 0;
+  font:
+    700 0.63rem/1.2 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  text-transform: uppercase;
+}
+.rankingTable th,
+.rankingTable td {
+  text-align: right;
+  vertical-align: top;
+}
+.rankingTable th:first-child {
+  text-align: left;
+  width: 48%;
+  padding-right: 10px;
+}
+.rankingTable tbody th,
+.rankingTable tbody td {
+  border-top: 1px solid var(--rule);
+  padding-block: 15px;
+}
+.rankingTable tbody th {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.rankingTable td {
+  font:
+    600 0.85rem/1.4 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.rankingTable small {
+  display: block;
+  color: var(--muted-ink);
+  font:
+    500 0.65rem/1.4 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  margin-top: 5px;
+}
+.rankingTable .result {
+  color: var(--red);
+  font-weight: 900;
+}
+.rank {
+  color: var(--red);
+}
+.method {
+  border-top: 1px solid var(--ink);
+  margin-top: 24px;
+  padding-top: 12px;
+  color: var(--muted-ink);
+  font:
+    0.78rem/1.6 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+.positionSummary {
+  margin-top: 32px;
+}
+.positionSummary th:first-child {
+  width: 12%;
+}
+.positionSummary th,
+.positionSummary td {
+  text-align: left;
+}
+.positionSummary td {
+  padding-right: 16px;
+  font-family: inherit;
+  font-size: 1.05rem;
+}
+.trade {
+  border-block: 1px solid var(--rule);
+  padding: 22px 0;
+  margin-top: 32px;
+}
+.trade h4,
+.outliers h4 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.trade p {
+  margin-top: 8px;
+}
+.trade small {
+  display: block;
+  margin-top: 12px;
+  color: var(--muted-ink);
+  line-height: 1.5;
+}
+.outliers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 48px;
+  margin-top: 28px;
+}
+.outliers article {
+  border-top: 2px solid var(--ink);
+  padding-top: 22px;
+}
+.outliers article > p:last-child {
+  line-height: 1.5;
+}
+.stat {
+  color: var(--red);
+  font:
+    900 4rem/1 var(--font-geizer),
+    Impact,
+    sans-serif;
+  margin-bottom: 12px;
+}
+.sourceNote {
+  margin-top: 48px;
+  border-block: 1px solid var(--ink);
+  padding: 18px 0;
+  font:
+    0.8rem/1.6 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+.sourceNote summary {
+  font-weight: 800;
+  cursor: pointer;
+}
+.sourceNote p {
+  margin-top: 14px;
+  max-width: 75rem;
+}
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+@media (max-width: 600px) {
+  .supplement {
+    width: calc(100% - 22px);
+    margin-top: 60px;
+  }
+  .desk {
+    margin-top: 48px;
+  }
+  .rankingTable th:first-child {
+    width: 46%;
+  }
+  .rankingTable td {
+    font-size: 0.72rem;
+  }
+  .rankingTable tbody th {
+    font-size: 0.92rem;
+  }
+  .rankingTable thead th {
+    font-size: 0.58rem;
+  }
+  .positionSummary th:first-child {
+    width: 13%;
+  }
+  .positionSummary td {
+    font-size: 0.9rem;
+    padding-right: 9px;
+  }
+  .outliers {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
