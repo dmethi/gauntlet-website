@@ -14,7 +14,8 @@ export type DedicatedReportRoute =
   | '2026-week-2'
   | '2026-week-3'
   | '2026-week-4'
-  | '2026-week-6';
+  | '2026-week-6'
+  | '2026-week-7';
 
 export const getDedicatedReportRoute = (
   season: string,
@@ -25,10 +26,22 @@ export const getDedicatedReportRoute = (
   if (season === '2026' && slug === 'week-3') return '2026-week-3';
   if (season === '2026' && slug === 'week-4') return '2026-week-4';
   if (season === '2026' && slug === 'week-6') return '2026-week-6';
+  if (season === '2026' && slug === 'week-7') return '2026-week-7';
   return null;
 };
 
 export const DEDICATED_REPORTS: ReportListItem[] = [
+  {
+    season: 2026,
+    week: 7,
+    title: 'Good Scores. Bad Addresses.',
+    href: '/competition/reports/2026/week-7',
+    date: '2026-10-27T12:00:00-04:00',
+    tags: ['Week 7', 'Scoring podium', 'Schedule luck', 'Recent form'],
+    status: 'success',
+    description:
+      'Ten underdog wins, a 0.57-point payout boundary, and a seven-week reality check across all 36 teams.',
+  },
   {
     season: 2026,
     week: 6,

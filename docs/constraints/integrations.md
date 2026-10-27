@@ -415,6 +415,25 @@ late claims, full draft costs, midweek trades, and source coverage.
 
 ---
 
+## Frozen Week 7 Field Notes
+
+The Week 7 recap stores its public source snapshot in
+`apps/web/src/features/weekly-recap/week-seven-source.json`. The corresponding
+analysis computes same-Legion all-play expected wins independently, then
+combines finished rows for the cross-Legion scoring podium and editorial tables.
+Records stop after Week 7; Week 8 data supplies pairings only. The source JSON
+exceeds the normal code file length limit because it preserves the edition’s
+public inputs.
+
+Recent form compares the average of Weeks 5–7 with Weeks 1–4. The star test sets
+each winner’s highest-scoring starter to zero and compares the remaining score
+with the actual opponent; it is not an optimal-lineup or injury-depth model.
+Legal one-player autopsies may reassign existing starters across both flex
+slots. The three chart tails that differ from Sleeper’s corrected totals are
+labeled directional; final Sleeper scores determine winners and scoring order.
+
+---
+
 ## Changing Integration Contracts
 
 Before modifying any pattern in this doc:

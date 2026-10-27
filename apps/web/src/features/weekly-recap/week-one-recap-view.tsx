@@ -51,11 +51,13 @@ const ScoringDistribution = ({ report }: { report: WeekOneRecap }) => {
           <h2 id="score-distribution-title">
             {report.week === 1
               ? 'Thirty-six scores, one crowded middle'
-              : report.week === 6
-                ? 'Twenty teams below a hundred'
-                : report.week === 4
-                  ? 'The points came back in force'
-                  : 'The points disappeared; the outliers did not'}
+              : report.week === 7
+                ? 'Thirteen teams below a hundred'
+                : report.week === 6
+                  ? 'Twenty teams below a hundred'
+                  : report.week === 4
+                    ? 'The points came back in force'
+                    : 'The points disappeared; the outliers did not'}
           </h2>
         </div>
         <p>
@@ -216,14 +218,17 @@ export const WeekOneRecapView = ({
   report,
   labels,
   supplement,
+  leadSupplement,
 }: {
   report: WeekOneRecap;
   labels: ResolvedTeamLabels;
   supplement?: ReactNode;
+  leadSupplement?: ReactNode;
 }) => {
   const isOpeningWeek = report.week === 1;
   const weekWord =
-    ['zero', 'one', 'two', 'three', 'four', 'five', 'six'][report.week] ?? String(report.week);
+    ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][report.week] ??
+    String(report.week);
   const allMatchups = report.leagues.flatMap(league => league.matchups);
   const allScores = allMatchups.flatMap(matchup => matchup.teams.map(team => team.score));
   const hasOpeningOdds = allMatchups.every(matchup => matchup.openingWinProbability != null);
@@ -305,6 +310,8 @@ export const WeekOneRecapView = ({
         <ScoringDistribution report={report} />
         {hasOpeningOdds && <OpeningLineLedger report={report} labels={labels} />}
       </div>
+
+      {leadSupplement}
 
       <section className={styles.flowDesk} aria-labelledby="flow-desk-title">
         <div className={styles.sectionBanner}>
