@@ -73,9 +73,10 @@ describe('MatchupSimulation', () => {
     it('fetches and displays simulation data', async () => {
       render(<MatchupSimulation leagueId="league-1" week={1} matchupId={1} />);
 
+      // The summary, score ranges and margin calculator each show both team names.
       await waitFor(() => {
-        expect(screen.getByText('Team Alpha')).toBeInTheDocument();
-        expect(screen.getByText('Team Beta')).toBeInTheDocument();
+        expect(screen.getAllByText('Team Alpha')).toHaveLength(3);
+        expect(screen.getAllByText('Team Beta')).toHaveLength(3);
       });
 
       expect(global.fetch).toHaveBeenCalledWith('/api/matchups/league-1/1/1/simulate', {
@@ -161,7 +162,7 @@ describe('MatchupSimulation', () => {
 
       await waitFor(() => {
         // Component should render successfully
-        expect(screen.getByText('Team Alpha')).toBeInTheDocument();
+        expect(screen.getAllByText('Team Alpha').length).toBeGreaterThan(0);
       });
     });
   });
