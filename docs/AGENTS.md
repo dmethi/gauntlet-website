@@ -77,12 +77,14 @@ git branch -d issue-<NUMBER>
 
 Studio Linear is the only active work queue. Read the canonical shared
 `portfolio/STUDIO_LINEAR.md` before selecting implementation work. GitHub PRs
-and legacy issues provide evidence and context; they do not authorize a second queue.
+and legacy issues provide evidence and context; they do not authorize a second
+queue.
 
 ### Before Starting
 
 1. Identify the authorizing Linear issue and destination project.
-2. Confirm admission and read its outcome, scope, exclusions and acceptance evidence.
+2. Confirm admission and read its outcome, scope, exclusions and acceptance
+   evidence.
 3. Follow the shared Git hygiene skill for ownership and worktree isolation.
 4. Keep repo-specific safety, privacy and review requirements in force.
 
@@ -114,12 +116,13 @@ scripts/merge-pr.sh <N>                       # merges only if `local-ci` passed
   thresholds for `@gauntlet/web`, `@gauntlet/server` and `@gauntlet/sim-engine`,
   and semgrep.
 - Commit first. The script refuses a dirty tracked tree.
-- Never merge with `gh pr merge` or the GitHub button. Use `scripts/merge-pr.sh`.
+- Never merge with `gh pr merge` or the GitHub button. Use
+  `scripts/merge-pr.sh`.
 - Scheduled jobs are manual scripts now. Run them only when asked:
   `scripts/update-variance-models.sh` (weekly variance refresh, no secrets) and
   `scripts/live-odds-snapshot.sh` (needs `DATABASE_URL`).
-- Vercel still builds a preview for every pushed branch and deploys `main`.
-  That doesn't use Actions.
+- Vercel still builds a preview for every pushed branch and deploys `main`. That
+  doesn't use Actions.
 - Don't add workflows that run on push, pull_request or schedule.
 
 ---

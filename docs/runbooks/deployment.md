@@ -15,11 +15,44 @@ production.
          │              │                 │
          ▼              ▼                 ▼
 ┌─────────────────┐  ┌──────────┐   ┌──────────────┐
-│ External POST   │  │cron-job. │   │  GitHub      │
-│  (Live Odds)    │  │   org    │   │  Actions     │
-└─────────────────┘  │ (Recaps) │   │(Variance)    │
-                     └──────────┘   └──────────────┘
+│ driveFF         │  │cron-job. │   │ Manual       │
+│  (Live Odds)    │  │   org    │   │ scripts      │
+└─────────────────┘  │ (Recaps) │   │(Variance,    │
+                     └──────────┘   │ odds backup) │
+                                    └──────────────┘
 ```
+
+No GitHub Actions run for this repo. CI runs locally (`scripts/ci-local.sh`, see
+`docs/AGENTS.md`), and the former scheduled workflows are now manual scripts.
+
+## How Deploys Happen
+
+Vercel's Git integration deploys this repo. Nothing in the repo triggers a
+deploy.
+
+- Two Vercel projects build from `main`, both with root directory `apps/web` and
+  the settings in `apps/web/vercel.json`:
+  - `gauntlet-website` serves `gauntletff.com` and
+    `gauntlet-website.vercel.app`.
+  - `gauntlet-website-web` serves `gauntlet-website-web.vercel.app`.
+  - Why there are two projects is not documented. Confirm before you delete
+    either one.
+- A merge to `main` makes a production deployment in both projects. Each one
+  posts a `Vercel – <project>` commit status.
+- Every pushed branch gets a preview deployment in both projects.
+- Merge with `scripts/merge-pr.sh <N>` after
+  `scripts/ci-local.sh --pr <N> --post-status` passes. The merge is the deploy.
+- Neither project defines Vercel Cron jobs.
+
+To check a deploy, read the statuses on the commit:
+
+```bash
+gh api repos/dmethi/gauntlet-website/commits/<sha>/statuses \
+  --jq '.[] | "\(.context) \(.state)"'
+```
+
+The `vercel` CLI steps below are for first-time setup or a manual deploy. You
+don't need them for a normal release.
 
 ## Prerequisites
 
@@ -117,16 +150,14 @@ Set these in Vercel Dashboard → Project Settings → Environment Variables:
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Yes         | Clerk browser key                                | `pk_live_...`                               |
 | `CLERK_SECRET_KEY`                  | Yes         | Clerk server key                                 | `sk_live_...`                               |
 
-### GitHub Actions Secrets
+### Manual Job Variables
 
-For scheduled jobs, set these in GitHub → Settings → Secrets and variables →
-Actions:
+Set these in your shell when you run a manual job. Don't commit them.
 
-| Variable       | Required | Description                   | Example                       |
-| -------------- | -------- | ----------------------------- | ----------------------------- |
-| `API_BASE_URL` | Yes      | Production API base URL       | `https://gauntlet.vercel.app` |
-| `CRON_SECRET`  | Yes      | Must match Vercel CRON_SECRET | `your-random-secret-key`      |
-| `DATABASE_URL` | Yes      | Same as Vercel (for DB jobs)  | `postgresql://...`            |
+| Variable       | Needed by                           |
+| -------------- | ----------------------------------- |
+| `DATABASE_URL` | `scripts/live-odds-snapshot.sh`     |
+| (none)         | `scripts/update-variance-models.sh` |
 
 ### Local Testing Variables
 
@@ -141,7 +172,7 @@ AI_SUMMARIZE_SECRET=your-local-capability-secret
 
 ## Cron Job Setup
 
-The application uses three different cron mechanisms:
+Scheduled and manual jobs:
 
 ### 1. driveFF Scheduler (Live Odds)
 
@@ -196,26 +227,63 @@ export GEMINI_API_KEY=your-key
 ./test-recap-cron-local.sh
 ```
 
-### 3. GitHub Actions (Variance Models)
+The schedule lives in the cron-job.org account, not in this repo. This doc can't
+confirm that the job is still enabled. Check the account.
 
-**Purpose**: Updates player variance models weekly
+### 3. Variance Models (manual)
 
-**File**: `.github/workflows/update-variance-models.yml`
+**Purpose**: Updates player variance models from last week's Sleeper stats.
 
-**Schedule**: Tuesdays at 7:00 AM UTC (3:00 AM ET)
+**When**: Weekly, after Monday Night Football. It used to run as a GitHub
+Actions job on Tuesdays at 07:00 UTC. Now a person runs it.
 
-**Manual trigger**:
+**Run**:
 
 ```bash
-# Via GitHub UI: Actions → Update Variance Models → Run workflow
+scripts/update-variance-models.sh
 ```
 
-The workflow:
+**Needs**: No secrets. It calls the public Sleeper API.
 
-1. Installs dependencies
-2. Builds packages
-3. Runs variance update job
-4. Commits changes to repo if variance data changed
+**What it does**:
+
+1. `pnpm install --frozen-lockfile`
+2. Builds `@gauntlet/sim-engine` and `@gauntlet/server`
+3. Runs `pnpm --filter @gauntlet/server run update-variance`, which rewrites
+   `apps/sim-engine/src/data/variance-data.json`
+4. Prints `git status` for `variance-data.json` and `players-cache.json`
+
+It does not commit. Review the diff (`git diff apps/sim-engine/src/data/`). If
+it looks right, commit it on a branch and open a normal PR.
+
+### 4. Live Odds Snapshot (manual backup)
+
+**Purpose**: Writes one Gauntlet live-odds snapshot to the historical database.
+It replaces the disabled GitHub Actions job that ran every 10 minutes during NFL
+game windows. driveFF owns normal live-odds collection (section 1), so run this
+only for manual recovery.
+
+**Run**:
+
+```bash
+DATABASE_URL=... scripts/live-odds-snapshot.sh
+```
+
+**Needs**: `DATABASE_URL` for the historical database. The script stops if it is
+not set.
+
+**What it does**:
+
+1. `pnpm install --frozen-lockfile`
+2. Generates the Prisma client from `prisma/schema-historical.prisma`
+3. Runs `pnpm --filter @gauntlet/server live-snapshot`. For the two leagues
+   hardcoded in `apps/server/src/scripts/jobs/comprehensive-live-snapshot.ts`,
+   it reads matchup odds from `https://gauntlet-website.vercel.app` and current
+   scores from Sleeper.
+4. Inserts a `LiveWinProbSample` row for each matchup whose data changed since
+   the last sample. It skips unchanged matchups.
+
+To capture a game window, run it again by hand. Nothing schedules it.
 
 ## Rollback Procedures
 
@@ -271,12 +339,14 @@ If variance model updates need rollback:
 # Find the commit to revert
 git log --oneline apps/sim-engine/src/data/
 
-# Revert the specific commit
+# Revert the specific commit on a branch
+git switch -c revert/variance-<week> origin/main
 git revert <commit-hash>
-
-# Push to trigger new deployment
-git push
+git push -u origin HEAD
 ```
+
+Open a PR, then run `scripts/ci-local.sh --pr <N> --post-status` and
+`scripts/merge-pr.sh <N>`. The merge deploys.
 
 ## Monitoring
 
@@ -290,14 +360,14 @@ Monitor at [vercel.com/dashboard](https://vercel.com/dashboard):
 | Response Time   | Analytics tab  | > 1000ms p95       |
 | Cron Execution  | Functions logs | Failed invocations |
 
-### GitHub Actions
+### Manual Jobs
 
-Monitor at GitHub → Actions tab:
+The manual scripts have no run history. Check their results directly:
 
-| Workflow               | Check Frequency   |
-| ---------------------- | ----------------- |
-| Update Variance Models | Weekly (Tuesdays) |
-| Manual cron triggers   | As needed         |
+| Job                                 | How to check                                          |
+| ----------------------------------- | ----------------------------------------------------- |
+| `scripts/update-variance-models.sh` | `git log apps/sim-engine/src/data/variance-data.json` |
+| `scripts/live-odds-snapshot.sh`     | Script output and new `LiveWinProbSample` rows        |
 
 ### Cron Job Monitoring
 
@@ -419,7 +489,8 @@ vercel --prod
   }
   ```
 - Increase if needed (max 300s on Vercel)
-- For longer jobs, consider GitHub Actions instead
+- For longer jobs, run them as manual scripts like
+  `scripts/live-odds-snapshot.sh`
 
 ## Security Considerations
 
@@ -435,7 +506,7 @@ vercel --prod
 **Current Stack (Free Tier)**:
 
 - Vercel Hobby: $0/month (100GB bandwidth, 6,000 build minutes)
-- GitHub Actions: $0/month (2,000 minutes)
+- CI: runs locally on the Mac Studio, no hosted CI cost
 - PostgreSQL: Varies by provider (Railway ~$5/month)
 
 **Upgrade Path**:
@@ -449,12 +520,11 @@ After successful deployment:
 
 1. Set up monitoring (Sentry for error tracking)
 2. Configure custom domain in Vercel
-3. Enable preview deployments for PRs
-4. Document any team-specific procedures
+3. Document any team-specific procedures
 
 ## Getting Help
 
 - Check Vercel status: [status.vercel.com](https://status.vercel.com)
 - Review function logs in Vercel Dashboard
-- Check GitHub Actions logs for scheduled job failures
+- For CI failures, rerun `scripts/ci-local.sh` and read its output
 - See `docs/runbooks/local-dev.md` for local development help

@@ -13,7 +13,7 @@ flowchart TD
 
   subgraph InScope["In Scope Container (#37)"]
     TST["Multi-league safety tests\napps/web/src/__tests__/integration/multi-league.test.ts"]
-    COV["Coverage thresholds + CI enforcement\nvitest configs + workflow"]
+    COV["Coverage thresholds + CI enforcement\nvitest configs + scripts/ci-local.sh"]
     LOGS["Production console cleanup\napps/*/src (non-test, non-scripts)"]
   end
 
@@ -26,7 +26,7 @@ flowchart TD
   subgraph Tooling["Quality Gates"]
     ROOT["Root gates\npnpm test / lint / type-check"]
     ESLINT["ESLint policy\nno-console config by app"]
-    CI[".github/workflows/*\nPR validation coverage gate"]
+    CI["scripts/ci-local.sh (local-ci status)\nPR validation coverage gate"]
   end
 
   subgraph OutScope["Out of Scope"]

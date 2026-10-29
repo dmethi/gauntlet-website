@@ -13,8 +13,8 @@
 ## Architectural Shape
 
 - **Monorepo (pnpm workspaces + Turborepo)** with three apps and five packages:
-  - `apps/web` – Next.js 14 client/SSR app that drives UI, APIs, and
-    cron-triggered workflows.
+  - `apps/web` – Next.js 14 client/SSR app that drives UI, APIs, and cron
+    endpoints.
   - `apps/server` – Background jobs + database access for historical odds
     snapshots, shared as a package.
   - `apps/sim-engine` – Monte Carlo simulation engine for win probabilities.
@@ -52,14 +52,16 @@
 - Vitest powers unit/integration tests across apps/packages; Jest remains only
   in legacy packages (`packages/models`).
 - Coverage thresholds configured in `apps/web` and `apps/sim-engine`; cron
-  workflows should avoid I/O reliance for deterministic tests.
+  runners should avoid I/O reliance for deterministic tests.
+- CI runs locally with `scripts/ci-local.sh`. No GitHub Actions run (see
+  `docs/AGENTS.md`).
 
 ## Deployment & Operations
 
-- Target deployment is Vercel for the web app (API routes + serverless cron
-  entrypoints).
-- Background jobs can run via GitHub Actions or external cron services
-  (cron-job.org).
+- Vercel deploys the web app (API routes + cron entrypoints) from `main` through
+  its Git integration. See `docs/runbooks/deployment.md`.
+- Weekly recaps are triggered by cron-job.org. Variance refresh and backup
+  live-odds snapshots are manual scripts in `scripts/`.
 - Avoid filesystem writes at runtime on Vercel; use providers (S3, Supabase)
   when durable storage is required.
 
