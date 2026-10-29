@@ -30,22 +30,23 @@ Schema: `prisma/schema-historical.prisma`
    - Stores league-wide odds snapshots (highest scorer, closest matchup, etc.)
    - Used by: Weekly recap reports, league-wide trends
 
-### GitHub Actions (1 Workflow)
+### Manual Jobs (no schedule)
 
-**`.github/workflows/live-sims.yml`**
+No GitHub Actions run. driveFF owns normal live-odds collection. These jobs run
+by hand:
 
-- **Schedule**: Runs every 10 minutes during NFL game windows (Thu-Mon)
-- **Command**: `pnpm --filter @gauntlet/server live-snapshot`
-- **Purpose**: Captures current matchup states, runs simulations, stores historical data
-- **Timeout**: 10 minutes per execution
+- `scripts/live-odds-snapshot.sh` runs `live-snapshot`. It needs
+  `DATABASE_URL` for the historical database. Use it for manual recovery.
+- `scripts/update-variance-models.sh` runs `update-variance`. It needs no
+  secrets and rewrites `apps/sim-engine/src/data/variance-data.json`.
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  GitHub Actions Scheduler (Cron)                    │
-│  • Every 10 minutes during NFL games                │
-│  • Thursday Night → Monday Night Football           │
+│  scripts/live-odds-snapshot.sh (manual run)         │
+│  • Needs DATABASE_URL                               │
+│  • One snapshot per run                             │
 └──────────────────┬──────────────────────────────────┘
                    │
                    ▼
@@ -125,18 +126,18 @@ DATABASE_URL=postgresql://user:pass@host:5432/dbname
 - ❌ No HTTP server running
 - ❌ No Express routes
 - ❌ No API endpoints
-- ✅ Just scheduled background jobs
+- ✅ Just background jobs, run by hand
 
 ## How It Works
 
 ### Live Snapshot Flow
 
-1. **Trigger**: GitHub Actions cron runs every 10 minutes during NFL games
+1. **Trigger**: A person runs `scripts/live-odds-snapshot.sh`
 2. **Fetch**: Script fetches current matchup data from Sleeper API
 3. **Simulate**: Runs 10,000 Monte Carlo simulations per matchup
 4. **Calculate**: Computes win probabilities, spreads, totals, and money lines
 5. **Store**: Writes snapshot to PostgreSQL with timestamp
-6. **Repeat**: Process repeats throughout the game (18+ snapshots per 3-hour game)
+6. **Repeat**: Run the script again for more samples. Nothing schedules it
 
 ### Data Usage
 
@@ -180,7 +181,7 @@ This database is for:
 
 ## Related Documentation
 
-- [DEPLOYMENT_GUIDE.md](../../DEPLOYMENT_GUIDE.md) - Deployment architecture
+- [docs/runbooks/deployment.md](../../docs/runbooks/deployment.md) - Deployment runbook
 - [.cursorrules](../../.cursorrules) - Development conventions
 - [TASK_SYSTEM.md](../../TASK_SYSTEM.md) - Task management system
 
@@ -190,7 +191,7 @@ This package is intentionally minimal:
 
 - **3 TypeScript files** - Only what's needed for live snapshots
 - **3 Prisma models** - Only time-series data Sleeper doesn't provide
-- **1 GitHub workflow** - Runs during NFL games only
+- **No scheduler** - Jobs run by hand through `scripts/`
 - **No HTTP server** - Despite the misleading name
 
 If you need to add more background jobs, this is the right place. If you need API endpoints for the web app, use Next.js API routes in `apps/web/src/app/api/` instead.

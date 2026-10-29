@@ -456,15 +456,19 @@ This job:
 5. Removes statistical outliers (>3σ)
 6. Updates `variance-data.json` with schema v2 format
 
-### Automated Schedule
+### Weekly Refresh
 
-Recommended: Run Tuesday 3am ET after Monday Night Football
+Nothing runs this on a schedule. Run it by hand each week after Monday Night
+Football:
 
-```cron
-0 3 * * 2 cd /path/to/gauntlet && pnpm --filter @gauntlet/server run update-variance
+```bash
+scripts/update-variance-models.sh
 ```
 
-**GitHub Actions:** Automated workflow runs every Tuesday at 3 AM EST (7 AM UTC)
+The script installs dependencies, builds `@gauntlet/sim-engine` and
+`@gauntlet/server`, runs the update job and prints `git status` for the data
+files. It needs no secrets and does not commit. Review the diff, then commit on
+a branch and open a normal PR.
 
 ---
 
