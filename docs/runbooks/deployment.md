@@ -30,16 +30,13 @@ No GitHub Actions run for this repo. CI runs locally (`scripts/ci-local.sh`, see
 Vercel's Git integration deploys this repo. Nothing in the repo triggers a
 deploy.
 
-- Two Vercel projects build from `main`, both with root directory `apps/web` and
-  the settings in `apps/web/vercel.json`:
-  - `gauntlet-website` serves `gauntletff.com` and
-    `gauntlet-website.vercel.app`.
-  - `gauntlet-website-web` serves `gauntlet-website-web.vercel.app`.
-  - Why there are two projects is not documented. Confirm before you delete
-    either one.
-- A merge to `main` makes a production deployment in both projects. Each one
-  posts a `Vercel – <project>` commit status.
-- Every pushed branch gets a preview deployment in both projects.
+- The Vercel project `gauntlet-website` builds from `main`, with root directory
+  `apps/web` and the settings in `apps/web/vercel.json`. It serves
+  `gauntletff.com` and `gauntlet-website.vercel.app`. A duplicate project,
+  `gauntlet-website-web`, was deleted on 2026-10-29.
+- A merge to `main` makes a production deployment and posts a
+  `Vercel – gauntlet-website` commit status.
+- Every pushed branch gets a preview deployment.
 - Merge with `scripts/merge-pr.sh <N>` after
   `scripts/ci-local.sh --pr <N> --post-status` passes. The merge is the deploy.
 - Neither project defines Vercel Cron jobs.
