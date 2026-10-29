@@ -75,31 +75,29 @@ git branch -d issue-<NUMBER>
 
 ## Picking Up Work
 
-Issues are structured as **vertical slices** — each delivers one complete
-feature end-to-end. Issues use the `vertical_slice` template on GitHub. Treat
-legacy references to `groomed_issue` as `vertical_slice` + the
-`ISSUE_GROOMING.md` readiness checklist.
+Studio Linear is the only active work queue. Read the canonical shared
+`portfolio/STUDIO_LINEAR.md` before selecting implementation work. GitHub PRs
+and legacy issues provide evidence and context; they do not authorize a second queue.
 
 ### Before Starting
 
-1. Check open issues: `gh issue list --state open --label slice`
-2. Pick an unassigned slice issue and confirm it is execution-ready
-3. Read the full issue — especially **Scope** and **Out of Scope**
-4. Set up a worktree for the issue (see above)
+1. Identify the authorizing Linear issue and destination project.
+2. Confirm admission and read its outcome, scope, exclusions and acceptance evidence.
+3. Follow the shared Git hygiene skill for ownership and worktree isolation.
+4. Keep repo-specific safety, privacy and review requirements in force.
 
 ### While Working
 
-1. **Stay within scope** — the In Scope checklist IS the work; Out of Scope is a
-   hard boundary
-2. **Commit incrementally** — don't save everything for one giant commit
-3. **One slice per PR** — each PR closes exactly one issue
+Keep one coherent change set within the admitted scope. Use checklists on the
+existing issue instead of creating a ticket for each step or session. Commit
+incrementally with the reason for the change.
 
 ### After Completing
 
-1. Verify all scope items are checked off
-2. Verify guardrails hold (existing tests pass, no type/lint errors)
-3. Create PR using the repo's PR template
-4. Link PR to issue (`Closes #X`)
+1. Verify acceptance evidence and the repo's applicable checks.
+2. Link the PR to the Linear issue; record blockers and the next action there.
+3. Mark Done only when the outcome is verified, not merely because a PR exists.
+4. Preserve durable decisions in repo docs and prune transient session context.
 
 ---
 
@@ -112,7 +110,7 @@ Before submitting a PR, verify:
 - [ ] Type checking passes (`pnpm type-check`)
 - [ ] Linting passes (`pnpm lint`)
 - [ ] No `console.log` statements in production code
-- [ ] Issue linked in PR (`Closes #X`)
+- [ ] Authorizing Linear issue linked in PR
 
 ---
 
