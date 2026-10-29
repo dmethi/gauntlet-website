@@ -101,6 +101,29 @@ incrementally with the reason for the change.
 
 ---
 
+## CI runs locally (no GitHub Actions)
+
+GitHub-hosted Actions are off (founder, 2026-10-29). CI runs on the Mac Studio:
+
+```bash
+scripts/ci-local.sh --pr <N> --post-status   # every job on the committed HEAD; posts `local-ci`
+scripts/merge-pr.sh <N>                       # merges only if `local-ci` passed on that exact head
+```
+
+- The jobs: install, web workspace deps build, type-check, build, coverage
+  thresholds for `@gauntlet/web`, `@gauntlet/server` and `@gauntlet/sim-engine`,
+  and semgrep.
+- Commit first. The script refuses a dirty tracked tree.
+- Never merge with `gh pr merge` or the GitHub button. Use `scripts/merge-pr.sh`.
+- Scheduled jobs are manual scripts now. Run them only when asked:
+  `scripts/update-variance-models.sh` (weekly variance refresh, no secrets) and
+  `scripts/live-odds-snapshot.sh` (needs `DATABASE_URL`).
+- Vercel still builds a preview for every pushed branch and deploys `main`.
+  That doesn't use Actions.
+- Don't add workflows that run on push, pull_request or schedule.
+
+---
+
 ## PR Checklist
 
 Before submitting a PR, verify:
